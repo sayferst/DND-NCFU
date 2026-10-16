@@ -14,16 +14,12 @@ class Interpretation:
 
 
 def intent_schema():
-    commands = sorted(allowed_intents() - set(CHAT_TARGETS) - {"уточнить намерение"})
     return {
         "type": "object",
         "properties": {
-            "kind": {"type": "string", "enum": ["action", "dialogue", "clarify"]},
-            "command": {"type": "string", "enum": ["", *commands]},
-            "target": {"type": "string", "enum": ["", *CHAT_TARGETS.values()]},
-            "question": {"type": "string"},
+            "command": {"type": "string", "enum": sorted(allowed_intents())},
         },
-        "required": ["kind", "command", "target", "question"],
+        "required": ["command"],
         "additionalProperties": False,
     }
 
@@ -37,13 +33,23 @@ def parse_interpretation(data):
     if message.get("role") != "assistant":
         raise ValueError("Invalid intent role")
     value = json.loads(message["content"])
+    if isinstance(value, dict) and set(value) == {"command"}:
+        command = value["command"]
+        if not isinstance(command, str) or command not in allowed_intents():
+            raise ValueError("Unsupported action")
+        if command in CHAT_TARGETS:
+            return Interpretation("dialogue", "", CHAT_TARGETS[command], "")
+        if command == "уточнить намерение":
+            return Interpretation("clarify", "", "", "")
+        return Interpretation("action", command, "", "")
+    # Accept the previous bounded wire contract too; never infer missing fields or effects.
     if not isinstance(value, dict) or set(value) != {"kind", "command", "target", "question"}:
         raise ValueError("Invalid intent fields")
     if not all(isinstance(v, str) for v in value.values()):
         raise ValueError("Invalid intent types")
     result = Interpretation(**value)
     if result.kind == "action":
-        if result.command not in intent_schema()["properties"]["command"]["enum"][1:]:
+        if result.command not in allowed_intents() - set(CHAT_TARGETS) - {"уточнить намерение"}:
             raise ValueError("Unsupported action")
         if result.target or result.question:
             raise ValueError("Mixed action and dialogue")

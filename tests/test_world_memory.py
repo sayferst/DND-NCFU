@@ -144,6 +144,30 @@ def test_legacy_editor_is_an_event_and_roundtrips():
     assert Session.from_dict(session.to_dict()).character.name == "Мира"
 
 
+def test_recent_dialogue_is_bounded_authoritative_and_keeps_saved_prose_two():
+    from rpg_vkr.narrative.context import recent_dialogue
+    from rpg_vkr.narrative.records import Narration
+
+    session = Session(seed=42)
+    for _ in range(5):
+        session.submit("поговорить с жительницей")
+    frame = build_frame(session)
+    session.add_narration(
+        Narration(5, "local-test:1", "Придуманный дракон.", frame.fingerprint, "narrator-prose-2")
+    )
+    restored = Session.from_dict(session.to_dict())
+    before = restored.to_dict()
+    history = recent_dialogue(restored)
+    assert len(history) == 3
+    assert all(
+        len(row["player_message"]) <= 200 and len(row["confirmed_result"]) <= 350 for row in history
+    )
+    assert "дракон" not in str(history)
+    assert "5 золотых" in str(history)
+    assert restored.to_dict() == before
+    assert restored.narrations[-1].prompt_version == "narrator-prose-2"
+
+
 def test_context_contains_only_local_actors_and_public_facts_and_never_hidden_wallet():
     session = Session(seed=42, world=WorldState(shop_gold=731, shop_stock=29))
     frame = build_frame(session)

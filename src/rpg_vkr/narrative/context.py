@@ -142,3 +142,11 @@ def build_frame(session):
         confirmed[:1500],
         tuple(text[:300] for text in memories[-6:]),
     )
+
+
+def recent_dialogue(session):
+    """Player words and authoritative outcomes; model prose never becomes a fact."""
+    return tuple(
+        {"player_message": turn.action[:200], "confirmed_result": present_turn(turn).story[:350]}
+        for turn in session.turns[-3:]
+    )

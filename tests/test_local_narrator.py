@@ -62,7 +62,8 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
             else:
                 content = {"narration": TEXT}
                 request_body = json.loads(body) if body else {}
-                if "kind" in request_body.get("format", {}).get("properties", {}):
+                is_intent = "command" in request_body.get("format", {}).get("properties", {})
+                if is_intent:
                     content = {
                         "kind": "dialogue",
                         "command": "",
@@ -108,13 +109,36 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                     content["narration"] = "Путник走近 деревенские ворота."
                 elif mode == "player_decision":
                     content["narration"] = "Путник подходит к ней, чтобы узнать о поручении."
-                elif mode in {"chat_bad_prose", "chat_delivery_failure"} and "kind" not in content:
+                elif mode in {"chat_bad_prose", "chat_delivery_failure"} and not is_intent:
                     content["narration"] = "Путник走近 деревенские ворота."
+                if is_intent:
+                    if content.get("kind") == "dialogue":
+                        from rpg_vkr.commands import CHAT_TARGETS
+
+                        content = {
+                            "command": next(
+                                key
+                                for key, target in CHAT_TARGETS.items()
+                                if target == content["target"]
+                            )
+                        }
+                    elif content.get("kind") == "clarify":
+                        content = {"command": "уточнить намерение"}
+                    else:
+                        content = {"command": content["command"]}
+                    if mode == "chat_observe":
+                        content = {"command": "осмотреться"}
+                elif mode == "chat_clarify":
+                    content = {"narration": "К кому вы обращаетесь?"}
                 if mode == "effects":
                     content["gold"] = 1000
-                payload = json.dumps(
-                    {"message": {"role": "assistant", "content": json.dumps(content)}}
-                ).encode()
+                response = {"message": {"role": "assistant", "content": json.dumps(content)}}
+                if mode == "truncated":
+                    response["done_reason"] = "length"
+                    response["message"]["thinking"] = "Скрытая цепочка рассуждений"
+                elif mode == "empty_content":
+                    response["message"]["content"] = ""
+                payload = json.dumps(response).encode()
             self.send_response(500 if mode == "error" else 200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(payload)))
@@ -473,7 +497,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-2"
+    assert new.prompt_version == "narrator-prose-3"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
@@ -543,7 +567,7 @@ def test_free_chat_interprets_then_commits_once_and_shows_only_ai_reply(
         else:
             assert "К кому вы обращаетесь?" in journal
             assert not window._session.memory.events[-1].changes
-        assert len(requests) == (2 if mode == "chat_clarify" else 3)
+        assert len(requests) == 3
         restored = Session.from_dict(window._session.to_dict())
         assert restored.to_dict() == window._session.to_dict()
         window.save_slot(1)
@@ -667,3 +691,70 @@ def test_cancelling_second_chat_stage_shows_engine_result_without_late_prose(win
         qt_app.processEvents()
         assert not window._session.narrations
         assert len(window._session.turns) == 1
+
+
+@pytest.mark.parametrize(
+    "phrase,mode,expected",
+    [
+        ("хочу осмотреться", "chat_observe", "осмотреться"),
+        ("Спрашиваю жительницу, нужна ли ей помощь.", "ok", "беседа с жительницей"),
+    ],
+)
+def test_reported_phrases_use_single_field_contract_with_examples_and_history(
+    window, qt_app, phrase, mode, expected
+):
+    with local_server(mode=mode) as (url, requests):
+        window._run_command("поговорить с жительницей")
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText(phrase)
+        window.send_button.click()
+        wait_for(qt_app, lambda: bool(window._session.narrations))
+        payload = requests[1][1]
+        assert set(payload["format"]["properties"]) == {"command"}
+        context = json.loads(payload["messages"][-1]["content"])
+        assert context["player_message"] == phrase
+        assert "жительницей" in context["recent_dialogue"][-1]["player_message"]
+        assert "хочу осмотреться" in payload["messages"][0]["content"]
+        assert window._session.turns[-1].action == phrase
+        assert window._session.turns[-1].intent == expected
+        assert window.narrator_details.toPlainText().startswith("Этап: narration")
+        assert not window.narrator_details.isVisible()
+
+
+@pytest.mark.parametrize("mode,expected", [("truncated", "обрезан"), ("empty_content", "формат")])
+def test_diagnostic_distinguishes_bad_intent_from_bad_prose(window, qt_app, mode, expected):
+    with local_server(mode=mode) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        before = window._session.to_dict()
+        window.action_input.setText("хочу осмотреться")
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert "Распознавание сообщения" in window.narrator_status.text()
+        assert expected in window.narrator_status.text()
+        assert window._session.to_dict() == before
+        assert "Этап: intent" in window.narrator_details.toPlainText()
+        assert "local-test:1" in window.narrator_details.toPlainText()
+        assert "Скрытая цепочка" not in window.narrator_details.toPlainText()
+        assert window.action_input.text() == "хочу осмотреться"
+        assert len(requests) == 2
+
+
+def test_bad_prose_diagnostic_identifies_second_stage_and_hides_thinking():
+    from rpg_vkr.narrative.ollama import response_diagnostic
+
+    diagnostic = response_diagnostic(
+        "narration",
+        "local-test:1",
+        b"body",
+        {"done_reason": "length", "message": {"content": "", "thinking": "Не показывать"}},
+        "truncated",
+    )
+    assert "Этап: narration" in diagnostic
+    assert "length" in diagnostic and "пустое" in diagnostic
+    assert "Не показывать" not in diagnostic

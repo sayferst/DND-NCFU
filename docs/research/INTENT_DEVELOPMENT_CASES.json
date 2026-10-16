@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "purpose": "development evaluation cases; not training data or measured results",
+  "created": "2026-10-17",
+  "annotation": "Manually authored expected commands; requires review before research use.",
+  "cases": [
+    {
+      "id": "observe-user",
+      "player_message": "хочу осмотреться",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "осмотреться"
+      ],
+      "forbidden_commands": [],
+      "source": "user_report",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "help-user",
+      "player_message": "Спрашиваю жительницу, нужна ли ей помощь.",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "беседа с жительницей"
+      ],
+      "forbidden_commands": [
+        "взять поручение"
+      ],
+      "source": "user_report",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "observe-question",
+      "player_message": "Что находится вокруг меня?",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "осмотреться"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "bag",
+      "player_message": "Проверяю содержимое своей сумки",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "инвентарь"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "accept",
+      "player_message": "Я согласен доставить корзину",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "взять поручение"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "buy-question",
+      "player_message": "Можно узнать, продаёте ли вы бинты?",
+      "context": {
+        "location": "market",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "беседа с торговцем"
+      ],
+      "forbidden_commands": [
+        "купить бинт"
+      ],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "buy-action",
+      "player_message": "Покупаю один бинт",
+      "context": {
+        "location": "market",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "купить бинт"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "travel",
+      "player_message": "Выхожу на дорогу из деревни",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "идти на дорогу"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "unclear-target",
+      "player_message": "Привет",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "уточнить намерение"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "unsupported",
+      "player_message": "Хочу построить замок",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "уточнить намерение"
+      ],
+      "forbidden_commands": [],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "compound",
+      "player_message": "Покупаю бинт и сразу атакую торговца",
+      "context": {
+        "location": "market",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "уточнить намерение"
+      ],
+      "forbidden_commands": [
+        "купить бинт",
+        "атаковать торговца"
+      ],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    },
+    {
+      "id": "not-accept",
+      "player_message": "Жительница, я не согласен брать корзину",
+      "context": {
+        "location": "gate",
+        "quest": "available",
+        "last_speaker": null,
+        "combat_active": false
+      },
+      "acceptable_commands": [
+        "беседа с жительницей",
+        "уточнить намерение"
+      ],
+      "forbidden_commands": [
+        "взять поручение"
+      ],
+      "source": "authored",
+      "split": "development",
+      "model_result": null
+    }
+  ]
+}

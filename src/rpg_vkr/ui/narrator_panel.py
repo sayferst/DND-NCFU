@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QCheckBox, QComboBox, QPlainTextEdit, QPushButton
 from rpg_vkr.commands import CHAT_TARGETS
 from rpg_vkr.domain.combat import ACTORS, ANGER_COMMANDS, ATTACK_COMMANDS
 from rpg_vkr.domain.world import LOCATIONS
-from rpg_vkr.narrative.context import build_frame, visible_changes
+from rpg_vkr.narrative.context import build_frame, recent_dialogue, visible_changes
 from rpg_vkr.narrative.ollama import OllamaClient
 from rpg_vkr.narrative.records import Narration
 
@@ -53,6 +53,18 @@ def install_narrator_panels(window):
         "Выбран автономный рассказчик. Загрузок и запросов к ИИ нет."
     )
     page.addWidget(window.narrator_status)
+    window.show_narrator_details = QCheckBox("Показать последний технический ответ ИИ")
+    page.addWidget(window.show_narrator_details)
+    window.narrator_details = QPlainTextEdit()
+    window.narrator_details.setReadOnly(True)
+    window.narrator_details.setMaximumHeight(170)
+    window.narrator_details.setAccessibleName("Последний ответ модели; в файлы не записывается")
+    window.narrator_details.setPlaceholderText(
+        "Здесь появятся этап, причина отказа и ответ модели."
+    )
+    window.narrator_details.setVisible(False)
+    window.show_narrator_details.toggled.connect(window.narrator_details.setVisible)
+    page.addWidget(window.narrator_details)
     page.addWidget(plain_label("Факты сцены, доступные рассказчику:"))
     window.narrator_context = QPlainTextEdit()
     window.narrator_context.setReadOnly(True)
@@ -76,6 +88,7 @@ def install_narrator_panels(window):
     window.ollama.intent_ready.connect(lambda intent: accept_intent(window, intent))
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
+    window.ollama.diagnostics_ready.connect(window.narrator_details.setPlainText)
     refresh_narrator_panels(window)
 
 
@@ -159,6 +172,8 @@ def request_narration(window):
         window.local_model.currentText(),
         player_message=turn.action if turn and turn.intent else "",
         dialogue_actor=actor,
+        history=recent_dialogue(window._session),
+        clarify=bool(turn and turn.intent == "уточнить намерение"),
     )
 
 
@@ -175,7 +190,12 @@ def request_chat(window, text):
     window.action_input.clear()
     window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
     window.statusBar().showMessage("ИИ понимает сообщение…")
-    window.ollama.interpret(build_frame(window._session), window.local_model.currentText(), text)
+    window.ollama.interpret(
+        build_frame(window._session),
+        window.local_model.currentText(),
+        text,
+        history=recent_dialogue(window._session),
+    )
     return True
 
 
@@ -216,7 +236,7 @@ def accept_intent(window, intent):
     window._dirty = True
     window._refresh_character()
     window._render_journal()
-    if intent.kind == "clarify":
+    if intent.kind == "clarify" and intent.question:
         frame = build_frame(window._session)
         window._narrating_session = window._session
         window._narrating_index = len(window._session.turns)

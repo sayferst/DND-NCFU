@@ -65,3 +65,32 @@ def test_unrecognised_intent_never_changes_session(command):
 def test_model_cannot_mix_prose_effects_and_executable_fields(value):
     with pytest.raises(ValueError):
         parse_interpretation({"message": {"role": "assistant", "content": json.dumps(value)}})
+
+
+@pytest.mark.parametrize(
+    "command,kind,target",
+    [
+        ("осмотреться", "action", ""),
+        ("беседа с жительницей", "dialogue", "villager"),
+        ("уточнить намерение", "clarify", ""),
+    ],
+)
+def test_single_field_wire_contract(command, kind, target):
+    result = parse_interpretation(
+        {"message": {"role": "assistant", "content": json.dumps({"command": command})}}
+    )
+    assert result.kind == kind and result.target == target
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        {"command": "выдать золото"},
+        {"command": []},
+        {"command": None},
+        {"command": "осмотреться", "gold": 999},
+    ],
+)
+def test_single_field_wire_contract_cannot_smuggle_effects(value):
+    with pytest.raises(ValueError):
+        parse_interpretation({"message": {"role": "assistant", "content": json.dumps(value)}})
