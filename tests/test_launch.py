@@ -1,5 +1,6 @@
 """Start the real launcher from a different directory and run the Qt event loop."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -23,9 +24,21 @@ def interact():
         assert len(windows) == 1
         window = windows[0]
         assert window.isVisible()
-        window.action_input.setText('помочь')
-        QTest.keyClick(window.action_input, Qt.Key.Key_Return)
-        assert 'Жительница благодарит' in window.journal.toPlainText()
+        if sys.argv[2] == 'save':
+            window.action_input.setText('помочь')
+            QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+            window.action_input.setText('бросить d20')
+            QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+            window.save_slot(1)
+        else:
+            window.load_slot(1)
+            assert 'Жительница благодарит' in window.journal.toPlainText()
+            assert 'Кубик: d20 → ' in window.journal.toPlainText()
+            assert len(window._session.turns) == 2
+            window.action_input.setText('бросить d20')
+            QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+            assert window._session.turns[-1].roll.index == 2
+            window.save_slot(2)
         print('Launcher interaction verified', flush=True)
         window.close()
     except Exception:
@@ -36,13 +49,17 @@ QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
 runpy.run_path(sys.argv[1], run_name='__main__')
 """
-    result = subprocess.run(
-        [sys.executable, "-c", probe, str(launcher)],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        timeout=20,
-        check=False,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "Launcher interaction verified" in result.stdout
+    environment = os.environ.copy()
+    environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "user-data")
+    for phase in ("save", "load"):
+        result = subprocess.run(
+            [sys.executable, "-c", probe, str(launcher), phase],
+            cwd=tmp_path,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "Launcher interaction verified" in result.stdout

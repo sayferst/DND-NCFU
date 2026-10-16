@@ -15,13 +15,18 @@ def qt_app():
 
 
 @pytest.fixture
-def window(qt_app):
+def window(qt_app, tmp_path, monkeypatch):
+    from PySide6.QtWidgets import QMessageBox
+
+    from rpg_vkr.application import Session
+    from rpg_vkr.storage.slots import SaveSlots
     from rpg_vkr.ui.main_window import MainWindow
 
-    widget = MainWindow()
+    widget = MainWindow(session=Session(seed=42), saves=SaveSlots(tmp_path / "saves"))
     widget.show()
     qt_app.processEvents()
     yield widget
+    monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.Yes)
     widget.close()
     widget.deleteLater()
     qt_app.processEvents()

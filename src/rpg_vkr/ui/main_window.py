@@ -2,25 +2,33 @@
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QGridLayout,
+    QGroupBox,
     QHBoxLayout,
     QLabel,
     QLineEdit,
     QMainWindow,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QVBoxLayout,
     QWidget,
 )
 
-from rpg_vkr.narrative.offline import INTRODUCTION, respond
+from rpg_vkr.application import Session
+from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 
 
 class MainWindow(QMainWindow):
-    def __init__(self) -> None:
+    def __init__(self, session: Session | None = None, saves: SaveSlots | None = None) -> None:
         super().__init__()
+        self._session = Session() if session is None else session
+        self._saves = SaveSlots(default_save_directory()) if saves is None else saves
+        self._dirty = False
+        self._current_slot: int | None = None
         self.setWindowTitle("Пограничье — первый прототип")
-        self.resize(900, 640)
-        self.setMinimumSize(560, 420)
+        self.resize(960, 780)
+        self.setMinimumSize(640, 620)
 
         body = QWidget(self)
         self.setCentralWidget(body)
@@ -42,10 +50,12 @@ class MainWindow(QMainWindow):
         self.journal = QPlainTextEdit()
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
-        self.journal.appendPlainText("Рассказчик: " + INTRODUCTION)
+        self._render_journal()
         layout.addWidget(self.journal, stretch=1)
 
-        hint = QLabel("Попробуйте: осмотреться · поговорить · помочь. Подсказка: помощь.")
+        hint = QLabel(
+            "Попробуйте: осмотреться · поговорить · помочь · бросить d20. Подсказка: помощь."
+        )
         hint.setWordWrap(True)
         layout.addWidget(hint)
 
@@ -64,7 +74,36 @@ class MainWindow(QMainWindow):
         input_row.addWidget(self.send_button)
         layout.addLayout(input_row)
 
-        note = QLabel("Пробный эпизод. Журнал не сохраняется после закрытия окна.")
+        slots_group = QGroupBox("Сохранения · 3 ячейки")
+        slots_layout = QGridLayout(slots_group)
+        self.slot_labels: dict[int, QLabel] = {}
+        self.save_buttons: dict[int, QPushButton] = {}
+        self.load_buttons: dict[int, QPushButton] = {}
+        self.delete_buttons: dict[int, QPushButton] = {}
+        for slot in (1, 2, 3):
+            label = QLabel()
+            label.setWordWrap(True)
+            self.slot_labels[slot] = label
+            slots_layout.addWidget(label, slot - 1, 0)
+            for column, (title, handler, buttons) in enumerate(
+                [
+                    ("Сохранить", self.save_slot, self.save_buttons),
+                    ("Загрузить", self.load_slot, self.load_buttons),
+                    ("Удалить", self.delete_slot, self.delete_buttons),
+                ],
+                start=1,
+            ):
+                button = QPushButton(title)
+                button.setAccessibleName(f"{title}: ячейка {slot}")
+                button.clicked.connect(lambda checked=False, s=slot, h=handler: h(s))
+                buttons[slot] = button
+                slots_layout.addWidget(button, slot - 1, column)
+        slots_layout.setColumnStretch(0, 1)
+        layout.addWidget(slots_group)
+
+        note = QLabel(f"Сохранения: {self._saves.directory}")
+        note.setTextFormat(Qt.TextFormat.PlainText)
+        note.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         note.setWordWrap(True)
         layout.addWidget(note)
 
@@ -74,15 +113,105 @@ class MainWindow(QMainWindow):
         self.action_input.returnPressed.connect(self.submit_action)
         self.send_button.clicked.connect(self.submit_action)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
+        self._refresh_slots()
+
+    def _render_journal(self) -> None:
+        self.journal.setPlainText("Рассказчик: " + self._session.introduction)
+        for turn in self._session.turns:
+            self.journal.appendPlainText("\nВы: " + turn.action)
+            self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
+        self.journal.ensureCursorVisible()
+
+    def _refresh_slots(self) -> None:
+        for slot in (1, 2, 3):
+            info = self._saves.info(slot)
+            self.slot_labels[slot].setText(f"Ячейка {slot} — {info.description}")
+            self.load_buttons[slot].setEnabled(info.occupied)
+            self.delete_buttons[slot].setEnabled(info.occupied)
+
+    def _confirm(self, text: str) -> bool:
+        answer = QMessageBox.question(
+            self,
+            "Подтверждение",
+            text,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        return answer == QMessageBox.StandardButton.Yes
+
+    def save_slot(self, slot: int) -> None:
+        if self._saves.info(slot).occupied and not self._confirm(
+            f"Перезаписать ячейку {slot}? Прежнее сохранение в ней будет заменено."
+        ):
+            return
+        try:
+            self._saves.save(slot, self._session)
+        except SaveError as error:
+            QMessageBox.warning(self, "Ошибка сохранения", str(error))
+            return
+        self._dirty = False
+        self._current_slot = slot
+        self._refresh_slots()
+        self.statusBar().showMessage(f"Сессия сохранена в ячейке {slot}.", 6000)
+
+    def load_slot(self, slot: int) -> None:
+        try:
+            session = self._saves.load(slot)
+        except SaveError as error:
+            QMessageBox.warning(self, "Ошибка загрузки", str(error))
+            return
+        if (self._dirty or self.action_input.text().strip()) and not self._confirm(
+            f"Загрузить ячейку {slot}? Несохранённые изменения текущей сессии будут потеряны."
+        ):
+            return
+        self._session = session
+        self._dirty = False
+        self._current_slot = slot
+        self.action_input.clear()
+        self._render_journal()
+        self._refresh_slots()
+        self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
+        self.statusBar().showMessage(f"Загружена ячейка {slot}.", 6000)
+
+    def delete_slot(self, slot: int) -> None:
+        if not self._confirm(f"Удалить сохранение из ячейки {slot}? Это действие нельзя отменить."):
+            return
+        try:
+            self._saves.delete(slot)
+        except SaveError as error:
+            QMessageBox.warning(self, "Ошибка удаления", str(error))
+            return
+        if self._current_slot == slot:
+            self._current_slot = None
+            self._dirty = True
+        self._refresh_slots()
+        self.statusBar().showMessage(
+            f"Ячейка {slot} освобождена. Текущая сессия остаётся в окне.", 6000
+        )
+
+    def closeEvent(self, event) -> None:
+        if (self._dirty or self.action_input.text().strip()) and not self._confirm(
+            "Закрыть окно без сохранения? Нажмите «Нет», чтобы вернуться и сохранить сессию."
+        ):
+            event.ignore()
+            return
+        event.accept()
 
     def submit_action(self) -> None:
         action = self.action_input.text().strip()
         if not action:
             return
 
+        try:
+            turn = self._session.submit(action)
+        except ValueError as error:
+            QMessageBox.warning(self, "Действие не выполнено", str(error))
+            return
+
         # appendPlainText keeps user-supplied HTML and links inert.
         self.journal.appendPlainText("\nВы: " + action)
-        self.journal.appendPlainText("Рассказчик: " + respond(action))
+        self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
+        self._dirty = True
         self.action_input.clear()
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self.journal.ensureCursorVisible()

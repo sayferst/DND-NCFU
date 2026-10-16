@@ -1,5 +1,7 @@
 """A small authored scene; no language model, SRD mechanics or persistent state."""
 
+from rpg_vkr.commands import normalise_action
+
 INTRODUCTION = (
     "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, "
     "а рядом жительница собирает яблоки из опрокинувшейся корзины. "
@@ -7,7 +9,7 @@ INTRODUCTION = (
 )
 
 HELP = (
-    "Пока доступны действия: «осмотреться», «поговорить» и «помочь». "
+    "Пока доступны действия: «осмотреться», «поговорить», «помочь» и «бросить d20». "
     "Можно также написать «поговорить со стражником» или «помочь собрать яблоки». "
     "Команда «помощь» снова покажет эту подсказку."
 )
@@ -43,7 +45,7 @@ _REPLIES = {
 
 def respond(action: str) -> str:
     """Recognise whole commands, never guess that an unknown action succeeded."""
-    normalised = " ".join(action.casefold().split()).rstrip(".!?")
+    normalised = normalise_action(action)
     if not normalised:
         return "Введите действие. " + HELP
     return _REPLIES.get(
