@@ -1,7 +1,7 @@
 """Complete screens for the existing episode; all mutations go through Session."""
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QBrush
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
@@ -20,8 +20,10 @@ from PySide6.QtWidgets import (
 
 from rpg_vkr.application import CHECK_COMMANDS
 from rpg_vkr.domain.character import ABILITY_NAMES
+from rpg_vkr.domain.combat import disposition_label
 from rpg_vkr.domain.progression import describe_award
 from rpg_vkr.domain.world import LOCATIONS
+from rpg_vkr.ui.combat_panel import install_combat_panel, refresh_combat_panel
 
 TRAVEL_COMMANDS = {"gate": "идти к воротам", "road": "идти на дорогу", "market": "идти на рынок"}
 RESIDENTS = (
@@ -224,7 +226,7 @@ class EpisodePanels:
         )
         guide.addWidget(
             plain_label(
-                "Следующие этапы: бой и инициатива, полные классы/навыки/магия/экипировка, "
+                "Следующие этапы: полные правила боя SRD, инициатива, классы/навыки/магия, "
                 "отношения NPC, формальные конфликты и исследовательский режим. "
                 "Их механики ещё не реализованы. Игра не использует LLM или платные API."
             )
@@ -232,6 +234,7 @@ class EpisodePanels:
         self._panel_button(guide, "О программе и лицензии", self._show_about)
         guide.addStretch()
 
+        install_combat_panel(self)
         inventory_layout = self.inventory_label.parentWidget().layout()
         self.inventory_table = readonly_table(["Предмет", "Количество", "Назначение"])
         self.inventory_table.setAccessibleName("Предметы героя")
@@ -254,7 +257,7 @@ class EpisodePanels:
         navigation_row = QHBoxLayout()
         self.navigation = QComboBox()
         self.navigation.setAccessibleName("Раздел игры")
-        order = [7, 0, 1, 2, 3, 8, 9, 10, 11, 4, 6, 5, 12]
+        order = [7, 0, 1, 2, 3, 8, 9, 13, 10, 11, 4, 6, 5, 12]
         for index in order:
             self.navigation.addItem(self.tabs.tabText(index), index)
         navigation_row.addWidget(QLabel("Раздел:"))
@@ -314,7 +317,19 @@ class EpisodePanels:
         name, location, description = RESIDENTS[row]
         if row == 2 and self._session.world.location != "market":
             description = "Найдите рынок и подойдите к торговцу, чтобы узнать о товаре."
-        present = self._session.world.location == location
+        actor_id = ("guard", "villager", "merchant")[row]
+        actor = self._session.combat.actor(actor_id)
+        present = (
+            self._session.world.location == location
+            and actor.hp > 0
+            and actor.disposition == "neutral"
+            and self._session.combat.active is None
+            and self._session.world.hp > 0
+        )
+        if actor.hp == 0:
+            description += " Персонаж повержен; взаимодействие недоступно."
+        elif actor.disposition == "hostile":
+            description += " Персонаж враждебен; мирное общение недоступно."
         self.resident_description.setText(
             f"{name}: {description}\n"
             + ("Вы в одном месте." if present else "Сначала перейдите в его локацию.")
@@ -329,13 +344,25 @@ class EpisodePanels:
         if not hasattr(self, "inventory_table"):
             return
         state = self._session.world
+        self.journal.set_hostiles(
+            actor.id for actor in self._session.combat.actors if actor.disposition == "hostile"
+        )
+        refresh_combat_panel(self)
+        peace = self._session.combat.active is None and state.hp > 0
+        merchant = self._session.combat.actor("merchant")
+        villager = self._session.combat.actor("villager")
+        merchant_available = merchant.hp > 0 and merchant.disposition == "neutral" and peace
+        villager_available = villager.hp > 0 and villager.disposition == "neutral" and peace
         progress = self._session.progress
         self.resume_button.setText(
             "Вернуться к текущему герою" if progress.enabled else "Открыть учебную песочницу"
         )
-        self.study_button.setEnabled(progress.enabled and not progress.practiced("book"))
+        self.study_button.setEnabled(progress.enabled and not progress.practiced("book") and peace)
         self.cart_button.setEnabled(
-            progress.enabled and state.location == "gate" and not progress.practiced("cart")
+            progress.enabled
+            and state.location == "gate"
+            and not progress.practiced("cart")
+            and peace
         )
         self.development_log.setPlainText(
             "\n".join(describe_award(event) for event in progress.events)
@@ -349,30 +376,48 @@ class EpisodePanels:
         for location, button in self.travel_buttons.items():
             known = location != "market" or state.market_known
             button.setText(LOCATIONS[location] if known else "Неизвестное место")
-            button.setEnabled(known and location != state.location)
-        self.ask_market.setEnabled(state.location == "gate" and not state.market_known)
-        self.quick_buttons["идти на рынок"].setEnabled(state.market_known)
-        self.quick_buttons["подойти к торговцу"].setEnabled(state.location == "market")
+            button.setEnabled(known and location != state.location and peace)
+        self.ask_market.setEnabled(
+            state.location == "gate"
+            and not state.market_known
+            and peace
+            and self._session.combat.actor("guard").disposition == "neutral"
+            and self._session.combat.actor("guard").hp > 0
+        )
+        self.quick_buttons["идти на рынок"].setEnabled(state.market_known and peace)
+        self.quick_buttons["подойти к торговцу"].setEnabled(
+            state.location == "market" and merchant_available
+        )
         self.quick_buttons["исследовать дорогу"].setEnabled(
-            state.location == "road" and not state.explored
+            state.location == "road" and not state.explored and peace
         )
         self.quick_buttons["взять поручение"].setEnabled(
-            state.location == "gate" and state.quest == "available"
+            state.location == "gate" and state.quest == "available" and villager_available
         )
         self.quick_buttons["доставить корзину"].setEnabled(
-            state.location == "market" and state.quest == "active"
+            state.location == "market" and state.quest == "active" and peace
         )
         for row, (name, _location, _) in enumerate(RESIDENTS):
             visible_name = name if row != 2 or state.location == "market" else "Житель рынка"
-            self.resident_list.item(row).setText(visible_name)
-        self.shop_travel.setEnabled(state.market_known and state.location != "market")
-        self.approach_merchant.setEnabled(state.location == "market" and not state.trading)
+            actor_id = ("guard", "villager", "merchant")[row]
+            actor = self._session.combat.actor(actor_id)
+            mark = (
+                " [" + disposition_label(actor) + "]"
+                if not actor.hp or actor.disposition == "hostile"
+                else ""
+            )
+            self.resident_list.item(row).setText(visible_name + mark)
+            self.resident_list.item(row).setForeground(QBrush(self.journal.actor_colour(actor_id)))
+        self.shop_travel.setEnabled(state.market_known and state.location != "market" and peace)
+        self.approach_merchant.setEnabled(
+            state.location == "market" and not state.trading and merchant_available
+        )
         self.exploration_status.setText(
             "Дорога уже исследована."
             if state.explored
             else "Дорога ещё не исследована: возможны находка или потеря здоровья."
         )
-        self.map_explore.setEnabled(state.location == "road" and not state.explored)
+        self.map_explore.setEnabled(state.location == "road" and not state.explored and peace)
         self._refresh_resident()
         conversation = next(
             (
@@ -392,12 +437,16 @@ class EpisodePanels:
             "Разговора пока не было. Выберите жителя в текущем месте.",
         )
         self.resident_reply.setPlainText(conversation)
-        visible_trade = state.location == "market" and state.trading
+        visible_trade = state.location == "market" and state.trading and merchant_available
         self.shop_summary.setText(
             f"Ваше золото: {state.gold}; ваши бинты: {state.bandages}. "
             + (
                 f"Торговец предлагает бинты. В наличии: {state.shop_stock}."
                 if visible_trade
+                else "Торговец повержен. Лавка недоступна."
+                if merchant.hp == 0
+                else "Торговец враждебен. Торговля закрыта."
+                if merchant.disposition == "hostile"
                 else "Ассортимент ещё не показан. Найдите рынок и подойдите к торговцу."
             )
         )
@@ -408,7 +457,13 @@ class EpisodePanels:
         self.shop_sell.setEnabled(visible_trade and state.bandages > 0)
         reasons = []
         if not visible_trade:
-            reasons.append("Торговля доступна после подхода к торговцу на рынке.")
+            reasons.append(
+                "Торговец враждебен или повержен; торговля недоступна."
+                if not merchant.hp or merchant.disposition == "hostile"
+                else "Сначала завершите схватку."
+                if not peace
+                else "Торговля доступна после подхода к торговцу на рынке."
+            )
         else:
             if state.gold < 3:
                 reasons.append("Для покупки не хватает золота.")
@@ -437,9 +492,17 @@ class EpisodePanels:
         for row, values in enumerate(items):
             for column, value in enumerate(values):
                 self.inventory_table.setItem(row, column, QTableWidgetItem(value))
-        rolls = [turn for turn in self._session.turns if turn.roll is not None]
+        rolls = [
+            (roll, turn)
+            for turn in self._session.turns
+            for roll in (
+                turn.combat.outcome.rolls if turn.combat else ((turn.roll,) if turn.roll else ())
+            )
+        ]
         self.roll_history.setPlainText(
-            "\n\n".join(f"#{turn.roll.index} · {turn.text}" for turn in rolls[-100:])
+            "\n\n".join(
+                f"#{roll.index} · d20 {roll.value} · {turn.action}" for roll, turn in rolls[-100:]
+            )
         )
         self.roll_summary.setText(
             f"Бросков в сессии: {len(rolls)}. Показаны последние 100; полная история — в журнале."

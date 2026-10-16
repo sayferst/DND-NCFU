@@ -31,6 +31,8 @@ def test_preferences_round_trip_and_missing_file_does_not_create_directory(tmp_p
         '{"font_size": 11, "theme": "unknown"}',
         '{"font_size": 11, "theme": []}',
         '{"font_size": 11, "theme": "Системная", "extra": 1}',
+        '{"font_size": 13, "theme": "Системная", "bold_text": 1}',
+        '{"font_size": 13, "theme": "Системная", "bold_text": "true"}',
         " " * 4097,
     ],
 )

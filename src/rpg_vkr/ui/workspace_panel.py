@@ -3,6 +3,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction, QColor, QFont, QPalette, QTextCursor
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QFileDialog,
     QFormLayout,
@@ -107,6 +108,9 @@ class WorkspaceActions:
         self.theme_choice.setCurrentText(preferences.theme)
         settings_layout.addRow("Размер текста журнала:", self.font_size)
         settings_layout.addRow("Тема окна:", self.theme_choice)
+        self.bold_text = QCheckBox("Жирный текст сообщений")
+        self.bold_text.setChecked(preferences.bold_text)
+        settings_layout.addRow(self.bold_text)
         reset = QPushButton("Вернуть стандартные настройки")
         reset.clicked.connect(self._reset_reading)
         settings_layout.addRow(reset)
@@ -121,6 +125,7 @@ class WorkspaceActions:
         saves_layout.addStretch()
         self.tabs.addTab(saves_tab, "Сохранения")
 
+        self.bold_text.toggled.connect(self._change_reading)
         self.font_size.valueChanged.connect(self._change_reading)
         self.theme_choice.currentTextChanged.connect(self._change_reading)
         self._apply_reading(preferences)
@@ -168,7 +173,21 @@ class WorkspaceActions:
         self.quest_action.setText(
             ("Взять поручение у ворот", "Доставить корзину на рынке", "Завершено")[step]
         )
-        self.quest_action.setEnabled(step < 2)
+        world = self._session.world
+        giver = self._session.combat.actor("villager")
+        peace = self._session.combat.active is None and world.hp > 0
+        self.quest_action.setEnabled(
+            peace
+            and (
+                (
+                    step == 0
+                    and world.location == "gate"
+                    and giver.hp > 0
+                    and giver.disposition == "neutral"
+                )
+                or (step == 1 and world.location == "market")
+            )
+        )
         slot = f"Ячейка {self._current_slot}" if self._current_slot else "Без ячейки"
         state = "есть изменения" if self._dirty else "без изменений"
         draft = " · черновик не сохраняется" if self.action_input.text().strip() else ""
@@ -277,9 +296,12 @@ class WorkspaceActions:
     def _apply_reading(self, preferences: ReadingPreferences) -> None:
         font = QFont(self._base_font)
         font.setPointSize(preferences.font_size)
+        font.setBold(preferences.bold_text)
         self.journal.setFont(font)
         if hasattr(self, "roll_history"):
             self.roll_history.setFont(font)
+        if hasattr(self, "combat_result"):
+            self.combat_result.setFont(font)
         palette = QPalette(self._system_palette)
         if preferences.theme != "Системная":
             dark = preferences.theme == "Тёмная"
@@ -307,9 +329,13 @@ class WorkspaceActions:
                 palette.setColor(QPalette.ColorGroup.Disabled, role, QColor("#858585"))
         self.setPalette(palette)
         self.journal.set_role_theme(palette.color(QPalette.ColorRole.Base).lightness() < 128)
+        if hasattr(self, "combat_targets"):
+            self._refresh_episode_panels()
 
     def _change_reading(self) -> None:
-        preferences = ReadingPreferences(self.font_size.value(), self.theme_choice.currentText())
+        preferences = ReadingPreferences(
+            self.font_size.value(), self.theme_choice.currentText(), self.bold_text.isChecked()
+        )
         self._apply_reading(preferences)
         try:
             save_preferences(self._preferences_path, preferences)
@@ -323,7 +349,10 @@ class WorkspaceActions:
     def _reset_reading(self) -> None:
         self.font_size.blockSignals(True)
         self.theme_choice.blockSignals(True)
-        self.font_size.setValue(11)
+        self.font_size.setValue(13)
+        self.bold_text.blockSignals(True)
+        self.bold_text.setChecked(True)
+        self.bold_text.blockSignals(False)
         self.theme_choice.setCurrentText("Системная")
         self.font_size.blockSignals(False)
         self.theme_choice.blockSignals(False)

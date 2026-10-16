@@ -4,7 +4,8 @@ from dataclasses import asdict, dataclass, replace
 
 from rpg_vkr.domain.character import ABILITY_NAMES, AbilityCheck, Character
 
-RULES_VERSION = "homebrew-progression-1"
+RULES_VERSION = "homebrew-progression-2"
+LEGACY_RULES_VERSION = "homebrew-progression-1"
 POINT_BUDGET = 24
 LEVEL_TWO_XP = 4
 TRAINING_STEP = 2
@@ -24,7 +25,7 @@ class Archetype:
 ARCHETYPES = {
     "fighter": Archetype(
         "Боец",
-        "Путник с учебным мечом и запасом бинтов. Бой пока не реализован.",
+        "Учебный меч с базой урона 3 и запас бинтов. Авторский профиль.",
         (16, 12, 14, 8, 12, 10),
         8,
         2,
@@ -32,7 +33,7 @@ ARCHETYPES = {
     ),
     "scout": Archetype(
         "Разведчик",
-        "Профиль исследователя дороги. Скрытные атаки пока недоступны.",
+        "Исследователь дороги с ножом. Доступен авторский скрытный подход.",
         (12, 16, 12, 10, 12, 10),
         10,
         1,
@@ -51,6 +52,7 @@ ACTIVITIES = {
     "cart": ("помочь разгрузить телегу", "strength", "Разгрузка телеги у ворот"),
     "road": ("исследовать дорогу", "dexterity", "Первое исследование дороги"),
     "book": ("изучить учебник", "intelligence", "Первое изучение дорожного учебника"),
+    "wolf": ("атаковать волка", "strength", "Первая победа над серым волком"),
 }
 PRACTICE_COMMANDS = {"помочь разгрузить телегу", "изучить учебник", "развитие"}
 
@@ -129,8 +131,18 @@ class HeroProgress:
         )
 
     def award(
-        self, activity: str, turn_index: int, check: AbilityCheck | None, roll_index: int | None
+        self,
+        activity: str,
+        turn_index: int,
+        check: AbilityCheck | None,
+        roll_index: int | None,
+        *,
+        rules_version: str = RULES_VERSION,
     ):
+        if rules_version not in (RULES_VERSION, LEGACY_RULES_VERSION) or (
+            activity == "wolf" and rules_version == LEGACY_RULES_VERSION
+        ):
+            raise ValueError("Unsupported progression rule version")
         if not self.enabled or activity not in ACTIVITIES or self.practiced(activity):
             raise ValueError("Activity cannot grant another reward")
         if (
@@ -154,6 +166,8 @@ class HeroProgress:
                 or roll_index < 1
             ):
                 raise ValueError("Training requires a matching check")
+            if activity == "wolf" and not check.succeeded:
+                raise ValueError("Victory must have a successful attack")
             points = 2 if check.succeeded else 1
         before = self.character().score(ability)
         after = min(
@@ -172,6 +186,7 @@ class HeroProgress:
             self.level,
             after_level,
             2 if after_level > self.level else 0,
+            rules_version,
         )
         return replace(self, events=(*self.events, event))
 
@@ -188,7 +203,7 @@ class HeroProgress:
         if (
             not isinstance(data, dict)
             or set(data) != {"rules_version", "class_id", "initial", "events"}
-            or data["rules_version"] != RULES_VERSION
+            or data["rules_version"] not in (RULES_VERSION, LEGACY_RULES_VERSION)
             or not isinstance(data["class_id"], str)
             or not isinstance(data["events"], list)
             or len(data["events"]) > len(ACTIVITIES)
@@ -224,12 +239,22 @@ class HeroProgress:
             from rpg_vkr.commands import normalise_action
 
             turn = turns[index - 1]
-            if normalise_action(turn.action) != ACTIVITIES[activity][0]:
+            combat_victory = (
+                activity == "wolf"
+                and getattr(turn, "combat", None) is not None
+                and turn.combat.outcome.victory
+                and turn.combat.outcome.actor_id == "wolf"
+            )
+            if normalise_action(turn.action) != ACTIVITIES[activity][0] and not combat_victory:
                 raise ValueError("Development event does not match action")
+            if activity == "wolf" and not combat_victory:
+                raise ValueError("Wolf reward requires a recorded victory")
             if activity == "book" and not turn.text.startswith("Вы изучили учебник."):
                 raise ValueError("Book event requires completed study")
             roll_index = turn.roll.index if turn.roll is not None else None
-            result = result.award(activity, index, turn.check, roll_index)
+            result = result.award(
+                activity, index, turn.check, roll_index, rules_version=item["rules_version"]
+            )
             if item != asdict(result.events[-1]):
                 raise ValueError("Development event does not match rules")
             last_index = index

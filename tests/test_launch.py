@@ -168,3 +168,72 @@ runpy.run_path(sys.argv[1], run_name='__main__')
         )
         assert result.returncode == 0, result.stdout + result.stderr
         assert "Created hero restart verified" in result.stdout
+
+
+def test_real_combat_save_restart_and_multi_roll_continuation(tmp_path):
+    launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+    probe = """
+import runpy
+import sys
+import traceback
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication, QMainWindow
+app = QApplication([])
+def interact():
+    try:
+        from rpg_vkr.application import Session
+        from rpg_vkr.domain.character import ABILITY_NAMES, Character
+        from rpg_vkr.domain.progression import ARCHETYPES
+        window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+        if sys.argv[2] == 'fight':
+            character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
+                                  ARCHETYPES['fighter'].scores, strict=True)))
+            window._session = Session.create_hero(character, 'fighter', seed=5)
+            window._refresh_character()
+            window._render_journal()
+            window._run_command('изучить учебник')
+            window._run_command('идти на дорогу')
+            window.open_section('Схватка')
+            assert window.combat_targets.currentData() == 'wolf'
+            window.combat_stealth.click()
+            assert window._session.combat.surprise
+            window.save_slot(1)
+        else:
+            window.load_slot(1)
+            assert window._session.combat.surprise
+            assert window.journal.actor_colour('wolf').name() == '#b00020'
+            window.open_section('Схватка')
+            window.combat_attack.click()
+            assert window._session.combat.actor('wolf').hp == 0
+            assert window._session.progress.level == 2
+            assert window._session.world.hp == 12
+            assert window._session.world.max_hp == 14
+            assert 'Бросков в сессии: 3' in window.roll_summary.text()
+            assert window.journal.font().bold()
+            assert window.journal.font().pointSize() == 13
+            window._run_command('бросить d20')
+            assert window._session.turns[-1].roll.value == 17
+            window.save_slot(2)
+        print('Combat restart verified', flush=True)
+        window.close()
+    except Exception:
+        traceback.print_exc()
+        app.exit(1)
+QTimer.singleShot(0, interact)
+QTimer.singleShot(10000, lambda: app.exit(2))
+runpy.run_path(sys.argv[1], run_name='__main__')
+"""
+    environment = os.environ.copy()
+    environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "combat-data")
+    for phase in ("fight", "restore"):
+        result = subprocess.run(
+            [sys.executable, "-c", probe, str(launcher), phase],
+            cwd=tmp_path,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "Combat restart verified" in result.stdout

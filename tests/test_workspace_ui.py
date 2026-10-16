@@ -25,6 +25,7 @@ def test_tabs_and_quest_follow_actual_world(window):
         "Лавка",
         "Кубики",
         "Как играть",
+        "Схватка",
     ]
     assert window.quest_progress.value() == 0
     window.quest_action.click()
@@ -135,7 +136,7 @@ def test_reading_preferences_persist_without_touching_slot_or_game(window, qt_ap
         assert path.read_bytes() == saved
         assert not window._dirty
         reopened._reset_reading()
-        assert reopened.font_size.value() == 11
+        assert reopened.font_size.value() == 13
         assert reopened.theme_choice.currentText() == "Системная"
     finally:
         reopened.close()
@@ -247,7 +248,7 @@ def test_bad_preferences_startup_reports_fallback_and_keeps_bytes(window, qt_app
     window._preferences_path.write_text("{broken", encoding="utf-8")
     reopened = MainWindow(saves=window._saves)
     try:
-        assert reopened.font_size.value() == 11
+        assert reopened.font_size.value() == 13
         assert "стандартные" in reopened.preferences_status.text()
         assert window._preferences_path.read_text(encoding="utf-8") == "{broken"
     finally:

@@ -12,12 +12,15 @@ from PySide6.QtWidgets import QLineEdit
 
 @dataclass(frozen=True)
 class ReadingPreferences:
-    font_size: int = 11
+    font_size: int = 13
     theme: str = "Системная"
+    bold_text: bool = True
 
     def __post_init__(self) -> None:
         if type(self.font_size) is not int or not 9 <= self.font_size <= 20:
             raise ValueError("Размер шрифта должен быть от 9 до 20.")
+        if type(self.bold_text) is not bool:
+            raise ValueError("Жирность текста должна быть булевым значением.")
         if self.theme not in ("Системная", "Светлая", "Тёмная"):
             raise ValueError("Неизвестная тема.")
 
@@ -46,9 +49,17 @@ def load_preferences(path: Path) -> tuple[ReadingPreferences, str]:
         if path.stat().st_size > 4096:
             raise ValueError("Файл настроек слишком большой.")
         data = json.loads(path.read_text(encoding="utf-8"))
-        if not isinstance(data, dict) or set(data) != {"font_size", "theme"}:
+        if not isinstance(data, dict) or set(data) not in (
+            {"font_size", "theme"},
+            {"font_size", "theme", "bold_text"},
+        ):
             raise ValueError("Неверный формат настроек.")
-        return ReadingPreferences(**data), ""
+        preferences = ReadingPreferences(**data)
+        if "bold_text" not in data:
+            preferences = ReadingPreferences(
+                min(20, preferences.font_size + 2), preferences.theme, True
+            )
+        return preferences, ""
     except FileNotFoundError:
         return ReadingPreferences(), ""
     except (OSError, ValueError, TypeError):

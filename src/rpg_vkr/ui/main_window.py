@@ -112,7 +112,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
         self._render_journal()
-        play_layout.addWidget(QLabel("Вы — синий · рассказчик — зелёный · NPC — фиолетовый"))
+        legend = QLabel("Вы — синий · рассказчик — зелёный · NPC — фиолетовый · враг — красный")
+        legend.setWordWrap(True)
+        play_layout.addWidget(legend)
         play_layout.addWidget(self.journal, stretch=1)
 
         quick = QGridLayout()
@@ -131,6 +133,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             button = QPushButton(label)
             button.setToolTip(command)
             button.clicked.connect(lambda checked=False, c=command: self._run_command(c))
+            if command == "использовать бинт":
+                button.setToolTip("В схватке лечение тратит действие; противник отвечает.")
             self.quick_buttons[command] = button
             quick.addWidget(button, index // 4, index % 4)
         play_layout.addLayout(quick)
@@ -212,7 +216,11 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             + ("герой" if self._session.progress.enabled else "песочница")
         )
         self.progress_label.setText(describe_progress(self._session.progress))
-        self.edit_character_button.setEnabled(not self._session.progress.enabled)
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
         self.edit_character_button.setToolTip(
             "Созданный герой развивается действиями; "
             "свободный редактор — только для старой песочницы."
@@ -278,9 +286,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             + SRD_ATTRIBUTION
             + "\n\nАдаптация: вычислительная реализация модификаторов и базовых проверок "
             "характеристик, русский интерфейс. Сюжет и учебный профиль — авторские. "
-            "Это ограниченное подмножество правил, без владения навыками и боёв. "
+            "Подмножество SRD ограничено проверками, без владения навыками. "
             "Старый редактор — песочница. Профили, бюджет, развитие, "
-            "уровни, цены и бинты — homebrew.",
+            "уровни, схватки, цены и бинты — homebrew.",
         )
 
     def _render_journal(self) -> None:
