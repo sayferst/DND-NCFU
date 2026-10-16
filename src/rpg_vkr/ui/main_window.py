@@ -10,7 +10,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QMainWindow,
     QMessageBox,
-    QPlainTextEdit,
     QPushButton,
     QTabWidget,
     QVBoxLayout,
@@ -20,10 +19,13 @@ from PySide6.QtWidgets import (
 from rpg_vkr.application import Session
 from rpg_vkr.attribution import SRD_ATTRIBUTION
 from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
+from rpg_vkr.domain.progression import describe_progress
 from rpg_vkr.domain.world import LOCATIONS, inventory_text, quest_text
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
+from rpg_vkr.ui.creation_dialog import CreationDialog
 from rpg_vkr.ui.episode_panels import EpisodePanels
+from rpg_vkr.ui.role_journal import RoleJournal
 from rpg_vkr.ui.workspace_panel import WorkspaceActions
 from rpg_vkr.ui.workspace_tools import HistoryLineEdit
 
@@ -95,18 +97,22 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         controls.addWidget(self.edit_character_button)
         profile_layout.addLayout(controls)
         note = QLabel(
-            "Параметры эпизода — homebrew: 12 ОЗ, 10 золотых и 1 бинт в начале. "
-            "Изменение характеристик не восполняет здоровье и не выдаёт ресурсы."
+            "Создание и развитие — авторские правила, не полные классы SRD. "
+            "Старый свободный редактор доступен только учебной песочнице."
         )
         note.setWordWrap(True)
         profile_layout.addWidget(note)
         profile_layout.addStretch()
+        self.progress_label = QLabel()
+        self.progress_label.setWordWrap(True)
+        profile_layout.insertWidget(1, self.progress_label)
         self._refresh_character()
 
-        self.journal = QPlainTextEdit()
+        self.journal = RoleJournal()
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
         self._render_journal()
+        play_layout.addWidget(QLabel("Вы — синий · рассказчик — зелёный · NPC — фиолетовый"))
         play_layout.addWidget(self.journal, stretch=1)
 
         quick = QGridLayout()
@@ -201,13 +207,25 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._refresh_episode_panels()
         character = self._session.character
         world = self._session.world
-        self.character_group.setTitle(f"Персонаж: {character.name} · песочница")
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(not self._session.progress.enabled)
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
         self.scene_title.setText(LOCATIONS[world.location])
         self.resource_label.setText(
             f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
             f"бинты {world.bandages} · {LOCATIONS[world.location]}"
         )
-        self.inventory_label.setText("Инвентарь: " + inventory_text(world))
+        extras = "; ".join(name + " ×1" for name, _ in self._session.extra_items)
+        self.inventory_label.setText(
+            "Инвентарь: " + inventory_text(world) + ("; " + extras if extras else "")
+        )
         self.quest_label.setText("Задание: " + quest_text(world))
         for ability, label in self.ability_labels.items():
             score = character.score(ability)
@@ -220,16 +238,14 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.action_input.setText(draft)
 
     def new_character(self) -> None:
-        from rpg_vkr.domain.character import Character
-
-        dialog = CharacterDialog(Character(), self)
+        dialog = CreationDialog(self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         if (self._dirty or self.action_input.text().strip()) and not self._confirm(
             "Начать новую сессию? Несохранённая текущая сессия будет потеряна. Ячейки останутся."
         ):
             return
-        self._session = Session(character=dialog.character())
+        self._session = dialog.create_session()
         self._dirty = True
         self._current_slot = None
         self.action_input.clear()
@@ -263,14 +279,15 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             + "\n\nАдаптация: вычислительная реализация модификаторов и базовых проверок "
             "характеристик, русский интерфейс. Сюжет и учебный профиль — авторские. "
             "Это ограниченное подмножество правил, без владения навыками и боёв. "
-            "Редактор — свободная песочница. Поручение, цены, здоровье и бинты — homebrew.",
+            "Старый редактор — песочница. Профили, бюджет, развитие, "
+            "уровни, цены и бинты — homebrew.",
         )
 
     def _render_journal(self) -> None:
-        self.journal.setPlainText("Рассказчик: " + self._session.introduction)
+        self.journal.clear()
+        self.journal.append_message("narrator", "Рассказчик", self._session.introduction)
         for turn in self._session.turns:
-            self.journal.appendPlainText("\nВы: " + turn.action)
-            self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
+            self.journal.append_turn(turn)
         self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
 
@@ -365,8 +382,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             return
 
         # appendPlainText keeps user-supplied HTML and links inert.
-        self.journal.appendPlainText("\nВы: " + action)
-        self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
+        self.journal.append_turn(turn)
         self._dirty = True
         self.action_input.remember(action)
         self._refresh_character()

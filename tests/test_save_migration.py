@@ -35,7 +35,7 @@ def test_explicit_save_migrates_v1_and_can_be_loaded_again(tmp_path):
     session = store.load(1)
     previous = session.turns
     store.save(1, session)
-    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 4
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 5
     reloaded = SaveSlots(tmp_path).load(1)
     assert reloaded.turns == previous
     assert reloaded.character == Character()
@@ -85,7 +85,7 @@ def test_v2_migration_preserves_profile_history_and_random_sequence(tmp_path):
     assert session.world.gold == 12
     assert path.read_bytes() == original
     store.save(2, session)
-    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 4
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 5
     assert store.load(2).to_dict() == session.to_dict()
 
 
@@ -122,7 +122,28 @@ def test_real_v3_fixture_migrates_knowledge_without_replaying_or_rewriting(tmp_p
     assert "подойдите" in session.submit("купить бинт").text
     session.submit("подойти к торговцу")
     store.save(1, session)
-    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 4
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 5
     restored = store.load(1)
     assert restored.world.trading
+    assert restored.submit("бросить d20").roll.value == 1
+
+
+def test_actual_v4_sandbox_migration_keeps_world_rng_and_unknown_study_history(tmp_path):
+    original = (Path(__file__).parent / "fixtures" / "save-v4.json").read_bytes()
+    path = tmp_path / "slot-2.json"
+    path.write_bytes(original)
+    store = SaveSlots(tmp_path)
+    session = store.load(2)
+    assert not session.progress.enabled
+    assert session.progress.xp == 0
+    assert session.turns[-1].action == "изучить учебник"
+    assert "пока не понимаю" in session.turns[-1].text
+    assert session.world.trading
+    assert session.world.gold == 7
+    assert path.read_bytes() == original
+    previous = session.to_dict()
+    store.save(2, session)
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 5
+    restored = store.load(2)
+    assert restored.to_dict() == previous
     assert restored.submit("бросить d20").roll.value == 1

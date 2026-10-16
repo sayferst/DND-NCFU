@@ -143,7 +143,7 @@ def perform_action(
             return WorldOutcome(state, "Спросите стражника у ворот, как найти рынок.")
         return WorldOutcome(
             replace(state, market_known=True),
-            "Стражник объясняет дорогу на рынок. Место отмечено на карте.",
+            "Стражник: «Рынок за площадью». Место отмечено на карте.",
         )
     if command == "поговорить с жительницей":
         if state.location != "gate":
@@ -192,7 +192,7 @@ def perform_action(
             )
         return WorldOutcome(
             replace(state, trading=True, market_known=True),
-            f"Торговец показывает товар: бинт стоит 3 золотых, выкуп — 1. "
+            f"Торговец: «Бинт стоит 3 золотых, выкуп — 1». "
             f"В наличии: {state.shop_stock}. Команды: купить бинт, продать бинт.",
         )
     if command == "взять поручение":

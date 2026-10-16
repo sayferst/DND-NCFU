@@ -223,7 +223,7 @@ def test_editor_changes_profile_without_refilling_resources(window, monkeypatch)
 def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
     from PySide6.QtWidgets import QDialog
 
-    from rpg_vkr.ui.character_dialog import CharacterDialog
+    from rpg_vkr.ui.creation_dialog import CreationDialog
 
     window._run_command("взять поручение")
     window.save_slot(1)
@@ -234,7 +234,7 @@ def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
         dialog.name_input.setText("Другой герой")
         return QDialog.DialogCode.Accepted
 
-    monkeypatch.setattr(CharacterDialog, "exec", apply)
+    monkeypatch.setattr(CreationDialog, "exec", apply)
     monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.Yes)
     window.new_character()
     assert window._session.character.name == "Другой герой"
@@ -243,7 +243,7 @@ def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
     assert all("активная" not in label.text() for label in window.slot_labels.values())
     QTest.keyClick(window.action_input, Qt.Key.Key_Up)
     assert not window.action_input.text()
-    assert window._session.world.gold == 10
+    assert window._session.world.gold == 8
     assert window._session.world.quest == "available"
     assert (window._saves.directory / "slot-1.json").read_bytes() == original
 
@@ -251,11 +251,11 @@ def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
 def test_cancel_new_hero_keeps_existing_session(window, monkeypatch):
     from PySide6.QtWidgets import QDialog
 
-    from rpg_vkr.ui.character_dialog import CharacterDialog
+    from rpg_vkr.ui.creation_dialog import CreationDialog
 
     window._run_command("взять поручение")
     previous = window._session.to_dict()
-    monkeypatch.setattr(CharacterDialog, "exec", lambda *args: QDialog.DialogCode.Accepted)
+    monkeypatch.setattr(CreationDialog, "exec", lambda *args: QDialog.DialogCode.Accepted)
     monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.No)
     window.new_character()
     assert window._session.to_dict() == previous

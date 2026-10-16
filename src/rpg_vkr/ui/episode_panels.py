@@ -1,6 +1,6 @@
 """Complete screens for the existing episode; all mutations go through Session."""
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (
     QAbstractItemView,
@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 
 from rpg_vkr.application import CHECK_COMMANDS
 from rpg_vkr.domain.character import ABILITY_NAMES
+from rpg_vkr.domain.progression import describe_award
 from rpg_vkr.domain.world import LOCATIONS
 
 TRAVEL_COMMANDS = {"gate": "идти к воротам", "road": "идти на дорогу", "market": "идти на рынок"}
@@ -71,10 +72,10 @@ class EpisodePanels:
         menu.addWidget(plain_label("Пограничье · Доставка на рынок"))
         self.home_summary = plain_label()
         menu.addWidget(self.home_summary)
+        self._panel_button(menu, "Новый герой…", self.new_character)
         self.resume_button = self._panel_button(
             menu, "Вернуться к текущей сессии", self.resume_session
         )
-        self._panel_button(menu, "Новый герой…", self.new_character)
         self._panel_button(menu, "Загрузить сохранение…", self.choose_load)
         self._panel_button(menu, "Сохранить текущую сессию…", self.quick_save)
         self._panel_button(menu, "Настройки", lambda: self.open_section("Настройки"))
@@ -223,7 +224,7 @@ class EpisodePanels:
         )
         guide.addWidget(
             plain_label(
-                "Следующие этапы: бой и инициатива, классы/навыки/магия/экипировка, "
+                "Следующие этапы: бой и инициатива, полные классы/навыки/магия/экипировка, "
                 "отношения NPC, формальные конфликты и исследовательский режим. "
                 "Их механики ещё не реализованы. Игра не использует LLM или платные API."
             )
@@ -235,6 +236,18 @@ class EpisodePanels:
         self.inventory_table = readonly_table(["Предмет", "Количество", "Назначение"])
         self.inventory_table.setAccessibleName("Предметы героя")
         inventory_layout.insertWidget(1, self.inventory_table, 1)
+        self.study_button = QPushButton("Изучить дорожный учебник")
+        self.study_button.clicked.connect(lambda: self._run_command("изучить учебник"))
+        inventory_layout.insertWidget(2, self.study_button)
+        hero_layout = self.tabs.widget(1).layout()
+        self.cart_button = QPushButton("Помочь разгрузить телегу у ворот")
+        self.cart_button.clicked.connect(lambda: self._run_command("помочь разгрузить телегу"))
+        hero_layout.insertWidget(2, self.cart_button)
+        self.development_log = QPlainTextEdit()
+        self.development_log.setReadOnly(True)
+        self.development_log.setAccessibleName("Журнал развития")
+        self.development_log.setMaximumHeight(100)
+        hero_layout.insertWidget(3, self.development_log)
 
         # A compact picker replaces a growing row of tabs without changing page indices.
         self.tabs.tabBar().hide()
@@ -286,6 +299,7 @@ class EpisodePanels:
     def resume_session(self) -> None:
         self.tabs.setCurrentIndex(0)
         self.action_input.setFocus()
+        QTimer.singleShot(0, self.journal, self.journal.ensureCursorVisible)
 
     def _talk_to_resident(self) -> None:
         command = ("поговорить со стражником", "поговорить с жительницей", "поговорить")[
@@ -315,6 +329,18 @@ class EpisodePanels:
         if not hasattr(self, "inventory_table"):
             return
         state = self._session.world
+        progress = self._session.progress
+        self.resume_button.setText(
+            "Вернуться к текущему герою" if progress.enabled else "Открыть учебную песочницу"
+        )
+        self.study_button.setEnabled(progress.enabled and not progress.practiced("book"))
+        self.cart_button.setEnabled(
+            progress.enabled and state.location == "gate" and not progress.practiced("cart")
+        )
+        self.development_log.setPlainText(
+            "\n".join(describe_award(event) for event in progress.events)
+            or "Журнал развития пуст. Для обучения создайте героя и выполните значимое действие."
+        )
         self.home_summary.setText(
             f"Текущий герой: {self._session.character.name}. Место: {LOCATIONS[state.location]}. "
             "Загрузка и новый герой заменяют текущую сессию только после обычного подтверждения."
@@ -406,6 +432,7 @@ class EpisodePanels:
             items.append(("Бинт", str(state.bandages), "Восстановить до 4 ОЗ"))
         if state.basket:
             items.append(("Корзина поручения", "1", "Доставить на рынок"))
+        items.extend((name, "1", purpose) for name, purpose in self._session.extra_items)
         self.inventory_table.setRowCount(len(items))
         for row, values in enumerate(items):
             for column, value in enumerate(values):

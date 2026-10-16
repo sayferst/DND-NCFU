@@ -306,6 +306,7 @@ class WorkspaceActions:
             ):
                 palette.setColor(QPalette.ColorGroup.Disabled, role, QColor("#858585"))
         self.setPalette(palette)
+        self.journal.set_role_theme(palette.color(QPalette.ColorRole.Base).lightness() < 128)
 
     def _change_reading(self) -> None:
         preferences = ReadingPreferences(self.font_size.value(), self.theme_choice.currentText())
