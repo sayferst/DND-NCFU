@@ -1,0 +1,26 @@
+{
+  "retrieved": "2026-10-17",
+  "sources": {
+    "ollama-windows.mdx": {
+      "sha256": "2dd781e589836e79dfdc2f92b77f9789fd35ea2786abcf291b6c9e16154a46a2",
+      "bytes": 4713
+    },
+    "ollama-faq.mdx": {
+      "sha256": "e3630684676a21219abc7cb6c17db53993412c194ba9c108c8dbae2f30318e0c",
+      "bytes": 18143
+    },
+    "ollama-LICENSE.txt": {
+      "sha256": "5934ed2ce0d15154bcdb9c85203210abac0da4314af34081e36df4599f90b226",
+      "bytes": 1058
+    },
+    "ollama-README.md": {
+      "sha256": "9e5a7d406950fdd2742084065ab38a3ea09b5aab5e2f13ef7d64147229ae0d8b",
+      "bytes": 19347
+    },
+    "qwen3-README.md": {
+      "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d",
+      "bytes": 24732
+    }
+  },
+  "note": "Официальные raw GitHub документы. Веса и установщик не скачивались; инструкция не является фактическим результатом Windows."
+}
