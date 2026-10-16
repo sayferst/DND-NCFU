@@ -30,7 +30,10 @@ def main() -> int:
             return 1
         if result.returncode:
             return result.returncode
-    print("Environment checks passed. Game and Windows UI are not tested.", flush=True)
+    print(
+        "Environment and prototype checks passed. Manual Windows GUI check is still required.",
+        flush=True,
+    )
     return 0
 
 

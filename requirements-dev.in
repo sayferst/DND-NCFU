@@ -1,3 +1,4 @@
-# Free development tools only. Runtime dependencies will be added when needed.
+# Application dependencies and free development tools.
+-r requirements.in
 pytest==8.4.2
 ruff==0.14.1
