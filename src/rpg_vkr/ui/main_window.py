@@ -25,6 +25,7 @@ from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
 from rpg_vkr.ui.creation_dialog import CreationDialog
 from rpg_vkr.ui.episode_panels import EpisodePanels
+from rpg_vkr.ui.resolution_panel import install_resolution_panel
 from rpg_vkr.ui.role_journal import RoleJournal
 from rpg_vkr.ui.workspace_panel import WorkspaceActions
 from rpg_vkr.ui.workspace_tools import HistoryLineEdit
@@ -38,14 +39,18 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._dirty = False
         self._current_slot: int | None = None
         self.setWindowTitle("Пограничье — первый прототип")
-        self.resize(960, 780)
+        self.resize(1180, 800)
         self.setMinimumSize(640, 620)
         about = self.menuBar().addMenu("Справка").addAction("О программе и лицензии")
         about.triggered.connect(self._show_about)
 
         body = QWidget(self)
         self.setCentralWidget(body)
-        layout = QVBoxLayout(body)
+        columns = QHBoxLayout(body)
+        columns.setContentsMargins(0, 0, 12, 0)
+        content = QWidget()
+        columns.addWidget(content, stretch=1)
+        layout = QVBoxLayout(content)
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(12)
 
@@ -137,7 +142,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 button.setToolTip("В схватке лечение тратит действие; противник отвечает.")
             self.quick_buttons[command] = button
             quick.addWidget(button, index // 4, index % 4)
-        play_layout.addLayout(quick)
+        self.quick_controls = QWidget()
+        self.quick_controls.setLayout(quick)
+        play_layout.addWidget(self.quick_controls)
 
         hint = QLabel(
             "Эпизод «Доставка на рынок». Можно вводить действия текстом. Подсказка: помощь."
@@ -193,6 +200,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
 
         self._build_workspace(play_layout, slots_group, note)
         self._build_episode_panels(layout)
+        install_resolution_panel(self, columns)
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(bool(text.strip()))
@@ -205,6 +213,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._refresh_slots()
         if session is None:
             self.open_section("Главное меню")
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if hasattr(self, "quick_controls"):
+            # The text field remains the main input on compact screens.
+            self.quick_controls.setVisible(self.width() >= 1000)
 
     def _refresh_character(self) -> None:
         self._refresh_workspace()

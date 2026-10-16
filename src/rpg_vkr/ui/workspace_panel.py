@@ -268,11 +268,23 @@ class WorkspaceActions:
                 self.statusBar().showMessage("В журнале не найдено.", 5000)
 
     def export_journal(self) -> None:
+        self._export_text(self.journal.toPlainText() + "\n", "Экспорт журнала", "journal.txt")
+
+    def export_calculations(self) -> None:
+        from rpg_vkr.narrative.presentation import present_turn
+
+        entries = [
+            f"Действие №{i + 1}: {turn.action}\n{present_turn(turn).details}"
+            for i, turn in enumerate(self._session.turns)
+            if turn.roll or (turn.combat and turn.combat.outcome.rolls)
+        ]
+        text = "Разбор бросков сессии\n\n" + "\n\n".join(entries)
+        self._export_text(text + "\n", "Экспорт расчётов", "rolls.txt")
+
+    def _export_text(self, content: str, title: str, default_name: str) -> None:
         from pathlib import Path
 
-        filename, _ = QFileDialog.getSaveFileName(
-            self, "Экспорт журнала", "journal.txt", "Текст (*.txt)"
-        )
+        filename, _ = QFileDialog.getSaveFileName(self, title, default_name, "Текст (*.txt)")
         if not filename:
             return
         path = Path(filename)
@@ -285,12 +297,12 @@ class WorkspaceActions:
             )
             return
         try:
-            atomic_text(path, self.journal.toPlainText() + "\n")
+            atomic_text(path, content)
         except OSError as error:
             QMessageBox.warning(self, "Ошибка экспорта", str(error))
             return
         self.statusBar().showMessage(
-            "Журнал экспортирован. Для продолжения игры нужна ячейка.", 6000
+            "Текст экспортирован. Для продолжения игры нужна ячейка.", 6000
         )
 
     def _apply_reading(self, preferences: ReadingPreferences) -> None:
@@ -302,6 +314,9 @@ class WorkspaceActions:
             self.roll_history.setFont(font)
         if hasattr(self, "combat_result"):
             self.combat_result.setFont(font)
+        if hasattr(self, "roll_breakdown"):
+            self.roll_breakdown.setFont(font)
+            self.action_result.setFont(font)
         palette = QPalette(self._system_palette)
         if preferences.theme != "Системная":
             dark = preferences.theme == "Тёмная"

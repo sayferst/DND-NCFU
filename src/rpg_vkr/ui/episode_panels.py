@@ -24,6 +24,7 @@ from rpg_vkr.domain.combat import disposition_label
 from rpg_vkr.domain.progression import describe_award
 from rpg_vkr.domain.world import LOCATIONS
 from rpg_vkr.ui.combat_panel import install_combat_panel, refresh_combat_panel
+from rpg_vkr.ui.resolution_panel import refresh_resolution_panel
 
 TRAVEL_COMMANDS = {"gate": "идти к воротам", "road": "идти на дорогу", "market": "идти на рынок"}
 RESIDENTS = (
@@ -171,11 +172,11 @@ class EpisodePanels:
         dice = self._episode_page("Кубики")
         dice.addWidget(
             plain_label(
-                "d20 и базовые проверки характеристик против сложности 10. "
+                "Кубик с 20 гранями и проверки характеристик против сложности 10. "
                 "Проверки в этой панели не меняют ресурсы мира."
             )
         )
-        self._panel_button(dice, "Бросить d20", lambda: self._run_command("бросить d20"))
+        self._panel_button(dice, "Бросить кубик", lambda: self._run_command("бросить кубик"))
         self.check_choice = QComboBox()
         self.check_choice.setAccessibleName("Характеристика для проверки")
         for command, ability in CHECK_COMMANDS.items():
@@ -220,7 +221,7 @@ class EpisodePanels:
         guide.addWidget(
             plain_label(
                 "Работает: герой, ресурсы, три места, поручение, лавка, бинты, "
-                "d20, базовые проверки, "
+                "кубик, базовые проверки, схватка и враждебность, "
                 "журнал и сохранения. Рассказчик автономный, понимает команды из справочника."
             )
         )
@@ -229,6 +230,16 @@ class EpisodePanels:
                 "Следующие этапы: полные правила боя SRD, инициатива, классы/навыки/магия, "
                 "отношения NPC, формальные конфликты и исследовательский режим. "
                 "Их механики ещё не реализованы. Игра не использует LLM или платные API."
+            )
+        )
+        guide.addWidget(
+            plain_label(
+                "Рассказчик: осмотрите сцену («что я вижу?»), введите действие и "
+                "прочтите итог в журнале. Справа — риск выбранного действия и отдельный "
+                "разбор кубиков: выпавшее число, бонус, сумма, порог и последствия. "
+                "Выбор прошлой записи ничего не переигрывает. "
+                "На небольшом экране быстрые кнопки под журналом скрыты; команды "
+                "и все разделы остаются доступны."
             )
         )
         self._panel_button(guide, "О программе и лицензии", self._show_about)
@@ -501,12 +512,14 @@ class EpisodePanels:
         ]
         self.roll_history.setPlainText(
             "\n\n".join(
-                f"#{roll.index} · d20 {roll.value} · {turn.action}" for roll, turn in rolls[-100:]
+                f"#{roll.index} · кубик {roll.value} · {turn.action}" for roll, turn in rolls[-100:]
             )
         )
         self.roll_summary.setText(
-            f"Бросков в сессии: {len(rolls)}. Показаны последние 100; полная история — в журнале."
+            f"Бросков в сессии: {len(rolls)}. Показаны последние 100; "
+            "разбор последних 100 действий — в панели справа."
         )
+        refresh_resolution_panel(self)
 
     def _toggle_fullscreen(self, checked: bool) -> None:
         self.showFullScreen() if checked else self.showNormal()

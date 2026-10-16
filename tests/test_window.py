@@ -54,8 +54,8 @@ def test_dice_enter_and_button_show_each_actual_result(window):
     QTest.keyClick(window.action_input, Qt.Key.Key_Return)
     window.action_input.setText("бросить d20")
     QTest.mouseClick(window.send_button, Qt.MouseButton.LeftButton)
-    assert window.journal.toPlainText().count("Кубик: d20 → 4") == 1
-    assert window.journal.toPlainText().count("Кубик: d20 → 1") == 1
+    assert window.journal.toPlainText().count("Кубик: На кубике выпало 4.") == 1
+    assert window.journal.toPlainText().count("Кубик: На кубике выпало 1.") == 1
 
 
 def test_three_empty_slots_are_visible(window):
@@ -80,7 +80,9 @@ def test_save_load_restores_journal_and_next_dice_roll(window, monkeypatch):
     assert window.journal.toPlainText() == saved_journal
     window.action_input.setText("бросить d20")
     window.submit_action()
-    assert window.journal.toPlainText().endswith("Кубик: d20 → 1")
+    assert window.journal.toPlainText().endswith(
+        "На кубике выпало 1. Сам по себе этот бросок не меняет мир."
+    )
 
 
 @pytest.mark.parametrize("operation", ["save_slot", "load_slot", "delete_slot"])
@@ -147,7 +149,10 @@ def test_character_sheet_and_ability_check_are_visible(window):
     assert window.ability_labels["strength"].text() == "Сила: 14 (+2)"
     window.action_input.setText("проверить силу")
     QTest.keyClick(window.action_input, Qt.Key.Key_Return)
-    assert "Сила: d20 (4) +2 = 6; сложность 10 — неудача." in window.journal.toPlainText()
+    assert "Сила — неудача" in window.journal.toPlainText()
+    assert "4 + 2 = 6" in window.roll_breakdown.toPlainText()
+    assert "Нужно не меньше 10" in window.roll_breakdown.toPlainText()
+    assert "d20 (4)" not in window.journal.toPlainText()
 
 
 def test_loading_saved_character_updates_sheet_and_history(window):
@@ -160,7 +165,8 @@ def test_loading_saved_character_updates_sheet_and_history(window):
     window.load_slot(2)
     assert "Мира" in window.character_group.title()
     assert window.ability_labels["strength"].text() == "Сила: 18 (+4)"
-    assert "d20 (4) +4 = 8" in window.journal.toPlainText()
+    assert "Сила — неудача" in window.journal.toPlainText()
+    assert "4 + 4 = 8" in window.roll_breakdown.toPlainText()
 
 
 def test_about_includes_required_srd_attribution(window, monkeypatch):

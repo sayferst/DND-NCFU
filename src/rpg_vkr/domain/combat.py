@@ -5,9 +5,9 @@ from dataclasses import asdict, dataclass, replace
 from rpg_vkr.domain.character import (
     AbilityCheck,
     Character,
-    ability_modifier,
     resolve_ability_check,
 )
+from rpg_vkr.domain.combat_math import counter_damage, hero_defence, player_damage
 from rpg_vkr.domain.dice import D20Roll, DiceRoller
 from rpg_vkr.domain.world import WorldState
 
@@ -245,10 +245,11 @@ def perform_combat(
         )
         if check.succeeded:
             power = roll()
-            base = WEAPON_BASE[class_id] + max(0, ability_modifier(character.strength))
-            bonus = (power.value - 1) // 5
-            multiplier = 2 if state.surprise else 1
-            damage = (base + bonus) * multiplier
+            calculation = player_damage(
+                WEAPON_BASE[class_id], character.strength, power.value, state.surprise
+            )
+            base, bonus, multiplier = calculation.base, calculation.bonus, calculation.multiplier
+            damage = calculation.total
             target = replace(target, hp=max(0, target.hp - damage))
             text.append(
                 f"Расчётный урон: база {base} + бонус {bonus} (d20 {power.value}), "
@@ -292,15 +293,15 @@ def perform_combat(
     else:
         raise ValueError("Unsupported combat command")
     counter = roll()
-    hero_defence = 10 + max(0, ability_modifier(character.dexterity))
-    hit_back = counter.value + attack_bonus >= hero_defence
+    defence_value = hero_defence(character.dexterity)
+    hit_back = counter.value + attack_bonus >= defence_value
     text.append(
         f"{name} отвечает: d20 ({counter.value}) {attack_bonus:+d} — "
         + ("попадание." if hit_back else "промах.")
     )
     if hit_back:
         power = roll()
-        damage = enemy_base + (power.value - 1) // 10
+        damage = counter_damage(enemy_base, power.value).total
         lost = min(world.hp, damage)
         world = replace(world, hp=world.hp - lost)
         text.append(f"Потеря здоровья: {lost} (расчётный урон {damage}, d20 {power.value}).")

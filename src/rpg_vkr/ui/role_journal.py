@@ -12,6 +12,8 @@ from PySide6.QtWidgets import QPlainTextEdit
 
 from rpg_vkr.commands import normalise_action
 from rpg_vkr.domain.combat import ANGER_COMMANDS, NAMES_TO_IDS, disposition_label
+from rpg_vkr.domain.world import OBSERVE_COMMANDS
+from rpg_vkr.narrative.presentation import present_turn
 
 
 class MessageRole(QTextBlockUserData):
@@ -105,11 +107,7 @@ class RoleJournal(QPlainTextEdit):
             role = "narrator"
         else:
             role = "system"
-        if turn.speaker == "Мир" and normalise_action(turn.action) in {
-            "осмотреться",
-            "осмотреть деревню",
-            "я осматриваюсь",
-        }:
+        if turn.speaker == "Мир" and normalise_action(turn.action) in OBSERVE_COMMANDS:
             # Only engine-authored observation rows carry these identities. Player text
             # is always inserted above with role=player, never inspected for identities.
             for line in turn.text.splitlines():
@@ -123,7 +121,7 @@ class RoleJournal(QPlainTextEdit):
                 )
             return
         # NPC identity already labels the message; do not duplicate it in its body.
-        text = turn.text
+        text = present_turn(turn).story
         if role == "npc" and text.startswith(turn.speaker + ":"):
             text = text[len(turn.speaker) + 1 :].lstrip()
         context = (

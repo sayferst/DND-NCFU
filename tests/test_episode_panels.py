@@ -171,7 +171,9 @@ def test_roll_history_shows_recent_100_without_truncating_session(window):
     assert history.startswith("#3 ·")
     assert "#102 ·" in history
     assert len(window._session.turns) == 102
-    assert "Кубик: d20" in window.journal.toPlainText()
+    assert "Кубик: На кубике выпало" in window.journal.toPlainText()
+    assert window.breakdown_selector.count() == 100
+    assert window.breakdown_selector.itemData(0) == 2
 
 
 def test_loading_restores_map_shop_inventory_quest_dice_and_returns_to_game(window, monkeypatch):

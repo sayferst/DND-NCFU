@@ -12,6 +12,7 @@ from rpg_vkr.domain.combat import (
     disposition_label,
     health_description,
 )
+from rpg_vkr.narrative.presentation import present_turn
 
 
 def install_combat_panel(window):
@@ -147,7 +148,7 @@ def refresh_target(window):
     )
     latest = next(
         (
-            turn.text
+            present_turn(turn).story
             for turn in reversed(session.turns)
             if turn.combat and turn.actor_id == actor_id
         ),

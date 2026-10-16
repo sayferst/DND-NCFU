@@ -6,7 +6,17 @@ from rpg_vkr.domain.character import AbilityCheck, Character, describe_check, re
 from rpg_vkr.domain.dice import D20Roll, DiceRoller
 
 LOCATIONS = {"gate": "Ворота деревни", "road": "Дорога у деревни", "market": "Рынок"}
+OBSERVE_COMMANDS = {
+    "осмотреться",
+    "осмотреть деревню",
+    "я осматриваюсь",
+    "что я вижу",
+    "что вокруг",
+}
+WHERE_COMMANDS = {"где я нахожусь", "где мы находимся"}
 WORLD_COMMANDS = {
+    *OBSERVE_COMMANDS,
+    *WHERE_COMMANDS,
     "идти к воротам",
     "идти на дорогу",
     "идти на рынок",
@@ -126,7 +136,9 @@ def perform_action(
             replace(state, location=destination, trading=False),
             f"Вы пришли: {LOCATIONS[destination]}.",
         )
-    if command in ("осмотреться", "осмотреть деревню", "я осматриваюсь"):
+    if command in WHERE_COMMANDS:
+        return WorldOutcome(state, f"Вы здесь: {LOCATIONS[state.location]}.")
+    if command in OBSERVE_COMMANDS:
         description = {
             "gate": "У ворот тихо. На дороге остались следы телеги. Жительница ждёт помощи.",
             "road": "Вы на дороге. Впереди каменистый участок, рядом видна тропа в деревню.",

@@ -28,10 +28,17 @@ from rpg_vkr.domain.progression import (
     describe_award,
     describe_progress,
 )
-from rpg_vkr.domain.world import WORLD_COMMANDS, WorldState, perform_action
+from rpg_vkr.domain.world import (
+    OBSERVE_COMMANDS,
+    WHERE_COMMANDS,
+    WORLD_COMMANDS,
+    WorldState,
+    perform_action,
+)
 from rpg_vkr.narrative.offline import INTRODUCTION, respond
+from rpg_vkr.narrative.scenes import describe_scene
 
-ROLL_COMMANDS = {"бросить d20", "бросить д20"}
+ROLL_COMMANDS = {"бросить d20", "бросить д20", "бросить кубик"}
 CHECK_COMMANDS = {
     "проверить силу": "strength",
     "проверить ловкость": "dexterity",
@@ -173,7 +180,15 @@ class Session:
                 record,
             )
             return turn, outcome.world
-        information = {"состояние", "инвентарь", "задание", "развитие", "помощь", "осмотреться"}
+        information = {
+            "состояние",
+            "инвентарь",
+            "задание",
+            "развитие",
+            "помощь",
+            *OBSERVE_COMMANDS,
+            *WHERE_COMMANDS,
+        }
         if self.world.hp == 0 and command not in information:
             return Turn(
                 action, "Рассказчик", "Вы выбыли. Загрузите сохранение или создайте нового героя."
@@ -222,7 +237,8 @@ class Session:
         if command in WORLD_COMMANDS:
             outcome = perform_action(self.world, command, self.character, self.dice)
             text = outcome.text
-            if command in {"осмотреться", "осмотреть деревню", "я осматриваюсь"}:
+            if command in OBSERVE_COMMANDS:
+                text = describe_scene(self.world)
                 visible = [
                     actor
                     for actor in self.combat.actors

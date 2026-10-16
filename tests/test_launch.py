@@ -48,7 +48,9 @@ def interact():
             assert window.theme_choice.currentText() == 'Тёмная'
             window.load_slot(1)
             assert 'Жительница благодарит' in window.journal.toPlainText()
-            assert 'Кубик: d20 → ' in window.journal.toPlainText()
+            assert 'Кубик: На кубике выпало ' in window.journal.toPlainText()
+            assert window.resolution_panel.isVisible()
+            assert 'Итого:' in window.roll_breakdown.toPlainText()
             assert len(window._session.turns) == 11
             assert window._session.world.quest == 'completed'
             assert window._session.world.hp == 12
@@ -197,6 +199,8 @@ def interact():
             assert window.combat_targets.currentData() == 'wolf'
             window.combat_stealth.click()
             assert window._session.combat.surprise
+            assert window.resolution_panel.isVisible()
+            assert '20 + 1 = 21' in window.roll_breakdown.toPlainText()
             window.save_slot(1)
         else:
             window.load_slot(1)
@@ -205,6 +209,9 @@ def interact():
             window.open_section('Схватка')
             window.combat_attack.click()
             assert window._session.combat.actor('wolf').hp == 0
+            assert 'Скрытая атака ×2 · урон 16' in window.journal.toPlainText()
+            assert '=' not in window.journal.toPlainText()
+            assert '(6 + 2) × 2 = 16' in window.roll_breakdown.toPlainText()
             assert window._session.progress.level == 2
             assert window._session.world.hp == 12
             assert window._session.world.max_hp == 14
