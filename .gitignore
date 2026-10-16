@@ -1,0 +1,36 @@
+# Python and local tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Secrets and machine-specific configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+
+# User saves and disposable outputs (research data stays tracked)
+/saves/
+/logs/
+/tmp/
+/backups/
+/models/
+/wheelhouse/
+*.tmp
+*.log
+
+# Do not ignore all JSON/CSV/SQLite files: experiments may need them.

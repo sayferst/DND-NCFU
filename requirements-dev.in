@@ -1,0 +1,3 @@
+# Free development tools only. Runtime dependencies will be added when needed.
+pytest==8.4.2
+ruff==0.14.1
