@@ -140,3 +140,33 @@ def test_close_can_be_cancelled_for_unsaved_session(window, monkeypatch):
     monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.No)
     assert not window.close()
     assert window.isVisible()
+
+
+def test_character_sheet_and_ability_check_are_visible(window):
+    assert "Путник" in window.character_group.title()
+    assert window.ability_labels["strength"].text() == "Сила: 14 (+2)"
+    window.action_input.setText("проверить силу")
+    QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+    assert "Сила: d20 (4) +2 = 6; сложность 10 — неудача." in window.journal.toPlainText()
+
+
+def test_loading_saved_character_updates_sheet_and_history(window):
+    from rpg_vkr.application import Session
+    from rpg_vkr.domain.character import Character
+
+    session = Session(seed=42, character=Character(name="Мира", strength=18))
+    session.submit("проверить силу")
+    window._saves.save(2, session)
+    window.load_slot(2)
+    assert "Мира" in window.character_group.title()
+    assert window.ability_labels["strength"].text() == "Сила: 18 (+4)"
+    assert "d20 (4) +4 = 8" in window.journal.toPlainText()
+
+
+def test_about_includes_required_srd_attribution(window, monkeypatch):
+    from rpg_vkr.attribution import SRD_ATTRIBUTION
+
+    messages = []
+    monkeypatch.setattr(QMessageBox, "information", lambda *args: messages.append(args[2]))
+    window._show_about()
+    assert SRD_ATTRIBUTION in messages[0]

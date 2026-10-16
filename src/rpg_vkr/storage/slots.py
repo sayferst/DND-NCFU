@@ -49,13 +49,13 @@ class SaveSlots:
             data = json.loads(raw)
             if not isinstance(data, dict) or set(data) != {"schema_version", "saved_at", "session"}:
                 raise ValueError("Invalid save structure")
-            if type(data["schema_version"]) is not int or data["schema_version"] != 1:
+            if type(data["schema_version"]) is not int or data["schema_version"] not in (1, 2):
                 raise ValueError("Unsupported save version")
             saved_at = datetime.fromisoformat(data["saved_at"])
             if saved_at.tzinfo is None:
                 raise ValueError("Missing timestamp timezone")
             saved_at = saved_at.astimezone()
-            return Session.from_dict(data["session"]), saved_at
+            return Session.from_dict(data["session"], version=data["schema_version"]), saved_at
         except FileNotFoundError as error:
             raise SaveError("Эта ячейка пуста.") from error
         except (ValueError, TypeError, KeyError, RecursionError, OverflowError) as error:
@@ -82,7 +82,7 @@ class SaveSlots:
         try:
             payload = json.dumps(
                 {
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "saved_at": datetime.now(UTC).isoformat(),
                     "session": session.to_dict(),
                 },

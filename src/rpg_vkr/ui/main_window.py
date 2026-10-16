@@ -16,6 +16,8 @@ from PySide6.QtWidgets import (
 )
 
 from rpg_vkr.application import Session
+from rpg_vkr.attribution import SRD_ATTRIBUTION
+from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 
 
@@ -29,6 +31,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Пограничье — первый прототип")
         self.resize(960, 780)
         self.setMinimumSize(640, 620)
+        about = self.menuBar().addMenu("Справка").addAction("О программе и лицензии")
+        about.triggered.connect(self._show_about)
 
         body = QWidget(self)
         self.setCentralWidget(body)
@@ -47,6 +51,16 @@ class MainWindow(QMainWindow):
         mode.setWordWrap(True)
         layout.addWidget(mode)
 
+        self.character_group = QGroupBox()
+        character_layout = QGridLayout(self.character_group)
+        self.ability_labels: dict[str, QLabel] = {}
+        for index, ability in enumerate(ABILITY_NAMES):
+            label = QLabel()
+            self.ability_labels[ability] = label
+            character_layout.addWidget(label, index // 3, index % 3)
+        self._refresh_character()
+        layout.addWidget(self.character_group)
+
         self.journal = QPlainTextEdit()
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
@@ -54,7 +68,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.journal, stretch=1)
 
         hint = QLabel(
-            "Попробуйте: осмотреться · поговорить · помочь · бросить d20. Подсказка: помощь."
+            "Попробуйте: осмотреться · поговорить · помочь · бросить d20 · проверить силу. "
+            "Подсказка: помощь."
         )
         hint.setWordWrap(True)
         layout.addWidget(hint)
@@ -64,7 +79,7 @@ class MainWindow(QMainWindow):
         input_row = QHBoxLayout()
         self.action_input = QLineEdit()
         self.action_input.setAccessibleName("Ваше действие")
-        self.action_input.setPlaceholderText("Например: помочь собрать яблоки")
+        self.action_input.setPlaceholderText("Например: проверить силу")
         self.action_input.setMaxLength(500)
         action_label.setBuddy(self.action_input)
         input_row.addWidget(self.action_input, stretch=1)
@@ -114,6 +129,24 @@ class MainWindow(QMainWindow):
         self.send_button.clicked.connect(self.submit_action)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self._refresh_slots()
+
+    def _refresh_character(self) -> None:
+        character = self._session.character
+        self.character_group.setTitle(f"Персонаж: {character.name} · учебный профиль")
+        for ability, label in self.ability_labels.items():
+            score = character.score(ability)
+            label.setText(f"{ABILITY_NAMES[ability]}: {score} ({ability_modifier(score):+d})")
+
+    def _show_about(self) -> None:
+        QMessageBox.information(
+            self,
+            "О программе и лицензии",
+            "Учебный офлайн-прототип DND-NCFU.\n\n"
+            + SRD_ATTRIBUTION
+            + "\n\nАдаптация: вычислительная реализация модификаторов и базовых проверок "
+            "характеристик, русский интерфейс. Сюжет и учебный профиль — авторские. "
+            "Это ограниченное подмножество правил, без владения навыками и боёв.",
+        )
 
     def _render_journal(self) -> None:
         self.journal.setPlainText("Рассказчик: " + self._session.introduction)
@@ -168,6 +201,7 @@ class MainWindow(QMainWindow):
         self._dirty = False
         self._current_slot = slot
         self.action_input.clear()
+        self._refresh_character()
         self._render_journal()
         self._refresh_slots()
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)

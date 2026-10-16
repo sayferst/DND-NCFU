@@ -29,15 +29,19 @@ def interact():
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             window.action_input.setText('бросить d20')
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+            window.action_input.setText('проверить силу')
+            QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             window.save_slot(1)
         else:
             window.load_slot(1)
             assert 'Жительница благодарит' in window.journal.toPlainText()
             assert 'Кубик: d20 → ' in window.journal.toPlainText()
-            assert len(window._session.turns) == 2
+            assert len(window._session.turns) == 3
+            assert window._session.turns[-1].check is not None
+            assert 'Сила: 14 (+2)' == window.ability_labels['strength'].text()
             window.action_input.setText('бросить d20')
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
-            assert window._session.turns[-1].roll.index == 2
+            assert window._session.turns[-1].roll.index == 3
             window.save_slot(2)
         print('Launcher interaction verified', flush=True)
         window.close()
