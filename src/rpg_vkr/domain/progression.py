@@ -245,7 +245,10 @@ class HeroProgress:
                 and turn.combat.outcome.victory
                 and turn.combat.outcome.actor_id == "wolf"
             )
-            if normalise_action(turn.action) != ACTIVITIES[activity][0] and not combat_victory:
+            if (
+                normalise_action(turn.intent or turn.action) != ACTIVITIES[activity][0]
+                and not combat_victory
+            ):
                 raise ValueError("Development event does not match action")
             if activity == "wolf" and not combat_victory:
                 raise ValueError("Wolf reward requires a recorded victory")

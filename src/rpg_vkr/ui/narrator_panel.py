@@ -3,9 +3,12 @@
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QCheckBox, QComboBox, QPlainTextEdit, QPushButton
 
+from rpg_vkr.commands import CHAT_TARGETS
+from rpg_vkr.domain.combat import ACTORS, ANGER_COMMANDS, ATTACK_COMMANDS
 from rpg_vkr.domain.world import LOCATIONS
 from rpg_vkr.narrative.context import build_frame, visible_changes
 from rpg_vkr.narrative.ollama import OllamaClient
+from rpg_vkr.narrative.records import Narration
 
 
 def install_narrator_panels(window):
@@ -23,19 +26,23 @@ def install_narrator_panels(window):
     page = window._episode_page("Рассказчик")
     page.addWidget(
         plain_label(
-            "Автономная игра работает всегда. Локальный ИИ может дополнить подтверждённые "
-            "события художественным текстом. Предметы, мир и числа он пока не создаёт. "
+            "В локальном чате ИИ понимает обычную речь и отвечает художественным текстом. "
+            "Действия проверяет движок; предметы, мир и числа модель пока не создаёт. "
+            "Без модели доступны автономные команды и быстрые кнопки. "
             "Нужны отдельно установленные Ollama и локальная модель. Эта кнопка их не скачивает."
         )
     )
     window.enable_local_narrator = QCheckBox("Использовать локального ИИ-рассказчика")
     page.addWidget(window.enable_local_narrator)
+    window.ai_chat = QCheckBox("Понимать свободный текст через ИИ и отвечать в чате")
+    window.ai_chat.setChecked(True)
+    page.addWidget(window.ai_chat)
     window.local_model = QComboBox()
     window.local_model.setAccessibleName("Установленная локальная модель")
     page.addWidget(window.local_model)
     window.find_models_button = QPushButton("Найти установленные модели")
     page.addWidget(window.find_models_button)
-    window.auto_narration = QCheckBox("Дополнять новые игровые действия автоматически")
+    window.auto_narration = QCheckBox("Рассказ после быстрых кнопок (чат отвечает всегда)")
     window.auto_narration.setChecked(True)
     page.addWidget(window.auto_narration)
     window.narrate_button = QPushButton("Рассказать текущую сцену")
@@ -57,13 +64,16 @@ def install_narrator_panels(window):
     window._narrating_session = None
     window._narrating_index = None
     window._narrator_frame = None
+    window._chat_text = None
     window.find_models_button.clicked.connect(window.ollama.list_models)
     window.narrate_button.clicked.connect(lambda: request_narration(window))
     window.cancel_narration_button.clicked.connect(lambda: cancel_narration(window))
     window.enable_local_narrator.toggled.connect(lambda enabled: change_mode(window, enabled))
+    window.ai_chat.toggled.connect(lambda enabled: None if enabled else cancel_narration(window))
     window.local_model.currentIndexChanged.connect(lambda index: refresh_narrator_panels(window))
     window.ollama.models_ready.connect(lambda models: models_ready(window, models))
     window.ollama.narration_ready.connect(lambda note: accept_narration(window, note))
+    window.ollama.intent_ready.connect(lambda intent: accept_intent(window, intent))
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
     refresh_narrator_panels(window)
@@ -81,19 +91,27 @@ def change_mode(window, enabled):
 
 
 def cancel_narration(window):
+    if window._chat_text and not window.action_input.text():
+        window.action_input.setText(window._chat_text)
+    window._chat_text = None
     window._narrating_session = None
     window._narrating_index = None
     window._narrator_frame = None
     window.ollama.cancel()
+    window._render_journal()
     window.narrator_status.setText(
-        "Ожидание отменено. Игровые действия и броски сохранены в журнале."
+        "Ожидание отменено. Новое намерение не выполняется; уже выполненные действия сохранены."
     )
     refresh_narrator_panels(window)
 
 
 def failed(window, message):
+    if window._chat_text and not window.action_input.text():
+        window.action_input.setText(window._chat_text)
+    window._chat_text = None
     window._narrating_session = None
     window._narrator_frame = None
+    window._render_journal()
     window.narrator_status.setText(message)
     window.statusBar().showMessage(message, 10000)
     refresh_narrator_panels(window)
@@ -129,7 +147,90 @@ def request_narration(window):
     window.narrator_status.setText(
         "Локальная модель пишет рассказ. Можно отменить ожидание или продолжить играть."
     )
-    window.ollama.narrate(window._narrator_frame, window.local_model.currentText())
+    window._render_journal()
+    turn = window._session.turns[-1] if window._session.turns else None
+    actor = ""
+    if turn and turn.intent in CHAT_TARGETS:
+        state = window._session.combat.actor(CHAT_TARGETS[turn.intent])
+        if state.hp > 0 and state.disposition != "hostile" and turn.actor_id == state.id:
+            actor = ACTORS[state.id][0]
+    window.ollama.narrate(
+        window._narrator_frame,
+        window.local_model.currentText(),
+        player_message=turn.action if turn and turn.intent else "",
+        dialogue_actor=actor,
+    )
+
+
+def request_chat(window, text):
+    if not window.enable_local_narrator.isChecked() or not window.ai_chat.isChecked():
+        return False
+    if not window.local_model.currentText():
+        failed(window, "Для свободного чата найдите и выберите локальную модель в «Рассказчик».")
+        return True
+    cancel_narration(window)
+    window._chat_text = text
+    window._narrating_session = window._session
+    window._narrating_index = len(window._session.turns)
+    window.action_input.clear()
+    window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
+    window.statusBar().showMessage("ИИ понимает сообщение…")
+    window.ollama.interpret(build_frame(window._session), window.local_model.currentText(), text)
+    return True
+
+
+def accept_intent(window, intent):
+    if (
+        window._chat_text is None
+        or window._narrating_session is not window._session
+        or window._narrating_index != len(window._session.turns)
+        or not window.enable_local_narrator.isChecked()
+    ):
+        return
+    text, window._chat_text = window._chat_text, None
+    window._narrating_session = None
+    command = intent.command
+    if intent.kind == "dialogue":
+        command = next(key for key, target in CHAT_TARGETS.items() if target == intent.target)
+    elif intent.kind == "clarify":
+        command = "уточнить намерение"
+    target = ATTACK_COMMANDS.get(command) or ANGER_COMMANDS.get(command)
+    if (
+        target
+        and window._session.combat.actor(target).disposition == "neutral"
+        and ACTORS[target][1] == window._session.world.location
+    ):
+        if not window._confirm(
+            f"ИИ понял сообщение как «{command}». Это сделает персонажа враждебным. Продолжить?"
+        ):
+            window.action_input.setText(text)
+            window.narrator_status.setText("Действие отменено. Мир не изменён.")
+            return
+    try:
+        window._session.submit(text, intent=command)
+    except ValueError as error:
+        window.action_input.setText(text)
+        failed(window, str(error))
+        return
+    window.action_input.remember(text)
+    window._dirty = True
+    window._refresh_character()
+    window._render_journal()
+    if intent.kind == "clarify":
+        frame = build_frame(window._session)
+        window._narrating_session = window._session
+        window._narrating_index = len(window._session.turns)
+        accept_narration(
+            window,
+            Narration(
+                len(window._session.turns),
+                window.local_model.currentText(),
+                intent.question,
+                frame.fingerprint,
+            ),
+        )
+    else:
+        request_narration(window)
 
 
 def accept_narration(window, note):
@@ -160,7 +261,7 @@ def after_action(window, turn):
     if (
         window.enable_local_narrator.isChecked()
         and window.auto_narration.isChecked()
-        and (turn.combat or turn.speaker in {"Мир", "Рассказчик"})
+        and (turn.combat or turn.speaker in {"Мир", "Рассказчик"} or turn.actor_id is not None)
         and not turn.text.startswith("Я пока не понимаю")
         and turn.action.casefold() != "помощь"
     ):
@@ -186,6 +287,7 @@ def refresh_narrator_panels(window):
     window.find_models_button.setEnabled(not busy)
     window.local_model.setEnabled(enabled and not busy)
     window.auto_narration.setEnabled(enabled)
+    window.ai_chat.setEnabled(enabled)
     window.narrate_button.setEnabled(
         enabled
         and not busy

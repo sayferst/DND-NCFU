@@ -25,7 +25,7 @@ from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
 from rpg_vkr.ui.creation_dialog import CreationDialog
 from rpg_vkr.ui.episode_panels import EpisodePanels
-from rpg_vkr.ui.narrator_panel import after_action
+from rpg_vkr.ui.narrator_panel import after_action, request_chat
 from rpg_vkr.ui.resolution_panel import install_resolution_panel
 from rpg_vkr.ui.role_journal import RoleJournal
 from rpg_vkr.ui.workspace_panel import WorkspaceActions
@@ -258,7 +258,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def _run_command(self, command: str) -> None:
         draft = self.action_input.text()
         self.action_input.setText(command)
-        self.submit_action()
+        self.submit_action(use_ai=False)
         self.action_input.setText(draft)
 
     def new_character(self) -> None:
@@ -309,18 +309,42 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
 
     def _render_journal(self) -> None:
         self.journal.clear()
-        self.journal.append_message("narrator", "Рассказчик", self._session.introduction)
         notes = {note.turn_index: note for note in self._session.narrations}
         if 0 in notes:
             self._append_narration(notes[0])
+        else:
+            self.journal.append_message("narrator", "Рассказчик", self._session.introduction)
         for index, turn in enumerate(self._session.turns, 1):
-            self.journal.append_turn(turn)
             if index in notes:
+                self.journal.append_message("player", "Вы", turn.action, blank_before=True)
                 self._append_narration(notes[index])
+            elif (
+                turn.intent
+                and self._narrating_session is self._session
+                and self._narrating_index == index
+                and self._chat_text is None
+            ):
+                self.journal.append_message("player", "Вы", turn.action, blank_before=True)
+                self.journal.append_message("system", "ИИ", "Описывает результат…")
+            else:
+                self.journal.append_turn(turn)
         self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
 
     def _append_narration(self, note) -> None:
+        if note.turn_index:
+            from rpg_vkr.commands import CHAT_TARGETS
+
+            turn = self._session.turns[note.turn_index - 1]
+            if (
+                turn.intent in CHAT_TARGETS
+                and turn.actor_id
+                and "мирное взаимодействие недоступно" not in turn.text
+            ):
+                self.journal.append_message(
+                    "npc", turn.speaker + " · ИИ", note.text, actor_id=turn.actor_id
+                )
+                return
         self.journal.append_message("narrator", "ИИ-рассказчик · " + note.model, note.text)
 
     def _refresh_slots(self) -> None:
@@ -404,9 +428,11 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.ollama.cancel()
         event.accept()
 
-    def submit_action(self) -> None:
+    def submit_action(self, *, use_ai=True) -> None:
         action = self.action_input.text().strip()
         if not action:
+            return
+        if use_ai and request_chat(self, action):
             return
 
         try:

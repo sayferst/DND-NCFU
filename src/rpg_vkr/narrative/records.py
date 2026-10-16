@@ -3,7 +3,8 @@
 import re
 from dataclasses import asdict, dataclass
 
-PROMPT_VERSION = "narrator-prose-1"
+PROMPT_VERSION = "narrator-prose-2"
+SUPPORTED_PROMPTS = {"narrator-prose-1", PROMPT_VERSION}
 
 
 @dataclass(frozen=True)
@@ -31,7 +32,7 @@ class Narration:
         if (
             not isinstance(self.context_hash, str)
             or not re.fullmatch(r"[0-9a-f]{64}", self.context_hash)
-            or self.prompt_version != PROMPT_VERSION
+            or self.prompt_version not in SUPPORTED_PROMPTS
         ):
             raise ValueError("Invalid narration provenance")
 

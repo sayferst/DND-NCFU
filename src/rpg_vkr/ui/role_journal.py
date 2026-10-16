@@ -107,7 +107,10 @@ class RoleJournal(QPlainTextEdit):
             role = "narrator"
         else:
             role = "system"
-        if turn.speaker == "Мир" and normalise_action(turn.action) in OBSERVE_COMMANDS:
+        if (
+            turn.speaker == "Мир"
+            and normalise_action(turn.intent or turn.action) in OBSERVE_COMMANDS
+        ):
             # Only engine-authored observation rows carry these identities. Player text
             # is always inserted above with role=player, never inspected for identities.
             for line in turn.text.splitlines():

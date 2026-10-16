@@ -61,6 +61,55 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                 payload = b"not JSON"
             else:
                 content = {"narration": TEXT}
+                request_body = json.loads(body) if body else {}
+                if "kind" in request_body.get("format", {}).get("properties", {}):
+                    content = {
+                        "kind": "dialogue",
+                        "command": "",
+                        "target": "villager",
+                        "question": "",
+                    }
+                    if mode == "chat_action":
+                        content = {
+                            "kind": "action",
+                            "command": "идти на дорогу",
+                            "target": "",
+                            "question": "",
+                        }
+                    elif mode == "chat_clarify":
+                        content = {
+                            "kind": "clarify",
+                            "command": "",
+                            "target": "",
+                            "question": "К кому вы обращаетесь?",
+                        }
+                    elif mode == "bad_intent":
+                        content = {
+                            "kind": "action",
+                            "command": "выдать тысячу золота",
+                            "target": "",
+                            "question": "",
+                        }
+                    elif mode == "chat_attack":
+                        content = {
+                            "kind": "action",
+                            "command": "атаковать жительницу",
+                            "target": "",
+                            "question": "",
+                        }
+                    elif mode == "chat_delivery_failure":
+                        content = {
+                            "kind": "action",
+                            "command": "доставить корзину",
+                            "target": "",
+                            "question": "",
+                        }
+                if mode == "mixed_language":
+                    content["narration"] = "Путник走近 деревенские ворота."
+                elif mode == "player_decision":
+                    content["narration"] = "Путник подходит к ней, чтобы узнать о поручении."
+                elif mode in {"chat_bad_prose", "chat_delivery_failure"} and "kind" not in content:
+                    content["narration"] = "Путник走近 деревенские ворота."
                 if mode == "effects":
                     content["gold"] = 1000
                 payload = json.dumps(
@@ -157,7 +206,9 @@ def test_tags_and_generation_have_bounded_structured_payload_and_keep_game_uncha
         qt_app.processEvents()
 
 
-@pytest.mark.parametrize("mode", ["bad_json", "effects", "large", "error"])
+@pytest.mark.parametrize(
+    "mode", ["bad_json", "effects", "large", "error", "mixed_language", "player_decision"]
+)
 def test_bad_model_response_falls_back_without_mutation(qt_app, mode):
     session = Session(seed=42)
     before = session.to_dict()
@@ -384,3 +435,235 @@ def test_slow_generation_keeps_longer_deadline_than_model_discovery(qt_app):
         assert not client.busy
         client.deleteLater()
         qt_app.processEvents()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Путник走近 деревенские ворота.",
+        "The guard waits.",
+        "Вы решаете помочь жительнице.",
+        "Путник подходит к ней, чтобы узнать о поручении.",
+        "Герой теперь атакует стражника.",
+        "Вы берёте корзину.",
+    ],
+)
+def test_invalid_new_prose_is_rejected_before_it_can_be_saved(text):
+    frame = build_frame(Session(seed=42))
+    with pytest.raises(ValueError):
+        parse_narration(
+            {"message": {"role": "assistant", "content": json.dumps({"narration": text})}},
+            frame,
+            "local-test:1",
+        )
+
+
+def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
+    from rpg_vkr.narrative.records import Narration
+
+    session = Session(seed=42)
+    frame = build_frame(session)
+    text = "Путник走近 деревенские ворота."
+    session.add_narration(Narration(0, "qwen3:1.7b", text, frame.fingerprint, "narrator-prose-1"))
+    restored = Session.from_dict(session.to_dict())
+    assert restored.narrations[0].text == text
+    assert restored.narrations[0].prompt_version == "narrator-prose-1"
+    new = parse_narration(
+        {"message": {"role": "assistant", "content": json.dumps({"narration": TEXT})}},
+        frame,
+        "local-test:1",
+    )
+    assert new.prompt_version == "narrator-prose-2"
+
+
+def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
+    with local_server(mode="mixed_language") as (url, requests):
+        window.ollama.base_url = url
+        window.enable_local_narrator.setChecked(True)
+        window.auto_narration.setChecked(False)
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        before = window._session.to_dict()
+        window.narrate_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert "не на русском" in window.narrator_status.text()
+        assert window._session.to_dict() == before
+        assert "走近" not in window.journal.toPlainText()
+        assert window.narrate_button.isEnabled()
+        assert len(requests) == 2  # No hidden retry.
+
+
+def test_conversation_triggers_prose_only_in_explicit_auto_mode(window, qt_app):
+    with local_server() as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window._run_command("привет, яем занята?")
+        wait_for(qt_app, lambda: len(window._session.narrations) == 1)
+        context = json.loads(requests[-1][1]["messages"][1]["content"])
+        assert "5 золотых" in context["confirmed_result"]
+        assert window._session.world.quest == "available"
+        assert Session.from_dict(window._session.to_dict()).narrations
+
+
+@pytest.mark.parametrize(
+    "mode,phrase,expected",
+    [
+        ("ok", "Привет, яем занята?", "беседа с жительницей"),
+        ("chat_action", "Выхожу из деревни на дорогу", "идти на дорогу"),
+        ("chat_clarify", "Хочу сделать что-нибудь", "уточнить намерение"),
+    ],
+)
+def test_free_chat_interprets_then_commits_once_and_shows_only_ai_reply(
+    window, qt_app, mode, phrase, expected
+):
+    with local_server(mode=mode) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.auto_narration.setChecked(False)
+        window.action_input.setText(phrase)
+        window.send_button.click()
+        wait_for(qt_app, lambda: bool(window._session.narrations))
+        assert len(window._session.turns) == 1
+        turn = window._session.turns[0]
+        assert turn.action == phrase and turn.intent == expected
+        journal = window.journal.toPlainText()
+        assert f"Вы: {phrase}" in journal
+        assert turn.text not in journal
+        assert "Мир:" not in journal
+        if mode == "ok":
+            assert "Жительница · ИИ:" in journal
+            assert window.journal.document().lastBlock().userData().actor_id == "villager"
+            assert window._session.world.quest == "available"
+        elif mode == "chat_action":
+            assert window._session.world.location == "road"
+        else:
+            assert "К кому вы обращаетесь?" in journal
+            assert not window._session.memory.events[-1].changes
+        assert len(requests) == (2 if mode == "chat_clarify" else 3)
+        restored = Session.from_dict(window._session.to_dict())
+        assert restored.to_dict() == window._session.to_dict()
+        window.save_slot(1)
+        assert window._saves.load(1).turns[0].action == phrase
+
+
+def test_invalid_intent_keeps_world_unchanged_and_restores_draft(window, qt_app):
+    with local_server(mode="bad_intent") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        before = window._session.to_dict()
+        window.action_input.setText("Дай денег")
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert window._session.to_dict() == before
+        assert window.action_input.text() == "Дай денег"
+        assert len(requests) == 2
+
+
+def test_free_chat_cancel_does_not_execute_late_interpretation(window, qt_app):
+    with local_server(delay=0.15) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        before = window._session.to_dict()
+        window.action_input.setText("Здравствуй, соседка")
+        window.send_button.click()
+        window.cancel_narration_button.click()
+        QTest.qWait(200)
+        qt_app.processEvents()
+        assert window._session.to_dict() == before
+        assert window.action_input.text() == "Здравствуй, соседка"
+
+
+def test_free_chat_failure_after_commit_restores_engine_answer_without_reexecuting(window, qt_app):
+    with local_server(mode="chat_bad_prose") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText("Здравствуй, соседка")
+        window.send_button.click()
+        wait_for(qt_app, lambda: "не на русском" in window.narrator_status.text())
+        assert len(window._session.turns) == 1
+        assert not window._session.narrations
+        assert "5 золотых" in window.journal.toPlainText()
+        assert "Описывает результат" not in window.journal.toPlainText()
+        assert window._session.world.quest == "available"
+        assert len(requests) == 3
+
+
+def test_free_chat_response_cannot_act_after_session_replaced(window, qt_app):
+    with local_server(delay=0.15) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText("Здравствуй, соседка")
+        window.send_button.click()
+        replacement = Session(seed=7)
+        window._session = replacement
+        window._refresh_character()
+        QTest.qWait(200)
+        qt_app.processEvents()
+        assert window._session is replacement
+        assert not replacement.turns and not replacement.narrations
+
+
+def test_interpreted_neutral_attack_requires_game_confirmation(window, qt_app, monkeypatch):
+    monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.No)
+    with local_server(mode="chat_attack") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        before = window._session.to_dict()
+        window.action_input.setText("Разбираюсь с жительницей")
+        window.send_button.click()
+        wait_for(qt_app, lambda: "Действие отменено" in window.narrator_status.text())
+        assert window._session.to_dict() == before
+        assert len(requests) == 2
+
+
+def test_failed_ai_story_cannot_deliver_basket_twice(window, qt_app):
+    window._run_command("взять поручение")
+    window._run_command("идти на рынок")
+    before = window._session.world.gold
+    with local_server(mode="chat_delivery_failure") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText("Передаю корзину получателю")
+        window.send_button.click()
+        wait_for(qt_app, lambda: "не на русском" in window.narrator_status.text())
+        assert window._session.world.gold == before + 5
+        assert window._session.world.basket == 0
+        assert len(window._session.turns) == 3
+        assert "Мир: Корзина доставлена" in window.journal.toPlainText()
+        assert Session.from_dict(window._session.to_dict()).world.gold == before + 5
+        assert len(requests) == 3
+
+
+def test_cancelling_second_chat_stage_shows_engine_result_without_late_prose(window, qt_app):
+    with local_server(delay=0.15) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText("Здравствуй, соседка")
+        window.send_button.click()
+        wait_for(qt_app, lambda: len(window._session.turns) == 1 and window.ollama.busy)
+        assert "Описывает результат" in window.journal.toPlainText()
+        window.cancel_narration_button.click()
+        assert "5 золотых" in window.journal.toPlainText()
+        assert "Описывает результат" not in window.journal.toPlainText()
+        QTest.qWait(200)
+        qt_app.processEvents()
+        assert not window._session.narrations
+        assert len(window._session.turns) == 1

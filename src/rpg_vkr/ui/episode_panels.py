@@ -436,7 +436,7 @@ class EpisodePanels:
             (
                 turn.text
                 for turn in reversed(self._session.turns)
-                if turn.action.casefold().strip()
+                if (turn.intent or turn.action).casefold().strip()
                 in (
                     "поговорить",
                     "поговорить со стражником",
@@ -488,7 +488,7 @@ class EpisodePanels:
             (
                 turn.text
                 for turn in reversed(self._session.turns)
-                if turn.action.casefold().strip()
+                if (turn.intent or turn.action).casefold().strip()
                 in ("подойти к торговцу", "торговля", "купить бинт", "продать бинт")
             ),
             "",
