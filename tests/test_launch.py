@@ -25,6 +25,8 @@ def interact():
         window = windows[0]
         assert window.isVisible()
         if sys.argv[2] == 'save':
+            window.font_size.setValue(16)
+            window.theme_choice.setCurrentText('Тёмная')
             window.action_input.setText('помочь')
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             window.action_input.setText('бросить d20')
@@ -38,6 +40,9 @@ def interact():
                 QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             window.save_slot(1)
         else:
+            assert window.font_size.value() == 16
+            assert window.journal.font().pointSize() == 16
+            assert window.theme_choice.currentText() == 'Тёмная'
             window.load_slot(1)
             assert 'Жительница благодарит' in window.journal.toPlainText()
             assert 'Кубик: d20 → ' in window.journal.toPlainText()

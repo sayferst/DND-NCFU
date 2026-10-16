@@ -235,6 +235,10 @@ def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
     window.new_character()
     assert window._session.character.name == "Другой герой"
     assert not window._session.turns
+    assert "Без ячейки" in window.session_status.text()
+    assert all("активная" not in label.text() for label in window.slot_labels.values())
+    QTest.keyClick(window.action_input, Qt.Key.Key_Up)
+    assert not window.action_input.text()
     assert window._session.world.gold == 10
     assert window._session.world.quest == "available"
     assert (window._saves.directory / "slot-1.json").read_bytes() == original

@@ -8,7 +8,6 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QLabel,
-    QLineEdit,
     QMainWindow,
     QMessageBox,
     QPlainTextEdit,
@@ -24,9 +23,11 @@ from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 from rpg_vkr.domain.world import LOCATIONS, inventory_text, quest_text
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
+from rpg_vkr.ui.workspace_panel import WorkspaceActions
+from rpg_vkr.ui.workspace_tools import HistoryLineEdit
 
 
-class MainWindow(QMainWindow):
+class MainWindow(WorkspaceActions, QMainWindow):
     def __init__(self, session: Session | None = None, saves: SaveSlots | None = None) -> None:
         super().__init__()
         self._session = Session() if session is None else session
@@ -69,7 +70,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(adventure, "Приключение")
         profile = QWidget()
         profile_layout = QVBoxLayout(profile)
-        self.tabs.addTab(profile, "Персонаж и инвентарь")
+        self.tabs.addTab(profile, "Герой")
         layout.addWidget(self.tabs, stretch=1)
 
         self.character_group = QGroupBox()
@@ -137,7 +138,7 @@ class MainWindow(QMainWindow):
         action_label = QLabel("Ваше действие:")
         play_layout.addWidget(action_label)
         input_row = QHBoxLayout()
-        self.action_input = QLineEdit()
+        self.action_input = HistoryLineEdit()
         self.action_input.setAccessibleName("Ваше действие")
         self.action_input.setPlaceholderText("Например: проверить силу")
         self.action_input.setMaxLength(500)
@@ -174,14 +175,14 @@ class MainWindow(QMainWindow):
                 buttons[slot] = button
                 slots_layout.addWidget(button, slot - 1, column)
         slots_layout.setColumnStretch(0, 1)
-        layout.addWidget(slots_group)
 
         note = QLabel(f"Сохранения: {self._saves.directory}")
         note.setTextFormat(Qt.TextFormat.PlainText)
         note.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         note.setWordWrap(True)
-        layout.addWidget(note)
 
+        self._build_workspace(play_layout, slots_group, note)
+        self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(bool(text.strip()))
         )
@@ -193,6 +194,7 @@ class MainWindow(QMainWindow):
         self._refresh_slots()
 
     def _refresh_character(self) -> None:
+        self._refresh_workspace()
         character = self._session.character
         world = self._session.world
         self.character_group.setTitle(f"Персонаж: {character.name} · песочница")
@@ -229,6 +231,8 @@ class MainWindow(QMainWindow):
         self.action_input.clear()
         self._refresh_character()
         self._render_journal()
+        self._rebuild_history()
+        self._refresh_slots()
         self.tabs.setCurrentIndex(0)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
 
@@ -267,9 +271,11 @@ class MainWindow(QMainWindow):
         self.journal.ensureCursorVisible()
 
     def _refresh_slots(self) -> None:
+        self._refresh_workspace()
         for slot in (1, 2, 3):
             info = self._saves.info(slot)
-            self.slot_labels[slot].setText(f"Ячейка {slot} — {info.description}")
+            active = " · активная" if slot == self._current_slot else ""
+            self.slot_labels[slot].setText(f"Ячейка {slot}{active} — {info.description}")
             self.load_buttons[slot].setEnabled(info.occupied)
             self.delete_buttons[slot].setEnabled(info.occupied)
 
@@ -314,6 +320,7 @@ class MainWindow(QMainWindow):
         self.action_input.clear()
         self._refresh_character()
         self._render_journal()
+        self._rebuild_history()
         self._refresh_slots()
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self.statusBar().showMessage(f"Загружена ячейка {slot}.", 6000)
@@ -357,6 +364,7 @@ class MainWindow(QMainWindow):
         self.journal.appendPlainText("\nВы: " + action)
         self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
         self._dirty = True
+        self.action_input.remember(action)
         self._refresh_character()
         self.action_input.clear()
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
