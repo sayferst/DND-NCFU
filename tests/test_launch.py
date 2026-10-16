@@ -31,17 +31,25 @@ def interact():
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             window.action_input.setText('проверить силу')
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+            for command in ['взять поручение', 'идти на дорогу', 'исследовать дорогу',
+                            'идти на рынок', 'доставить корзину', 'купить бинт',
+                            'использовать бинт']:
+                window.action_input.setText(command)
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             window.save_slot(1)
         else:
             window.load_slot(1)
             assert 'Жительница благодарит' in window.journal.toPlainText()
             assert 'Кубик: d20 → ' in window.journal.toPlainText()
-            assert len(window._session.turns) == 3
-            assert window._session.turns[-1].check is not None
+            assert len(window._session.turns) == 10
+            assert window._session.world.quest == 'completed'
+            assert window._session.world.hp == 12
+            assert window._session.world.gold in (12, 14)
+            assert window._session.world.shop_stock == 2
             assert 'Сила: 14 (+2)' == window.ability_labels['strength'].text()
             window.action_input.setText('бросить d20')
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
-            assert window._session.turns[-1].roll.index == 3
+            assert window._session.turns[-1].roll.index == 4
             window.save_slot(2)
         print('Launcher interaction verified', flush=True)
         window.close()

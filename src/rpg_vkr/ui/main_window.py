@@ -1,7 +1,9 @@
 """The first window: a plain-text journal, an action field and an offline reply."""
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QTextCursor
 from PySide6.QtWidgets import (
+    QDialog,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
@@ -11,6 +13,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -18,7 +21,9 @@ from PySide6.QtWidgets import (
 from rpg_vkr.application import Session
 from rpg_vkr.attribution import SRD_ATTRIBUTION
 from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
+from rpg_vkr.domain.world import LOCATIONS, inventory_text, quest_text
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
+from rpg_vkr.ui.character_dialog import CharacterDialog
 
 
 class MainWindow(QMainWindow):
@@ -41,6 +46,7 @@ class MainWindow(QMainWindow):
         layout.setSpacing(12)
 
         title = QLabel("У ворот деревни")
+        self.scene_title = title
         title_font = title.font()
         title_font.setPointSize(20)
         title_font.setBold(True)
@@ -51,6 +57,21 @@ class MainWindow(QMainWindow):
         mode.setWordWrap(True)
         layout.addWidget(mode)
 
+        self.resource_label = QLabel()
+        self.resource_label.setWordWrap(True)
+        self.resource_label.setTextFormat(Qt.TextFormat.PlainText)
+        layout.addWidget(self.resource_label)
+
+        self.tabs = QTabWidget()
+        adventure = QWidget()
+        play_layout = QVBoxLayout(adventure)
+        play_layout.setContentsMargins(0, 8, 0, 0)
+        self.tabs.addTab(adventure, "Приключение")
+        profile = QWidget()
+        profile_layout = QVBoxLayout(profile)
+        self.tabs.addTab(profile, "Персонаж и инвентарь")
+        layout.addWidget(self.tabs, stretch=1)
+
         self.character_group = QGroupBox()
         character_layout = QGridLayout(self.character_group)
         self.ability_labels: dict[str, QLabel] = {}
@@ -58,24 +79,63 @@ class MainWindow(QMainWindow):
             label = QLabel()
             self.ability_labels[ability] = label
             character_layout.addWidget(label, index // 3, index % 3)
+        profile_layout.addWidget(self.character_group)
+        self.inventory_label = QLabel()
+        self.inventory_label.setWordWrap(True)
+        profile_layout.addWidget(self.inventory_label)
+        self.quest_label = QLabel()
+        self.quest_label.setWordWrap(True)
+        profile_layout.addWidget(self.quest_label)
+        controls = QHBoxLayout()
+        self.new_character_button = QPushButton("Новый герой")
+        self.edit_character_button = QPushButton("Редактировать героя")
+        controls.addWidget(self.new_character_button)
+        controls.addWidget(self.edit_character_button)
+        profile_layout.addLayout(controls)
+        note = QLabel(
+            "Параметры эпизода — homebrew: 12 ОЗ, 10 золотых и 1 бинт в начале. "
+            "Изменение характеристик не восполняет здоровье и не выдаёт ресурсы."
+        )
+        note.setWordWrap(True)
+        profile_layout.addWidget(note)
+        profile_layout.addStretch()
         self._refresh_character()
-        layout.addWidget(self.character_group)
 
         self.journal = QPlainTextEdit()
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
         self._render_journal()
-        layout.addWidget(self.journal, stretch=1)
+        play_layout.addWidget(self.journal, stretch=1)
+
+        quick = QGridLayout()
+        self.quick_buttons: dict[str, QPushButton] = {}
+        for index, (label, command) in enumerate(
+            [
+                ("Поручение", "взять поручение"),
+                ("Дорога", "идти на дорогу"),
+                ("Исследовать", "исследовать дорогу"),
+                ("Рынок", "идти на рынок"),
+                ("Доставить", "доставить корзину"),
+                ("Лавка", "торговля"),
+                ("Купить бинт", "купить бинт"),
+                ("Использовать бинт", "использовать бинт"),
+            ]
+        ):
+            button = QPushButton(label)
+            button.setToolTip(command)
+            button.clicked.connect(lambda checked=False, c=command: self._run_command(c))
+            self.quick_buttons[command] = button
+            quick.addWidget(button, index // 4, index % 4)
+        play_layout.addLayout(quick)
 
         hint = QLabel(
-            "Попробуйте: осмотреться · поговорить · помочь · бросить d20 · проверить силу. "
-            "Подсказка: помощь."
+            "Эпизод «Доставка на рынок». Можно вводить действия текстом. Подсказка: помощь."
         )
         hint.setWordWrap(True)
-        layout.addWidget(hint)
+        play_layout.addWidget(hint)
 
         action_label = QLabel("Ваше действие:")
-        layout.addWidget(action_label)
+        play_layout.addWidget(action_label)
         input_row = QHBoxLayout()
         self.action_input = QLineEdit()
         self.action_input.setAccessibleName("Ваше действие")
@@ -87,7 +147,7 @@ class MainWindow(QMainWindow):
         self.send_button = QPushButton("Отправить")
         self.send_button.setEnabled(False)
         input_row.addWidget(self.send_button)
-        layout.addLayout(input_row)
+        play_layout.addLayout(input_row)
 
         slots_group = QGroupBox("Сохранения · 3 ячейки")
         slots_layout = QGridLayout(slots_group)
@@ -127,15 +187,64 @@ class MainWindow(QMainWindow):
         )
         self.action_input.returnPressed.connect(self.submit_action)
         self.send_button.clicked.connect(self.submit_action)
+        self.new_character_button.clicked.connect(self.new_character)
+        self.edit_character_button.clicked.connect(self.edit_character)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self._refresh_slots()
 
     def _refresh_character(self) -> None:
         character = self._session.character
-        self.character_group.setTitle(f"Персонаж: {character.name} · учебный профиль")
+        world = self._session.world
+        self.character_group.setTitle(f"Персонаж: {character.name} · песочница")
+        self.scene_title.setText(LOCATIONS[world.location])
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {LOCATIONS[world.location]}"
+        )
+        self.inventory_label.setText("Инвентарь: " + inventory_text(world))
+        self.quest_label.setText("Задание: " + quest_text(world))
         for ability, label in self.ability_labels.items():
             score = character.score(ability)
             label.setText(f"{ABILITY_NAMES[ability]}: {score} ({ability_modifier(score):+d})")
+
+    def _run_command(self, command: str) -> None:
+        draft = self.action_input.text()
+        self.action_input.setText(command)
+        self.submit_action()
+        self.action_input.setText(draft)
+
+    def new_character(self) -> None:
+        from rpg_vkr.domain.character import Character
+
+        dialog = CharacterDialog(Character(), self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        if (self._dirty or self.action_input.text().strip()) and not self._confirm(
+            "Начать новую сессию? Несохранённая текущая сессия будет потеряна. Ячейки останутся."
+        ):
+            return
+        self._session = Session(character=dialog.character())
+        self._dirty = True
+        self._current_slot = None
+        self.action_input.clear()
+        self._refresh_character()
+        self._render_journal()
+        self.tabs.setCurrentIndex(0)
+        self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
+
+    def edit_character(self) -> None:
+        dialog = CharacterDialog(self._session.character, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        try:
+            changed = self._session.edit_character(dialog.character())
+        except ValueError as error:
+            QMessageBox.warning(self, "Профиль не изменён", str(error))
+            return
+        if changed:
+            self._dirty = True
+            self._refresh_character()
+            self._render_journal()
 
     def _show_about(self) -> None:
         QMessageBox.information(
@@ -145,7 +254,8 @@ class MainWindow(QMainWindow):
             + SRD_ATTRIBUTION
             + "\n\nАдаптация: вычислительная реализация модификаторов и базовых проверок "
             "характеристик, русский интерфейс. Сюжет и учебный профиль — авторские. "
-            "Это ограниченное подмножество правил, без владения навыками и боёв.",
+            "Это ограниченное подмножество правил, без владения навыками и боёв. "
+            "Редактор — свободная песочница. Поручение, цены, здоровье и бинты — homebrew.",
         )
 
     def _render_journal(self) -> None:
@@ -153,6 +263,7 @@ class MainWindow(QMainWindow):
         for turn in self._session.turns:
             self.journal.appendPlainText("\nВы: " + turn.action)
             self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
+        self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
 
     def _refresh_slots(self) -> None:
@@ -246,6 +357,8 @@ class MainWindow(QMainWindow):
         self.journal.appendPlainText("\nВы: " + action)
         self.journal.appendPlainText(f"{turn.speaker}: {turn.text}")
         self._dirty = True
+        self._refresh_character()
         self.action_input.clear()
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
+        self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()

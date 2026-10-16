@@ -22,3 +22,11 @@ class DiceRoller:
     def roll_d20(self) -> D20Roll:
         self._count += 1
         return D20Roll(index=self._count, value=self._random.randint(1, 20))
+
+    def checkpoint(self) -> tuple:
+        return self._random.getstate(), self._count
+
+    def restore(self, checkpoint: tuple) -> None:
+        state, count = checkpoint
+        self._random.setstate(state)
+        self._count = count

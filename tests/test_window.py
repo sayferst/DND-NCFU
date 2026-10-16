@@ -170,3 +170,112 @@ def test_about_includes_required_srd_attribution(window, monkeypatch):
     monkeypatch.setattr(QMessageBox, "information", lambda *args: messages.append(args[2]))
     window._show_about()
     assert SRD_ATTRIBUTION in messages[0]
+
+
+def test_quick_actions_update_world_and_preserve_typed_draft(window):
+    window.action_input.setText("мой черновик")
+    for command in [
+        "взять поручение",
+        "идти на дорогу",
+        "исследовать дорогу",
+        "идти на рынок",
+        "доставить корзину",
+        "купить бинт",
+        "использовать бинт",
+    ]:
+        QTest.mouseClick(window.quick_buttons[command], Qt.MouseButton.LeftButton)
+    assert window.action_input.text() == "мой черновик"
+    assert window._session.world.gold == 12
+    assert window._session.world.hp == 12
+    assert "золото 12" in window.resource_label.text()
+    assert "Бинт ×1" in window.inventory_label.text()
+    assert "завершено" in window.quest_label.text()
+    assert window.scene_title.text() == "Рынок"
+
+
+def test_editor_changes_profile_without_refilling_resources(window, monkeypatch):
+    from PySide6.QtWidgets import QDialog
+
+    from rpg_vkr.ui.character_dialog import CharacterDialog
+
+    window._run_command("идти на дорогу")
+    window._run_command("исследовать дорогу")
+    previous = window._session.world
+
+    def apply(dialog):
+        dialog.name_input.setText("Мира")
+        dialog.scores["strength"].setValue(18)
+        return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(CharacterDialog, "exec", apply)
+    window.tabs.setCurrentIndex(1)
+    QTest.mouseClick(window.edit_character_button, Qt.MouseButton.LeftButton)
+    assert window._session.character.name == "Мира"
+    assert window._session.world == previous
+    assert "Сила: 18 (+4)" == window.ability_labels["strength"].text()
+    assert "Профиль изменён" in window.journal.toPlainText()
+
+
+def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
+    from PySide6.QtWidgets import QDialog
+
+    from rpg_vkr.ui.character_dialog import CharacterDialog
+
+    window._run_command("взять поручение")
+    window.save_slot(1)
+    original = (window._saves.directory / "slot-1.json").read_bytes()
+    window._run_command("идти на рынок")
+
+    def apply(dialog):
+        dialog.name_input.setText("Другой герой")
+        return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(CharacterDialog, "exec", apply)
+    monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.Yes)
+    window.new_character()
+    assert window._session.character.name == "Другой герой"
+    assert not window._session.turns
+    assert window._session.world.gold == 10
+    assert window._session.world.quest == "available"
+    assert (window._saves.directory / "slot-1.json").read_bytes() == original
+
+
+def test_cancel_new_hero_keeps_existing_session(window, monkeypatch):
+    from PySide6.QtWidgets import QDialog
+
+    from rpg_vkr.ui.character_dialog import CharacterDialog
+
+    window._run_command("взять поручение")
+    previous = window._session.to_dict()
+    monkeypatch.setattr(CharacterDialog, "exec", lambda *args: QDialog.DialogCode.Accepted)
+    monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.No)
+    window.new_character()
+    assert window._session.to_dict() == previous
+
+
+def test_world_labels_restore_on_load(window, monkeypatch):
+    monkeypatch.setattr(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.Yes)
+    window._run_command("взять поручение")
+    window._run_command("идти на дорогу")
+    window._run_command("исследовать дорогу")
+    window.save_slot(1)
+    saved_journal = window.journal.toPlainText()
+    window._run_command("идти на рынок")
+    window._run_command("доставить корзину")
+    window.load_slot(1)
+    assert window._session.world.hp == 9
+    assert window._session.world.basket == 1
+    assert "здоровье 9/12" in window.resource_label.text()
+    assert "Корзина поручения" in window.inventory_label.text()
+    assert window.scene_title.text() == "Дорога у деревни"
+    assert window.journal.toPlainText() == saved_journal
+
+
+def test_long_journal_keeps_latest_message_visible(window, qt_app):
+    for _ in range(30):
+        window._run_command("идти на рынок")
+    qt_app.processEvents()
+    scrollbar = window.journal.verticalScrollBar()
+    assert scrollbar.maximum() > 0
+    assert scrollbar.value() >= scrollbar.maximum() - 1
+    assert window.journal.cursorRect().bottom() <= window.journal.viewport().height()
