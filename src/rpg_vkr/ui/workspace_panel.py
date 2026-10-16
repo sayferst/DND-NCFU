@@ -43,15 +43,11 @@ class WorkspaceActions:
         inventory_layout.addWidget(self.inventory_label)
         note = QLabel(
             "Бинт восстанавливает до 4 ОЗ. Корзина относится к поручению и сдаётся на рынке. "
-            "Предметы и цены этого эпизода — авторские (homebrew)."
+            "В инвентаре только ваши вещи. Для торговли найдите торговца."
         )
         note.setWordWrap(True)
         inventory_layout.addWidget(note)
-        for text, command in (
-            ("Использовать бинт", "использовать бинт"),
-            ("Купить бинт · 3 золотых", "купить бинт"),
-            ("Продать бинт · 1 золотой", "продать бинт"),
-        ):
+        for text, command in (("Использовать бинт", "использовать бинт"),):
             button = QPushButton(text)
             button.clicked.connect(lambda checked=False, c=command: self._run_command(c))
             inventory_layout.addWidget(button)
@@ -282,6 +278,8 @@ class WorkspaceActions:
         font = QFont(self._base_font)
         font.setPointSize(preferences.font_size)
         self.journal.setFont(font)
+        if hasattr(self, "roll_history"):
+            self.roll_history.setFont(font)
         palette = QPalette(self._system_palette)
         if preferences.theme != "Системная":
             dark = preferences.theme == "Тёмная"

@@ -35,7 +35,7 @@ def test_explicit_save_migrates_v1_and_can_be_loaded_again(tmp_path):
     session = store.load(1)
     previous = session.turns
     store.save(1, session)
-    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 3
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 4
     reloaded = SaveSlots(tmp_path).load(1)
     assert reloaded.turns == previous
     assert reloaded.character == Character()
@@ -85,7 +85,7 @@ def test_v2_migration_preserves_profile_history_and_random_sequence(tmp_path):
     assert session.world.gold == 12
     assert path.read_bytes() == original
     store.save(2, session)
-    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 3
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 4
     assert store.load(2).to_dict() == session.to_dict()
 
 
@@ -98,10 +98,31 @@ def test_v3_world_and_profile_edits_survive_reopening(tmp_path):
     store.save(1, session)
     restored = SaveSlots(tmp_path).load(1)
     assert restored.to_dict() == session.to_dict()
-    for command in ["доставить корзину", "купить бинт", "использовать бинт"]:
+    for command in ["доставить корзину", "подойти к торговцу", "купить бинт", "использовать бинт"]:
         restored.submit(command)
         session.submit(command)
     assert restored.world == session.world
     assert restored.world.gold == 12
     assert restored.world.hp == 12
     assert restored.submit("бросить d20") == session.submit("бросить d20")
+
+
+def test_real_v3_fixture_migrates_knowledge_without_replaying_or_rewriting(tmp_path):
+    original = (Path(__file__).parent / "fixtures" / "save-v3.json").read_bytes()
+    path = tmp_path / "slot-1.json"
+    path.write_bytes(original)
+    store = SaveSlots(tmp_path)
+    session = store.load(1)
+    assert session.world.gold == 7
+    assert session.world.bandages == 2
+    assert session.world.market_known
+    assert not session.world.trading
+    assert session.turns[-1].action == "купить бинт"
+    assert path.read_bytes() == original
+    assert "подойдите" in session.submit("купить бинт").text
+    session.submit("подойти к торговцу")
+    store.save(1, session)
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 4
+    restored = store.load(1)
+    assert restored.world.trading
+    assert restored.submit("бросить d20").roll.value == 1

@@ -23,11 +23,12 @@ from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 from rpg_vkr.domain.world import LOCATIONS, inventory_text, quest_text
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
+from rpg_vkr.ui.episode_panels import EpisodePanels
 from rpg_vkr.ui.workspace_panel import WorkspaceActions
 from rpg_vkr.ui.workspace_tools import HistoryLineEdit
 
 
-class MainWindow(WorkspaceActions, QMainWindow):
+class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def __init__(self, session: Session | None = None, saves: SaveSlots | None = None) -> None:
         super().__init__()
         self._session = Session() if session is None else session
@@ -117,8 +118,7 @@ class MainWindow(WorkspaceActions, QMainWindow):
                 ("Исследовать", "исследовать дорогу"),
                 ("Рынок", "идти на рынок"),
                 ("Доставить", "доставить корзину"),
-                ("Лавка", "торговля"),
-                ("Купить бинт", "купить бинт"),
+                ("Торговец", "подойти к торговцу"),
                 ("Использовать бинт", "использовать бинт"),
             ]
         ):
@@ -182,6 +182,7 @@ class MainWindow(WorkspaceActions, QMainWindow):
         note.setWordWrap(True)
 
         self._build_workspace(play_layout, slots_group, note)
+        self._build_episode_panels(layout)
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(bool(text.strip()))
@@ -192,9 +193,12 @@ class MainWindow(WorkspaceActions, QMainWindow):
         self.edit_character_button.clicked.connect(self.edit_character)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self._refresh_slots()
+        if session is None:
+            self.open_section("Главное меню")
 
     def _refresh_character(self) -> None:
         self._refresh_workspace()
+        self._refresh_episode_panels()
         character = self._session.character
         world = self._session.world
         self.character_group.setTitle(f"Персонаж: {character.name} · песочница")
@@ -322,7 +326,7 @@ class MainWindow(WorkspaceActions, QMainWindow):
         self._render_journal()
         self._rebuild_history()
         self._refresh_slots()
-        self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
+        self.resume_session()
         self.statusBar().showMessage(f"Загружена ячейка {slot}.", 6000)
 
     def delete_slot(self, slot: int) -> None:

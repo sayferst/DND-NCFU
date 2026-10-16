@@ -49,7 +49,12 @@ class SaveSlots:
             data = json.loads(raw)
             if not isinstance(data, dict) or set(data) != {"schema_version", "saved_at", "session"}:
                 raise ValueError("Invalid save structure")
-            if type(data["schema_version"]) is not int or data["schema_version"] not in (1, 2, 3):
+            if type(data["schema_version"]) is not int or data["schema_version"] not in (
+                1,
+                2,
+                3,
+                4,
+            ):
                 raise ValueError("Unsupported save version")
             saved_at = datetime.fromisoformat(data["saved_at"])
             if saved_at.tzinfo is None:
@@ -82,7 +87,7 @@ class SaveSlots:
         try:
             payload = json.dumps(
                 {
-                    "schema_version": 3,
+                    "schema_version": 4,
                     "saved_at": datetime.now(UTC).isoformat(),
                     "session": session.to_dict(),
                 },

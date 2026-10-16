@@ -117,13 +117,13 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 3) -> "Session":
-        if type(version) is not int or version not in (1, 2, 3):
+    def from_dict(cls, data: object, version: int = 4) -> "Session":
+        if type(version) is not int or version not in (1, 2, 3, 4):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
         if version >= 2:
             keys.add("character")
-        if version == 3:
+        if version >= 3:
             keys.add("world")
         if not isinstance(data, dict) or set(data) != keys:
             raise ValueError("Invalid session structure")
@@ -131,7 +131,17 @@ class Session:
         if type(data["seed"]) is not int:
             raise ValueError("Missing session seed")
         character = Character() if version == 1 else Character.from_dict(data["character"])
-        world = WorldState() if version < 3 else WorldState.from_dict(data["world"])
+        if version < 3:
+            world = WorldState()
+        elif version == 3:
+            old_world = data["world"]
+            legacy_keys = set(asdict(WorldState())) - {"market_known", "trading"}
+            if not isinstance(old_world, dict) or set(old_world) != legacy_keys:
+                raise ValueError("Invalid legacy world")
+            # Old worlds had public navigation; preserve access without replaying history.
+            world = WorldState.from_dict(old_world | {"market_known": True, "trading": False})
+        else:
+            world = WorldState.from_dict(data["world"])
         session = cls(seed=data["seed"], character=character, world=world)
         session.introduction = _text(data["introduction"], 4000)
         turns = data["turns"]
@@ -177,7 +187,7 @@ class Session:
                     ):
                         raise ValueError("Invalid check numbers")
                     world_check = (
-                        version == 3
+                        version >= 3
                         and normalise_action(action) == "исследовать дорогу"
                         and item["speaker"] == "Мир"
                         and stored_check["ability"] == "dexterity"
@@ -211,12 +221,12 @@ class Session:
                 valid_speaker = (
                     item["speaker"] == "Рассказчик"
                     or (
-                        version == 3
+                        version >= 3
                         and item["speaker"] == "Мир"
                         and normalise_action(action) in WORLD_COMMANDS
                     )
                     or (
-                        version == 3
+                        version >= 3
                         and item["speaker"] == "Система"
                         and action == "Изменить персонажа"
                     )

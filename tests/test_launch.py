@@ -24,6 +24,8 @@ def interact():
         assert len(windows) == 1
         window = windows[0]
         assert window.isVisible()
+        assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
+        window.resume_button.click()
         if sys.argv[2] == 'save':
             window.font_size.setValue(16)
             window.theme_choice.setCurrentText('Тёмная')
@@ -34,7 +36,8 @@ def interact():
             window.action_input.setText('проверить силу')
             QTest.keyClick(window.action_input, Qt.Key.Key_Return)
             for command in ['взять поручение', 'идти на дорогу', 'исследовать дорогу',
-                            'идти на рынок', 'доставить корзину', 'купить бинт',
+                            'идти на рынок', 'доставить корзину', 'подойти к торговцу',
+                            'купить бинт',
                             'использовать бинт']:
                 window.action_input.setText(command)
                 QTest.keyClick(window.action_input, Qt.Key.Key_Return)
@@ -46,7 +49,7 @@ def interact():
             window.load_slot(1)
             assert 'Жительница благодарит' in window.journal.toPlainText()
             assert 'Кубик: d20 → ' in window.journal.toPlainText()
-            assert len(window._session.turns) == 10
+            assert len(window._session.turns) == 11
             assert window._session.world.quest == 'completed'
             assert window._session.world.hp == 12
             assert window._session.world.gold in (12, 14)

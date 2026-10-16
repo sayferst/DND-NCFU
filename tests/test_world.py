@@ -17,7 +17,13 @@ def test_complete_delivery_trade_and_healing_cycle():
     assert session.world.hp == 9
     assert session.world.explored
     assert session.world.basket == 1
-    for command in ["идти на рынок", "доставить корзину", "купить бинт", "использовать бинт"]:
+    for command in [
+        "идти на рынок",
+        "доставить корзину",
+        "подойти к торговцу",
+        "купить бинт",
+        "использовать бинт",
+    ]:
         session.submit(command)
     assert session.world.hp == 12
     assert session.world.gold == 12
@@ -32,7 +38,7 @@ def test_complete_delivery_trade_and_healing_cycle():
 
 
 def test_trade_conserves_money_and_items_and_cannot_generate_profit():
-    session = Session(seed=42, world=WorldState(location="market"))
+    session = Session(seed=42, world=WorldState(location="market", market_known=True, trading=True))
     starting = session.world
     for command in ["купить бинт", "продать бинт"]:
         session.submit(command)
@@ -46,15 +52,24 @@ def test_trade_conserves_money_and_items_and_cannot_generate_profit():
     ("state", "command"),
     [
         (WorldState(), "купить бинт"),
-        (WorldState(location="market", gold=2), "купить бинт"),
-        (WorldState(location="market", shop_stock=0), "купить бинт"),
-        (WorldState(location="market", bandages=0), "продать бинт"),
-        (WorldState(location="market", shop_gold=0), "продать бинт"),
+        (WorldState(location="market", market_known=True, trading=True, gold=2), "купить бинт"),
+        (
+            WorldState(location="market", market_known=True, trading=True, shop_stock=0),
+            "купить бинт",
+        ),
+        (
+            WorldState(location="market", market_known=True, trading=True, bandages=0),
+            "продать бинт",
+        ),
+        (
+            WorldState(location="market", market_known=True, trading=True, shop_gold=0),
+            "продать бинт",
+        ),
         (WorldState(), "использовать бинт"),
         (WorldState(hp=5, bandages=0), "использовать бинт"),
         (WorldState(), "доставить корзину"),
         (WorldState(quest="active", basket=1), "доставить корзину"),
-        (WorldState(location="market"), "взять поручение"),
+        (WorldState(location="market", market_known=True, trading=True), "взять поручение"),
         (WorldState(), "исследовать дорогу"),
     ],
 )
@@ -154,6 +169,7 @@ def test_failed_random_transition_restores_rng_and_keeps_saves_replayable():
 def test_legacy_observe_and_dialogue_follow_current_location():
     session = Session(seed=42)
     assert "следы телеги" in session.submit("осмотреться").text
+    session.submit("узнать дорогу на рынок")
     session.submit("идти на рынок")
     assert "на рынке" in session.submit("осмотреться").text
     assert "Торговец" in session.submit("поговорить").text

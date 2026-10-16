@@ -20,11 +20,14 @@ WORLD_COMMANDS = {
     "инвентарь",
     "задание",
     "торговля",
+    "узнать дорогу на рынок",
+    "подойти к торговцу",
     "осмотреться",
     "осмотреть деревню",
     "я осматриваюсь",
     "поговорить",
     "поговорить со стражником",
+    "поговорить с жительницей",
     "помочь",
     "помочь жительнице",
     "помочь собрать яблоки",
@@ -43,6 +46,8 @@ class WorldState:
     explored: bool = False
     shop_stock: int = 3
     shop_gold: int = 20
+    market_known: bool = False
+    trading: bool = False
 
     def __post_init__(self) -> None:
         if (
@@ -67,6 +72,11 @@ class WorldState:
         if type(self.explored) is not bool or self.basket != int(self.quest == "active"):
             raise ValueError("Invalid quest inventory or exploration flag")
 
+        if type(self.market_known) is not bool or type(self.trading) is not bool:
+            raise ValueError("Invalid world knowledge")
+        if self.trading and (self.location != "market" or not self.market_known):
+            raise ValueError("Trade requires a known market and merchant interaction")
+
     @classmethod
     def from_dict(cls, data: object) -> "WorldState":
         if not isinstance(data, dict) or set(data) != set(asdict(cls())):
@@ -85,8 +95,8 @@ def inventory_text(state: WorldState) -> str:
 
 def quest_text(state: WorldState) -> str:
     return {
-        "available": "У ворот доступно поручение: доставить корзину на рынок. Награда — 5 золотых.",
-        "active": "Доставьте корзину на рынок. Команды: идти на рынок, доставить корзину.",
+        "available": "Жительнице у ворот нужна помощь. Поговорите с ней, чтобы узнать о поручении.",
+        "active": "Доставьте корзину на рынок. Обещанная награда — 5 золотых.",
         "completed": "Корзина доставлена, награда получена. Поручение завершено.",
     }[state.quest]
 
@@ -106,25 +116,55 @@ def perform_action(
     travel = {"идти к воротам": "gate", "идти на дорогу": "road", "идти на рынок": "market"}
     if command in travel:
         destination = travel[command]
+        if destination == "market" and not state.market_known:
+            return WorldOutcome(
+                state, "Вы ещё не знаете дорогу на рынок. Узнайте её у стражника у ворот."
+            )
+        if destination == state.location:
+            return WorldOutcome(state, f"Вы уже здесь: {LOCATIONS[destination]}.")
         return WorldOutcome(
-            replace(state, location=destination), f"Вы пришли: {LOCATIONS[destination]}."
+            replace(state, location=destination, trading=False),
+            f"Вы пришли: {LOCATIONS[destination]}.",
         )
     if command in ("осмотреться", "осмотреть деревню", "я осматриваюсь"):
         description = {
             "gate": "У ворот тихо. На дороге остались следы телеги. Жительница ждёт помощи.",
-            "road": "Вы на дороге. Впереди каменистый участок, рядом видна тропа к рынку.",
-            "market": f"Вы на рынке. В лавке {state.shop_stock} бинтов; здесь принимают корзины.",
+            "road": "Вы на дороге. Впереди каменистый участок, рядом видна тропа в деревню.",
+            "market": (
+                "Вы на рынке. Видна лавка с торговцем; здесь принимают корзины. "
+                "К торговцу можно подойти."
+            ),
         }[state.location]
         if state.location == "road" and state.explored:
             description += " Этот участок уже исследован."
         return WorldOutcome(state, description)
+    if command == "узнать дорогу на рынок":
+        if state.location != "gate":
+            return WorldOutcome(state, "Спросите стражника у ворот, как найти рынок.")
+        return WorldOutcome(
+            replace(state, market_known=True),
+            "Стражник объясняет дорогу на рынок. Место отмечено на карте.",
+        )
+    if command == "поговорить с жительницей":
+        if state.location != "gate":
+            return WorldOutcome(state, "Жительница осталась у ворот деревни.")
+        return WorldOutcome(
+            state,
+            "Жительница: «Нужно доставить корзину на рынок. "
+            "Заплачу 5 золотых. Если согласны — возьмите поручение».",
+        )
+    if command == "поговорить со стражником" and state.location != "gate":
+        return WorldOutcome(state, "Стражник остался у ворот деревни.")
     if command in ("поговорить", "поговорить со стражником"):
         description = {
-            "gate": "Стражник кивает: «Добро пожаловать. За работой обратитесь к соседке».",
+            "gate": (
+                "Стражник объясняет дорогу на рынок и советует обратиться за работой к соседке."
+            ),
             "road": "Поблизости не с кем поговорить. Можно вернуться к воротам или идти на рынок.",
-            "market": f"Торговец: «Бинт стоит 3, выкуплю за 1. Осталось: {state.shop_stock}».",
+            "market": "Торговец занят у прилавка. Подойдите к нему, чтобы узнать ассортимент.",
         }[state.location]
-        return WorldOutcome(state, description)
+        updated = replace(state, market_known=True) if state.location == "gate" else state
+        return WorldOutcome(updated, description)
     if command in ("помочь", "помочь жительнице", "помочь собрать яблоки"):
         if state.location == "gate":
             return WorldOutcome(
@@ -145,12 +185,15 @@ def perform_action(
         return WorldOutcome(state, inventory_text(state))
     if command == "задание":
         return WorldOutcome(state, quest_text(state))
-    if command == "торговля":
+    if command in ("торговля", "подойти к торговцу"):
+        if state.location != "market":
+            return WorldOutcome(
+                state, "Сначала найдите рынок и придите туда, затем подойдите к торговцу."
+            )
         return WorldOutcome(
-            state,
-            f"Лавка на рынке: бинт стоит 3 золотых, выкуп — 1. "
-            f"В наличии: {state.shop_stock}; деньги торговца: {state.shop_gold}. "
-            "Команды: купить бинт, продать бинт.",
+            replace(state, trading=True, market_known=True),
+            f"Торговец показывает товар: бинт стоит 3 золотых, выкуп — 1. "
+            f"В наличии: {state.shop_stock}. Команды: купить бинт, продать бинт.",
         )
     if command == "взять поручение":
         if state.quest != "available":
@@ -160,8 +203,8 @@ def perform_action(
         if state.location != "gate":
             return WorldOutcome(state, "За поручением нужно вернуться к воротам.")
         return WorldOutcome(
-            replace(state, quest="active", basket=1),
-            "Жительница передаёт корзину для доставки на рынок. Корзина добавлена в инвентарь.",
+            replace(state, quest="active", basket=1, market_known=True),
+            "Жительница передаёт корзину, обещает 5 золотых и объясняет дорогу на рынок.",
         )
     if command == "доставить корзину":
         if state.quest != "active":
@@ -192,6 +235,8 @@ def perform_action(
     if command in ("купить бинт", "продать бинт"):
         if state.location != "market":
             return WorldOutcome(state, "Лавка находится на рынке: идти на рынок.")
+        if not state.trading:
+            return WorldOutcome(state, "Сначала подойдите к торговцу и узнайте его ассортимент.")
         if command == "купить бинт":
             if state.gold < 3 or not state.shop_stock:
                 return WorldOutcome(
@@ -208,7 +253,12 @@ def perform_action(
                 "Куплен бинт за 3 золотых.",
             )
         if not state.bandages or not state.shop_gold:
-            return WorldOutcome(state, "Продажа невозможна: нет бинта или денег у торговца.")
+            return WorldOutcome(
+                state,
+                "У вас нет бинта для продажи."
+                if not state.bandages
+                else "Торговец отказывается: сейчас не готов выкупить ваш бинт.",
+            )
         return WorldOutcome(
             replace(
                 state,

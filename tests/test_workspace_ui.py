@@ -19,6 +19,12 @@ def test_tabs_and_quest_follow_actual_world(window):
         "Команды",
         "Настройки",
         "Сохранения",
+        "Главное меню",
+        "Карта",
+        "Жители",
+        "Лавка",
+        "Кубики",
+        "Как играть",
     ]
     assert window.quest_progress.value() == 0
     window.quest_action.click()

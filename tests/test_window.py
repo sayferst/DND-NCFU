@@ -180,10 +180,14 @@ def test_quick_actions_update_world_and_preserve_typed_draft(window):
         "исследовать дорогу",
         "идти на рынок",
         "доставить корзину",
+        "подойти к торговцу",
         "купить бинт",
         "использовать бинт",
     ]:
-        QTest.mouseClick(window.quick_buttons[command], Qt.MouseButton.LeftButton)
+        QTest.mouseClick(
+            window.shop_buy if command == "купить бинт" else window.quick_buttons[command],
+            Qt.MouseButton.LeftButton,
+        )
     assert window.action_input.text() == "мой черновик"
     assert window._session.world.gold == 12
     assert window._session.world.hp == 12
