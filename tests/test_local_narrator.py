@@ -29,7 +29,7 @@ def wait_for(app, predicate, timeout_ms=2500):
 
 
 @contextmanager
-def local_server(*, mode="ok", delay=0):
+def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
     requests = []
 
     class Handler(BaseHTTPRequestHandler):
@@ -46,7 +46,7 @@ def local_server(*, mode="ok", delay=0):
             length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(length)
             requests.append((self.path, json.loads(body) if body else None))
-            if delay and self.path == "/api/chat":
+            if delay and self.path == delay_path:
                 time.sleep(delay)
             if mode == "redirect":
                 self.send_response(302)
@@ -72,7 +72,7 @@ def local_server(*, mode="ok", delay=0):
             self.end_headers()
             try:
                 self.wfile.write(payload)
-            except (BrokenPipeError, ConnectionResetError):
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
                 pass
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -292,15 +292,18 @@ def test_invalid_structured_response_with_state_fields_is_rejected():
 def test_absent_local_server_reports_failure_and_game_remains_playable(window, qt_app):
     import socket
 
+    # Reserve the port without listening so another process cannot claim it.
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
         port = sock.getsockname()[1]
-    window.ollama.base_url = f"http://127.0.0.1:{port}"
-    window.find_models_button.click()
-    wait_for(qt_app, lambda: not window.ollama.busy)
+        window.ollama.base_url = f"http://127.0.0.1:{port}"
+        window.find_models_button.click()
+        # The game must accept input even while Windows is reporting a refusal.
+        window._run_command("бросить кубик")
+        assert window._session.turns[-1].roll.value == 4
+        wait_for(qt_app, lambda: not window.ollama.busy, timeout_ms=6000)
     assert "недоступна" in window.narrator_status.text()
-    window._run_command("бросить кубик")
-    assert window._session.turns[-1].roll.value == 4
+    assert window.find_models_button.isEnabled()
     assert not window._session.narrations
 
 
@@ -349,3 +352,35 @@ def test_closing_window_prevents_a_queued_generation(window, qt_app, monkeypatch
         qt_app.processEvents()
         assert len(requests) == 1
         assert not window.ollama.busy
+
+
+def test_model_discovery_has_its_own_deadline_for_an_unresponsive_server(qt_app):
+    with local_server(delay=0.2, delay_path="/api/tags") as (url, requests):
+        client = OllamaClient(base_url=url, timeout_ms=10000, models_timeout_ms=40)
+        errors, models = [], []
+        client.failed.connect(errors.append)
+        client.models_ready.connect(models.append)
+        client.list_models()
+        wait_for(qt_app, lambda: bool(errors), timeout_ms=1500)
+        assert "поиск моделей" in errors[0] and "недоступна" in errors[0]
+        assert not client.busy and not models
+        QTest.qWait(250)
+        qt_app.processEvents()
+        assert not models and len(errors) == 1
+        client.deleteLater()
+        qt_app.processEvents()
+
+
+def test_slow_generation_keeps_longer_deadline_than_model_discovery(qt_app):
+    with local_server(delay=0.15) as (url, requests):
+        client = OllamaClient(base_url=url, timeout_ms=2000, models_timeout_ms=30)
+        client.models = ("local-test:1",)
+        errors, notes = [], []
+        client.failed.connect(errors.append)
+        client.narration_ready.connect(notes.append)
+        client.narrate(build_frame(Session(seed=42)), "local-test:1")
+        wait_for(qt_app, lambda: bool(errors) or bool(notes))
+        assert not errors and notes[0].text == TEXT
+        assert not client.busy
+        client.deleteLater()
+        qt_app.processEvents()

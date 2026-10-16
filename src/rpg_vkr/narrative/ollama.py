@@ -4,7 +4,7 @@ import json
 import re
 from urllib.parse import urlsplit
 
-from PySide6.QtCore import QByteArray, QObject, QTimer, QUrl, Signal
+from PySide6.QtCore import QByteArray, QObject, Qt, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkProxy, QNetworkReply, QNetworkRequest
 
 from rpg_vkr.narrative.records import Narration
@@ -60,7 +60,14 @@ class OllamaClient(QObject):
     failed = Signal(str)
     busy_changed = Signal(bool)
 
-    def __init__(self, parent=None, *, base_url="http://127.0.0.1:11434", timeout_ms=90000):
+    def __init__(
+        self,
+        parent=None,
+        *,
+        base_url="http://127.0.0.1:11434",
+        timeout_ms=90000,
+        models_timeout_ms=2000,
+    ):
         super().__init__(parent)
         url = urlsplit(base_url)
         if (
@@ -76,10 +83,12 @@ class OllamaClient(QObject):
             raise ValueError("Only a local Ollama address is allowed")
         self.base_url = base_url
         self.timeout_ms = timeout_ms
+        self.models_timeout_ms = models_timeout_ms
         self.manager = QNetworkAccessManager(self)
         self.manager.setProxy(QNetworkProxy(QNetworkProxy.ProxyType.NoProxy))
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
+        self.timer.setTimerType(Qt.TimerType.PreciseTimer)
         self.timer.timeout.connect(self._timeout)
         self._reply = None
         self._buffer = bytearray()
@@ -153,13 +162,16 @@ class OllamaClient(QObject):
         self._reply = reply
         reply.readyRead.connect(lambda: self._read(reply))
         reply.finished.connect(lambda: self._finished(reply))
-        self.timer.start(self.timeout_ms)
+        self.timer.start(self.models_timeout_ms if kind == "models" else self.timeout_ms)
         self.busy_changed.emit(True)
 
     def _timeout(self):
         if self._reply is not None:
             self._reason = (
-                "Локальная модель не ответила за отведённое время. "
+                "Ollama недоступна: поиск моделей не завершился за отведённое время. "
+                "Автономная игра продолжает работать."
+                if self._kind == "models"
+                else "Локальная модель не ответила за отведённое время. "
                 "Автономный рассказ остаётся в журнале."
             )
             self._reply.abort()

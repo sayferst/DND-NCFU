@@ -1,0 +1,162 @@
+>>     Set-Location D:\Projects\DND-NCFU -ErrorAction Stop
+>>
+>>     $saveDir = 'D:\Projects\DND-NCFU-data\saves'
+>>     $backupDir = 'D:\Projects\DND-NCFU-data\saves-before-1I'
+>>     if ((Test-Path $saveDir) -and !(Test-Path $backupDir)) {
+>>         Copy-Item $saveDir $backupDir -Recurse -ErrorAction Stop
+>>     }
+>>
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не получено. Запуск остановлен.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\check.py
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Проверка не прошла. Запуск остановлен.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\run_game.py
+>> }
+remote: Enumerating objects: 84, done.
+remote: Counting objects: 100% (84/84), done.
+remote: Compressing objects: 100% (17/17), done.
+remote: Total 48 (delta 30), reused 48 (delta 30), pack-reused 0 (from 0)
+Unpacking objects: 100% (48/48), 55.94 KiB | 830.00 KiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   a2ff4bb..61dd573  setup/development-environment -> origin/setup/development-environment
+Updating a2ff4bb..61dd573
+Fast-forward
+ AGENTS.md                                          |  30 ++
+ CHANGELOG.md                                       |  11 +
+ DECISIONS.md                                       |  42 +++
+ KNOWN_ISSUES.md                                    |  21 +-
+ LICENSES_AND_ATTRIBUTIONS.md                       |   6 +
+ PROJECT_STATUS.md                                  |  30 +-
+ README.md                                          |  11 +-
+ RESEARCH_LOG.md                                    |  23 ++
+ ROADMAP.md                                         |   6 +-
+ TEST_PLAN.md                                       |  26 +-
+ docs/CONTENT_GENERATION_PLAN.md                    |  39 +++
+ docs/INTERFACE.md                                  |   7 +
+ docs/LOCAL_NARRATOR_AND_MEMORY.md                  | 125 ++++++++
+ docs/NARRATOR_AND_ROLLS.md                         |   7 +
+ docs/OFFLINE_TEST.md                               |   9 +
+ docs/SAVE_SLOTS.md                                 |  11 +-
+ docs/research/STORYFORGE_REVIEW.md                 |   9 +
+ docs/research/USER_STORYFORGE_REVISION.md          | 323 +++++++++++++++++++
+ docs/research/USER_STORYFORGE_REVISION_SOURCE.json |   6 +
+ src/rpg_vkr/application.py                         |  59 +++-
+ src/rpg_vkr/domain/memory.py                       | 204 ++++++++++++
+ src/rpg_vkr/narrative/context.py                   | 144 +++++++++
+ src/rpg_vkr/narrative/ollama.py                    | 204 ++++++++++++
+ src/rpg_vkr/narrative/records.py                   |  45 +++
+ src/rpg_vkr/storage/slots.py                       |   3 +-
+ src/rpg_vkr/ui/episode_panels.py                   |   5 +-
+ src/rpg_vkr/ui/main_window.py                      |  15 +-
+ src/rpg_vkr/ui/narrator_panel.py                   | 238 ++++++++++++++
+ src/rpg_vkr/ui/workspace_panel.py                  |   3 +
+ tests/test_creation_and_roles.py                   |   4 +-
+ tests/test_launch.py                               |  11 +
+ tests/test_local_narrator.py                       | 351 +++++++++++++++++++++
+ tests/test_progression.py                          |   7 +-
+ tests/test_save_migration.py                       |   8 +-
+ tests/test_trade_context.py                        |   3 +-
+ tests/test_workspace_ui.py                         |   2 +
+ tests/test_world_memory.py                         | 196 ++++++++++++
+ 37 files changed, 2218 insertions(+), 26 deletions(-)
+ create mode 100644 docs/CONTENT_GENERATION_PLAN.md
+ create mode 100644 docs/LOCAL_NARRATOR_AND_MEMORY.md
+ create mode 100644 docs/research/USER_STORYFORGE_REVISION.md
+ create mode 100644 docs/research/USER_STORYFORGE_REVISION_SOURCE.json
+ create mode 100644 src/rpg_vkr/domain/memory.py
+ create mode 100644 src/rpg_vkr/narrative/context.py
+ create mode 100644 src/rpg_vkr/narrative/ollama.py
+ create mode 100644 src/rpg_vkr/narrative/records.py
+ create mode 100644 src/rpg_vkr/ui/narrator_panel.py
+ create mode 100644 tests/test_local_narrator.py
+ create mode 100644 tests/test_world_memory.py
+Platform: Windows AMD64
+Python: 3.12.10; SQLite: 3.49.1
+Running: git --version
+git version 2.56.0.windows.2
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+No broken requirements found.
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pytest
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 357 items
+
+tests\test_character.py ........................                                                                                                                     [  6%]
+tests\test_character_dialog.py ...                                                                                                                                   [  7%]
+tests\test_combat.py .......................                                                                                                                         [ 14%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 17%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 19%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 21%]
+tests\test_dice.py ...                                                                                                                                               [ 22%]
+tests\test_environment.py ...                                                                                                                                        [ 22%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 26%]
+tests\test_launch.py ...                                                                                                                                             [ 27%]
+tests\test_local_narrator.py .............----------------------------------------
+....F...                                                                                                                   [ 33%]
+tests\test_offline.py ..........                                                                                                                                     [ 36%]
+tests\test_presentation.py .................                                                                                                                         [ 41%]
+tests\test_progression.py ......................................                                                                                                     [ 51%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 55%]
+tests\test_save_migration.py ..........                                                                                                                              [ 57%]
+tests\test_save_slots.py ....................                                                                                                                        [ 63%]
+tests\test_session.py ....................                                                                                                                           [ 69%]
+tests\test_trade_context.py .........                                                                                                                                [ 71%]
+tests\test_window.py .......................                                                                                                                         [ 78%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 81%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 86%]
+tests\test_world.py ..............................                                                                                                                   [ 95%]
+tests\test_world_memory.py .................                                                                                                                         [100%]
+
+================================================================================ FAILURES =================================================================================
+___________________________________________________ test_absent_local_server_reports_failure_and_game_remains_playable ____________________________________________________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x1a937319230) at 0x000001A93951A340>, qt_app = <PySide6.QtWidgets.QApplication(0x1a92ff65580) at 0x000001A930D55C00>
+
+    def test_absent_local_server_reports_failure_and_game_remains_playable(window, qt_app):
+        import socket
+
+        with socket.socket() as sock:
+            sock.bind(("127.0.0.1", 0))
+            port = sock.getsockname()[1]
+        window.ollama.base_url = f"http://127.0.0.1:{port}"
+        window.find_models_button.click()
+>       wait_for(qt_app, lambda: not window.ollama.busy)
+
+tests\test_local_narrator.py:300:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+app = <PySide6.QtWidgets.QApplication(0x1a92ff65580) at 0x000001A930D55C00>
+predicate = <function test_absent_local_server_reports_failure_and_game_remains_playable.<locals>.<lambda> at 0x000001A9382985E0>, timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+            app.processEvents()
+            QTest.qWait(5)
+>       assert predicate(), "Timed out waiting for the local transport"
+E       AssertionError: Timed out waiting for the local transport
+E       assert False
+E        +  where False = <function test_absent_local_server_reports_failure_and_game_remains_playable.<locals>.<lambda> at 0x000001A9382985E0>()
+
+tests\test_local_narrator.py:28: AssertionError
+========================================================================= short test summary info =========================================================================
+FAILED tests/test_local_narrator.py::test_absent_local_server_reports_failure_and_game_remains_playable - AssertionError: Timed out waiting for the local transport
+===================================================================== 1 failed, 356 passed in 13.27s ======================================================================
+Проверка не прошла. Запуск остановлен.
+строка:17 знак:9
++         throw 'Проверка не прошла. Запуск остановлен.'
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Проверка не прошла. Запуск остановлен.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Проверка не прошла. Запуск остановлен.
+
+PS D:\Projects\DND-NCFU>
