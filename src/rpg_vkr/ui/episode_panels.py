@@ -24,6 +24,7 @@ from rpg_vkr.domain.combat import disposition_label
 from rpg_vkr.domain.progression import describe_award
 from rpg_vkr.domain.world import LOCATIONS
 from rpg_vkr.ui.combat_panel import install_combat_panel, refresh_combat_panel
+from rpg_vkr.ui.narrator_panel import install_narrator_panels, refresh_narrator_panels
 from rpg_vkr.ui.resolution_panel import refresh_resolution_panel
 
 TRAVEL_COMMANDS = {"gate": "идти к воротам", "road": "идти на дорогу", "market": "идти на рынок"}
@@ -246,6 +247,7 @@ class EpisodePanels:
         guide.addStretch()
 
         install_combat_panel(self)
+        install_narrator_panels(self)
         inventory_layout = self.inventory_label.parentWidget().layout()
         self.inventory_table = readonly_table(["Предмет", "Количество", "Назначение"])
         self.inventory_table.setAccessibleName("Предметы героя")
@@ -268,7 +270,7 @@ class EpisodePanels:
         navigation_row = QHBoxLayout()
         self.navigation = QComboBox()
         self.navigation.setAccessibleName("Раздел игры")
-        order = [7, 0, 1, 2, 3, 8, 9, 13, 10, 11, 4, 6, 5, 12]
+        order = [7, 0, 1, 2, 3, 8, 9, 13, 10, 11, 14, 15, 4, 6, 5, 12]
         for index in order:
             self.navigation.addItem(self.tabs.tabText(index), index)
         navigation_row.addWidget(QLabel("Раздел:"))
@@ -520,6 +522,7 @@ class EpisodePanels:
             "разбор последних 100 действий — в панели справа."
         )
         refresh_resolution_panel(self)
+        refresh_narrator_panels(self)
 
     def _toggle_fullscreen(self, checked: bool) -> None:
         self.showFullScreen() if checked else self.showNormal()

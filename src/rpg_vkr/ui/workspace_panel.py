@@ -314,6 +314,9 @@ class WorkspaceActions:
             self.roll_history.setFont(font)
         if hasattr(self, "combat_result"):
             self.combat_result.setFont(font)
+        if hasattr(self, "world_memory_view"):
+            self.world_memory_view.setFont(font)
+            self.narrator_context.setFont(font)
         if hasattr(self, "roll_breakdown"):
             self.roll_breakdown.setFont(font)
             self.action_result.setFont(font)

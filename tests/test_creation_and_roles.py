@@ -1,7 +1,5 @@
 """Creation interaction, derived inventory and safe accessible coloured dialogue."""
 
-from dataclasses import replace
-
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QMessageBox
 
 from rpg_vkr.application import Session
@@ -65,7 +63,7 @@ def test_hero_buttons_grow_stats_and_refresh_inventory_profile_and_journal(windo
     assert not window.study_button.isEnabled()
     assert "обучения" in window.development_log.toPlainText()
     assert "Развитие:" in window.journal.toPlainText()
-    window._session.world = replace(window._session.world, location="road")
+    window._run_command("идти на дорогу")
     window._refresh_character()
     assert not window.cart_button.isEnabled()
     window.save_slot(1)

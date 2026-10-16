@@ -201,10 +201,21 @@ def interact():
             assert window._session.combat.surprise
             assert window.resolution_panel.isVisible()
             assert '20 + 1 = 21' in window.roll_breakdown.toPlainText()
+            from rpg_vkr.narrative.context import build_frame
+            from rpg_vkr.narrative.records import Narration
+            frame = build_frame(window._session)
+            window._session.add_narration(Narration(3, 'local-test:1',
+                'Вы приближаетесь к волку незамеченным.', frame.fingerprint))
+            window._render_journal()
+            assert len(window._session.memory.events) == 3
             window.save_slot(1)
         else:
             window.load_slot(1)
             assert window._session.combat.surprise
+            assert len(window._session.memory.events) == 3
+            assert 'Вы приближаетесь к волку незамеченным.' in window.journal.toPlainText()
+            assert not window.enable_local_narrator.isChecked()
+            assert not window.ollama.busy
             assert window.journal.actor_colour('wolf').name() == '#b00020'
             window.open_section('Схватка')
             window.combat_attack.click()

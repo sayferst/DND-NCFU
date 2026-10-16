@@ -25,6 +25,7 @@ from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
 from rpg_vkr.ui.creation_dialog import CreationDialog
 from rpg_vkr.ui.episode_panels import EpisodePanels
+from rpg_vkr.ui.narrator_panel import after_action
 from rpg_vkr.ui.resolution_panel import install_resolution_panel
 from rpg_vkr.ui.role_journal import RoleJournal
 from rpg_vkr.ui.workspace_panel import WorkspaceActions
@@ -63,6 +64,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         layout.addWidget(title)
 
         mode = QLabel("Автономный режим · без нейросети и интернета")
+        self.mode_label = mode
         mode.setWordWrap(True)
         layout.addWidget(mode)
 
@@ -308,10 +310,18 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def _render_journal(self) -> None:
         self.journal.clear()
         self.journal.append_message("narrator", "Рассказчик", self._session.introduction)
-        for turn in self._session.turns:
+        notes = {note.turn_index: note for note in self._session.narrations}
+        if 0 in notes:
+            self._append_narration(notes[0])
+        for index, turn in enumerate(self._session.turns, 1):
             self.journal.append_turn(turn)
+            if index in notes:
+                self._append_narration(notes[index])
         self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
+
+    def _append_narration(self, note) -> None:
+        self.journal.append_message("narrator", "ИИ-рассказчик · " + note.model, note.text)
 
     def _refresh_slots(self) -> None:
         self._refresh_workspace()
@@ -390,6 +400,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         ):
             event.ignore()
             return
+        self._closing = True
+        self.ollama.cancel()
         event.accept()
 
     def submit_action(self) -> None:
@@ -412,3 +424,4 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
+        after_action(self, turn)

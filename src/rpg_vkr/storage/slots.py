@@ -56,6 +56,7 @@ class SaveSlots:
                 4,
                 5,
                 6,
+                7,
             ):
                 raise ValueError("Unsupported save version")
             saved_at = datetime.fromisoformat(data["saved_at"])
@@ -89,7 +90,7 @@ class SaveSlots:
         try:
             payload = json.dumps(
                 {
-                    "schema_version": 6,
+                    "schema_version": 7,
                     "saved_at": datetime.now(UTC).isoformat(),
                     "session": session.to_dict(),
                 },

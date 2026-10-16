@@ -21,6 +21,7 @@ from rpg_vkr.domain.combat import (
 )
 from rpg_vkr.domain.combat_record import CombatRecord, canonical, restore_record
 from rpg_vkr.domain.dice import D20Roll, DiceRoller
+from rpg_vkr.domain.memory import WorldMemory, snapshot
 from rpg_vkr.domain.progression import (
     ARCHETYPES,
     PRACTICE_COMMANDS,
@@ -36,6 +37,7 @@ from rpg_vkr.domain.world import (
     perform_action,
 )
 from rpg_vkr.narrative.offline import INTRODUCTION, respond
+from rpg_vkr.narrative.records import Narration
 from rpg_vkr.narrative.scenes import describe_scene
 
 ROLL_COMMANDS = {"бросить d20", "бросить д20", "бросить кубик"}
@@ -86,6 +88,10 @@ class Session:
         self.combat = CombatState() if combat is None else combat
         self.introduction = INTRODUCTION
         self._turns: list[Turn] = []
+        self.memory = WorldMemory(
+            0, snapshot(self.world, self.character, self.combat, self.progress)
+        )
+        self._narrations: list[Narration] = []
 
     @classmethod
     def create_hero(cls, character: Character, class_id: str, seed: int | None = None):
@@ -118,6 +124,7 @@ class Session:
             raise ValueError("Достигнут предел в 2000 действий. Сохраните сессию.")
         command = normalise_action(action)
         checkpoint = self.dice.checkpoint()
+        before = snapshot(self.world, self.character, self.combat, self.progress)
         try:
             turn, world = self._resolve_turn(action, command)
             combat = turn.combat.outcome.state if turn.combat is not None else self.combat
@@ -149,9 +156,11 @@ class Session:
                 event = progress.events[-1]
                 world = replace(world, max_hp=world.max_hp + event.max_hp_delta)
                 turn = replace(turn, text=turn.text + "\n" + describe_award(event))
+            memory = self.memory.append(turn, before, snapshot(world, character, combat, progress))
         except Exception:
             self.dice.restore(checkpoint)
             raise
+        self.memory = memory
         self.world = world
         self.combat = combat
         self.progress = progress
@@ -316,12 +325,34 @@ class Session:
         turn = Turn(
             "Изменить персонажа", "Система", f"Профиль изменён: {character.name}. {summary}."
         )
+        before = snapshot(self.world, self.character, self.combat, self.progress)
+        memory = self.memory.append(
+            turn, before, snapshot(self.world, character, self.combat, self.progress)
+        )
+        self.memory = memory
         self.character = character
         self._turns.append(turn)
         return True
 
+    @property
+    def narrations(self):
+        return tuple(self._narrations)
+
+    def add_narration(self, narration: Narration) -> None:
+        if not isinstance(narration, Narration) or narration.turn_index != len(self._turns):
+            raise ValueError("Narration refers to an outdated scene")
+        if any(old.turn_index == narration.turn_index for old in self._narrations):
+            raise ValueError("This scene already has narration")
+        from rpg_vkr.narrative.context import build_frame
+
+        if narration.context_hash != build_frame(self).fingerprint:
+            raise ValueError("Narration context no longer matches")
+        self._narrations.append(narration)
+
     def to_dict(self) -> dict:
         return {
+            "memory": self.memory.to_dict(),
+            "narrations": [note.to_dict() for note in self.narrations],
             "seed": self.dice.seed,
             "character": asdict(self.character),
             "world": asdict(self.world),
@@ -335,10 +366,12 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 6) -> "Session":
-        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6):
+    def from_dict(cls, data: object, version: int = 7) -> "Session":
+        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 7:
+            keys.update({"memory", "narrations"})
         if version >= 2:
             keys.add("character")
         if version >= 3:
@@ -591,4 +624,26 @@ class Session:
                         or turn.combat.character != before_progress.character()
                     ):
                         raise ValueError("Combat character does not match progression")
+        final = snapshot(session.world, session.character, session.combat, session.progress)
+        session.memory = (
+            WorldMemory.from_dict(data["memory"], session.turns, final)
+            if version >= 7
+            else WorldMemory(len(session.turns), final)
+        )
+        if version >= 7:
+            notes = data["narrations"]
+            if not isinstance(notes, list) or len(notes) > len(session.turns) + 1:
+                raise ValueError("Invalid narration list")
+            previous = -1
+            for item in notes:
+                note = Narration.from_dict(item)
+                if not previous < note.turn_index <= len(session.turns):
+                    raise ValueError("Invalid narration order")
+                if note.turn_index == len(session.turns):
+                    from rpg_vkr.narrative.context import build_frame
+
+                    if note.context_hash != build_frame(session).fingerprint:
+                        raise ValueError("Saved narration does not match current scene")
+                session._narrations.append(note)
+                previous = note.turn_index
         return session

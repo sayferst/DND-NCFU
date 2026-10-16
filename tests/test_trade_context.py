@@ -82,6 +82,8 @@ def test_inventory_contains_no_purchase_or_sale_controls(window):
 
 
 def test_shop_hides_prices_stock_and_wallet_until_contact(window, qt_app):
+    window._session = Session(seed=42, world=replace(WorldState(), shop_gold=0))
+    window._refresh_character()
     window.open_section("Лавка")
     qt_app.processEvents()
     assert not window.shop_buy.isVisible()
@@ -97,7 +99,6 @@ def test_shop_hides_prices_stock_and_wallet_until_contact(window, qt_app):
     assert window.shop_buy.isVisible()
     assert "В наличии: 3" in window.shop_summary.text()
     assert "деньги торговца" not in window.shop_summary.text().casefold()
-    window._session.world = replace(window._session.world, shop_gold=0)
     window._refresh_character()
     assert window.shop_sell.isEnabled()  # The player does not know the merchant's wallet.
     before = window._session.world

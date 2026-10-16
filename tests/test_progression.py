@@ -51,7 +51,12 @@ def test_unknown_profile_cannot_create_a_hero():
 
 def test_successful_work_and_book_grow_separate_abilities_and_level_without_healing():
     session = created(seed=5)
-    session.world = replace(session.world, hp=7)
+    session = Session(
+        seed=5,
+        character=session.character,
+        world=replace(session.world, hp=7),
+        progress=session.progress,
+    )
     turn = session.submit("помочь разгрузить телегу")
     assert turn.roll.value == 20
     assert turn.check.total == 23
