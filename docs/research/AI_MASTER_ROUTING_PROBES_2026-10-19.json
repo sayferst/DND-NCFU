@@ -1,0 +1,124 @@
+{
+  "code_commit": "56c089c",
+  "model_called": false,
+  "results": [
+    {
+      "case_id": "basket_help",
+      "provenance": "synthetic_supplied_intent_not_observed_model_output",
+      "input": "возможно у тебе нужна помощь, чтобы перевернуть корзину?",
+      "supplied_intent": "беседа с жительницей",
+      "explicit_target": null,
+      "speech_details": [
+        "question",
+        "help"
+      ],
+      "result": "Жительница: Жительница поднимает голову.\n— Нужно доставить корзину на рынок. Заплачу 5 золотых. Возьмётесь?",
+      "dialogue": {
+        "target": "villager",
+        "act": "question",
+        "topic": "help",
+        "before": 0,
+        "after": 0,
+        "rules_version": "homebrew-social-1"
+      },
+      "world_unchanged": true,
+      "rng_unchanged": true,
+      "narrator_context": {
+        "speaker": "Жительница",
+        "target_id": "villager",
+        "speech_act": "question",
+        "topic": "help",
+        "activity": "собирает рассыпавшиеся яблоки из опрокинувшейся корзины",
+        "voice": "Простая, прямая речь занятого человека, без загадок и высокопарности.",
+        "public_goal": "Закончить сборы на рынок и получить помощь без унижения.",
+        "approved_reply": "Нужно доставить корзину на рынок. Заплачу 5 золотых. Возьмётесь?",
+        "reaction": "готов к разговору",
+        "rule": "Ответить на реплику, сохранив смысл approved_reply; не менять собеседника, не придумывать действие героя, предложение не равно согласию."
+      }
+    },
+    {
+      "case_id": "polite_refusal",
+      "provenance": "synthetic_supplied_intent_not_observed_model_output",
+      "input": "не, не хочу, у меня много других дел, хорошего ня тебе, красавица",
+      "supplied_intent": "беседа с жительницей",
+      "explicit_target": null,
+      "speech_details": [
+        "refusal",
+        "other"
+      ],
+      "result": "Жительница: Жительница поднимает голову.\n— Ваше право. Тогда поищу другого помощника.",
+      "dialogue": {
+        "target": "villager",
+        "act": "refusal",
+        "topic": "other",
+        "before": 0,
+        "after": 0,
+        "rules_version": "homebrew-social-1"
+      },
+      "world_unchanged": true,
+      "rng_unchanged": true,
+      "narrator_context": {
+        "speaker": "Жительница",
+        "target_id": "villager",
+        "speech_act": "refusal",
+        "topic": "other",
+        "activity": "собирает рассыпавшиеся яблоки из опрокинувшейся корзины",
+        "voice": "Простая, прямая речь занятого человека, без загадок и высокопарности.",
+        "public_goal": "Закончить сборы на рынок и получить помощь без унижения.",
+        "approved_reply": "Ваше право. Тогда поищу другого помощника.",
+        "reaction": "готов к разговору",
+        "rule": "Ответить на реплику, сохранив смысл approved_reply; не менять собеседника, не придумывать действие героя, предложение не равно согласию."
+      }
+    },
+    {
+      "case_id": "clarified_refusal",
+      "provenance": "synthetic_supplied_intent_not_observed_model_output",
+      "input": "не, не хочу, у меня много других дел, хорошего ня тебе, красавица",
+      "supplied_intent": "уточнить намерение",
+      "explicit_target": null,
+      "speech_details": [
+        "refusal",
+        "other"
+      ],
+      "result": "Нужно уточнить намерение. Мир не изменён.",
+      "dialogue": null,
+      "world_unchanged": true,
+      "rng_unchanged": true,
+      "narrator_context": null
+    },
+    {
+      "case_id": "ask_master_appearance",
+      "provenance": "synthetic_supplied_intent_not_observed_model_output",
+      "input": "мастер,я хочу оценить внешность девушки с яблоками, как она выглядит",
+      "supplied_intent": "беседа с жительницей",
+      "explicit_target": null,
+      "speech_details": [
+        "question",
+        "wares"
+      ],
+      "result": "Жительница: Жительница поднимает голову.\n— Что именно вы хотите узнать?",
+      "dialogue": {
+        "target": "villager",
+        "act": "question",
+        "topic": "wares",
+        "before": 0,
+        "after": 0,
+        "rules_version": "homebrew-social-1"
+      },
+      "world_unchanged": true,
+      "rng_unchanged": true,
+      "narrator_context": {
+        "speaker": "Жительница",
+        "target_id": "villager",
+        "speech_act": "question",
+        "topic": "wares",
+        "activity": "собирает рассыпавшиеся яблоки из опрокинувшейся корзины",
+        "voice": "Простая, прямая речь занятого человека, без загадок и высокопарности.",
+        "public_goal": "Закончить сборы на рынок и получить помощь без унижения.",
+        "approved_reply": "Что именно вы хотите узнать?",
+        "reaction": "готов к разговору",
+        "rule": "Ответить на реплику, сохранив смысл approved_reply; не менять собеседника, не придумывать действие героя, предложение не равно согласию."
+      }
+    }
+  ]
+}

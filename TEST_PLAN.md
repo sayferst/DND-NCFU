@@ -253,3 +253,17 @@ Windows-сценарий: docs/CONVERSATIONS_AND_REACTIONS.md. Новый test_c
 0 failed/skipped за 13.20 с; pip check, Ruff check и Ruff format --check
 успешны (69 Python-файлов). Исходные 7 документов сверены по SHA-256.
 HTTP-тесты синтетические; новая настоящая Qwen3/Windows-приёмка ожидается.
+
+
+## 2026-10-19 — ревизия целевого ИИ-мастера, без правок тестов
+
+Повторный scripts/check.py для кода 56c089c: 445 passed, 0 failed/skipped за
+13.69 с; pip check/Ruff check/format успешны, 69 Python-файлов. Сырой вывод —
+docs/validation/linux-master-audit-2026-10-19.txt. Четыре синтетические пробы
+маршрутизации сохранены в docs/research/AI_MASTER_ROUTING_PROBES_2026-10-19.json.
+Правильный отказ при верном intent не опровергает реальный сбой пользователя.
+
+Будущие 30 development-сцен/пользовательские регрессии, независимая приёмка и
+C-01–C-15 расписаны в docs/AI_MASTER_TRANSITION_PLAN.md; пока не реализованы и не
+пройдены. Не смешивать будущие пороги с измеренным качеством Qwen. Текущая
+проверка исходной версии не доказывает литературность/свободный sandbox.

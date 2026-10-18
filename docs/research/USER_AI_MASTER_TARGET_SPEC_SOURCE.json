@@ -1,0 +1,16 @@
+{
+  "received_date_user_timezone": "2026-10-19",
+  "timezone": "Europe/Moscow",
+  "source": "user_uploaded_reference_document",
+  "original_filename": "DND_NCFU_ЦЕЛЕВОЙ_ИИ_МАСТЕР_ТЗ_для_Codex (1).md",
+  "bytes": 217293,
+  "sha256": "81ac97617d11d348499c9fbf7ddeb3a2d6d0c99b4adaa1612b9f761b59489ece",
+  "preserved_path": "docs/research/USER_AI_MASTER_TARGET_SPEC.md",
+  "read_lines": 1173,
+  "status": "reference_requirements_reviewed_not_automatic_implementation_authorization",
+  "runtime_prompt_imported": false,
+  "model_training_performed": false,
+  "names_and_story_examples": "example_only_not_campaign_canon",
+  "rights": "user_provided_reference_not_independently_verified_training_license",
+  "code_reviewed": "56c089c0947d7c9dbe976785556f1fe02977b7cf"
+}

@@ -1,0 +1,55 @@
+{
+  "date_user_timezone": "2026-10-19",
+  "method": "read_only_urllib_https_no_paid_api_no_dataset_download",
+  "checks": [
+    {
+      "url": "https://www.thealexandrian.net/creations/misc/prep-scenario.html",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.thealexandrian.net/creations/misc/node-design/node-design.html",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://slyflourish.com/revealing_secrets.html",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.dndbeyond.com/srd/",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.dndbeyond.com/creator-faq",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://github.com/RevanthRameshkumar/CRD3",
+      "status": 200,
+      "bytes_read": 160000,
+      "verification": "repository_readme_read_not_full_dataset_rights_clearance",
+      "readme_claims": {
+        "episodes": 159,
+        "turns": 398682,
+        "summary_dialogue_pairs": 34243,
+        "stated_license": "CC BY-SA 4.0",
+        "paper": "R. Rameshkumar and P. Bailey, Storytelling with Dialogue: A Critical Role Dungeons and Dragons Dataset, ACL 2020"
+      },
+      "dataset_downloaded": false
+    },
+    {
+      "url": "https://huggingface.co/Qwen/Qwen3-1.7B/blob/main/LICENSE",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+      "verification": "unverified",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    }
+  ]
+}
