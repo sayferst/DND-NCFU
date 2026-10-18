@@ -92,8 +92,8 @@ def test_observation_shows_local_actors_with_colour_and_qualitative_health(windo
     window._run_command("осмотреться")
     qt_app.processEvents()
     text = window.journal.toPlainText()
-    assert "Серый волк: враждебен, без видимых ран" in text
-    assert "Кабан: нейтрален" in text
+    assert "Серый волк враждебен, без видимых ран" in text
+    assert "Кабан рядом" in text
     assert "10/10" not in text
     blocks = tagged_blocks(window, "wolf")
     assert blocks

@@ -159,7 +159,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         input_row = QHBoxLayout()
         self.action_input = HistoryLineEdit()
         self.action_input.setAccessibleName("Ваше действие")
-        self.action_input.setPlaceholderText("Например: проверить силу")
+        self.action_input.setPlaceholderText("Например: спрашиваю жительницу, чем она занята")
         self.action_input.setMaxLength(500)
         action_label.setBuddy(self.action_input)
         input_row.addWidget(self.action_input, stretch=1)
@@ -258,7 +258,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def _run_command(self, command: str) -> None:
         draft = self.action_input.text()
         self.action_input.setText(command)
-        self.submit_action(use_ai=False)
+        self.submit_action(use_ai=False, origin="quick")
         self.action_input.setText(draft)
 
     def new_character(self) -> None:
@@ -316,7 +316,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self.journal.append_message("narrator", "Рассказчик", self._session.introduction)
         for index, turn in enumerate(self._session.turns, 1):
             if index in notes:
-                self.journal.append_message("player", "Вы", turn.action, blank_before=True)
+                self.journal.append_player(turn)
                 self._append_narration(notes[index])
             elif (
                 turn.intent
@@ -324,28 +324,21 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 and self._narrating_index == index
                 and self._chat_text is None
             ):
-                self.journal.append_message("player", "Вы", turn.action, blank_before=True)
-                self.journal.append_message("system", "ИИ", "Описывает результат…")
+                self.journal.append_player(turn)
             else:
                 self.journal.append_turn(turn)
         self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
 
     def _append_narration(self, note) -> None:
+        actor_id = None
         if note.turn_index:
-            from rpg_vkr.commands import CHAT_TARGETS
-
             turn = self._session.turns[note.turn_index - 1]
-            if (
-                turn.intent in CHAT_TARGETS
-                and turn.actor_id
-                and "мирное взаимодействие недоступно" not in turn.text
-            ):
-                self.journal.append_message(
-                    "npc", turn.speaker + " · ИИ", note.text, actor_id=turn.actor_id
-                )
-                return
-        self.journal.append_message("narrator", "ИИ-рассказчик · " + note.model, note.text)
+            if turn.dialogue:
+                actor_id = turn.dialogue.target
+            elif turn.actor_id in {"guard", "villager", "merchant"}:
+                actor_id = turn.actor_id  # Preserve trusted attribution in older saves too.
+        self.journal.append_story(note.text, actor_id=actor_id)
 
     def _refresh_slots(self) -> None:
         self._refresh_workspace()
@@ -428,7 +421,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.ollama.cancel()
         event.accept()
 
-    def submit_action(self, *, use_ai=True) -> None:
+    def submit_action(self, *, use_ai=True, origin="typed") -> None:
         action = self.action_input.text().strip()
         if not action:
             return
@@ -436,7 +429,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             return
 
         try:
-            turn = self._session.submit(action)
+            turn = self._session.submit(action, origin=origin)
         except ValueError as error:
             QMessageBox.warning(self, "Действие не выполнено", str(error))
             return

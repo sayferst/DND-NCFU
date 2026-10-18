@@ -13,11 +13,18 @@ class Interpretation:
     question: str
 
 
-def intent_schema():
+def intent_schema(target=None):
+    from rpg_vkr.narrative.speech import command_target
+
+    commands = sorted(
+        command
+        for command in allowed_intents()
+        if not target or (command != "поговорить" and command_target(command) in {None, target})
+    )
     return {
         "type": "object",
         "properties": {
-            "command": {"type": "string", "enum": sorted(allowed_intents())},
+            "command": {"type": "string", "enum": commands},
         },
         "required": ["command"],
         "additionalProperties": False,

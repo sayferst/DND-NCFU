@@ -15,7 +15,8 @@ def test_reported_conversation_gets_npc_answer_without_accepting_quest(action):
     rng = session.dice.checkpoint()
     turn = session.submit(action)
     assert turn.actor_id == "villager" and turn.speaker == "Жительница"
-    assert "5 золотых" in turn.text
+    assert "Яблоки собираю" in turn.text
+    assert "5 золотых" not in turn.text
     assert session.world == before and session.dice.checkpoint() == rng
     assert not session.memory.events[-1].changes
     restored = Session.from_dict(session.to_dict())
@@ -41,7 +42,7 @@ def test_npc_answer_tracks_quest_without_duplicate_reward():
     session.submit("идти на рынок")
     session.submit("доставить корзину")
     session.submit("идти к воротам")
-    assert "Новых поручений" in session.submit("жительница, чем занята?").text
+    assert "Новых поручений" in session.submit("жительница, чем могу помочь?").text
     assert session.world.gold == 15
 
 
@@ -49,7 +50,7 @@ def test_trade_conversation_requires_contact_and_does_not_buy():
     session = Session(seed=42)
     session.submit("узнать дорогу на рынок")
     session.submit("идти на рынок")
-    assert "подойти к торговцу" in session.submit("торговец, что продаёшь?").text
+    assert "Подойдите к прилавку" in session.submit("торговец, что продаёшь?").text
     assert not session.world.trading
     session.submit("подойти к торговцу")
     before = session.world

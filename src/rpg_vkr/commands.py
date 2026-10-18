@@ -10,6 +10,7 @@ CHAT_TARGETS = {
     "беседа с жительницей": "villager",
     "беседа с торговцем": "merchant",
 }
+NPC_CONTACTS = {"подойти к стражнику": "guard", "подойти к жительнице": "villager"}
 
 
 def allowed_intents():
@@ -25,5 +26,6 @@ def allowed_intents():
         | ROLL_COMMANDS
         | set(CHECK_COMMANDS)
         | set(CHAT_TARGETS)
+        | set(NPC_CONTACTS)
         | {"помощь", "уточнить намерение"}
     )

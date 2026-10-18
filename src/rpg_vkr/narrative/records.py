@@ -3,8 +3,8 @@
 import re
 from dataclasses import asdict, dataclass
 
-PROMPT_VERSION = "narrator-prose-3"
-SUPPORTED_PROMPTS = {"narrator-prose-1", "narrator-prose-2", PROMPT_VERSION}
+PROMPT_VERSION = "narrator-prose-4"
+SUPPORTED_PROMPTS = {"narrator-prose-1", "narrator-prose-2", "narrator-prose-3", PROMPT_VERSION}
 
 
 @dataclass(frozen=True)

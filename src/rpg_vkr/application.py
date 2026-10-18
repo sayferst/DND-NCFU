@@ -2,7 +2,7 @@
 
 from dataclasses import asdict, dataclass, replace
 
-from rpg_vkr.commands import CHAT_TARGETS, allowed_intents, normalise_action
+from rpg_vkr.commands import CHAT_TARGETS, NPC_CONTACTS, allowed_intents, normalise_action
 from rpg_vkr.domain.character import (
     ABILITY_NAMES,
     AbilityCheck,
@@ -29,6 +29,7 @@ from rpg_vkr.domain.progression import (
     describe_award,
     describe_progress,
 )
+from rpg_vkr.domain.social import DialogueRecord, grievance
 from rpg_vkr.domain.world import (
     OBSERVE_COMMANDS,
     WHERE_COMMANDS,
@@ -36,10 +37,11 @@ from rpg_vkr.domain.world import (
     WorldState,
     perform_action,
 )
-from rpg_vkr.narrative.dialogue import dialogue_intent, dialogue_reply
+from rpg_vkr.narrative.dialogue import dialogue_intent, last_interlocutor, resolve_conversation
 from rpg_vkr.narrative.offline import INTRODUCTION, respond
 from rpg_vkr.narrative.records import Narration
 from rpg_vkr.narrative.scenes import describe_scene
+from rpg_vkr.narrative.speech import command_target, validate_binding
 
 ROLL_COMMANDS = {"бросить d20", "бросить д20", "бросить кубик"}
 CHECK_COMMANDS = {
@@ -64,6 +66,8 @@ class Turn:
     actor_id: str | None = None
     combat: CombatRecord | None = None
     intent: str | None = None
+    origin: str = "typed"
+    dialogue: DialogueRecord | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -120,18 +124,35 @@ class Session:
     def turns(self) -> tuple[Turn, ...]:
         return tuple(self._turns)
 
-    def submit(self, action: str, *, intent: str | None = None) -> Turn:
+    def submit(self, action: str, *, intent: str | None = None, origin="typed") -> Turn:
         action = _text(action, 500).strip()
         if len(self._turns) >= MAX_TURNS:
             raise ValueError("Достигнут предел в 2000 действий. Сохраните сессию.")
         if intent is not None and (not isinstance(intent, str) or intent not in allowed_intents()):
             raise ValueError("Неподдерживаемое намерение. Мир не изменён.")
         command = intent or normalise_action(action)
+        if not isinstance(origin, str) or origin not in {"typed", "quick"}:
+            raise ValueError("Invalid input origin")
+        binding_error = (
+            validate_binding(
+                action,
+                command,
+                location=self.world.location,
+                active_target=self.combat.active,
+                interlocutor=last_interlocutor(self),
+            )
+            if intent is not None
+            else None
+        )
+        if binding_error:
+            command = intent = "уточнить намерение"
         checkpoint = self.dice.checkpoint()
         before = snapshot(self.world, self.character, self.combat, self.progress)
         try:
             turn, world = self._resolve_turn(action, command)
-            turn = replace(turn, intent=intent)
+            turn = replace(turn, intent=intent, origin=origin)
+            if binding_error:
+                turn = replace(turn, text=binding_error)
             combat = turn.combat.outcome.state if turn.combat is not None else self.combat
             progress = self.progress
             character = self.character
@@ -217,13 +238,21 @@ class Session:
             return Turn(
                 action, "Рассказчик", "Нужно уточнить намерение. Мир не изменён."
             ), self.world
-        if command in CHAT_TARGETS:
-            speaker, text, actor_id = dialogue_reply(self, (CHAT_TARGETS[command], "occupation"))
-            return Turn(action, speaker, text, actor_id=actor_id), self.world
+        if command in CHAT_TARGETS or command in NPC_CONTACTS:
+            speaker, text, actor_id, record = resolve_conversation(
+                self,
+                action,
+                CHAT_TARGETS.get(command) or NPC_CONTACTS.get(command),
+                contact=command in NPC_CONTACTS,
+            )
+            return Turn(action, speaker, text, actor_id=actor_id, dialogue=record), self.world
         intent = dialogue_intent(action) if command == normalise_action(action) else None
-        if intent is not None:
-            speaker, text, actor_id = dialogue_reply(self, intent)
-            return Turn(action, speaker, text, actor_id=actor_id), self.world
+        if intent is not None and command not in WORLD_COMMANDS:
+            target, topic = intent
+            speaker, text, actor_id, record = resolve_conversation(
+                self, action, target, topic_hint=topic
+            )
+            return Turn(action, speaker, text, actor_id=actor_id, dialogue=record), self.world
         resident = None
         if (
             command in {"подойти к торговцу", "торговля", "купить бинт", "продать бинт"}
@@ -257,6 +286,14 @@ class Session:
                     "персонаж повержен." if actor.hp == 0 else "персонаж враждебен."
                 )
                 return Turn(action, name, text, actor_id=resident), self.world
+            if grievance(self.turns, resident) >= 2:
+                name = ACTORS[resident][0]
+                return Turn(
+                    action,
+                    name,
+                    f"{name}: после грубости разговор и помощь пока недоступны.",
+                    actor_id=resident,
+                ), self.world
         if command in PRACTICE_COMMANDS:
             return self._practice(action, command)
         if command in WORLD_COMMANDS:
@@ -339,7 +376,10 @@ class Session:
             f"{label}: {character.score(key)}" for key, label in ABILITY_NAMES.items()
         )
         turn = Turn(
-            "Изменить персонажа", "Система", f"Профиль изменён: {character.name}. {summary}."
+            "Изменить персонажа",
+            "Система",
+            f"Профиль изменён: {character.name}. {summary}.",
+            origin="system",
         )
         before = snapshot(self.world, self.character, self.combat, self.progress)
         memory = self.memory.append(
@@ -382,8 +422,8 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 8) -> "Session":
-        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8):
+    def from_dict(cls, data: object, version: int = 9) -> "Session":
+        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
         if version >= 7:
@@ -420,6 +460,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 9:
+                turn_keys.update({"origin", "dialogue"})
             if version >= 8:
                 turn_keys.add("intent")
             if version >= 2:
@@ -435,6 +477,24 @@ class Session:
             ):
                 raise ValueError("Invalid resolved intent")
             command = intent or normalise_action(action)
+            origin = item.get("origin", "legacy")
+            if not isinstance(origin, str) or origin not in {"typed", "quick", "legacy", "system"}:
+                raise ValueError("Invalid saved input origin")
+            dialogue = None
+            if version >= 9 and item["dialogue"] is not None:
+                dialogue = DialogueRecord.from_dict(item["dialogue"])
+                if (
+                    dialogue.before != grievance(session.turns, dialogue.target)
+                    or item["actor_id"] != dialogue.target
+                    or item["roll"] is not None
+                    or item["check"] is not None
+                    or item["combat"] is not None
+                ):
+                    raise ValueError("Invalid social history")
+                if command_target(command) not in {None, dialogue.target}:
+                    raise ValueError("Social target does not match intent")
+                # The recorded interpretation is historical evidence. Do not reinterpret
+                # natural language on load after a future parser/model improvement.
             text = _text(item["text"], 4000)
             roll = None
             check = None
@@ -473,6 +533,8 @@ class Session:
                         outcome.actor_id,
                         record,
                         intent,
+                        origin,
+                        dialogue,
                     )
                 )
                 continue
@@ -560,6 +622,7 @@ class Session:
                         command in WORLD_COMMANDS
                         or (version >= 7 and dialogue_intent(action) is not None)
                         or (version >= 8 and command in CHAT_TARGETS)
+                        or (version >= 9 and command in NPC_CONTACTS)
                     ) and text.startswith(item["speaker"] + ":")
                 if stored_check is not None or not valid_speaker:
                     raise ValueError("Invalid narration turn")
@@ -571,7 +634,17 @@ class Session:
             ):
                 raise ValueError("Actor identity mismatch")
             session._turns.append(
-                Turn(action, item["speaker"], text, roll, check, actor_id, intent=intent)
+                Turn(
+                    action,
+                    item["speaker"],
+                    text,
+                    roll,
+                    check,
+                    actor_id,
+                    intent=intent,
+                    origin=origin,
+                    dialogue=dialogue,
+                )
             )
         if version >= 5:
             session.progress = HeroProgress.from_dict(data["progress"], session.turns)

@@ -1,5 +1,7 @@
 """Plain text remains inert; role metadata alone controls accessible message colours."""
 
+import re
+
 from PySide6.QtGui import (
     QColor,
     QFont,
@@ -11,16 +13,17 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QPlainTextEdit
 
 from rpg_vkr.commands import normalise_action
-from rpg_vkr.domain.combat import ANGER_COMMANDS, NAMES_TO_IDS, disposition_label
+from rpg_vkr.domain.combat import NAMES_TO_IDS
 from rpg_vkr.domain.world import OBSERVE_COMMANDS
 from rpg_vkr.narrative.presentation import present_turn
 
 
 class MessageRole(QTextBlockUserData):
-    def __init__(self, role: str, actor_id: str | None = None) -> None:
+    def __init__(self, role: str, actor_id: str | None = None, speech_only=False) -> None:
         super().__init__()
         self.role = role
         self.actor_id = actor_id
+        self.speech_only = speech_only
 
 
 class RoleHighlighter(QSyntaxHighlighter):
@@ -32,12 +35,25 @@ class RoleHighlighter(QSyntaxHighlighter):
     def highlightBlock(self, text: str) -> None:
         metadata = self.currentBlock().userData()
         role = metadata.role if isinstance(metadata, MessageRole) else "system"
-        hostile = isinstance(metadata, MessageRole) and metadata.actor_id in self.hostile_ids
+        speech_only = isinstance(metadata, MessageRole) and metadata.speech_only
+        hostile = (
+            isinstance(metadata, MessageRole)
+            and metadata.actor_id in self.hostile_ids
+            and not speech_only
+        )
         format = QTextCharFormat()
         format.setForeground(self.colour("hostile" if hostile else role))
         if hostile:
             format.setFontWeight(QFont.Weight.Bold)
         self.setFormat(0, len(text), format)
+        if speech_only and metadata.actor_id:
+            speech_format = QTextCharFormat()
+            is_hostile = metadata.actor_id in self.hostile_ids
+            speech_format.setForeground(self.colour("hostile" if is_hostile else "npc"))
+            if is_hostile:
+                speech_format.setFontWeight(QFont.Weight.Bold)
+            for match in re.finditer(r"«[^»]+»|(?:^|: )— .+$", text):
+                self.setFormat(match.start(), len(match[0]), speech_format)
 
     def colour(self, role):
         colors = (
@@ -70,7 +86,14 @@ class RoleJournal(QPlainTextEdit):
         self.highlighter.rehighlight()
 
     def append_message(
-        self, role: str, label: str, text: str, *, blank_before=False, actor_id=None
+        self,
+        role: str,
+        label: str,
+        text: str,
+        *,
+        blank_before=False,
+        actor_id=None,
+        speech_only=False,
     ) -> None:
         cursor = QTextCursor(self.document())
         cursor.movePosition(QTextCursor.MoveOperation.End)
@@ -79,11 +102,11 @@ class RoleJournal(QPlainTextEdit):
             if blank_before:
                 cursor.insertBlock()
         first_block = cursor.block().blockNumber()
-        cursor.insertText(f"{label}: {text}")
+        cursor.insertText(f"{label}: {text}" if label else text)
         last_block = cursor.block().blockNumber()
         block = self.document().findBlockByNumber(first_block)
         while block.isValid() and block.blockNumber() <= last_block:
-            block.setUserData(MessageRole(role, actor_id))
+            block.setUserData(MessageRole(role, actor_id, speech_only))
             self.highlighter.rehighlightBlock(block)
             block = block.next()
         self.setTextCursor(cursor)
@@ -97,46 +120,35 @@ class RoleJournal(QPlainTextEdit):
             "hostile" if actor_id in self.highlighter.hostile_ids else "npc"
         )
 
+    def append_player(self, turn):
+        if turn.origin in {"typed", "legacy"}:
+            self.append_message("player", "Вы", turn.action, blank_before=True)
+
+    def append_story(self, text, *, actor_id=None):
+        self.append_message("narrator", "Рассказчик", text, actor_id=actor_id, speech_only=True)
+
     def append_turn(self, turn) -> None:
-        self.append_message("player", "Вы", turn.action, blank_before=True)
-        if turn.combat is not None:
-            role = "system"
-        elif turn.actor_id is not None:
-            role = "npc"
-        elif turn.speaker in {"Мир", "Рассказчик"}:
-            role = "narrator"
-        else:
-            role = "system"
+        self.append_player(turn)
         if (
             turn.speaker == "Мир"
             and normalise_action(turn.intent or turn.action) in OBSERVE_COMMANDS
         ):
-            # Only engine-authored observation rows carry these identities. Player text
-            # is always inserted above with role=player, never inspected for identities.
-            for line in turn.text.splitlines():
+            for index, line in enumerate(turn.text.splitlines()):
                 name, separator, body = line.partition(": ")
                 actor_id = NAMES_TO_IDS.get(name) if separator else None
+                if actor_id and "нейтрал" in body and "без видимых ран" in body:
+                    body = "рядом."
                 self.append_message(
-                    "npc" if actor_id else role,
-                    name if actor_id else turn.speaker,
-                    body if actor_id else line,
+                    "npc" if actor_id else "narrator",
+                    "Рассказчик" if index == 0 else None,
+                    f"{name} {body}" if actor_id else line,
                     actor_id=actor_id,
                 )
             return
-        # NPC identity already labels the message; do not duplicate it in its body.
         text = present_turn(turn).story
-        if role == "npc" and text.startswith(turn.speaker + ":"):
-            text = text[len(turn.speaker) + 1 :].lstrip()
-        context = (
-            "Провокация — "
-            if turn.combat and turn.combat.command in ANGER_COMMANDS
-            else "Схватка — "
-        )
-        label = (context if turn.combat else "") + turn.speaker
-        if (
-            turn.combat
-            and turn.actor_id
-            and turn.combat.outcome.state.actor(turn.actor_id).disposition == "hostile"
-        ):
-            label += " [" + disposition_label(turn.combat.outcome.state.actor(turn.actor_id)) + "]"
-        self.append_message(role, label, text, actor_id=turn.actor_id)
+        if turn.dialogue:
+            text = text.removeprefix(turn.speaker + ": ")
+            self.append_story(text, actor_id=turn.actor_id)
+        else:
+            role = "npc" if turn.actor_id else "narrator"
+            self.append_message(role, "Рассказчик", text, actor_id=turn.actor_id)

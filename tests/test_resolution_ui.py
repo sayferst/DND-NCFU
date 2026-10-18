@@ -130,7 +130,7 @@ def test_world_questions_during_encounter_are_read_only(window, question):
     assert window._session.combat == before_combat
     assert window._session.dice.checkpoint() == checkpoint
     if question.startswith("что"):
-        assert "Серый волк: враждебен" in window.journal.toPlainText()
+        assert "Серый волк враждебен" in window.journal.toPlainText()
         assert "10/10" not in window.journal.toPlainText()
     else:
         assert "Дорога у деревни" in reply.text

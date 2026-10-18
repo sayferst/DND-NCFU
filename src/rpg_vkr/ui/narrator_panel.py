@@ -7,8 +7,10 @@ from rpg_vkr.commands import CHAT_TARGETS
 from rpg_vkr.domain.combat import ACTORS, ANGER_COMMANDS, ATTACK_COMMANDS
 from rpg_vkr.domain.world import LOCATIONS
 from rpg_vkr.narrative.context import build_frame, recent_dialogue, visible_changes
+from rpg_vkr.narrative.dialogue import dialogue_context, last_interlocutor
 from rpg_vkr.narrative.ollama import OllamaClient
 from rpg_vkr.narrative.records import Narration
+from rpg_vkr.narrative.speech import validate_binding
 
 
 def install_narrator_panels(window):
@@ -174,6 +176,7 @@ def request_narration(window):
         dialogue_actor=actor,
         history=recent_dialogue(window._session),
         clarify=bool(turn and turn.intent == "уточнить намерение"),
+        dialogue=dialogue_context(window._session),
     )
 
 
@@ -215,6 +218,14 @@ def accept_intent(window, intent):
     elif intent.kind == "clarify":
         command = "уточнить намерение"
     target = ATTACK_COMMANDS.get(command) or ANGER_COMMANDS.get(command)
+    if validate_binding(
+        text,
+        command,
+        location=window._session.world.location,
+        active_target=window._session.combat.active,
+        interlocutor=last_interlocutor(window._session),
+    ):
+        target = None  # Session records a clarification rather than proposing this attack.
     if (
         target
         and window._session.combat.actor(target).disposition == "neutral"
@@ -315,13 +326,7 @@ def refresh_narrator_panels(window):
         and not any(n.turn_index == len(session.turns) for n in session.narrations)
     )
     window.cancel_narration_button.setEnabled(busy)
-    window.mode_label.setText(
-        "Локальный ИИ · "
-        + (window.local_model.currentText() or "модель не выбрана")
-        + " · правила и автономный рассказ работают локально"
-        if enabled
-        else "Автономный режим · без нейросети и интернета"
-    )
+    window.mode_label.setText("Рассказчик" if enabled else "Рассказчик · автономный режим")
     frame = build_frame(session)
     context = (
         f"{frame.hero}\n{frame.location}; здоровье {frame.health}\n"

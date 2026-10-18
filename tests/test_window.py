@@ -54,8 +54,8 @@ def test_dice_enter_and_button_show_each_actual_result(window):
     QTest.keyClick(window.action_input, Qt.Key.Key_Return)
     window.action_input.setText("бросить d20")
     QTest.mouseClick(window.send_button, Qt.MouseButton.LeftButton)
-    assert window.journal.toPlainText().count("Кубик: На кубике выпало 4.") == 1
-    assert window.journal.toPlainText().count("Кубик: На кубике выпало 1.") == 1
+    assert window.journal.toPlainText().count("Рассказчик: На кубике выпало 4.") == 1
+    assert window.journal.toPlainText().count("Рассказчик: На кубике выпало 1.") == 1
 
 
 def test_three_empty_slots_are_visible(window):

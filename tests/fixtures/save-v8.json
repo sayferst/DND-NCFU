@@ -1,0 +1,170 @@
+{
+  "schema_version": 8,
+  "saved_at": "2026-10-18T20:43:36.480279+00:00",
+  "session": {
+    "memory": {
+      "version": "world-memory-1",
+      "base_turn": 0,
+      "baseline": {
+        "actor.boar.disposition": "neutral",
+        "actor.boar.hp": 12,
+        "actor.guard.disposition": "neutral",
+        "actor.guard.hp": 18,
+        "actor.merchant.disposition": "neutral",
+        "actor.merchant.hp": 12,
+        "actor.villager.disposition": "neutral",
+        "actor.villager.hp": 8,
+        "actor.wolf.disposition": "hostile",
+        "actor.wolf.hp": 10,
+        "combat.active": null,
+        "combat.rounds": 0,
+        "combat.surprise": false,
+        "hero.charisma": 8,
+        "hero.constitution": 13,
+        "hero.dexterity": 12,
+        "hero.intelligence": 10,
+        "hero.name": "Путник",
+        "hero.strength": 14,
+        "hero.wisdom": 15,
+        "progress.class_id": "legacy",
+        "progress.level": 1,
+        "progress.xp": 0,
+        "training.charisma": 0,
+        "training.constitution": 0,
+        "training.dexterity": 0,
+        "training.intelligence": 0,
+        "training.strength": 0,
+        "training.wisdom": 0,
+        "world.bandages": 1,
+        "world.basket": 0,
+        "world.explored": false,
+        "world.gold": 10,
+        "world.hp": 12,
+        "world.location": "gate",
+        "world.market_known": false,
+        "world.max_hp": 12,
+        "world.quest": "available",
+        "world.shop_gold": 20,
+        "world.shop_stock": 3,
+        "world.trading": false
+      },
+      "events": [
+        {
+          "turn_index": 1,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [],
+          "before_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726",
+          "after_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726"
+        },
+        {
+          "turn_index": 2,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [
+            1
+          ],
+          "before_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726",
+          "after_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726"
+        }
+      ]
+    },
+    "narrations": [
+      {
+        "turn_index": 2,
+        "model": "local-test:1",
+        "text": "У ворот тихо.",
+        "context_hash": "94ebcd67ba41c672e7acd4d4fc0edd7342b68135a4dfff6f22a8e12d36afe754",
+        "prompt_version": "narrator-prose-3"
+      }
+    ],
+    "seed": 42,
+    "character": {
+      "name": "Путник",
+      "strength": 14,
+      "dexterity": 12,
+      "constitution": 13,
+      "intelligence": 10,
+      "wisdom": 15,
+      "charisma": 8
+    },
+    "world": {
+      "location": "gate",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 10,
+      "bandages": 1,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "legacy",
+      "initial": null,
+      "events": []
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "neutral"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "neutral"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": null,
+      "surprise": false,
+      "rounds": 0
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "Спрашиваю жительницу о помощи",
+        "speaker": "Жительница",
+        "text": "Жительница: «Нужно доставить корзину на рынок. Заплачу 5 золотых. Если согласны, напишите: «взять поручение».»",
+        "roll": null,
+        "check": null,
+        "actor_id": "villager",
+        "combat": null,
+        "intent": "беседа с жительницей"
+      },
+      {
+        "action": "Хочу проверить удачу",
+        "speaker": "Кубик",
+        "text": "d20 → 4",
+        "roll": {
+          "index": 1,
+          "value": 4
+        },
+        "check": null,
+        "actor_id": null,
+        "combat": null,
+        "intent": "бросить кубик"
+      }
+    ]
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-18",
+  "purpose": "Audit provenance, not imported runtime corpus or training data",
+  "main_document_sha256": "05d0f5fe1c6a7a0e6fe80ccbb1fc12391675ac57402f1db2d2409b62f7a79f21",
+  "archive_sha256": "a815e316107492fc2c73385651dd4dfb82115a08b77d7661d11d663c11d0bc3d",
+  "manifest": {
+    "created": "2026-10-18",
+    "files": [
+      {
+        "name": "DND_NCFU_STORYTELLER_RESEARCH_AND_CORPUS_FOR_CODEX.md",
+        "bytes": 1059347,
+        "sha256": "05d0f5fe1c6a7a0e6fe80ccbb1fc12391675ac57402f1db2d2409b62f7a79f21"
+      },
+      {
+        "name": "README_FOR_CODEX.md",
+        "bytes": 2282,
+        "sha256": "1f965ab691d466dd9a0b56ba93452854b8b625ecf1c8e39efe3908ce1f987d91"
+      },
+      {
+        "name": "literary_sources.csv",
+        "bytes": 4144,
+        "sha256": "512ffba048fa2d4f07777ece47b615528d51d42f6c460eb5c203cf3b62a1dd06"
+      },
+      {
+        "name": "narrative_knowledge.sqlite3",
+        "bytes": 3993600,
+        "sha256": "dbdbcaaebffb7db01e1561be819d7074d3f39fb275d958dcfefa3ea301dbc56c"
+      },
+      {
+        "name": "narrator_examples.jsonl",
+        "bytes": 200095,
+        "sha256": "609487447b738b7286d424c0c122ae97672841bf36d0b8b33b8270939b252c4b"
+      },
+      {
+        "name": "scenario_cards.jsonl",
+        "bytes": 1910030,
+        "sha256": "1e702c84955a67075255ffdebfc4a25c9b0c8a67aa7bbeb3d0a5928213d24815"
+      },
+      {
+        "name": "sources.csv",
+        "bytes": 28008,
+        "sha256": "ee1a43242aa6c3f2d565813a35d4e15a6e5972b52b977a7d215fe4b07185be28"
+      },
+      {
+        "name": "tropes_catalog.jsonl",
+        "bytes": 71130,
+        "sha256": "5cf626dee1a28bd8697bad30b4dcabefab5af48c1328100d774b6afc016fbc5f"
+      }
+    ],
+    "statistics": {
+      "core_settings": 55,
+      "scenario_variants": 330,
+      "trope_cards": 85,
+      "narration_examples": 122,
+      "source_links": 105
+    }
+  },
+  "audit_sha256": "ce497fd0a6c4fd3d4a8c319c6ef0f6c45d82c37d0b6872a56cf440c9c868d919",
+  "independent_source_checks": [
+    {
+      "url": "https://www.gutenberg.org/ebooks/50742",
+      "claimed_title": "Беовульф",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/128",
+      "claimed_title": "Тысяча и одна ночь, редакция Э. Лэнга",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/5668",
+      "claimed_title": "Тысяча и одна ночь, редакция Дж. Скотта",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/34117",
+      "claimed_title": "Беовульф: комментарии и исследование Р. Чамберса",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/2591",
+      "claimed_title": "Сказки братьев Гримм",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/1727",
+      "claimed_title": "Одиссея, перевод Сэмюэла Батлера",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/1251",
+      "claimed_title": "Смерть Артура, том I, Т. Мэлори",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://www.gutenberg.org/ebooks/391",
+      "claimed_title": "Песнь о Роланде, исторический перевод Скотт-Монкриффа",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://tvtropes.org/pmwiki/termsofservice.php",
+      "claimed_title": "Terms of Service",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://posmotre.ch/%D0%9F%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B5.%D0%BB%D0%B8:%D0%9F%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B5_%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5",
+      "claimed_title": "Пользовательское соглашение",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://posmotre.ch/%D0%9F%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B5.%D0%BB%D0%B8:%D0%9E%D1%82%D0%BA%D0%B0%D0%B7_%D0%BE%D1%82_%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8",
+      "claimed_title": "Отказ от ответственности",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://creativecommons.org/reusing-cc-licensed-content/",
+      "claimed_title": "Reusing CC-licensed content",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://creativecommons.org/2021/03/04/should-cc-licensed-content-be-used-to-train-ai-it-depends/",
+      "claimed_title": "Should CC-Licensed Content be Used to Train AI?",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    }
+  ],
+  "notes": [
+    "All 8 manifest entries matched hashes and sizes.",
+    "build_pack.py not executed.",
+    "All 13 external source attempts failed with CONNECT 403.",
+    "Only first dialogue/UI package approved for implementation."
+  ]
+}
