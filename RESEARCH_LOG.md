@@ -382,3 +382,28 @@ Windows не измерены. Базовый хэш frame прежний, по�
 успешны (75 Python-файлов). Сырой вывод: docs/validation/linux-master-canon-2026-10-19.txt.
 7 исходных документов и последнее пользовательское ТЗ сверены по SHA-256;
 lockfile и старые fixtures v1–v8 не менялись. Настоящая Qwen3/Windows ещё не проверены.
+
+
+## 2026-10-19 — R021: пользовательский сбой кодировки Windows
+
+Источник — вставленный пользователем traceback, не самостоятельный запуск агента
+на Windows: 470 passed/1 failed за 17.97 с, test_actual_v9_migration_preserves_rng_socials_and_old_prose,
+UnicodeDecodeError CP1251, байт 0x98, позиция 5865. SHA на ПК не предоставлен.
+Path.read_text не имел encoding, хотя тестовый файл сохранён в UTF-8. Добавлен
+явный encoding; функции игры/формат/fixtures не менялись. Проверка того же теста
+с имитацией CP1251 успешна; PYTHONWARNDEFAULTENCODING=1 и ошибка EncodingWarning —
+1 passed за 0.19 с. AST-проверка src/tests/scripts не нашла иных неявных вызовов
+read_text/write_text. Это инженерная переносимость, не научный A/B и не качество LLM.
+
+Полный присланный консольный лог подтвердил обновление до 3d9ceb3, прежние
+Windows-прогоны 418/445 без ошибок и последний 470/1. Дополнительно найден
+ConnectionAbortedError/WinError 10053 в тестовом HTTP при отмене клиента. Он
+добавлен к ожидаемым разрывам только при записи тестового ответа, как в старой
+HTTP-фикстуре; ошибки сети игры не подавляются. Лог с замаскированным именем
+профиля/метаданными SHA-256 — docs/validation/windows-master-before-encoding-fix-2026-10-19.*.
+Исходный загруженный файл сохранён без изменения вне репозитория.
+
+Итог исправления: Linux/Python 3.12.14, scripts/check.py — 471 passed,
+0 failed/skipped за 13.25 с; pip check и обе проверки Ruff успешны, 75 файлов.
+Вывод — docs/validation/linux-windows-encoding-fix-2026-10-19.txt. Реальная Windows
+после исправления ещё не запускалась агентом; требуется повторный прогон пользователя.

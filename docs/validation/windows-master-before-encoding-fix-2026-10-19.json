@@ -1,0 +1,32 @@
+{
+  "source": "user_uploaded_console_log",
+  "date_user_timezone": "2026-10-19",
+  "original_bytes": 37051,
+  "original_sha256": "ad86133beda307a474cb7bf40633f992ddac481396a79ebb07a7798d098ac735",
+  "stored_sha256": "a27cd156be511ef91350200eeb155cb00bda1cb76c24a3914e04915e45ea4ddf",
+  "redactions": "Windows profile username in paths replaced by <USER>; original attachment unchanged outside repository",
+  "observed_updates": [
+    "024d805..56c089c",
+    "56c089c..24506f1",
+    "24506f1..21d2312",
+    "21d2312..3d9ceb3"
+  ],
+  "latest_windows_result": {
+    "passed": 470,
+    "failed": 1,
+    "seconds": 17.97,
+    "failure": "UnicodeDecodeError default CP1251 in migration test",
+    "background_traceback": "ConnectionAbortedError WinError 10053 in cancelled test HTTP response"
+  },
+  "earlier_windows_results": [
+    {
+      "passed": 418,
+      "seconds": 17.72
+    },
+    {
+      "passed": 445,
+      "seconds": 18.5
+    }
+  ],
+  "line_endings": "LF normalized for versioned copy; original upload unchanged"
+}

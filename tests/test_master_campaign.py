@@ -140,7 +140,9 @@ def test_actual_v9_migration_preserves_rng_socials_and_old_prose(tmp_path):
     assert session.campaign == slots.load(1).campaign
     assert session.submit("бросить кубик").roll.value == 1
     slots.save(2, session)
-    assert json.loads((tmp_path / "slot-2.json").read_text())["schema_version"] == 10
+    assert (
+        json.loads((tmp_path / "slot-2.json").read_text(encoding="utf-8"))["schema_version"] == 10
+    )
     assert slots.load(2).to_dict() == session.to_dict()
     assert (tmp_path / "slot-1.json").read_bytes() == raw
 
@@ -292,7 +294,7 @@ def master_server():
             self.end_headers()
             try:
                 self.wfile.write(payload)
-            except (BrokenPipeError, ConnectionResetError):
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
                 pass
 
         def do_GET(self):

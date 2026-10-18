@@ -1,0 +1,503 @@
+Windows PowerShell
+(C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены.
+
+Попробуйте новую кроссплатформенную оболочку PowerShell (https://aka.ms/pscore6)
+
+PS C:\Windows\system32> & {
+>>     Set-Location D:\Projects\DND-NCFU -ErrorAction Stop
+>>
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не получено. Запуск остановлен.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\check.py
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Проверка не прошла. Запуск остановлен.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\run_game.py
+>> }
+Already up to date.
+Platform: Windows AMD64
+Python: 3.12.10; SQLite: 3.49.1
+Running: git --version
+git version 2.56.0.windows.2
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+No broken requirements found.
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pytest
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 418 items
+
+tests\test_character.py ........................                                                                                                                     [  5%]
+tests\test_character_dialog.py ...                                                                                                                                   [  6%]
+tests\test_chat_intents.py ...................                                                                                                                       [ 11%]
+tests\test_combat.py .......................                                                                                                                         [ 16%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 19%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 21%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 22%]
+tests\test_dialogue.py .............                                                                                                                                 [ 25%]
+tests\test_dice.py ...                                                                                                                                               [ 26%]
+tests\test_environment.py ...                                                                                                                                        [ 27%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 30%]
+tests\test_launch.py ...                                                                                                                                             [ 31%]
+tests\test_local_narrator.py .................................................                                                                                       [ 43%]
+tests\test_offline.py ..........                                                                                                                                     [ 45%]
+tests\test_presentation.py .................                                                                                                                         [ 49%]
+tests\test_progression.py ......................................                                                                                                     [ 58%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 61%]
+tests\test_save_migration.py ..........                                                                                                                              [ 63%]
+tests\test_save_slots.py ....................                                                                                                                        [ 68%]
+tests\test_session.py ....................                                                                                                                           [ 73%]
+tests\test_trade_context.py .........                                                                                                                                [ 75%]
+tests\test_window.py .......................                                                                                                                         [ 81%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 84%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 88%]
+tests\test_world.py ..............................                                                                                                                   [ 95%]
+tests\test_world_memory.py ..................                                                                                                                        [100%]
+
+========================================================================== 418 passed in 17.72s ===========================================================================
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m ruff check .
+All checks passed!
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m ruff format --check .
+66 files already formatted
+Environment and prototype checks passed. Manual Windows GUI check is still required.
+PS D:\Projects\DND-NCFU> & {
+>>     $ErrorActionPreference = 'Stop'
+>>
+>>     Set-Location 'D:\Projects\DND-NCFU' -ErrorAction Stop
+>>
+>>     $saveDir = 'D:\Projects\DND-NCFU-data\saves'
+>>
+>>     if (Test-Path -LiteralPath $saveDir) {
+>>         $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+>>         $suffix = [guid]::NewGuid().ToString('N').Substring(0, 8)
+>>         $backupDir = "D:\Projects\DND-NCFU-data\backup-before-dialogue-$stamp-$suffix"
+>>
+>>         Copy-Item -LiteralPath $saveDir -Destination $backupDir -Recurse
+>>         Write-Host "Копия сохранений: $backupDir"
+>>     }
+>>
+>>     git switch setup/development-environment
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Не удалось переключить ветку. Пришлите вывод.'
+>>     }
+>>
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не выполнено. Пришлите вывод.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\check.py
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Проверка не прошла. Игра не запущена.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\run_game.py
+>> }
+Копия сохранений: D:\Projects\DND-NCFU-data\backup-before-dialogue-20261019-002046-58b2a1aa
+Already on 'setup/development-environment'
+Your branch is up to date with 'origin/setup/development-environment'.
+remote: Enumerating objects: 98, done.
+remote: Counting objects: 100% (98/98), done.
+remote: Compressing objects: 100% (12/12), done.
+remote: Total 53 (delta 40), reused 53 (delta 40), pack-reused 0 (from 0)
+Unpacking objects: 100% (53/53), 49.89 KiB | 183.00 KiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   024d805..56c089c  setup/development-environment -> origin/setup/development-environment
+Updating 024d805..56c089c
+Fast-forward
+ AGENTS.md                                          |  27 ++
+ CHANGELOG.md                                       |  13 +
+ DECISIONS.md                                       |  49 ++++
+ KNOWN_ISSUES.md                                    |  19 +-
+ LICENSES_AND_ATTRIBUTIONS.md                       |   7 +
+ PROJECT_STATUS.md                                  |  25 +-
+ README.md                                          |   7 +-
+ RESEARCH_LOG.md                                    |  35 +++
+ ROADMAP.md                                         |   7 +
+ TEST_PLAN.md                                       |  20 ++
+ docs/CONVERSATIONS_AND_REACTIONS.md                | 101 +++++++
+ docs/DIALOGUE_AND_PROSE.md                         |   6 +
+ docs/LOCAL_AI_IMPROVEMENT_PLAN.md                  |   6 +
+ docs/OFFLINE_TEST.md                               |   9 +
+ docs/SAVE_SLOTS.md                                 |  10 +
+ .../STORYTELLER_CORPUS_AUDIT_2026-10-18.md         | 304 +++++++++++++++++++++
+ docs/research/STORYTELLER_CORPUS_SOURCE.json       | 132 +++++++++
+ src/rpg_vkr/application.py                         | 101 ++++++-
+ src/rpg_vkr/commands.py                            |   2 +
+ src/rpg_vkr/domain/social.py                       |  52 ++++
+ src/rpg_vkr/narrative/dialogue.py                  | 273 +++++++++++++-----
+ src/rpg_vkr/narrative/intent.py                    |  11 +-
+ src/rpg_vkr/narrative/ollama.py                    |  96 +++++--
+ src/rpg_vkr/narrative/records.py                   |   4 +-
+ src/rpg_vkr/narrative/speech.py                    | 122 +++++++++
+ src/rpg_vkr/storage/slots.py                       |   3 +-
+ src/rpg_vkr/ui/main_window.py                      |  31 +--
+ src/rpg_vkr/ui/narrator_panel.py                   |  19 +-
+ src/rpg_vkr/ui/role_journal.py                     |  86 +++---
+ tests/fixtures/save-v8.json                        | 170 ++++++++++++
+ tests/test_chat_intents.py                         |   2 +-
+ tests/test_combat_ui.py                            |   4 +-
+ tests/test_conversation_revision.py                | 247 +++++++++++++++++
+ tests/test_dialogue.py                             |   7 +-
+ tests/test_episode_panels.py                       |   2 +-
+ tests/test_launch.py                               |   2 +-
+ tests/test_local_narrator.py                       |  95 ++++++-
+ tests/test_resolution_ui.py                        |   2 +-
+ tests/test_save_migration.py                       |   8 +-
+ tests/test_window.py                               |   4 +-
+ tests/test_world_memory.py                         |   2 +-
+ 41 files changed, 1929 insertions(+), 193 deletions(-)
+ create mode 100644 docs/CONVERSATIONS_AND_REACTIONS.md
+ create mode 100644 docs/research/STORYTELLER_CORPUS_AUDIT_2026-10-18.md
+ create mode 100644 docs/research/STORYTELLER_CORPUS_SOURCE.json
+ create mode 100644 src/rpg_vkr/domain/social.py
+ create mode 100644 src/rpg_vkr/narrative/speech.py
+ create mode 100644 tests/fixtures/save-v8.json
+ create mode 100644 tests/test_conversation_revision.py
+Platform: Windows AMD64
+Python: 3.12.10; SQLite: 3.49.1
+Running: git --version
+git version 2.56.0.windows.2
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+No broken requirements found.
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pytest
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 445 items
+
+tests\test_character.py ........................                                                                                                                     [  5%]
+tests\test_character_dialog.py ...                                                                                                                                   [  6%]
+tests\test_chat_intents.py ...................                                                                                                                       [ 10%]
+tests\test_combat.py .......................                                                                                                                         [ 15%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 18%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 20%]
+tests\test_conversation_revision.py ........................                                                                                                         [ 25%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 26%]
+tests\test_dialogue.py .............                                                                                                                                 [ 29%]
+tests\test_dice.py ...                                                                                                                                               [ 30%]
+tests\test_environment.py ...                                                                                                                                        [ 31%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 34%]
+tests\test_launch.py ...                                                                                                                                             [ 34%]
+tests\test_local_narrator.py ....................................................                                                                                    [ 46%]
+tests\test_offline.py ..........                                                                                                                                     [ 48%]
+tests\test_presentation.py .................                                                                                                                         [ 52%]
+tests\test_progression.py ......................................                                                                                                     [ 61%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 63%]
+tests\test_save_migration.py ..........                                                                                                                              [ 66%]
+tests\test_save_slots.py ....................                                                                                                                        [ 70%]
+tests\test_session.py ....................                                                                                                                           [ 75%]
+tests\test_trade_context.py .........                                                                                                                                [ 77%]
+tests\test_window.py .......................                                                                                                                         [ 82%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 85%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 89%]
+tests\test_world.py ..............................                                                                                                                   [ 95%]
+tests\test_world_memory.py ..................                                                                                                                        [100%]
+
+========================================================================== 445 passed in 18.50s ===========================================================================
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m ruff check .
+All checks passed!
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m ruff format --check .
+69 files already formatted
+Environment and prototype checks passed. Manual Windows GUI check is still required.
+PS D:\Projects\DND-NCFU> & {
+>>     $ErrorActionPreference = 'Stop'
+>>     Set-Location 'D:\Projects\DND-NCFU' -ErrorAction Stop
+>>
+>>     git switch setup/development-environment
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Не удалось переключить ветку.'
+>>     }
+>>
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не выполнено. Пришлите вывод.'
+>>     }
+>>
+>>     notepad '.\docs\AI_MASTER_TRANSITION_PLAN.md'
+>> }
+Already on 'setup/development-environment'
+Your branch is up to date with 'origin/setup/development-environment'.
+remote: Enumerating objects: 35, done.
+remote: Counting objects: 100% (35/35), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 21 (delta 13), reused 21 (delta 13), pack-reused 0 (from 0)
+Unpacking objects: 100% (21/21), 89.49 KiB | 2.29 MiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   56c089c..24506f1  setup/development-environment -> origin/setup/development-environment
+Updating 56c089c..24506f1
+Fast-forward
+ AGENTS.md                                          |   17 +
+ CHANGELOG.md                                       |   10 +
+ DECISIONS.md                                       |   26 +
+ KNOWN_ISSUES.md                                    |   12 +
+ LICENSES_AND_ATTRIBUTIONS.md                       |   13 +
+ PROJECT_STATUS.md                                  |   15 +-
+ README.md                                          |    4 +
+ RESEARCH_LOG.md                                    |   23 +
+ ROADMAP.md                                         |   11 +
+ TEST_PLAN.md                                       |   14 +
+ docs/AI_MASTER_TRANSITION_PLAN.md                  |  370 ++++++
+ .../AI_MASTER_ROUTING_PROBES_2026-10-19.json       |  124 +++
+ .../AI_MASTER_SOURCE_CHECKS_2026-10-19.json        |   55 +
+ docs/research/USER_AI_MASTER_TARGET_SPEC.md        | 1173 ++++++++++++++++++++
+ .../USER_AI_MASTER_TARGET_SPEC_SOURCE.json         |   16 +
+ docs/validation/linux-master-audit-2026-10-19.txt  |   49 +
+ 16 files changed, 1931 insertions(+), 1 deletion(-)
+ create mode 100644 docs/AI_MASTER_TRANSITION_PLAN.md
+ create mode 100644 docs/research/AI_MASTER_ROUTING_PROBES_2026-10-19.json
+ create mode 100644 docs/research/AI_MASTER_SOURCE_CHECKS_2026-10-19.json
+ create mode 100644 docs/research/USER_AI_MASTER_TARGET_SPEC.md
+ create mode 100644 docs/research/USER_AI_MASTER_TARGET_SPEC_SOURCE.json
+ create mode 100644 docs/validation/linux-master-audit-2026-10-19.txt
+PS D:\Projects\DND-NCFU> & {
+>>     $ErrorActionPreference = 'Stop'
+>>     Set-Location 'D:\Projects\DND-NCFU'
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не выполнено. Пришлите вывод.'
+>>     }
+>> }
+remote: Enumerating objects: 15, done.
+remote: Counting objects: 100% (15/15), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 8 (delta 7), reused 8 (delta 7), pack-reused 0 (from 0)
+Unpacking objects: 100% (8/8), 4.02 KiB | 132.00 KiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   24506f1..21d2312  setup/development-environment -> origin/setup/development-environment
+Updating 24506f1..21d2312
+Fast-forward
+ AGENTS.md                         | 10 ++++++++++
+ DECISIONS.md                      | 16 ++++++++++++++++
+ PROJECT_STATUS.md                 |  4 ++++
+ RESEARCH_LOG.md                   | 11 +++++++++++
+ docs/AI_MASTER_TRANSITION_PLAN.md | 35 ++++++++++++++++++++++++++++++++---
+ 5 files changed, 73 insertions(+), 3 deletions(-)
+PS D:\Projects\DND-NCFU> & {
+>>     $ErrorActionPreference = 'Stop'
+>>     Set-Location 'D:\Projects\DND-NCFU'
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не выполнено. Пришлите вывод.'
+>>     }
+>> }
+Already up to date.
+PS D:\Projects\DND-NCFU> & {
+>>     $ErrorActionPreference = 'Stop'
+>>     Set-Location 'D:\Projects\DND-NCFU' -ErrorAction Stop
+>>
+>>     $dataDir = 'D:\Projects\DND-NCFU-data'
+>>     if ($env:RPG_VKR_DATA_DIR) {
+>>         $dataDir = $env:RPG_VKR_DATA_DIR
+>>     }
+>>
+>>     $saveDir = Join-Path $dataDir 'saves'
+>>     if (Test-Path -LiteralPath $saveDir) {
+>>         $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+>>         $suffix = [guid]::NewGuid().ToString('N').Substring(0, 8)
+>>         $backupDir = Join-Path $dataDir "backup-before-master-$stamp-$suffix"
+>>
+>>         Copy-Item -LiteralPath $saveDir -Destination $backupDir -Recurse
+>>         Write-Host "Копия сохранений: $backupDir"
+>>     }
+>>
+>>     git switch setup/development-environment
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Не удалось переключить ветку. Пришлите вывод.'
+>>     }
+>>
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Обновление не выполнено. Пришлите вывод.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\check.py
+>>     if ($LASTEXITCODE -ne 0) {
+>>         throw 'Проверка не прошла. Игра не запущена.'
+>>     }
+>>
+>>     .\.venv\Scripts\python.exe scripts\run_game.py
+>> }
+Копия сохранений: D:\Projects\DND-NCFU-data\backup-before-master-20261019-011503-b189a9ea
+Already on 'setup/development-environment'
+Your branch is up to date with 'origin/setup/development-environment'.
+remote: Enumerating objects: 104, done.
+remote: Counting objects: 100% (104/104), done.
+remote: Compressing objects: 100% (14/14), done.
+remote: Total 57 (delta 42), reused 57 (delta 42), pack-reused 0 (from 0)
+Unpacking objects: 100% (57/57), 43.22 KiB | 303.00 KiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   21d2312..3d9ceb3  setup/development-environment -> origin/setup/development-environment
+Updating 21d2312..3d9ceb3
+Fast-forward
+ AGENTS.md                                         |  35 ++
+ CHANGELOG.md                                      |   9 +
+ DECISIONS.md                                      |  46 +++
+ KNOWN_ISSUES.md                                   |  20 ++
+ LICENSES_AND_ATTRIBUTIONS.md                      |   9 +
+ PROJECT_STATUS.md                                 |  23 +-
+ README.md                                         |  10 +-
+ RESEARCH_LOG.md                                   |  27 ++
+ ROADMAP.md                                        |  11 +
+ TEST_PLAN.md                                      |  22 ++
+ docs/AI_MASTER_TRANSITION_PLAN.md                 |   5 +
+ docs/CONVERSATIONS_AND_REACTIONS.md               |   5 +
+ docs/DIALOGUE_AND_PROSE.md                        |   5 +
+ docs/MASTER_AND_CANON.md                          | 136 ++++++++
+ docs/OFFLINE_TEST.md                              |   9 +
+ docs/SAVE_SLOTS.md                                |  10 +
+ docs/validation/linux-master-canon-2026-10-19.txt |  50 +++
+ src/rpg_vkr/application.py                        | 127 ++++++-
+ src/rpg_vkr/commands.py                           |   2 +-
+ src/rpg_vkr/domain/campaign.py                    | 154 +++++++++
+ src/rpg_vkr/domain/meaning.py                     |  49 +++
+ src/rpg_vkr/domain/social.py                      |  14 +-
+ src/rpg_vkr/narrative/dialogue.py                 |  28 +-
+ src/rpg_vkr/narrative/intent.py                   |  66 +++-
+ src/rpg_vkr/narrative/master.py                   |  39 +++
+ src/rpg_vkr/narrative/ollama.py                   | 165 +++++++--
+ src/rpg_vkr/narrative/records.py                  |  37 +-
+ src/rpg_vkr/narrative/routing.py                  |  52 +++
+ src/rpg_vkr/narrative/segments.py                 |  56 ++++
+ src/rpg_vkr/narrative/speech.py                   |  37 +-
+ src/rpg_vkr/storage/slots.py                      |   3 +-
+ src/rpg_vkr/ui/creation_dialog.py                 |  41 ++-
+ src/rpg_vkr/ui/main_window.py                     |  26 +-
+ src/rpg_vkr/ui/narrator_panel.py                  |  64 +++-
+ src/rpg_vkr/ui/role_journal.py                    |  26 +-
+ tests/fixtures/save-v9.json                       | 208 ++++++++++++
+ tests/test_chat_intents.py                        |   2 +-
+ tests/test_conversation_revision.py               |  10 +-
+ tests/test_episode_panels.py                      |   2 +-
+ tests/test_launch.py                              |   2 +-
+ tests/test_local_narrator.py                      |  22 +-
+ tests/test_master_campaign.py                     | 391 ++++++++++++++++++++++
+ tests/test_save_migration.py                      |   8 +-
+ tests/test_window.py                              |   8 +-
+ tests/test_world_memory.py                        |   2 +-
+ 45 files changed, 1966 insertions(+), 107 deletions(-)
+ create mode 100644 docs/MASTER_AND_CANON.md
+ create mode 100644 docs/validation/linux-master-canon-2026-10-19.txt
+ create mode 100644 src/rpg_vkr/domain/campaign.py
+ create mode 100644 src/rpg_vkr/domain/meaning.py
+ create mode 100644 src/rpg_vkr/narrative/master.py
+ create mode 100644 src/rpg_vkr/narrative/routing.py
+ create mode 100644 src/rpg_vkr/narrative/segments.py
+ create mode 100644 tests/fixtures/save-v9.json
+ create mode 100644 tests/test_master_campaign.py
+Platform: Windows AMD64
+Python: 3.12.10; SQLite: 3.49.1
+Running: git --version
+git version 2.56.0.windows.2
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+No broken requirements found.
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pytest
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 471 items
+
+tests\test_character.py ........................                                                                                                                     [  5%]
+tests\test_character_dialog.py ...                                                                                                                                   [  5%]
+tests\test_chat_intents.py ...................                                                                                                                       [  9%]
+tests\test_combat.py .......................                                                                                                                         [ 14%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 17%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 18%]
+tests\test_conversation_revision.py ........................                                                                                                         [ 23%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 25%]
+tests\test_dialogue.py .............                                                                                                                                 [ 28%]
+tests\test_dice.py ...                                                                                                                                               [ 28%]
+tests\test_environment.py ...                                                                                                                                        [ 29%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 32%]
+tests\test_launch.py ...                                                                                                                                             [ 32%]
+tests\test_local_narrator.py ....................................................                                                                                    [ 43%]
+tests\test_master_campaign.py .............F............                                                                                                             [ 49%]
+tests\test_offline.py ..........                                                                                                                                     [ 51%]
+tests\test_presentation.py ...........Traceback (most recent call last):
+......                                                                                                                         [ 55%]
+tests\test_progression.py ..  File "C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+.  File "C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+.  File "C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+.  File "C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "D:\Projects\DND-NCFU\tests\test_master_campaign.py", line 320, in do_POST
+    self.send({"message": {"role": "assistant", "content": json.dumps(result)}})
+  File "D:\Projects\DND-NCFU\tests\test_master_campaign.py", line 294, in send
+    self.wfile.write(payload)
+  File "C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+.ConnectionAbortedError: [WinError 10053] Программа на вашем хост-компьютере разорвала установленное подключение
+----------------------------------------
+................................                                                                                                     [ 63%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 65%]
+tests\test_save_migration.py ..........                                                                                                                              [ 67%]
+tests\test_save_slots.py ....................                                                                                                                        [ 72%]
+tests\test_session.py ....................                                                                                                                           [ 76%]
+tests\test_trade_context.py .........                                                                                                                                [ 78%]
+tests\test_window.py .......................                                                                                                                         [ 83%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 85%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 89%]
+tests\test_world.py ..............................                                                                                                                   [ 96%]
+tests\test_world_memory.py ..................                                                                                                                        [100%]
+
+================================================================================ FAILURES =================================================================================
+______________________________________________________ test_actual_v9_migration_preserves_rng_socials_and_old_prose _______________________________________________________
+
+tmp_path = WindowsPath('C:/Users/<USER>/AppData/Local/Temp/pytest-of-<USER>/pytest-20/test_actual_v9_migration_prese0')
+
+    def test_actual_v9_migration_preserves_rng_socials_and_old_prose(tmp_path):
+        raw = (Path(__file__).parent / "fixtures/save-v9.json").read_bytes()
+        (tmp_path / "slot-1.json").write_bytes(raw)
+        slots = SaveSlots(tmp_path)
+        session = slots.load(1)
+        assert session.narrations[0].prompt_version == "narrator-prose-4"
+        assert session.turns[0].dialogue.act == "contact"
+        assert session.campaign.npc_profiles == ()
+        assert all(turn.meaning is None for turn in session.turns)
+        assert session.campaign == slots.load(1).campaign
+        assert session.submit("бросить кубик").roll.value == 1
+        slots.save(2, session)
+>       assert json.loads((tmp_path / "slot-2.json").read_text())["schema_version"] == 10
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_master_campaign.py:143:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\pathlib.py:1028: in read_text
+    return f.read()
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <encodings.cp1251.IncrementalDecoder object at 0x0000023FBFA416D0>
+input = b'{\n  "schema_version": 10,\n  "saved_at": "2026-10-18T22:15:24.312887+00:00",\n  "session": {\n    "campaign": {\n  ...   "meaning": null,\n        "player_name": "\xd0\x9f\xd1\x83\xd1\x82\xd0\xbd\xd0\xb8\xd0\xba"\n      }\n    ]\n  }\n}'
+final = True
+
+    def decode(self, input, final=False):
+>       return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       UnicodeDecodeError: 'charmap' codec can't decode byte 0x98 in position 5865: character maps to <undefined>
+
+C:\Users\<USER>\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1251.py:23: UnicodeDecodeError
+========================================================================= short test summary info =========================================================================
+FAILED tests/test_master_campaign.py::test_actual_v9_migration_preserves_rng_socials_and_old_prose - UnicodeDecodeError: 'charmap' codec can't decode byte 0x98 in position 5865: character maps to <undefined>
+===================================================================== 1 failed, 470 passed in 17.97s ======================================================================
+Проверка не прошла. Игра не запущена.
+строка:32 знак:9
++         throw 'Проверка не прошла. Игра не запущена.'
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Проверка не прошла. Игра не запущена.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Проверка не прошла. Игра не запущена.
