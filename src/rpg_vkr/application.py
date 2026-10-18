@@ -3,6 +3,7 @@
 from dataclasses import asdict, dataclass, replace
 
 from rpg_vkr.commands import CHAT_TARGETS, NPC_CONTACTS, allowed_intents, normalise_action
+from rpg_vkr.domain.campaign import Campaign, NPCProfile, procedural_profile
 from rpg_vkr.domain.character import (
     ABILITY_NAMES,
     AbilityCheck,
@@ -21,6 +22,7 @@ from rpg_vkr.domain.combat import (
 )
 from rpg_vkr.domain.combat_record import CombatRecord, canonical, restore_record
 from rpg_vkr.domain.dice import D20Roll, DiceRoller
+from rpg_vkr.domain.meaning import Meaning
 from rpg_vkr.domain.memory import WorldMemory, snapshot
 from rpg_vkr.domain.progression import (
     ARCHETYPES,
@@ -68,6 +70,8 @@ class Turn:
     intent: str | None = None
     origin: str = "typed"
     dialogue: DialogueRecord | None = None
+    meaning: Meaning | None = None
+    player_name: str | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -84,7 +88,9 @@ class Session:
         world: WorldState | None = None,
         progress: HeroProgress | None = None,
         combat: CombatState | None = None,
+        campaign: Campaign | None = None,
     ) -> None:
+        self.campaign = Campaign.create() if campaign is None else campaign
         self.dice = DiceRoller(seed)
         self.character = Character() if character is None else character
         self.world = WorldState() if world is None else world
@@ -100,7 +106,9 @@ class Session:
         self._narrations: list[Narration] = []
 
     @classmethod
-    def create_hero(cls, character: Character, class_id: str, seed: int | None = None):
+    def create_hero(
+        cls, character: Character, class_id: str, seed: int | None = None, *, description=""
+    ):
         progress = HeroProgress(class_id, character)
         kit = ARCHETYPES[class_id]
         return cls(
@@ -108,6 +116,7 @@ class Session:
             character=character,
             world=WorldState(gold=kit.gold, bandages=kit.bandages),
             progress=progress,
+            campaign=Campaign.create(description),
         )
 
     @property
@@ -124,12 +133,27 @@ class Session:
     def turns(self) -> tuple[Turn, ...]:
         return tuple(self._turns)
 
-    def submit(self, action: str, *, intent: str | None = None, origin="typed") -> Turn:
+    def submit(
+        self, action: str, *, intent: str | None = None, origin="typed", meaning=None, profile=None
+    ) -> Turn:
         action = _text(action, 500).strip()
         if len(self._turns) >= MAX_TURNS:
             raise ValueError("Достигнут предел в 2000 действий. Сохраните сессию.")
         if intent is not None and (not isinstance(intent, str) or intent not in allowed_intents()):
             raise ValueError("Неподдерживаемое намерение. Мир не изменён.")
+        if meaning is not None and not isinstance(meaning, Meaning):
+            raise ValueError("Invalid semantic evidence")
+        if meaning is None and intent is None:
+            from rpg_vkr.narrative.routing import infer_meaning
+
+            meaning = infer_meaning(self, action)
+        if meaning is not None:
+            from rpg_vkr.narrative.routing import meaning_command
+
+            expected = meaning_command(meaning)
+            if intent is not None and intent != expected:
+                raise ValueError("Meaning does not match executable command")
+            intent = expected
         command = intent or normalise_action(action)
         if not isinstance(origin, str) or origin not in {"typed", "quick"}:
             raise ValueError("Invalid input origin")
@@ -141,16 +165,44 @@ class Session:
                 active_target=self.combat.active,
                 interlocutor=last_interlocutor(self),
             )
-            if intent is not None
+            if intent is not None and not (meaning and meaning.kind == "master")
             else None
         )
         if binding_error:
             command = intent = "уточнить намерение"
+            meaning = None
+        campaign_before = self.campaign
+        if profile is not None:
+            if (
+                not isinstance(profile, NPCProfile)
+                or not meaning
+                or profile.actor_id != meaning.target
+                or profile.created_at_turn != len(self.turns) + 1
+                or ACTORS[profile.actor_id][1] != self.world.location
+            ):
+                raise ValueError("NPC proposal does not match this scene")
+            candidate = self.campaign.add(profile)
+        else:
+            candidate = self.campaign
+        if (
+            meaning
+            and meaning.target
+            and ACTORS[meaning.target][1] == self.world.location
+            and not candidate.profile(meaning.target)
+            and meaning.speech_act == "question"
+            and meaning.topic in {"appearance", "background", "other"}
+        ):
+            candidate = candidate.add(
+                procedural_profile(candidate, meaning.target, len(self.turns) + 1)
+            )
         checkpoint = self.dice.checkpoint()
         before = snapshot(self.world, self.character, self.combat, self.progress)
         try:
-            turn, world = self._resolve_turn(action, command)
-            turn = replace(turn, intent=intent, origin=origin)
+            self.campaign = candidate
+            turn, world = self._resolve_turn(action, command, meaning)
+            turn = replace(
+                turn, intent=intent, origin=origin, meaning=meaning, player_name=self.character.name
+            )
             if binding_error:
                 turn = replace(turn, text=binding_error)
             combat = turn.combat.outcome.state if turn.combat is not None else self.combat
@@ -184,6 +236,7 @@ class Session:
                 turn = replace(turn, text=turn.text + "\n" + describe_award(event))
             memory = self.memory.append(turn, before, snapshot(world, character, combat, progress))
         except Exception:
+            self.campaign = campaign_before
             self.dice.restore(checkpoint)
             raise
         self.memory = memory
@@ -194,7 +247,7 @@ class Session:
         self._turns.append(turn)
         return turn
 
-    def _resolve_turn(self, action: str, command: str) -> tuple[Turn, WorldState]:
+    def _resolve_turn(self, action: str, command: str, meaning=None) -> tuple[Turn, WorldState]:
         if command in COMBAT_COMMANDS or (
             self.combat.active is not None and command == "использовать бинт"
         ):
@@ -221,6 +274,7 @@ class Session:
             "задание",
             "развитие",
             "помощь",
+            "спросить мастера",
             *OBSERVE_COMMANDS,
             *WHERE_COMMANDS,
         }
@@ -234,6 +288,10 @@ class Session:
                 "Рассказчик",
                 "Идёт схватка: атакуйте, уклонитесь, используйте бинт или отступите.",
             ), self.world
+        if command == "спросить мастера":
+            from rpg_vkr.narrative.master import master_reply
+
+            return Turn(action, "Рассказчик", master_reply(self, meaning)), self.world
         if command == "уточнить намерение":
             return Turn(
                 action, "Рассказчик", "Нужно уточнить намерение. Мир не изменён."
@@ -244,6 +302,7 @@ class Session:
                 action,
                 CHAT_TARGETS.get(command) or NPC_CONTACTS.get(command),
                 contact=command in NPC_CONTACTS,
+                meaning=meaning,
             )
             return Turn(action, speaker, text, actor_id=actor_id, dialogue=record), self.world
         intent = dialogue_intent(action) if command == normalise_action(action) else None
@@ -403,10 +462,18 @@ class Session:
 
         if narration.context_hash != build_frame(self).fingerprint:
             raise ValueError("Narration context no longer matches")
+        self._validate_segments(narration)
         self._narrations.append(narration)
+
+    def _validate_segments(self, note):
+        turn = self.turns[note.turn_index - 1] if note.turn_index else None
+        target = turn.dialogue.target if turn and turn.dialogue else None
+        if any(segment.speaker_id not in {"master", target} for segment in note.segments):
+            raise ValueError("Narration contains an unapproved speaker")
 
     def to_dict(self) -> dict:
         return {
+            "campaign": self.campaign.to_dict(),
             "memory": self.memory.to_dict(),
             "narrations": [note.to_dict() for note in self.narrations],
             "seed": self.dice.seed,
@@ -422,10 +489,12 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 9) -> "Session":
-        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9):
+    def from_dict(cls, data: object, version: int = 10) -> "Session":
+        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 10:
+            keys.add("campaign")
         if version >= 7:
             keys.update({"memory", "narrations"})
         if version >= 2:
@@ -454,12 +523,17 @@ class Session:
         else:
             world = WorldState.from_dict(data["world"])
         session = cls(seed=data["seed"], character=character, world=world)
+        session.campaign = (
+            Campaign.from_dict(data["campaign"]) if version >= 10 else Campaign.migrate(data)
+        )
         session.introduction = _text(data["introduction"], 4000)
         turns = data["turns"]
         if not isinstance(turns, list) or len(turns) > MAX_TURNS:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 10:
+                turn_keys.update({"meaning", "player_name"})
             if version >= 9:
                 turn_keys.update({"origin", "dialogue"})
             if version >= 8:
@@ -477,6 +551,20 @@ class Session:
             ):
                 raise ValueError("Invalid resolved intent")
             command = intent or normalise_action(action)
+            meaning = None
+            if version >= 10 and item["meaning"] is not None:
+                from rpg_vkr.narrative.routing import meaning_command
+
+                meaning = Meaning.from_dict(item["meaning"])
+                if (
+                    command != meaning_command(meaning)
+                    or item["combat"] is not None
+                    or item["roll"] is not None
+                ):
+                    raise ValueError("Saved meaning does not match this turn")
+            player_name = item.get("player_name")
+            if player_name is not None:
+                player_name = _text(player_name, 40)
             origin = item.get("origin", "legacy")
             if not isinstance(origin, str) or origin not in {"typed", "quick", "legacy", "system"}:
                 raise ValueError("Invalid saved input origin")
@@ -495,6 +583,18 @@ class Session:
                     raise ValueError("Social target does not match intent")
                 # The recorded interpretation is historical evidence. Do not reinterpret
                 # natural language on load after a future parser/model improvement.
+            if meaning:
+                if meaning.kind == "master" and (
+                    item["actor_id"] is not None or dialogue is not None
+                ):
+                    raise ValueError("Master question cannot impersonate an NPC")
+                if dialogue and (
+                    meaning.kind != "dialogue"
+                    or meaning.target != dialogue.target
+                    or meaning.speech_act != dialogue.act
+                    or meaning.topic != dialogue.topic
+                ):
+                    raise ValueError("Social record does not match saved semantics")
             text = _text(item["text"], 4000)
             roll = None
             check = None
@@ -535,6 +635,8 @@ class Session:
                         intent,
                         origin,
                         dialogue,
+                        meaning,
+                        player_name,
                     )
                 )
                 continue
@@ -644,6 +746,8 @@ class Session:
                     intent=intent,
                     origin=origin,
                     dialogue=dialogue,
+                    meaning=meaning,
+                    player_name=player_name,
                 )
             )
         if version >= 5:
@@ -717,6 +821,12 @@ class Session:
                         or turn.combat.character != before_progress.character()
                     ):
                         raise ValueError("Combat character does not match progression")
+        if any(p.created_at_turn > len(session.turns) for p in session.campaign.npc_profiles):
+            raise ValueError("NPC canon is anchored in the future")
+        for profile in session.campaign.npc_profiles:
+            turn = session.turns[profile.created_at_turn - 1]
+            if not turn.meaning or turn.meaning.target != profile.actor_id:
+                raise ValueError("NPC profile has no matching confirmed question")
         final = snapshot(session.world, session.character, session.combat, session.progress)
         session.memory = (
             WorldMemory.from_dict(data["memory"], session.turns, final)
@@ -737,6 +847,7 @@ class Session:
 
                     if note.context_hash != build_frame(session).fingerprint:
                         raise ValueError("Saved narration does not match current scene")
+                session._validate_segments(note)
                 session._narrations.append(note)
                 previous = note.turn_index
         return session

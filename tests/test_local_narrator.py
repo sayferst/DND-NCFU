@@ -310,7 +310,7 @@ def test_gui_saves_prose_separately_restores_and_never_autorequests_on_load(
         window.narrate_button.click()
         wait_for(qt_app, lambda: len(window._session.narrations) == 1)
         assert TEXT in window.journal.toPlainText()
-        assert "Рассказчик:" in window.journal.toPlainText()
+        assert "Мастер:" in window.journal.toPlainText()
         assert window._session.world == before_world
         assert window._session.dice.checkpoint() == checkpoint
         assert not window._session.turns and not window._session.memory.events
@@ -509,7 +509,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-4"
+    assert new.prompt_version == "narrator-prose-5"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
@@ -567,11 +567,11 @@ def test_free_chat_interprets_then_commits_once_and_shows_only_ai_reply(
         turn = window._session.turns[0]
         assert turn.action == phrase and turn.intent == expected
         journal = window.journal.toPlainText()
-        assert f"Вы: {phrase}" in journal
+        assert f"Путник: {phrase}" in journal
         assert turn.text not in journal
         assert "Мир:" not in journal
         if mode == "ok":
-            assert "Рассказчик:" in journal
+            assert "Мастер:" in journal
             assert window.journal.document().lastBlock().userData().actor_id == "villager"
             assert window._session.world.quest == "available"
         elif mode == "chat_action":
@@ -681,7 +681,7 @@ def test_failed_ai_story_cannot_deliver_basket_twice(window, qt_app):
         assert window._session.world.gold == before + 5
         assert window._session.world.basket == 0
         assert len(window._session.turns) == 3
-        assert "Рассказчик: Корзина доставлена" in window.journal.toPlainText()
+        assert "Мастер: Корзина доставлена" in window.journal.toPlainText()
         assert Session.from_dict(window._session.to_dict()).world.gold == before + 5
         assert len(requests) == 3
 
@@ -712,7 +712,7 @@ def test_cancelling_second_chat_stage_shows_engine_result_without_late_prose(win
         ("Спрашиваю жительницу, нужна ли ей помощь.", "ok", "беседа с жительницей"),
     ],
 )
-def test_reported_phrases_use_single_field_contract_with_examples_and_history(
+def test_reported_phrases_use_semantic_contract_with_examples_and_history(
     window, qt_app, phrase, mode, expected
 ):
     with local_server(mode=mode) as (url, requests):
@@ -725,7 +725,13 @@ def test_reported_phrases_use_single_field_contract_with_examples_and_history(
         window.send_button.click()
         wait_for(qt_app, lambda: bool(window._session.narrations))
         payload = requests[1][1]
-        assert set(payload["format"]["properties"]) == {"command"}
+        assert set(payload["format"]["properties"]) == {
+            "kind",
+            "command",
+            "target",
+            "speech_act",
+            "topic",
+        }
         context = json.loads(payload["messages"][-1]["content"])
         assert context["player_message"] == phrase
         assert "жительницей" in context["recent_dialogue"][-1]["player_message"]
@@ -812,7 +818,7 @@ def test_conversation_receives_only_focused_reply_context_without_stat_sheet(win
         text = window.journal.toPlainText()
         assert "«Яблоки собираю" in text
         assert "ИИ-рассказчик" not in text and "· ИИ" not in text
-        assert window.mode_label.text() == "Рассказчик"
+        assert window.mode_label.text() == "Мастер"
 
 
 def test_misread_approach_does_not_offer_an_attack_confirmation(window, qt_app, monkeypatch):

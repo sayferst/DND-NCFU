@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QMainWindow,
     QMessageBox,
+    QPlainTextEdit,
     QPushButton,
     QTabWidget,
     QVBoxLayout,
@@ -97,6 +98,11 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.quest_label = QLabel()
         self.quest_label.setWordWrap(True)
         profile_layout.addWidget(self.quest_label)
+        self.hero_description_view = QPlainTextEdit()
+        self.hero_description_view.setReadOnly(True)
+        self.hero_description_view.setMaximumHeight(150)
+        self.hero_description_view.setAccessibleName("Сохранённое описание и прошлое героя")
+        profile_layout.addWidget(self.hero_description_view)
         controls = QHBoxLayout()
         self.new_character_button = QPushButton("Новый герой")
         self.edit_character_button = QPushButton("Редактировать героя")
@@ -119,7 +125,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
         self._render_journal()
-        legend = QLabel("Вы — синий · рассказчик — зелёный · NPC — фиолетовый · враг — красный")
+        legend = QLabel("Герой — синий · мастер — зелёный · NPC — фиолетовый · враг — красный")
         legend.setWordWrap(True)
         play_layout.addWidget(legend)
         play_layout.addWidget(self.journal, stretch=1)
@@ -227,6 +233,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._refresh_episode_panels()
         character = self._session.character
         world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
         self.character_group.setTitle(
             f"Персонаж: {character.name} · "
             + ("герой" if self._session.progress.enabled else "песочница")
@@ -241,6 +253,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             "Созданный герой развивается действиями; "
             "свободный редактор — только для старой песочницы."
         )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
         self.scene_title.setText(LOCATIONS[world.location])
         self.resource_label.setText(
             f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
@@ -308,19 +322,20 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         )
 
     def _render_journal(self) -> None:
+        self.journal.hero_name = self._session.character.name
         self.journal.clear()
         notes = {note.turn_index: note for note in self._session.narrations}
         if 0 in notes:
             self._append_narration(notes[0])
         else:
-            self.journal.append_message("narrator", "Рассказчик", self._session.introduction)
+            self.journal.append_message("narrator", "Мастер", self._session.introduction)
         for index, turn in enumerate(self._session.turns, 1):
             if index in notes:
                 self.journal.append_player(turn)
                 self._append_narration(notes[index])
             elif (
                 turn.intent
-                and self._narrating_session is self._session
+                and getattr(self, "_narrating_session", None) is self._session
                 and self._narrating_index == index
                 and self._chat_text is None
             ):
@@ -338,7 +353,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 actor_id = turn.dialogue.target
             elif turn.actor_id in {"guard", "villager", "merchant"}:
                 actor_id = turn.actor_id  # Preserve trusted attribution in older saves too.
-        self.journal.append_story(note.text, actor_id=actor_id)
+        if note.segments:
+            self.journal.append_segments(note.segments)
+        else:
+            self.journal.append_story(note.text, actor_id=actor_id)
 
     def _refresh_slots(self) -> None:
         self._refresh_workspace()

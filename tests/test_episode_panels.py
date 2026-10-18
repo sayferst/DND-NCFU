@@ -171,7 +171,7 @@ def test_roll_history_shows_recent_100_without_truncating_session(window):
     assert history.startswith("#3 ·")
     assert "#102 ·" in history
     assert len(window._session.turns) == 102
-    assert "Рассказчик: На кубике выпало" in window.journal.toPlainText()
+    assert "Мастер: На кубике выпало" in window.journal.toPlainText()
     assert window.breakdown_selector.count() == 100
     assert window.breakdown_selector.itemData(0) == 2
 

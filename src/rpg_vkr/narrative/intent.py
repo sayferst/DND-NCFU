@@ -11,6 +11,8 @@ class Interpretation:
     command: str
     target: str
     question: str
+    speech_act: str = ""
+    topic: str = ""
 
 
 def intent_schema(target=None):
@@ -24,9 +26,40 @@ def intent_schema(target=None):
     return {
         "type": "object",
         "properties": {
-            "command": {"type": "string", "enum": commands},
+            "command": {"type": "string", "enum": ["", *commands]},
+            "kind": {"type": "string", "enum": ["action", "dialogue", "master", "clarify"]},
+            "target": {"type": "string", "enum": ["", "guard", "villager", "merchant"]},
+            "speech_act": {
+                "type": "string",
+                "enum": [
+                    "",
+                    "question",
+                    "greeting",
+                    "contact",
+                    "refusal",
+                    "farewell",
+                    "insult",
+                    "threat",
+                    "apology",
+                ],
+            },
+            "topic": {
+                "type": "string",
+                "enum": [
+                    "",
+                    "occupation",
+                    "help",
+                    "local_help",
+                    "wares",
+                    "directions",
+                    "greeting",
+                    "appearance",
+                    "background",
+                    "other",
+                ],
+            },
         },
-        "required": ["command"],
+        "required": ["kind", "command", "target", "speech_act", "topic"],
         "additionalProperties": False,
     }
 
@@ -40,6 +73,35 @@ def parse_interpretation(data):
     if message.get("role") != "assistant":
         raise ValueError("Invalid intent role")
     value = json.loads(message["content"])
+    if isinstance(value, dict) and set(value) == {
+        "kind",
+        "command",
+        "target",
+        "speech_act",
+        "topic",
+    }:
+        if not all(isinstance(v, str) for v in value.values()):
+            raise ValueError("Invalid semantic types")
+        kind, command, target = value["kind"], value["command"], value["target"]
+        if kind in {"master", "dialogue"}:
+            from rpg_vkr.domain.meaning import Meaning
+
+            Meaning(kind, target, value["speech_act"], value["topic"])
+            if command:
+                raise ValueError("Speech cannot execute a transaction")
+            return Interpretation(kind, "", target, "", value["speech_act"], value["topic"])
+        if value["speech_act"] or value["topic"] or target:
+            raise ValueError("Mixed semantic roles")
+        if kind == "clarify" and not command:
+            return Interpretation("clarify", "", "", "")
+        if kind != "action":
+            raise ValueError("Invalid semantic kind")
+        if command not in allowed_intents() - set(CHAT_TARGETS) - {
+            "спросить мастера",
+            "уточнить намерение",
+        }:
+            raise ValueError("Unsupported semantic action")
+        return Interpretation("action", command, "", "")
     if isinstance(value, dict) and set(value) == {"command"}:
         command = value["command"]
         if not isinstance(command, str) or command not in allowed_intents():

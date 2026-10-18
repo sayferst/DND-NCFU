@@ -8,8 +8,10 @@ from rpg_vkr.domain.combat import ACTORS, ANGER_COMMANDS, ATTACK_COMMANDS
 from rpg_vkr.domain.world import LOCATIONS
 from rpg_vkr.narrative.context import build_frame, recent_dialogue, visible_changes
 from rpg_vkr.narrative.dialogue import dialogue_context, last_interlocutor
+from rpg_vkr.narrative.master import campaign_context
 from rpg_vkr.narrative.ollama import OllamaClient
 from rpg_vkr.narrative.records import Narration
+from rpg_vkr.narrative.routing import infer_meaning, meaning_command
 from rpg_vkr.narrative.speech import validate_binding
 
 
@@ -79,6 +81,7 @@ def install_narrator_panels(window):
     window._narrating_index = None
     window._narrator_frame = None
     window._chat_text = None
+    window._profile_intent = None
     window.find_models_button.clicked.connect(window.ollama.list_models)
     window.narrate_button.clicked.connect(lambda: request_narration(window))
     window.cancel_narration_button.clicked.connect(lambda: cancel_narration(window))
@@ -88,6 +91,7 @@ def install_narrator_panels(window):
     window.ollama.models_ready.connect(lambda models: models_ready(window, models))
     window.ollama.narration_ready.connect(lambda note: accept_narration(window, note))
     window.ollama.intent_ready.connect(lambda intent: accept_intent(window, intent))
+    window.ollama.profile_ready.connect(lambda profile: accept_profile(window, profile))
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
     window.ollama.diagnostics_ready.connect(window.narrator_details.setPlainText)
@@ -109,6 +113,7 @@ def cancel_narration(window):
     if window._chat_text and not window.action_input.text():
         window.action_input.setText(window._chat_text)
     window._chat_text = None
+    window._profile_intent = None
     window._narrating_session = None
     window._narrating_index = None
     window._narrator_frame = None
@@ -124,6 +129,7 @@ def failed(window, message):
     if window._chat_text and not window.action_input.text():
         window.action_input.setText(window._chat_text)
     window._chat_text = None
+    window._profile_intent = None
     window._narrating_session = None
     window._narrator_frame = None
     window._render_journal()
@@ -177,6 +183,9 @@ def request_narration(window):
         history=recent_dialogue(window._session),
         clarify=bool(turn and turn.intent == "уточнить намерение"),
         dialogue=dialogue_context(window._session),
+        campaign=campaign_context(
+            window._session, turn.meaning.target if turn and turn.meaning else actor
+        ),
     )
 
 
@@ -198,11 +207,13 @@ def request_chat(window, text):
         window.local_model.currentText(),
         text,
         history=recent_dialogue(window._session),
+        campaign=campaign_context(window._session, last_interlocutor(window._session)),
+        conversation={"interlocutor_id": last_interlocutor(window._session)},
     )
     return True
 
 
-def accept_intent(window, intent):
+def accept_intent(window, intent, profile=None):
     if (
         window._chat_text is None
         or window._narrating_session is not window._session
@@ -210,21 +221,24 @@ def accept_intent(window, intent):
         or not window.enable_local_narrator.isChecked()
     ):
         return
-    text, window._chat_text = window._chat_text, None
-    window._narrating_session = None
+    text = window._chat_text
+    meaning = infer_meaning(window._session, text, intent)
     command = intent.command
     if intent.kind == "dialogue":
         command = next(key for key, target in CHAT_TARGETS.items() if target == intent.target)
     elif intent.kind == "clarify":
         command = "уточнить намерение"
+    if meaning:
+        command = meaning_command(meaning)
     target = ATTACK_COMMANDS.get(command) or ANGER_COMMANDS.get(command)
-    if validate_binding(
+    binding_error = validate_binding(
         text,
         command,
         location=window._session.world.location,
         active_target=window._session.combat.active,
         interlocutor=last_interlocutor(window._session),
-    ):
+    )
+    if binding_error:
         target = None  # Session records a clarification rather than proposing this attack.
     if (
         target
@@ -234,11 +248,34 @@ def accept_intent(window, intent):
         if not window._confirm(
             f"ИИ понял сообщение как «{command}». Это сделает персонажа враждебным. Продолжить?"
         ):
+            cancel_narration(window)
             window.action_input.setText(text)
             window.narrator_status.setText("Действие отменено. Мир не изменён.")
             return
+    if (
+        profile is None
+        and meaning
+        and meaning.target
+        and not binding_error
+        and meaning.speech_act == "question"
+        and meaning.topic in {"appearance", "background", "other"}
+        and ACTORS[meaning.target][1] == window._session.world.location
+        and not window._session.campaign.profile(meaning.target)
+    ):
+        window._profile_intent = intent
+        window.narrator_status.setText("Мастер придумывает и проверяет детали персонажа…")
+        window.ollama.create_profile(
+            build_frame(window._session),
+            window.local_model.currentText(),
+            meaning.target,
+            campaign={"genre": "сельское приключенческое фэнтези"},
+        )
+        return
+    window._chat_text = None
+    window._profile_intent = None
+    window._narrating_session = None
     try:
-        window._session.submit(text, intent=command)
+        window._session.submit(text, intent=command, meaning=meaning, profile=profile)
     except ValueError as error:
         window.action_input.setText(text)
         failed(window, str(error))
@@ -247,7 +284,7 @@ def accept_intent(window, intent):
     window._dirty = True
     window._refresh_character()
     window._render_journal()
-    if intent.kind == "clarify" and intent.question:
+    if not meaning and intent.kind == "clarify" and intent.question:
         frame = build_frame(window._session)
         window._narrating_session = window._session
         window._narrating_index = len(window._session.turns)
@@ -262,6 +299,12 @@ def accept_intent(window, intent):
         )
     else:
         request_narration(window)
+
+
+def accept_profile(window, profile):
+    intent = window._profile_intent
+    if intent is not None:
+        accept_intent(window, intent, profile)
 
 
 def accept_narration(window, note):
@@ -326,7 +369,7 @@ def refresh_narrator_panels(window):
         and not any(n.turn_index == len(session.turns) for n in session.narrations)
     )
     window.cancel_narration_button.setEnabled(busy)
-    window.mode_label.setText("Рассказчик" if enabled else "Рассказчик · автономный режим")
+    window.mode_label.setText("Мастер" if enabled else "Мастер · автономный режим")
     frame = build_frame(session)
     context = (
         f"{frame.hero}\n{frame.location}; здоровье {frame.health}\n"
@@ -351,6 +394,11 @@ def refresh_narrator_panels(window):
     text = (
         "\n\n".join(rows[-100:]) or "Значимых изменений пока нет. Осмотр сам по себе не меняет мир."
     )
+    if session.campaign.npc_profiles:
+        text += "\n\nЗапомненные описания жителей:\n" + "\n\n".join(
+            f"{ACTORS[profile.actor_id][0]}: {profile.appearance} {profile.ancestry}"
+            for profile in session.campaign.npc_profiles
+        )
     if window.world_memory_view.toPlainText() != text:
         window.world_memory_view.setPlainText(text)
     window.memory_status.setText(

@@ -12,7 +12,7 @@ def test_enter_sends_action_and_keeps_journal(window):
     QTest.keyClick(window.action_input, Qt.Key.Key_Return)
     journal = window.journal.toPlainText()
     assert journal.startswith(initial)
-    assert journal.count("Вы: осмотреться") == 1
+    assert journal.count("Путник: осмотреться") == 1
     assert "следы телеги" in journal
     assert window.action_input.text() == ""
     assert not window.send_button.isEnabled()
@@ -21,7 +21,7 @@ def test_enter_sends_action_and_keeps_journal(window):
 def test_button_sends_help_event(window):
     window.action_input.setText("помочь")
     QTest.mouseClick(window.send_button, Qt.MouseButton.LeftButton)
-    assert "Вы: помочь" in window.journal.toPlainText()
+    assert "Путник: помочь" in window.journal.toPlainText()
     assert "Жительница благодарит" in window.journal.toPlainText()
 
 
@@ -54,8 +54,8 @@ def test_dice_enter_and_button_show_each_actual_result(window):
     QTest.keyClick(window.action_input, Qt.Key.Key_Return)
     window.action_input.setText("бросить d20")
     QTest.mouseClick(window.send_button, Qt.MouseButton.LeftButton)
-    assert window.journal.toPlainText().count("Рассказчик: На кубике выпало 4.") == 1
-    assert window.journal.toPlainText().count("Рассказчик: На кубике выпало 1.") == 1
+    assert window.journal.toPlainText().count("Мастер: На кубике выпало 4.") == 1
+    assert window.journal.toPlainText().count("Мастер: На кубике выпало 1.") == 1
 
 
 def test_three_empty_slots_are_visible(window):

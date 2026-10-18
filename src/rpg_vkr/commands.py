@@ -27,5 +27,5 @@ def allowed_intents():
         | set(CHECK_COMMANDS)
         | set(CHAT_TARGETS)
         | set(NPC_CONTACTS)
-        | {"помощь", "уточнить намерение"}
+        | {"помощь", "уточнить намерение", "спросить мастера"}
     )

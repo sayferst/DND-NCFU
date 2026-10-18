@@ -3,8 +3,18 @@
 from dataclasses import asdict, dataclass
 
 NPC_IDS = {"guard", "villager", "merchant"}
-ACTS = {"question", "greeting", "contact", "refusal", "insult", "threat", "apology"}
-TOPICS = {"occupation", "help", "wares", "directions", "greeting", "other"}
+ACTS = {"question", "greeting", "contact", "refusal", "insult", "threat", "apology", "farewell"}
+TOPICS = {
+    "occupation",
+    "help",
+    "wares",
+    "directions",
+    "greeting",
+    "other",
+    "local_help",
+    "appearance",
+    "background",
+}
 
 
 def grievance_after(before, act):

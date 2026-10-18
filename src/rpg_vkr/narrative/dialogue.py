@@ -66,6 +66,8 @@ def dialogue_intent(action):
 
 def last_interlocutor(session):
     for turn in reversed(session.turns):
+        if turn.dialogue and turn.dialogue.act == "farewell":
+            break
         if normalise_action(turn.intent or turn.action) in {
             "идти к воротам",
             "идти на дорогу",
@@ -117,6 +119,17 @@ def _answer(session, target, topic):
             "guard": "Караулю дорогу. Слежу, чтобы у ворот был порядок.",
             "merchant": "Торгую. Если интересует товар, можем обсудить его у прилавка.",
         }[target]
+    if topic == "local_help" and target == "villager":
+        return (
+            "Спасибо, яблоки уже собраны. Я справлюсь с корзиной."
+            if activity(session, target).startswith("собрала") or session.world.quest != "available"
+            else "Если поможете поставить корзину и собрать рассыпавшиеся яблоки, "
+            "буду благодарна. Только придержите ручку."
+        )
+    if topic in {"appearance", "background", "other"}:
+        profile = session.campaign.profile(target)
+        if profile:
+            return profile.public_background if topic == "background" else profile.work_detail
     if topic == "directions":
         return "Рынок за площадью. Если собираетесь туда, я могу объяснить дорогу."
     if topic == "greeting":
@@ -151,8 +164,10 @@ def _answer(session, target, topic):
     }[target]
 
 
-def resolve_conversation(session, action, target=None, *, topic_hint=None, contact=False):
-    act, topic = speech_details(action)
+def resolve_conversation(
+    session, action, target=None, *, topic_hint=None, contact=False, meaning=None
+):
+    act, topic = (meaning.speech_act, meaning.topic) if meaning else speech_details(action)
     if contact:
         act, topic = "contact", "greeting"
     elif topic_hint and topic == "other":
@@ -200,6 +215,8 @@ def resolve_conversation(session, action, target=None, *, topic_hint=None, conta
             if target == "villager"
             else "После ваших слов разговор пока окончен."
         )
+    elif act == "farewell":
+        line = "Хорошо, доброго вам пути. Настаивать не буду."
     elif act == "refusal":
         line = (
             "Ваше право. Тогда поищу другого помощника."
@@ -213,6 +230,8 @@ def resolve_conversation(session, action, target=None, *, topic_hint=None, conta
         "guard": "Стражник обращает на вас внимание.",
         "merchant": "Торговец прислушивается к вашим словам.",
     }[target]
+    if any(t.actor_id == target for t in session.turns):
+        gesture = f"{name} отвечает, ненадолго отвлекаясь от своих дел."
     return name, f"{name}: {gesture}\n— {line}", target, record
 
 
@@ -227,7 +246,12 @@ def dialogue_context(session):
         return None
     turn = session.turns[-1]
     record = turn.dialogue
+    from rpg_vkr.narrative.master import campaign_context
+
     return {
+        **campaign_context(session, record.target),
+        "open_question": record.act == "question"
+        and record.topic in {"other", "background", "appearance"},
         "speaker": ACTORS[record.target][0],
         "target_id": record.target,
         "speech_act": record.act,

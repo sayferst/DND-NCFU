@@ -48,7 +48,7 @@ def interact():
             assert window.theme_choice.currentText() == 'Тёмная'
             window.load_slot(1)
             assert 'Жительница благодарит' in window.journal.toPlainText()
-            assert 'Рассказчик: На кубике выпало ' in window.journal.toPlainText()
+            assert 'Мастер: На кубике выпало ' in window.journal.toPlainText()
             assert window.resolution_panel.isVisible()
             assert 'Итого:' in window.roll_breakdown.toPlainText()
             assert len(window._session.turns) == 11

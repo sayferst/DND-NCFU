@@ -181,7 +181,7 @@ def test_actual_v8_fixture_preserves_prose_original_input_and_rng_without_retros
     talk(old, "пошел нахер")
     assert grievance(old.turns, "villager") == 1
     slots.save(2, old)
-    assert json.loads((tmp_path / "slot-2.json").read_bytes())["schema_version"] == 9
+    assert json.loads((tmp_path / "slot-2.json").read_bytes())["schema_version"] == 10
     assert slots.load(2).to_dict() == old.to_dict()
     assert (tmp_path / "slot-1.json").read_bytes() == raw
 
@@ -190,12 +190,12 @@ def test_user_text_kept_quick_command_hidden_and_stays_hidden_after_load(window)
     window.action_input.setText("осмотреться")
     window.submit_action()
     window._run_command("осмотреться")
-    assert window.journal.toPlainText().count("Вы: осмотреться") == 1
+    assert window.journal.toPlainText().count("Путник: осмотреться") == 1
     assert [t.origin for t in window._session.turns] == ["typed", "quick"]
     window.save_slot(1)
     window._session = window._saves.load(1)
     window._render_journal()
-    assert window.journal.toPlainText().count("Вы: осмотреться") == 1
+    assert window.journal.toPlainText().count("Путник: осмотреться") == 1
 
 
 def test_narrator_label_and_quoted_npc_colour_survive_hostility_and_theme(window, qt_app):
@@ -209,7 +209,7 @@ def test_narrator_label_and_quoted_npc_colour_survive_hostility_and_theme(window
     )
     window._render_journal()
     text = window.journal.toPlainText()
-    assert "Рассказчик:" in text
+    assert "Мастер:" in text
     assert "ИИ-рассказчик" not in text and "· ИИ" not in text
     assert "Описывает результат" not in text
     window._run_command("поссориться с жительницей")
@@ -220,7 +220,7 @@ def test_narrator_label_and_quoted_npc_colour_survive_hostility_and_theme(window
         if "«Яблоки собираю»" in block.text():
             colors = {item.format.foreground().color().name() for item in block.layout().formats()}
             assert window.journal.actor_colour("villager").name() in colors
-            assert window.journal.highlighter.colour("narrator").name() in colors
+            assert block.userData().actor_id == "villager"
             found = True
         block = block.next()
     assert found

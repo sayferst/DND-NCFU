@@ -3,8 +3,16 @@
 import re
 from dataclasses import asdict, dataclass
 
-PROMPT_VERSION = "narrator-prose-4"
-SUPPORTED_PROMPTS = {"narrator-prose-1", "narrator-prose-2", "narrator-prose-3", PROMPT_VERSION}
+from rpg_vkr.narrative.segments import Segment
+
+PROMPT_VERSION = "narrator-prose-5"
+SUPPORTED_PROMPTS = {
+    "narrator-prose-1",
+    "narrator-prose-2",
+    "narrator-prose-3",
+    "narrator-prose-4",
+    PROMPT_VERSION,
+}
 
 
 @dataclass(frozen=True)
@@ -14,6 +22,7 @@ class Narration:
     text: str
     context_hash: str
     prompt_version: str = PROMPT_VERSION
+    segments: tuple[Segment, ...] = ()
 
     def __post_init__(self):
         if type(self.turn_index) is not int or not 0 <= self.turn_index <= 2000:
@@ -36,11 +45,31 @@ class Narration:
         ):
             raise ValueError("Invalid narration provenance")
 
+        if (
+            not isinstance(self.segments, tuple)
+            or len(self.segments) > 24
+            or not all(isinstance(item, Segment) for item in self.segments)
+        ):
+            raise ValueError("Invalid visible segments")
+        if self.segments:
+
+            def compact(value):
+                return re.sub(r"[\s—«»]", "", value)
+
+            if compact("".join(item.text for item in self.segments)) != compact(self.text):
+                raise ValueError("Segments differ from narration")
+
     def to_dict(self):
         return asdict(self)
 
     @classmethod
     def from_dict(cls, data):
-        if not isinstance(data, dict) or set(data) != set(cls.__dataclass_fields__):
+        if not isinstance(data, dict) or set(data) not in (
+            set(cls.__dataclass_fields__),
+            set(cls.__dataclass_fields__) - {"segments"},
+        ):
             raise ValueError("Invalid narration record")
-        return cls(**data)
+        segments = data.get("segments", ())
+        if not isinstance(segments, (list, tuple)):
+            raise ValueError("Invalid saved segments")
+        return cls(**(data | {"segments": tuple(Segment.from_dict(item) for item in segments)}))

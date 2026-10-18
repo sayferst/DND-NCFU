@@ -8,11 +8,13 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMessageBox,
+    QPlainTextEdit,
     QPushButton,
     QSpinBox,
 )
 
 from rpg_vkr.application import Session
+from rpg_vkr.domain.campaign import DESCRIPTION_LIMIT, plain
 from rpg_vkr.domain.character import ABILITY_NAMES, Character
 from rpg_vkr.domain.progression import ARCHETYPES, POINT_BUDGET, validate_creation
 
@@ -35,7 +37,25 @@ class CreationDialog(QDialog):
         self.class_choice = QComboBox()
         for key, archetype in ARCHETYPES.items():
             self.class_choice.addItem(archetype.name, key)
-        layout.addRow("Профиль", self.class_choice)
+        layout.addRow("Класс / авторский профиль", self.class_choice)
+        self.description_input = QPlainTextEdit()
+        self.description_input.setAccessibleName("Свободное описание героя")
+        self.description_input.setPlaceholderText(
+            "Внешность, происхождение, семья, прошлое и желания героя. Можно оставить пустым."
+        )
+        self.description_input.setMaximumHeight(150)
+        layout.addRow("Расскажите о герое", self.description_input)
+        self.description_limit = QLabel(
+            f"До {DESCRIPTION_LIMIT} символов. Исходный текст сохраняется без переписывания."
+        )
+        self.description_limit.setWordWrap(True)
+        layout.addRow(self.description_limit)
+        self.description_input.textChanged.connect(self._update_budget)
+        layout.addRow(
+            QLabel(
+                "Отдельная новая сессия. Генератор новых регионов и общий мир пока в разработке."
+            )
+        )
         self.kit_label = QLabel()
         self.kit_label.setWordWrap(True)
         layout.addRow(self.kit_label)
@@ -84,8 +104,19 @@ class CreationDialog(QDialog):
             return
         remaining = POINT_BUDGET - sum(spin.value() - 8 for spin in self.scores.values())
         self.budget_label.setText(f"Осталось очков: {remaining}. Для создания должно остаться 0.")
+        used = len(self.description_input.toPlainText())
+        self.description_limit.setText(
+            f"Описание: {used}/{DESCRIPTION_LIMIT} символов. "
+            + (
+                "Лимит превышен; сократите текст. Он остаётся в поле ввода."
+                if used > DESCRIPTION_LIMIT
+                else "Исходный текст сохраняется без переписывания."
+            )
+        )
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(
-            remaining == 0 and bool(self.name_input.text().strip())
+            remaining == 0
+            and bool(self.name_input.text().strip())
+            and len(self.description_input.toPlainText()) <= DESCRIPTION_LIMIT
         )
 
     def character(self) -> Character:
@@ -97,11 +128,15 @@ class CreationDialog(QDialog):
         return character
 
     def create_session(self) -> Session:
-        return Session.create_hero(self.character(), self.class_choice.currentData())
+        description = plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
+        return Session.create_hero(
+            self.character(), self.class_choice.currentData(), description=description
+        )
 
     def accept(self) -> None:
         try:
             self.character()
+            plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
         except ValueError as error:
             QMessageBox.warning(self, "Проверьте героя", str(error))
             return

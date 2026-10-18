@@ -16,6 +16,7 @@ from rpg_vkr.commands import normalise_action
 from rpg_vkr.domain.combat import NAMES_TO_IDS
 from rpg_vkr.domain.world import OBSERVE_COMMANDS
 from rpg_vkr.narrative.presentation import present_turn
+from rpg_vkr.narrative.segments import split_story
 
 
 class MessageRole(QTextBlockUserData):
@@ -80,6 +81,7 @@ class RoleJournal(QPlainTextEdit):
     def __init__(self) -> None:
         super().__init__()
         self.highlighter = RoleHighlighter(self.document())
+        self.hero_name = "Путник"
 
     def set_role_theme(self, dark: bool) -> None:
         self.highlighter.dark = dark
@@ -122,10 +124,21 @@ class RoleJournal(QPlainTextEdit):
 
     def append_player(self, turn):
         if turn.origin in {"typed", "legacy"}:
-            self.append_message("player", "Вы", turn.action, blank_before=True)
+            self.append_message(
+                "player", turn.player_name or self.hero_name, turn.action, blank_before=True
+            )
 
     def append_story(self, text, *, actor_id=None):
-        self.append_message("narrator", "Рассказчик", text, actor_id=actor_id, speech_only=True)
+        self.append_segments(split_story(text, actor_id))
+
+    def append_segments(self, segments):
+        for segment in segments:
+            self.append_message(
+                "narrator" if segment.speaker_id == "master" else "npc",
+                segment.display_name,
+                segment.text,
+                actor_id=None if segment.speaker_id == "master" else segment.speaker_id,
+            )
 
     def append_turn(self, turn) -> None:
         self.append_player(turn)
@@ -140,7 +153,7 @@ class RoleJournal(QPlainTextEdit):
                     body = "рядом."
                 self.append_message(
                     "npc" if actor_id else "narrator",
-                    "Рассказчик" if index == 0 else None,
+                    "Мастер" if index == 0 else None,
                     f"{name} {body}" if actor_id else line,
                     actor_id=actor_id,
                 )
@@ -151,4 +164,9 @@ class RoleJournal(QPlainTextEdit):
             self.append_story(text, actor_id=turn.actor_id)
         else:
             role = "npc" if turn.actor_id else "narrator"
-            self.append_message(role, "Рассказчик", text, actor_id=turn.actor_id)
+            self.append_message(
+                role,
+                turn.speaker if turn.actor_id else "Мастер",
+                text.removeprefix(turn.speaker + ": ") if turn.actor_id else text,
+                actor_id=turn.actor_id,
+            )
