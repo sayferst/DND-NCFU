@@ -350,6 +350,7 @@ def request_chat(window, text):
                         "player": t.action,
                         "result": t.text[:1500],
                         "source": t.scene.version if t.scene else "rules",
+                        "actor_id": t.actor_id or "",
                     }
                     for t in window._session.turns[-3:]
                 ],

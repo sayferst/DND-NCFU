@@ -1,0 +1,20 @@
+{
+  "run_id": "20261019T031843286830Z",
+  "platform": "Linux",
+  "model": "qwen2.5:7b",
+  "seed": 42,
+  "prompt_version": "narrator-prose-10",
+  "code_ref": "36ce2f89a7ffeb3fd10dd9208ce2549b121b8932",
+  "purpose": "same dialogue and world; recorded product profiles, not a causal weights A/B",
+  "literary_review": "pending",
+  "human_rubric": [
+    "Русский язык: естественные фразы, согласование и единое время повествования.",
+    "Причинность: предметы и занятие NPC не подменяются, нет внутренних противоречий.",
+    "Ответ по существу: каждая просьба игрока получает ответ или понятное препятствие.",
+    "Границы ролей: модель не пишет следующие слова, решения и чувства игрока."
+  ],
+  "cases": [],
+  "comparison": [],
+  "error": "<urlopen error [Errno 111] Connection refused>",
+  "protocol_passed": false
+}

@@ -151,6 +151,7 @@ def recent_dialogue(session):
             "player_message": turn.action[:200],
             "confirmed_result": present_turn(turn).story[:350],
             "source": turn.scene.version if turn.scene else "rules",
+            "actor_id": turn.actor_id or "",
         }
         for turn in session.turns[-3:]
     )

@@ -45,11 +45,11 @@ def test_real_http_prose_and_single_repair_after_hero_creation(window, qt_app, m
         wait_for(qt_app, lambda: not window.ollama.busy)
         assert len(window._session.turns) == 1
         assert len(requests) == 1 + calls
-        assert window._session.turns[0].scene.version == "scene-director-3"
+        assert window._session.turns[0].scene.version == "scene-director-4"
         assert (window._session.world, window._session.dice.checkpoint()) == before
         for _, body in requests[1:]:
             assert "format" not in body
-            assert body["keep_alive"] == "5m" and body["think"] is False
+            assert body["keep_alive"] == "5m" and body.get("think", False) is False
         assert "Асуна выросла у моря" in requests[1][1]["messages"][-1]["content"]
         assert "Попытка 2" in window.narrator_details.toPlainText() if calls == 2 else True
         assert "продать бинт" not in window._session.turns[0].action

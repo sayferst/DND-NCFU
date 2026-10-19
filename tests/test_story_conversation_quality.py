@@ -11,7 +11,7 @@ from rpg_vkr.domain.director import StoryFact, known_facts
 from rpg_vkr.narrative.context import build_frame
 from rpg_vkr.narrative.dialogue import last_interlocutor
 from rpg_vkr.narrative.master import campaign_context
-from rpg_vkr.narrative.story import payload_context, story_payload, story_proposal
+from rpg_vkr.narrative.story import story_context, story_payload, story_proposal
 from rpg_vkr.narrative.story_quality import check_story_quality
 from rpg_vkr.storage.knowledge import CampaignIndex, export_session, restore_session, retrieve
 from rpg_vkr.storage.slots import SaveSlots
@@ -24,14 +24,12 @@ def response(text):
 
 
 def request_context(session, text):
-    return payload_context(
-        story_payload(
-            build_frame(session),
-            "qwen3:1.7b",
-            text,
-            memory=retrieve(session, text),
-            campaign=campaign_context(session, last_interlocutor(session)),
-        )
+    return story_context(
+        build_frame(session),
+        "qwen3:1.7b",
+        text,
+        memory=retrieve(session, text),
+        campaign=campaign_context(session, last_interlocutor(session)),
     )
 
 
@@ -61,20 +59,18 @@ def test_actual_v13_bad_prose_loads_but_is_not_fed_back_as_world_fact(tmp_path):
     assert session.character.name == "Путана"
     assert session.narrations[0].prompt_version == "narrator-prose-8"
     assert "мунданию" in session.turns[0].text
-    context = payload_context(
-        story_payload(
-            build_frame(session),
-            "qwen3:1.7b",
-            "спросить, как у нее дела",
-            memory=retrieve(session, "мунданию ее помощь"),
-            history=[
-                {
-                    "player": session.turns[0].action,
-                    "result": session.turns[0].text,
-                    "source": "scene-director-2",
-                }
-            ],
-        )
+    context = story_context(
+        build_frame(session),
+        "qwen3:1.7b",
+        "спросить, как у нее дела",
+        memory=retrieve(session, "мунданию ее помощь"),
+        history=[
+            {
+                "player": session.turns[0].action,
+                "result": session.turns[0].text,
+                "source": "scene-director-2",
+            }
+        ],
     )
     encoded = json.dumps(context, ensure_ascii=False)
     assert "мунданию" not in encoded and "Вы замолчите" not in encoded
@@ -263,7 +259,7 @@ def test_repair_feedback_reports_all_missing_topics_not_just_first_defect():
             response(sample["response"]),
             build_frame(session),
             sample["input"],
-            context=payload_context(payload),
+            context=story_context(build_frame(session), "qwen3:1.7b", sample["input"]),
         )
     repaired = repair_payload(payload, captured.value)
     instruction = repaired["messages"][0]["content"]

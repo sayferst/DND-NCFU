@@ -231,7 +231,7 @@ class OllamaClient(QObject):
     def _start_story(
         self, frame, model, text, *, memory=None, campaign=None, history=(), confirmed=False
     ):
-        from rpg_vkr.narrative.story import story_payload
+        from rpg_vkr.narrative.story import story_context, story_payload
 
         if model not in self.models:
             self.failed.emit("Выберите установленную модель.")
@@ -240,7 +240,7 @@ class OllamaClient(QObject):
         self._story_attempt = 0
         self._story_diagnostics = []
         self.progress.emit("Мастер пишет ответ. На процессоре первая генерация может занять время.")
-        payload = story_payload(
+        context = story_context(
             frame,
             model,
             text,
@@ -249,10 +249,12 @@ class OllamaClient(QObject):
             history=history,
             confirmed=confirmed,
         )
+        payload = story_payload(frame, model, text, context=context)
         self._story = {
             "frame": frame,
             "text": text,
             "payload": payload,
+            "context": context,
             "confirmed": confirmed,
             "previous": list(history),
         }
@@ -626,7 +628,7 @@ class OllamaClient(QObject):
                 self._report(kind, model, raw, data, "OK")
                 self.profile_ready.emit(profile)
             elif kind in {"director", "story_result"}:
-                from rpg_vkr.narrative.story import payload_context, story_proposal, story_text
+                from rpg_vkr.narrative.story import story_proposal, story_text
                 from rpg_vkr.narrative.story_quality import check_story_quality
 
                 if kind == "director":
@@ -634,7 +636,7 @@ class OllamaClient(QObject):
                         data,
                         self._frame,
                         self._story["text"],
-                        context=payload_context(self._story["payload"]),
+                        context=self._story["context"],
                         previous=self._story["previous"],
                     )
                     self._report(
@@ -650,7 +652,7 @@ class OllamaClient(QObject):
                     self.proposal_ready.emit(proposal)
                 else:
                     text = story_text(data, confirmed=True)
-                    context = payload_context(self._story["payload"])
+                    context = self._story["context"]
                     check_story_quality(
                         text,
                         self._frame,

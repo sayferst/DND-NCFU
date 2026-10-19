@@ -1,0 +1,9 @@
+{
+  "source": "user-pasted probe dialogue, not an agent-run inference",
+  "date": "2026-10-19",
+  "commit_before_fix": "36ce2f89a7ffeb3fd10dd9208ce2549b121b8932",
+  "input": "подойду к девушке",
+  "model": "qwen3:1.7b",
+  "response": "Вы подойдите к ней, и она оторвала палец от яблоки, не замечая вашего присутствия. Она молча смотрит на корзину, затем медленно встает, чтобы убрать остатки.\n\n— Скажите, вы не видели, как яблоко упало?\n…Нет, я не видел.\n\nОна вздохнула, глядя на ягоды.\n— Надеюсь, это не повредит. Я собираю их для рынка.\n\nВы подойдете к ней, и она почувствует вашу присутствие, но продолжит собирать яблоки без изменений.",
+  "observation": "broken Russian, invented unassigned first-person reply, repeated approach; old parser accepts"
+}

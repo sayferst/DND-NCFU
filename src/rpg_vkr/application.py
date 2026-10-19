@@ -584,7 +584,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 14) -> "Session":
+    def from_dict(cls, data: object, version: int = 15) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -600,6 +600,7 @@ class Session:
             12,
             13,
             14,
+            15,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}

@@ -40,6 +40,19 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
             issues.append(
                 "Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку."
             )
+    # Unassigned first-person lines and role labels can simulate a reply by the player.
+    hero_name = frame.hero.split(",", 1)[0]
+    if re.search(r"(?mi)^\s*(?:…|\.{3})?\s*(?:(?:нет|да)[,:]\s*)?я\b", prose) or re.search(
+        r"(?mi)^\s*(?:игрок|вы|" + re.escape(hero_name) + r")\s*:", prose
+    ):
+        issues.append(
+            "Модель сочинила неатрибутированную реплику за игрока. Говорит только указанный NPC."
+        )
+    approach = r"\bвы\s+(?:подход\w*|подош\w*|подойд\w*)"
+    if len(re.findall(approach, prose, re.I)) > max(
+        1, len(re.findall(r"\b(?:подойду|подойти|подхожу)\b", normal))
+    ):
+        issues.append("Один подход героя описан несколько раз. Оставь одно действие и реакцию NPC.")
     owned = (frame.inventory + " " + (campaign or {}).get("hero_description", "")).casefold()
     for item in ("нож", "кинжал", "меч", "топор", "лук", "арбалет", "посох"):
         if not re.search(r"\b" + item, owned) and re.search(

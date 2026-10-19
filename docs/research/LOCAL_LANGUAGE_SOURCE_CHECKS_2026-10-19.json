@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-19",
+  "purpose": "model candidate/license and local API investigation, no model downloads",
+  "checks": [
+    {
+      "url": "https://ollama.com/library/qwen2.5:7b",
+      "result": "CONNECT403"
+    },
+    {
+      "url": "https://ollama.com/library/qwen3:4b",
+      "result": "CONNECT403"
+    },
+    {
+      "url": "https://qwenlm.github.io/blog/qwen3/",
+      "result": "CONNECT403"
+    },
+    {
+      "url": "https://api.github.com/repos/QwenLM/Qwen2.5/commits?path=README.md&until=2025-01-01T00:00:00Z&per_page=1",
+      "result": "CONNECT403"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
+      "status": 200,
+      "bytes": 24732,
+      "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d",
+      "limitation": "content is Qwen3 README, not evidence of the precise Qwen2.5:7b license"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/QwenLM/Qwen3/main/README.md",
+      "status": 200,
+      "bytes": 24732,
+      "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ollama/ollama/main/README.md",
+      "status": 200,
+      "bytes": 19347,
+      "sha256": "9e5a7d406950fdd2742084065ab38a3ea09b5aab5e2f13ef7d64147229ae0d8b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ollama/ollama/main/docs/api.md",
+      "status": 200,
+      "bytes": 54614,
+      "limitation": "small source fetch only, not a live local inference"
+    }
+  ],
+  "candidate": "qwen2.5:7b",
+  "estimated_download_GB": 4.7,
+  "size_is_live_verified": false,
+  "exact_tag_license_checked_here": false,
+  "required_user_check": "/api/show before use; record license/details outside Git",
+  "user_authorization": "Explicit yes to trying 7B with approximately4.7GB on D: and slower CPU replies."
+}

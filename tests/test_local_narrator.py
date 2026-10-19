@@ -57,6 +57,8 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                 payload = json.dumps({"version": "local-test"}).encode()
             elif self.path == "/api/tags":
                 payload = json.dumps(LOCAL_MODELS).encode()
+            elif self.path == "/api/generate":
+                payload = json.dumps({"done": True, "done_reason": "unload"}).encode()
             elif mode == "large":
                 payload = b"x" * (MAX_RESPONSE + 100)
             elif mode == "bad_json":
@@ -110,7 +112,7 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                             "target": "",
                             "question": "",
                         }
-                if not is_intent:
+                if not is_intent and not mode.startswith("plain_") and mode != "director":
                     user_context = json.loads(request_body["messages"][-1]["content"])
                     conversation = user_context.get("conversation")
                     if conversation:
@@ -183,11 +185,12 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                     )
                     response["message"]["content"] = prose
                     if mode == "plain_probe":
-                        from rpg_vkr.narrative.story import payload_context
+                        import re
 
-                        context = payload_context(request_body)
-                        name = context["turn_brief"].get("public_name", "")
-                        current = context["player_message"]
+                        prompt = request_body["messages"][1]["content"]
+                        name_match = re.search(r"(?m)^Имя собеседника: (.+)$", prompt)
+                        name = name_match[1] if name_match else ""
+                        current = json.loads(re.search(r"(?m)^Игрок написал: (.+)$", prompt)[1])
                         if "нужна ли" in current:
                             prose = (
                                 f"Женщина переставляет корзину. «Я {name}. "
@@ -602,7 +605,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-9"
+    assert new.prompt_version == "narrator-prose-10"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
@@ -1047,11 +1050,11 @@ def test_new_master_develops_compound_scene_over_http(window, qt_app):
         assert window._session.turns[0].action == text
         assert window._session.turns[0].scene
         assert len(requests) == 2  # tags and one scene proposal, no command mapping stage
-        context = json.loads(requests[-1][1]["messages"][-1]["content"])
-        assert "memory" in context and "reaction_model" not in context
+        prompt = requests[-1][1]["messages"][-1]["content"]
+        assert "Занятие:" in prompt and "reaction_model" not in prompt
         assert "format" not in requests[-1][1]
-        assert "examples" not in context["memory"]
-        assert "approved_reply" not in context
+        assert "examples" not in prompt and "approved_reply" not in prompt
+        assert "Игрок написал: " + json.dumps(text, ensure_ascii=False) in prompt
         assert "другое действие не выполнено" not in window.journal.toPlainText()
 
 
