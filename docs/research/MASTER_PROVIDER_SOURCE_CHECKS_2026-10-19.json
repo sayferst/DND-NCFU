@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+    "status": "unverified",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://help.openai.com/en/articles/9039756-billing-settings-in-chatgpt-vs-platform",
+    "status": "unverified",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://arxiv.org/abs/2005.11401",
+    "status": "unverified",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://doi.org/10.1073/pnas.36.1.48",
+    "status": "unverified",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  }
+]

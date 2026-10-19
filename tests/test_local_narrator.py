@@ -155,6 +155,19 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                         content = {"intent": "осмотреться", "speech_act": "", "topic": ""}
                 elif mode == "chat_clarify":
                     content = {"narration": "К кому вы обращаетесь?"}
+                if mode == "director" and "mechanical_command" in request_body.get(
+                    "format", {}
+                ).get("properties", {}):
+                    content = {
+                        "mechanical_command": "",
+                        "focus_id": "villager",
+                        "facts": [],
+                        "narration": (
+                            "Вы подходите к девушке. Жительница придерживает корзину. "
+                            "«Спасибо, держусь. Яблоки рассыпались, "
+                            "а мне ещё на рынок успеть»."
+                        ),
+                    }
                 if mode == "effects":
                     content["gold"] = 1000
                 response = {"message": {"role": "assistant", "content": json.dumps(content)}}
@@ -522,7 +535,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-6"
+    assert new.prompt_version == "narrator-prose-7"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
@@ -950,3 +963,43 @@ def test_cancelled_search_intent_does_not_consume_checks(window, qt_app):
         qt_app.processEvents()
         assert (window._session.to_dict(), window._session.dice.checkpoint()) == before
         assert window.action_input.text() == text
+
+
+def test_new_master_develops_compound_scene_over_http(window, qt_app):
+    window.director_mode.setChecked(True)
+    with local_server(mode="director") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        text = "подойду к девушке и спрошу, как у нее дела"
+        window.action_input.setText(text)
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert len(window._session.turns) == 1
+        assert window._session.turns[0].action == text
+        assert window._session.turns[0].scene
+        assert len(requests) == 2  # tags and one scene proposal, no command mapping stage
+        context = json.loads(requests[-1][1]["messages"][-1]["content"])
+        assert "memory" in context and "reaction_model" in context
+        assert len(context["memory"]["examples"]) <= 2
+        assert "approved_reply" not in context
+        assert "другое действие не выполнено" not in window.journal.toPlainText()
+
+
+def test_cancelled_master_response_does_not_commit_scene(window, qt_app):
+    from rpg_vkr.ui.narrator_panel import cancel_narration
+
+    window.director_mode.setChecked(True)
+    with local_server(mode="director", delay=0.2) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        before = window._session.to_dict()
+        window.action_input.setText("подойду к девушке и спрошу, как у нее дела")
+        window.send_button.click()
+        cancel_narration(window)
+        QTest.qWait(300)
+        qt_app.processEvents()
+        assert window._session.to_dict() == before

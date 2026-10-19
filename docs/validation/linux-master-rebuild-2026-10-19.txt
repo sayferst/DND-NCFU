@@ -1,0 +1,52 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 545 items
+
+tests/test_character.py ........................                         [  4%]
+tests/test_character_dialog.py ...                                       [  4%]
+tests/test_chat_intents.py ...................                           [  8%]
+tests/test_combat.py .......................                             [ 12%]
+tests/test_combat_storage.py ..............                              [ 15%]
+tests/test_combat_ui.py ......                                           [ 16%]
+tests/test_conversation_revision.py ........................             [ 20%]
+tests/test_creation_and_roles.py ......                                  [ 21%]
+tests/test_dialogue.py .............                                     [ 24%]
+tests/test_dice.py ...                                                   [ 24%]
+tests/test_environment.py ...                                            [ 25%]
+tests/test_episode_panels.py ..............                              [ 27%]
+tests/test_inspection.py ..............................                  [ 33%]
+tests/test_launch.py ...                                                 [ 33%]
+tests/test_local_narrator.py ........................................... [ 41%]
+..................                                                       [ 45%]
+tests/test_master_campaign.py ..........................                 [ 49%]
+tests/test_offline.py ..........                                         [ 51%]
+tests/test_presentation.py .................                             [ 54%]
+tests/test_progression.py ......................................         [ 61%]
+tests/test_resolution_ui.py ............                                 [ 64%]
+tests/test_save_migration.py ..........                                  [ 65%]
+tests/test_save_slots.py ....................                            [ 69%]
+tests/test_scene_director.py ...................................         [ 75%]
+tests/test_session.py ....................                               [ 79%]
+tests/test_trade_context.py .........                                    [ 81%]
+tests/test_window.py .......................                             [ 85%]
+tests/test_workspace_tools.py .............                              [ 87%]
+tests/test_workspace_ui.py ..................                            [ 91%]
+tests/test_world.py ..............................                       [ 96%]
+tests/test_world_memory.py ..................                            [100%]
+
+============================= 545 passed in 15.76s =============================
+Running: /workspace/DND-NCFU/.venv/bin/python -m ruff check .
+All checks passed!
+Running: /workspace/DND-NCFU/.venv/bin/python -m ruff format --check .
+83 files already formatted
+Environment and prototype checks passed. Manual Windows GUI check is still required.

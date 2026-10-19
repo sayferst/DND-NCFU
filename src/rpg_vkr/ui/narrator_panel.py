@@ -26,21 +26,34 @@ def install_narrator_panels(window):
     window.world_memory_view.setFont(window.journal.font())
     window.world_memory_view.setAccessibleName("Известные игроку последствия событий")
     memory.addWidget(window.world_memory_view, 1)
+    window.export_campaign_button = QPushButton("Экспорт всей сессии в SQLite…")
+    window.export_campaign_button.clicked.connect(lambda: export_campaign(window))
+    memory.addWidget(window.export_campaign_button)
+    window.import_campaign_button = QPushButton("Открыть сессию из SQLite…")
+    window.import_campaign_button.clicked.connect(lambda: import_campaign(window))
+    memory.addWidget(window.import_campaign_button)
 
     page = window._episode_page("Рассказчик")
     page.addWidget(
         plain_label(
-            "В локальном чате ИИ понимает обычную речь и отвечает художественным текстом. "
-            "Действия проверяет движок; предметы, мир и числа модель пока не создаёт. "
+            "ИИ-мастер понимает обычную речь и отвечает художественным текстом. "
+            "Мастер создаёт детали и реакции NPC; механику и изменения ресурсов проверяет движок. "
             "Без модели доступны автономные команды и быстрые кнопки. "
-            "Нужны отдельно установленные Ollama и локальная модель. Эта кнопка их не скачивает."
+            "Для локального режима нужны Ollama и модель; ручной ChatGPT работает без них."
         )
     )
-    window.enable_local_narrator = QCheckBox("Использовать локального ИИ-рассказчика")
+    window.enable_local_narrator = QCheckBox("Включить ИИ-мастера (локальный или ChatGPT вручную)")
     page.addWidget(window.enable_local_narrator)
     window.ai_chat = QCheckBox("Понимать свободный текст через ИИ и отвечать в чате")
     window.ai_chat.setChecked(True)
     page.addWidget(window.ai_chat)
+    window.manual_chatgpt = QCheckBox("ChatGPT вручную через копирование (без API)")
+    window.manual_chatgpt.toggled.connect(lambda enabled: cancel_narration(window))
+    page.addWidget(window.manual_chatgpt)
+    window.director_mode = QCheckBox("Мастер: развивать сцену и запоминать новые детали")
+    window.director_mode.setChecked(True)
+    window.director_mode.toggled.connect(lambda enabled: cancel_narration(window))
+    page.addWidget(window.director_mode)
     window.local_model = QComboBox()
     window.local_model.setAccessibleName("Установленная локальная модель")
     page.addWidget(window.local_model)
@@ -91,6 +104,7 @@ def install_narrator_panels(window):
     window.ollama.models_ready.connect(lambda models: models_ready(window, models))
     window.ollama.narration_ready.connect(lambda note: accept_narration(window, note))
     window.ollama.intent_ready.connect(lambda intent: accept_intent(window, intent))
+    window.ollama.proposal_ready.connect(lambda proposal: accept_proposal(window, proposal))
     window.ollama.profile_ready.connect(lambda profile: accept_profile(window, profile))
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
@@ -168,6 +182,7 @@ def request_narration(window):
     if (
         getattr(window, "_closing", False)
         or not window.enable_local_narrator.isChecked()
+        or window.manual_chatgpt.isChecked()
         or window.ollama.busy
         or not window.local_model.currentText()
         or any(n.turn_index == len(window._session.turns) for n in window._session.narrations)
@@ -203,7 +218,7 @@ def request_narration(window):
 def request_chat(window, text):
     if not window.enable_local_narrator.isChecked() or not window.ai_chat.isChecked():
         return False
-    if not window.local_model.currentText():
+    if not window.manual_chatgpt.isChecked() and not window.local_model.currentText():
         failed(window, "Для свободного чата найдите и выберите локальную модель в «Рассказчик».")
         return True
     cancel_narration(window)
@@ -213,6 +228,29 @@ def request_chat(window, text):
     window.action_input.clear()
     window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
     window.statusBar().showMessage("ИИ понимает сообщение…")
+    if window.manual_chatgpt.isChecked():
+        from rpg_vkr.ui.manual_master import open_exchange
+
+        open_exchange(window, text)
+        window.narrator_status.setText(
+            "Запрос готов. Скопируйте его в ChatGPT и верните JSON-ответ."
+        )
+        return True
+    if window.director_mode.isChecked():
+        from rpg_vkr.storage.knowledge import retrieve
+
+        local = simple_action(text)
+        if local and local.command == "исследовать окрестности":
+            accept_intent(window, local)
+        else:
+            window.ollama.develop(
+                build_frame(window._session),
+                window.local_model.currentText(),
+                text,
+                memory=retrieve(window._session, text),
+                campaign=campaign_context(window._session, last_interlocutor(window._session)),
+            )
+        return True
     window.ollama.interpret(
         build_frame(window._session),
         window.local_model.currentText(),
@@ -317,6 +355,111 @@ def accept_intent(window, intent, profile=None):
         )
     else:
         request_narration(window)
+
+
+def accept_proposal(window, proposal):
+    if (
+        window._chat_text is None
+        or window._narrating_session is not window._session
+        or window._narrating_index != len(window._session.turns)
+        or not window.enable_local_narrator.isChecked()
+    ):
+        return
+    if proposal.mechanical_command:
+        from rpg_vkr.narrative.intent import Interpretation
+
+        before = len(window._session.turns)
+        text = window._chat_text
+        accept_intent(window, Interpretation("action", proposal.mechanical_command, "", ""))
+        if window.manual_chatgpt.isChecked() and len(window._session.turns) == before + 1:
+            from rpg_vkr.ui.manual_master import open_exchange
+
+            window._narrating_session = window._session
+            window._narrating_index = len(window._session.turns)
+            open_exchange(window, text, prose=True)
+            window.narrator_status.setText(
+                "Действие рассчитано. Второй запрос передаст ChatGPT готовый итог для рассказа."
+            )
+        return
+    text = window._chat_text
+    try:
+        source = (
+            "chatgpt-manual"
+            if window.manual_chatgpt.isChecked()
+            else window.local_model.currentText()
+        )
+        window._session.submit_scene(text, proposal, source, base_turn=window._narrating_index)
+    except (ValueError, TypeError) as error:
+        failed(window, str(error))
+        return
+    window._chat_text = None
+    window._narrating_session = None
+    window._narrating_index = None
+    window.action_input.remember(text)
+    window._dirty = True
+    window._refresh_character()
+    window._render_journal()
+    window.narrator_status.setText(
+        "Мастер продолжил сцену. Новые детали записаны; сохраните сессию."
+    )
+    refresh_narrator_panels(window)
+
+
+def export_campaign(window):
+    import sqlite3
+    from pathlib import Path
+
+    from PySide6.QtWidgets import QFileDialog, QMessageBox
+
+    from rpg_vkr.storage.knowledge import export_session
+
+    filename, _ = QFileDialog.getSaveFileName(
+        window, "Полная память кампании", "campaign.sqlite3", "SQLite (*.sqlite3)"
+    )
+    if not filename:
+        return
+    path = Path(filename)
+    if path.resolve().is_relative_to(window._saves.directory.resolve()):
+        QMessageBox.warning(window, "Экспорт отменён", "Выберите файл вне папки ячеек.")
+        return
+    try:
+        export_session(window._session, path)
+    except (OSError, ValueError, sqlite3.Error) as error:
+        QMessageBox.warning(window, "Экспорт не выполнен", str(error))
+        return
+    window.statusBar().showMessage("Полная сессия и поисковые таблицы сохранены в SQLite.", 10000)
+
+
+def import_campaign(window):
+    import sqlite3
+
+    from PySide6.QtWidgets import QFileDialog, QMessageBox
+
+    from rpg_vkr.storage.knowledge import restore_session
+
+    filename, _ = QFileDialog.getOpenFileName(window, "Открыть кампанию", "", "SQLite (*.sqlite3)")
+    if not filename:
+        return
+    try:
+        session = restore_session(filename)
+    except (OSError, ValueError, TypeError, KeyError, sqlite3.Error):
+        QMessageBox.warning(
+            window, "Кампания не открыта", "Файл повреждён или имеет другой формат."
+        )
+        return
+    if (window._dirty or window.action_input.text().strip()) and not window._confirm(
+        "Открыть кампанию из базы? Несохранённая текущая сессия будет потеряна."
+    ):
+        return
+    cancel_narration(window)
+    window._session = session
+    window._dirty = False
+    window._current_slot = None
+    window.action_input.clear()
+    window._refresh_character()
+    window._render_journal()
+    window._rebuild_history()
+    window._refresh_slots()
 
 
 def accept_profile(window, profile):

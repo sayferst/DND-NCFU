@@ -22,6 +22,7 @@ from rpg_vkr.domain.combat import (
 )
 from rpg_vkr.domain.combat_record import CombatRecord, canonical, restore_record
 from rpg_vkr.domain.dice import D20Roll, DiceRoller
+from rpg_vkr.domain.director import SceneRecord, validate_scene
 from rpg_vkr.domain.inspection import COMMAND as INSPECT_COMMAND
 from rpg_vkr.domain.inspection import Inspection, inspect, requested_abilities
 from rpg_vkr.domain.meaning import Meaning
@@ -76,6 +77,7 @@ class Turn:
     player_name: str | None = None
     inspection: Inspection | None = None
     intent_source: str = "direct"
+    scene: SceneRecord | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -269,6 +271,56 @@ class Session:
         self.progress = progress
         self.character = character
         self._turns.append(turn)
+        return turn
+
+    def submit_scene(self, action, proposal, model, *, base_turn):
+        """Commit validated fiction and its visible segments in one transaction."""
+        from rpg_vkr.domain.meaning import Meaning
+        from rpg_vkr.narrative.context import build_frame
+        from rpg_vkr.narrative.segments import split_story
+        from rpg_vkr.narrative.speech import speech_details
+
+        action = _text(action, 500)
+        record = SceneRecord(base_turn, self.world.location, model, proposal)
+        validate_scene(record, self.turns, self.world.location, self.combat, self.world.hp)
+        target = proposal.focus_id
+        dialogue = None
+        if target:
+            act, topic = speech_details(action)
+            if act == "contact" and "спро" in action.casefold():
+                act, topic = "question", "other"
+            _, _, _, dialogue = resolve_conversation(
+                self, action, target, meaning=Meaning("dialogue", target, act, topic)
+            )
+        turn = Turn(
+            action,
+            "Рассказчик",
+            proposal.narration,
+            actor_id=target or None,
+            dialogue=dialogue,
+            player_name=self.character.name,
+            intent_source="model",
+            scene=record,
+        )
+        state = snapshot(self.world, self.character, self.combat, self.progress)
+        memory = self.memory.append(turn, state, state)
+        old_memory = self.memory
+        self._turns.append(turn)
+        self.memory = memory
+        try:
+            self.add_narration(
+                Narration(
+                    len(self.turns),
+                    model,
+                    proposal.narration,
+                    build_frame(self).fingerprint,
+                    segments=split_story(proposal.narration, target),
+                )
+            )
+        except Exception:
+            self._turns.pop()
+            self.memory = old_memory
+            raise
         return turn
 
     def _resolve_turn(self, action: str, command: str, meaning=None) -> tuple[Turn, WorldState]:
@@ -532,8 +584,8 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 11) -> "Session":
-        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11):
+    def from_dict(cls, data: object, version: int = 12) -> "Session":
+        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
         if version >= 10:
@@ -575,6 +627,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 12:
+                turn_keys.add("scene")
             if version >= 11:
                 turn_keys.update({"inspection", "intent_source"})
             if version >= 10:
@@ -653,6 +707,33 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if version >= 12 and item["scene"] is not None:
+                record = SceneRecord.from_dict(item["scene"])
+                if (
+                    record.base_turn != len(session.turns)
+                    or text != record.proposal.narration
+                    or item["speaker"] != "Рассказчик"
+                    or intent is not None
+                    or meaning is not None
+                    or any(item[k] is not None for k in ("roll", "check", "combat", "inspection"))
+                    or item["actor_id"] != (record.proposal.focus_id or None)
+                    or (dialogue.target if dialogue else "") != record.proposal.focus_id
+                ):
+                    raise ValueError("Scene record does not match its turn")
+                session._turns.append(
+                    Turn(
+                        action,
+                        item["speaker"],
+                        text,
+                        actor_id=item["actor_id"],
+                        origin=origin,
+                        dialogue=dialogue,
+                        player_name=player_name,
+                        intent_source=intent_source,
+                        scene=record,
+                    )
+                )
+                continue
             if version >= 11 and item["inspection"] is not None:
                 if (
                     command != INSPECT_COMMAND
@@ -921,6 +1002,31 @@ class Session:
         fields = dict(session.memory.baseline)
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
+            if turn.scene:
+                historical_combat = CombatState.from_dict(
+                    {
+                        "actors": [
+                            {
+                                "id": key,
+                                "hp": fields[f"actor.{key}.hp"],
+                                "disposition": fields[f"actor.{key}.disposition"],
+                            }
+                            for key in ACTORS
+                        ],
+                        **{
+                            key: fields["combat." + key] for key in ("active", "surprise", "rounds")
+                        },
+                    }
+                )
+                validate_scene(
+                    turn.scene,
+                    session.turns[: event.turn_index - 1],
+                    fields["world.location"],
+                    historical_combat,
+                    fields["world.hp"],
+                )
+                if event.changes:
+                    raise ValueError("Narrative scene attempted a mechanical change")
             if turn.inspection:
                 record = turn.inspection
                 if (

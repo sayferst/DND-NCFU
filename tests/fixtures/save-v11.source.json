@@ -1,0 +1,8 @@
+{
+  "fixture": "tests/fixtures/save-v11.json",
+  "source_commit": "514356a",
+  "schema_version": 11,
+  "seed": 5,
+  "sha256": "1c6a71705400cb155252822bde9e440e358d5e2414e54f002ff528811e48453f",
+  "note": "Created with previous source before schema edits; saved_at is fixed fixture metadata."
+}

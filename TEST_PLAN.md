@@ -328,3 +328,24 @@ tests/test_inspection.py и HTTP/Qt тесты в test_local_narrator.py: нов
 за 15.18 с; pip check, Ruff check и Ruff format --check успешны (77 файлов).
 Вывод: docs/validation/linux-chat-inspection-2026-10-19.txt. Это HTTP/offscreen,
 не запуск настоящей Qwen3 или ручная приёмка Windows.
+
+
+## 1N / развивающий мастер, SQLite и ручной ChatGPT, 2026-10-19
+
+test_scene_director.py: составной контакт, гул/реакция, факты и неизменность ресурсов,
+атомарность событий/прозы, исторические предусловия, подмена записи, запрет замены
+канона, SQL полный roundtrip/эксклюзивный экспорт/импорт UI, выбор старых событий,
+лимит контекста/приватность, ручной обмен без HTTP, request_id/устаревшая сессия,
+два этапа механики без повторного RNG, настоящий fixture11/следующий кубик,
+default нового окна, pure Nash/maximin/некорректные матрицы.
+
+HTTP-тесты добавляют новую сцену и отмену. Прежняя UI-сюита явно выбирает прежний
+режим для регрессии; это не проверка нового default. Новый default отдельно
+проверяется с новым окном. Подробности Windows и ручного ChatGPT: MASTER_REBUILD.md.
+Реальные ChatGPT/Qwen, RAM/скорость и литературная рубрика пока не измерены.
+
+Проверка 1N: Linux/Python 3.12.14, scripts/check.py — 545 passed,
+0 failed/skipped за 15.76 с; pip check, Ruff check и format --check успешны,
+83 Python-файла. Сырой вывод: docs/validation/linux-master-rebuild-2026-10-19.txt.
+Окно ручного обмена дополнительно отрисовано Qt offscreen без HTTP. Реальные
+ChatGPT/Qwen/Windows и литературная оценка не запускались.

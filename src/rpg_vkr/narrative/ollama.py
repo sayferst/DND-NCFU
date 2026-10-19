@@ -147,6 +147,7 @@ class OllamaClient(QObject):
     models_ready = Signal(object)
     narration_ready = Signal(object)
     intent_ready = Signal(object)
+    proposal_ready = Signal(object)
     profile_ready = Signal(object)
     failed = Signal(str)
     busy_changed = Signal(bool)
@@ -208,6 +209,44 @@ class OllamaClient(QObject):
 
     def list_models(self):
         self._start("/api/tags", "models")
+
+    def develop(self, frame, model, text, *, memory, campaign):
+        from rpg_vkr.domain.conflict import peaceful_contact
+        from rpg_vkr.narrative.director import MASTER_CONTRACT, proposal_schema
+
+        if model not in self.models:
+            self.failed.emit("Выберите установленную локальную модель.")
+            return
+        self._frame, self._model = frame, model
+        context = {
+            "scene": frame.to_dict(),
+            "player_message": text,
+            "campaign": {k: v for k, v in campaign.items() if k != "constraints"},
+            "memory": memory,
+            "reaction_model": peaceful_contact(),
+        }
+        self._start(
+            "/api/chat",
+            "director",
+            {
+                "model": model,
+                "stream": False,
+                "think": False,
+                "keep_alive": 0,
+                "format": proposal_schema(),
+                "options": {
+                    "num_ctx": 8192,
+                    "num_predict": 900,
+                    "temperature": 0.55,
+                    "num_gpu": 0,
+                    "num_thread": 4,
+                },
+                "messages": [
+                    {"role": "system", "content": MASTER_CONTRACT},
+                    {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
+                ],
+            },
+        )
 
     def interpret(self, frame, model, text, *, history=(), campaign=None, conversation=None):
         if model not in self.models:
@@ -497,6 +536,7 @@ class OllamaClient(QObject):
         data = None
         stage = {
             "intent": "Распознавание сообщения",
+            "director": "Развитие сцены мастером",
             "narration": "Художественный ответ",
             "models": "Поиск моделей",
             "profile": "Создание деталей персонажа",
@@ -529,6 +569,14 @@ class OllamaClient(QObject):
                 )
                 self._report(kind, model, raw, data, "OK")
                 self.profile_ready.emit(profile)
+            elif kind == "director":
+                from rpg_vkr.domain.director import Proposal
+
+                if data["message"].get("role") != "assistant":
+                    raise ValueError("Invalid master role")
+                proposal = Proposal.from_dict(json.loads(data["message"]["content"]))
+                self._report(kind, model, raw, data, "OK")
+                self.proposal_ready.emit(proposal)
             elif kind == "intent":
                 intent = parse_interpretation(data)
                 self._report(kind, model, raw, data, "OK")
