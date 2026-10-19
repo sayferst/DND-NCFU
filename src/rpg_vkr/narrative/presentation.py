@@ -30,6 +30,22 @@ def check_details(check, roll, purpose, *, graded=False):
 
 
 def present_turn(turn) -> TurnPresentation:
+    if turn.inspection:
+        record = turn.inspection
+        details = []
+        for item in record.checks:
+            purpose = (
+                "длительный поиск: выносливость"
+                if item.check.ability == "constitution"
+                else "осмысленные детали окружения"
+            )
+            details.append(check_details(item.check, item.roll, purpose))
+        details.append(
+            "Авторское исследование: Телосложение поддерживает долгий "
+            "поиск, но не заменяет понимание. Опыт/предметы не выдаются."
+        )
+        title = "Исследование — " + ("найдены зацепки" if record.clues else "новых зацепок нет")
+        return TurnPresentation(title, record.story(), "\n\n".join(details))
     if turn.combat:
         return present_combat(turn)
     if turn.check is not None and turn.roll is not None:

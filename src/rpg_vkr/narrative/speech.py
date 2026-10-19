@@ -124,12 +124,19 @@ def validate_binding(text, command, *, location=None, active_target=None, interl
     if act in {"refusal", "insult", "threat", "apology", "farewell"}:
         if command not in CHAT_TARGETS and command != "уточнить намерение":
             return "Реплика требует реакции собеседника. Уточните, к кому обращаетесь."
-    if act == "contact" and command not in {
-        "подойти к стражнику",
-        "подойти к жительнице",
-        "подойти к торговцу",
-        *CHAT_TARGETS,
-    }:
+    if (
+        act == "contact"
+        and not (
+            target is None and command in {"идти к воротам", "идти на дорогу", "идти на рынок"}
+        )
+        and command
+        not in {
+            "подойти к стражнику",
+            "подойти к жительнице",
+            "подойти к торговцу",
+            *CHAT_TARGETS,
+        }
+    ):
         return "Вы обозначили подход к собеседнику; другое действие не выполнено."
     harmless = {
         "осмотреться",

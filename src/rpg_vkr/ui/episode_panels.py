@@ -509,7 +509,13 @@ class EpisodePanels:
             (roll, turn)
             for turn in self._session.turns
             for roll in (
-                turn.combat.outcome.rolls if turn.combat else ((turn.roll,) if turn.roll else ())
+                turn.inspection.rolls
+                if turn.inspection
+                else (
+                    turn.combat.outcome.rolls
+                    if turn.combat
+                    else ((turn.roll,) if turn.roll else ())
+                )
             )
         ]
         self.roll_history.setPlainText(

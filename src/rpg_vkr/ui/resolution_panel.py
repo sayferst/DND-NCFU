@@ -5,7 +5,9 @@ from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import QComboBox, QGroupBox, QLabel, QPlainTextEdit, QPushButton, QVBoxLayout
 
 from rpg_vkr.commands import normalise_action
+from rpg_vkr.domain.character import ABILITY_NAMES
 from rpg_vkr.domain.combat import ACTORS, ATTACK_COMMANDS, STEALTH_COMMANDS
+from rpg_vkr.domain.inspection import requested_abilities
 from rpg_vkr.narrative.presentation import present_turn
 
 
@@ -52,6 +54,7 @@ def install_resolution_panel(window, layout):
 def refresh_guidance(window):
     session = window._session
     command = normalise_action(window.action_input.text())
+    inspection = requested_abilities(window.action_input.text())
     actor_id = ATTACK_COMMANDS.get(command) or STEALTH_COMMANDS.get(command)
     actor_id = actor_id or (session.combat.active if command == "атаковать" else None)
     if session.world.hp == 0:
@@ -75,6 +78,15 @@ def refresh_guidance(window):
             text += " Нападение сделает цель враждебной."
         if session.combat.surprise:
             text += " Незамеченный подход: урон ×2 при попадании; промах потратит преимущество."
+    elif inspection:
+        text = (
+            "Исследование недоступно во время схватки."
+            if session.combat.active
+            else "Исследование: "
+            + ", ".join(ABILITY_NAMES[a] for a in inspection)
+            + ". Отдельный кубик для каждой проверки, сложность 10. "
+            "Телосложение поддерживает долгий поиск; обычный осмотр — без броска."
+        )
     elif command == "использовать бинт" and session.combat.active:
         text = "Бинт лечит до 4 здоровья вместо атаки. После лечения противник отвечает."
     elif command in {"уклониться", "отступить"} and session.combat.active:
@@ -115,14 +127,18 @@ def refresh_resolution_panel(window):
         entries = [
             (i, turn)
             for i, turn in enumerate(turns)
-            if turn.roll or (turn.combat and turn.combat.outcome.rolls)
+            if turn.inspection or turn.roll or (turn.combat and turn.combat.outcome.rolls)
         ][-100:]
         window.breakdown_selector.blockSignals(True)
         window.breakdown_selector.clear()
         for i, turn in entries:
             window.breakdown_selector.addItem(f"Ход {i + 1}: {turn.action[:35]}", i)
         index = window.breakdown_selector.findData(previous) if same_session else -1
-        if turns and (turns[-1].roll or (turns[-1].combat and turns[-1].combat.outcome.rolls)):
+        if turns and (
+            turns[-1].inspection
+            or turns[-1].roll
+            or (turns[-1].combat and turns[-1].combat.outcome.rolls)
+        ):
             index = len(entries) - 1
         window.breakdown_selector.setCurrentIndex(index if index >= 0 else len(entries) - 1)
         window.breakdown_selector.setEnabled(bool(entries))

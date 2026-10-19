@@ -411,3 +411,21 @@ lockfile и старые fixtures v1–v8 не менялись. Настоящ�
 0 failed/skipped за 13.25 с; pip check и обе проверки Ruff успешны, 75 файлов.
 Вывод — docs/validation/linux-windows-encoding-fix-2026-10-19.txt. Реальная Windows
 после исправления ещё не запускалась агентом; требуется повторный прогон пользователя.
+
+
+## Исправление чата и несколько проверок, 2026-10-19
+
+Новый wire intent/speech_act/topic (единый маршрут), старые корректные читаются.
+Не принимать command из противоречивого master-ответа. simple_action — только
+полное ограниченное сообщение для осмотра/перехода/явного исследования; не
+расширять до произвольного исполнения. Turn.intent_source сохраняет происхождение.
+Авторский domain/inspection.py: независимые проверки DC10, Интеллект/Мудрость
+для понимания, Телосложение для длительности, без XP/предметов. Повтор набора в
+месте без RNG, порядок не важен. Оба броска обязаны попадать в память/UI/экспорт.
+Writer v11, reader v1–v11; Narration v1–v6; fixture v10 от bb1ba4c. Старые
+fixtures/канон/хэши не менять. Текущая ручная приёмка — docs/CHAT_AND_INSPECTION.md.
+
+Проверка: Linux/Python 3.12.14, scripts/check.py — 508 passed, 0 failed/skipped
+за 15.18 с; pip check, Ruff check и Ruff format --check успешны (77 файлов).
+Вывод: docs/validation/linux-chat-inspection-2026-10-19.txt. Это HTTP/offscreen,
+не запуск настоящей Qwen3 или ручная приёмка Windows.

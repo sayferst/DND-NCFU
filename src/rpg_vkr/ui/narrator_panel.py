@@ -11,7 +11,7 @@ from rpg_vkr.narrative.dialogue import dialogue_context, last_interlocutor
 from rpg_vkr.narrative.master import campaign_context
 from rpg_vkr.narrative.ollama import OllamaClient
 from rpg_vkr.narrative.records import Narration
-from rpg_vkr.narrative.routing import infer_meaning, meaning_command
+from rpg_vkr.narrative.routing import infer_meaning, meaning_command, simple_action
 from rpg_vkr.narrative.speech import validate_binding
 
 
@@ -126,6 +126,17 @@ def cancel_narration(window):
 
 
 def failed(window, message):
+    if (
+        window._chat_text
+        and window._profile_intent is None
+        and window._narrating_session is window._session
+        and window._narrating_index == len(window._session.turns)
+        and message.startswith("Распознавание сообщения:")
+    ):
+        fallback = simple_action(window._chat_text)
+        if fallback:
+            accept_intent(window, fallback)
+            return
     if window._chat_text and not window.action_input.text():
         window.action_input.setText(window._chat_text)
     window._chat_text = None
@@ -222,6 +233,11 @@ def accept_intent(window, intent, profile=None):
     ):
         return
     text = window._chat_text
+    local = simple_action(text)
+    if local and (intent.kind != "action" or intent.command != local.command):
+        from dataclasses import replace
+
+        intent = replace(local, source="local-correction")
     meaning = infer_meaning(window._session, text, intent)
     command = intent.command
     if intent.kind == "dialogue":
@@ -275,7 +291,9 @@ def accept_intent(window, intent, profile=None):
     window._profile_intent = None
     window._narrating_session = None
     try:
-        window._session.submit(text, intent=command, meaning=meaning, profile=profile)
+        window._session.submit(
+            text, intent=command, meaning=meaning, profile=profile, intent_source=intent.source
+        )
     except ValueError as error:
         window.action_input.setText(text)
         failed(window, str(error))

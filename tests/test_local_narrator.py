@@ -62,7 +62,10 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
             else:
                 content = {"narration": TEXT}
                 request_body = json.loads(body) if body else {}
-                is_intent = "command" in request_body.get("format", {}).get("properties", {})
+                is_intent = bool(
+                    {"command", "intent"}
+                    & set(request_body.get("format", {}).get("properties", {}))
+                )
                 if is_intent:
                     content = {
                         "kind": "dialogue",
@@ -140,6 +143,16 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                         content = {"command": content["command"]}
                     if mode == "chat_observe":
                         content = {"command": "осмотреться"}
+                    if mode == "mixed_intent":
+                        content = {
+                            "kind": "master",
+                            "command": "задание",
+                            "target": "villager",
+                            "speech_act": "question",
+                            "topic": "other",
+                        }
+                    elif mode == "routed_observe":
+                        content = {"intent": "осмотреться", "speech_act": "", "topic": ""}
                 elif mode == "chat_clarify":
                     content = {"narration": "К кому вы обращаетесь?"}
                 if mode == "effects":
@@ -509,7 +522,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-5"
+    assert new.prompt_version == "narrator-prose-6"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
@@ -725,13 +738,7 @@ def test_reported_phrases_use_semantic_contract_with_examples_and_history(
         window.send_button.click()
         wait_for(qt_app, lambda: bool(window._session.narrations))
         payload = requests[1][1]
-        assert set(payload["format"]["properties"]) == {
-            "kind",
-            "command",
-            "target",
-            "speech_act",
-            "topic",
-        }
+        assert set(payload["format"]["properties"]) == {"intent", "speech_act", "topic"}
         context = json.loads(payload["messages"][-1]["content"])
         assert context["player_message"] == phrase
         assert "жительницей" in context["recent_dialogue"][-1]["player_message"]
@@ -750,7 +757,7 @@ def test_diagnostic_distinguishes_bad_intent_from_bad_prose(window, qt_app, mode
         wait_for(qt_app, lambda: window.local_model.count() == 1)
         window.enable_local_narrator.setChecked(True)
         before = window._session.to_dict()
-        window.action_input.setText("хочу осмотреться")
+        window.action_input.setText("Спрашиваю жительницу о её семье")
         window.send_button.click()
         wait_for(qt_app, lambda: not window.ollama.busy)
         assert "Распознавание сообщения" in window.narrator_status.text()
@@ -759,7 +766,7 @@ def test_diagnostic_distinguishes_bad_intent_from_bad_prose(window, qt_app, mode
         assert "Этап: intent" in window.narrator_details.toPlainText()
         assert "local-test:1" in window.narrator_details.toPlainText()
         assert "Скрытая цепочка" not in window.narrator_details.toPlainText()
-        assert window.action_input.text() == "хочу осмотреться"
+        assert window.action_input.text() == "Спрашиваю жительницу о её семье"
         assert len(requests) == 2
 
 
@@ -795,7 +802,7 @@ def test_wrong_model_addressee_is_rejected_and_followed_by_clarification(window,
             window._session.combat,
             window._session.dice.checkpoint(),
         ) == before
-        commands = requests[1][1]["format"]["properties"]["command"]["enum"]
+        commands = requests[1][1]["format"]["properties"]["intent"]["enum"]
         assert "беседа с жительницей" not in commands
         assert "подойти к стражнику" in commands
         assert "К кому вы обращаетесь?" in window.journal.toPlainText()
@@ -843,3 +850,103 @@ def test_misread_approach_does_not_offer_an_attack_confirmation(window, qt_app, 
         assert window._session.turns[-1].intent == "уточнить намерение"
         assert (window._session.combat, window._session.world) == before
         assert confirmations == []
+
+
+@pytest.mark.parametrize(
+    "text,command,count",
+    [
+        ("осмотреться вокруг", "осмотреться", 0),
+        ("подойти к воротам", "идти к воротам", 0),
+        (
+            "осмотреться вокруг, используя навык интелект и выносливость",
+            "исследовать окрестности",
+            2,
+        ),
+    ],
+)
+def test_mixed_model_reply_uses_original_simple_message_once(window, qt_app, text, command, count):
+    with local_server(mode="mixed_intent") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText(text)
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert len(window._session.turns) == 1
+        turn = window._session.turns[0]
+        assert turn.action == text and turn.intent == command
+        assert turn.intent_source == "local-fallback"
+        assert len(turn.inspection.rolls) == count if count else turn.inspection is None
+        assert len(requests) == 3  # tags, rejected intent, normal prose; no intent retry
+        assert set(requests[1][1]["format"]["properties"]) == {"intent", "speech_act", "topic"}
+        if count:
+            assert "Бросок №1" in window.roll_breakdown.toPlainText()
+            assert "Бросок №2" in window.roll_breakdown.toPlainText()
+
+
+def test_unknown_message_does_not_execute_command_from_mixed_reply(window, qt_app):
+    with local_server(mode="mixed_intent") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        before = window._session.to_dict()
+        text = "Расскажи, почему жительница здесь живёт?"
+        window.action_input.setText(text)
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert window._session.to_dict() == before
+        assert window.action_input.text() == text
+        assert len(requests) == 2
+
+
+def test_new_route_is_executed_through_http(window, qt_app):
+    with local_server(mode="routed_observe") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText("хочу осмотреться")
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        assert len(window._session.turns) == 1
+        assert window._session.turns[0].intent_source == "model"
+        assert window._session.turns[0].intent == "осмотреться"
+        assert len(requests) == 3
+
+
+def test_valid_but_wrong_model_route_corrected_for_explicit_search(window, qt_app):
+    with local_server(mode="routed_observe") as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        window.action_input.setText("осмотреться вокруг с интеллектом и выносливостью")
+        window.send_button.click()
+        wait_for(qt_app, lambda: not window.ollama.busy)
+        turn = window._session.turns[0]
+        assert turn.intent_source == "local-correction"
+        assert len(turn.inspection.rolls) == 2
+        assert "#1" in window.roll_history.toPlainText()
+        assert "#2" in window.roll_history.toPlainText()
+        assert len(requests) == 3
+
+
+def test_cancelled_search_intent_does_not_consume_checks(window, qt_app):
+    from rpg_vkr.ui.narrator_panel import cancel_narration
+
+    with local_server(mode="mixed_intent", delay=0.2) as (url, requests):
+        window.ollama.base_url = url
+        window.find_models_button.click()
+        wait_for(qt_app, lambda: window.local_model.count() == 1)
+        window.enable_local_narrator.setChecked(True)
+        text = "осмотреться вокруг с интеллектом и выносливостью"
+        before = window._session.to_dict(), window._session.dice.checkpoint()
+        window.action_input.setText(text)
+        window.send_button.click()
+        cancel_narration(window)
+        QTest.qWait(300)
+        qt_app.processEvents()
+        assert (window._session.to_dict(), window._session.dice.checkpoint()) == before
+        assert window.action_input.text() == text

@@ -22,6 +22,8 @@ from rpg_vkr.domain.combat import (
 )
 from rpg_vkr.domain.combat_record import CombatRecord, canonical, restore_record
 from rpg_vkr.domain.dice import D20Roll, DiceRoller
+from rpg_vkr.domain.inspection import COMMAND as INSPECT_COMMAND
+from rpg_vkr.domain.inspection import Inspection, inspect, requested_abilities
 from rpg_vkr.domain.meaning import Meaning
 from rpg_vkr.domain.memory import WorldMemory, snapshot
 from rpg_vkr.domain.progression import (
@@ -72,6 +74,8 @@ class Turn:
     dialogue: DialogueRecord | None = None
     meaning: Meaning | None = None
     player_name: str | None = None
+    inspection: Inspection | None = None
+    intent_source: str = "direct"
 
 
 def _text(value: object, limit: int) -> str:
@@ -134,7 +138,14 @@ class Session:
         return tuple(self._turns)
 
     def submit(
-        self, action: str, *, intent: str | None = None, origin="typed", meaning=None, profile=None
+        self,
+        action: str,
+        *,
+        intent: str | None = None,
+        origin="typed",
+        meaning=None,
+        profile=None,
+        intent_source="direct",
     ) -> Turn:
         action = _text(action, 500).strip()
         if len(self._turns) >= MAX_TURNS:
@@ -154,6 +165,14 @@ class Session:
             if intent is not None and intent != expected:
                 raise ValueError("Meaning does not match executable command")
             intent = expected
+        if intent is None:
+            from rpg_vkr.narrative.routing import simple_action
+
+            local = simple_action(action)
+            if local:
+                intent = local.command
+        if intent_source not in {"direct", "model", "local-fallback", "local-correction"}:
+            raise ValueError("Invalid interpretation source")
         command = intent or normalise_action(action)
         if not isinstance(origin, str) or origin not in {"typed", "quick"}:
             raise ValueError("Invalid input origin")
@@ -201,7 +220,12 @@ class Session:
             self.campaign = candidate
             turn, world = self._resolve_turn(action, command, meaning)
             turn = replace(
-                turn, intent=intent, origin=origin, meaning=meaning, player_name=self.character.name
+                turn,
+                intent=intent,
+                origin=origin,
+                meaning=meaning,
+                player_name=self.character.name,
+                intent_source=intent_source,
             )
             if binding_error:
                 turn = replace(turn, text=binding_error)
@@ -288,6 +312,25 @@ class Session:
                 "Рассказчик",
                 "Идёт схватка: атакуйте, уклонитесь, используйте бинт или отступите.",
             ), self.world
+        if command == INSPECT_COMMAND:
+            abilities = requested_abilities(action) or ("intelligence",)
+            previous = next(
+                (
+                    t.inspection
+                    for t in reversed(self.turns)
+                    if t.inspection
+                    and t.inspection.location == self.world.location
+                    and set(t.inspection.abilities) == set(abilities)
+                ),
+                None,
+            )
+            if previous:
+                return Turn(
+                    action, "Рассказчик", "Вы уже проверили эти детали.\n" + previous.story()
+                ), self.world
+            record = inspect(self.world, self.character, self.dice, abilities)
+            world = replace(self.world, market_known=True) if record.reveals_route else self.world
+            return Turn(action, "Рассказчик", record.story(), inspection=record), world
         if command == "спросить мастера":
             from rpg_vkr.narrative.master import master_reply
 
@@ -489,8 +532,8 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 10) -> "Session":
-        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10):
+    def from_dict(cls, data: object, version: int = 11) -> "Session":
+        if type(version) is not int or version not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
         if version >= 10:
@@ -532,6 +575,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 11:
+                turn_keys.update({"inspection", "intent_source"})
             if version >= 10:
                 turn_keys.update({"meaning", "player_name"})
             if version >= 9:
@@ -562,6 +607,15 @@ class Session:
                     or item["roll"] is not None
                 ):
                     raise ValueError("Saved meaning does not match this turn")
+            intent_source = item.get("intent_source", "legacy")
+            if not isinstance(intent_source, str) or intent_source not in {
+                "direct",
+                "model",
+                "local-fallback",
+                "local-correction",
+                "legacy",
+            }:
+                raise ValueError("Invalid saved interpretation source")
             player_name = item.get("player_name")
             if player_name is not None:
                 player_name = _text(player_name, 40)
@@ -599,6 +653,34 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if version >= 11 and item["inspection"] is not None:
+                if (
+                    command != INSPECT_COMMAND
+                    or item["speaker"] != "Рассказчик"
+                    or item["actor_id"] is not None
+                    or item["roll"] is not None
+                    or stored_check is not None
+                    or item["combat"] is not None
+                    or dialogue is not None
+                    or meaning is not None
+                ):
+                    raise ValueError("Inspection mixed with another action")
+                record = Inspection.restore(item["inspection"], session.dice)
+                if text != record.story():
+                    raise ValueError("Inspection text does not match checked discoveries")
+                session._turns.append(
+                    Turn(
+                        action,
+                        item["speaker"],
+                        text,
+                        intent=intent,
+                        origin=origin,
+                        player_name=player_name,
+                        inspection=record,
+                        intent_source=intent_source,
+                    )
+                )
+                continue
             if version >= 6 and item["combat"] is not None:
                 previous_record = next(
                     (turn.combat for turn in reversed(session._turns) if turn.combat), None
@@ -637,6 +719,8 @@ class Session:
                         dialogue,
                         meaning,
                         player_name,
+                        None,
+                        intent_source,
                     )
                 )
                 continue
@@ -748,6 +832,7 @@ class Session:
                     dialogue=dialogue,
                     meaning=meaning,
                     player_name=player_name,
+                    intent_source=intent_source,
                 )
             )
         if version >= 5:
@@ -833,6 +918,29 @@ class Session:
             if version >= 7
             else WorldMemory(len(session.turns), final)
         )
+        fields = dict(session.memory.baseline)
+        for event in session.memory.events:
+            turn = session.turns[event.turn_index - 1]
+            if turn.inspection:
+                record = turn.inspection
+                if (
+                    fields["world.hp"] <= 0
+                    or fields["combat.active"] is not None
+                    or record.location != fields["world.location"]
+                    or record.route_known_before != fields["world.market_known"]
+                    or any(
+                        item.check.score != fields["hero." + item.check.ability]
+                        for item in record.checks
+                    )
+                ):
+                    raise ValueError("Inspection does not match historical context")
+                expected = [("world.market_known", False, True)] if record.reveals_route else []
+                if [
+                    (change.field, change.before, change.after) for change in event.changes
+                ] != expected:
+                    raise ValueError("Inspection attempted unapproved world changes")
+            for change in event.changes:
+                fields[change.field] = change.after
         if version >= 7:
             notes = data["narrations"]
             if not isinstance(notes, list) or len(notes) > len(session.turns) + 1:

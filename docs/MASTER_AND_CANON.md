@@ -134,3 +134,10 @@ Qwen3/ручная Windows-приёмка нового пакета в обла�
 
 Итог инженерного прогона: 471 passed за 13.35 с, pip check/Ruff lint/format
 успешны (75 Python-файлов); полный вывод в validation/linux-master-canon-2026-10-19.txt.
+
+
+## Дополнение: исправление контракта после скриншота
+
+Текущий wire упрощён до intent/speech_act/topic, writer JSON v11/reader v1–v11,
+новая проза v6/reader v1–v6. Предыдущие описания v10/v5 выше относятся к исходному
+пакету 1L. Исправления и несколько проверок описаны в CHAT_AND_INSPECTION.md.

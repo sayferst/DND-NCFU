@@ -103,7 +103,11 @@ def event_dict(event):
 
 
 def roll_indices(turn):
-    rolls = turn.combat.outcome.rolls if turn.combat else ((turn.roll,) if turn.roll else ())
+    rolls = (
+        turn.inspection.rolls
+        if turn.inspection
+        else (turn.combat.outcome.rolls if turn.combat else ((turn.roll,) if turn.roll else ()))
+    )
     return tuple(roll.index for roll in rolls)
 
 

@@ -276,7 +276,7 @@ class WorkspaceActions:
         entries = [
             f"Действие №{i + 1}: {turn.action}\n{present_turn(turn).details}"
             for i, turn in enumerate(self._session.turns)
-            if turn.roll or (turn.combat and turn.combat.outcome.rolls)
+            if turn.inspection or turn.roll or (turn.combat and turn.combat.outcome.rolls)
         ]
         text = "Разбор бросков сессии\n\n" + "\n\n".join(entries)
         self._export_text(text + "\n", "Экспорт расчётов", "rolls.txt")

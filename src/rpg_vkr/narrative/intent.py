@@ -13,6 +13,7 @@ class Interpretation:
     question: str
     speech_act: str = ""
     topic: str = ""
+    source: str = "model"
 
 
 def intent_schema(target=None):
@@ -23,43 +24,28 @@ def intent_schema(target=None):
         for command in allowed_intents()
         if not target or (command != "поговорить" and command_target(command) in {None, target})
     )
+    from rpg_vkr.domain.meaning import ACTS, TOPICS
+
+    routes = [
+        c
+        for c in commands
+        if c not in CHAT_TARGETS and c not in {"спросить мастера", "уточнить намерение"}
+    ]
+    routes += ["master", "clarify"]
+    routes += [f"master:{actor}" for actor in ("guard", "villager", "merchant")]
+    routes += [
+        f"dialogue:{actor}"
+        for actor in ("guard", "villager", "merchant")
+        if not target or target == actor
+    ]
     return {
         "type": "object",
         "properties": {
-            "command": {"type": "string", "enum": ["", *commands]},
-            "kind": {"type": "string", "enum": ["action", "dialogue", "master", "clarify"]},
-            "target": {"type": "string", "enum": ["", "guard", "villager", "merchant"]},
-            "speech_act": {
-                "type": "string",
-                "enum": [
-                    "",
-                    "question",
-                    "greeting",
-                    "contact",
-                    "refusal",
-                    "farewell",
-                    "insult",
-                    "threat",
-                    "apology",
-                ],
-            },
-            "topic": {
-                "type": "string",
-                "enum": [
-                    "",
-                    "occupation",
-                    "help",
-                    "local_help",
-                    "wares",
-                    "directions",
-                    "greeting",
-                    "appearance",
-                    "background",
-                    "other",
-                ],
-            },
+            "intent": {"type": "string", "enum": routes},
+            "speech_act": {"type": "string", "enum": ["", *sorted(ACTS)]},
+            "topic": {"type": "string", "enum": ["", *sorted(TOPICS)]},
         },
-        "required": ["kind", "command", "target", "speech_act", "topic"],
+        "required": ["intent", "speech_act", "topic"],
         "additionalProperties": False,
     }
 
@@ -73,6 +59,26 @@ def parse_interpretation(data):
     if message.get("role") != "assistant":
         raise ValueError("Invalid intent role")
     value = json.loads(message["content"])
+    if isinstance(value, dict) and set(value) == {"intent", "speech_act", "topic"}:
+        if not all(isinstance(item, str) for item in value.values()):
+            raise ValueError("Invalid routed intent types")
+        route, act, topic = value["intent"], value["speech_act"], value["topic"]
+        if route == "master" or route.startswith(("master:", "dialogue:")):
+            from rpg_vkr.domain.meaning import Meaning
+
+            kind, _, target = route.partition(":")
+            Meaning(kind, target, act, topic)
+            return Interpretation(kind, "", target, "", act, topic)
+        if act or topic:
+            raise ValueError("Action route cannot carry a speech act")
+        if route == "clarify":
+            return Interpretation("clarify", "", "", "")
+        if route not in allowed_intents() - set(CHAT_TARGETS) - {
+            "спросить мастера",
+            "уточнить намерение",
+        }:
+            raise ValueError("Unsupported routed action")
+        return Interpretation("action", route, "", "")
     if isinstance(value, dict) and set(value) == {
         "kind",
         "command",

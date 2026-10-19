@@ -50,3 +50,33 @@ def meaning_command(meaning):
     if meaning.kind == "master":
         return "спросить мастера"
     return next(key for key, value in CHAT_TARGETS.items() if value == meaning.target)
+
+
+def simple_action(text):
+    """Full-message information/movement only; never mines an invalid model command."""
+    from rpg_vkr.domain.inspection import COMMAND, requested_abilities
+    from rpg_vkr.narrative.intent import Interpretation
+
+    value = unquoted(text)
+    if requested_abilities(text):
+        return Interpretation("action", COMMAND, "", "", source="local-fallback")
+    prefix = r"(?:я\s+)?(?:(?:хочу|попробую)\s+)?"
+    look = r"(?:осмотреться|оглядеться|осмотреть|осматриваю|смотрю)"
+    if re.fullmatch(
+        prefix + look + r"(?:\s+(?:вокруг|окрестности|окружение|местность|по сторонам))?", value
+    ):
+        return Interpretation("action", "осмотреться", "", "", source="local-fallback")
+    move = re.fullmatch(
+        prefix + r"(?:подойти|подойду|пойти|пойду|идти|иду|вернуться|возвращаюсь)\s+"
+        r"(?:к|на|в)\s+(воротам|ворота|рынок|дорогу)",
+        value,
+    )
+    if move:
+        command = {
+            "воротам": "идти к воротам",
+            "ворота": "идти к воротам",
+            "рынок": "идти на рынок",
+            "дорогу": "идти на дорогу",
+        }[move[1]]
+        return Interpretation("action", command, "", "", source="local-fallback")
+    return None

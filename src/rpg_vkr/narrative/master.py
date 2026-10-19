@@ -28,6 +28,14 @@ def master_reply(session, meaning):
 def campaign_context(session, target=""):
     profile = session.campaign.profile(target)
     return {
+        "known_observations": list(
+            dict.fromkeys(
+                clue
+                for t in session.turns
+                if t.inspection and t.inspection.location == session.world.location
+                for clue in t.inspection.clues
+            )
+        ),
         "hero_description": session.campaign.raw_player_description,
         "public_npc_facts": {key: getattr(profile, key) for key in PROFILE_FIELDS}
         if profile
