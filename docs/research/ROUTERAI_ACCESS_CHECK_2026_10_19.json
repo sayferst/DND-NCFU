@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-19",
+  "source": "User suggested https://routerai.ru/ as an alternative after the OpenRouter browser verification failed",
+  "status": "Documentation access blocked in agent environment; API integration not implemented",
+  "read_only_checks": [
+    {"url": "https://routerai.ru/", "address_status": "User-supplied service homepage", "result": "Tunnel connection failed: 403 Forbidden"},
+    {"url": "https://routerai.ru/docs", "address_status": "Candidate documentation URL, not verified as the actual docs route", "result": "Tunnel connection failed: 403 Forbidden"},
+    {"url": "https://routerai.ru/api/v1/models", "address_status": "Candidate model-list route, not verified as an actual API endpoint", "result": "Tunnel connection failed: 403 Forbidden"}
+  ],
+  "not_established": [
+    "Actual API base URL and chat completion request schema",
+    "Available model IDs and Russian narration quality",
+    "Prices, free quota, commissions, billing and hard spending limits",
+    "Account and regional availability",
+    "Prompt retention and underlying provider policies",
+    "Real latency or successful API inference"
+  ],
+  "remaining_input": "Official quickstart Python/curl example with API key replaced by YOUR_API_KEY, model ID, input/output token prices and spending-limit documentation",
+  "constraints": "Optional cloud within the user-authorized budget of 2000 RUB/month; game retains free offline support. No account creation, payments, API POST requests, key transmission or new dependencies were performed. Do not substitute a guessed endpoint or send a RouterAI key to another provider."
+}
