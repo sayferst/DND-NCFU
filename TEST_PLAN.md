@@ -1,6 +1,15 @@
 # План проверок
 
-Актуально1O.1: **815passed,0failed/skipped,50.97с**, scripts/check.py вLinux/Python3.12.14,
+Актуально1O.2: **824 passed,0failed/skipped,51.44с**, scripts/check.py вLinux/Python3.12.14,
+pip/Ruff успешны,115Python-файлов. Raw:docs/validation/linux-sqlite-handles-release-2026-10-19.txt.
+test_sqlite_lifecycle.py:9случаев с настоящими удерживаемыми соединениями;
+до исправления9failed/0.22с. Проверяются закрытие до os.replace/unlink, повторная
+публикация, экспорт двух проекций, восстановление правильного/ошибочного снимка,
+сбой backup и отказ перезаписи чужойБД. Целевые catalog/UI/lifecycle:46passed/5.49с.
+Повторить scripts/check.py на Windows; проверить раздел Каталог мира, сохранение/
+загрузку и экспорт в новыйSQLite-файл без WinError32. Не удалять пользовательскиеБД.
+
+История1O.1: **815passed,0failed/skipped,50.97с**, scripts/check.py вLinux/Python3.12.14,
 pip/Ruff успешны,114Python-файлов. Raw:docs/validation/linux-catalog-release-2026-10-19.txt.
 Первичный812/50.81с сохранён отдельно. Qt1280×880 просмотрен offscreen.
 Новый настоящийWindows/Flash-повтор ожидается. Дальше сохранена история проверок.

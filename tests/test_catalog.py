@@ -4,6 +4,7 @@ import hashlib
 import json
 import random
 import sqlite3
+from contextlib import closing
 from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
@@ -337,7 +338,7 @@ def test_sqlite_export_roundtrip_and_safe_working_publication(tmp_path, monkeypa
         index.publish(working)
         assert working.read_bytes() == previous
         foreign = tmp_path / "foreign.sqlite3"
-        with sqlite3.connect(foreign) as db:
+        with closing(sqlite3.connect(foreign)) as db, db:
             db.execute("CREATE TABLE keep_me(value TEXT)")
         original = foreign.read_bytes()
         with pytest.raises(ValueError, match="другая база"):

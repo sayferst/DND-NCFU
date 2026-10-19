@@ -2,6 +2,7 @@
 
 import json
 import sqlite3
+from contextlib import closing
 
 from test_catalog import workshop
 from test_local_narrator import wait_for
@@ -57,7 +58,7 @@ def test_master_creation_is_real_and_is_visible_in_catalog_and_working_sqlite(
         ]
         assert "mira" in ids and "case_one" in ids
         path = window._saves.directory.parent / "world-catalog.sqlite3"
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db:
             assert (
                 db.execute("SELECT quantity FROM catalog_instances WHERE id='ingots'").fetchone()[0]
                 == 2

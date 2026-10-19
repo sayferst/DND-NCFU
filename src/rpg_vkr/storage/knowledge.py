@@ -3,6 +3,7 @@
 import json
 import re
 import sqlite3
+from contextlib import closing
 from dataclasses import asdict
 from pathlib import Path
 
@@ -189,7 +190,7 @@ class CampaignIndex:
         with path.open("xb"):
             pass
         try:
-            with sqlite3.connect(path) as target:
+            with closing(sqlite3.connect(path)) as target:
                 self.db.backup(target)
         except Exception:
             path.unlink(missing_ok=True)
@@ -218,7 +219,7 @@ def restore_session(path):
     path = Path(path).resolve()
     if path.stat().st_size > 64 * 1024 * 1024:
         raise ValueError("Campaign database too large")
-    with sqlite3.connect(path.as_uri() + "?mode=ro", uri=True) as db:
+    with closing(sqlite3.connect(path.as_uri() + "?mode=ro", uri=True)) as db:
         db.execute("PRAGMA trusted_schema=OFF")
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
         if (

@@ -1,0 +1,406 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+______ test_publish_closes_temporary_and_previous_database_before_replace ______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_publish_closes_temporary_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0368c73bf0>
+file_connections = [<sqlite3.Connection object at 0x7f0368c53100>]
+
+    def test_publish_closes_temporary_and_previous_database_before_replace(
+        tmp_path, monkeypatch, file_connections
+    ):
+        from rpg_vkr.storage import catalog
+    
+        replace = catalog.os.replace
+        replacements = []
+    
+        def require_closed(source, destination):
+            assert_closed(file_connections)
+            replacements.append(destination)
+            return replace(source, destination)
+    
+        monkeypatch.setattr(catalog.os, "replace", require_closed)
+        path = tmp_path / "working.sqlite3"
+        index = CatalogIndex(Session(seed=5))
+        try:
+>           index.publish(path)
+
+tests/test_sqlite_lifecycle.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/catalog.py:365: in publish
+    os.replace(temporary, path)
+tests/test_sqlite_lifecycle.py:48: in require_closed
+    assert_closed(file_connections)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f0368c53100>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+___________ test_export_closes_database_before_return[CatalogIndex] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_export_closes_database_be0')
+file_connections = [<sqlite3.Connection object at 0x7f0368c53790>]
+index_type = <class 'rpg_vkr.storage.catalog.CatalogIndex'>
+
+    @pytest.mark.parametrize("index_type", [CatalogIndex, CampaignIndex])
+    def test_export_closes_database_before_return(tmp_path, file_connections, index_type):
+        index = index_type(Session(seed=5))
+        try:
+            path = tmp_path / "export.sqlite3"
+            index.export(path)
+>           assert_closed(file_connections)
+
+tests/test_sqlite_lifecycle.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f0368c53790>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+___________ test_export_closes_database_before_return[CampaignIndex] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_export_closes_database_be1')
+file_connections = [<sqlite3.Connection object at 0x7f0368c535b0>]
+index_type = <class 'rpg_vkr.storage.knowledge.CampaignIndex'>
+
+    @pytest.mark.parametrize("index_type", [CatalogIndex, CampaignIndex])
+    def test_export_closes_database_before_return(tmp_path, file_connections, index_type):
+        index = index_type(Session(seed=5))
+        try:
+            path = tmp_path / "export.sqlite3"
+            index.export(path)
+>           assert_closed(file_connections)
+
+tests/test_sqlite_lifecycle.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f0368c535b0>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+_____ test_restore_closes_database_on_success_and_invalid_snapshot[valid] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_restore_closes_database_o0')
+file_connections = [<sqlite3.Connection object at 0x7f0368c533d0>, <sqlite3.Connection object at 0x7f03689d4e50>]
+valid = True
+
+    @pytest.mark.parametrize("valid", [True, False], ids=["valid", "invalid"])
+    def test_restore_closes_database_on_success_and_invalid_snapshot(
+        tmp_path, file_connections, valid
+    ):
+        path = tmp_path / "campaign.sqlite3"
+        index = CampaignIndex(Session(seed=5))
+        try:
+            index.export(path)
+        finally:
+            index.close()
+        if not valid:
+            with closing(sqlite3.connect(path)) as db, db:
+                db.execute("DELETE FROM snapshot")
+            with pytest.raises(ValueError, match="Invalid campaign snapshot"):
+                restore_session(path)
+        else:
+            restore_session(path)
+>       assert_closed(file_connections)
+
+tests/test_sqlite_lifecycle.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f0368c533d0>, <sqlite3.Connection object at 0x7f03689d4e50>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+____ test_restore_closes_database_on_success_and_invalid_snapshot[invalid] _____
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_restore_closes_database_o1')
+file_connections = [<sqlite3.Connection object at 0x7f03689d4a90>, <sqlite3.Connection object at 0x7f03689d5300>, <sqlite3.Connection object at 0x7f03689d54e0>]
+valid = False
+
+    @pytest.mark.parametrize("valid", [True, False], ids=["valid", "invalid"])
+    def test_restore_closes_database_on_success_and_invalid_snapshot(
+        tmp_path, file_connections, valid
+    ):
+        path = tmp_path / "campaign.sqlite3"
+        index = CampaignIndex(Session(seed=5))
+        try:
+            index.export(path)
+        finally:
+            index.close()
+        if not valid:
+            with closing(sqlite3.connect(path)) as db, db:
+                db.execute("DELETE FROM snapshot")
+            with pytest.raises(ValueError, match="Invalid campaign snapshot"):
+                restore_session(path)
+        else:
+            restore_session(path)
+>       assert_closed(file_connections)
+
+tests/test_sqlite_lifecycle.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f03689d4a90>, <sqlite3.Connection object at 0x7f03689d5300>, <sqlite3.Connection object at 0x7f03689d54e0>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+_ test_failed_backup_closes_before_cleanup_and_preserves_error[CatalogIndex-export] _
+
+target = <sqlite3.Connection object at 0x7f03689d56c0>
+
+    def fail(target):
+        target.execute("CREATE TABLE partial(value TEXT)")
+>       raise OSError("backup interrupted")
+E       OSError: backup interrupted
+
+tests/test_sqlite_lifecycle.py:114: OSError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_failed_backup_closes_befo0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0368b0ba40>
+file_connections = [<sqlite3.Connection object at 0x7f03689d56c0>]
+index_type = <class 'rpg_vkr.storage.catalog.CatalogIndex'>
+operation = 'export'
+
+    @pytest.mark.parametrize(
+        ("index_type", "operation"),
+        [(CatalogIndex, "export"), (CampaignIndex, "export"), (CatalogIndex, "publish")],
+    )
+    def test_failed_backup_closes_before_cleanup_and_preserves_error(
+        tmp_path, monkeypatch, file_connections, index_type, operation
+    ):
+        index = index_type(Session(seed=5))
+        original = index.db
+        path = tmp_path / "output.sqlite3"
+        unlink = type(path).unlink
+    
+        def fail(target):
+            target.execute("CREATE TABLE partial(value TEXT)")
+            raise OSError("backup interrupted")
+    
+        def require_closed(self, *args, **kwargs):
+            assert_closed(file_connections)
+            return unlink(self, *args, **kwargs)
+    
+        monkeypatch.setattr(type(path), "unlink", require_closed)
+        index.db = SimpleNamespace(backup=fail)
+        try:
+            with pytest.raises(OSError, match="backup interrupted"):
+>               getattr(index, operation)(path)
+
+tests/test_sqlite_lifecycle.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/catalog.py:346: in export
+    path.unlink(missing_ok=True)
+tests/test_sqlite_lifecycle.py:117: in require_closed
+    assert_closed(file_connections)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f03689d56c0>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+_ test_failed_backup_closes_before_cleanup_and_preserves_error[CampaignIndex-export] _
+
+target = <sqlite3.Connection object at 0x7f03689d5f30>
+
+    def fail(target):
+        target.execute("CREATE TABLE partial(value TEXT)")
+>       raise OSError("backup interrupted")
+E       OSError: backup interrupted
+
+tests/test_sqlite_lifecycle.py:114: OSError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_failed_backup_closes_befo1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0368c816a0>
+file_connections = [<sqlite3.Connection object at 0x7f03689d5f30>]
+index_type = <class 'rpg_vkr.storage.knowledge.CampaignIndex'>
+operation = 'export'
+
+    @pytest.mark.parametrize(
+        ("index_type", "operation"),
+        [(CatalogIndex, "export"), (CampaignIndex, "export"), (CatalogIndex, "publish")],
+    )
+    def test_failed_backup_closes_before_cleanup_and_preserves_error(
+        tmp_path, monkeypatch, file_connections, index_type, operation
+    ):
+        index = index_type(Session(seed=5))
+        original = index.db
+        path = tmp_path / "output.sqlite3"
+        unlink = type(path).unlink
+    
+        def fail(target):
+            target.execute("CREATE TABLE partial(value TEXT)")
+            raise OSError("backup interrupted")
+    
+        def require_closed(self, *args, **kwargs):
+            assert_closed(file_connections)
+            return unlink(self, *args, **kwargs)
+    
+        monkeypatch.setattr(type(path), "unlink", require_closed)
+        index.db = SimpleNamespace(backup=fail)
+        try:
+            with pytest.raises(OSError, match="backup interrupted"):
+>               getattr(index, operation)(path)
+
+tests/test_sqlite_lifecycle.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/knowledge.py:195: in export
+    path.unlink(missing_ok=True)
+tests/test_sqlite_lifecycle.py:117: in require_closed
+    assert_closed(file_connections)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f03689d5f30>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+_ test_failed_backup_closes_before_cleanup_and_preserves_error[CatalogIndex-publish] _
+
+target = <sqlite3.Connection object at 0x7f03689d5d50>
+
+    def fail(target):
+        target.execute("CREATE TABLE partial(value TEXT)")
+>       raise OSError("backup interrupted")
+E       OSError: backup interrupted
+
+tests/test_sqlite_lifecycle.py:114: OSError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_failed_backup_closes_befo2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0368c7b890>
+file_connections = [<sqlite3.Connection object at 0x7f03689d5d50>]
+index_type = <class 'rpg_vkr.storage.catalog.CatalogIndex'>
+operation = 'publish'
+
+    @pytest.mark.parametrize(
+        ("index_type", "operation"),
+        [(CatalogIndex, "export"), (CampaignIndex, "export"), (CatalogIndex, "publish")],
+    )
+    def test_failed_backup_closes_before_cleanup_and_preserves_error(
+        tmp_path, monkeypatch, file_connections, index_type, operation
+    ):
+        index = index_type(Session(seed=5))
+        original = index.db
+        path = tmp_path / "output.sqlite3"
+        unlink = type(path).unlink
+    
+        def fail(target):
+            target.execute("CREATE TABLE partial(value TEXT)")
+            raise OSError("backup interrupted")
+    
+        def require_closed(self, *args, **kwargs):
+            assert_closed(file_connections)
+            return unlink(self, *args, **kwargs)
+    
+        monkeypatch.setattr(type(path), "unlink", require_closed)
+        index.db = SimpleNamespace(backup=fail)
+        try:
+            with pytest.raises(OSError, match="backup interrupted"):
+>               getattr(index, operation)(path)
+
+tests/test_sqlite_lifecycle.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/catalog.py:368: in publish
+    temporary.unlink(missing_ok=True)
+tests/test_sqlite_lifecycle.py:117: in require_closed
+    assert_closed(file_connections)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f03689d5d50>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+______ test_foreign_database_check_closes_read_handle_and_preserves_bytes ______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-116/test_foreign_database_check_cl0')
+file_connections = [<sqlite3.Connection object at 0x7f0368c536a0>, <sqlite3.Connection object at 0x7f03689d56c0>]
+
+    def test_foreign_database_check_closes_read_handle_and_preserves_bytes(
+        tmp_path, file_connections
+    ):
+        path = tmp_path / "foreign.sqlite3"
+        with closing(sqlite3.connect(path)) as db, db:
+            db.execute("CREATE TABLE keep_me(value TEXT)")
+        before = path.read_bytes()
+        index = CatalogIndex(Session(seed=5))
+        try:
+            with pytest.raises(ValueError, match="другая база"):
+                index.publish(path)
+>           assert_closed(file_connections)
+
+tests/test_sqlite_lifecycle.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+connections = [<sqlite3.Connection object at 0x7f0368c536a0>, <sqlite3.Connection object at 0x7f03689d56c0>]
+
+    def assert_closed(connections):
+        assert connections
+        for db in connections:
+>           with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.ProgrammingError'>
+
+tests/test_sqlite_lifecycle.py:35: Failed
+=========================== short test summary info ============================
+FAILED tests/test_sqlite_lifecycle.py::test_publish_closes_temporary_and_previous_database_before_replace
+FAILED tests/test_sqlite_lifecycle.py::test_export_closes_database_before_return[CatalogIndex]
+FAILED tests/test_sqlite_lifecycle.py::test_export_closes_database_before_return[CampaignIndex]
+FAILED tests/test_sqlite_lifecycle.py::test_restore_closes_database_on_success_and_invalid_snapshot[valid]
+FAILED tests/test_sqlite_lifecycle.py::test_restore_closes_database_on_success_and_invalid_snapshot[invalid]
+FAILED tests/test_sqlite_lifecycle.py::test_failed_backup_closes_before_cleanup_and_preserves_error[CatalogIndex-export]
+FAILED tests/test_sqlite_lifecycle.py::test_failed_backup_closes_before_cleanup_and_preserves_error[CampaignIndex-export]
+FAILED tests/test_sqlite_lifecycle.py::test_failed_backup_closes_before_cleanup_and_preserves_error[CatalogIndex-publish]
+FAILED tests/test_sqlite_lifecycle.py::test_foreign_database_check_closes_read_handle_and_preserves_bytes
+9 failed in 0.22s

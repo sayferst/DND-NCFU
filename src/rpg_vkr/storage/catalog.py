@@ -4,6 +4,7 @@ import json
 import os
 import sqlite3
 import tempfile
+from contextlib import closing
 from pathlib import Path
 
 from rpg_vkr.domain.catalog import CATEGORIES, Definition, effective_properties, seed_catalog
@@ -340,7 +341,7 @@ class CatalogIndex:
         with path.open("xb"):
             pass
         try:
-            with sqlite3.connect(path) as target:
+            with closing(sqlite3.connect(path)) as target:
                 self.db.backup(target)
         except Exception:
             path.unlink(missing_ok=True)
@@ -351,7 +352,7 @@ class CatalogIndex:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         if path.exists():
-            with sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True) as old:
+            with closing(sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)) as old:
                 if old.execute("PRAGMA application_id").fetchone()[0] != 1145980227:
                     raise ValueError("По этому пути находится другая база; она не перезаписана.")
         temporary = None
@@ -360,7 +361,9 @@ class CatalogIndex:
                 dir=path.parent, suffix=".sqlite3.tmp", delete=False
             ) as f:
                 temporary = Path(f.name)
-            with sqlite3.connect(temporary) as target:
+            # A Connection context commits/rolls back, but does not close the file.
+            # Windows requires both the old and temporary handles closed for replace.
+            with closing(sqlite3.connect(temporary)) as target:
                 self.db.backup(target)
             os.replace(temporary, path)
         finally:
