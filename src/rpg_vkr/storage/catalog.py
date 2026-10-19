@@ -14,6 +14,9 @@ from rpg_vkr.domain.combat import ACTORS
 def live_records(session):
     """Legacy bindings are read from their sole current state, never a second wallet."""
     catalog = session.catalog or seed_catalog()
+    resource_world = (
+        session.interactive_world and session.interactive_world.version == "interactive-world-3"
+    )
     types = {d.id: d.to_dict() for d in catalog.definitions}
     records = {}
 
@@ -41,7 +44,7 @@ def live_records(session):
         "Золото",
         "item",
         ("miscellaneous",),
-        {"currency": "gold", "copper_units_per_coin": 100},
+        {"currency": "gold", "copper_units_per_coin": 100, "mass_g": 5, "volume_ml": 1},
         origin="legacy-adapter",
     ).to_dict()
     put("legacy_gold", "type_currency", "hero", "hero", session.world.gold, binding="world.gold")
@@ -91,13 +94,28 @@ def live_records(session):
                 if step.target in mapping:
                     mapping[f"split_{i}_{j}"] = mapping[step.target]
     for e in catalog.entities:
+        if (
+            resource_world
+            and types[e.definition_id]["kind"] != "actor"
+            and not any(t.id == e.id for t in session.interactive_world.things)
+        ):
+            continue
         put(e.id, e.definition_id, e.parent_id, e.owner_id, e.quantity, e.state)
     if session.interactive_world:
+        if resource_world:
+            records.pop("legacy_gold", None)
+            records.pop("legacy_bandages", None)
         for a in session.interactive_world.actor_refs:
             if a.id in records:
                 records[a.id]["parent_id"] = a.place
         for t in session.interactive_world.things:
-            type_id = mapping.get(t.id, "imported_type_" + t.id)
+            from rpg_vkr.domain.resources import RESOURCE_TYPES
+
+            type_id = (
+                RESOURCE_TYPES[t.resource]
+                if t.resource
+                else mapping.get(t.id, "imported_type_" + t.id)
+            )
             if type_id not in types:
                 types[type_id] = Definition(
                     type_id,
@@ -191,7 +209,7 @@ class CatalogIndex:
             self.db.execute("CREATE TABLE snapshot(version INTEGER,payload TEXT)")
             self.db.execute(
                 "INSERT INTO snapshot VALUES (?,?)",
-                (19, json.dumps(session.to_dict(), ensure_ascii=False)),
+                (20, json.dumps(session.to_dict(), ensure_ascii=False)),
             )
             self.db.commit()
         except Exception:

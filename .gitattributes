@@ -5,6 +5,7 @@ tests/fixtures/*.json -text
 docs/validation/windows-fixture-crlf-2026-10-19.txt -text
 # Raw pytest evidence includes intentional whitespace in traceback output.
 docs/validation/linux-sqlite-handles-*-2026-10-19.txt -text whitespace=-blank-at-eol
+docs/validation/linux-resource-ledger-first-2026-10-19.txt -text
 docs/research/USER_ROUTERAI_API_EXCERPTS.md -text
 docs/research/routerai_starter/* -text
 docs/research/system_logic/* -text

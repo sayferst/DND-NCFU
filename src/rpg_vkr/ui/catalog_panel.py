@@ -104,7 +104,10 @@ def refresh_catalog_panel(window):
                 window.catalog_table.setItem(i, j, item)
         window.catalog_table.blockSignals(False)
         window.catalog_detail.clear()
-        if window._session.catalog:
+        if window._session.catalog or (
+            window._session.interactive_world
+            and window._session.interactive_world.version == "interactive-world-3"
+        ):
             path = window._saves.directory.parent / "world-catalog.sqlite3"
             try:
                 index.publish(path)

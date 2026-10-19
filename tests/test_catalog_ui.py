@@ -9,6 +9,8 @@ from test_local_narrator import wait_for
 from test_routerai import configure, router_server
 
 from rpg_vkr.application import Session
+from rpg_vkr.domain.interactions import Step, WorldPlan
+from rpg_vkr.domain.world import WorldState
 from rpg_vkr.storage.catalog import CatalogIndex
 
 LOOK = "осмотрюсь в открытой мастерской"
@@ -172,3 +174,78 @@ def test_cancelled_actor_attempt_consumes_neither_die_nor_bandage(window, qt_app
         assert (window._session.to_dict(), window._session.dice.checkpoint()) == before
         assert window.action_input.text() == text
         assert len([r for r in records if r["method"] == "POST"]) == 1
+
+
+def test_resource_gift_uses_real_balance_and_working_sqlite(window, qt_app, monkeypatch):
+    text = "отдаю жительнице один бинт"
+    plan = {
+        "steps": [
+            {"op": "give", "target": "legacy_bandages", "quantity": 1, "destination": "villager"}
+        ],
+        "places": [],
+        "check": "none",
+    }
+    window._session = Session(seed=5)
+    with router_server(world_plans={text: plan}, writer_text="Жительница принимает бинт.") as (
+        url,
+        records,
+    ):
+        enable(window, monkeypatch, url)
+        send(window, qt_app, text)
+        assert window._session.world.bandages == 0
+        item = next(t for t in window._session.interactive_world.things if t.resource == "bandages")
+        assert item.holder == item.owner == "villager"
+        path = window._saves.directory.parent / "world-catalog.sqlite3"
+        with closing(sqlite3.connect(path)) as db:
+            row = db.execute(
+                "SELECT parent_id,quantity FROM catalog_instances WHERE id=?", (item.id,)
+            ).fetchone()
+            assert row == ("villager", 1)
+        assert len([r for r in records if r["method"] == "POST"]) == 2
+        assert window.journal.toPlainText().count(text) == 1
+        window.save_slot(1)
+        expected = window._session.to_dict()
+        window.load_slot(1)
+        assert window._session.to_dict() == expected
+
+
+def test_cancelled_resource_plan_does_not_activate_or_spend(window, qt_app, monkeypatch):
+    text = "пожертвую монеты жительнице"
+    plan = {
+        "steps": [
+            {"op": "give", "target": "legacy_gold", "quantity": 2, "destination": "villager"}
+        ],
+        "places": [],
+        "check": "none",
+    }
+    before = window._session.to_dict(), window._session.dice.checkpoint()
+    monkeypatch.setattr(window, "_confirm", lambda _: False)
+    with router_server(world_plans={text: plan}) as (url, records):
+        enable(window, monkeypatch, url)
+        send(window, qt_app, text)
+        assert (window._session.to_dict(), window._session.dice.checkpoint()) == before
+        assert window.action_input.text() == text
+        assert len([r for r in records if r["method"] == "POST"]) == 1
+
+
+def test_chat_purchase_consumes_same_coins_and_creates_real_bandage(window, qt_app, monkeypatch):
+    text = "купить бинт"
+    window._session = Session(
+        seed=5, world=WorldState(location="market", market_known=True, trading=True, bandages=0)
+    )
+    window._session.submit_interaction(
+        "выбрасываю монеты", WorldPlan((Step("drop", "legacy_gold", 2),))
+    )
+    with router_server(writer_text="Торговец передаёт вам бинт и принимает плату.") as (url, _):
+        enable(window, monkeypatch, url)
+        send(window, qt_app, text)
+        assert window._session.world.gold == 5 and window._session.world.bandages == 1
+        assert (
+            sum(
+                t.quantity
+                for t in window._session.interactive_world.carried()
+                if t.resource == "gold"
+            )
+            == 5
+        )
+        assert Session.from_dict(window._session.to_dict()).to_dict() == window._session.to_dict()

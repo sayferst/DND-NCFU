@@ -50,6 +50,9 @@ from rpg_vkr.domain.progression import (
     describe_award,
     describe_progress,
 )
+from rpg_vkr.domain.resources import activate as activate_resources
+from rpg_vkr.domain.resources import needed as resource_plan
+from rpg_vkr.domain.resources import physical, project, reconcile, validate_balances
 from rpg_vkr.domain.social import DialogueRecord, grievance
 from rpg_vkr.domain.world import (
     LOCATIONS,
@@ -168,6 +171,7 @@ class Session:
         return base + tuple(
             (f"{t.name} ×{t.quantity}", "Переносимый предмет мира")
             for t in (self.interactive_world.carried() if self.interactive_world else ())
+            if not t.resource
         )
 
     @property
@@ -188,6 +192,7 @@ class Session:
         return tuple((name, 1, purpose) for name, purpose in base) + tuple(
             (t.name, t.quantity, "Переносимый предмет мира")
             for t in (self.interactive_world.carried() if self.interactive_world else ())
+            if not t.resource
         )
 
     def actor_is_here(self, actor_id):
@@ -198,6 +203,12 @@ class Session:
 
     def interaction_state(self):
         return self.interactive_world or InteractiveWorld.initial(self.world.location)
+
+    def plan_state(self, plan):
+        scene = self.interaction_state()
+        if resource_plan(scene, plan, self.catalog, self.catalog_aliases):
+            return activate_resources(scene, self.world, self.catalog, self.catalog_aliases)
+        return scene
 
     @property
     def catalog_aliases(self):
@@ -289,6 +300,7 @@ class Session:
         checkpoint = self.dice.checkpoint()
         try:
             catalog, world, record = resolve_attempt(**kwargs, roll=self.dice.roll_d20())
+            resource_scene = reconcile(scene, self.world, world, len(self.turns) + 1, catalog)
             combat = self.combat
             if target_id in ACTORS:
                 actor = combat.actor(target_id)
@@ -318,6 +330,8 @@ class Session:
             self.dice.restore(checkpoint)
             raise
         self.catalog, self.world, self.combat, self.memory = catalog, world, combat, memory
+        if physical(scene):
+            self.interactive_world = resource_scene
         self._turns.append(turn)
         return turn
 
@@ -330,11 +344,15 @@ class Session:
         bind_plan(action, plan, confirmed=confirmed_plan)
         if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Эта цепочка недоступна в бою или после выбытия.")
-        before = self.interaction_state()
+        before = self.plan_state(plan)
         index = len(self.turns) + 1
-        if self.catalog:
+        if self.catalog or physical(before):
             validate_plan_properties(
-                self.catalog, before, plan, turn_index=index, aliases=self.catalog_aliases
+                self.catalog or seed_catalog(),
+                before,
+                plan,
+                turn_index=index,
+                aliases=self.catalog_aliases,
             )
         _, risky, _, _ = apply_plan(before, plan, turn_index=index)
         checkpoint = self.dice.checkpoint()
@@ -366,6 +384,7 @@ class Session:
                 trading=False if after.current != before.current else self.world.trading,
                 market_known=self.world.market_known or anchor == "market",
             )
+            world = project(after, world)
             turn = Turn(
                 action,
                 "Мир",
@@ -567,12 +586,21 @@ class Session:
                 event = progress.events[-1]
                 world = replace(world, max_hp=world.max_hp + event.max_hp_delta)
                 turn = replace(turn, text=turn.text + "\n" + describe_award(event))
+            resource_scene = (
+                reconcile(
+                    self.interactive_world, self.world, world, len(self.turns) + 1, self.catalog
+                )
+                if self.interactive_world
+                else None
+            )
             memory = self.memory.append(turn, before, snapshot(world, character, combat, progress))
         except Exception:
             self.campaign = campaign_before
             self.dice.restore(checkpoint)
             raise
         self.memory = memory
+        if resource_scene:
+            self.interactive_world = resource_scene
         if self.interactive_world and world.location != self.world.location:
             self.interactive_world = replace(self.interactive_world, current=world.location)
         self.world = world
@@ -990,7 +1018,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 19) -> "Session":
+    def from_dict(cls, data: object, version: int = 20) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -1011,6 +1039,7 @@ class Session:
             17,
             18,
             19,
+            20,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -1265,9 +1294,9 @@ class Session:
                 record = Interaction.restore(
                     item["interaction"], session.dice, len(session.turns) + 1
                 )
-                if session.catalog:
+                if session.catalog or physical(record.before):
                     validate_plan_properties(
-                        session.catalog,
+                        session.catalog or seed_catalog(),
                         record.before,
                         record.plan,
                         turn_index=len(session.turns) + 1,
@@ -1681,6 +1710,10 @@ class Session:
                 )
                 if canonical(record.to_dict()) != canonical(expected_record.to_dict()):
                     raise ValueError("Actor attempt does not match historical calculation")
+                if physical(expected_before):
+                    interactive = reconcile(
+                        expected_before, world, after_world, event.turn_index, historical_catalog
+                    )
                 expected_fields = dict(fields)
                 expected_fields.update({"world." + k: v for k, v in asdict(after_world).items()})
                 if record.target_id in ACTORS:
@@ -1708,6 +1741,19 @@ class Session:
             elif turn.interaction:
                 record = turn.interaction
                 expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
+                if physical(record.before) and not physical(expected_before):
+                    prior_world = WorldState.from_dict(
+                        {k: fields["world." + k] for k in asdict(WorldState())}
+                    )
+                    aliases = {
+                        f"split_{i}_{j}": step.target
+                        for i, prior in enumerate(session.turns[: event.turn_index - 1], 1)
+                        if prior.interaction
+                        for j, step in enumerate(prior.interaction.plan.steps)
+                    }
+                    expected_before = activate_resources(
+                        expected_before, prior_world, historical_catalog, aliases
+                    )
                 if (
                     record.before != expected_before
                     or fields["world.hp"] <= 0
@@ -1729,6 +1775,12 @@ class Session:
                         "world.market_known": fields["world.market_known"] or anchor == "market",
                     }
                 )
+                if physical(record.after):
+                    from rpg_vkr.domain.resources import balances
+
+                    expected_fields.update(
+                        {"world." + k: v for k, v in balances(record.after).items()}
+                    )
                 for actor in record.witnesses:
                     if actor not in ACTORS:
                         continue
@@ -1742,6 +1794,17 @@ class Session:
                     raise ValueError("Interaction attempted unapproved numeric changes")
                 interactive = record.after
             elif interactive:
+                if physical(interactive):
+                    prior_world = WorldState.from_dict(
+                        {k: fields["world." + k] for k in asdict(WorldState())}
+                    )
+                    next_fields = fields | {c.field: c.after for c in event.changes}
+                    next_world = WorldState.from_dict(
+                        {k: next_fields["world." + k] for k in asdict(WorldState())}
+                    )
+                    interactive = reconcile(
+                        interactive, prior_world, next_world, event.turn_index, historical_catalog
+                    )
                 for change in event.changes:
                     if change.field == "world.location":
                         interactive = replace(interactive, current=change.after)
@@ -1807,11 +1870,19 @@ class Session:
             for change in event.changes:
                 fields[change.field] = change.after
         stored_interactive = data.get("interactive_world")
+        if (
+            version < 20
+            and stored_interactive
+            and stored_interactive.get("version") == "interactive-world-3"
+        ):
+            raise ValueError("Physical resources require session schema 20")
         if (interactive.to_dict() if interactive else None) != (
             InteractiveWorld.from_dict(stored_interactive).to_dict() if stored_interactive else None
         ):
             raise ValueError("Final objects do not match recorded transactions")
         session.interactive_world = interactive
+        if interactive:
+            validate_balances(interactive, session.world)
         stored_catalog = data.get("catalog")
         if (session.catalog.to_dict() if session.catalog else None) != (
             Catalog.from_dict(stored_catalog).to_dict() if stored_catalog is not None else None

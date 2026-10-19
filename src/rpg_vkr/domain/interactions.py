@@ -57,6 +57,7 @@ class Thing:
     owner: str
     quantity: int
     container: bool = False
+    resource: str = ""
 
     def __post_init__(self):
         for value in (self.id, self.holder):
@@ -68,6 +69,8 @@ class Thing:
             raise ValueError("Неверное количество предметов.")
         if type(self.container) is not bool or (self.container and self.quantity != 1):
             raise ValueError("Неверный контейнер.")
+        if self.resource not in {"", "gold", "bandages"} or self.resource and self.container:
+            raise ValueError("Неверный ресурс предмета.")
 
 
 @dataclass(frozen=True)
@@ -94,13 +97,14 @@ class InteractiveWorld:
     def actor_refs(self):
         return (
             self.actors
-            if self.version == "interactive-world-2"
+            if self.version in {"interactive-world-2", "interactive-world-3"}
             else tuple(ActorRef(key, spec[0], spec[1]) for key, spec in ACTORS.items())
         )
 
     def __post_init__(self):
         if (
-            self.version not in {"interactive-world-1", "interactive-world-2"}
+            self.version
+            not in {"interactive-world-1", "interactive-world-2", "interactive-world-3"}
             or not 3 <= len(self.places) <= 40
             or len(self.things) > (80 if self.version == "interactive-world-1" else 2000)
         ):
@@ -128,6 +132,8 @@ class InteractiveWorld:
                 seen.add(cursor.id)
                 cursor = places[cursor.parent]
         for thing in self.things:
+            if thing.resource and self.version != "interactive-world-3":
+                raise ValueError("Физические ресурсы требуют новую версию мира.")
             if self.version == "interactive-world-1" and thing.quantity > 100:
                 raise ValueError("Количество превышает предел старой версии мира.")
             cursor, seen = thing, set()
@@ -187,14 +193,21 @@ class InteractiveWorld:
             "current": self.current,
             "place": asdict(self.place()),
             "places": [asdict(p) for p in self.places],
-            "objects": [asdict(t) | {"available_here": self.here(t)} for t in self.things],
+            "objects": [self.thing_dict(t) | {"available_here": self.here(t)} for t in self.things],
             "actors_here": [a.id for a in self.actor_refs if a.place == self.current],
         }
 
     def to_dict(self):
         value = asdict(self)
+        value["things"] = [self.thing_dict(t) for t in self.things]
         if self.version == "interactive-world-1":
             value.pop("actors")
+        return value
+
+    def thing_dict(self, thing):
+        value = asdict(thing)
+        if self.version != "interactive-world-3":
+            value.pop("resource")
         return value
 
     @classmethod

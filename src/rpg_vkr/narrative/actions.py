@@ -45,6 +45,13 @@ def action_plan(session, text, *, allow_interactions=False):
     from rpg_vkr.narrative.dialogue import last_interlocutor
 
     value = unquoted(text)
+    resource_command = re.fullmatch(
+        r"(?:я\s+)?(?:(?:хочу|попробую)\s+)?"
+        r"(купить бинт|продать бинт|использовать бинт)",
+        value,
+    )
+    if resource_command and "?" not in text:
+        return ActionPlan((resource_command[1],))
     if allow_interactions and re.search(ATTACK, value):
         dynamic_here = any(
             a.id not in ACTORS and a.place == session.current_place_id

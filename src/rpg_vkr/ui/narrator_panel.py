@@ -612,6 +612,17 @@ def catalog_context(window, text):
     from rpg_vkr.storage.catalog import CatalogIndex
 
     state = window._session.interaction_state().context()
+    from rpg_vkr.domain.resources import NAMES, POOL_IDS, physical
+
+    state["resource_pools"] = (
+        []
+        if physical(window._session.interaction_state())
+        else [
+            {"id": id, "name": NAMES[field], "quantity": getattr(window._session.world, field)}
+            for field, id in POOL_IDS.items()
+            if getattr(window._session.world, field)
+        ]
+    )
     if window._session.catalog:
         state["object_count"] = len(state["objects"])
         state["objects"] = sorted(state["objects"], key=lambda o: not o["available_here"])[:40]
@@ -780,9 +791,13 @@ def accept_world_plan(window, result):
                 state,
             )
             catalog, state = register(window._session.catalog or seed_catalog(), state, record)
-        if catalog:
+        from rpg_vkr.domain.resources import activate, needed, physical
+
+        if needed(state, plan, catalog, window._session.catalog_aliases):
+            state = activate(state, window._session.world, catalog, window._session.catalog_aliases)
+        if catalog or physical(state):
             validate_plan_properties(
-                catalog,
+                catalog or seed_catalog(),
                 state,
                 plan,
                 turn_index=len(window._session.turns) + 1 + bool(definitions or entities),

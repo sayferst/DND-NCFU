@@ -1,6 +1,16 @@
 # План проверок
 
-Актуально1O.2: **824 passed,0failed/skipped,51.44с**, scripts/check.py вLinux/Python3.12.14,
+Актуально1O.3: **853 passed,0failed/skipped,54.63с**, scripts/check.py вLinux/Python3.12.14,
+pip/Ruff успешны,117Python-файлов. Raw:docs/validation/linux-resource-ledger-first-2026-10-19.txt.
+Новые26кейсов вtest_resource_ledger.py и3Qt/HTTP вtest_catalog_ui.py; целевые35/6.93с.
+Проверяются часть/весь запас, новые владельцы, вложенные и запертые контейнеры,
+реальный расход и награды, торговля, перевязка NPC, удаление фантомов, отрицания/
+цитаты/вопросы, отсутствие частичного эффекта ошибочной цепочки, подмена данных,
+RNG, fixture19, три ячейки и SQLite. Qt-путь: передача, отмена, покупка через чат.
+Ручная проверка Windows: docs/RESOURCE_LEDGER.md; проверить остатки после drop/take,
+передачи, сохранения/загрузки и использования бинта. Реальный Flash не тестировался.
+
+История1O.2: **824 passed,0failed/skipped,51.44с**, scripts/check.py вLinux/Python3.12.14,
 pip/Ruff успешны,115Python-файлов. Raw:docs/validation/linux-sqlite-handles-release-2026-10-19.txt.
 test_sqlite_lifecycle.py:9случаев с настоящими удерживаемыми соединениями;
 до исправления9failed/0.22с. Проверяются закрытие до os.replace/unlink, повторная

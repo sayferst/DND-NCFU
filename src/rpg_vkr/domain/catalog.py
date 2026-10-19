@@ -397,7 +397,8 @@ def register(catalog, world, record):
     if any(e.id in existing_entities for e in record.entities):
         raise ValueError("Установленную сущность нельзя незаметно заменить.")
     if any(
-        r.id.startswith(("legacy_", "type_actor_", "imported_type_")) or r.id == "type_currency"
+        r.id.startswith(("legacy_", "resource_", "type_actor_", "imported_type_"))
+        or r.id == "type_currency"
         for r in (*record.definitions, *record.entities)
     ):
         raise ValueError("Этот диапазон ID зарезервирован адаптером старых данных.")
@@ -440,10 +441,16 @@ def register(catalog, world, record):
                 e.owner_id,
                 e.quantity,
                 d.properties.get("container", False),
+                {"type_bandage": "bandages"}.get(d.id, "")
+                if world.version == "interactive-world-3"
+                else "",
             )
         )
     expanded = replace(
-        world, things=tuple(things), actors=tuple(actors), version="interactive-world-2"
+        world,
+        things=tuple(things),
+        actors=tuple(actors),
+        version=world.version if world.version == "interactive-world-3" else "interactive-world-2",
     )
     return result, expanded
 
@@ -463,6 +470,11 @@ def validate_plan_properties(catalog, world, plan, *, turn_index, aliases=None):
         while id in aliases and id not in seen:
             seen.add(id)
             id = aliases[id]
+        thing = next((t for t in world.things if t.id == id), None)
+        if thing and thing.resource:
+            from rpg_vkr.domain.resources import properties as resource_properties
+
+            return resource_properties(world, id, catalog)
         e = entities.get(id)
         type_id = e.definition_id if e else defaults.get(id)
         if type_id not in definitions:
