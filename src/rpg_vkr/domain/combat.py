@@ -34,7 +34,13 @@ ANGER_COMMANDS = {
     "поссориться с торговцем": "merchant",
     "спровоцировать кабана": "boar",
 }
-STEALTH_COMMANDS = {"подкрасться к волку": "wolf", "подкрасться к кабану": "boar"}
+STEALTH_COMMANDS = {
+    "подкрасться к волку": "wolf",
+    "подкрасться к кабану": "boar",
+    "подкрасться к стражнику": "guard",
+    "подкрасться к жительнице": "villager",
+    "подкрасться к торговцу": "merchant",
+}
 COMBAT_COMMANDS = {
     *ATTACK_COMMANDS,
     *ANGER_COMMANDS,

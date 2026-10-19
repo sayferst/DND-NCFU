@@ -47,6 +47,8 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
     else:
         facts.pop("confirmed_result", None)
     brief = turn_brief(frame, text, campaign=campaign, memory=memory, master=master_question(text))
+    if confirmed:
+        brief = {**brief, "mode": "result", "clarification": ""}
     if brief.get("mode") == "dialogue":
         facts.pop(
             "scene", None
@@ -57,7 +59,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         entry = {"player_message": event.get("player", event.get("player_message", ""))[:300]}
         if event.get("source") == "rules":
             entry["rules_result"] = event.get("result", event.get("confirmed_result", ""))[:350]
-        elif event.get("source") == "scene-director-4":
+        elif event.get("source") == "scene-director-5":
             entry["npc_reply"] = spoken(event.get("result", ""))[:350]
             entry["actor_id"] = event.get("actor_id", "")
         recent.append(entry)
@@ -65,6 +67,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "player_message": text,
         "current_scene": facts,
         "hero_description": (campaign or {}).get("hero_description", ""),
+        "resolution": (campaign or {}).get("resolution", []) if confirmed else [],
         "known_observations": (campaign or {}).get("known_observations", []),
         "memory": memory,
         "recent_events": recent,

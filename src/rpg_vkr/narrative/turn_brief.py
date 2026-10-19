@@ -64,7 +64,10 @@ def turn_brief(frame, text, *, campaign=None, memory=None, master=False):
     act, topic = speech_details(text)
     if topic in TASKS and topic not in topics and topic != "help":
         topics.append(topic)
-    approach = bool(re.search(r"\b(?:подойду|подойти|подхожу)\b", normal))
+    place = re.search(r"\b(?:к воротам|на рынок|на дорогу|в ворота)\b", normal)
+    approach = bool(re.search(r"\b(?:подойду|подойти|подхожу)\b", normal)) and not place
+    if target and re.fullmatch(r"\s*к\s+[а-яё\s]+[.!]?\s*", normal):
+        approach = True  # The player's answer to the previous addressee clarification.
     social = bool(
         topics
         or re.search(r"спро|спраш|скажи|скажите|поговор", normal)

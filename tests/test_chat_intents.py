@@ -23,7 +23,7 @@ def test_real_v7_fixture_migrates_without_replaying_or_rewriting(tmp_path):
     session.submit("Проверю удачу ещё раз", intent="бросить кубик")
     assert session.turns[-1].roll.value == 1
     slots.save(2, session)
-    assert json.loads((tmp_path / "slot-2.json").read_bytes())["schema_version"] == 15
+    assert json.loads((tmp_path / "slot-2.json").read_bytes())["schema_version"] == 16
     assert slots.load(2).to_dict() == session.to_dict()
     assert (tmp_path / "slot-1.json").read_bytes() == original
 

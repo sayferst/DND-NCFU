@@ -78,6 +78,7 @@ class Turn:
     inspection: Inspection | None = None
     intent_source: str = "direct"
     scene: SceneRecord | None = None
+    notes: tuple[str, ...] = ()
 
 
 def _text(value: object, limit: int) -> str:
@@ -148,6 +149,7 @@ class Session:
         meaning=None,
         profile=None,
         intent_source="direct",
+        _verified_step=False,
     ) -> Turn:
         action = _text(action, 500).strip()
         if len(self._turns) >= MAX_TURNS:
@@ -156,7 +158,7 @@ class Session:
             raise ValueError("Неподдерживаемое намерение. Мир не изменён.")
         if meaning is not None and not isinstance(meaning, Meaning):
             raise ValueError("Invalid semantic evidence")
-        if meaning is None and intent is None:
+        if meaning is None and intent is None and not _verified_step:
             from rpg_vkr.narrative.routing import infer_meaning
 
             meaning = infer_meaning(self, action)
@@ -176,7 +178,7 @@ class Session:
         if intent_source not in {"direct", "model", "local-fallback", "local-correction"}:
             raise ValueError("Invalid interpretation source")
         command = intent or normalise_action(action)
-        if not isinstance(origin, str) or origin not in {"typed", "quick"}:
+        if not isinstance(origin, str) or origin not in {"typed", "quick", "system"}:
             raise ValueError("Invalid input origin")
         binding_error = (
             validate_binding(
@@ -186,7 +188,9 @@ class Session:
                 active_target=self.combat.active,
                 interlocutor=last_interlocutor(self),
             )
-            if intent is not None and not (meaning and meaning.kind == "master")
+            if intent is not None
+            and not _verified_step
+            and not (meaning and meaning.kind == "master")
             else None
         )
         if binding_error:
@@ -273,6 +277,57 @@ class Session:
         self._turns.append(turn)
         return turn
 
+    def submit_actions(self, action):
+        """Validate explicit local evidence and commit at most two steps atomically.
+
+        There is no model-controlled bypass. The plan is recomputed here, using
+        the current scene, inventory and interlocutor, before any dice are rolled.
+        """
+        from rpg_vkr.narrative.actions import action_plan
+
+        action = _text(action, 500).strip()
+        plan = action_plan(self, action)
+        if plan is None:
+            raise ValueError("Нет подтверждённого локального действия.")
+        if plan.clarification:
+            raise ValueError(plan.clarification)
+        if len(self.turns) + len(plan.commands) > MAX_TURNS:
+            raise ValueError("Достигнут предел действий. Сохраните сессию.")
+        state = (self.world, self.character, self.combat, self.progress, self.campaign, self.memory)
+        checkpoint, count = self.dice.checkpoint(), len(self.turns)
+        result = []
+        try:
+            for index, command in enumerate(plan.commands):
+                # Do not grant the second action if travel failed or the hero fell.
+                if index:
+                    destination = {
+                        "идти к воротам": "gate",
+                        "идти на рынок": "market",
+                        "идти на дорогу": "road",
+                    }.get(plan.commands[index - 1])
+                    if self.world.hp == 0 or (destination and self.world.location != destination):
+                        break
+                result.append(
+                    self.submit(
+                        action if index == 0 else command,
+                        intent=command,
+                        origin="typed" if index == 0 else "system",
+                        intent_source="local-fallback",
+                        _verified_step=True,
+                    )
+                )
+            if plan.notes:
+                result[-1] = replace(result[-1], notes=plan.notes)
+                self._turns[-1] = result[-1]
+        except Exception:
+            self.world, self.character, self.combat, self.progress, self.campaign, self.memory = (
+                state
+            )
+            del self._turns[count:]
+            self.dice.restore(checkpoint)
+            raise
+        return tuple(result)
+
     def submit_scene(self, action, proposal, model, *, base_turn):
         """Commit validated fiction and its visible segments in one transaction."""
         from rpg_vkr.domain.meaning import Meaning
@@ -281,6 +336,10 @@ class Session:
         from rpg_vkr.narrative.speech import speech_details
 
         action = _text(action, 500)
+        from rpg_vkr.narrative.actions import action_plan
+
+        if action_plan(self, action) is not None:
+            raise ValueError("Это действие требует игровых правил, а не свободной сцены.")
         record = SceneRecord(base_turn, self.world.location, model, proposal)
         validate_scene(record, self.turns, self.world.location, self.combat, self.world.hp)
         target = proposal.focus_id
@@ -584,7 +643,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 15) -> "Session":
+    def from_dict(cls, data: object, version: int = 16) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -601,6 +660,7 @@ class Session:
             13,
             14,
             15,
+            16,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -643,6 +703,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 16:
+                turn_keys.add("notes")
             if version >= 12:
                 turn_keys.add("scene")
             if version >= 11:
@@ -932,6 +994,19 @@ class Session:
                     intent_source=intent_source,
                 )
             )
+        if version >= 16:
+            from rpg_vkr.narrative.actions import NOTES
+
+            for index, item in enumerate(turns):
+                notes = item["notes"]
+                if (
+                    not isinstance(notes, (list, tuple))
+                    or len(notes) > len(NOTES)
+                    or any(not isinstance(n, str) or n not in NOTES for n in notes)
+                    or len(set(notes)) != len(notes)
+                ):
+                    raise ValueError("Invalid saved action notes")
+                session._turns[index] = replace(session._turns[index], notes=tuple(notes))
         if version >= 5:
             session.progress = HeroProgress.from_dict(data["progress"], session.turns)
             if session.progress.enabled:

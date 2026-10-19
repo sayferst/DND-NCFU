@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass
 
 from rpg_vkr.narrative.segments import Segment
 
-PROMPT_VERSION = "narrator-prose-10"
+PROMPT_VERSION = "narrator-prose-11"
 SUPPORTED_PROMPTS = {
     "narrator-prose-1",
     "narrator-prose-2",
@@ -16,6 +16,7 @@ SUPPORTED_PROMPTS = {
     "narrator-prose-7",
     "narrator-prose-8",
     "narrator-prose-9",
+    "narrator-prose-10",
     PROMPT_VERSION,
 }
 

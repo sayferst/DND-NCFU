@@ -131,6 +131,10 @@ class RoleJournal(QPlainTextEdit):
     def append_story(self, text, *, actor_id=None):
         self.append_segments(split_story(text, actor_id))
 
+    def append_master_story(self, text, *, actor_id=None):
+        # One label for the whole turn; quoted NPC speech keeps its own colour.
+        self.append_message("narrator", "Мастер", text, actor_id=actor_id, speech_only=True)
+
     def append_segments(self, segments):
         for segment in segments:
             self.append_message(
@@ -159,7 +163,9 @@ class RoleJournal(QPlainTextEdit):
                 )
             return
         text = present_turn(turn).story
-        if turn.dialogue:
+        if turn.combat:
+            self.append_master_story(text)
+        elif turn.dialogue:
             text = text.removeprefix(turn.speaker + ": ")
             self.append_story(text, actor_id=turn.actor_id)
         else:

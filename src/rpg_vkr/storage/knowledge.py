@@ -32,7 +32,7 @@ class CampaignIndex:
         def dump(value):
             return json.dumps(value, ensure_ascii=False)
 
-        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (15, dump(session.to_dict())))
+        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (16, dump(session.to_dict())))
         self.db.execute(
             "INSERT INTO entities VALUES (?,?,?,?)",
             ("hero", "hero", self.location, dump(asdict(session.character))),
@@ -195,7 +195,7 @@ def restore_session(path):
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
         if (
             len(values) != 1
-            or values[0][0] not in (12, 13, 14, 15)
+            or values[0][0] not in (12, 13, 14, 15, 16)
             or len(values[0][1]) > 4 * 1024 * 1024
         ):
             raise ValueError("Invalid campaign snapshot")

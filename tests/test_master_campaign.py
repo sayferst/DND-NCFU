@@ -141,7 +141,7 @@ def test_actual_v9_migration_preserves_rng_socials_and_old_prose(tmp_path):
     assert session.submit("бросить кубик").roll.value == 1
     slots.save(2, session)
     assert (
-        json.loads((tmp_path / "slot-2.json").read_text(encoding="utf-8"))["schema_version"] == 15
+        json.loads((tmp_path / "slot-2.json").read_text(encoding="utf-8"))["schema_version"] == 16
     )
     assert slots.load(2).to_dict() == session.to_dict()
     assert (tmp_path / "slot-1.json").read_bytes() == raw
@@ -243,7 +243,8 @@ def test_trusted_segments_and_historical_player_name_survive_load(window):
     window._render_journal()
     journal = window.journal.toPlainText()
     assert "Мастер: Жительница поправляет платок." in journal
-    assert "Жительница: «Яблоки собираю»" in journal
+    assert "«Яблоки собираю»" in journal
+    assert "Жительница: «Яблоки собираю»" not in journal
     assert "Мастер: ." not in journal
     assert "Путник: Жительница, что ты делаешь?" in journal
     saved = Session.from_dict(session.to_dict())

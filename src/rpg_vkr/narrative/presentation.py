@@ -30,6 +30,17 @@ def check_details(check, roll, purpose, *, graded=False):
 
 
 def present_turn(turn) -> TurnPresentation:
+    from rpg_vkr.narrative.actions import NOTES
+
+    view = _present_turn(turn)
+    if turn.notes:
+        return TurnPresentation(
+            view.title, view.story + "\n" + "\n".join(NOTES[n] for n in turn.notes), view.details
+        )
+    return view
+
+
+def _present_turn(turn) -> TurnPresentation:
     if turn.inspection:
         record = turn.inspection
         details = []

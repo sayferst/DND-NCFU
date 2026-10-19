@@ -49,9 +49,17 @@ def response_diagnostic(kind, model, raw, data, reason):
         if isinstance(data, dict)
         else "[Ответ не разобран как JSON; содержимое не отображается]"
     )
+    response_model = data.get("response_model", "") if isinstance(data, dict) else ""
+    resolved_model = (
+        f"Фактическая модель API: {response_model}\n"
+        if isinstance(response_model, str)
+        and re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", response_model)
+        else ""
+    )
     return (
         f"Этап: {kind}; модель: {model}\n"
-        f"Размер ответа: {len(raw)} байт; завершение: {finish}\n"
+        + resolved_model
+        + f"Размер ответа: {len(raw)} байт; завершение: {finish}\n"
         f"Длина thinking: {len(thinking) if isinstance(thinking, str) else 0}\n"
         f"Проверка: {reason}\nОтвет (до 6000 символов):\n{answer[:6000]}"
     )
@@ -509,6 +517,7 @@ class OllamaClient(QObject):
 
     def _start(self, path, kind, payload=None):
         self.cancel()
+        self.response_model = ""
         self._kind, self._reason = kind, ""
         self._buffer = bytearray()
         if self.cloud:
@@ -581,7 +590,13 @@ class OllamaClient(QObject):
         if error != QNetworkReply.NetworkError.NoError or status != 200:
             self._report(kind, model, raw, None, f"HTTP {status}; ошибка сети")
             self.failed.emit(
-                f"Облачный API отклонил запрос (HTTP {status}). Проверьте ключ, модель и доступ."
+                (
+                    "Лимит облачного API исчерпан (HTTP 429). Подождите восстановления квоты "
+                    "или выберите локальный режим. Выполненные действия сохранены."
+                    if status == 429
+                    else f"Облачный API отклонил запрос (HTTP {status}). "
+                    "Проверьте ключ, модель и доступ."
+                )
                 if self.cloud
                 else "Ollama недоступна или отклонила запрос. Автономная игра продолжает работать."
             )
@@ -601,6 +616,9 @@ class OllamaClient(QObject):
                 from rpg_vkr.narrative.cloud import normalize_completion
 
                 data = normalize_completion(data)
+                resolved = data.get("response_model", "")
+                if isinstance(resolved, str) and re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", resolved):
+                    self.response_model = resolved
             if isinstance(data, dict) and (
                 data.get("done_reason") == "length" or data.get("done") is False
             ):
@@ -657,12 +675,16 @@ class OllamaClient(QObject):
                         text,
                         self._frame,
                         self._story["text"],
+                        brief=context.get("turn_brief", {}),
                         previous=self._story["previous"],
-                        campaign={"hero_description": context.get("hero_description", "")},
+                        campaign={
+                            "hero_description": context.get("hero_description", ""),
+                            "resolution": context.get("resolution", []),
+                        },
                     )
                     note = Narration(
                         self._frame.turn_index,
-                        model,
+                        self.response_model or model,
                         text,
                         self._frame.fingerprint,
                         segments=split_story(text),

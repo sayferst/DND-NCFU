@@ -14,6 +14,7 @@ class CloudProfile:
     provider: str
     model: str
     key: str = field(repr=False)
+    free_only: bool = False
 
     def __post_init__(self):
         if self.provider not in ENDPOINTS:
@@ -22,6 +23,16 @@ class CloudProfile:
             raise ValueError("Укажите идентификатор облачной модели.")
         if not self.key or any(c.isspace() for c in self.key):
             raise ValueError("Укажите API-ключ провайдера, не пароль ChatGPT.")
+        if type(self.free_only) is not bool:
+            raise ValueError("Неверный режим оплаты API.")
+        if self.free_only and (
+            self.provider != "openrouter"
+            or not (self.model == "openrouter/free" or self.model.endswith(":free"))
+        ):
+            raise ValueError(
+                "Для бесплатного режима OpenRouter выберите openrouter/free "
+                "или существующую модель с суффиксом :free."
+            )
 
     @property
     def endpoint(self):
@@ -33,6 +44,11 @@ class CloudProfile:
         result["max_completion_tokens" if self.provider == "openai" else "max_tokens"] = limit
         if not self.model.startswith(("gpt-5", "o1", "o3", "o4")):
             result["temperature"] = local.get("options", {}).get("temperature", 0.45)
+        if self.free_only:
+            result["provider"] = {
+                "max_price": {"prompt": 0, "completion": 0, "request": 0},
+                "allow_fallbacks": False,
+            }
         return result
 
 
@@ -44,8 +60,11 @@ def normalize_completion(data):
     ):
         raise ValueError("Облачный API не вернул choices/message.")
     choice = data["choices"][0]
+    if not isinstance(choice, dict):
+        raise ValueError("Неверная структура облачного choices/message.")
     return {
         "message": choice.get("message"),
         "done": True,
         "done_reason": choice.get("finish_reason", "unknown"),
+        "response_model": data.get("model", ""),
     }

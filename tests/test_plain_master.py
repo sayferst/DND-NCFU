@@ -45,7 +45,7 @@ def test_real_http_prose_and_single_repair_after_hero_creation(window, qt_app, m
         wait_for(qt_app, lambda: not window.ollama.busy)
         assert len(window._session.turns) == 1
         assert len(requests) == 1 + calls
-        assert window._session.turns[0].scene.version == "scene-director-4"
+        assert window._session.turns[0].scene.version == "scene-director-5"
         assert (window._session.world, window._session.dice.checkpoint()) == before
         for _, body in requests[1:]:
             assert "format" not in body

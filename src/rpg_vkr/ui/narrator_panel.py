@@ -55,6 +55,9 @@ def install_narrator_panels(window):
     window.cloud_model = QLineEdit()
     window.cloud_model.setPlaceholderText("Идентификатор модели API (указывается у провайдера)")
     page.addWidget(window.cloud_model)
+    window.cloud_free_only = QCheckBox("OpenRouter: только бесплатные модели, без платной замены")
+    window.cloud_free_only.setChecked(True)
+    page.addWidget(window.cloud_free_only)
     window.cloud_key = QLineEdit()
     window.cloud_key.setEchoMode(QLineEdit.EchoMode.Password)
     window.cloud_key.setPlaceholderText("API-ключ или переменная RPG_VKR_LLM_API_KEY")
@@ -140,6 +143,9 @@ def provider_changed(window):
     cloud = window.ai_provider.currentData() != "local"
     for widget in (window.cloud_model, window.cloud_key, window.cloud_allowed, window.cloud_notice):
         widget.setVisible(cloud)
+    window.cloud_free_only.setVisible(window.ai_provider.currentData() == "openrouter")
+    if window.ai_provider.currentData() == "openrouter" and not window.cloud_model.text().strip():
+        window.cloud_model.setText("openrouter/free")
     window.director_mode.setEnabled(not cloud)
     if cloud:
         window._local_models = (
@@ -177,6 +183,8 @@ def prepare_model(window):
             window.ai_provider.currentData(),
             window.cloud_model.text().strip(),
             window.cloud_key.text().strip() or os.environ.get("RPG_VKR_LLM_API_KEY", ""),
+            free_only=window.ai_provider.currentData() == "openrouter"
+            and window.cloud_free_only.isChecked(),
         )
     except ValueError as error:
         failed(window, str(error))
@@ -367,6 +375,43 @@ def request_chat(window, text):
     return True
 
 
+def request_local_actions(window, text):
+    """Explicit mechanics work even when the selected model/key is unavailable."""
+    from rpg_vkr.narrative.actions import action_plan
+
+    plan = action_plan(window._session, text)
+    if plan is None:
+        return False
+    cancel_narration(window)
+    if plan.clarification:
+        window.narrator_status.setText(plan.clarification)
+        window.statusBar().showMessage(plan.clarification)
+        return True
+    if (
+        plan.target
+        and window._session.combat.actor(plan.target).disposition == "neutral"
+        and window._session.combat.actor(plan.target).hp > 0
+    ):
+        if not window._confirm(
+            "Вы намерены напасть на нейтрального персонажа. Это начнёт схватку. Продолжить?"
+        ):
+            return True
+    try:
+        window._session.submit_actions(text)
+    except ValueError as error:
+        window.narrator_status.setText(str(error))
+        return True
+    window.action_input.remember(text)
+    window.action_input.clear()
+    window._dirty = True
+    window._refresh_character()
+    window._render_journal()
+    window.narrator_status.setText("Действие рассчитано и сохранено в сессии.")
+    if window.enable_local_narrator.isChecked() and window.ai_chat.isChecked():
+        request_narration(window)
+    return True
+
+
 def accept_intent(window, intent, profile=None):
     if (
         window._chat_text is None
@@ -475,7 +520,11 @@ def accept_proposal(window, proposal, *, source=None):
         return
     text = window._chat_text
     try:
-        source = source or window.local_model.currentText()
+        source = (
+            source
+            or (getattr(window.ollama, "response_model", "") if window.ollama.cloud else "")
+            or window.local_model.currentText()
+        )
         window._session.submit_scene(text, proposal, source, base_turn=window._narrating_index)
     except (ValueError, TypeError) as error:
         failed(window, str(error))

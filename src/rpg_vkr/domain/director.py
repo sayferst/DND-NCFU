@@ -104,7 +104,7 @@ class SceneRecord:
     location: str
     model: str
     proposal: Proposal
-    version: str = "scene-director-4"
+    version: str = "scene-director-5"
 
     def __post_init__(self):
         if type(self.base_turn) is not int or not 0 <= self.base_turn < 2000:
@@ -114,6 +114,7 @@ class SceneRecord:
             "scene-director-2",
             "scene-director-3",
             "scene-director-4",
+            "scene-director-5",
         }:
             raise ValueError("Invalid scene context")
         if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
@@ -164,7 +165,12 @@ def validate_scene(record, turns, location, combat, hp):
         if (fact.subject, fact.key) in current and current[fact.subject, fact.key] != fact.value:
             raise ValueError("Мастер попытался заменить уже установленный факт.")
     text = record.proposal.narration
-    if record.version in {"scene-director-2", "scene-director-3", "scene-director-4"}:
+    if record.version in {
+        "scene-director-2",
+        "scene-director-3",
+        "scene-director-4",
+        "scene-director-5",
+    }:
         from rpg_vkr.narrative.story import validate_story_text
 
         validate_story_text(text)

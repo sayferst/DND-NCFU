@@ -206,17 +206,18 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                         else:
                             prose = "Женщина оборачивается на ваши шаги. «Здравствуйте. Вы ко мне?»"
                         response["message"]["content"] = prose
-                    elif mode == "plain_cloud":
+                    elif mode in {"plain_cloud", "plain_cloud_quota"}:
                         requests[-1][1]["_test_auth_ok"] = (
                             self.headers.get("Authorization") == "Bearer fake-test-key"
                         )
                         response = {
+                            "model": "test/free-model:free",
                             "choices": [
                                 {
                                     "message": {"role": "assistant", "content": prose},
                                     "finish_reason": "stop",
                                 }
-                            ]
+                            ],
                         }
                     elif mode == "plain_semantic_bad" or (
                         count == 1 and mode == "plain_semantic_first"
@@ -247,7 +248,9 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                     elif count == 1 and mode == "plain_truncated_first":
                         response["done_reason"] = "length"
                 payload = json.dumps(response).encode()
-            self.send_response(500 if mode == "error" else 200)
+            self.send_response(
+                429 if mode == "plain_cloud_quota" else 500 if mode == "error" else 200
+            )
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(payload)))
             self.end_headers()
@@ -605,7 +608,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-10"
+    assert new.prompt_version == "narrator-prose-11"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):

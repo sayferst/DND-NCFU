@@ -27,7 +27,32 @@ def master_reply(session, meaning):
 
 def campaign_context(session, target=""):
     profile = session.campaign.profile(target)
+    from rpg_vkr.narrative.actions import NOTES
+    from rpg_vkr.narrative.presentation import present_turn
+
+    resolution = []
+    for turn in session.turns[-2:]:
+        if not turn.combat:
+            continue
+        outcome = turn.combat.outcome
+        resolution.append(
+            {
+                "target_id": outcome.actor_id or "",
+                "target": ACTORS[outcome.actor_id][0] if outcome.actor_id else "",
+                "command": turn.combat.command,
+                "summary": present_turn(turn).story,
+                "hit": outcome.check.succeeded
+                if outcome.check and turn.combat.command.startswith("атаковать")
+                else None,
+                "defeated": bool(
+                    outcome.actor_id and outcome.state.actor(outcome.actor_id).hp == 0
+                ),
+                "rolled": bool(outcome.rolls),
+                "notes": [NOTES[n] for n in turn.notes],
+            }
+        )
     return {
+        "resolution": resolution,
         "known_observations": list(
             dict.fromkeys(
                 clue

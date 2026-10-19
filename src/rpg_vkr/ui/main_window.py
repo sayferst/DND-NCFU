@@ -26,7 +26,7 @@ from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
 from rpg_vkr.ui.creation_dialog import CreationDialog
 from rpg_vkr.ui.episode_panels import EpisodePanels
-from rpg_vkr.ui.narrator_panel import after_action, request_chat
+from rpg_vkr.ui.narrator_panel import after_action, request_chat, request_local_actions
 from rpg_vkr.ui.resolution_panel import install_resolution_panel
 from rpg_vkr.ui.role_journal import RoleJournal
 from rpg_vkr.ui.workspace_panel import WorkspaceActions
@@ -339,6 +339,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         else:
             self.journal.append_message("narrator", "Мастер", self._session.introduction)
         for index, turn in enumerate(self._session.turns, 1):
+            if turn.combat or turn.inspection:
+                # The checked result remains visible while the writer thinks or fails.
+                self.journal.append_turn(turn)
+                if index in notes:
+                    self._append_narration(notes[index])
+                continue
             if index in notes:
                 self.journal.append_player(turn)
                 self._append_narration(notes[index])
@@ -362,7 +368,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 actor_id = turn.dialogue.target
             elif turn.actor_id in {"guard", "villager", "merchant"}:
                 actor_id = turn.actor_id  # Preserve trusted attribution in older saves too.
-        if note.segments:
+        if note.prompt_version == "narrator-prose-11":
+            self.journal.append_master_story(note.text, actor_id=actor_id)
+        elif note.segments:
             self.journal.append_segments(note.segments)
         else:
             self.journal.append_story(note.text, actor_id=actor_id)
@@ -451,6 +459,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def submit_action(self, *, use_ai=True, origin="typed") -> None:
         action = self.action_input.text().strip()
         if not action:
+            return
+        if origin == "typed" and request_local_actions(self, action):
             return
         if use_ai and request_chat(self, action):
             return

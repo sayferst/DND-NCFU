@@ -1,0 +1,61 @@
+{
+  "checked_date": "2026-10-19",
+  "method": "Official published documentation Git mirror; direct pricing websites blocked by CONNECT 403. No external model request or API key used. No weights or training data downloaded.",
+  "repository": "https://github.com/OpenRouterTeam/docs",
+  "commit": "355426fd8363eee8ab299ed1690ecd1a813e9514",
+  "sources": [
+    {
+      "url": "https://github.com/OpenRouterTeam/docs/blob/355426fd8363eee8ab299ed1690ecd1a813e9514/api_reference/limits.mdx",
+      "path": "api_reference/limits.mdx",
+      "sha256": "71d88572e56497734d50a0d8b0c8a2240bb5fafb174400b035a839c309af7a7c"
+    },
+    {
+      "url": "https://github.com/OpenRouterTeam/docs/blob/355426fd8363eee8ab299ed1690ecd1a813e9514/snippets/exports/constants.mdx",
+      "path": "snippets/exports/constants.mdx",
+      "sha256": "ed3f8100dde89afa21b7ea95274fb10539c3c93fdfa62825ec035da54ba1e8ab"
+    },
+    {
+      "url": "https://github.com/OpenRouterTeam/docs/blob/355426fd8363eee8ab299ed1690ecd1a813e9514/guides/routing/routers/free-router.mdx",
+      "path": "guides/routing/routers/free-router.mdx",
+      "sha256": "6b4d4a7866233454d0316f5eb1af24689bcbd63b3a04ddb527dbec410bfbeeb1"
+    },
+    {
+      "url": "https://github.com/OpenRouterTeam/docs/blob/355426fd8363eee8ab299ed1690ecd1a813e9514/guides/routing/provider-selection.mdx",
+      "path": "guides/routing/provider-selection.mdx",
+      "sha256": "a84b764dd256d344574ba94ea6bf059c78ffc8cf30a3f20db31c8cfad9611f1e"
+    },
+    {
+      "url": "https://github.com/OpenRouterTeam/docs/blob/355426fd8363eee8ab299ed1690ecd1a813e9514/guides/privacy/data-collection.mdx",
+      "path": "guides/privacy/data-collection.mdx",
+      "sha256": "9e244021d502115d4d038667f29d06e60d0124055403c6da5bd9c09a88ea4f8e"
+    }
+  ],
+  "verified_claims": {
+    "free_router": "openrouter/free chooses an available free model; latency/availability/quality may vary",
+    "free_requests_per_minute": 20,
+    "free_requests_per_day_without_10_usd_credit_purchase": 50,
+    "provider_max_price_units": "USD per million prompt/completion tokens; request price supported separately",
+    "application_free_payload": {
+      "max_price": {
+        "prompt": 0,
+        "completion": 0,
+        "request": 0
+      },
+      "allow_fallbacks": false
+    }
+  },
+  "not_verified": [
+    "Current priced-model tariffs in RUB",
+    "Regional account availability and Russian card payments",
+    "Live free API quota for this user",
+    "Actual quality, Russian prose and response latency",
+    "Licenses of weights behind each dynamically routed model"
+  ],
+  "yandex_research": {
+    "repository": "https://github.com/yandex-cloud/docs",
+    "commit": "fab4d50b1f068ad6e208e2979ee6a3b784820e84",
+    "examined_path": "ru/_tutorials/serverless/streaming-openai-agent.md",
+    "finding": "OpenAI Responses-compatible tutorial; not proof of chat-completions endpoint or current tariff; no Yandex adapter added."
+  },
+  "licensing": "Only factual summaries and source hashes archived. Official provider text, weights, books and third-party training datasets are not redistributed."
+}
