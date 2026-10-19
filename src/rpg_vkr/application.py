@@ -4,6 +4,14 @@ from dataclasses import asdict, dataclass, replace
 
 from rpg_vkr.commands import CHAT_TARGETS, NPC_CONTACTS, allowed_intents, normalise_action
 from rpg_vkr.domain.campaign import Campaign, NPCProfile, procedural_profile
+from rpg_vkr.domain.catalog import (
+    Catalog,
+    Registration,
+    register,
+    seed_catalog,
+    validate_plan_properties,
+)
+from rpg_vkr.domain.catalog_actions import ActorAttempt, resolve_attempt, restore_attempt
 from rpg_vkr.domain.challenge import CHALLENGES, Challenge, needs_model_review, proposed_challenge
 from rpg_vkr.domain.character import (
     ABILITY_NAMES,
@@ -90,6 +98,7 @@ class Turn:
     notes: tuple[str, ...] = ()
     challenge: Challenge | None = None
     interaction: Interaction | None = None
+    catalog: Registration | ActorAttempt | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -123,6 +132,7 @@ class Session:
         )
         self._narrations: list[Narration] = []
         self.interactive_world: InteractiveWorld | None = None
+        self.catalog: Catalog | None = None
 
     @classmethod
     def create_hero(
@@ -181,13 +191,140 @@ class Session:
         )
 
     def actor_is_here(self, actor_id):
-        return actor_id in ACTORS and ACTORS[actor_id][1] == self.current_place_id
+        return any(
+            a.id == actor_id and a.place == self.current_place_id
+            for a in self.interaction_state().actor_refs
+        )
 
     def interaction_state(self):
         return self.interactive_world or InteractiveWorld.initial(self.world.location)
 
-    def submit_interaction(self, action, plan, *, confirmed_plan=False):
+    @property
+    def catalog_aliases(self):
+        return {
+            f"split_{i}_{j}": step.target
+            for i, t in enumerate(self.turns, 1)
+            if t.interaction
+            for j, step in enumerate(t.interaction.plan.steps)
+        }
+
+    def register_catalog(self, action, definitions, entities, reason, model):
         action = _text(action, 500).strip()
+        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+            raise ValueError("Создание сцены недоступно в схватке или после выбытия.")
+        record = Registration(
+            tuple(definitions),
+            tuple(entities),
+            reason,
+            model,
+            len(self.turns),
+            self.interaction_state(),
+        )
+        catalog, expanded = register(self.catalog or seed_catalog(), record.before, record)
+        names = {d.id: d.name for d in catalog.definitions}
+        text = (
+            "Вы замечаете: " + "; ".join(names[e.definition_id] for e in entities) + "."
+            if entities
+            else "Сохранены сведения: " + "; ".join(d.name for d in definitions) + "."
+        )
+        turn = Turn(
+            action,
+            "Мир",
+            text,
+            player_name=self.character.name,
+            intent_source="model",
+            catalog=record,
+        )
+        before = snapshot(self.world, self.character, self.combat, self.progress)
+        memory = self.memory.append(turn, before, before)
+        self.catalog, self.interactive_world, self.memory = catalog, expanded, memory
+        self._turns.append(turn)
+        return turn
+
+    def legacy_catalog_actor(self, target_id):
+        from rpg_vkr.domain.catalog import Entity
+
+        if target_id not in ACTORS:
+            return None
+        actor = self.combat.actor(target_id)
+        state = {"hp": actor.hp, "disposition": actor.disposition}
+        last = next(
+            (
+                t.catalog
+                for t in reversed(self.turns)
+                if isinstance(t.catalog, ActorAttempt) and t.catalog.target_id == target_id
+            ),
+            None,
+        )
+        if last and last.entity_after.state.get("life") == "dead" and actor.hp == 0:
+            state["life"] = "dead"
+        return Entity(target_id, "type_actor_" + target_id, ACTORS[target_id][1], state=state)
+
+    def submit_actor_attempt(
+        self, action, target_id, operation, lethal, reason, model, *, confirmed_intent=False
+    ):
+        from rpg_vkr.domain.catalog_actions import bind_attempt
+
+        action = _text(action, 500)
+        bind_attempt(action, operation, lethal, confirmed=confirmed_intent)
+        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+            raise ValueError("Сначала завершите текущую схватку или загрузите живого героя.")
+        catalog = self.catalog or seed_catalog()
+        scene = self.interaction_state()
+        kwargs = dict(
+            catalog=catalog,
+            scene=scene,
+            world=self.world,
+            character=self.character,
+            target_id=target_id,
+            operation=operation,
+            lethal=lethal,
+            reason=reason,
+            model=model,
+            base_turn=len(self.turns),
+            legacy_entity=self.legacy_catalog_actor(target_id),
+        )
+        # Validate before consuming RNG or a bandage.
+        resolve_attempt(**kwargs, roll=D20Roll(self.dice.checkpoint()[1] + 1, 10))
+        checkpoint = self.dice.checkpoint()
+        try:
+            catalog, world, record = resolve_attempt(**kwargs, roll=self.dice.roll_d20())
+            combat = self.combat
+            if target_id in ACTORS:
+                actor = combat.actor(target_id)
+                combat = combat.update(
+                    replace(
+                        actor,
+                        hp=record.entity_after.state["hp"],
+                        disposition=record.entity_after.state["disposition"],
+                    )
+                )
+            turn = Turn(
+                action,
+                "Мир",
+                record.summary,
+                record.roll,
+                record.check,
+                player_name=self.character.name,
+                intent_source="model",
+                catalog=record,
+            )
+            memory = self.memory.append(
+                turn,
+                snapshot(self.world, self.character, self.combat, self.progress),
+                snapshot(world, self.character, combat, self.progress),
+            )
+        except Exception:
+            self.dice.restore(checkpoint)
+            raise
+        self.catalog, self.world, self.combat, self.memory = catalog, world, combat, memory
+        self._turns.append(turn)
+        return turn
+
+    def submit_interaction(self, action, plan, *, confirmed_plan=False, origin="typed"):
+        action = _text(action, 500).strip()
+        if origin not in {"typed", "system"}:
+            raise ValueError("Неверный источник шага.")
         if not isinstance(plan, WorldPlan) or not plan.steps:
             raise ValueError("Нет плана изменения мира.")
         bind_plan(action, plan, confirmed=confirmed_plan)
@@ -195,6 +332,10 @@ class Session:
             raise ValueError("Эта цепочка недоступна в бою или после выбытия.")
         before = self.interaction_state()
         index = len(self.turns) + 1
+        if self.catalog:
+            validate_plan_properties(
+                self.catalog, before, plan, turn_index=index, aliases=self.catalog_aliases
+            )
         _, risky, _, _ = apply_plan(before, plan, turn_index=index)
         checkpoint = self.dice.checkpoint()
         try:
@@ -234,6 +375,7 @@ class Session:
                 player_name=self.character.name,
                 intent_source="model",
                 interaction=record,
+                origin=origin,
             )
             memory = self.memory.append(
                 turn,
@@ -823,6 +965,7 @@ class Session:
 
     def to_dict(self) -> dict:
         return {
+            "catalog": self.catalog.to_dict() if self.catalog else None,
             "interactive_world": self.interactive_world.to_dict()
             if self.interactive_world
             else None,
@@ -836,13 +979,18 @@ class Session:
             "combat": self.combat.to_dict(),
             "introduction": self.introduction,
             "turns": [
-                asdict(turn) | {"combat": turn.combat.to_dict() if turn.combat else None}
+                asdict(turn)
+                | {
+                    "combat": turn.combat.to_dict() if turn.combat else None,
+                    "interaction": turn.interaction.to_dict() if turn.interaction else None,
+                    "catalog": turn.catalog.to_dict() if turn.catalog else None,
+                }
                 for turn in self._turns
             ],
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 18) -> "Session":
+    def from_dict(cls, data: object, version: int = 19) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -862,9 +1010,12 @@ class Session:
             16,
             17,
             18,
+            19,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 19:
+            keys.add("catalog")
         if version >= 18:
             keys.add("interactive_world")
         if version >= 10:
@@ -908,6 +1059,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 19:
+                turn_keys.add("catalog")
             if version >= 18:
                 turn_keys.add("interaction")
             if version >= 17:
@@ -994,6 +1147,109 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if version >= 19 and item["catalog"] is not None:
+                if isinstance(item["catalog"], dict) and "operation" in item["catalog"]:
+                    if (
+                        item["speaker"] != "Мир"
+                        or item["actor_id"] is not None
+                        or any(
+                            item[k] is not None
+                            for k in (
+                                "intent",
+                                "meaning",
+                                "dialogue",
+                                "combat",
+                                "inspection",
+                                "scene",
+                                "challenge",
+                                "interaction",
+                            )
+                        )
+                    ):
+                        raise ValueError("Actor attempt mixed with another action")
+                    session.catalog, _, record = restore_attempt(
+                        item["catalog"], session.catalog or seed_catalog(), session.dice, character
+                    )
+                    if (
+                        record.base_turn != len(session.turns)
+                        or record.summary != text
+                        or item["roll"] != asdict(record.roll)
+                        or stored_check != asdict(record.check)
+                    ):
+                        raise ValueError("Actor attempt turn mismatch")
+                    if record.target_id in ACTORS:
+                        actor = session.combat.actor(record.target_id)
+                        session.combat = session.combat.update(
+                            replace(
+                                actor,
+                                hp=record.entity_after.state["hp"],
+                                disposition=record.entity_after.state["disposition"],
+                            )
+                        )
+                    session._turns.append(
+                        Turn(
+                            action,
+                            "Мир",
+                            text,
+                            record.roll,
+                            record.check,
+                            origin=origin,
+                            player_name=player_name,
+                            intent_source=intent_source,
+                            catalog=record,
+                        )
+                    )
+                    continue
+                if (
+                    item["speaker"] != "Мир"
+                    or item["actor_id"] is not None
+                    or any(
+                        item[k] is not None
+                        for k in (
+                            "roll",
+                            "check",
+                            "intent",
+                            "meaning",
+                            "dialogue",
+                            "combat",
+                            "inspection",
+                            "scene",
+                            "challenge",
+                            "interaction",
+                        )
+                    )
+                ):
+                    raise ValueError("Catalog registration mixed with another action")
+                record = Registration.from_dict(item["catalog"])
+                if record.base_turn != len(session.turns):
+                    raise ValueError("Catalog registration has the wrong turn")
+                session.catalog, _ = register(
+                    session.catalog or seed_catalog(), record.before, record
+                )
+                names = {d.id: d.name for d in session.catalog.definitions}
+                expected = (
+                    "Вы замечаете: "
+                    + "; ".join(names[e.definition_id] for e in record.entities)
+                    + "."
+                    if record.entities
+                    else "Сохранены сведения: "
+                    + "; ".join(d.name for d in record.definitions)
+                    + "."
+                )
+                if text != expected:
+                    raise ValueError("Catalog registration text mismatch")
+                session._turns.append(
+                    Turn(
+                        action,
+                        "Мир",
+                        text,
+                        origin=origin,
+                        player_name=player_name,
+                        intent_source=intent_source,
+                        catalog=record,
+                    )
+                )
+                continue
             if version >= 18 and item["interaction"] is not None:
                 if (
                     item["speaker"] != "Мир"
@@ -1009,6 +1265,14 @@ class Session:
                 record = Interaction.restore(
                     item["interaction"], session.dice, len(session.turns) + 1
                 )
+                if session.catalog:
+                    validate_plan_properties(
+                        session.catalog,
+                        record.before,
+                        record.plan,
+                        turn_index=len(session.turns) + 1,
+                        aliases=session.catalog_aliases,
+                    )
                 if (
                     item["roll"] != (asdict(record.roll) if record.roll else None)
                     or stored_check != (asdict(record.check) if record.check else None)
@@ -1376,9 +1640,72 @@ class Session:
         )
         fields = dict(session.memory.baseline)
         interactive = None
+        historical_catalog = None
+        legacy_lives = {}
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
-            if turn.interaction:
+            if isinstance(turn.catalog, ActorAttempt):
+                from rpg_vkr.domain.catalog import Entity
+
+                record = turn.catalog
+                expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
+                world = WorldState.from_dict(
+                    {k: fields["world." + k] for k in asdict(WorldState())}
+                )
+                hero = Character.from_dict({k: fields["hero." + k] for k in asdict(Character())})
+                legacy_entity = None
+                if record.target_id in ACTORS:
+                    key = record.target_id
+                    state = {
+                        "hp": fields[f"actor.{key}.hp"],
+                        "disposition": fields[f"actor.{key}.disposition"],
+                    }
+                    if state["hp"] == 0 and legacy_lives.get(key) == "dead":
+                        state["life"] = "dead"
+                    legacy_entity = Entity(key, "type_actor_" + key, ACTORS[key][1], state=state)
+                if fields["combat.active"] is not None or fields["world.hp"] <= 0:
+                    raise ValueError("Actor attempt has invalid historical context")
+                historical_catalog, after_world, expected_record = resolve_attempt(
+                    historical_catalog or seed_catalog(),
+                    expected_before,
+                    world,
+                    hero,
+                    record.target_id,
+                    record.operation,
+                    record.lethal,
+                    record.roll,
+                    record.reason,
+                    record.model,
+                    record.base_turn,
+                    legacy_entity,
+                )
+                if canonical(record.to_dict()) != canonical(expected_record.to_dict()):
+                    raise ValueError("Actor attempt does not match historical calculation")
+                expected_fields = dict(fields)
+                expected_fields.update({"world." + k: v for k, v in asdict(after_world).items()})
+                if record.target_id in ACTORS:
+                    for key in ("hp", "disposition"):
+                        expected_fields[f"actor.{record.target_id}.{key}"] = (
+                            record.entity_after.state[key]
+                        )
+                    legacy_lives[record.target_id] = record.entity_after.state.get("life")
+                if {c.field: (c.before, c.after) for c in event.changes} != {
+                    k: (fields[k], v) for k, v in expected_fields.items() if fields[k] != v
+                }:
+                    raise ValueError("Actor attempt changed unapproved fields")
+            elif turn.catalog:
+                expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
+                if (
+                    turn.catalog.before != expected_before
+                    or event.changes
+                    or fields["world.hp"] <= 0
+                    or fields["combat.active"] is not None
+                ):
+                    raise ValueError("Catalog registration does not match historical scene")
+                historical_catalog, interactive = register(
+                    historical_catalog or seed_catalog(), expected_before, turn.catalog
+                )
+            elif turn.interaction:
                 record = turn.interaction
                 expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
                 if (
@@ -1403,6 +1730,8 @@ class Session:
                     }
                 )
                 for actor in record.witnesses:
+                    if actor not in ACTORS:
+                        continue
                     if fields[f"actor.{actor}.hp"] > 0:
                         expected_fields[f"actor.{actor}.disposition"] = "hostile"
                 expected_changes = {
@@ -1483,6 +1812,11 @@ class Session:
         ):
             raise ValueError("Final objects do not match recorded transactions")
         session.interactive_world = interactive
+        stored_catalog = data.get("catalog")
+        if (session.catalog.to_dict() if session.catalog else None) != (
+            Catalog.from_dict(stored_catalog).to_dict() if stored_catalog is not None else None
+        ):
+            raise ValueError("Final catalog does not match registration history")
         if version >= 7:
             notes = data["narrations"]
             if not isinstance(notes, list) or len(notes) > len(session.turns) + 1:

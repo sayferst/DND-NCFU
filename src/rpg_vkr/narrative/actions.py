@@ -45,6 +45,14 @@ def action_plan(session, text, *, allow_interactions=False):
     from rpg_vkr.narrative.dialogue import last_interlocutor
 
     value = unquoted(text)
+    if allow_interactions and re.search(ATTACK, value):
+        dynamic_here = any(
+            a.id not in ACTORS and a.place == session.current_place_id
+            for a in session.interaction_state().actor_refs
+        )
+        legacy_named = any(re.search(pattern, value) for pattern in TARGETS.values())
+        if (dynamic_here and not legacy_named) or re.search(r"\bдоб\w*", value):
+            return None
     if not re.search(ATTACK, value):
         if re.match(r"(?:я\s+)?(?:хочу\s+)?(?:обыс\w*|заберу|забрать|украсть|украду)\b", value):
             if allow_interactions and not re.search(r"обыс|труп", value):

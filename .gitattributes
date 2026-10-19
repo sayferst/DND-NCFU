@@ -5,3 +5,7 @@ tests/fixtures/*.json -text
 docs/validation/windows-fixture-crlf-2026-10-19.txt -text
 docs/research/USER_ROUTERAI_API_EXCERPTS.md -text
 docs/research/routerai_starter/* -text
+docs/research/system_logic/* -text
+# Keep the owner's original Markdown hard line breaks byte-for-byte.
+docs/research/system_logic/OWNER_SYSTEM_LOGIC.md whitespace=-blank-at-eol
+data/catalog/seed-v1*.json -text

@@ -48,6 +48,18 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
     else:
         facts.pop("confirmed_result", None)
     brief = turn_brief(frame, text, campaign=campaign, memory=memory, master=master_question(text))
+    catalog_scene = (campaign or {}).get("catalog_scene", [])
+    actors = [r for r in catalog_scene if r["definition"]["kind"] == "actor"]
+    for row in actors:
+        name = row["definition"]["name"]
+        if any(word.casefold() in text.casefold() for word in name.split() if len(word) > 2):
+            brief = {
+                "mode": "scene",
+                "target_id": "",
+                "clarification": "",
+                "tasks": ["На обращение отвечает " + name + "; слова NPC в кавычках."],
+            }
+            break
     if confirmed:
         brief = {**brief, "mode": "result", "clarification": ""}
     if brief.get("mode") == "dialogue":
@@ -73,6 +85,11 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "current_scene": facts,
         "hero_description": (campaign or {}).get("hero_description", ""),
         "world_brief": (campaign or {}).get("world_brief", ""),
+        "catalog_scene": catalog_scene,
+        "actor_attempt_result": (campaign or {}).get("actor_attempt_result", "")
+        if confirmed
+        else "",
+        "death_confirmed": (campaign or {}).get("death_confirmed", False) if confirmed else False,
         "challenge_result": (campaign or {}).get("challenge_result", "") if confirmed else "",
         "interaction_result": (campaign or {}).get("interaction_result", "") if confirmed else "",
         "resolution": (campaign or {}).get("resolution", []) if confirmed else [],

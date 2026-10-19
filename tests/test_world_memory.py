@@ -129,7 +129,7 @@ def test_old_v6_starts_memory_at_final_state_without_replaying_and_saves_v7(tmp_
     assert session.memory.events[0].turn_index == 4
     assert session.memory.events[0].roll_indices == (2, 3)
     slots.save(2, session)
-    assert json.loads((slots.directory / "slot-2.json").read_bytes())["schema_version"] == 18
+    assert json.loads((slots.directory / "slot-2.json").read_bytes())["schema_version"] == 19
     assert slots.load(2).to_dict() == session.to_dict()
     assert slots.load(2).submit("бросить кубик").roll.value == 17
     assert (slots.directory / "slot-1.json").read_bytes() == raw

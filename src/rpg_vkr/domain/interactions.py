@@ -59,13 +59,27 @@ class Thing:
     container: bool = False
 
     def __post_init__(self):
-        for value in (self.id, self.holder, self.owner):
+        for value in (self.id, self.holder):
             identifier(value)
+        if self.owner:
+            identifier(self.owner)
         label(self.name, 80)
-        if type(self.quantity) is not int or not 1 <= self.quantity <= 100:
+        if type(self.quantity) is not int or not 1 <= self.quantity <= 1000000:
             raise ValueError("Неверное количество предметов.")
         if type(self.container) is not bool or (self.container and self.quantity != 1):
             raise ValueError("Неверный контейнер.")
+
+
+@dataclass(frozen=True)
+class ActorRef:
+    id: str
+    name: str
+    place: str
+
+    def __post_init__(self):
+        identifier(self.id)
+        identifier(self.place)
+        label(self.name, 100)
 
 
 @dataclass(frozen=True)
@@ -74,20 +88,34 @@ class InteractiveWorld:
     places: tuple[Place, ...]
     things: tuple[Thing, ...]
     version: str = "interactive-world-1"
+    actors: tuple[ActorRef, ...] = ()
+
+    @property
+    def actor_refs(self):
+        return (
+            self.actors
+            if self.version == "interactive-world-2"
+            else tuple(ActorRef(key, spec[0], spec[1]) for key, spec in ACTORS.items())
+        )
 
     def __post_init__(self):
         if (
-            self.version != "interactive-world-1"
+            self.version not in {"interactive-world-1", "interactive-world-2"}
             or not 3 <= len(self.places) <= 40
-            or len(self.things) > 80
+            or len(self.things) > (80 if self.version == "interactive-world-1" else 2000)
         ):
             raise ValueError("Мир превышает поддерживаемые пределы.")
         places = {p.id: p for p in self.places}
         things = {t.id: t for t in self.things}
+        actors = {a.id: a for a in self.actor_refs}
+        if len(actors) != len(self.actor_refs) or any(
+            a.place not in places for a in actors.values()
+        ):
+            raise ValueError("Неверное размещение существ.")
         if len(places) != len(self.places) or len(things) != len(self.things):
             raise ValueError("Повторный идентификатор объекта.")
-        if set(places) & (set(things) | set(ACTORS) | {"hero"}) or set(things) & (
-            set(ACTORS) | {"hero"}
+        if set(places) & (set(things) | set(actors) | {"hero"}) or set(things) & (
+            set(actors) | {"hero"}
         ):
             raise ValueError("Пересечение идентификаторов мира.")
         if self.current not in places or not set(LOCATIONS) <= set(places):
@@ -100,15 +128,18 @@ class InteractiveWorld:
                 seen.add(cursor.id)
                 cursor = places[cursor.parent]
         for thing in self.things:
+            if self.version == "interactive-world-1" and thing.quantity > 100:
+                raise ValueError("Количество превышает предел старой версии мира.")
             cursor, seen = thing, set()
             while cursor.holder in things:
                 if cursor.id in seen or not things[cursor.holder].container:
                     raise ValueError("Цикл или неверный контейнер.")
                 seen.add(cursor.id)
                 cursor = things[cursor.holder]
-            if cursor.holder not in {*places, *ACTORS, "hero"} or thing.owner not in {
-                *ACTORS,
+            if cursor.holder not in {*places, *actors, "hero"} or thing.owner not in {
+                *actors,
                 "hero",
+                *(set() if self.version == "interactive-world-1" else {""}),
             }:
                 raise ValueError("Неизвестный держатель или собственник.")
 
@@ -141,7 +172,7 @@ class InteractiveWorld:
         return (
             holder == "hero"
             or holder == self.current
-            or (holder in ACTORS and ACTORS[holder][1] == self.current)
+            or any(a.id == holder and a.place == self.current for a in self.actor_refs)
         )
 
     def carried(self):
@@ -157,21 +188,28 @@ class InteractiveWorld:
             "place": asdict(self.place()),
             "places": [asdict(p) for p in self.places],
             "objects": [asdict(t) | {"available_here": self.here(t)} for t in self.things],
-            "actors_here": [key for key, spec in ACTORS.items() if spec[1] == self.current],
+            "actors_here": [a.id for a in self.actor_refs if a.place == self.current],
         }
 
     def to_dict(self):
-        return asdict(self)
+        value = asdict(self)
+        if self.version == "interactive-world-1":
+            value.pop("actors")
+        return value
 
     @classmethod
     def from_dict(cls, data):
-        if not isinstance(data, dict) or set(data) != set(cls.__dataclass_fields__):
+        fields = set(cls.__dataclass_fields__)
+        if isinstance(data, dict) and data.get("version") == "interactive-world-1":
+            fields.discard("actors")
+        if not isinstance(data, dict) or set(data) != fields:
             raise ValueError("Неверное состояние предметов мира.")
         return cls(
             data["current"],
             tuple(Place(**p) for p in data["places"]),
             tuple(Thing(**t) for t in data["things"]),
             data["version"],
+            tuple(ActorRef(**a) for a in data.get("actors", ())),
         )
 
 
@@ -189,7 +227,7 @@ class Step:
             identifier(self.target)
         if self.destination:
             identifier(self.destination)
-        if type(self.quantity) is not int or not 0 <= self.quantity <= 100:
+        if type(self.quantity) is not int or not 0 <= self.quantity <= 1000000:
             raise ValueError("Неверное количество в действии.")
 
 
@@ -321,20 +359,19 @@ def apply_plan(before, plan, *, check_succeeded=True, turn_index=1):
             if item.holder == "hero":
                 messages.append(item.name + " уже при вас.")
                 continue
-            guarded = held in ACTORS or any(
-                key in {item.owner, "guard"} and spec[1] == state.current
-                for key, spec in ACTORS.items()
+            guarded = any(a.id == held for a in state.actor_refs) or any(
+                a.id in {item.owner, "guard"} and a.place == state.current for a in state.actor_refs
             )
-            if held != "hero" and item.owner != "hero" and guarded:
+            if held != "hero" and item.owner and item.owner != "hero" and guarded:
                 risky = True
-                witnesses.update(k for k, spec in ACTORS.items() if spec[1] == state.current)
+                witnesses.update(a.id for a in state.actor_refs if a.place == state.current)
             destination = "hero"
         else:
             if held != "hero":
                 raise ValueError("Нельзя выбросить или переложить предмет, которого у вас нет.")
             destination = state.current if step.op == "drop" else step.destination
             if step.op == "give" and (
-                destination not in ACTORS or ACTORS[destination][1] != state.current
+                not any(a.id == destination and a.place == state.current for a in state.actor_refs)
             ):
                 raise ValueError("Получателя здесь нет.")
             if step.op == "put" and (
@@ -382,7 +419,7 @@ class Interaction:
     version: str = "interaction-homebrew-1"
 
     def to_dict(self):
-        return asdict(self)
+        return asdict(self) | {"before": self.before.to_dict(), "after": self.after.to_dict()}
 
     @classmethod
     def restore(cls, data, dice, turn_index):

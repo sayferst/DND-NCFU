@@ -106,10 +106,30 @@ def build_frame(session):
         else f"{session.character.name}, учебная песочница без развития"
     )
     actors = tuple(
-        f"{ACTORS[a.id][0]}: {disposition_label(a).lower()}, {health_description(a)}"
+        (
+            f"{ACTORS[a.id][0]}: погиб"
+            if session.legacy_catalog_actor(a.id).state.get("life") == "dead"
+            else f"{ACTORS[a.id][0]}: {disposition_label(a).lower()}, {health_description(a)}"
+        )
         for a in session.combat.actors
         if session.actor_is_here(a.id)
     )
+    if session.interactive_world:
+        actor_states = (
+            {e.id: e.state or {} for e in session.catalog.entities} if session.catalog else {}
+        )
+        actors += tuple(
+            f"{a.name}: "
+            + (
+                "погиб"
+                if actor_states.get(a.id, {}).get("life") == "dead"
+                else "повержен"
+                if actor_states.get(a.id, {}).get("hp") == 0
+                else "рядом"
+            )
+            for a in session.interactive_world.actor_refs
+            if a.id not in ACTORS and a.place == session.current_place_id
+        )
     memories = []
     for event in session.memory.events:
         changes = visible_changes(event)

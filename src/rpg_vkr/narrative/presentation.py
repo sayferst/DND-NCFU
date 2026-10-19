@@ -41,6 +41,14 @@ def present_turn(turn) -> TurnPresentation:
 
 
 def _present_turn(turn) -> TurnPresentation:
+    from rpg_vkr.domain.catalog_actions import ActorAttempt
+
+    if isinstance(turn.catalog, ActorAttempt):
+        return TurnPresentation(
+            "Итог попытки",
+            turn.catalog.summary,
+            check_details(turn.check, turn.roll, turn.catalog.reason),
+        )
     if turn.interaction:
         record = turn.interaction
         details = "Изменения предметов и места применены одной проверенной цепочкой."

@@ -421,7 +421,7 @@ def request_narration(window):
         window._narrator_frame,
         window.local_model.currentText(),
         player_message=turn.action
-        if turn and (turn.intent or turn.challenge or turn.interaction)
+        if turn and (turn.intent or turn.challenge or turn.interaction or turn.catalog)
         else "",
         dialogue_actor=actor,
         history=recent_dialogue(window._session),
@@ -450,11 +450,12 @@ def request_chat(window, text):
     window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
     window.statusBar().showMessage("ИИ понимает сообщение…")
     if world_agent_enabled(window):
+        window._catalog_reads = 0
         window.ollama.plan_world(
             build_frame(window._session),
             window.local_model.currentText(),
             text,
-            window._session.interaction_state().context(),
+            catalog_context(window, text),
             window._session.campaign.world_brief,
         )
         return True
@@ -606,6 +607,25 @@ def world_agent_enabled(window):
     )
 
 
+def catalog_context(window, text):
+    from rpg_vkr.domain.catalog import CATEGORIES
+    from rpg_vkr.storage.catalog import CatalogIndex
+
+    state = window._session.interaction_state().context()
+    if window._session.catalog:
+        state["object_count"] = len(state["objects"])
+        state["objects"] = sorted(state["objects"], key=lambda o: not o["available_here"])[:40]
+        state["actors_here"] = state["actors_here"][:20]
+    state["recent_actions"] = [t.action[:300] for t in window._session.turns[-4:]]
+    index = CatalogIndex(window._session)
+    try:
+        state["catalog_records"] = index.relevant(text)
+        state["category_codes"] = CATEGORIES
+        return state
+    finally:
+        index.close()
+
+
 def accept_world_plan(window, result):
     from rpg_vkr.domain.interactions import (
         PlanConfirmationRequired,
@@ -621,12 +641,126 @@ def accept_world_plan(window, result):
         or not world_agent_enabled(window)
     ):
         return
-    plan, category = result
+    from rpg_vkr.domain.catalog import (
+        Registration,
+        register,
+        seed_catalog,
+        validate_plan_properties,
+    )
+
+    plan, category, definitions, entities, reason, queries, attempt = result
     text = window._chat_text
+    if attempt:
+        from rpg_vkr.domain.catalog_actions import resolve_attempt
+        from rpg_vkr.domain.character import ABILITY_NAMES
+        from rpg_vkr.domain.dice import D20Roll
+
+        try:
+            _, _, preview_record = resolve_attempt(
+                window._session.catalog or seed_catalog(),
+                window._session.interaction_state(),
+                window._session.world,
+                window._session.character,
+                attempt["target_id"],
+                attempt["operation"],
+                attempt["lethal"],
+                D20Roll(1, 10),
+                attempt["reason"],
+                window.ollama.response_model or window.local_model.currentText(),
+                len(window._session.turns),
+                window._session.legacy_catalog_actor(attempt["target_id"]),
+            )
+        except (ValueError, TypeError, KeyError) as error:
+            failed(window, "Попытка не выполнена: " + str(error))
+            return
+        operation_name = {
+            "attack": "Нападение",
+            "heal": "Перевязка",
+            "help": "Помощь",
+            "hinder": "Попытка помешать",
+            "insult": "Обидное обращение",
+        }[attempt["operation"]]
+        target_name = next(
+            (
+                a.name
+                for a in window._session.interaction_state().actor_refs
+                if a.id == attempt["target_id"]
+            ),
+            attempt["target_id"],
+        )
+        if not window._confirm(
+            operation_name
+            + ": "
+            + target_name
+            + ("; смертельное намерение" if attempt["lethal"] else "")
+            + "\n"
+            + attempt["reason"]
+            + "\n"
+            + ABILITY_NAMES[preview_record.check.ability]
+            + f", сложность {preview_record.check.difficulty}. Бросить кубик?"
+            + (
+                "\nДля перевязки будет использован один ваш бинт."
+                if attempt["operation"] == "heal"
+                else ""
+            )
+        ):
+            cancel_narration(window)
+            return
+        cancel_narration(window)
+        try:
+            window._session.submit_actor_attempt(
+                text,
+                attempt["target_id"],
+                attempt["operation"],
+                attempt["lethal"],
+                attempt["reason"],
+                preview_record.model,
+                confirmed_intent=True,
+            )
+        except (ValueError, TypeError, KeyError) as error:
+            failed(window, "Попытка не выполнена: " + str(error))
+            return
+        window.action_input.remember(text)
+        window.action_input.clear()
+        window._dirty = True
+        window._refresh_character()
+        window._render_journal()
+        request_narration(window)
+        return
+    if queries:
+        from rpg_vkr.storage.catalog import CatalogIndex
+
+        if getattr(window, "_catalog_reads", 0) >= 1:
+            failed(window, "Мастер исчерпал дополнительный поиск каталога. Ввод сохранён.")
+            return
+        index = CatalogIndex(window._session)
+        try:
+            found = []
+            for query in queries:
+                direct = index.lookup(query)
+                found.extend([direct] if direct else index.search(query, limit=3))
+        finally:
+            index.close()
+        state = catalog_context(window, text)
+        results = found[:8]
+        import json
+
+        while results and len(json.dumps(results, ensure_ascii=False)) > 24000:
+            results.pop()
+        state["catalog_query_results"] = results
+        window._catalog_reads += 1
+        window.ollama.plan_world(
+            build_frame(window._session),
+            window.local_model.currentText(),
+            text,
+            state,
+            window._session.campaign.world_brief,
+        )
+        return
     if category != "none":
         accept_challenge_suggestion(window, category)
         return
-    if not plan.steps:
+    if not plan.steps and not (definitions or entities):
         if requests_physical_change(text):
             failed(window, "Мастер не составил план этого действия. Мир не изменён; ввод сохранён.")
             return
@@ -634,8 +768,28 @@ def accept_world_plan(window, result):
         return
     confirmation = False
     try:
+        state = window._session.interaction_state()
+        catalog = window._session.catalog
+        if definitions or entities:
+            record = Registration(
+                definitions,
+                entities,
+                reason,
+                window.ollama.response_model or window.local_model.currentText(),
+                len(window._session.turns),
+                state,
+            )
+            catalog, state = register(window._session.catalog or seed_catalog(), state, record)
+        if catalog:
+            validate_plan_properties(
+                catalog,
+                state,
+                plan,
+                turn_index=len(window._session.turns) + 1 + bool(definitions or entities),
+                aliases=window._session.catalog_aliases,
+            )
         _, risky, _, _ = apply_plan(
-            window._session.interaction_state(), plan, turn_index=len(window._session.turns) + 1
+            state, plan, turn_index=len(window._session.turns) + 1 + bool(definitions or entities)
         )
         try:
             bind_plan(text, plan)
@@ -644,7 +798,7 @@ def accept_world_plan(window, result):
     except (ValueError, TypeError, KeyError) as error:
         failed(window, "План не выполнен: " + str(error))
         return
-    names = {t.id: t.name for t in window._session.interaction_state().things}
+    names = {t.id: t.name for t in state.things}
     names.update({p.id: p.name for p in window._session.interaction_state().places + plan.places})
     verbs = {
         "take": "Взять",
@@ -668,7 +822,15 @@ def accept_world_plan(window, result):
         return
     cancel_narration(window)
     try:
-        window._session.submit_interaction(text, plan, confirmed_plan=confirmation)
+        if definitions or entities:
+            window._session.register_catalog(text, definitions, entities, reason, record.model)
+        if plan.steps:
+            window._session.submit_interaction(
+                text,
+                plan,
+                confirmed_plan=confirmation,
+                origin="system" if definitions or entities else "typed",
+            )
     except (ValueError, TypeError, KeyError) as error:
         window.action_input.setText(text)
         failed(window, "План не выполнен: " + str(error))

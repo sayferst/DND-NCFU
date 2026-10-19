@@ -51,7 +51,11 @@ def test_editable_instruction_is_loaded_for_each_request_and_core_rules_remain(
     )
 
 
-@pytest.mark.parametrize("raw", [b"", b"\x98", b"a\x00b", b"x" * 65537])
+@pytest.mark.parametrize(
+    "raw",
+    [b"", b"\x98", b"a\x00b", b"x" * 65537],
+    ids=["empty", "invalid-utf8", "control-character", "oversized"],
+)
 def test_invalid_instruction_is_rejected_instead_of_silently_using_another(raw, tmp_path):
     default = tmp_path / "default.txt"
     local = tmp_path / "local.txt"
@@ -126,7 +130,12 @@ def test_world_brief_cannot_be_disguised_as_a_legacy_schema():
     session = Session.create_hero(Character(), "scout", seed=5, world_brief="Морское фэнтези")
     with pytest.raises(ValueError, match="schema 17"):
         Session.from_dict(
-            {k: v for k, v in session.to_dict().items() if k != "interactive_world"}, version=16
+            {
+                k: v
+                for k, v in session.to_dict().items()
+                if k not in {"interactive_world", "catalog"}
+            },
+            version=16,
         )
 
 

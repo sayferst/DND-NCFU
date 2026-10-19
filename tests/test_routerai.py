@@ -49,6 +49,7 @@ def router_server(
 ):
     records = []
     keys = [ALLOWANCE] if keys is None else keys
+    world_counts = {}
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
@@ -103,15 +104,15 @@ def router_server(
                 if world_plans is not None:
                     if "Режим: план изменений мира" in body["messages"][0]["content"]:
                         request = json.loads(body["messages"][1]["content"])
+                        value = world_plans.get(
+                            request["player_message"], {"steps": [], "places": [], "check": "none"}
+                        )
+                        if isinstance(value, list):
+                            position = world_counts.get(request["player_message"], 0)
+                            world_counts[request["player_message"]] = position + 1
+                            value = value[min(position, len(value) - 1)]
                         text = json.dumps(
-                            world_plans.get(
-                                request["player_message"],
-                                {
-                                    "steps": [],
-                                    "places": [],
-                                    "check": "none",
-                                },
-                            ),
+                            value,
                             ensure_ascii=False,
                         )
                     elif writer_text:

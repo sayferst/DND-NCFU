@@ -85,8 +85,23 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
         issues.append(
             "Попытка не удалась. Не описывай получение вещи или уход как свершившийся факт."
         )
-    if re.search(r"\b(?:убит[аы]?|умер\w*|мертв\w*|труп\w*|погиб\w*)\b", prose, re.I):
+    dead_names = [a.split(":", 1)[0] for a in frame.visible_actors if ": погиб" in a]
+    refers_to_dead = any(
+        re.search(r"\b" + re.escape(name[:-1] if name[-1:] in "аяйь" else name), prose, re.I)
+        for name in dead_names
+    )
+    if not ((campaign or {}).get("death_confirmed") or refers_to_dead) and re.search(
+        r"\b(?:убит[аы]?|умер\w*|мертв\w*|труп\w*|погиб\w*)\b", prose, re.I
+    ):
         issues.append("Смерть персонажа игровыми правилами не подтверждена. Не объявляй смерть.")
+    for name in dead_names:
+        root = name[:-1] if name[-1:] in "аяйь" else name
+        if re.search(
+            r"\b" + re.escape(root) + r"\w*\s+(?:говорит|отвечает|встаёт|встает|бежит)", prose, re.I
+        ):
+            issues.append(
+                "Погибший персонаж не может говорить или действовать без подтверждённого эффекта."
+            )
     if not resolution and re.search(
         r"\b(?:вы\s+)?(?:вонзаете|вонзили|добиваете|убиваете|зарезали|убили|"
         r"наносите удар|нанесли удар)\b",

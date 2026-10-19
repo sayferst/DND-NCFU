@@ -36,7 +36,10 @@ class CampaignIndex:
         def dump(value):
             return json.dumps(value, ensure_ascii=False)
 
-        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (18, dump(session.to_dict())))
+        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (19, dump(session.to_dict())))
+        from rpg_vkr.storage.catalog import populate_catalog
+
+        populate_catalog(self.db, session)
         if session.interactive_world:
             state = session.interactive_world
             self.db.executemany(
@@ -213,15 +216,15 @@ def restore_session(path):
     from rpg_vkr.application import Session
 
     path = Path(path).resolve()
-    if path.stat().st_size > 32 * 1024 * 1024:
+    if path.stat().st_size > 64 * 1024 * 1024:
         raise ValueError("Campaign database too large")
     with sqlite3.connect(path.as_uri() + "?mode=ro", uri=True) as db:
         db.execute("PRAGMA trusted_schema=OFF")
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
         if (
             len(values) != 1
-            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18)
-            or len(values[0][1]) > 4 * 1024 * 1024
+            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18, 19)
+            or len(values[0][1]) > 32 * 1024 * 1024
         ):
             raise ValueError("Invalid campaign snapshot")
         return Session.from_dict(json.loads(values[0][1]), version=values[0][0])

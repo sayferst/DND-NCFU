@@ -9,7 +9,7 @@ from pathlib import Path
 
 from rpg_vkr.application import Session
 
-MAX_SAVE_BYTES = 4 * 1024 * 1024
+MAX_SAVE_BYTES = 32 * 1024 * 1024
 
 
 class SaveError(Exception):
@@ -68,6 +68,7 @@ class SaveSlots:
                 16,
                 17,
                 18,
+                19,
             ):
                 raise ValueError("Unsupported save version")
             saved_at = datetime.fromisoformat(data["saved_at"])
@@ -101,7 +102,7 @@ class SaveSlots:
         try:
             payload = json.dumps(
                 {
-                    "schema_version": 18,
+                    "schema_version": 19,
                     "saved_at": datetime.now(UTC).isoformat(),
                     "session": session.to_dict(),
                 },

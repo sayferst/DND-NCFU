@@ -31,6 +31,22 @@ def campaign_context(session, target=""):
     from rpg_vkr.narrative.presentation import present_turn
 
     resolution = []
+    from rpg_vkr.domain.catalog_actions import ActorAttempt
+
+    attempt = session.turns[-1].catalog if session.turns else None
+    if isinstance(attempt, ActorAttempt) and attempt.operation == "attack":
+        resolution.append(
+            {
+                "target_id": attempt.target_id,
+                "target": attempt.target_id,
+                "command": "нападение",
+                "summary": attempt.summary,
+                "hit": attempt.check.succeeded,
+                "defeated": attempt.entity_after.state["hp"] == 0,
+                "rolled": True,
+                "notes": [],
+            }
+        )
     for turn in session.turns[-2:] if session.turns and session.turns[-1].combat else ():
         if not turn.combat:
             continue
@@ -51,7 +67,25 @@ def campaign_context(session, target=""):
                 "notes": [NOTES[n] for n in turn.notes],
             }
         )
+    catalog_scene = []
+    if session.catalog:
+        from rpg_vkr.storage.catalog import CatalogIndex
+
+        index = CatalogIndex(session)
+        try:
+            for entity in session.catalog.entities:
+                value = index.narrator_record(entity.id)
+                if value and value["entity"]["parent_id"] in {session.current_place_id, "hero"}:
+                    catalog_scene.append(value)
+                if len(catalog_scene) == 8:
+                    break
+        finally:
+            index.close()
     return {
+        "catalog_scene": catalog_scene,
+        "actor_attempt_result": attempt.summary if isinstance(attempt, ActorAttempt) else "",
+        "death_confirmed": isinstance(attempt, ActorAttempt)
+        and attempt.entity_after.state.get("life") == "dead",
         "resolution": resolution,
         "known_observations": list(
             dict.fromkeys(

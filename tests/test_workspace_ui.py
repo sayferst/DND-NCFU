@@ -28,6 +28,7 @@ def test_tabs_and_quest_follow_actual_world(window):
         "Схватка",
         "Память мира",
         "Рассказчик",
+        "Каталог мира",
     ]
     assert window.quest_progress.value() == 0
     window.quest_action.click()

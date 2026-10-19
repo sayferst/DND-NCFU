@@ -53,6 +53,18 @@ def render_context(context):
     if context.get("hero_description"):
         lines.append("Описание героя (данные): " + context["hero_description"])
     lines.append("Известные вещи героя: " + facts["inventory"])
+    if context.get("catalog_scene"):
+        lines.append(
+            "Проверенные записи каталога текущей сцены (данные): "
+            + json.dumps(context["catalog_scene"], ensure_ascii=False)
+        )
+        lines.append(
+            "Сохрани эти ID, имена, размещение и свойства; не создавай эффекты одной прозой."
+        )
+        lines.append(
+            "npc_voice задаёт мотивы и память говорящего. Не раскрывай скрытые мотивы "
+            "как известные герою факты; используй их для выбора реплики."
+        )
     lines.append("Здоровье героя: " + facts["health"])
     if brief.get("mode") != "dialogue" and facts.get("visible_actors"):
         lines.append("Рядом видны: " + "; ".join(facts["visible_actors"]))
@@ -73,6 +85,11 @@ def render_context(context):
             "не возвращай героя или прежнего собеседника в старую сцену. "
             "Если попытка не удалась, не описывай получение предмета или уход."
         )
+    if context.get("actor_attempt_result"):
+        lines.append(
+            "Проверенный результат воздействия на существо: " + context["actor_attempt_result"]
+        )
+        lines.append("Не заменяй выполненное действие разговором или моральным запретом.")
     for outcome in context.get("resolution", ()):
         lines.append(
             "Подтверждённое действие: " + outcome["command"] + "; цель: " + outcome["target"]

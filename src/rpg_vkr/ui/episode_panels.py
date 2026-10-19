@@ -23,6 +23,7 @@ from rpg_vkr.domain.character import ABILITY_NAMES
 from rpg_vkr.domain.combat import disposition_label
 from rpg_vkr.domain.progression import describe_award
 from rpg_vkr.domain.world import LOCATIONS
+from rpg_vkr.ui.catalog_panel import install_catalog_panel, refresh_catalog_panel
 from rpg_vkr.ui.combat_panel import install_combat_panel, refresh_combat_panel
 from rpg_vkr.ui.narrator_panel import install_narrator_panels, refresh_narrator_panels
 from rpg_vkr.ui.resolution_panel import refresh_resolution_panel
@@ -285,7 +286,8 @@ class EpisodePanels:
         navigation_row = QHBoxLayout()
         self.navigation = QComboBox()
         self.navigation.setAccessibleName("Раздел игры")
-        order = [7, 0, 1, 2, 3, 8, 9, 13, 10, 11, 14, 15, 4, 6, 5, 12]
+        install_catalog_panel(self)
+        order = [7, 0, 1, 2, 3, 8, 9, 13, 10, 11, 14, 15, 16, 4, 6, 5, 12]
         for index in order:
             self.navigation.addItem(self.tabs.tabText(index), index)
         navigation_row.addWidget(QLabel("Раздел:"))
@@ -547,6 +549,7 @@ class EpisodePanels:
         )
         refresh_resolution_panel(self)
         refresh_narrator_panels(self)
+        refresh_catalog_panel(self)
 
     def _toggle_fullscreen(self, checked: bool) -> None:
         self.showFullScreen() if checked else self.showNormal()
