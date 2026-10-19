@@ -453,6 +453,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             event.ignore()
             return
         self._closing = True
+        self.routerai_catalog.cancel()
         self.ollama.cancel()
         event.accept()
 

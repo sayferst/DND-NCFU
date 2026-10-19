@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-19",
+  "source": "User-pasted documentation excerpts and follow-up URL, not a direct agent fetch",
+  "url": "https://routerai.ru/docs/reference#tag/api-keys/POST/v1/keys",
+  "archive": "docs/research/USER_ROUTERAI_API_EXCERPTS.md",
+  "archive_kind": "Selected excerpts with clearly marked editorial notes; full text retained in user chat",
+  "sha256": "79cc5c1a95f837f3479a4e29a404dc7950e09fcfc1762c1812afbbf8cd7d9049",
+  "direct_access": "Previously blocked by CONNECT 403; no live inference or key inspection possible in agent environment",
+  "documented_endpoints": [
+    "https://routerai.ru/api/v1/chat/completions",
+    "https://routerai.ru/api/v1/models"
+  ],
+  "read_only_key_route": "GET /v1/key is listed; dedicated response not pasted, current client requires documented key fields and rejects unknown formats",
+  "prices": "Example JSON only, not a live tariff or an independent verification of billing",
+  "not_performed": "No administrative API operations or payments performed. No secret supplied or requested in chat."
+}

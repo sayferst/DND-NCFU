@@ -56,9 +56,19 @@ def response_diagnostic(kind, model, raw, data, reason):
         and re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", response_model)
         else ""
     )
+    usage = data.get("usage") if isinstance(data, dict) else None
+    token_line = ""
+    if isinstance(usage, dict):
+        incoming = usage.get("input_tokens", usage.get("prompt_tokens"))
+        outgoing = usage.get("output_tokens", usage.get("completion_tokens"))
+        if all(
+            type(value) is int and 0 <= value <= 1_000_000_000 for value in (incoming, outgoing)
+        ):
+            token_line = f"Токены API: вход {incoming}, выход {outgoing}.\n"
     return (
         f"Этап: {kind}; модель: {model}\n"
         + resolved_model
+        + token_line
         + f"Размер ответа: {len(raw)} байт; завершение: {finish}\n"
         f"Длина thinking: {len(thinking) if isinstance(thinking, str) else 0}\n"
         f"Проверка: {reason}\nОтвет (до 6000 символов):\n{answer[:6000]}"
@@ -203,6 +213,12 @@ class OllamaClient(QObject):
         self._dialogue = None
         self._clarify = False
         self.cloud = None
+        from rpg_vkr.narrative.routerai import RouterAIClient
+
+        self._routerai_guard = RouterAIClient(self)
+        self._pending_routerai = None
+        self._routerai_guard.key_ready.connect(self._routerai_verified)
+        self._routerai_guard.failed.connect(self._routerai_failed)
         self._story = None
         self._story_attempt = 0
         self._story_diagnostics = []
@@ -211,14 +227,18 @@ class OllamaClient(QObject):
 
     @property
     def busy(self):
-        return self._reply is not None
+        return self._reply is not None or self._pending_routerai is not None
 
     def cancel(self):
+        was_busy = self.busy
+        self._pending_routerai = None
+        self._routerai_guard.cancel()
         reply, self._reply = self._reply, None
         self.timer.stop()
         if reply is not None:
             reply.abort()
             reply.deleteLater()
+        if was_busy:
             self.busy_changed.emit(False)
 
     def configure_cloud(self, profile):
@@ -518,6 +538,35 @@ class OllamaClient(QObject):
     def _start(self, path, kind, payload=None):
         self.cancel()
         self.response_model = ""
+        if self.cloud and self.cloud.provider == "routerai":
+            if kind not in {"director", "story_result"} or payload is None:
+                self.failed.emit("RouterAI доступен только режиму мастера.")
+                return
+            self._pending_routerai = (path, kind, payload, self.cloud)
+            self.progress.emit("Проверяем месячный лимит ключа RouterAI перед генерацией…")
+            self._routerai_guard.check_key(self.cloud.key)
+            self.busy_changed.emit(True)
+            return
+        self._send(path, kind, payload)
+
+    def _routerai_verified(self, allowance):
+        pending, self._pending_routerai = self._pending_routerai, None
+        if pending is None or pending[3] != self.cloud:
+            return
+        self.progress.emit(
+            f"RouterAI: лимит {allowance.limit} ₽/месяц, доступно {allowance.remaining} ₽. "
+            "Мастер пишет ответ…"
+        )
+        self._send(*pending[:3])
+
+    def _routerai_failed(self, message):
+        if self._pending_routerai is not None:
+            self._pending_routerai = None
+            self.busy_changed.emit(False)
+            self._report("routerai_key", self._model, b"", None, message)
+            self.failed.emit(message)
+
+    def _send(self, path, kind, payload=None):
         self._kind, self._reason = kind, ""
         self._buffer = bytearray()
         if self.cloud:
@@ -589,6 +638,14 @@ class OllamaClient(QObject):
             return
         if error != QNetworkReply.NetworkError.NoError or status != 200:
             self._report(kind, model, raw, None, f"HTTP {status}; ошибка сети")
+            if self.cloud and self.cloud.provider == "routerai" and status in {401, 402}:
+                self.failed.emit(
+                    "RouterAI: ключ не принят (HTTP 401). Проверьте отдельный API-ключ RouterAI."
+                    if status == 401
+                    else "RouterAI: недостаточно баланса (HTTP 402). "
+                    "Выполненные действия сохранены."
+                )
+                return
             self.failed.emit(
                 (
                     "Лимит облачного API исчерпан (HTTP 429). Подождите восстановления квоты "

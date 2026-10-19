@@ -51,10 +51,18 @@ def install_narrator_panels(window):
     window.ai_provider.addItem("Локально: Ollama · без оплаты API", "local")
     window.ai_provider.addItem("Облако: OpenAI API · отдельный доступ", "openai")
     window.ai_provider.addItem("Облако: OpenRouter API · условия провайдера", "openrouter")
+    window.ai_provider.addItem("Облако: RouterAI · тарифы в рублях", "routerai")
     page.addWidget(window.ai_provider)
     window.cloud_model = QLineEdit()
     window.cloud_model.setPlaceholderText("Идентификатор модели API (указывается у провайдера)")
     page.addWidget(window.cloud_model)
+    window.routerai_catalog_button = QPushButton("Загрузить модели и цены RouterAI")
+    page.addWidget(window.routerai_catalog_button)
+    window.routerai_model_list = QComboBox()
+    window.routerai_model_list.addItem("Выберите модель из каталога", "")
+    page.addWidget(window.routerai_model_list)
+    window.routerai_price = plain_label("Цены не проверены. Загрузите текущий каталог RouterAI.")
+    page.addWidget(window.routerai_price)
     window.cloud_free_only = QCheckBox("OpenRouter: только бесплатные модели, без платной замены")
     window.cloud_free_only.setChecked(True)
     page.addWidget(window.cloud_free_only)
@@ -113,6 +121,21 @@ def install_narrator_panels(window):
     page.addWidget(window.narrator_context, 1)
 
     window.ollama = OllamaClient(window)
+    from rpg_vkr.narrative.routerai import RouterAIClient
+
+    window.routerai_catalog = RouterAIClient(window)
+    window._routerai_quotes = {}
+    window.routerai_catalog_button.clicked.connect(window.routerai_catalog.list_models)
+    window.routerai_model_list.activated.connect(lambda index: select_routerai_model(window, index))
+    window.routerai_catalog.catalog_ready.connect(
+        lambda quotes: routerai_models_ready(window, quotes)
+    )
+    window.routerai_catalog.failed.connect(
+        lambda message: window.narrator_status.setText(message)
+        if window.ai_provider.currentData() == "routerai" and not window.ollama.busy
+        else None
+    )
+    window.routerai_catalog.busy_changed.connect(lambda _: refresh_narrator_panels(window))
     window._narrating_session = None
     window._narrating_index = None
     window._narrator_frame = None
@@ -133,6 +156,11 @@ def install_narrator_panels(window):
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
     window.ollama.diagnostics_ready.connect(window.narrator_details.setPlainText)
+    window.cloud_key.textEdited.connect(lambda _: cancel_if_busy(window))
+    window.cloud_model.textEdited.connect(lambda _: cancel_if_busy(window))
+    window.cloud_allowed.toggled.connect(
+        lambda allowed: None if allowed else cancel_if_busy(window)
+    )
     provider_changed(window)
     refresh_narrator_panels(window)
 
@@ -140,10 +168,42 @@ def install_narrator_panels(window):
 def provider_changed(window):
     if window.ollama.busy or window._chat_text is not None or window._narrating_session is not None:
         cancel_narration(window)
+    window.routerai_catalog.cancel()
+    provider = window.ai_provider.currentData()
+    previous = getattr(window, "_previous_ai_provider", None)
+    if previous is not None and previous != provider:
+        window.cloud_key.clear()
+        window.cloud_model.clear()
+        window.cloud_allowed.setChecked(False)
+    window._previous_ai_provider = provider
     cloud = window.ai_provider.currentData() != "local"
     for widget in (window.cloud_model, window.cloud_key, window.cloud_allowed, window.cloud_notice):
         widget.setVisible(cloud)
     window.cloud_free_only.setVisible(window.ai_provider.currentData() == "openrouter")
+    for widget in (
+        window.routerai_catalog_button,
+        window.routerai_model_list,
+        window.routerai_price,
+    ):
+        widget.setVisible(provider == "routerai")
+    window.cloud_key.setPlaceholderText(
+        "Ключ RouterAI или переменная RPG_VKR_ROUTERAI_API_KEY"
+        if provider == "routerai"
+        else "API-ключ или переменная RPG_VKR_LLM_API_KEY"
+    )
+    if provider == "routerai":
+        window.cloud_notice.setText(
+            "RouterAI оплачивается отдельно. Используйте обычный API-ключ с месячным лимитом "
+            "не более 2000 ₽; перед каждой генерацией игра проверит лимит. "
+            "Ключи и баланс приложение не изменяет."
+        )
+        if not window.cloud_model.text().strip():
+            window.cloud_model.setText("deepseek/deepseek-chat-v3.1")
+    else:
+        window.cloud_notice.setText(
+            "Подписка ChatGPT Plus не включает API. Возможны отдельные расходы/лимиты. "
+            "Ключ хранится только в памяти; запросы идут после вашего действия."
+        )
     if window.ai_provider.currentData() == "openrouter" and not window.cloud_model.text().strip():
         window.cloud_model.setText("openrouter/free")
     window.director_mode.setEnabled(not cloud)
@@ -164,6 +224,41 @@ def provider_changed(window):
         window.ollama.models = tuple(getattr(window, "_local_models", ()))
 
 
+def cancel_if_busy(window):
+    if window.ollama.busy:
+        cancel_narration(window)
+
+
+def routerai_models_ready(window, quotes):
+    if window.ai_provider.currentData() != "routerai" or getattr(window, "_closing", False):
+        return
+    window._routerai_quotes = {quote.id: quote for quote in quotes}
+    window.routerai_model_list.clear()
+    window.routerai_model_list.addItem("Выберите модель из каталога", "")
+    for quote in quotes:
+        window.routerai_model_list.addItem(quote.label, quote.id)
+    current = window.cloud_model.text().strip()
+    index = window.routerai_model_list.findData(current)
+    if index > 0 and current in window._routerai_quotes:
+        window.routerai_model_list.setCurrentIndex(index)
+        window.routerai_price.setText(window._routerai_quotes[current].label)
+    else:
+        window.routerai_price.setText("Выберите модель. Указанного ID нет в полученном каталоге.")
+    if not window.ollama.busy:
+        window.narrator_status.setText(
+            "Каталог RouterAI получен. Загрузка каталога не запускает генерацию."
+        )
+
+
+def select_routerai_model(window, index):
+    model = window.routerai_model_list.itemData(index)
+    quote = window._routerai_quotes.get(model)
+    if quote:
+        cancel_if_busy(window)
+        window.cloud_model.setText(quote.id)
+        window.routerai_price.setText(quote.label)
+
+
 def prepare_model(window):
     if window.ai_provider.currentData() == "local":
         window.ollama.use_local()
@@ -179,12 +274,22 @@ def prepare_model(window):
         )
         return False
     try:
+        provider = window.ai_provider.currentData()
+        quote = (
+            window._routerai_quotes.get(window.cloud_model.text().strip())
+            if provider == "routerai"
+            else None
+        )
         profile = CloudProfile(
-            window.ai_provider.currentData(),
+            provider,
             window.cloud_model.text().strip(),
-            window.cloud_key.text().strip() or os.environ.get("RPG_VKR_LLM_API_KEY", ""),
+            window.cloud_key.text().strip()
+            or os.environ.get(
+                "RPG_VKR_ROUTERAI_API_KEY" if provider == "routerai" else "RPG_VKR_LLM_API_KEY", ""
+            ),
             free_only=window.ai_provider.currentData() == "openrouter"
             and window.cloud_free_only.isChecked(),
+            supported_parameters=quote.supported_parameters if quote else (),
         )
     except ValueError as error:
         failed(window, str(error))
@@ -665,6 +770,8 @@ def refresh_narrator_panels(window):
         and not any(n.turn_index == len(session.turns) for n in session.narrations)
     )
     window.cancel_narration_button.setEnabled(busy)
+    window.routerai_catalog_button.setEnabled(not busy and not window.routerai_catalog.busy)
+    window.routerai_model_list.setEnabled(not busy and not window.routerai_catalog.busy)
     window.mode_label.setText("Мастер" if enabled else "Мастер · автономный режим")
     frame = build_frame(session)
     context = (

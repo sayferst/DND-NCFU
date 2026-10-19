@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 ENDPOINTS = {
     "openai": "https://api.openai.com/v1/chat/completions",
     "openrouter": "https://openrouter.ai/api/v1/chat/completions",
+    "routerai": "https://routerai.ru/api/v1/chat/completions",
 }
 
 
@@ -15,6 +16,7 @@ class CloudProfile:
     model: str
     key: str = field(repr=False)
     free_only: bool = False
+    supported_parameters: tuple[str, ...] = ()
 
     def __post_init__(self):
         if self.provider not in ENDPOINTS:
@@ -25,6 +27,12 @@ class CloudProfile:
             raise ValueError("Укажите API-ключ провайдера, не пароль ChatGPT.")
         if type(self.free_only) is not bool:
             raise ValueError("Неверный режим оплаты API.")
+        if (
+            not isinstance(self.supported_parameters, tuple)
+            or len(self.supported_parameters) > 100
+            or any(not isinstance(p, str) for p in self.supported_parameters)
+        ):
+            raise ValueError("Неверные параметры модели API.")
         if self.free_only and (
             self.provider != "openrouter"
             or not (self.model == "openrouter/free" or self.model.endswith(":free"))
@@ -41,8 +49,14 @@ class CloudProfile:
     def payload(self, local):
         result = {"model": self.model, "messages": local["messages"], "stream": False}
         limit = local.get("options", {}).get("num_predict", 650)
-        result["max_completion_tokens" if self.provider == "openai" else "max_tokens"] = limit
-        if not self.model.startswith(("gpt-5", "o1", "o3", "o4")):
+        if self.provider == "routerai":
+            for parameter in ("max_tokens", "max_completion_tokens"):
+                if parameter in self.supported_parameters:
+                    result[parameter] = limit
+                    break
+        else:
+            result["max_completion_tokens" if self.provider == "openai" else "max_tokens"] = limit
+        if not self.model.split("/")[-1].startswith(("gpt-5", "o1", "o3", "o4")):
             result["temperature"] = local.get("options", {}).get("temperature", 0.45)
         if self.free_only:
             result["provider"] = {
@@ -67,4 +81,5 @@ def normalize_completion(data):
         "done": True,
         "done_reason": choice.get("finish_reason", "unknown"),
         "response_model": data.get("model", ""),
+        "usage": data.get("usage"),
     }
