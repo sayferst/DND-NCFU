@@ -50,7 +50,11 @@ def action_plan(session, text, *, allow_interactions=False):
         r"(купить бинт|продать бинт|использовать бинт)",
         value,
     )
-    if resource_command and "?" not in text:
+    if (
+        resource_command
+        and "?" not in text
+        and (not session.generated_world or resource_command[1] == "использовать бинт")
+    ):
         return ActionPlan((resource_command[1],))
     if allow_interactions and re.search(ATTACK, value):
         dynamic_here = any(

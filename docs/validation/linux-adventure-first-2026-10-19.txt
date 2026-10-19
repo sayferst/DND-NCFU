@@ -1,0 +1,283 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 880 items
+
+tests/test_adventure.py ...................                              [  2%]
+tests/test_adventure_ui.py ........                                      [  3%]
+tests/test_catalog.py ...............................                    [  6%]
+tests/test_catalog_ui.py .........                                       [  7%]
+tests/test_character.py ........................                         [ 10%]
+tests/test_character_dialog.py ...                                       [ 10%]
+tests/test_chat_intents.py ...................                           [ 12%]
+tests/test_combat.py .......................                             [ 15%]
+tests/test_combat_storage.py ..............                              [ 17%]
+tests/test_combat_ui.py ......                                           [ 17%]
+tests/test_conversation_revision.py ........................             [ 20%]
+tests/test_creation_and_roles.py ......                                  [ 21%]
+tests/test_dialogue.py .............                                     [ 22%]
+tests/test_dice.py ...                                                   [ 22%]
+tests/test_environment.py ...                                            [ 23%]
+tests/test_episode_panels.py ..............                              [ 24%]
+tests/test_fixture_git_checkout.py ..                                    [ 25%]
+tests/test_fixture_repair.py ...........                                 [ 26%]
+tests/test_free_attempts.py .................................            [ 30%]
+tests/test_free_cloud.py .........                                       [ 31%]
+tests/test_inspection.py ..............................                  [ 34%]
+tests/test_launch.py .FF                                                 [ 34%]
+tests/test_local_narrator.py ........................................... [ 39%]
+..................                                                       [ 41%]
+tests/test_master_campaign.py ..........................                 [ 44%]
+tests/test_master_configuration.py ...........                           [ 46%]
+tests/test_master_language_profiles.py ........                          [ 46%]
+tests/test_mechanics_before_prose.py ................................... [ 50%]
+.....                                                                    [ 51%]
+tests/test_offline.py ..........                                         [ 52%]
+tests/test_plain_master.py .........................                     [ 55%]
+tests/test_presentation.py .................                             [ 57%]
+tests/test_progression.py ......................................         [ 61%]
+tests/test_resolution_ui.py ............                                 [ 63%]
+tests/test_resource_ledger.py ..........................                 [ 66%]
+tests/test_routerai.py .......................................           [ 70%]
+tests/test_save_migration.py ..........                                  [ 71%]
+tests/test_save_slots.py ....................                            [ 73%]
+tests/test_scene_director.py ..............................              [ 77%]
+tests/test_semantic_challenges.py .............                          [ 78%]
+tests/test_session.py ....................                               [ 81%]
+tests/test_sqlite_lifecycle.py .........                                 [ 82%]
+tests/test_story_conversation_quality.py ................                [ 83%]
+tests/test_trade_context.py .........                                    [ 84%]
+tests/test_window.py .......................                             [ 87%]
+tests/test_windows_test_ids.py .                                         [ 87%]
+tests/test_workspace_tools.py .............                              [ 89%]
+tests/test_workspace_ui.py ............F.....                            [ 91%]
+tests/test_world.py ..............................                       [ 94%]
+tests/test_world_agent_ui.py ........                                    [ 95%]
+tests/test_world_memory.py ..................                            [ 97%]
+tests/test_world_transactions.py ......................                  [100%]
+
+=================================== FAILURES ===================================
+_______________ test_real_creator_modal_progression_and_restart ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-132/test_real_creator_modal_progre0')
+
+    def test_real_creator_modal_progression_and_restart(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    
+    def fill_creator():
+        try:
+            from rpg_vkr.ui.creation_dialog import CreationDialog
+            dialog = app.activeModalWidget()
+            assert isinstance(dialog, CreationDialog)
+            dialog.name_input.setText('Мира')
+            dialog.class_choice.setCurrentIndex(0)
+            dialog.apply_recommended()
+            dialog.accept()
+        except Exception:
+            traceback.print_exc()
+            if app.activeModalWidget():
+                app.activeModalWidget().reject()
+            app.exit(1)
+    
+    def interact():
+        try:
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            if sys.argv[2] == 'create':
+                QTimer.singleShot(0, fill_creator)
+                window.new_character()
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.enabled
+                assert not window.edit_character_button.isEnabled()
+                window.cart_button.click()
+                window.study_button.click()
+                window._run_command('идти на дорогу')
+                window.quick_buttons['исследовать дорогу'].click()
+                assert window._session.progress.level == 2
+                assert len(window._session.progress.events) == 3
+                assert window._session.world.max_hp == 14
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.level == 2
+                assert window._session.world.max_hp == 14
+                assert len(window._session.progress.events) == 3
+                assert 'Мира' in window.resource_label.text()
+                assert 'уровень 2' in window.progress_label.text()
+                assert 'Учебный меч' in window.inventory_label.text()
+                assert 'Развитие:' in window.journal.toPlainText()
+                assert not window.study_button.isEnabled()
+                xp = window._session.progress.xp
+                window._run_command('изучить учебник')
+                assert window._session.progress.xp == xp
+                window._run_command('бросить d20')
+                assert window._session.turns[-1].roll.index == 3
+                window.save_slot(2)
+            print('Created hero restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    runpy.run_path(sys.argv[1], run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "created-data")
+        for phase in ("create", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 37, in interact
+E             AssertionError
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr...able cache directories\nTraceback (most recent call last):\n  File "<string>", line 37, in interact\nAssertionError\n').returncode
+
+tests/test_launch.py:171: AssertionError
+__________ test_real_combat_save_restart_and_multi_roll_continuation ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-132/test_real_combat_save_restart_0')
+
+    def test_real_combat_save_restart_and_multi_roll_continuation(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    def interact():
+        try:
+            from rpg_vkr.application import Session
+            from rpg_vkr.domain.character import ABILITY_NAMES, Character
+            from rpg_vkr.domain.progression import ARCHETYPES
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            if sys.argv[2] == 'fight':
+                character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
+                                      ARCHETYPES['fighter'].scores, strict=True)))
+                window._session = Session.create_hero(character, 'fighter', seed=5)
+                window._refresh_character()
+                window._render_journal()
+                window._run_command('изучить учебник')
+                window._run_command('идти на дорогу')
+                window.open_section('Схватка')
+                assert window.combat_targets.currentData() == 'wolf'
+                window.combat_stealth.click()
+                assert window._session.combat.surprise
+                assert window.resolution_panel.isVisible()
+                assert '20 + 1 = 21' in window.roll_breakdown.toPlainText()
+                from rpg_vkr.narrative.context import build_frame
+                from rpg_vkr.narrative.records import Narration
+                frame = build_frame(window._session)
+                window._session.add_narration(Narration(3, 'local-test:1',
+                    'Вы приближаетесь к волку незамеченным.', frame.fingerprint))
+                window._render_journal()
+                assert len(window._session.memory.events) == 3
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.combat.surprise
+                assert len(window._session.memory.events) == 3
+                assert 'Вы приближаетесь к волку незамеченным.' in window.journal.toPlainText()
+                assert not window.enable_local_narrator.isChecked()
+                assert not window.ollama.busy
+                assert window.journal.actor_colour('wolf').name() == '#b00020'
+                window.open_section('Схватка')
+                window.combat_attack.click()
+                assert window._session.combat.actor('wolf').hp == 0
+                assert 'Скрытая атака ×2 · урон 16' in window.journal.toPlainText()
+                assert '=' not in window.journal.toPlainText()
+                assert '(6 + 2) × 2 = 16' in window.roll_breakdown.toPlainText()
+                assert window._session.progress.level == 2
+                assert window._session.world.hp == 12
+                assert window._session.world.max_hp == 14
+                assert 'Бросков в сессии: 3' in window.roll_summary.text()
+                assert window.journal.font().bold()
+                assert window.journal.font().pointSize() == 13
+                window._run_command('бросить d20')
+                assert window._session.turns[-1].roll.value == 17
+                window.save_slot(2)
+            print('Combat restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    runpy.run_path(sys.argv[1], run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "combat-data")
+        for phase in ("fight", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 22, in interact
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/episode_panels.py", line 362, in open_section
+E                 raise ValueError(f"Unknown UI section: {name}")
+E             ValueError: Unknown UI section: Схватка
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr... 362, in open_section\n    raise ValueError(f"Unknown UI section: {name}")\nValueError: Unknown UI section: Схватка\n').returncode
+
+tests/test_launch.py:256: AssertionError
+___________________ test_export_cancel_keeps_game_and_files ____________________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x42bea640) at 0x7faf673c1a00>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-132/test_export_cancel_keeps_game_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7faf69b2b2c0>
+
+    def test_export_cancel_keeps_game_and_files(window, tmp_path, monkeypatch):
+        before = window._session.to_dict()
+        monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *args: ("", ""))
+        window.export_journal()
+        assert window._session.to_dict() == before
+>       assert not list(tmp_path.iterdir())
+E       AssertionError: assert not [PosixPath('/tmp/pytest-of-agent/pytest-132/test_export_cancel_keeps_game_0/campaigns.sqlite3')]
+E        +  where [PosixPath('/tmp/pytest-of-agent/pytest-132/test_export_cancel_keeps_game_0/campaigns.sqlite3')] = list(<generator object Path.iterdir at 0x7faf6747d560>)
+E        +    where <generator object Path.iterdir at 0x7faf6747d560> = iterdir()
+E        +      where iterdir = PosixPath('/tmp/pytest-of-agent/pytest-132/test_export_cancel_keeps_game_0').iterdir
+
+tests/test_workspace_ui.py:191: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_launch.py::test_real_creator_modal_progression_and_restart
+FAILED tests/test_launch.py::test_real_combat_save_restart_and_multi_roll_continuation
+FAILED tests/test_workspace_ui.py::test_export_cancel_keeps_game_and_files - ...
+=================== 3 failed, 877 passed in 67.34s (0:01:07) ===================

@@ -46,6 +46,7 @@ def router_server(
     suggestion=None,
     world_plans=None,
     writer_text=None,
+    world_seed=None,
 ):
     records = []
     keys = [ALLOWANCE] if keys is None else keys
@@ -101,7 +102,9 @@ def router_server(
                     and "Режим: предложить категорию" in body["messages"][0]["content"]
                 ):
                     text = json.dumps(suggestion, ensure_ascii=False)
-                if world_plans is not None:
+                if world_seed is not None and "Режим: новый мир" in body["messages"][0]["content"]:
+                    text = json.dumps(world_seed, ensure_ascii=False)
+                elif world_plans is not None:
                     if "Режим: план изменений мира" in body["messages"][0]["content"]:
                         request = json.loads(body["messages"][1]["content"])
                         value = world_plans.get(

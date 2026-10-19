@@ -80,6 +80,14 @@ def attempt_parameters(catalog, target_id, operation, character, legacy_entity=N
 
 
 @dataclass(frozen=True)
+class CounterAttack:
+    roll: D20Roll
+    total: int
+    defence: int
+    damage: int
+
+
+@dataclass(frozen=True)
 class ActorAttempt:
     operation: str
     target_id: str
@@ -96,13 +104,17 @@ class ActorAttempt:
     check: AbilityCheck
     summary: str
     rules_version: str = "catalog-actor-homebrew-1"
+    counter: CounterAttack | None = None
 
     def to_dict(self):
-        return asdict(self) | {
+        result = asdict(self) | {
             "before": self.before.to_dict(),
             "entity_before": self.entity_before.to_dict(),
             "entity_after": self.entity_after.to_dict(),
         }
+        if self.rules_version == "catalog-actor-homebrew-1":
+            result.pop("counter")
+        return result
 
 
 def resolve_attempt(
@@ -118,6 +130,8 @@ def resolve_attempt(
     model,
     base_turn,
     legacy_entity=None,
+    counter_roll=None,
+    preview=False,
 ):
     identifier(target_id)
     label(reason, 400)
@@ -184,6 +198,41 @@ def resolve_attempt(
         summary = f"{name}: {description} " + (
             "повлияла на отношение." if check.succeeded else "не дала ожидаемого влияния."
         )
+    counter = None
+    rules_version = (
+        "catalog-actor-homebrew-2"
+        if scene.version == "interactive-world-4"
+        else "catalog-actor-homebrew-1"
+    )
+    if operation == "attack" and rules_version.endswith("-2") and state["hp"] > 0:
+        if counter_roll is None and not preview:
+            raise ValueError("Не хватает ответного броска противника.")
+        if counter_roll:
+            from rpg_vkr.domain.character import ability_modifier
+
+            bonus = definition.properties.get("attack_bonus", 1)
+            base_damage = definition.properties.get("attack_damage", 2)
+            if (
+                type(bonus) is not int
+                or not -5 <= bonus <= 20
+                or type(base_damage) is not int
+                or not 1 <= base_damage <= 100
+            ):
+                raise ValueError("Некорректные боевые параметры существа.")
+            defence = 10 + max(0, ability_modifier(character.dexterity))
+            total = counter_roll.value + bonus
+            damage = min(world.hp, base_damage) if total >= defence else 0
+            counter = CounterAttack(counter_roll, total, defence, damage)
+            after_world = replace(after_world, hp=after_world.hp - damage)
+            summary += (
+                f" Ответный удар: потеряно {damage} ОЗ."
+                if damage
+                else " Ответный удар прошёл мимо."
+            )
+            if after_world.hp == 0:
+                summary += " Герой выбыл."
+    elif counter_roll is not None:
+        raise ValueError("У этого действия нет ответного удара.")
     after = replace(target, state=state)
     record = ActorAttempt(
         operation,
@@ -200,6 +249,8 @@ def resolve_attempt(
         roll,
         check,
         summary,
+        rules_version,
+        counter,
     )
     updated = Catalog(
         catalog.definitions, tuple(after if e.id == target_id else e for e in catalog.entities)
@@ -208,12 +259,21 @@ def resolve_attempt(
 
 
 def restore_attempt(data, catalog, dice, character):
-    if not isinstance(data, dict) or set(data) != set(ActorAttempt.__dataclass_fields__):
+    fields = set(ActorAttempt.__dataclass_fields__)
+    if isinstance(data, dict) and data.get("rules_version") == "catalog-actor-homebrew-1":
+        fields.remove("counter")
+    if not isinstance(data, dict) or set(data) != fields:
         raise ValueError("Неверная запись попытки с существом.")
     roll = dice.roll_d20()
     if asdict(roll) != data["roll"]:
         raise ValueError("Изменён бросок попытки.")
     values = dict(data)
+    if data.get("counter") is not None:
+        raw_counter = data["counter"]
+        counter_roll = dice.roll_d20()
+        if asdict(counter_roll) != raw_counter["roll"]:
+            raise ValueError("Изменён ответный бросок.")
+        values["counter"] = CounterAttack(**(raw_counter | {"roll": counter_roll}))
     values.update(
         before=InteractiveWorld.from_dict(data["before"]),
         world_before=WorldState.from_dict(data["world_before"]),

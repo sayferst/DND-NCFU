@@ -283,8 +283,12 @@ def test_tampered_physical_resource_state_is_rejected(damage):
         data["interactive_world"]["things"][-1]["quantity"] += 1
     elif damage == "resource":
         data["interactive_world"]["things"][-1]["resource"] = "bandages"
+    if damage == "downgrade":
+        data.pop("chronicle")
+        for turn in data["turns"]:
+            turn.pop("trade")
     with pytest.raises(ValueError):
-        Session.from_dict(data, version=19 if damage == "downgrade" else 20)
+        Session.from_dict(data, version=19 if damage == "downgrade" else 21)
 
 
 def test_real_v19_migration_and_three_slots_sqlite_roundtrip(tmp_path):

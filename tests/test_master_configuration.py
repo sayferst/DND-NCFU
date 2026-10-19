@@ -133,7 +133,7 @@ def test_world_brief_cannot_be_disguised_as_a_legacy_schema():
             {
                 k: v
                 for k, v in session.to_dict().items()
-                if k not in {"interactive_world", "catalog"}
+                if k not in {"interactive_world", "catalog", "chronicle"}
             },
             version=16,
         )
@@ -180,4 +180,4 @@ def test_real_transport_sends_instruction_and_persists_its_hash(qt_app, tmp_path
         ]
         assert "бытовые детали" in system
         assert notes[0].instruction_hash == instruction_hash(system)
-        assert notes[0].prompt_version == "narrator-prose-12"
+        assert notes[0].prompt_version == "narrator-prose-13"

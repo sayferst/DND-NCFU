@@ -44,10 +44,18 @@ def _present_turn(turn) -> TurnPresentation:
     from rpg_vkr.domain.catalog_actions import ActorAttempt
 
     if isinstance(turn.catalog, ActorAttempt):
+        details = check_details(turn.check, turn.roll, turn.catalog.reason)
+        if turn.catalog.counter:
+            counter = turn.catalog.counter
+            details += (
+                f"\nОтветный кубик: {counter.roll.value} "
+                f"+ {counter.total - counter.roll.value} = {counter.total}. "
+                f"Ваша защита: {counter.defence}. Получено урона: {counter.damage}."
+            )
         return TurnPresentation(
             "Итог попытки",
             turn.catalog.summary,
-            check_details(turn.check, turn.roll, turn.catalog.reason),
+            details,
         )
     if turn.interaction:
         record = turn.interaction

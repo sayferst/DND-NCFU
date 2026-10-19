@@ -131,23 +131,38 @@ def build_frame(session):
             if a.id not in ACTORS and a.place == session.current_place_id
         )
     memories = []
+    remembered_place = session.chronicle.seed.scene.place().name if session.generated_world else ""
     for event in session.memory.events:
+        if session.generated_world:
+            turn = session.turns[event.turn_index - 1]
+            record = turn.interaction or turn.trade
+            if record:
+                remembered_place = record.after.place().name
+            elif getattr(turn.catalog, "before", None):
+                remembered_place = turn.catalog.before.place().name
         changes = visible_changes(event)
         if changes:
             # Use facts, not the untrusted player input or previous model's prose.
             memories.append(
-                f"Событие {event.turn_index}, {LOCATIONS[event.location]}: " + "; ".join(changes)
+                f"Событие {event.turn_index}, "
+                + (remembered_place if session.generated_world else LOCATIONS[event.location])
+                + ": "
+                + "; ".join(changes)
             )
     items = inventory_text(world)
     if session.extra_items:
         items += "; " + "; ".join(name for name, _ in session.extra_items)
+    if session.generated_world:
+        items = session.interaction_state().inventory()
     confirmed = present_turn(session.turns[-1]).story if session.turns else session.introduction
     scene = describe_scene(world)
     if session.interactive_world:
         state = session.interactive_world
         place = state.place()
         scene = place.description or (
-            describe_scene(world) if place.id in LOCATIONS else place.name
+            describe_scene(world)
+            if place.id in LOCATIONS and not session.generated_world
+            else place.name
         )
         visible = [t for t in state.things if state.here(t) and state.root_holder(t) != "hero"]
         scene += "\nПредметы в этом месте: " + (
@@ -162,7 +177,9 @@ def build_frame(session):
         scene,
         f"{world.hp}/{world.max_hp}",
         items,
-        (
+        ("Зацепки: " + "; ".join(session.chronicle.seed.hooks))
+        if session.generated_world
+        else (
             "Новое поручение недоступно: жительница повержена или враждебна."
             if world.quest == "available"
             and (

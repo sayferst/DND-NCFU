@@ -29,6 +29,7 @@ def test_tabs_and_quest_follow_actual_world(window):
         "Память мира",
         "Рассказчик",
         "Каталог мира",
+        "Дневник",
     ]
     assert window.quest_progress.value() == 0
     window.quest_action.click()
@@ -184,10 +185,13 @@ def test_export_cannot_overwrite_internal_data(window, monkeypatch, target):
 
 def test_export_cancel_keeps_game_and_files(window, tmp_path, monkeypatch):
     before = window._session.to_dict()
+    files = {p.relative_to(tmp_path): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
     monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *args: ("", ""))
     window.export_journal()
     assert window._session.to_dict() == before
-    assert not list(tmp_path.iterdir())
+    assert {
+        p.relative_to(tmp_path): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()
+    } == files
 
 
 def test_ctrl_s_and_ctrl_f_work_across_tabs(window, qt_app, monkeypatch):

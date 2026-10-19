@@ -97,15 +97,20 @@ class InteractiveWorld:
     def actor_refs(self):
         return (
             self.actors
-            if self.version in {"interactive-world-2", "interactive-world-3"}
+            if self.version in {"interactive-world-2", "interactive-world-3", "interactive-world-4"}
             else tuple(ActorRef(key, spec[0], spec[1]) for key, spec in ACTORS.items())
         )
 
     def __post_init__(self):
         if (
             self.version
-            not in {"interactive-world-1", "interactive-world-2", "interactive-world-3"}
-            or not 3 <= len(self.places) <= 40
+            not in {
+                "interactive-world-1",
+                "interactive-world-2",
+                "interactive-world-3",
+                "interactive-world-4",
+            }
+            or not (1 if self.version == "interactive-world-4" else 3) <= len(self.places) <= 40
             or len(self.things) > (80 if self.version == "interactive-world-1" else 2000)
         ):
             raise ValueError("Мир превышает поддерживаемые пределы.")
@@ -122,7 +127,9 @@ class InteractiveWorld:
             set(actors) | {"hero"}
         ):
             raise ValueError("Пересечение идентификаторов мира.")
-        if self.current not in places or not set(LOCATIONS) <= set(places):
+        if self.current not in places or (
+            self.version != "interactive-world-4" and not set(LOCATIONS) <= set(places)
+        ):
             raise ValueError("Неизвестное текущее место.")
         for p in self.places:
             seen, cursor = set(), p
@@ -132,7 +139,10 @@ class InteractiveWorld:
                 seen.add(cursor.id)
                 cursor = places[cursor.parent]
         for thing in self.things:
-            if thing.resource and self.version != "interactive-world-3":
+            if thing.resource and self.version not in {
+                "interactive-world-3",
+                "interactive-world-4",
+            }:
                 raise ValueError("Физические ресурсы требуют новую версию мира.")
             if self.version == "interactive-world-1" and thing.quantity > 100:
                 raise ValueError("Количество превышает предел старой версии мира.")
@@ -206,7 +216,7 @@ class InteractiveWorld:
 
     def thing_dict(self, thing):
         value = asdict(thing)
-        if self.version != "interactive-world-3":
+        if self.version not in {"interactive-world-3", "interactive-world-4"}:
             value.pop("resource")
         return value
 
@@ -323,6 +333,8 @@ def apply_plan(before, plan, *, check_succeeded=True, turn_index=1):
         places.append(new)
     state = replace(before, places=tuple(places))
     witnesses, messages, risky = set(), [], False
+    stopped_state = stopped_messages = stopped_witnesses = None
+    stopped_index = None
     for index, step in enumerate(plan.steps):
         current_things = {t.id: t for t in state.things}
         if step.op in {"look", "inventory"}:
@@ -376,6 +388,11 @@ def apply_plan(before, plan, *, check_succeeded=True, turn_index=1):
                 a.id in {item.owner, "guard"} and a.place == state.current for a in state.actor_refs
             )
             if held != "hero" and item.owner and item.owner != "hero" and guarded:
+                if not risky:
+                    stopped_state, stopped_messages, stopped_index = state, tuple(messages), index
+                    stopped_witnesses = tuple(
+                        a.id for a in state.actor_refs if a.place == state.current
+                    )
                 risky = True
                 witnesses.update(a.id for a in state.actor_refs if a.place == state.current)
             destination = "hero"
@@ -415,8 +432,29 @@ def apply_plan(before, plan, *, check_succeeded=True, turn_index=1):
     if any(p.id not in visited for p in plan.places):
         raise ValueError("Нельзя создавать места, к которым герой не направлялся.")
     if risky and not check_succeeded:
-        state = before
-        messages = ["Забрать чужой предмет и выполнить цепочку не удалось. Вещи остались на месте."]
+        if before.version == "interactive-world-4":
+            visited_prefix = {s.target for s in plan.steps[:stopped_index] if s.op == "move"}
+            state = replace(
+                stopped_state,
+                places=tuple(
+                    p
+                    for p in stopped_state.places
+                    if p.id in {old.id for old in before.places} or p.id in visited_prefix
+                ),
+            )
+            witnesses = set(stopped_witnesses)
+            messages = [
+                *stopped_messages,
+                (
+                    "Завладеть чужим предметом не удалось. Предыдущие шаги выполнены; "
+                    "последующие не выполнялись."
+                ),
+            ]
+        else:
+            state = before
+            messages = [
+                "Забрать чужой предмет и выполнить цепочку не удалось. Вещи остались на месте."
+            ]
     return state, risky, tuple(sorted(witnesses)), tuple(messages)
 
 
@@ -455,7 +493,18 @@ class Interaction:
         )
         if risky != (check is not None) or data["check"] is not None and check is None:
             raise ValueError("Не хватает проверки рискованного действия.")
-        record = cls(before, plan, after, witnesses, "\n".join(messages), roll, check)
+        record = cls(
+            before,
+            plan,
+            after,
+            witnesses,
+            "\n".join(messages),
+            roll,
+            check,
+            "interaction-homebrew-2"
+            if before.version == "interactive-world-4"
+            else "interaction-homebrew-1",
+        )
         if json.loads(json.dumps(record.to_dict())) != json.loads(json.dumps(data)):
             raise ValueError("Изменения мира не соответствуют проверенному плану.")
         return record

@@ -14,9 +14,10 @@ from rpg_vkr.domain.combat import ACTORS
 def live_records(session):
     """Legacy bindings are read from their sole current state, never a second wallet."""
     catalog = session.catalog or seed_catalog()
-    resource_world = (
-        session.interactive_world and session.interactive_world.version == "interactive-world-3"
-    )
+    resource_world = session.interactive_world and session.interactive_world.version in {
+        "interactive-world-3",
+        "interactive-world-4",
+    }
     types = {d.id: d.to_dict() for d in catalog.definitions}
     records = {}
 
@@ -66,6 +67,10 @@ def live_records(session):
         put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
         put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
     for key, spec in ACTORS.items():
+        if session.generated_world and not any(
+            a.id == key for a in session.interaction_state().actor_refs
+        ):
+            continue
         category = "creatures" if key in {"wolf", "boar"} else "npcs"
         types["type_actor_" + key] = Definition(
             "type_actor_" + key,
@@ -89,6 +94,8 @@ def live_records(session):
     mapping = {"apples": "type_apple", "produce_basket": "type_basket"}
     mapping.update({e.id: e.definition_id for e in catalog.entities})
     for i, turn in enumerate(session.turns, 1):
+        if turn.trade and turn.trade.item_id in mapping:
+            mapping[f"split_{i}_0"] = mapping[turn.trade.item_id]
         if turn.interaction:
             for j, step in enumerate(turn.interaction.plan.steps):
                 if step.target in mapping:
@@ -127,6 +134,17 @@ def live_records(session):
                 ).to_dict()
             old = records.get(t.id, {})
             put(t.id, type_id, t.holder, t.owner, t.quantity, old.get("state"))
+    for value in records.values():
+        if types[value["definition_id"]]["kind"] != "actor":
+            continue
+        coins = sum(
+            t.quantity
+            for t in session.interaction_state().things
+            if t.resource == "gold" and session.interaction_state().root_holder(t) == value["id"]
+        )
+        if coins:
+            value["state"] = dict(value["state"])
+            value["state"]["wealth_cp"] = (value["state"].get("gold_cp") or 0) + coins * 100
     return types, records
 
 
@@ -209,7 +227,7 @@ class CatalogIndex:
             self.db.execute("CREATE TABLE snapshot(version INTEGER,payload TEXT)")
             self.db.execute(
                 "INSERT INTO snapshot VALUES (?,?)",
-                (20, json.dumps(session.to_dict(), ensure_ascii=False)),
+                (21, json.dumps(session.to_dict(), ensure_ascii=False)),
             )
             self.db.commit()
         except Exception:
@@ -232,8 +250,7 @@ class CatalogIndex:
             cursor = parents[cursor]
         if cursor in {current, "hero"}:
             return True
-        visited = {"gate", self.session.world.location}
-        visited.update(e.location for e in self.session.memory.events)
+        visited = self.session.visited_places
         return cursor in visited
 
     def lookup(self, id, *, public=True):
@@ -351,6 +368,7 @@ class CatalogIndex:
                 "goals": raw["definition"]["properties"].get("goals", []),
                 "traits": raw["definition"]["properties"].get("traits", []),
                 "relations_to_hero": raw["entity"]["state"].get("relations", {}).get("hero", {}),
+                "observed_event": raw["entity"]["state"].get("last_observed_event"),
             }
         return value
 

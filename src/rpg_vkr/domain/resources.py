@@ -11,7 +11,7 @@ VERSION = "interactive-world-3"
 
 
 def physical(scene):
-    return scene.version == VERSION
+    return scene.version in {VERSION, "interactive-world-4"}
 
 
 def type_mapping(catalog, aliases=None):

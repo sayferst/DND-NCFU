@@ -3,6 +3,7 @@
 from dataclasses import asdict, dataclass, replace
 
 from rpg_vkr.commands import CHAT_TARGETS, NPC_CONTACTS, allowed_intents, normalise_action
+from rpg_vkr.domain.adventure import Chronicle, MemoryNote, WorldSeed, input_signature
 from rpg_vkr.domain.campaign import Campaign, NPCProfile, procedural_profile
 from rpg_vkr.domain.catalog import (
     Catalog,
@@ -54,6 +55,7 @@ from rpg_vkr.domain.resources import activate as activate_resources
 from rpg_vkr.domain.resources import needed as resource_plan
 from rpg_vkr.domain.resources import physical, project, reconcile, validate_balances
 from rpg_vkr.domain.social import DialogueRecord, grievance
+from rpg_vkr.domain.trade import TradeRecord, restore_trade, transact
 from rpg_vkr.domain.world import (
     LOCATIONS,
     OBSERVE_COMMANDS,
@@ -102,6 +104,7 @@ class Turn:
     challenge: Challenge | None = None
     interaction: Interaction | None = None
     catalog: Registration | ActorAttempt | None = None
+    trade: TradeRecord | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -136,6 +139,78 @@ class Session:
         self._narrations: list[Narration] = []
         self.interactive_world: InteractiveWorld | None = None
         self.catalog: Catalog | None = None
+        self.chronicle: Chronicle | None = None
+
+    @property
+    def generated_world(self):
+        return bool(self.chronicle and self.chronicle.seed)
+
+    def start_world(self, seed):
+        if self.turns or not self.progress.enabled or self.generated_world:
+            raise ValueError("Новый мир создаётся при рождении нового героя.")
+        if not isinstance(seed, WorldSeed) or seed.signature != input_signature(
+            self.campaign, self.progress.class_id
+        ):
+            raise ValueError("Этот мир создан для другого героя.")
+        world = project(seed.scene, replace(self.world, quest="completed", basket=0, trading=False))
+        self.chronicle = Chronicle(seed)
+        self.catalog, self.interactive_world = seed.catalog, seed.scene
+        self.world, self.introduction = world, seed.opening
+        self.memory = WorldMemory(0, snapshot(world, self.character, self.combat, self.progress))
+
+    def write_diary(self, title, text, *, id=None, pinned=False, delete=False, place=None):
+        self.chronicle = (self.chronicle or Chronicle()).revise(
+            title,
+            text,
+            self.current_place_name if place is None else place,
+            len(self.turns),
+            id=id,
+            pinned=pinned,
+            delete=delete,
+        )
+
+    def remember(self, values, source):
+        self.chronicle = self.checked_memories(values, source)
+
+    def checked_memories(self, values, source, *, scene=None, turn=None):
+        if len(values) > 8:
+            raise ValueError("Слишком много новых воспоминаний за один ход.")
+        scene = scene or self.interaction_state()
+        subjects = {
+            "world",
+            "hero",
+            "plot",
+            *[p.id for p in scene.places],
+            *[a.id for a in scene.actor_refs],
+            *[t.id for t in scene.things],
+        }
+        notes = tuple(
+            MemoryNote(
+                **(value | {"turn": len(self.turns) if turn is None else turn, "source": source})
+            )
+            for value in values
+        )
+        if any(n.subject not in subjects for n in notes):
+            raise ValueError("Воспоминание относится к неизвестному объекту.")
+        if self.catalog:
+            for note in notes:
+                if note.kind != "appearance":
+                    continue
+                entity = next((e for e in self.catalog.entities if e.id == note.subject), None)
+                definition = next(
+                    (
+                        d
+                        for d in self.catalog.definitions
+                        if entity and d.id == entity.definition_id
+                    ),
+                    None,
+                )
+                appearance = definition.properties.get("appearance") if definition else None
+                if appearance and note.text != appearance:
+                    raise ValueError(
+                        "Внешность уже определена каталогом; используйте установленный текст."
+                    )
+        return (self.chronicle or Chronicle()).remember(notes)
 
     @classmethod
     def create_hero(
@@ -187,6 +262,15 @@ class Session:
         )
 
     @property
+    def visited_places(self):
+        result = {self.chronicle.seed.scene.current} if self.generated_world else {"gate"}
+        for turn in self.turns:
+            if turn.interaction:
+                result.update((turn.interaction.before.current, turn.interaction.after.current))
+        result.add(self.current_place_id)
+        return result
+
+    @property
     def extra_inventory_rows(self):
         base = self.extra_items[:2] if self.progress.enabled else ()
         return tuple((name, 1, purpose) for name, purpose in base) + tuple(
@@ -212,12 +296,59 @@ class Session:
 
     @property
     def catalog_aliases(self):
-        return {
+        values = {
             f"split_{i}_{j}": step.target
             for i, t in enumerate(self.turns, 1)
             if t.interaction
             for j, step in enumerate(t.interaction.plan.steps)
         }
+        values.update(
+            {f"split_{i}_0": t.trade.item_id for i, t in enumerate(self.turns, 1) if t.trade}
+        )
+        return values
+
+    def submit_trade(self, action, merchant_id, item_id, operation, quantity, source="player-ui"):
+        action = _text(action, 500)
+        if (
+            not self.catalog
+            or self.combat.active
+            or self.world.hp <= 0
+            or len(self.turns) >= MAX_TURNS
+        ):
+            raise ValueError("Сделка сейчас недоступна.")
+        catalog, world, record = transact(
+            self.catalog,
+            self.interaction_state(),
+            self.world,
+            merchant_id,
+            item_id,
+            operation,
+            quantity,
+            len(self.turns) + 1,
+            source,
+            self.catalog_aliases,
+        )
+        turn = Turn(
+            action,
+            "Мир",
+            record.summary,
+            player_name=self.character.name,
+            intent_source="model",
+            trade=record,
+        )
+        memory = self.memory.append(
+            turn,
+            snapshot(self.world, self.character, self.combat, self.progress),
+            snapshot(world, self.character, self.combat, self.progress),
+        )
+        self.catalog, self.world, self.interactive_world, self.memory = (
+            catalog,
+            world,
+            record.after,
+            memory,
+        )
+        self._turns.append(turn)
+        return turn
 
     def register_catalog(self, action, definitions, entities, reason, model):
         action = _text(action, 500).strip()
@@ -296,10 +427,19 @@ class Session:
             legacy_entity=self.legacy_catalog_actor(target_id),
         )
         # Validate before consuming RNG or a bandage.
-        resolve_attempt(**kwargs, roll=D20Roll(self.dice.checkpoint()[1] + 1, 10))
+        resolve_attempt(**kwargs, roll=D20Roll(self.dice.checkpoint()[1] + 1, 10), preview=True)
         checkpoint = self.dice.checkpoint()
         try:
-            catalog, world, record = resolve_attempt(**kwargs, roll=self.dice.roll_d20())
+            roll = self.dice.roll_d20()
+            catalog, world, record = resolve_attempt(**kwargs, roll=roll, preview=True)
+            if (
+                scene.version == "interactive-world-4"
+                and operation == "attack"
+                and record.entity_after.state["hp"] > 0
+            ):
+                catalog, world, record = resolve_attempt(
+                    **kwargs, roll=roll, counter_roll=self.dice.roll_d20()
+                )
             resource_scene = reconcile(scene, self.world, world, len(self.turns) + 1, catalog)
             combat = self.combat
             if target_id in ACTORS:
@@ -369,7 +509,23 @@ class Session:
                 check_succeeded=check.succeeded if check else True,
                 turn_index=index,
             )
-            record = Interaction(before, plan, after, witnesses, "\n".join(messages), roll, check)
+            record = Interaction(
+                before,
+                plan,
+                after,
+                witnesses,
+                "\n".join(messages),
+                roll,
+                check,
+                "interaction-homebrew-2"
+                if before.version == "interactive-world-4"
+                else "interaction-homebrew-1",
+            )
+            catalog = self.catalog
+            if catalog and before.version == "interactive-world-4":
+                from rpg_vkr.domain.npc_reactions import react
+
+                catalog = react(catalog, record, index)
             combat = replace(
                 self.combat,
                 actors=tuple(
@@ -406,6 +562,7 @@ class Session:
             raise
         self.world, self.combat, self.memory = world, combat, memory
         self.interactive_world = after
+        self.catalog = catalog
         self._turns.append(turn)
         return turn
 
@@ -735,6 +892,29 @@ class Session:
     def _resolve_turn(self, action: str, command: str, meaning=None) -> tuple[Turn, WorldState]:
         from rpg_vkr.domain.combat import ANGER_COMMANDS, ATTACK_COMMANDS, STEALTH_COMMANDS
 
+        if self.generated_world and command in {
+            "идти к воротам",
+            "идти на дорогу",
+            "идти на рынок",
+            "исследовать дорогу",
+            "взять поручение",
+            "доставить корзину",
+            "купить бинт",
+            "продать бинт",
+            "подойти к торговцу",
+            "торговля",
+            "узнать дорогу на рынок",
+            "помочь разгрузить телегу",
+        }:
+            return Turn(
+                action,
+                "Рассказчик",
+                (
+                    "Опишите действие в текущем месте; этот маршрут относится к "
+                    "прежнему учебному эпизоду."
+                ),
+            ), self.world
+
         target = (
             ATTACK_COMMANDS.get(command)
             or ANGER_COMMANDS.get(command)
@@ -888,6 +1068,8 @@ class Session:
                     f"{health_description(actor)}."
                     for actor in visible
                 )
+            if self.generated_world and command in WHERE_COMMANDS:
+                text = "Вы здесь: " + self.current_place_name + "."
             if command == "инвентарь" and self.extra_items:
                 text += "; " + "; ".join(
                     f"{name} ×{quantity}" for name, quantity, _ in self.extra_inventory_rows
@@ -993,6 +1175,7 @@ class Session:
 
     def to_dict(self) -> dict:
         return {
+            "chronicle": self.chronicle.to_dict() if self.chronicle else None,
             "catalog": self.catalog.to_dict() if self.catalog else None,
             "interactive_world": self.interactive_world.to_dict()
             if self.interactive_world
@@ -1012,13 +1195,14 @@ class Session:
                     "combat": turn.combat.to_dict() if turn.combat else None,
                     "interaction": turn.interaction.to_dict() if turn.interaction else None,
                     "catalog": turn.catalog.to_dict() if turn.catalog else None,
+                    "trade": turn.trade.to_dict() if turn.trade else None,
                 }
                 for turn in self._turns
             ],
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 20) -> "Session":
+    def from_dict(cls, data: object, version: int = 21) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -1040,9 +1224,12 @@ class Session:
             18,
             19,
             20,
+            21,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 21:
+            keys.add("chronicle")
         if version >= 19:
             keys.add("catalog")
         if version >= 18:
@@ -1080,6 +1267,18 @@ class Session:
         session.campaign = (
             Campaign.from_dict(data["campaign"]) if version >= 10 else Campaign.migrate(data)
         )
+        session.chronicle = (
+            Chronicle.from_dict(data["chronicle"]) if version >= 21 and data["chronicle"] else None
+        )
+        if session.generated_world:
+            seed = session.chronicle.seed
+            class_id = data["progress"]["class_id"]
+            if (
+                seed.signature != input_signature(session.campaign, class_id)
+                or data["introduction"] != seed.opening
+            ):
+                raise ValueError("Происхождение мира не совпадает с героем.")
+            session.catalog = seed.catalog
         if version < 17 and session.campaign.version != "campaign-1":
             raise ValueError("World brief requires session schema 17")
         session.introduction = _text(data["introduction"], 4000)
@@ -1088,6 +1287,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 21:
+                turn_keys.add("trade")
             if version >= 19:
                 turn_keys.add("catalog")
             if version >= 18:
@@ -1176,6 +1377,42 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if version >= 21 and item["trade"] is not None:
+                if item["speaker"] != "Мир" or any(
+                    item[k] is not None
+                    for k in (
+                        "actor_id",
+                        "roll",
+                        "check",
+                        "intent",
+                        "meaning",
+                        "dialogue",
+                        "combat",
+                        "inspection",
+                        "scene",
+                        "challenge",
+                        "interaction",
+                        "catalog",
+                    )
+                ):
+                    raise ValueError("Сделка смешана с другим действием.")
+                session.catalog, record = restore_trade(
+                    item["trade"], session.catalog or seed_catalog(), session.catalog_aliases
+                )
+                if record.base_turn != len(session.turns) or record.summary != text:
+                    raise ValueError("Сделка не совпадает с записью хода.")
+                session._turns.append(
+                    Turn(
+                        action,
+                        "Мир",
+                        text,
+                        origin=origin,
+                        player_name=player_name,
+                        intent_source=intent_source,
+                        trade=record,
+                    )
+                )
+                continue
             if version >= 19 and item["catalog"] is not None:
                 if isinstance(item["catalog"], dict) and "operation" in item["catalog"]:
                     if (
@@ -1294,6 +1531,10 @@ class Session:
                 record = Interaction.restore(
                     item["interaction"], session.dice, len(session.turns) + 1
                 )
+                if session.catalog and record.before.version == "interactive-world-4":
+                    from rpg_vkr.domain.npc_reactions import react
+
+                    session.catalog = react(session.catalog, record, len(session.turns) + 1)
                 if session.catalog or physical(record.before):
                     validate_plan_properties(
                         session.catalog or seed_catalog(),
@@ -1668,12 +1909,60 @@ class Session:
             else WorldMemory(len(session.turns), final)
         )
         fields = dict(session.memory.baseline)
-        interactive = None
-        historical_catalog = None
+        interactive = session.chronicle.seed.scene if session.generated_world else None
+        historical_catalog = session.chronicle.seed.catalog if session.generated_world else None
         legacy_lives = {}
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
-            if isinstance(turn.catalog, ActorAttempt):
+            if turn.trade:
+                record = turn.trade
+                expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
+                world = WorldState.from_dict(
+                    {k: fields["world." + k] for k in asdict(WorldState())}
+                )
+                if (
+                    record.before != expected_before
+                    or record.world_before != world
+                    or fields["combat.active"] is not None
+                    or world.hp <= 0
+                ):
+                    raise ValueError("Сделка не соответствует историческому состоянию.")
+                aliases = {
+                    f"split_{i}_{j}": step.target
+                    for i, prior in enumerate(session.turns[: event.turn_index - 1], 1)
+                    if prior.interaction
+                    for j, step in enumerate(prior.interaction.plan.steps)
+                }
+                aliases.update(
+                    {
+                        f"split_{i}_0": prior.trade.item_id
+                        for i, prior in enumerate(session.turns[: event.turn_index - 1], 1)
+                        if prior.trade
+                    }
+                )
+                historical_catalog, _, expected_record = transact(
+                    historical_catalog or seed_catalog(),
+                    expected_before,
+                    world,
+                    record.merchant_id,
+                    record.item_id,
+                    record.operation,
+                    record.quantity,
+                    event.turn_index,
+                    record.source,
+                    aliases,
+                )
+                if canonical(record.to_dict()) != canonical(expected_record.to_dict()):
+                    raise ValueError("Сделка изменила непредусмотренные данные.")
+                expected_fields = fields | {
+                    "world." + k: v for k, v in asdict(record.world_after).items()
+                }
+                if {c.field: (c.before, c.after) for c in event.changes} != {
+                    k: (fields[k], v) for k, v in expected_fields.items() if fields[k] != v
+                }:
+                    raise ValueError("Изменения ресурсов не соответствуют сделке.")
+                interactive = record.after
+            elif isinstance(turn.catalog, ActorAttempt):
                 from rpg_vkr.domain.catalog import Entity
 
                 record = turn.catalog
@@ -1707,6 +1996,7 @@ class Session:
                     record.model,
                     record.base_turn,
                     legacy_entity,
+                    counter_roll=record.counter.roll if record.counter else None,
                 )
                 if canonical(record.to_dict()) != canonical(expected_record.to_dict()):
                     raise ValueError("Actor attempt does not match historical calculation")
@@ -1793,6 +2083,10 @@ class Session:
                 if actual_changes != expected_changes:
                     raise ValueError("Interaction attempted unapproved numeric changes")
                 interactive = record.after
+                if historical_catalog and record.before.version == "interactive-world-4":
+                    from rpg_vkr.domain.npc_reactions import react
+
+                    historical_catalog = react(historical_catalog, record, event.turn_index)
             elif interactive:
                 if physical(interactive):
                     prior_world = WorldState.from_dict(
@@ -1881,6 +2175,16 @@ class Session:
         ):
             raise ValueError("Final objects do not match recorded transactions")
         session.interactive_world = interactive
+        if canonical(historical_catalog.to_dict() if historical_catalog else None) != canonical(
+            session.catalog.to_dict() if session.catalog else None
+        ):
+            raise ValueError("История состояний каталога не совпадает с записями.")
+        if session.chronicle:
+            if any(
+                e.turn > len(session.turns)
+                for e in (*session.chronicle.diary, *session.chronicle.memories)
+            ):
+                raise ValueError("Запись хроники находится в будущем.")
         if interactive:
             validate_balances(interactive, session.world)
         stored_catalog = data.get("catalog")

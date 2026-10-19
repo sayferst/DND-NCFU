@@ -1,5 +1,7 @@
 """Local optional prose and player-visible memory, independent of game calculations."""
 
+import sqlite3
+
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QCheckBox, QComboBox, QLineEdit, QPlainTextEdit, QPushButton
 
@@ -339,6 +341,12 @@ def change_mode(window, enabled):
 
 
 def cancel_narration(window):
+    if getattr(window, "_generating_session", None) is window._session:
+        window.ollama.cancel()
+        from rpg_vkr.ui.adventure_panel import generation_failed
+
+        generation_failed(window, "Ожидание отменено.")
+        return
     if window._chat_text and not window.action_input.text():
         window.action_input.setText(window._chat_text)
     window._chat_text = None
@@ -355,6 +363,11 @@ def cancel_narration(window):
 
 
 def failed(window, message):
+    if getattr(window, "_generating_session", None) is window._session:
+        from rpg_vkr.ui.adventure_panel import generation_failed
+
+        generation_failed(window, message)
+        return
     if (
         window._chat_text
         and window._profile_intent is None
@@ -421,7 +434,8 @@ def request_narration(window):
         window._narrator_frame,
         window.local_model.currentText(),
         player_message=turn.action
-        if turn and (turn.intent or turn.challenge or turn.interaction or turn.catalog)
+        if turn
+        and (turn.intent or turn.challenge or turn.interaction or turn.catalog or turn.trade)
         else "",
         dialogue_actor=actor,
         history=recent_dialogue(window._session),
@@ -443,6 +457,7 @@ def request_chat(window, text):
         failed(window, "Для свободного чата найдите и выберите локальную модель в «Рассказчик».")
         return True
     cancel_narration(window)
+    window._pending_memories = []
     window._chat_text = text
     window._narrating_session = window._session
     window._narrating_index = len(window._session.turns)
@@ -510,12 +525,16 @@ def request_chat(window, text):
 def continue_story(window, text):
     from rpg_vkr.storage.knowledge import retrieve
 
+    campaign = campaign_context(window._session, last_interlocutor(window._session))
+    campaign["proposed_memories"] = [
+        n for n in getattr(window, "_pending_memories", []) if not n["private"]
+    ]
     window.ollama.develop(
         build_frame(window._session),
         window.local_model.currentText(),
         text,
         memory=retrieve(window._session, text),
-        campaign=campaign_context(window._session, last_interlocutor(window._session)),
+        campaign=campaign,
         history=[
             {
                 "player": t.action,
@@ -612,6 +631,15 @@ def catalog_context(window, text):
     from rpg_vkr.storage.catalog import CatalogIndex
 
     state = window._session.interaction_state().context()
+    target = getattr(window, "_context_target_id", "")
+    state["selected_target"] = target if window._session.actor_is_here(target) else ""
+    if window._campaign_repository:
+        try:
+            state["persistent_memory"] = window._campaign_repository.recall(
+                window._session, text, private=True
+            )
+        except (OSError, ValueError, sqlite3.Error):
+            state["persistent_memory"] = {}
     from rpg_vkr.domain.resources import NAMES, POOL_IDS, physical
 
     state["resource_pools"] = (
@@ -659,14 +687,76 @@ def accept_world_plan(window, result):
         validate_plan_properties,
     )
 
-    plan, category, definitions, entities, reason, queries, attempt = result
+    plan, category, definitions, entities, reason, queries, attempt, memories, trade = result
+    window._pending_memories = memories
     text = window._chat_text
+    if trade:
+        import re
+
+        from rpg_vkr.domain.trade import transact
+        from rpg_vkr.narrative.speech import unquoted
+
+        if "?" in text or re.search(r"\b(?:не|если|говорю|спрашиваю|цитирую)\b", unquoted(text)):
+            failed(window, "Вопрос, отрицание и цитата не выполняют сделку.")
+            return
+        try:
+            _, _, quote = transact(
+                window._session.catalog,
+                window._session.interaction_state(),
+                window._session.world,
+                trade["merchant_id"],
+                trade["item_id"],
+                trade["operation"],
+                trade["quantity"],
+                len(window._session.turns) + 1,
+                window.ollama.response_model or window.local_model.currentText(),
+                window._session.catalog_aliases,
+            )
+            memory_update = (
+                window._session.checked_memories(
+                    memories, quote.source, scene=quote.after, turn=len(window._session.turns) + 1
+                )
+                if memories
+                else window._session.chronicle
+            )
+        except (ValueError, TypeError, KeyError, AttributeError) as error:
+            failed(window, "Сделка не выполнена: " + str(error))
+            return
+        if not window._confirm(quote.summary + "\nВыполнить эту сделку?"):
+            cancel_narration(window)
+            return
+        cancel_narration(window)
+        window._session.submit_trade(
+            text,
+            trade["merchant_id"],
+            trade["item_id"],
+            trade["operation"],
+            trade["quantity"],
+            quote.source,
+        )
+        window._session.chronicle = memory_update
+        window.action_input.remember(text)
+        window.action_input.clear()
+        window._dirty = True
+        window._refresh_character()
+        window._render_journal()
+        request_narration(window)
+        return
     if attempt:
         from rpg_vkr.domain.catalog_actions import resolve_attempt
         from rpg_vkr.domain.character import ABILITY_NAMES
         from rpg_vkr.domain.dice import D20Roll
 
         try:
+            memory_update = (
+                window._session.checked_memories(
+                    memories,
+                    window.ollama.response_model or window.local_model.currentText(),
+                    turn=len(window._session.turns) + 1,
+                )
+                if memories
+                else window._session.chronicle
+            )
             _, _, preview_record = resolve_attempt(
                 window._session.catalog or seed_catalog(),
                 window._session.interaction_state(),
@@ -680,6 +770,7 @@ def accept_world_plan(window, result):
                 window.ollama.response_model or window.local_model.currentText(),
                 len(window._session.turns),
                 window._session.legacy_catalog_actor(attempt["target_id"]),
+                preview=True,
             )
         except (ValueError, TypeError, KeyError) as error:
             failed(window, "Попытка не выполнена: " + str(error))
@@ -710,6 +801,11 @@ def accept_world_plan(window, result):
             + ABILITY_NAMES[preview_record.check.ability]
             + f", сложность {preview_record.check.difficulty}. Бросить кубик?"
             + (
+                "\nЕсли противник останется на ногах, он получит ответную попытку удара."
+                if attempt["operation"] == "attack" and window._session.generated_world
+                else ""
+            )
+            + (
                 "\nДля перевязки будет использован один ваш бинт."
                 if attempt["operation"] == "heal"
                 else ""
@@ -728,6 +824,7 @@ def accept_world_plan(window, result):
                 preview_record.model,
                 confirmed_intent=True,
             )
+            window._session.chronicle = memory_update
         except (ValueError, TypeError, KeyError) as error:
             failed(window, "Попытка не выполнена: " + str(error))
             return
@@ -772,6 +869,15 @@ def accept_world_plan(window, result):
         accept_challenge_suggestion(window, category)
         return
     if not plan.steps and not (definitions or entities):
+        try:
+            window._session.checked_memories(
+                memories,
+                window.ollama.response_model or window.local_model.currentText(),
+                turn=len(window._session.turns) + 1,
+            )
+        except (ValueError, TypeError, KeyError) as error:
+            failed(window, "Память не принята: " + str(error))
+            return
         if requests_physical_change(text):
             failed(window, "Мастер не составил план этого действия. Мир не изменён; ввод сохранён.")
             return
@@ -803,8 +909,18 @@ def accept_world_plan(window, result):
                 turn_index=len(window._session.turns) + 1 + bool(definitions or entities),
                 aliases=window._session.catalog_aliases,
             )
-        _, risky, _, _ = apply_plan(
+        after_preview, risky, _, _ = apply_plan(
             state, plan, turn_index=len(window._session.turns) + 1 + bool(definitions or entities)
+        )
+        memory_update = (
+            window._session.checked_memories(
+                memories,
+                window.ollama.response_model or window.local_model.currentText(),
+                scene=after_preview,
+                turn=len(window._session.turns) + bool(plan.steps) + bool(definitions or entities),
+            )
+            if memories
+            else window._session.chronicle
         )
         try:
             bind_plan(text, plan)
@@ -846,6 +962,7 @@ def accept_world_plan(window, result):
                 confirmed_plan=confirmation,
                 origin="system" if definitions or entities else "typed",
             )
+        window._session.chronicle = memory_update
     except (ValueError, TypeError, KeyError) as error:
         window.action_input.setText(text)
         failed(window, "План не выполнен: " + str(error))
@@ -1009,6 +1126,15 @@ def accept_proposal(window, proposal, *, source=None):
             or (getattr(window.ollama, "response_model", "") if window.ollama.cloud else "")
             or window.local_model.currentText()
         )
+        memory_update = (
+            window._session.checked_memories(
+                getattr(window, "_pending_memories", []),
+                source,
+                turn=len(window._session.turns) + 1,
+            )
+            if getattr(window, "_pending_memories", None)
+            else window._session.chronicle
+        )
         window._session.submit_scene(
             text,
             proposal,
@@ -1018,6 +1144,8 @@ def accept_proposal(window, proposal, *, source=None):
             if source != "local-clarification"
             else "",
         )
+        window._session.chronicle = memory_update
+        window._pending_memories = []
     except (ValueError, TypeError) as error:
         failed(window, str(error))
         return

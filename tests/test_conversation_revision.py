@@ -181,7 +181,7 @@ def test_actual_v8_fixture_preserves_prose_original_input_and_rng_without_retros
     talk(old, "пошел нахер")
     assert grievance(old.turns, "villager") == 1
     slots.save(2, old)
-    assert json.loads((tmp_path / "slot-2.json").read_bytes())["schema_version"] == 20
+    assert json.loads((tmp_path / "slot-2.json").read_bytes())["schema_version"] == 21
     assert slots.load(2).to_dict() == old.to_dict()
     assert (tmp_path / "slot-1.json").read_bytes() == raw
 

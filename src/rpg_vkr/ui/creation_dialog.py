@@ -1,6 +1,7 @@
 """Explicit homebrew creation with a fixed budget, separate from the legacy editor."""
 
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
@@ -73,11 +74,16 @@ class CreationDialog(QDialog):
         self.world_brief_limit.setWordWrap(True)
         layout.addRow(self.world_brief_limit)
         self.world_brief_input.textChanged.connect(self._update_budget)
-        layout.addRow(
-            QLabel(
-                "Отдельная новая сессия. Генератор новых регионов и общий мир пока в разработке."
-            )
+        self.generate_world = QCheckBox("Создать новый мир и сюжет мастером")
+        self.generate_world.setChecked(not getattr(parent, "_legacy_controls", False))
+        layout.addRow(self.generate_world)
+        generation_note = QLabel(
+            "Место и сюжет выбирает мастер по описаниям выше. Включите ИИ до "
+            "создания героя; без подключения доступен автономный случайный "
+            "старт."
         )
+        generation_note.setWordWrap(True)
+        layout.addRow(generation_note)
         self.kit_label = QLabel()
         self.kit_label.setWordWrap(True)
         layout.addRow(self.kit_label)

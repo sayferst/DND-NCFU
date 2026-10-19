@@ -217,6 +217,7 @@ def test_real_v17_fixture_migrates_without_changing_world_brief_challenge_or_rng
     migrated_turns = json.loads(json.dumps(s.to_dict()["turns"]))
     assert all(t.pop("interaction") is None for t in migrated_turns)
     assert all(t.pop("catalog") is None for t in migrated_turns)
+    assert all(t.pop("trade") is None for t in migrated_turns)
     assert migrated_turns == original["turns"]
     checkpoint = s.dice.checkpoint()
     slots.save(2, s)

@@ -104,6 +104,7 @@ def fill_creator():
         assert isinstance(dialog, CreationDialog)
         dialog.name_input.setText('Мира')
         dialog.class_choice.setCurrentIndex(0)
+        dialog.generate_world.setChecked(False)  # Preserve the original progression scenario.
         dialog.apply_recommended()
         dialog.accept()
     except Exception:
@@ -196,6 +197,7 @@ def interact():
             window._run_command('изучить учебник')
             window._run_command('идти на дорогу')
             window.open_section('Схватка')
+            assert window._encounter_dialog.isVisible()
             assert window.combat_targets.currentData() == 'wolf'
             window.combat_stealth.click()
             assert window._session.combat.surprise

@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass
 
 from rpg_vkr.narrative.segments import Segment
 
-PROMPT_VERSION = "narrator-prose-12"
+PROMPT_VERSION = "narrator-prose-13"
 SUPPORTED_PROMPTS = {
     "narrator-prose-1",
     "narrator-prose-2",
@@ -18,6 +18,7 @@ SUPPORTED_PROMPTS = {
     "narrator-prose-9",
     "narrator-prose-10",
     "narrator-prose-11",
+    "narrator-prose-12",
     PROMPT_VERSION,
 }
 
@@ -73,7 +74,10 @@ class Narration:
 
     def to_dict(self):
         result = asdict(self)
-        if self.prompt_version != PROMPT_VERSION and not self.instruction_hash:
+        if (
+            self.prompt_version not in {"narrator-prose-12", PROMPT_VERSION}
+            and not self.instruction_hash
+        ):
             result.pop("instruction_hash")
         return result
 

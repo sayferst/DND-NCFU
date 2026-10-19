@@ -112,7 +112,7 @@ def test_two_checks_unlock_information_and_persist_without_rewards(tmp_path):
     slots = SaveSlots(tmp_path)
     slots.save(1, session)
     assert (
-        json.loads((tmp_path / "slot-1.json").read_text(encoding="utf-8"))["schema_version"] == 20
+        json.loads((tmp_path / "slot-1.json").read_text(encoding="utf-8"))["schema_version"] == 21
     )
     restored = slots.load(1)
     assert restored.to_dict() == session.to_dict()

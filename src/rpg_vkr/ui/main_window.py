@@ -1,4 +1,6 @@
-"""The first window: a plain-text journal, an action field and an offline reply."""
+"""Campaign window: free input, contextual interactions and durable memory."""
+
+import sqlite3
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QTextCursor
@@ -12,6 +14,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QTableWidgetItem,
     QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -22,6 +25,7 @@ from rpg_vkr.attribution import SRD_ATTRIBUTION
 from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 from rpg_vkr.domain.progression import describe_progress
 from rpg_vkr.domain.world import inventory_text, quest_text
+from rpg_vkr.storage.campaigns import CampaignRepository
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
 from rpg_vkr.ui.creation_dialog import CreationDialog
@@ -45,6 +49,15 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._legacy_controls = legacy_controls
         self._session = Session() if session is None else session
         self._saves = SaveSlots(default_save_directory()) if saves is None else saves
+        self._archive_error = ""
+        self._campaign_repository = None
+        self._generating_session = None
+        try:
+            self._campaign_repository = CampaignRepository(
+                self._saves.directory.parent / "campaigns.sqlite3"
+            )
+        except (OSError, ValueError, sqlite3.Error) as error:
+            self._archive_error = "Рабочая память недоступна: " + str(error)
         self._dirty = False
         self._current_slot: int | None = None
         self.setWindowTitle("Пограничье — первый прототип")
@@ -228,6 +241,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.edit_character_button.clicked.connect(self.edit_character)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self._refresh_slots()
+        self._refresh_character()
         if session is None:
             self.open_section("Главное меню")
 
@@ -277,6 +291,65 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         for ability, label in self.ability_labels.items():
             score = character.score(ability)
             label.setText(f"{ABILITY_NAMES[ability]}: {score} ({ability_modifier(score):+d})")
+        if self._session.generated_world and hasattr(self, "home_summary"):
+            hooks = "\n".join(self._session.chronicle.seed.hooks)
+            self.quest_label.setText("Зацепки: " + hooks)
+            self.home_summary.setText(
+                self._session.chronicle.seed.title + " · " + self._session.current_place_name
+            )
+            self.home_title.setText(self._session.chronicle.seed.title)
+            places = [
+                p
+                for p in self._session.interaction_state().places
+                if p.id in self._session.visited_places
+            ]
+            self.known_places.setRowCount(len(places))
+            for row, place in enumerate(places):
+                self.known_places.setItem(row, 0, QTableWidgetItem(place.name))
+                self.known_places.setItem(row, 1, QTableWidgetItem(place.description))
+            self.map_location.setText("Вы здесь: " + self._session.current_place_name)
+            self.exploration_status.setText(
+                "Известные места: "
+                + "; ".join(
+                    p.name
+                    for p in self._session.interaction_state().places
+                    if p.id in self._session.visited_places
+                )
+            )
+        self._persist_campaign()
+        if hasattr(self, "diary_list"):
+            from rpg_vkr.ui.adventure_panel import refresh_diary
+            from rpg_vkr.ui.context_actions import refresh_context
+
+            refresh_diary(self)
+            refresh_context(self)
+
+    def _persist_campaign(self):
+        if not self._campaign_repository:
+            return
+        try:
+            if self._session.progress.enabled or self._session.turns or self._session.chronicle:
+                self._campaign_repository.sync(self._session)
+            self._session._memory_provider = self._recall_campaign
+            if hasattr(self, "campaign_choice"):
+                selected = self.campaign_choice.currentData()
+                self.campaign_choice.clear()
+                for id, hero, title, _ in self._campaign_repository.list_campaigns():
+                    self.campaign_choice.addItem(hero + " · " + title, id)
+                self.campaign_choice.setCurrentIndex(
+                    max(0, self.campaign_choice.findData(selected))
+                )
+            self._archive_error = ""
+        except (OSError, ValueError, sqlite3.Error) as error:
+            self._archive_error = "Память не записана: " + str(error)
+            self.statusBar().showMessage(self._archive_error)
+
+    def _recall_campaign(self, text, private=False):
+        try:
+            return self._campaign_repository.recall(self._session, text, private=private)
+        except (OSError, ValueError, sqlite3.Error) as error:
+            self._archive_error = "Память недоступна: " + str(error)
+            return {}
 
     def _run_command(self, command: str) -> None:
         draft = self.action_input.text()
@@ -288,11 +361,16 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         dialog = CreationDialog(self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        if (self._dirty or self.action_input.text().strip()) and not self._confirm(
+        if (
+            self._dirty or self.action_input.text().strip() or getattr(self, "_diary_draft", False)
+        ) and not self._confirm(
             "Начать новую сессию? Несохранённая текущая сессия будет потеряна. Ячейки останутся."
         ):
             return
+        self._generating_session = None
+        self.ollama.cancel()
         self._session = dialog.create_session()
+        self.action_input.setEnabled(True)
         self._dirty = True
         self._current_slot = None
         self.action_input.clear()
@@ -302,6 +380,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._refresh_slots()
         self.tabs.setCurrentIndex(0)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
+        if dialog.generate_world.isChecked():
+            from rpg_vkr.ui.adventure_panel import begin_world
+
+            begin_world(self)
 
     def edit_character(self) -> None:
         dialog = CharacterDialog(self._session.character, self)
@@ -333,6 +415,13 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def _render_journal(self) -> None:
         self.journal.hero_name = self._session.character.name
         self.journal.clear()
+        if getattr(self, "_generating_session", None) is self._session:
+            self.journal.append_message(
+                "narrator",
+                "Мастер",
+                "Создаётся ваш мир: место появления, обитатели и сюжетные зацепки…",
+            )
+            return
         notes = {note.turn_index: note for note in self._session.narrations}
         if 0 in notes:
             self._append_narration(notes[0])
@@ -359,6 +448,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 self.journal.append_turn(turn)
         self.journal.moveCursor(QTextCursor.MoveOperation.End)
         self.journal.ensureCursorVisible()
+        self._persist_campaign()
 
     def _append_narration(self, note) -> None:
         actor_id = None
@@ -368,7 +458,19 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 actor_id = turn.dialogue.target
             elif turn.actor_id in {"guard", "villager", "merchant"}:
                 actor_id = turn.actor_id  # Preserve trusted attribution in older saves too.
-        if note.prompt_version in {"narrator-prose-11", "narrator-prose-12"}:
+            elif turn.catalog and hasattr(turn.catalog, "target_id"):
+                actor_id = turn.catalog.target_id
+        if not actor_id and self._session.generated_world:
+            import re
+
+            named = [
+                a.id
+                for a in self._session.interaction_state().actor_refs
+                if re.search(r"\b" + re.escape(a.name) + r"\b", note.text, re.I)
+            ]
+            if len(named) == 1:
+                actor_id = named[0]
+        if note.prompt_version in {"narrator-prose-11", "narrator-prose-12", "narrator-prose-13"}:
             self.journal.append_master_story(note.text, actor_id=actor_id)
         elif note.segments:
             self.journal.append_segments(note.segments)
@@ -395,6 +497,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         return answer == QMessageBox.StandardButton.Yes
 
     def save_slot(self, slot: int) -> None:
+        if self._generating_session is self._session:
+            self.statusBar().showMessage("Дождитесь создания мира или отмените ожидание.")
+            return
         if self._saves.info(slot).occupied and not self._confirm(
             f"Перезаписать ячейку {slot}? Прежнее сохранение в ней будет заменено."
         ):
@@ -415,10 +520,15 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         except SaveError as error:
             QMessageBox.warning(self, "Ошибка загрузки", str(error))
             return
-        if (self._dirty or self.action_input.text().strip()) and not self._confirm(
+        if (
+            self._dirty or self.action_input.text().strip() or getattr(self, "_diary_draft", False)
+        ) and not self._confirm(
             f"Загрузить ячейку {slot}? Несохранённые изменения текущей сессии будут потеряны."
         ):
             return
+        self._generating_session = None
+        self.ollama.cancel()
+        self.action_input.setEnabled(True)
         self._session = session
         self._dirty = False
         self._current_slot = slot
@@ -447,8 +557,13 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         )
 
     def closeEvent(self, event) -> None:
-        if (self._dirty or self.action_input.text().strip()) and not self._confirm(
-            "Закрыть окно без сохранения? Нажмите «Нет», чтобы вернуться и сохранить сессию."
+        if (
+            self._dirty or self.action_input.text().strip() or getattr(self, "_diary_draft", False)
+        ) and not self._confirm(
+            "Закрыть окно? Рабочая кампания уже записана в базу, если нет сообщения об ошибке. "
+            "Ячейка сохранения не обновится; неотправленный ввод и "
+            "несохранённая заметка будут потеряны. "
+            "Нажмите «Нет», чтобы вернуться."
         ):
             event.ignore()
             return

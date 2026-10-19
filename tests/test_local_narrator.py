@@ -608,7 +608,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-12"
+    assert new.prompt_version == "narrator-prose-13"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):

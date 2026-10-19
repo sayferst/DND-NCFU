@@ -397,7 +397,7 @@ def register(catalog, world, record):
     if any(e.id in existing_entities for e in record.entities):
         raise ValueError("Установленную сущность нельзя незаметно заменить.")
     if any(
-        r.id.startswith(("legacy_", "resource_", "type_actor_", "imported_type_"))
+        r.id.startswith(("legacy_", "resource_", "trade_", "type_actor_", "imported_type_"))
         or r.id == "type_currency"
         for r in (*record.definitions, *record.entities)
     ):
@@ -442,7 +442,7 @@ def register(catalog, world, record):
                 e.quantity,
                 d.properties.get("container", False),
                 {"type_bandage": "bandages"}.get(d.id, "")
-                if world.version == "interactive-world-3"
+                if world.version in {"interactive-world-3", "interactive-world-4"}
                 else "",
             )
         )
@@ -450,7 +450,9 @@ def register(catalog, world, record):
         world,
         things=tuple(things),
         actors=tuple(actors),
-        version=world.version if world.version == "interactive-world-3" else "interactive-world-2",
+        version=world.version
+        if world.version in {"interactive-world-3", "interactive-world-4"}
+        else "interactive-world-2",
     )
     return result, expanded
 

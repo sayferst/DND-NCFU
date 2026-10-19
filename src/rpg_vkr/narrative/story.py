@@ -81,6 +81,8 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
                 entry["actor_id"] = actor_id
         recent.append(entry)
     context = {
+        "persistent_memory": (campaign or {}).get("persistent_memory", {}),
+        "proposed_memories": (campaign or {}).get("proposed_memories", []),
         "player_message": text,
         "current_scene": facts,
         "hero_description": (campaign or {}).get("hero_description", ""),

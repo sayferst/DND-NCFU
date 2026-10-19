@@ -85,7 +85,8 @@ class EpisodePanels:
 
     def _build_episode_panels(self, root_layout) -> None:
         menu = self._episode_page("Главное меню")
-        menu.addWidget(plain_label("Пограничье · Доставка на рынок"))
+        self.home_title = plain_label("DND-NCFU · Приключение")
+        menu.addWidget(self.home_title)
         self.home_summary = plain_label()
         menu.addWidget(self.home_summary)
         self._panel_button(menu, "Новый герой…", self.new_character)
@@ -97,14 +98,19 @@ class EpisodePanels:
         self._panel_button(menu, "Настройки", lambda: self.open_section("Настройки"))
         self._panel_button(menu, "Как играть", lambda: self.open_section("Как играть"))
         self._panel_button(menu, "Выйти", self.close)
-        menu.addWidget(plain_label("Меню не сбрасывает игру. Автосохранения нет."))
+        menu.addWidget(
+            plain_label(
+                "Рабочая кампания сохраняется в SQLite. Три ячейки — отдельные "
+                "контрольные точки, они обновляются вручную."
+            )
+        )
         menu.addStretch()
 
         map_layout = self._episode_page("Карта")
         map_layout.addWidget(
             plain_label(
-                "Три места эпизода: ворота, дорога и рынок. Переход бесплатный. "
-                "Здесь нет расстояний, скрытых областей или случайных встреч."
+                "Известные места и видимые направления. Переходы задаются через "
+                "чат; неизвестный район раскрывается по мере исследования."
             )
         )
         self.ask_market = self._panel_button(
@@ -114,6 +120,8 @@ class EpisodePanels:
         )
         self.map_location = plain_label()
         map_layout.addWidget(self.map_location)
+        self.known_places = readonly_table(["Место", "Что известно"])
+        map_layout.addWidget(self.known_places, 1)
         self.travel_buttons = {}
         for location, name in LOCATIONS.items():
             self.travel_buttons[location] = self._panel_button(
@@ -211,9 +219,11 @@ class EpisodePanels:
         guide = self._episode_page("Как играть")
         guide.addWidget(
             plain_label(
-                "Начало: возьмите поручение у ворот, сходите на рынок и доставьте корзину. "
-                "Дорогу можно исследовать один раз. У торговца можно узнать об ассортименте. "
-                "Все действия записываются в журнал приключения."
+                "Создайте героя, опишите его прошлое и пожелания к миру. Мастер "
+                "выберет место появления и сюжетные зацепки. "
+                "Для ИИ-генерации включите и настройте мастера до создания героя. "
+                "Без API есть автономный случайный старт. "
+                "Действуйте через чат; важные сведения записывайте в Дневник."
             )
         )
         guide.addWidget(
@@ -233,9 +243,10 @@ class EpisodePanels:
         )
         guide.addWidget(
             plain_label(
-                "Работает: герой, ресурсы, три места, поручение, лавка, бинты, "
-                "кубик, базовые проверки, схватка и враждебность, "
-                "журнал и сохранения. Рассказчик автономный, понимает команды из справочника."
+                "Товары открываются при разговоре с торговцем рядом; панель "
+                "противника — при взаимодействии с целью. "
+                "Ресурсы и результаты проверяет движок. Рабочая память SQLite и "
+                "личные заметки сохраняются отдельно от полного текста истории."
             )
         )
         guide.addWidget(
@@ -287,9 +298,47 @@ class EpisodePanels:
         self.navigation = QComboBox()
         self.navigation.setAccessibleName("Раздел игры")
         install_catalog_panel(self)
-        order = [7, 0, 1, 2, 3, 8, 9, 13, 10, 11, 14, 15, 16, 4, 6, 5, 12]
-        for index in order:
-            self.navigation.addItem(self.tabs.tabText(index), index)
+        from rpg_vkr.ui.adventure_panel import install_adventure_panel
+
+        install_adventure_panel(self)
+        self._persist_campaign()
+        if not self._legacy_controls:
+            for index in reversed(range(self.tabs.count())):
+                if self.tabs.tabText(index) in {
+                    "Жители",
+                    "Лавка",
+                    "Схватка",
+                    "Команды",
+                    "Кубики",
+                    "Задание",
+                }:
+                    page = self.tabs.widget(index)
+                    self.tabs.removeTab(index)
+                    page.hide()
+        order = [
+            "Главное меню",
+            "Приключение",
+            "Герой",
+            "Инвентарь",
+            "Дневник",
+            "Задание",
+            "Карта",
+            "Жители",
+            "Схватка",
+            "Лавка",
+            "Кубики",
+            "Память мира",
+            "Рассказчик",
+            "Каталог мира",
+            "Команды",
+            "Сохранения",
+            "Настройки",
+            "Как играть",
+        ]
+        for name in order:
+            for index in range(self.tabs.count()):
+                if self.tabs.tabText(index) == name:
+                    self.navigation.addItem(name, index)
         navigation_row.addWidget(QLabel("Раздел:"))
         navigation_row.addWidget(self.navigation, 1)
         self._panel_button(navigation_row, "К игре", self.resume_session)
@@ -322,6 +371,19 @@ class EpisodePanels:
             if self.tabs.tabText(index) == name:
                 self.tabs.setCurrentIndex(index)
                 return
+        if name == "Схватка":
+            from rpg_vkr.ui.context_actions import show_encounter
+
+            target = self._session.combat.active or self.combat_targets.currentData()
+            if target:
+                show_encounter(self, target)
+            return
+        if name == "Лавка":
+            from rpg_vkr.ui.context_actions import show_trade
+
+            if self._session.actor_is_here("merchant") and self._session.world.trading:
+                show_trade(self, "merchant")
+            return
         raise ValueError(f"Unknown UI section: {name}")
 
     def _sync_navigation(self, index: int) -> None:
@@ -374,9 +436,16 @@ class EpisodePanels:
         if not hasattr(self, "inventory_table"):
             return
         state = self._session.world
-        self.journal.set_hostiles(
+        hostiles = [
             actor.id for actor in self._session.combat.actors if actor.disposition == "hostile"
-        )
+        ]
+        if self._session.catalog:
+            hostiles += [
+                e.id
+                for e in self._session.catalog.entities
+                if (e.state or {}).get("disposition") == "hostile"
+            ]
+        self.journal.set_hostiles(hostiles)
         refresh_combat_panel(self)
         peace = self._session.combat.active is None and state.hp > 0
         merchant = self._session.combat.actor("merchant")
