@@ -17,7 +17,7 @@ from rpg_vkr.narrative.cloud import CloudProfile
 from rpg_vkr.narrative.routerai import parse_allowance, parse_models
 from rpg_vkr.ui.narrator_panel import prepare_model
 
-MODEL = "deepseek/deepseek-chat-v3.1"
+MODEL = "deepseek/deepseek-v4-pro-0813"
 QUOTE = {
     "id": MODEL,
     "architecture": {"output_modalities": ["text"]},
@@ -36,7 +36,14 @@ ALLOWANCE = {
 
 @contextmanager
 def router_server(
-    *, keys=None, key_status=200, chat_status=200, delay_key=0, bad_first=False, redirect=False
+    *,
+    keys=None,
+    key_status=200,
+    chat_status=200,
+    delay_key=0,
+    bad_first=False,
+    redirect=False,
+    suggestion=None,
 ):
     records = []
     keys = [ALLOWANCE] if keys is None else keys
@@ -86,6 +93,11 @@ def router_server(
                     else "У ворот скрипят деревянные створки. Стражник смотрит на дорогу, "
                     "женщина придерживает корзину с яблоками."
                 )
+                if (
+                    suggestion is not None
+                    and "Режим: предложить категорию" in body["messages"][0]["content"]
+                ):
+                    text = json.dumps(suggestion, ensure_ascii=False)
                 result = {
                     "model": MODEL,
                     "choices": [
@@ -233,7 +245,7 @@ def test_verified_key_then_one_chat_request_and_actual_usage(window, qt_app, mon
         assert records[1]["method"] == "GET" and records[1]["authenticated"]
         post = records[2]
         assert post["method"] == "POST" and post["authenticated"]
-        assert post["body"]["max_tokens"] == 450
+        assert post["body"]["max_tokens"] == 900
         assert "provider" not in post["body"]
         assert len(window._session.turns) == 1
         assert window._session.narrations[0].model == MODEL

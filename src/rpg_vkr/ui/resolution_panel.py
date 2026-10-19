@@ -5,6 +5,7 @@ from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import QComboBox, QGroupBox, QLabel, QPlainTextEdit, QPushButton, QVBoxLayout
 
 from rpg_vkr.commands import normalise_action
+from rpg_vkr.domain.challenge import CHALLENGES, proposed_challenge
 from rpg_vkr.domain.character import ABILITY_NAMES
 from rpg_vkr.domain.combat import ACTORS, ATTACK_COMMANDS, STEALTH_COMMANDS
 from rpg_vkr.domain.inspection import requested_abilities
@@ -55,6 +56,7 @@ def refresh_guidance(window):
     session = window._session
     command = normalise_action(window.action_input.text())
     inspection = requested_abilities(window.action_input.text())
+    challenge = proposed_challenge(window.action_input.text())
     actor_id = ATTACK_COMMANDS.get(command) or STEALTH_COMMANDS.get(command)
     actor_id = actor_id or (session.combat.active if command == "атаковать" else None)
     if session.world.hp == 0:
@@ -91,6 +93,14 @@ def refresh_guidance(window):
         text = "Бинт лечит до 4 здоровья вместо атаки. После лечения противник отвечает."
     elif command in {"уклониться", "отступить"} and session.combat.active:
         text = "Проверка Ловкости: нужно набрать 10. Неудача позволяет противнику ответить."
+    elif challenge:
+        ability, difficulty, purpose = CHALLENGES[challenge]
+        text = (
+            "Эта проверка недоступна во время схватки."
+            if session.combat.active
+            else f"Попытка: {purpose}. {ABILITY_NAMES[ability]}, сложность {difficulty}. "
+            "После отправки можно подтвердить или отменить бросок."
+        )
     else:
         text = (
             "Введите действие. Если нужен кубик, бросок произойдёт автоматически. "

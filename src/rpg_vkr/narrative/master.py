@@ -31,7 +31,7 @@ def campaign_context(session, target=""):
     from rpg_vkr.narrative.presentation import present_turn
 
     resolution = []
-    for turn in session.turns[-2:]:
+    for turn in session.turns[-2:] if session.turns and session.turns[-1].combat else ():
         if not turn.combat:
             continue
         outcome = turn.combat.outcome
@@ -62,6 +62,12 @@ def campaign_context(session, target=""):
             )
         ),
         "hero_description": session.campaign.raw_player_description,
+        "world_brief": session.campaign.world_brief,
+        "challenge_result": (
+            session.turns[-1].challenge.story()
+            if session.turns and session.turns[-1].challenge
+            else ""
+        ),
         "world_id": session.campaign.world_id,
         "interlocutor_id": target,
         "public_npc_facts": {key: getattr(profile, key) for key in PROFILE_FIELDS}

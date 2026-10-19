@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass, replace
 
 from rpg_vkr.commands import CHAT_TARGETS, NPC_CONTACTS, allowed_intents, normalise_action
 from rpg_vkr.domain.campaign import Campaign, NPCProfile, procedural_profile
+from rpg_vkr.domain.challenge import CHALLENGES, Challenge, needs_model_review, proposed_challenge
 from rpg_vkr.domain.character import (
     ABILITY_NAMES,
     AbilityCheck,
@@ -79,6 +80,7 @@ class Turn:
     intent_source: str = "direct"
     scene: SceneRecord | None = None
     notes: tuple[str, ...] = ()
+    challenge: Challenge | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -114,7 +116,13 @@ class Session:
 
     @classmethod
     def create_hero(
-        cls, character: Character, class_id: str, seed: int | None = None, *, description=""
+        cls,
+        character: Character,
+        class_id: str,
+        seed: int | None = None,
+        *,
+        description="",
+        world_brief="",
     ):
         progress = HeroProgress(class_id, character)
         kit = ARCHETYPES[class_id]
@@ -123,7 +131,7 @@ class Session:
             character=character,
             world=WorldState(gold=kit.gold, bandages=kit.bandages),
             progress=progress,
-            campaign=Campaign.create(description),
+            campaign=Campaign.create(description, world_brief),
         )
 
     @property
@@ -135,6 +143,55 @@ class Session:
             (kit.equipment, "Оружие для авторской схватки"),
             ("Дорожный учебник", "Изучить один раз для обучения Интеллекту"),
         )
+
+    def submit_challenge(self, action: str, *, suggested_kind=None) -> Turn:
+        action = _text(action, 500).strip()
+        kind = proposed_challenge(action)
+        if suggested_kind is not None:
+            from rpg_vkr.narrative.actions import action_plan
+
+            if (
+                suggested_kind not in CHALLENGES
+                or (kind and suggested_kind != kind)
+                or (kind is None and not needs_model_review(action))
+                or action_plan(self, action) is not None
+            ):
+                raise ValueError("Предложение проверки не соответствует попытке.")
+            kind = suggested_kind
+        if kind is None:
+            raise ValueError("Для этой попытки пока нет проверяемой проверки.")
+        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+            raise ValueError("Эта проверка недоступна во время схватки или после выбытия.")
+        ability, difficulty, _ = CHALLENGES[kind]
+        checkpoint = self.dice.checkpoint()
+        try:
+            roll = self.dice.roll_d20()
+            record = Challenge(
+                kind,
+                self.world.location,
+                roll,
+                resolve_ability_check(
+                    ability, self.character.score(ability), roll.value, difficulty
+                ),
+            )
+            turn = Turn(
+                action,
+                "Правила",
+                record.story(),
+                roll,
+                record.check,
+                player_name=self.character.name,
+                intent_source="model" if suggested_kind is not None else "local-fallback",
+                challenge=record,
+            )
+            state = snapshot(self.world, self.character, self.combat, self.progress)
+            memory = self.memory.append(turn, state, state)
+        except Exception:
+            self.dice.restore(checkpoint)
+            raise
+        self._turns.append(turn)
+        self.memory = memory
+        return turn
 
     @property
     def turns(self) -> tuple[Turn, ...]:
@@ -328,7 +385,7 @@ class Session:
             raise
         return tuple(result)
 
-    def submit_scene(self, action, proposal, model, *, base_turn):
+    def submit_scene(self, action, proposal, model, *, base_turn, instruction_hash=""):
         """Commit validated fiction and its visible segments in one transaction."""
         from rpg_vkr.domain.meaning import Meaning
         from rpg_vkr.narrative.context import build_frame
@@ -374,6 +431,7 @@ class Session:
                     proposal.narration,
                     build_frame(self).fingerprint,
                     segments=split_story(proposal.narration, target),
+                    instruction_hash=instruction_hash,
                 )
             )
         except Exception:
@@ -643,7 +701,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 16) -> "Session":
+    def from_dict(cls, data: object, version: int = 17) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -661,6 +719,7 @@ class Session:
             14,
             15,
             16,
+            17,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -697,12 +756,16 @@ class Session:
         session.campaign = (
             Campaign.from_dict(data["campaign"]) if version >= 10 else Campaign.migrate(data)
         )
+        if version < 17 and session.campaign.version != "campaign-1":
+            raise ValueError("World brief requires session schema 17")
         session.introduction = _text(data["introduction"], 4000)
         turns = data["turns"]
         if not isinstance(turns, list) or len(turns) > MAX_TURNS:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 17:
+                turn_keys.add("challenge")
             if version >= 16:
                 turn_keys.add("notes")
             if version >= 12:
@@ -785,6 +848,37 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if version >= 17 and item["challenge"] is not None:
+                if (
+                    item["speaker"] != "Правила"
+                    or intent is not None
+                    or meaning is not None
+                    or dialogue is not None
+                    or item["actor_id"] is not None
+                    or any(item[k] is not None for k in ("combat", "inspection", "scene"))
+                ):
+                    raise ValueError("Challenge mixed with another action")
+                record = Challenge.restore(item["challenge"], session.dice)
+                if (
+                    item["roll"] != asdict(record.roll)
+                    or stored_check != asdict(record.check)
+                    or text != record.story()
+                ):
+                    raise ValueError("Challenge turn mismatch")
+                session._turns.append(
+                    Turn(
+                        action,
+                        item["speaker"],
+                        text,
+                        record.roll,
+                        record.check,
+                        origin=origin,
+                        player_name=player_name,
+                        intent_source=intent_source,
+                        challenge=record,
+                    )
+                )
+                continue
             if version >= 12 and item["scene"] is not None:
                 record = SceneRecord.from_dict(item["scene"])
                 if (
@@ -1093,6 +1187,16 @@ class Session:
         fields = dict(session.memory.baseline)
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
+            if turn.challenge:
+                record = turn.challenge
+                if (
+                    fields["world.hp"] <= 0
+                    or fields["combat.active"] is not None
+                    or record.location != fields["world.location"]
+                    or record.check.score != fields["hero." + record.check.ability]
+                    or event.changes
+                ):
+                    raise ValueError("Challenge does not match historical state")
             if turn.scene:
                 historical_combat = CombatState.from_dict(
                     {

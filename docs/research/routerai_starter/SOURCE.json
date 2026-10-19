@@ -1,0 +1,36 @@
+{
+  "source": "User-uploaded DND_NCFU_RouterAI_DeepSeek_Starter.zip; separate task/prompt uploads were byte-identical.",
+  "received_date_moscow": "2026-10-19",
+  "archive_sha256": "0dfb39a07075f97a4bf7b45e629f3a9adf53eed67bda7602cd1c14de172182f4",
+  "scope": "User-provided requirements and reference documents; not independently verified provider availability/prices, not an executed implementation task, not a literary training corpus. No API keys archived.",
+  "licensing": "No explicit license supplied for the starter; kept as owner-provided project references, not claimed as a redistributable training dataset.",
+  "files": [
+    {
+      "archive_name": "master_system_prompt.txt",
+      "saved_name": "master_system_prompt.original.txt",
+      "sha256": "24f7cdfb3a2685b9b8e9c68a2cf74e5346c5341c46600f77f0144d5c63c027fe",
+      "bytes": 7714
+    },
+    {
+      "archive_name": "CODEX_IMPLEMENTATION_TASK.md",
+      "saved_name": "CODEX_IMPLEMENTATION_TASK.original.md",
+      "sha256": "c58e98e8c863578689d5711010f6c37104878fc646d0b2c2b8b1b60aa041d244",
+      "bytes": 24496
+    },
+    {
+      "archive_name": "README_RU.md",
+      "saved_name": "README_RU.original.md",
+      "sha256": "e631556adc66367a46f402ef5a5cae69054c6a9bac99b5ab1a2ae9239659f74e",
+      "bytes": 27265
+    }
+  ],
+  "model_screenshot": {
+    "source": "User screenshots in chat, 2026-10-19; no independent live confirmation",
+    "pro_id": "deepseek/deepseek-v4-pro-0813",
+    "pro_input_rub_per_million": "34",
+    "pro_output_rub_per_million": "102",
+    "flash_id": "deepseek/deepseek-v4-flash-latest",
+    "flash_input_rub_per_million": "5.98",
+    "flash_output_rub_per_million": "11"
+  }
+}

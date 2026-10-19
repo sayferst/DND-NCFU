@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass
 
 from rpg_vkr.narrative.segments import Segment
 
-PROMPT_VERSION = "narrator-prose-11"
+PROMPT_VERSION = "narrator-prose-12"
 SUPPORTED_PROMPTS = {
     "narrator-prose-1",
     "narrator-prose-2",
@@ -17,6 +17,7 @@ SUPPORTED_PROMPTS = {
     "narrator-prose-8",
     "narrator-prose-9",
     "narrator-prose-10",
+    "narrator-prose-11",
     PROMPT_VERSION,
 }
 
@@ -29,6 +30,7 @@ class Narration:
     context_hash: str
     prompt_version: str = PROMPT_VERSION
     segments: tuple[Segment, ...] = ()
+    instruction_hash: str = ""
 
     def __post_init__(self):
         if type(self.turn_index) is not int or not 0 <= self.turn_index <= 2000:
@@ -64,15 +66,24 @@ class Narration:
 
             if compact("".join(item.text for item in self.segments)) != compact(self.text):
                 raise ValueError("Segments differ from narration")
+        if not isinstance(self.instruction_hash, str) or (
+            self.instruction_hash and not re.fullmatch(r"[0-9a-f]{64}", self.instruction_hash)
+        ):
+            raise ValueError("Invalid instruction hash")
 
     def to_dict(self):
-        return asdict(self)
+        result = asdict(self)
+        if self.prompt_version != PROMPT_VERSION and not self.instruction_hash:
+            result.pop("instruction_hash")
+        return result
 
     @classmethod
     def from_dict(cls, data):
         if not isinstance(data, dict) or set(data) not in (
             set(cls.__dataclass_fields__),
             set(cls.__dataclass_fields__) - {"segments"},
+            set(cls.__dataclass_fields__) - {"instruction_hash"},
+            set(cls.__dataclass_fields__) - {"segments", "instruction_hash"},
         ):
             raise ValueError("Invalid narration record")
         segments = data.get("segments", ())

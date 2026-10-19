@@ -5,6 +5,7 @@ import re
 from copy import deepcopy
 
 from rpg_vkr.domain.director import Proposal, StoryFact, mechanical_commands
+from rpg_vkr.narrative.instructions import load_instructions
 from rpg_vkr.narrative.routing import addressed_to_master, simple_action
 from rpg_vkr.narrative.speech import speech_details
 from rpg_vkr.narrative.story_prompt import STORY_CONTRACT, render_context, writing_profile
@@ -67,6 +68,8 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "player_message": text,
         "current_scene": facts,
         "hero_description": (campaign or {}).get("hero_description", ""),
+        "world_brief": (campaign or {}).get("world_brief", ""),
+        "challenge_result": (campaign or {}).get("challenge_result", "") if confirmed else "",
         "resolution": (campaign or {}).get("resolution", []) if confirmed else [],
         "known_observations": (campaign or {}).get("known_observations", []),
         "memory": memory,
@@ -106,7 +109,7 @@ def story_payload(
             "num_thread": 4,
         },
         "messages": [
-            {"role": "system", "content": STORY_CONTRACT},
+            {"role": "system", "content": load_instructions() + "\n\n" + STORY_CONTRACT},
             {
                 "role": "user",
                 "content": render_context(context)

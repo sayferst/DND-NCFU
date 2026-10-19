@@ -368,7 +368,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 actor_id = turn.dialogue.target
             elif turn.actor_id in {"guard", "villager", "merchant"}:
                 actor_id = turn.actor_id  # Preserve trusted attribution in older saves too.
-        if note.prompt_version == "narrator-prose-11":
+        if note.prompt_version in {"narrator-prose-11", "narrator-prose-12"}:
             self.journal.append_master_story(note.text, actor_id=actor_id)
         elif note.segments:
             self.journal.append_segments(note.segments)

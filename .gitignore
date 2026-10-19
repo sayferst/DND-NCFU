@@ -29,6 +29,7 @@ Thumbs.db
 /tmp/
 /backups/
 /models/
+/prompts/master_system_prompt.local.txt
 /wheelhouse/
 *.tmp
 *.log

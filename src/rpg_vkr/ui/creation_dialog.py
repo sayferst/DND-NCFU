@@ -10,11 +10,14 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QSpinBox,
+    QVBoxLayout,
+    QWidget,
 )
 
 from rpg_vkr.application import Session
-from rpg_vkr.domain.campaign import DESCRIPTION_LIMIT, plain
+from rpg_vkr.domain.campaign import DESCRIPTION_LIMIT, WORLD_BRIEF_LIMIT, plain
 from rpg_vkr.domain.character import ABILITY_NAMES, Character
 from rpg_vkr.domain.progression import ARCHETYPES, POINT_BUDGET, validate_creation
 
@@ -23,8 +26,15 @@ class CreationDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Создать героя · авторские правила")
-        self.setMinimumWidth(430)
-        layout = QFormLayout(self)
+        self.setMinimumSize(480, 550)
+        self.resize(580, 740)
+        outer = QVBoxLayout(self)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        content = QWidget()
+        layout = QFormLayout(content)
+        scroll.setWidget(content)
+        outer.addWidget(scroll, 1)
         note = QLabel(
             "База 8, распределите 24 очка. Повышение на 1 стоит 1 очко; максимум 16. "
             "Это homebrew-профили, не полные классы SRD."
@@ -51,6 +61,18 @@ class CreationDialog(QDialog):
         self.description_limit.setWordWrap(True)
         layout.addRow(self.description_limit)
         self.description_input.textChanged.connect(self._update_budget)
+        self.world_brief_input = QPlainTextEdit()
+        self.world_brief_input.setAccessibleName("Пожелания к миру и жанру")
+        self.world_brief_input.setPlaceholderText(
+            "Например: приключенческое фэнтези, редкая магия, торговля, интриги гильдий. "
+            "Это пожелания к повествованию, а не выдача предметов или готовый мир."
+        )
+        self.world_brief_input.setMaximumHeight(100)
+        layout.addRow("Мир, жанры и настроение", self.world_brief_input)
+        self.world_brief_limit = QLabel(f"До {WORLD_BRIEF_LIMIT} символов. Поле необязательное.")
+        self.world_brief_limit.setWordWrap(True)
+        layout.addRow(self.world_brief_limit)
+        self.world_brief_input.textChanged.connect(self._update_budget)
         layout.addRow(
             QLabel(
                 "Отдельная новая сессия. Генератор новых регионов и общий мир пока в разработке."
@@ -79,7 +101,7 @@ class CreationDialog(QDialog):
         self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("Отмена")
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
-        layout.addRow(self.buttons)
+        outer.addWidget(self.buttons)
         self.class_choice.currentIndexChanged.connect(self._update_kit)
         self.name_input.textChanged.connect(self._update_budget)
         self.apply_recommended()
@@ -105,6 +127,11 @@ class CreationDialog(QDialog):
         remaining = POINT_BUDGET - sum(spin.value() - 8 for spin in self.scores.values())
         self.budget_label.setText(f"Осталось очков: {remaining}. Для создания должно остаться 0.")
         used = len(self.description_input.toPlainText())
+        world_used = len(self.world_brief_input.toPlainText())
+        self.world_brief_limit.setText(
+            f"Пожелания к миру: {world_used}/{WORLD_BRIEF_LIMIT} символов. "
+            + ("Сократите текст." if world_used > WORLD_BRIEF_LIMIT else "Поле необязательное.")
+        )
         self.description_limit.setText(
             f"Описание: {used}/{DESCRIPTION_LIMIT} символов. "
             + (
@@ -117,6 +144,7 @@ class CreationDialog(QDialog):
             remaining == 0
             and bool(self.name_input.text().strip())
             and len(self.description_input.toPlainText()) <= DESCRIPTION_LIMIT
+            and world_used <= WORLD_BRIEF_LIMIT
         )
 
     def character(self) -> Character:
@@ -130,13 +158,17 @@ class CreationDialog(QDialog):
     def create_session(self) -> Session:
         description = plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
         return Session.create_hero(
-            self.character(), self.class_choice.currentData(), description=description
+            self.character(),
+            self.class_choice.currentData(),
+            description=description,
+            world_brief=plain(self.world_brief_input.toPlainText(), WORLD_BRIEF_LIMIT, empty=True),
         )
 
     def accept(self) -> None:
         try:
             self.character()
             plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
+            plain(self.world_brief_input.toPlainText(), WORLD_BRIEF_LIMIT, empty=True)
         except ValueError as error:
             QMessageBox.warning(self, "Проверьте героя", str(error))
             return

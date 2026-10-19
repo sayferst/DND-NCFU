@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass, replace
 NPC_IDS = {"guard", "villager", "merchant"}
 PROFILE_FIELDS = ("appearance", "ancestry", "work_detail", "public_background")
 DESCRIPTION_LIMIT = 6000
+WORLD_BRIEF_LIMIT = 3000
 
 
 def plain(value, limit, *, empty=False):
@@ -67,10 +68,14 @@ class Campaign:
     raw_player_description: str = ""
     npc_profiles: tuple[NPCProfile, ...] = ()
     version: str = "campaign-1"
+    world_brief: str = ""
 
     def __post_init__(self):
-        if self.version != "campaign-1":
+        if self.version not in {"campaign-1", "campaign-2"}:
             raise ValueError("Unsupported campaign version")
+        plain(self.world_brief, WORLD_BRIEF_LIMIT, empty=True)
+        if self.version == "campaign-1" and self.world_brief:
+            raise ValueError("Legacy campaign cannot contain a world brief")
         for value in (self.world_id, self.hero_id):
             if not isinstance(value, str) or str(uuid.UUID(value)) != value:
                 raise ValueError("Invalid campaign identity")
@@ -82,8 +87,14 @@ class Campaign:
             raise ValueError("Duplicate or invalid NPC profile")
 
     @classmethod
-    def create(cls, description=""):
-        return cls(str(uuid.uuid4()), str(uuid.uuid4()), description)
+    def create(cls, description="", world_brief=""):
+        return cls(
+            str(uuid.uuid4()),
+            str(uuid.uuid4()),
+            description,
+            version="campaign-2",
+            world_brief=world_brief,
+        )
 
     @classmethod
     def migrate(cls, old_data):
@@ -102,11 +113,19 @@ class Campaign:
         return replace(self, npc_profiles=self.npc_profiles + (profile,))
 
     def to_dict(self):
-        return asdict(self)
+        result = asdict(self)
+        if self.version == "campaign-1":
+            result.pop("world_brief")
+        return result
 
     @classmethod
     def from_dict(cls, data):
-        if not isinstance(data, dict) or set(data) != set(cls.__dataclass_fields__):
+        if not isinstance(data, dict):
+            raise ValueError("Invalid campaign")
+        expected = set(cls.__dataclass_fields__)
+        if data.get("version") == "campaign-1":
+            expected.remove("world_brief")
+        if set(data) != expected:
             raise ValueError("Invalid campaign")
         if not isinstance(data["npc_profiles"], (list, tuple)):
             raise ValueError("Invalid NPC list")

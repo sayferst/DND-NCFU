@@ -41,6 +41,20 @@ def present_turn(turn) -> TurnPresentation:
 
 
 def _present_turn(turn) -> TurnPresentation:
+    if turn.challenge:
+        from rpg_vkr.domain.challenge import CHALLENGES
+
+        record = turn.challenge
+        purpose = CHALLENGES[record.kind][2]
+        title = ABILITY_NAMES[record.check.ability] + (
+            " — успех" if record.check.succeeded else " — неудача"
+        )
+        return TurnPresentation(
+            title,
+            record.story(),
+            check_details(record.check, record.roll, purpose) + "\nАвторская проверка попытки. "
+            "Предметы, награды и переходы требуют отдельных правил.",
+        )
     if turn.inspection:
         record = turn.inspection
         details = []

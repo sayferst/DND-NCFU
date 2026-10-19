@@ -47,6 +47,13 @@ def install_narrator_panels(window):
     window.ai_chat = QCheckBox("Понимать свободный текст через ИИ и отвечать в чате")
     window.ai_chat.setChecked(True)
     page.addWidget(window.ai_chat)
+    window.prompt_notice = plain_label(
+        "Инструкция мастера: prompts/master_system_prompt.txt. "
+        "Личная версия: prompts/master_system_prompt.local.txt — "
+        "применяется со следующего запроса. "
+        "Пожелания к миру задаются отдельно при создании героя."
+    )
+    page.addWidget(window.prompt_notice)
     window.ai_provider = QComboBox()
     window.ai_provider.addItem("Локально: Ollama · без оплаты API", "local")
     window.ai_provider.addItem("Облако: OpenAI API · отдельный доступ", "openai")
@@ -152,6 +159,9 @@ def install_narrator_panels(window):
     window.ollama.intent_ready.connect(lambda intent: accept_intent(window, intent))
     window.ollama.proposal_ready.connect(lambda proposal: accept_proposal(window, proposal))
     window.ollama.profile_ready.connect(lambda profile: accept_profile(window, profile))
+    window.ollama.challenge_ready.connect(
+        lambda category: accept_challenge_suggestion(window, category)
+    )
     window.ollama.progress.connect(window.narrator_status.setText)
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
@@ -198,7 +208,7 @@ def provider_changed(window):
             "Ключи и баланс приложение не изменяет."
         )
         if not window.cloud_model.text().strip():
-            window.cloud_model.setText("deepseek/deepseek-chat-v3.1")
+            window.cloud_model.setText("deepseek/deepseek-v4-pro-0813")
     else:
         window.cloud_notice.setText(
             "Подписка ChatGPT Plus не включает API. Возможны отдельные расходы/лимиты. "
@@ -402,7 +412,7 @@ def request_narration(window):
     window.ollama.narrate(
         window._narrator_frame,
         window.local_model.currentText(),
-        player_message=turn.action if turn and turn.intent else "",
+        player_message=turn.action if turn and (turn.intent or turn.challenge) else "",
         dialogue_actor=actor,
         history=recent_dialogue(window._session),
         clarify=bool(turn and turn.intent == "уточнить намерение"),
@@ -451,23 +461,20 @@ def request_chat(window, text):
             accept_intent(
                 window, Interpretation("action", command, "", "", source="local-fallback")
             )
+        elif (
+            window.ollama.cloud
+            and window.local_model.currentText().startswith("deepseek/")
+            and brief.get("mode") == "scene"
+            and not simple_action(text)
+        ):
+            from rpg_vkr.domain.challenge import needs_model_review
+
+            if needs_model_review(text):
+                window.ollama.suggest_challenge(frame, window.local_model.currentText(), text)
+            else:
+                continue_story(window, text)
         else:
-            window.ollama.develop(
-                build_frame(window._session),
-                window.local_model.currentText(),
-                text,
-                memory=memory,
-                campaign=campaign,
-                history=[
-                    {
-                        "player": t.action,
-                        "result": t.text[:1500],
-                        "source": t.scene.version if t.scene else "rules",
-                        "actor_id": t.actor_id or "",
-                    }
-                    for t in window._session.turns[-3:]
-                ],
-            )
+            continue_story(window, text)
         return True
     window.ollama.interpret(
         build_frame(window._session),
@@ -480,13 +487,49 @@ def request_chat(window, text):
     return True
 
 
+def continue_story(window, text):
+    from rpg_vkr.storage.knowledge import retrieve
+
+    window.ollama.develop(
+        build_frame(window._session),
+        window.local_model.currentText(),
+        text,
+        memory=retrieve(window._session, text),
+        campaign=campaign_context(window._session, last_interlocutor(window._session)),
+        history=[
+            {
+                "player": t.action,
+                "result": t.text[:1500],
+                "source": t.scene.version if t.scene else "rules",
+                "actor_id": t.actor_id or "",
+            }
+            for t in window._session.turns[-3:]
+        ],
+    )
+
+
+def accept_challenge_suggestion(window, category):
+    if (
+        window._chat_text is None
+        or window._narrating_session is not window._session
+        or window._narrating_index != len(window._session.turns)
+        or not window.enable_local_narrator.isChecked()
+    ):
+        return
+    text = window._chat_text
+    if category == "none":
+        continue_story(window, text)
+    else:
+        request_challenge(window, text, suggested_kind=category)
+
+
 def request_local_actions(window, text):
     """Explicit mechanics work even when the selected model/key is unavailable."""
     from rpg_vkr.narrative.actions import action_plan
 
     plan = action_plan(window._session, text)
     if plan is None:
-        return False
+        return request_challenge(window, text)
     cancel_narration(window)
     if plan.clarification:
         window.narrator_status.setText(plan.clarification)
@@ -512,6 +555,43 @@ def request_local_actions(window, text):
     window._refresh_character()
     window._render_journal()
     window.narrator_status.setText("Действие рассчитано и сохранено в сессии.")
+    if window.enable_local_narrator.isChecked() and window.ai_chat.isChecked():
+        request_narration(window)
+    return True
+
+
+def request_challenge(window, text, *, suggested_kind=None):
+    from rpg_vkr.domain.challenge import CHALLENGES, proposed_challenge
+    from rpg_vkr.domain.character import ABILITY_NAMES
+
+    kind = suggested_kind or proposed_challenge(text)
+    if kind is None:
+        return False
+    cancel_narration(window)
+    if window._session.combat.active or window._session.world.hp <= 0:
+        window.narrator_status.setText(
+            "Эта проверка недоступна во время схватки или после выбытия."
+        )
+        return True
+    ability, difficulty, purpose = CHALLENGES[kind]
+    if not window._confirm(
+        f"Чтобы {purpose}, предлагается проверка: {ABILITY_NAMES[ability]}, "
+        f"сложность {difficulty}. Бросить кубик?\n\n"
+        "Проверяется попытка; награды, вещи и переходы требуют отдельных правил."
+    ):
+        window.narrator_status.setText("Бросок отменён. Ваш текст остался в поле ввода.")
+        return True
+    try:
+        window._session.submit_challenge(text, suggested_kind=suggested_kind)
+    except ValueError as error:
+        window.narrator_status.setText(str(error))
+        return True
+    window.action_input.remember(text)
+    window.action_input.clear()
+    window._dirty = True
+    window._refresh_character()
+    window._render_journal()
+    window.narrator_status.setText("Проверка рассчитана. Итог и бросок сохранены в сессии.")
     if window.enable_local_narrator.isChecked() and window.ai_chat.isChecked():
         request_narration(window)
     return True
@@ -630,7 +710,15 @@ def accept_proposal(window, proposal, *, source=None):
             or (getattr(window.ollama, "response_model", "") if window.ollama.cloud else "")
             or window.local_model.currentText()
         )
-        window._session.submit_scene(text, proposal, source, base_turn=window._narrating_index)
+        window._session.submit_scene(
+            text,
+            proposal,
+            source,
+            base_turn=window._narrating_index,
+            instruction_hash=window.ollama.instruction_hash
+            if source != "local-clarification"
+            else "",
+        )
     except (ValueError, TypeError) as error:
         failed(window, str(error))
         return
@@ -782,6 +870,11 @@ def refresh_narrator_panels(window):
         + frame.confirmed_result
         + "\n\nПоследние известные изменения:\n"
         + "\n".join(frame.memories)
+        + (
+            "\n\nПожелания к миру (не факты):\n" + session.campaign.world_brief
+            if session.campaign.world_brief
+            else ""
+        )
     )
     if window.narrator_context.toPlainText() != context:
         window.narrator_context.setPlainText(context)
