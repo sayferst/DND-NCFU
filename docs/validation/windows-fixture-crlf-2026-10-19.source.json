@@ -1,0 +1,15 @@
+{
+  "source": "User-pasted Windows pytest report, 2026-10-19",
+  "source_file": "Вставленный текст.txt",
+  "sha256": "8ddcdb256b43854750844339e73fa91654d9a7196691504c1bd4aa1cd5bccd12",
+  "bytes": 8588,
+  "reported_tests": {
+    "passed": 637,
+    "failed": 1,
+    "duration_seconds": 27.18
+  },
+  "diagnosis": "Git core.autocrlf=true converts LF to CRLF in the textual fixture. The transformed fixture hash exactly equals the reported mismatch.",
+  "expected_fixture_sha256": "e00a333d44929de6d5e3ff6a87c70ca3e1b1f9704f55554ecaf2cb59bed94238",
+  "reported_and_reproduced_crlf_sha256": "b1d9736c8d31f59f331da4e74ee2850f7f211488b2bbd6ff59f9f1e5b1d420f2",
+  "runtime_changes": "None; fixture bytes and original provenance checksum remain unchanged."
+}

@@ -1,0 +1,68 @@
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 638 items
+
+tests\test_character.py ........................                                                                                                                     [  3%]
+tests\test_character_dialog.py ...                                                                                                                                   [  4%]
+tests\test_chat_intents.py ...................                                                                                                                       [  7%]
+tests\test_combat.py .......................                                                                                                                         [ 10%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 13%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 13%]
+tests\test_conversation_revision.py ........................                                                                                                         [ 17%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 18%]
+tests\test_dialogue.py .............                                                                                                                                 [ 20%]
+tests\test_dice.py ...                                                                                                                                               [ 21%]
+tests\test_environment.py ...                                                                                                                                        [ 21%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 23%]
+tests\test_free_cloud.py .........                                                                                                                                   [ 25%]
+tests\test_inspection.py ..............................                                                                                                              [ 29%]
+tests\test_launch.py ...                                                                                                                                             [ 30%]
+tests\test_local_narrator.py .............................................................                                                                           [ 39%]
+tests\test_master_campaign.py ..........................                                                                                                             [ 44%]
+tests\test_master_language_profiles.py ........                                                                                                                      [ 45%]
+tests\test_mechanics_before_prose.py ....................................F...                                                                                        [ 51%]
+tests\test_offline.py ..........                                                                                                                                     [ 53%]
+tests\test_plain_master.py .........................                                                                                                                 [ 57%]
+tests\test_presentation.py .................                                                                                                                         [ 59%]
+tests\test_progression.py ......................................                                                                                                     [ 65%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 67%]
+tests\test_save_migration.py ..........                                                                                                                              [ 69%]
+tests\test_save_slots.py ....................                                                                                                                        [ 72%]
+tests\test_scene_director.py ..............................                                                                                                          [ 76%]
+tests\test_session.py ....................                                                                                                                           [ 80%]
+tests\test_story_conversation_quality.py ................                                                                                                            [ 82%]
+tests\test_trade_context.py .........                                                                                                                                [ 84%]
+tests\test_window.py .......................                                                                                                                         [ 87%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 89%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 92%]
+tests\test_world.py ..............................                                                                                                                   [ 97%]
+tests\test_world_memory.py ..................                                                                                                                        [100%]
+
+================================================================================ FAILURES =================================================================================
+___________________________________________________________ test_real_v15_fixture_is_not_reparsed_or_rewritten ____________________________________________________________
+
+tmp_path = WindowsPath('C:/Users/Sagro/AppData/Local/Temp/pytest-of-Sagro/pytest-26/test_real_v15_fixture_is_not_r0')
+
+    def test_real_v15_fixture_is_not_reparsed_or_rewritten(tmp_path):
+        root = Path(__file__).parent / "fixtures"
+        raw = (root / "save-v15.json").read_bytes()
+        source = json.loads((root / "save-v15.source.json").read_text(encoding="utf-8"))
+>       assert hashlib.sha256(raw).hexdigest() == source["sha256"]
+E       AssertionError: assert 'b1d9736c8d31...9f1e5b1d420f2' == 'e00a333d4492...2cb59bed94238'
+E
+E         - e00a333d44929de6d5e3ff6a87c70ca3e1b1f9704f55554ecaf2cb59bed94238
+E         + b1d9736c8d31f59f331da4e74ee2850f7f211488b2bbd6ff59f9f1e5b1d420f2
+
+tests\test_mechanics_before_prose.py:260: AssertionError
+========================================================================= short test summary info =========================================================================
+FAILED tests/test_mechanics_before_prose.py::test_real_v15_fixture_is_not_reparsed_or_rewritten - AssertionError: assert 'b1d9736c8d31...9f1e5b1d420f2' == 'e00a333d4492...2cb59bed94238'
+===================================================================== 1 failed, 637 passed in 27.18s ======================================================================
+Проверка не прошла. Сохраните текст ошибки.
+строка:20 знак:32
++ ... ITCODE -ne 0) { throw 'Проверка не прошла. Сохраните текст ошибки.' }
++                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Проверка не про...е текст ошибки.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Проверка не прошла. Сохраните текст ошибки.

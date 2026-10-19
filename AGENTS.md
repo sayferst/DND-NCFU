@@ -602,3 +602,27 @@ linux-language-labels-final и linux-language-canon-final сохранены.
 Ключей API в окружении нет; настоящий облачный inference/Windows ожидаются.
 Новых зависимостей/плагинов/дообучения/научного A/B-результата нет. После задачи
 обязательны PowerShell pull/check/run наD: с остановкой при ошибках.
+
+
+## Исправление контрольной суммы Windows, 2026-10-19
+
+Прислано637passed/1failed: byte-hash fixture15 наWindows отличается из-за Git
+core.autocrlf, а не из-за нового формата игры. LF-хеш e00a333d…94238 и
+CRLF-хеш b1d9736c…20f2 точно воспроизведены. Не менять provenance-хеш,
+не ослаблять проверку и не переписывать исходные fixtures ради прохождения.
+
+- .gitattributes задаёт `tests/fixtures/*.json -text`: эталонные байты сохраняются
+  независимо от ОС и настроек Git. Не менять глобальный core.autocrlf пользователя.
+- После получения этого правила в старойWindows-копии однократно восстановить
+  именно `tests/fixtures` изHEAD. Не восстанавливать весь checkout и не трогать
+  D:\Projects\DND-NCFU-data\saves. Выдать команду в обычном блоке pull/check/run.
+- tests/test_fixture_git_checkout.py использует настоящий временный Git-репозиторий:
+  воспроизводит старую CRLF-выдачу и проверяет byte-identical checkout/restore
+  с реальным .gitattributes. Это проверка настроек Git наLinux, не запускWindows.
+- Исходный вывод пользователя сохранён побайтно в
+  docs/validation/windows-fixture-crlf-2026-10-19.txt с отдельным SOURCE-хешем;
+  для него также запрещено изменение строк. Исторические логи не переписывать.
+
+Полный scripts/check.py:639passed,0failed/skipped за19.64с, pip/Ruff успешны,
+95Python-файлов. Runtime/JSON16/правила/зависимости прежние. ПовторWindows и
+доступ OpenRouter после браузерной проверки ожидаются; не обещать успехAPI.

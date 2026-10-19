@@ -1,0 +1,5 @@
+# Immutable test fixtures: checkout must preserve the original bytes and SHA-256.
+tests/fixtures/*.json -text
+
+# Preserve the Windows report exactly as supplied, including CRLF line endings.
+docs/validation/windows-fixture-crlf-2026-10-19.txt -text

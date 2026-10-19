@@ -468,3 +468,24 @@ tests/test_mechanics_before_prose.py + tests/test_free_cloud.py:49новых с�
 сравнить реальное время/осмысленность, записать фактическую модель. При429 выбрать
 локальный режим/подождать, не пополнять счёт автоматически. Старая ячейка после
 чтения не переписывается до явного сохранения; резервная копия наD: обязательна.
+
+
+## Windows SHA-256/CRLF — исправление 1N.4
+
+Полученный результатWindows:637passed/1failed из638 за27.18с. Причина точно
+воспроизведена: Git checkout меняет LF наCRLF и тем самым byte-hash fixture15.
+Проверка хеша сохранена, эталон/provenance не изменены. .gitattributes -text
+сохраняет байты всех JSON-fixtures. СтарымWindows-копиям нужен одноразовый
+`git restore --source=HEAD --worktree -- tests/fixtures` после pull.
+
+tests/test_fixture_git_checkout.py: настоящий tempGit с core.autocrlf=true,
+core.eol=crlf. До правила — отличающийся хеш и CRLF; после — исходные байты/хеш.
+Проверено восстановление старой CRLF-копии, без пользовательских сохранений.
+Вместе с прежним тестом fixture15:2passed за0.22с. Итоговый полный scripts/check.py:
+**639passed,0failed/skipped,19.64с**, pip/Ruff успешны,95Python-файлов.
+Raw: docs/validation/linux-fixture-crlf-fix-2026-10-19.txt.
+
+Следующий ручной шаг: получить обновление, восстановить tests/fixtures и снова
+выполнить scripts/check.py наWindows. Ожидаются639passed и запуск окна. Доступ
+OpenRouter нужно проверить после успешной браузерной проверки сайта; скриншот
+её ошибки не является результатом запроса кAPI или проверкой качества мастера.

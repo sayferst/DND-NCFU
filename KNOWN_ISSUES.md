@@ -1,5 +1,11 @@
 # Известные ограничения
 
+Windows CRLF-дефект эталона исправлен в .gitattributes: хеш/байты fixture15 прежние.
+После pull старой копии нужно однократно восстановить tests/fixtures изHEAD;
+команда есть в docs/CLOUD_MASTER_AND_COMBAT.md. Linux639passed, повторWindows
+ожидается. Пользовательский сайтOpenRouter пока не завершил браузерную проверку;
+настоящий API-доступ/генерация не подтверждены.
+
 Актуально для1N.4: JSON16/reader1–16, Scene5, Narration11. См.
 docs/CLOUD_MASTER_AND_COMBAT.md. 638автоматических тестов прошли вLinux;
 ручная Windows и настоящее облако с пользовательским ключом не проверены.
