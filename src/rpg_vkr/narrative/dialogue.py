@@ -242,7 +242,8 @@ def dialogue_reply(session, intent):
 
 
 def dialogue_context(session):
-    if not session.turns or not session.turns[-1].dialogue:
+    if not session.turns or not session.turns[-1].dialogue or session.turns[-1].scene:
+        # A scene's prose is not a code-approved answer to feed back as a rule result.
         return None
     turn = session.turns[-1]
     record = turn.dialogue

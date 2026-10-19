@@ -249,7 +249,13 @@ class OllamaClient(QObject):
             history=history,
             confirmed=confirmed,
         )
-        self._story = {"frame": frame, "text": text, "payload": payload, "confirmed": confirmed}
+        self._story = {
+            "frame": frame,
+            "text": text,
+            "payload": payload,
+            "confirmed": confirmed,
+            "previous": list(history),
+        }
         self._start("/api/chat", "story_result" if confirmed else "director", payload)
 
     def _retry_story(self, kind, reason):
@@ -620,14 +626,38 @@ class OllamaClient(QObject):
                 self._report(kind, model, raw, data, "OK")
                 self.profile_ready.emit(profile)
             elif kind in {"director", "story_result"}:
-                from rpg_vkr.narrative.story import story_proposal, story_text
+                from rpg_vkr.narrative.story import payload_context, story_proposal, story_text
+                from rpg_vkr.narrative.story_quality import check_story_quality
 
                 if kind == "director":
-                    proposal = story_proposal(data, self._frame, self._story["text"])
-                    self._report(kind, model, raw, data, "OK")
+                    proposal = story_proposal(
+                        data,
+                        self._frame,
+                        self._story["text"],
+                        context=payload_context(self._story["payload"]),
+                        previous=self._story["previous"],
+                    )
+                    self._report(
+                        kind,
+                        model,
+                        raw,
+                        data,
+                        (
+                            "Формат и ограниченные проверки содержания пройдены; "
+                            "литературное качество не оценено"
+                        ),
+                    )
                     self.proposal_ready.emit(proposal)
                 else:
                     text = story_text(data, confirmed=True)
+                    context = payload_context(self._story["payload"])
+                    check_story_quality(
+                        text,
+                        self._frame,
+                        self._story["text"],
+                        previous=self._story["previous"],
+                        campaign={"hero_description": context.get("hero_description", "")},
+                    )
                     note = Narration(
                         self._frame.turn_index,
                         model,
@@ -635,7 +665,16 @@ class OllamaClient(QObject):
                         self._frame.fingerprint,
                         segments=split_story(text),
                     )
-                    self._report(kind, model, raw, data, "OK")
+                    self._report(
+                        kind,
+                        model,
+                        raw,
+                        data,
+                        (
+                            "Формат и ограниченные проверки содержания пройдены; "
+                            "литературное качество не оценено"
+                        ),
+                    )
                     self.narration_ready.emit(note)
             elif kind == "intent":
                 intent = parse_interpretation(data)

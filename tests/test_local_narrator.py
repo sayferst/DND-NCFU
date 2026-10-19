@@ -182,7 +182,28 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                         "Стражник наблюдает за дорогой, а женщина собирает яблоки."
                     )
                     response["message"]["content"] = prose
-                    if mode == "plain_cloud":
+                    if mode == "plain_probe":
+                        from rpg_vkr.narrative.story import payload_context
+
+                        context = payload_context(request_body)
+                        name = context["turn_brief"].get("public_name", "")
+                        current = context["player_message"]
+                        if "нужна ли" in current:
+                            prose = (
+                                f"Женщина переставляет корзину. «Я {name}. "
+                                "Помогите собрать яблоки, пожалуйста: они катятся к канаве»."
+                            )
+                        elif "зовут" in current:
+                            prose = f"«{name}», — повторяет женщина, придерживая платок у виска."
+                        elif "дела" in current:
+                            prose = (
+                                "«Скверно: корзина подвела, теперь яблоки в пыли. "
+                                "Но я справлюсь», — говорит женщина, стряхивая песок с ладони."
+                            )
+                        else:
+                            prose = "Женщина оборачивается на ваши шаги. «Здравствуйте. Вы ко мне?»"
+                        response["message"]["content"] = prose
+                    elif mode == "plain_cloud":
                         requests[-1][1]["_test_auth_ok"] = (
                             self.headers.get("Authorization") == "Bearer fake-test-key"
                         )
@@ -194,6 +215,18 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                                 }
                             ]
                         }
+                    elif mode == "plain_semantic_bad" or (
+                        count == 1 and mode == "plain_semantic_first"
+                    ):
+                        from pathlib import Path
+
+                        fixture = (
+                            Path(__file__).resolve().parents[1]
+                            / "docs/validation/windows-qwen-repetition-2026-10-19.json"
+                        )
+                        response["message"]["content"] = json.loads(
+                            fixture.read_text(encoding="utf-8")
+                        )["response"]
                     elif mode == "plain_always_bad":
                         response["message"]["content"] = "走近 గ్రామం"
                     elif count == 1 and mode == "plain_empty_first":
@@ -569,7 +602,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-8"
+    assert new.prompt_version == "narrator-prose-9"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):

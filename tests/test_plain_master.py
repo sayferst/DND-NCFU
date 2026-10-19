@@ -45,7 +45,7 @@ def test_real_http_prose_and_single_repair_after_hero_creation(window, qt_app, m
         wait_for(qt_app, lambda: not window.ollama.busy)
         assert len(window._session.turns) == 1
         assert len(requests) == 1 + calls
-        assert window._session.turns[0].scene.version == "scene-director-2"
+        assert window._session.turns[0].scene.version == "scene-director-3"
         assert (window._session.world, window._session.dice.checkpoint()) == before
         for _, body in requests[1:]:
             assert "format" not in body
@@ -215,7 +215,7 @@ def test_real_probe_script_with_synthetic_http_does_not_touch_saves(tmp_path):
     import sys
 
     root = Path(__file__).resolve().parents[1]
-    with local_server(mode="plain_ok") as (url, requests):
+    with local_server(mode="plain_probe") as (url, requests):
         result = subprocess.run(
             [
                 sys.executable,
@@ -239,8 +239,8 @@ def test_real_probe_script_with_synthetic_http_does_not_touch_saves(tmp_path):
         assert len(reports) == 1
         report = json.loads(reports[0].read_text(encoding="utf-8"))
         assert report["protocol_passed"]
-        assert len(report["cases"]) == 2 and all(c["accepted"] for c in report["cases"])
-        assert len([r for r in requests if r[0] == "/api/chat"]) == 2
+        assert len(report["cases"]) == 5 and all(c["accepted"] for c in report["cases"])
+        assert len([r for r in requests if r[0] == "/api/chat"]) == 4
         assert not (tmp_path / "saves").exists()
 
 

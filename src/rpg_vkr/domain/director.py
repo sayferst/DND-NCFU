@@ -8,7 +8,7 @@ from rpg_vkr.domain.campaign import plain
 from rpg_vkr.domain.combat import ACTORS
 from rpg_vkr.domain.world import LOCATIONS
 
-FACT_KEYS = {"sensory_detail", "motive", "concern", "rumour", "occupation_detail"}
+FACT_KEYS = {"sensory_detail", "motive", "concern", "rumour", "occupation_detail", "public_name"}
 SUBJECTS = {*LOCATIONS, "guard", "villager", "merchant"}
 
 
@@ -42,6 +42,11 @@ class StoryFact:
     def __post_init__(self):
         if self.subject not in SUBJECTS or self.key not in FACT_KEYS:
             raise ValueError("Unsupported narrative fact")
+        if self.key == "public_name" and (
+            self.subject not in {"guard", "villager", "merchant"}
+            or not re.fullmatch(r"[А-ЯЁ][а-яё]{1,29}(?:-[А-ЯЁ][а-яё]{1,29})?", self.value)
+        ):
+            raise ValueError("Invalid public NPC name")
         plain(self.value, 240)
         if not re.search(r"[А-Яа-яЁё]", self.value) or re.search(
             r"\d|https?://|<|>|\b(?:урон|золота|золотых|опыта|здоровья)\b", self.value, re.I
@@ -99,7 +104,7 @@ class SceneRecord:
     location: str
     model: str
     proposal: Proposal
-    version: str = "scene-director-2"
+    version: str = "scene-director-3"
 
     def __post_init__(self):
         if type(self.base_turn) is not int or not 0 <= self.base_turn < 2000:
@@ -107,6 +112,7 @@ class SceneRecord:
         if self.location not in LOCATIONS or self.version not in {
             "scene-director-1",
             "scene-director-2",
+            "scene-director-3",
         }:
             raise ValueError("Invalid scene context")
         if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
@@ -157,7 +163,7 @@ def validate_scene(record, turns, location, combat, hp):
         if (fact.subject, fact.key) in current and current[fact.subject, fact.key] != fact.value:
             raise ValueError("Мастер попытался заменить уже установленный факт.")
     text = record.proposal.narration
-    if record.version == "scene-director-2":
+    if record.version in {"scene-director-2", "scene-director-3"}:
         from rpg_vkr.narrative.story import validate_story_text
 
         validate_story_text(text)

@@ -317,12 +317,24 @@ def request_chat(window, text):
     window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
     window.statusBar().showMessage("ИИ понимает сообщение…")
     if window.director_mode.isChecked():
+        from rpg_vkr.domain.director import Proposal
         from rpg_vkr.narrative.intent import Interpretation
-        from rpg_vkr.narrative.story import mechanical_request
+        from rpg_vkr.narrative.story import master_question, mechanical_request
+        from rpg_vkr.narrative.turn_brief import turn_brief
         from rpg_vkr.storage.knowledge import retrieve
 
+        frame = build_frame(window._session)
+        memory = retrieve(window._session, text)
+        campaign = campaign_context(window._session, last_interlocutor(window._session))
+        brief = turn_brief(
+            frame, text, memory=memory, campaign=campaign, master=master_question(text)
+        )
         command = mechanical_request(text)
-        if command:
+        if not command and brief.get("clarification"):
+            accept_proposal(
+                window, Proposal("", "", brief["clarification"], ()), source="local-clarification"
+            )
+        elif command:
             accept_intent(
                 window, Interpretation("action", command, "", "", source="local-fallback")
             )
@@ -331,10 +343,15 @@ def request_chat(window, text):
                 build_frame(window._session),
                 window.local_model.currentText(),
                 text,
-                memory=retrieve(window._session, text),
-                campaign=campaign_context(window._session, last_interlocutor(window._session)),
+                memory=memory,
+                campaign=campaign,
                 history=[
-                    {"player": t.action, "result": t.text[:700]} for t in window._session.turns[-2:]
+                    {
+                        "player": t.action,
+                        "result": t.text[:1500],
+                        "source": t.scene.version if t.scene else "rules",
+                    }
+                    for t in window._session.turns[-3:]
                 ],
             )
         return True
@@ -444,7 +461,7 @@ def accept_intent(window, intent, profile=None):
         request_narration(window)
 
 
-def accept_proposal(window, proposal):
+def accept_proposal(window, proposal, *, source=None):
     if (
         window._chat_text is None
         or window._narrating_session is not window._session
@@ -457,7 +474,7 @@ def accept_proposal(window, proposal):
         return
     text = window._chat_text
     try:
-        source = window.local_model.currentText()
+        source = source or window.local_model.currentText()
         window._session.submit_scene(text, proposal, source, base_turn=window._narrating_index)
     except (ValueError, TypeError) as error:
         failed(window, str(error))

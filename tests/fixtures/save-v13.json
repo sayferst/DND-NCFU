@@ -1,0 +1,179 @@
+{
+  "schema_version": 13,
+  "saved_at": "2026-10-19T02:50:13.348285+00:00",
+  "session": {
+    "campaign": {
+      "world_id": "b5786857-630e-4ab7-a910-9b8dfdecae6c",
+      "hero_id": "618505cc-9595-4499-8c59-38d3fbbeec90",
+      "raw_player_description": "",
+      "npc_profiles": [],
+      "version": "campaign-1"
+    },
+    "memory": {
+      "version": "world-memory-1",
+      "base_turn": 0,
+      "baseline": {
+        "actor.boar.disposition": "neutral",
+        "actor.boar.hp": 12,
+        "actor.guard.disposition": "neutral",
+        "actor.guard.hp": 18,
+        "actor.merchant.disposition": "neutral",
+        "actor.merchant.hp": 12,
+        "actor.villager.disposition": "neutral",
+        "actor.villager.hp": 8,
+        "actor.wolf.disposition": "hostile",
+        "actor.wolf.hp": 10,
+        "combat.active": null,
+        "combat.rounds": 0,
+        "combat.surprise": false,
+        "hero.charisma": 8,
+        "hero.constitution": 13,
+        "hero.dexterity": 12,
+        "hero.intelligence": 10,
+        "hero.name": "Путана",
+        "hero.strength": 14,
+        "hero.wisdom": 15,
+        "progress.class_id": "legacy",
+        "progress.level": 1,
+        "progress.xp": 0,
+        "training.charisma": 0,
+        "training.constitution": 0,
+        "training.dexterity": 0,
+        "training.intelligence": 0,
+        "training.strength": 0,
+        "training.wisdom": 0,
+        "world.bandages": 1,
+        "world.basket": 0,
+        "world.explored": false,
+        "world.gold": 10,
+        "world.hp": 12,
+        "world.location": "gate",
+        "world.market_known": false,
+        "world.max_hp": 12,
+        "world.quest": "available",
+        "world.shop_gold": 20,
+        "world.shop_stock": 3,
+        "world.trading": false
+      },
+      "events": [
+        {
+          "turn_index": 1,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [],
+          "before_hash": "5cdc77acb90a77d2b341832e901c0d6051be6948b56b6b1da1b8d66fdc575ecb",
+          "after_hash": "5cdc77acb90a77d2b341832e901c0d6051be6948b56b6b1da1b8d66fdc575ecb"
+        }
+      ]
+    },
+    "narrations": [
+      {
+        "turn_index": 1,
+        "model": "qwen3:1.7b",
+        "text": "Вы подходите к ней, чувствуя, как тянет вас в нечто большее. Она смотрит на вас с непривычной внимательностью, но не обращает на вас внимания. Взгляд её скользит по вашему мунданию, где лежит бинт и нож.\n\n— Что-то случилось? — спрашивает она, наконец, поднимая голову. В её голосе не хранится прежняя уверенность.\n\nВы замолчите, не зная, что сказать. В этом месте, в тишине деревни, вы чувствуете, как тянет вас в нечто большее.",
+        "context_hash": "e1a8db3395259ebc167f7654dca5bec5a54aded406fde1e61bded83dd3474baf",
+        "prompt_version": "narrator-prose-8",
+        "segments": [
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "Вы подходите к ней, чувствуя, как тянет вас в нечто большее. Она смотрит на вас с непривычной внимательностью, но не обращает на вас внимания. Взгляд её скользит по вашему мунданию, где лежит бинт и нож.\n\n— Что-то случилось? — спрашивает она, наконец, поднимая голову. В её голосе не хранится прежняя уверенность.\n\nВы замолчите, не зная, что сказать. В этом месте, в тишине деревни, вы чувствуете, как тянет вас в нечто большее."
+          }
+        ]
+      }
+    ],
+    "seed": 42,
+    "character": {
+      "name": "Путана",
+      "strength": 14,
+      "dexterity": 12,
+      "constitution": 13,
+      "intelligence": 10,
+      "wisdom": 15,
+      "charisma": 8
+    },
+    "world": {
+      "location": "gate",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 10,
+      "bandages": 1,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "legacy",
+      "initial": null,
+      "events": []
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "neutral"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "neutral"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": null,
+      "surprise": false,
+      "rounds": 0
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "спросить, нужна ли ей помощь, а заодно узнать ее имя",
+        "speaker": "Рассказчик",
+        "text": "Вы подходите к ней, чувствуя, как тянет вас в нечто большее. Она смотрит на вас с непривычной внимательностью, но не обращает на вас внимания. Взгляд её скользит по вашему мунданию, где лежит бинт и нож.\n\n— Что-то случилось? — спрашивает она, наконец, поднимая голову. В её голосе не хранится прежняя уверенность.\n\nВы замолчите, не зная, что сказать. В этом месте, в тишине деревни, вы чувствуете, как тянет вас в нечто большее.",
+        "roll": null,
+        "check": null,
+        "actor_id": null,
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": null,
+        "meaning": null,
+        "player_name": "Путана",
+        "inspection": null,
+        "intent_source": "model",
+        "scene": {
+          "base_turn": 0,
+          "location": "gate",
+          "model": "qwen3:1.7b",
+          "proposal": {
+            "mechanical_command": "",
+            "focus_id": "",
+            "narration": "Вы подходите к ней, чувствуя, как тянет вас в нечто большее. Она смотрит на вас с непривычной внимательностью, но не обращает на вас внимания. Взгляд её скользит по вашему мунданию, где лежит бинт и нож.\n\n— Что-то случилось? — спрашивает она, наконец, поднимая голову. В её голосе не хранится прежняя уверенность.\n\nВы замолчите, не зная, что сказать. В этом месте, в тишине деревни, вы чувствуете, как тянет вас в нечто большее.",
+            "facts": []
+          },
+          "version": "scene-director-2"
+        }
+      }
+    ]
+  }
+}

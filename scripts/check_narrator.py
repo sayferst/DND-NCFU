@@ -12,10 +12,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from rpg_vkr.application import Session  # noqa: E402
 from rpg_vkr.domain.campaign import Campaign  # noqa: E402
-from rpg_vkr.domain.character import Character  # noqa: E402
+from rpg_vkr.domain.character import Character
+from rpg_vkr.domain.director import Proposal
 from rpg_vkr.narrative.context import build_frame  # noqa: E402
+from rpg_vkr.narrative.dialogue import last_interlocutor  # noqa: E402
 from rpg_vkr.narrative.master import campaign_context  # noqa: E402
-from rpg_vkr.narrative.story import repair_payload, story_payload, story_proposal  # noqa: E402
+from rpg_vkr.narrative.records import PROMPT_VERSION  # noqa: E402
+from rpg_vkr.narrative.story import (  # noqa: E402
+    payload_context,
+    repair_payload,
+    story_payload,
+    story_proposal,
+)
 from rpg_vkr.storage.knowledge import retrieve  # noqa: E402
 
 
@@ -58,7 +66,9 @@ def main():
         "run_id": datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ"),
         "platform": platform.system(),
         "model": args.model,
-        "purpose": "real transport/protocol test, not a literary quality score",
+        "seed": 42,
+        "prompt_version": PROMPT_VERSION,
+        "purpose": "sequential dialogue and heuristic content checks, not a literary quality score",
         "cases": [],
     }
 
@@ -86,27 +96,56 @@ def main():
             ),
         )
         okay = True
-        for text in ("осмотрюсь, где я", "подойду к девушке и спрошу, как у нее дела"):
+        for text in (
+            "подойду",
+            "подойду к девушке",
+            "спросить, как у нее дела",
+            "спросить, нужна ли ей помощь, а заодно узнать ее имя",
+            "как тебя зовут?",
+        ):
             case = {"input": text, "attempts": []}
             report["cases"].append(case)
+            history = [
+                {
+                    "player": t.action,
+                    "result": t.text,
+                    "source": t.scene.version if t.scene else "rules",
+                }
+                for t in session.turns[-3:]
+            ]
             payload = story_payload(
                 build_frame(session),
                 args.model,
                 text,
                 memory=retrieve(session, text),
-                campaign=campaign_context(session),
+                campaign=campaign_context(session, last_interlocutor(session)),
+                history=history,
             )
+            context = payload_context(payload)
+            case["brief"] = context["turn_brief"]
+            if context["turn_brief"].get("clarification"):
+                proposal = Proposal("", "", context["turn_brief"]["clarification"], ())
+                session.submit_scene(
+                    text, proposal, "local-clarification", base_turn=len(session.turns)
+                )
+                case["accepted"] = True
+                case["local_clarification"] = True
+                print("\nИгрок: " + text + "\nМастер: " + proposal.narration, flush=True)
+                continue
             for attempt in range(2):
                 answer = request("/api/chat", payload)
                 raw = answer.get("message", {}).get("content", "")
                 result = {
                     "attempt": attempt + 1,
+                    "request": payload,
                     "content": raw[:6000],
                     "done_reason": answer.get("done_reason"),
                 }
                 case["attempts"].append(result)
                 try:
-                    proposal = story_proposal(answer, build_frame(session), text)
+                    proposal = story_proposal(
+                        answer, build_frame(session), text, context=context, previous=history
+                    )
                     session.submit_scene(text, proposal, args.model, base_turn=len(session.turns))
                     result["validation"] = "accepted"
                     print("\nИгрок: " + text + "\nМастер: " + proposal.narration, flush=True)
@@ -127,7 +166,7 @@ def main():
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("\nОтчёт: " + str(path), flush=True)
     print(
-        "Протокол прошёл проверку. Оцените содержание ответов выше."
+        "Разговор прошёл ограниченные проверки. Оцените содержание ответов выше."
         if okay
         else "Рассказчик не прошёл реальную проверку. Ошибка: " + report.get("error", "см. отчёт"),
         flush=True,

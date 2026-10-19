@@ -32,7 +32,7 @@ class CampaignIndex:
         def dump(value):
             return json.dumps(value, ensure_ascii=False)
 
-        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (13, dump(session.to_dict())))
+        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (14, dump(session.to_dict())))
         self.db.execute(
             "INSERT INTO entities VALUES (?,?,?,?)",
             ("hero", "hero", self.location, dump(asdict(session.character))),
@@ -107,16 +107,21 @@ class CampaignIndex:
         # Matching old events supplement the last turns, rather than sending the whole journal.
         seen = set()
         for pattern in patterns:
-            for turn, player, value in self.db.execute(
+            for turn, player, value, source in self.db.execute(
                 """
-                SELECT turn,player,result FROM events WHERE player LIKE ? OR result LIKE ?
+                SELECT turn,player,result,source FROM events WHERE player LIKE ? OR result LIKE ?
                 ORDER BY turn DESC LIMIT 2""",
                 (pattern, pattern),
             ):
                 if turn not in seen:
                     seen.add(turn)
                     result["events"].append(
-                        {"turn": turn, "player": player[:180], "result": value[:500]}
+                        {
+                            "turn": turn,
+                            "player": player[:180],
+                            "source": source,
+                            **({"result": value[:500]} if source == "rules" else {}),
+                        }
                     )
                 if len(result["events"]) >= 4:
                     break
@@ -188,6 +193,10 @@ def restore_session(path):
     with sqlite3.connect(path.as_uri() + "?mode=ro", uri=True) as db:
         db.execute("PRAGMA trusted_schema=OFF")
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
-        if len(values) != 1 or values[0][0] not in (12, 13) or len(values[0][1]) > 4 * 1024 * 1024:
+        if (
+            len(values) != 1
+            or values[0][0] not in (12, 13, 14)
+            or len(values[0][1]) > 4 * 1024 * 1024
+        ):
             raise ValueError("Invalid campaign snapshot")
         return Session.from_dict(json.loads(values[0][1]), version=values[0][0])

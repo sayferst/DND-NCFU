@@ -1,0 +1,3 @@
+
+Отчёт: docs/validation/qwen-dialogue-probe-2026-10-19/narrator-20261019T025753286453Z.json
+Рассказчик не прошёл реальную проверку. Ошибка: <urlopen error [Errno 111] Connection refused>

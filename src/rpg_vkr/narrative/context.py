@@ -147,6 +147,10 @@ def build_frame(session):
 def recent_dialogue(session):
     """Player words and authoritative outcomes; model prose never becomes a fact."""
     return tuple(
-        {"player_message": turn.action[:200], "confirmed_result": present_turn(turn).story[:350]}
+        {
+            "player_message": turn.action[:200],
+            "confirmed_result": present_turn(turn).story[:350],
+            "source": turn.scene.version if turn.scene else "rules",
+        }
         for turn in session.turns[-3:]
     )

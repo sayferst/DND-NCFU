@@ -4,9 +4,11 @@ import json
 import re
 from copy import deepcopy
 
-from rpg_vkr.domain.director import Proposal, mechanical_commands
+from rpg_vkr.domain.director import Proposal, StoryFact, mechanical_commands
 from rpg_vkr.narrative.routing import addressed_to_master, simple_action
-from rpg_vkr.narrative.speech import explicit_target, speech_details
+from rpg_vkr.narrative.speech import speech_details
+from rpg_vkr.narrative.story_quality import check_story_quality, spoken
+from rpg_vkr.narrative.turn_brief import turn_brief
 
 STORY_CONTRACT = (
     "Ты Мастер одиночной фэнтези-RPG. Пиши литературный текст по-русски, без JSON, "
@@ -48,20 +50,48 @@ def master_question(text):
 
 def story_payload(frame, model, text, *, memory=None, campaign=None, history=(), confirmed=False):
     memory = deepcopy(memory or {})
-    memory.pop("examples", None)  # One concrete task and canon beat multiple competing examples.
+    memory.pop("examples", None)
+    # Raw model prose stays in the journal, never in authoritative world facts.
+    for event in memory.get("events", ()):
+        if event.get("source") != "rules":
+            event.pop("result", None)
     facts = frame.to_dict()
     facts["visible_actors"] = [a.split(":", 1)[0] for a in facts["visible_actors"]]
-    facts["confirmed_result"] = facts["confirmed_result"][:1200]
+    latest_is_scene = bool(
+        history and list(history)[-1].get("source", "").startswith("scene-director-")
+    )
+    if confirmed and not latest_is_scene:
+        facts["confirmed_result"] = facts["confirmed_result"][:1200]
+    else:
+        facts.pop("confirmed_result", None)
+    brief = turn_brief(frame, text, campaign=campaign, memory=memory, master=master_question(text))
+    if brief.get("mode") == "dialogue":
+        facts.pop(
+            "scene", None
+        )  # A conversation needs the speaker's situation, not another panorama.
+        memory["npcs"] = [n for n in memory.get("npcs", ()) if n.get("id") == brief["target_id"]]
+    recent = []
+    for event in list(history)[-3:]:
+        entry = {"player_message": event.get("player", event.get("player_message", ""))[:300]}
+        if event.get("source") == "rules":
+            entry["rules_result"] = event.get("result", event.get("confirmed_result", ""))[:350]
+        elif event.get("source") == "scene-director-3":
+            entry["npc_reply"] = spoken(event.get("result", ""))[:350]
+        recent.append(entry)
     context = {
         "player_message": text,
         "current_scene": facts,
         "hero_description": (campaign or {}).get("hero_description", ""),
         "known_observations": (campaign or {}).get("known_observations", []),
         "memory": memory,
-        "recent_events": list(history)[-2:],
+        "recent_events": recent,
+        "turn_brief": brief,
         "task": "Опиши уже подтверждённый итог без повторного действия."
         if confirmed
-        else "Продолжи сцену в ответ на последнее сообщение игрока.",
+        else (
+            "Ответь на последнее сообщение. Выполни КАЖДУЮ задачу turn_brief.tasks. "
+            "Не копируй прошлый ответ."
+        ),
     }
     if master_question(text):
         context["task"] += " Это вопрос ведущему о наблюдаемом: ответь описанием, не от лица NPC."
@@ -74,6 +104,8 @@ def story_payload(frame, model, text, *, memory=None, campaign=None, history=(),
             "num_ctx": 8192 if len(context["hero_description"]) > 1500 else 4096,
             "num_predict": 650,
             "temperature": 0.45,
+            "repeat_penalty": 1.12,
+            "repeat_last_n": 128,
             "num_gpu": 0,
             "num_thread": 4,
         },
@@ -144,37 +176,38 @@ def validate_story_text(text, *, confirmed=False):
         raise ValueError("Рассказчик назначил неподтверждённый механический результат")
 
 
-def story_proposal(data, frame, player_text):
-    text = story_text(data)
-    master = master_question(player_text)
-    target = None if master else explicit_target(player_text)
-    has_speech = bool(re.search(r"«[^»]+»|(?:^|\n)\s*—\s*\S", text))
-    question = bool(re.search(r"спро|спраш|как.{0,15}дела|привет|здравств", player_text, re.I))
-    from rpg_vkr.domain.combat import ACTORS
-    from rpg_vkr.domain.world import LOCATIONS
+def payload_context(payload):
+    """Read only our own request envelope; model output never controls this brief."""
+    return json.loads(payload["messages"][1]["content"].removesuffix("\n/no_think"))
 
-    visible = {
-        key
-        for key, value in ACTORS.items()
-        if LOCATIONS[value[1]] == frame.location and key in {"guard", "villager", "merchant"}
-    }
-    if target not in visible:
-        target = None
-    if target and question and not has_speech:
-        raise ValueError("NPC должен прямо ответить на вопрос, а не описывать пейзаж")
-    if not has_speech:
-        target = None
-    elif target is None and not master:
-        named = [key for key in visible if ACTORS[key][0].casefold() in text.casefold()]
-        target = named[0] if len(named) == 1 else None
-    return Proposal("", target or "", text, ())
+
+def story_proposal(data, frame, player_text, *, context=None, previous=()):
+    text = story_text(data)
+    context = context or {}
+    master = master_question(player_text)
+    brief = context.get("turn_brief") or turn_brief(frame, player_text, master=master)
+    check_story_quality(
+        text,
+        frame,
+        player_text,
+        brief=brief,
+        previous=previous,
+        campaign={"hero_description": context.get("hero_description", "")},
+    )
+    target = "" if master else brief.get("target_id", "")
+    if not spoken(text):
+        target = ""
+    facts = ()
+    if target and "name" in brief.get("topics", ()) and not brief.get("name_established"):
+        facts = (StoryFact(target, "public_name", brief["public_name"]),)
+    return Proposal("", target, text, facts)
 
 
 def repair_payload(payload, reason):
     result = deepcopy(payload)
     result["messages"][0]["content"] += (
         " Первая попытка отклонена: "
-        + str(reason)[:220]
+        + str(reason)[:900]
         + ". Ответь обычным законченным русским текстом, без игровых команд и JSON."
     )
     result["options"]["num_predict"] = 900

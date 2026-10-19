@@ -37,6 +37,8 @@ def campaign_context(session, target=""):
             )
         ),
         "hero_description": session.campaign.raw_player_description,
+        "world_id": session.campaign.world_id,
+        "interlocutor_id": target,
         "public_npc_facts": {key: getattr(profile, key) for key in PROFILE_FIELDS}
         if profile
         else {},
