@@ -257,7 +257,10 @@ def test_real_v15_fixture_is_not_reparsed_or_rewritten(tmp_path):
     root = Path(__file__).parent / "fixtures"
     raw = (root / "save-v15.json").read_bytes()
     source = json.loads((root / "save-v15.source.json").read_text(encoding="utf-8"))
-    assert hashlib.sha256(raw).hexdigest() == source["sha256"]
+    assert hashlib.sha256(raw).hexdigest() == source["sha256"], (
+        "Fixture bytes changed. For an old CRLF checkout, run: "
+        ".venv\\Scripts\\python.exe scripts\\repair_fixture_checkout.py"
+    )
     slots = SaveSlots(tmp_path)
     (tmp_path / "slot-1.json").write_bytes(raw)
     session = slots.load(1)

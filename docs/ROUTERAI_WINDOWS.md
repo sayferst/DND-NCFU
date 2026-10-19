@@ -66,8 +66,8 @@ Ollama для него не требуется. Игра по-прежнему �
     if ($LASTEXITCODE -ne 0) { throw 'Не удалось переключить ветку.' }
     git pull --ff-only
     if ($LASTEXITCODE -ne 0) { throw 'Обновление не получено. Сохраните текст ошибки.' }
-    git restore --source=HEAD --worktree -- tests/fixtures
-    if ($LASTEXITCODE -ne 0) { throw 'Не удалось обновить эталоны тестов.' }
+    .\.venv\Scripts\python.exe scripts\repair_fixture_checkout.py
+    if ($LASTEXITCODE -ne 0) { throw 'Эталон не восстановлен. Сохраните текст ошибки.' }
 
     .\.venv\Scripts\python.exe scripts\check.py
     if ($LASTEXITCODE -ne 0) { throw 'Проверка не прошла. Сохраните вывод.' }
@@ -75,8 +75,10 @@ Ollama для него не требуется. Игра по-прежнему �
 }
 ```
 
-Новых зависимостей нет. Restore обновляет только эталоны тестов после исправления
-Windows LF/CRLF; пользовательские ячейки лежат отдельно в DND-NCFU-data/saves.
+Новых зависимостей нет. Команда восстановления исправляет только точную CRLF-копию
+эталона тестов после проверки исходного хеша. Иные изменения вызывают остановку.
+Подробности: [исправление эталона Windows](FIXTURE_CHECKOUT_WINDOWS.md).
+Пользовательские ячейки лежат отдельно в DND-NCFU-data/saves.
 Не используйте reset --hard при конфликте с вашими изменениями.
 
 ## 3. Подключение через окно игры

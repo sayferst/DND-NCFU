@@ -155,8 +155,8 @@ Fixture15 создана исходным кодом75280df до правок, �
     if ($LASTEXITCODE -ne 0) { throw 'Не удалось переключить ветку.' }
     git pull --ff-only
     if ($LASTEXITCODE -ne 0) { throw 'Обновление не получено. Сохраните текст ошибки.' }
-    git restore --source=HEAD --worktree -- tests/fixtures
-    if ($LASTEXITCODE -ne 0) { throw 'Не удалось обновить эталонные файлы тестов.' }
+    .\.venv\Scripts\python.exe scripts\repair_fixture_checkout.py
+    if ($LASTEXITCODE -ne 0) { throw 'Эталон не восстановлен. Сохраните текст ошибки.' }
     .\.venv\Scripts\python.exe scripts\check.py
     if ($LASTEXITCODE -ne 0) { throw 'Проверка не прошла. Сохраните текст ошибки.' }
     .\.venv\Scripts\python.exe scripts\run_game.py
@@ -166,10 +166,11 @@ Fixture15 создана исходным кодом75280df до правок, �
 Новых Python-зависимостей нет. Если Git сообщает о ваших локальных изменениях,
 не используйте `reset --hard`: сохраните сообщение для разбора.
 
-Команда `git restore ... tests/fixtures` однократно обновляет эталонные файлы
-автоматических тестов после исправления Windows-переводов строк. Git больше
-не преобразует их байты при скачивании. Игровые ячейки находятся отдельно,
-в `D:\Projects\DND-NCFU-data\saves`.
+Команда `scripts/repair_fixture_checkout.py` проверяет исходный SHA-256 из Git
+и восстанавливает только точную старую CRLF-копию тестового эталона. Произвольные
+изменения останавливают восстановление; повтор безопасен. Подробности:
+[исправление эталона Windows](FIXTURE_CHECKOUT_WINDOWS.md). Игровые ячейки
+находятся отдельно, в `D:\Projects\DND-NCFU-data\saves`.
 
 Для проверки создайте отдельного разведчика и попробуйте подход/осмотр ворот,
 разговор с женщиной, затем отдельную попытку нападения на стражника. Ожидаются

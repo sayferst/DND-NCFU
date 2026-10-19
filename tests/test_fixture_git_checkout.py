@@ -6,11 +6,18 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
 
-def test_windows_git_checkout_preserves_fixture_bytes_and_original_sha256(tmp_path):
+from scripts.repair_fixture_checkout import reference_bytes
+
+
+@pytest.mark.parametrize("existing_crlf", [False, True], ids=["LF-source", "CRLF-source"])
+def test_windows_git_checkout_preserves_fixture_bytes_and_original_sha256(tmp_path, existing_crlf):
     root = Path(__file__).resolve().parents[1]
     relative = "tests/fixtures/save-v15.json"
-    original = (root / relative).read_bytes()
+    # The working copy may still contain CRLF. Keep its strict byte-hash test
+    # separate; construct the filter experiment from the verified committed blob.
+    original = reference_bytes(root)
     source = json.loads((root / "tests/fixtures/save-v15.source.json").read_text(encoding="utf-8"))
     repository = tmp_path / "git checkout"
     repository.mkdir()
@@ -37,7 +44,7 @@ def test_windows_git_checkout_preserves_fixture_bytes_and_original_sha256(tmp_pa
     git("init", "--quiet")
     fixture = repository / relative
     fixture.parent.mkdir(parents=True)
-    fixture.write_bytes(original)
+    fixture.write_bytes(original.replace(b"\n", b"\r\n") if existing_crlf else original)
     git("add", "--", relative)
 
     # Reproduce the exact old defect through checkout, not a mock of Git.
