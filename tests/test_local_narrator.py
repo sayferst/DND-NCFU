@@ -53,7 +53,9 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                 self.send_header("Location", "https://example.invalid/leak")
                 self.end_headers()
                 return
-            if self.path == "/api/tags":
+            if self.path == "/api/version":
+                payload = json.dumps({"version": "local-test"}).encode()
+            elif self.path == "/api/tags":
                 payload = json.dumps(LOCAL_MODELS).encode()
             elif mode == "large":
                 payload = b"x" * (MAX_RESPONSE + 100)
@@ -155,18 +157,12 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                         content = {"intent": "осмотреться", "speech_act": "", "topic": ""}
                 elif mode == "chat_clarify":
                     content = {"narration": "К кому вы обращаетесь?"}
-                if mode == "director" and "mechanical_command" in request_body.get(
-                    "format", {}
-                ).get("properties", {}):
+                if mode == "director":
                     content = {
-                        "mechanical_command": "",
-                        "focus_id": "villager",
-                        "facts": [],
                         "narration": (
                             "Вы подходите к девушке. Жительница придерживает корзину. "
-                            "«Спасибо, держусь. Яблоки рассыпались, "
-                            "а мне ещё на рынок успеть»."
-                        ),
+                            "«Спасибо, держусь. Яблоки рассыпались, а мне ещё на рынок успеть»."
+                        )
                     }
                 if mode == "effects":
                     content["gold"] = 1000
@@ -176,6 +172,44 @@ def local_server(*, mode="ok", delay=0, delay_path="/api/chat"):
                     response["message"]["thinking"] = "Скрытая цепочка рассуждений"
                 elif mode == "empty_content":
                     response["message"]["content"] = ""
+                if mode.startswith("plain_"):
+                    count = sum(path == "/api/chat" for path, _ in requests)
+                    prose = (
+                        "Вы подходите к девушке. Жительница придерживает корзину. "
+                        "«Держусь, спасибо. Яблоки рассыпались, а мне ещё на рынок успеть»."
+                        if "девуш" in str(request_body)
+                        else "Вы стоите у деревенских ворот. С площади доносится гул голосов. "
+                        "Стражник наблюдает за дорогой, а женщина собирает яблоки."
+                    )
+                    response["message"]["content"] = prose
+                    if mode == "plain_cloud":
+                        requests[-1][1]["_test_auth_ok"] = (
+                            self.headers.get("Authorization") == "Bearer fake-test-key"
+                        )
+                        response = {
+                            "choices": [
+                                {
+                                    "message": {"role": "assistant", "content": prose},
+                                    "finish_reason": "stop",
+                                }
+                            ]
+                        }
+                    elif mode == "plain_always_bad":
+                        response["message"]["content"] = "走近 గ్రామం"
+                    elif count == 1 and mode == "plain_empty_first":
+                        response["message"]["content"] = ""
+                    elif count == 1 and mode == "plain_mixed_first":
+                        from pathlib import Path
+
+                        fixture = (
+                            Path(__file__).resolve().parents[1]
+                            / "docs/validation/windows-director-mixed-response-2026-10-19.json"
+                        )
+                        response["message"]["content"] = json.dumps(
+                            json.loads(fixture.read_text(encoding="utf-8"))["response"]
+                        )
+                    elif count == 1 and mode == "plain_truncated_first":
+                        response["done_reason"] = "length"
                 payload = json.dumps(response).encode()
             self.send_response(500 if mode == "error" else 200)
             self.send_header("Content-Type", "application/json")
@@ -535,7 +569,7 @@ def test_previously_saved_prose_one_is_preserved_even_if_quality_is_low():
         frame,
         "local-test:1",
     )
-    assert new.prompt_version == "narrator-prose-7"
+    assert new.prompt_version == "narrator-prose-8"
 
 
 def test_gui_bad_language_reports_reason_and_allows_manual_retry(window, qt_app):
@@ -981,8 +1015,9 @@ def test_new_master_develops_compound_scene_over_http(window, qt_app):
         assert window._session.turns[0].scene
         assert len(requests) == 2  # tags and one scene proposal, no command mapping stage
         context = json.loads(requests[-1][1]["messages"][-1]["content"])
-        assert "memory" in context and "reaction_model" in context
-        assert len(context["memory"]["examples"]) <= 2
+        assert "memory" in context and "reaction_model" not in context
+        assert "format" not in requests[-1][1]
+        assert "examples" not in context["memory"]
         assert "approved_reply" not in context
         assert "другое действие не выполнено" not in window.journal.toPlainText()
 

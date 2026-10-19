@@ -68,6 +68,17 @@ class EpisodePanels:
     def _panel_button(self, layout, text, callback):
         button = QPushButton(text)
         button.clicked.connect(callback)
+        names = getattr(getattr(callback, "__code__", None), "co_names", ())
+        action = (
+            bool(
+                set(names)
+                & {"_run_command", "attack_selected", "send_selected", "provoke_selected"}
+            )
+            or getattr(callback, "__name__", "") == "_talk_to_resident"
+        )
+        if action:
+            button.setProperty("game_action", True)
+            button.setVisible(self._legacy_controls)
         layout.addWidget(button)
         return button
 
@@ -230,7 +241,8 @@ class EpisodePanels:
             plain_label(
                 "Следующие этапы: полные правила боя SRD, инициатива, классы/навыки/магия, "
                 "отношения NPC, формальные конфликты и исследовательский режим. "
-                "Их механики ещё не реализованы. Игра не использует LLM или платные API."
+                "Их механики ещё не реализованы. Мастер использует выбранную локальную "
+                "модель или необязательный API."
             )
         )
         guide.addWidget(
@@ -239,8 +251,7 @@ class EpisodePanels:
                 "прочтите итог в журнале. Справа — риск выбранного действия и отдельный "
                 "разбор кубиков: выпавшее число, бонус, сумма, порог и последствия. "
                 "Выбор прошлой записи ничего не переигрывает. "
-                "На небольшом экране быстрые кнопки под журналом скрыты; команды "
-                "и все разделы остаются доступны."
+                "Игровые действия выполняются через чат. Меню и сохранения доступны отдельно."
             )
         )
         self._panel_button(guide, "О программе и лицензии", self._show_about)
@@ -253,10 +264,14 @@ class EpisodePanels:
         self.inventory_table.setAccessibleName("Предметы героя")
         inventory_layout.insertWidget(1, self.inventory_table, 1)
         self.study_button = QPushButton("Изучить дорожный учебник")
+        self.study_button.setProperty("game_action", True)
+        self.study_button.setVisible(self._legacy_controls)
         self.study_button.clicked.connect(lambda: self._run_command("изучить учебник"))
         inventory_layout.insertWidget(2, self.study_button)
         hero_layout = self.tabs.widget(1).layout()
         self.cart_button = QPushButton("Помочь разгрузить телегу у ворот")
+        self.cart_button.setProperty("game_action", True)
+        self.cart_button.setVisible(self._legacy_controls)
         self.cart_button.clicked.connect(lambda: self._run_command("помочь разгрузить телегу"))
         hero_layout.insertWidget(2, self.cart_button)
         self.development_log = QPlainTextEdit()
@@ -463,8 +478,8 @@ class EpisodePanels:
                 else "Ассортимент ещё не показан. Найдите рынок и подойдите к торговцу."
             )
         )
-        self.shop_buy.setVisible(visible_trade)
-        self.shop_sell.setVisible(visible_trade)
+        self.shop_buy.setVisible(visible_trade and self._legacy_controls)
+        self.shop_sell.setVisible(visible_trade and self._legacy_controls)
         self.shop_buy.setEnabled(visible_trade and state.gold >= 3 and state.shop_stock > 0)
         # The NPC's wallet stays private. Refusal to buy is revealed by the dialogue.
         self.shop_sell.setEnabled(visible_trade and state.bandages > 0)

@@ -13,7 +13,6 @@ from rpg_vkr.domain.director import Proposal, StoryFact
 from rpg_vkr.domain.memory import WorldMemory
 from rpg_vkr.storage.knowledge import CampaignIndex, export_session, restore_session, retrieve
 from rpg_vkr.storage.slots import SaveSlots
-from rpg_vkr.ui.manual_master import create_packet, parse_response
 
 TEXT = (
     "Путник движется к шуму площади. Стражник отступает от створки ворот, "
@@ -210,60 +209,6 @@ def test_sql_queries_treat_input_as_data():
         index.close()
 
 
-def test_manual_packet_has_no_api_and_checks_response_identity():
-    session = Session(seed=42)
-    packet = create_packet(session, "подойду к девушке и спрошу, как у нее дела")
-    assert packet["revision"] == 0
-    assert len(packet["memory"]["examples"]) <= 2
-    payload = {
-        "request_id": packet["request_id"],
-        "proposal": {
-            "mechanical_command": "",
-            "focus_id": "guard",
-            "narration": TEXT,
-            "facts": [{"subject": FACT.subject, "key": FACT.key, "value": FACT.value}],
-        },
-    }
-    assert parse_response(json.dumps(payload), packet["request_id"]) == proposal()
-    with pytest.raises(ValueError, match="другому запросу"):
-        parse_response(json.dumps(payload), "wrong-request")
-
-
-def test_manual_bridge_applies_without_ollama_or_network(window, qt_app, monkeypatch):
-    window.enable_local_narrator.setChecked(True)
-    window.manual_chatgpt.setChecked(True)
-    monkeypatch.setattr(window.ollama, "_start", lambda *args: pytest.fail("Unexpected HTTP"))
-    window.action_input.setText("подойду к девушке и спрошу, как у нее дела")
-    window.send_button.click()
-    dialog = window.manual_dialog
-    response = {
-        "request_id": dialog.request_packet["request_id"],
-        "proposal": {
-            "mechanical_command": "",
-            "focus_id": "villager",
-            "facts": [],
-            "narration": "Вы подходите к девушке. «Спасибо, неплохо, только корзина подвела».",
-        },
-    }
-    dialog.response_editor.setPlainText(json.dumps(response, ensure_ascii=False))
-    dialog.apply_response.click()
-    assert len(window._session.turns) == 1
-    assert window._session.turns[0].scene.model == "chatgpt-manual"
-    assert window._session.turns[0].dialogue.target == "villager"
-    assert not dialog.isVisible()
-
-
-def test_closed_manual_exchange_does_not_commit(window, qt_app):
-    window.enable_local_narrator.setChecked(True)
-    window.manual_chatgpt.setChecked(True)
-    before = window._session.to_dict()
-    window.action_input.setText("слушаю шум площади")
-    window.send_button.click()
-    window.manual_dialog.reject()
-    assert window._session.to_dict() == before
-    assert window.action_input.text() == "слушаю шум площади"
-
-
 def test_actual_v11_save_preserves_both_rolls_and_future_rng():
     path = Path(__file__).parent / "fixtures" / "save-v11.json"
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -286,79 +231,6 @@ def test_pure_nash_and_maximin_reference_cases():
 def test_invalid_games_are_rejected(matrix):
     with pytest.raises(ValueError):
         analyse_game(matrix)
-
-
-def test_manual_mechanics_and_prose_are_two_stages_without_second_roll(window, qt_app, monkeypatch):
-    window.enable_local_narrator.setChecked(True)
-    window.manual_chatgpt.setChecked(True)
-    monkeypatch.setattr(window.ollama, "_start", lambda *args: pytest.fail("Unexpected HTTP"))
-    window.action_input.setText("бросить кубик")
-    window.send_button.click()
-    first = window.manual_dialog
-    first.response_editor.setPlainText(
-        json.dumps(
-            {
-                "request_id": first.request_packet["request_id"],
-                "proposal": {
-                    "mechanical_command": "бросить кубик",
-                    "focus_id": "",
-                    "narration": "",
-                    "facts": [],
-                },
-            }
-        )
-    )
-    first.apply_response.click()
-    assert len(window._session.turns) == 1
-    assert window._session.turns[0].roll.value == 4
-    second = window.manual_dialog
-    assert second is not first
-    assert second.request_packet["stage"] == "confirmed_result"
-    second.response_editor.setPlainText(
-        json.dumps(
-            {
-                "request_id": second.request_packet["request_id"],
-                "proposal": {
-                    "narration": (
-                        "Кубик останавливается. Выпало четыре; "
-                        "этот бросок сам по себе не меняет мир."
-                    )
-                },
-            }
-        )
-    )
-    second.apply_response.click()
-    assert len(window._session.turns) == 1
-    assert window._session.narrations[-1].model == "chatgpt-manual"
-    assert window._session.submit("бросить кубик").roll.value == 1
-
-
-def test_old_manual_answer_cannot_apply_to_new_session(window, qt_app, monkeypatch):
-    from PySide6.QtWidgets import QMessageBox
-
-    monkeypatch.setattr(QMessageBox, "warning", lambda *args: None)
-    window.enable_local_narrator.setChecked(True)
-    window.manual_chatgpt.setChecked(True)
-    window.action_input.setText("слушаю гул")
-    window.send_button.click()
-    dialog = window.manual_dialog
-    window._session = Session(seed=7)
-    dialog.response_editor.setPlainText(
-        json.dumps(
-            {
-                "request_id": dialog.request_packet["request_id"],
-                "proposal": {
-                    "mechanical_command": "",
-                    "focus_id": "guard",
-                    "narration": TEXT,
-                    "facts": [],
-                },
-            }
-        )
-    )
-    dialog.apply_response.click()
-    assert not window._session.turns
-    dialog.reject()
 
 
 def test_sqlite_private_facts_not_sent_to_model_and_relations_are_selected():
@@ -398,6 +270,6 @@ def test_new_window_defaults_to_scene_master(qt_app, tmp_path):
 
     widget = MainWindow(session=Session(seed=42), saves=SaveSlots(tmp_path / "slots"))
     assert widget.director_mode.isChecked()
-    assert not widget.manual_chatgpt.isChecked()
+    assert not hasattr(widget, "manual_chatgpt")
     widget.close()
     widget.deleteLater()

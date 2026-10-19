@@ -22,7 +22,9 @@ def window(qt_app, tmp_path, monkeypatch):
     from rpg_vkr.storage.slots import SaveSlots
     from rpg_vkr.ui.main_window import MainWindow
 
-    widget = MainWindow(session=Session(seed=42), saves=SaveSlots(tmp_path / "saves"))
+    widget = MainWindow(
+        session=Session(seed=42), saves=SaveSlots(tmp_path / "saves"), legacy_controls=True
+    )
     widget.director_mode.setChecked(False)  # Legacy transport regression suite.
     widget.show()
     qt_app.processEvents()

@@ -1,0 +1,8 @@
+{
+  "source": "observed tool probes in this task",
+  "local_ollama": "127.0.0.1:11434 connection refused",
+  "model_registry": "https://registry.ollama.ai/v2/library/qwen3/manifests/1.7b CONNECT 403",
+  "model_source": "https://huggingface.co/Qwen/Qwen3-1.7B-GGUF/raw/main/README.md CONNECT 403",
+  "model_installed_or_executed": false,
+  "windows_remote_tool_available": false
+}

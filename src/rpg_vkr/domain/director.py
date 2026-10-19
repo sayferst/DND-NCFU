@@ -99,12 +99,15 @@ class SceneRecord:
     location: str
     model: str
     proposal: Proposal
-    version: str = "scene-director-1"
+    version: str = "scene-director-2"
 
     def __post_init__(self):
         if type(self.base_turn) is not int or not 0 <= self.base_turn < 2000:
             raise ValueError("Invalid scene revision")
-        if self.location not in LOCATIONS or self.version != "scene-director-1":
+        if self.location not in LOCATIONS or self.version not in {
+            "scene-director-1",
+            "scene-director-2",
+        }:
             raise ValueError("Invalid scene context")
         if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
             raise ValueError("Invalid source model")
@@ -154,6 +157,13 @@ def validate_scene(record, turns, location, combat, hp):
         if (fact.subject, fact.key) in current and current[fact.subject, fact.key] != fact.value:
             raise ValueError("Мастер попытался заменить уже установленный факт.")
     text = record.proposal.narration
+    if record.version == "scene-director-2":
+        from rpg_vkr.narrative.story import validate_story_text
+
+        validate_story_text(text)
+        if target and not re.search(r"«[^»]+»|(?:^|\n)\s*—\s*\S", text):
+            raise ValueError("В сцене отсутствует прямая речь выбранного NPC.")
+        return
     if any(c.isalpha() and not re.fullmatch(r"[А-Яа-яЁё]", c) for c in text):
         raise ValueError("Мастер ответил не по-русски.")
     if not re.search(r"[А-Яа-яЁё]", text) or "<" in text or ">" in text:

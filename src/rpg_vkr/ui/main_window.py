@@ -34,8 +34,15 @@ from rpg_vkr.ui.workspace_tools import HistoryLineEdit
 
 
 class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
-    def __init__(self, session: Session | None = None, saves: SaveSlots | None = None) -> None:
+    def __init__(
+        self,
+        session: Session | None = None,
+        saves: SaveSlots | None = None,
+        *,
+        legacy_controls=False,
+    ) -> None:
         super().__init__()
+        self._legacy_controls = legacy_controls
         self._session = Session() if session is None else session
         self._saves = SaveSlots(default_save_directory()) if saves is None else saves
         self._dirty = False
@@ -144,6 +151,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             ]
         ):
             button = QPushButton(label)
+            button.setProperty("game_action", True)
             button.setToolTip(command)
             button.clicked.connect(lambda checked=False, c=command: self._run_command(c))
             if command == "использовать бинт":
@@ -153,9 +161,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.quick_controls = QWidget()
         self.quick_controls.setLayout(quick)
         play_layout.addWidget(self.quick_controls)
+        self.quick_controls.setVisible(self._legacy_controls)
 
         hint = QLabel(
-            "Эпизод «Доставка на рынок». Можно вводить действия текстом. Подсказка: помощь."
+            "Опишите действие своими словами. Мастер отвечает в журнале; расчёты показаны справа."
         )
         hint.setWordWrap(True)
         play_layout.addWidget(hint)
@@ -226,7 +235,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         super().resizeEvent(event)
         if hasattr(self, "quick_controls"):
             # The text field remains the main input on compact screens.
-            self.quick_controls.setVisible(self.width() >= 1000)
+            self.quick_controls.setVisible(self._legacy_controls and self.width() >= 1000)
 
     def _refresh_character(self) -> None:
         self._refresh_workspace()

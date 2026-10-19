@@ -10,7 +10,7 @@ from rpg_vkr.domain.combat import ACTORS
 from rpg_vkr.domain.director import known_facts
 from rpg_vkr.domain.social import grievance
 from rpg_vkr.domain.world import LOCATIONS, inventory_text
-from rpg_vkr.narrative.director import EXAMPLES
+from rpg_vkr.narrative.examples import EXAMPLES
 
 
 class CampaignIndex:
@@ -32,7 +32,7 @@ class CampaignIndex:
         def dump(value):
             return json.dumps(value, ensure_ascii=False)
 
-        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (12, dump(session.to_dict())))
+        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (13, dump(session.to_dict())))
         self.db.execute(
             "INSERT INTO entities VALUES (?,?,?,?)",
             ("hero", "hero", self.location, dump(asdict(session.character))),
@@ -188,6 +188,6 @@ def restore_session(path):
     with sqlite3.connect(path.as_uri() + "?mode=ro", uri=True) as db:
         db.execute("PRAGMA trusted_schema=OFF")
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
-        if len(values) != 1 or values[0][0] != 12 or len(values[0][1]) > 4 * 1024 * 1024:
+        if len(values) != 1 or values[0][0] not in (12, 13) or len(values[0][1]) > 4 * 1024 * 1024:
             raise ValueError("Invalid campaign snapshot")
-        return Session.from_dict(json.loads(values[0][1]), version=12)
+        return Session.from_dict(json.loads(values[0][1]), version=values[0][0])

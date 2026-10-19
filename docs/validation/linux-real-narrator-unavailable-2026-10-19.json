@@ -1,0 +1,9 @@
+{
+  "run_id": "20261019T022342038109Z",
+  "platform": "Linux",
+  "model": "qwen3:1.7b",
+  "purpose": "real transport/protocol test, not a literary quality score",
+  "cases": [],
+  "error": "<urlopen error [Errno 111] Connection refused>",
+  "protocol_passed": false
+}

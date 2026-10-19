@@ -1,7 +1,7 @@
 """Local optional prose and player-visible memory, independent of game calculations."""
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QCheckBox, QComboBox, QPlainTextEdit, QPushButton
+from PySide6.QtWidgets import QCheckBox, QComboBox, QLineEdit, QPlainTextEdit, QPushButton
 
 from rpg_vkr.commands import CHAT_TARGETS
 from rpg_vkr.domain.combat import ACTORS, ANGER_COMMANDS, ATTACK_COMMANDS
@@ -38,22 +38,40 @@ def install_narrator_panels(window):
         plain_label(
             "ИИ-мастер понимает обычную речь и отвечает художественным текстом. "
             "Мастер создаёт детали и реакции NPC; механику и изменения ресурсов проверяет движок. "
-            "Без модели доступны автономные команды и быстрые кнопки. "
-            "Для локального режима нужны Ollama и модель; ручной ChatGPT работает без них."
+            "Без модели доступны базовые автономные действия через текст. "
+            "Для локального режима нужны Ollama и установленная модель."
         )
     )
-    window.enable_local_narrator = QCheckBox("Включить ИИ-мастера (локальный или ChatGPT вручную)")
+    window.enable_local_narrator = QCheckBox("Включить ИИ-мастера")
     page.addWidget(window.enable_local_narrator)
     window.ai_chat = QCheckBox("Понимать свободный текст через ИИ и отвечать в чате")
     window.ai_chat.setChecked(True)
     page.addWidget(window.ai_chat)
-    window.manual_chatgpt = QCheckBox("ChatGPT вручную через копирование (без API)")
-    window.manual_chatgpt.toggled.connect(lambda enabled: cancel_narration(window))
-    page.addWidget(window.manual_chatgpt)
+    window.ai_provider = QComboBox()
+    window.ai_provider.addItem("Локально: Ollama · без оплаты API", "local")
+    window.ai_provider.addItem("Облако: OpenAI API · отдельный доступ", "openai")
+    window.ai_provider.addItem("Облако: OpenRouter API · условия провайдера", "openrouter")
+    page.addWidget(window.ai_provider)
+    window.cloud_model = QLineEdit()
+    window.cloud_model.setPlaceholderText("Идентификатор модели API (указывается у провайдера)")
+    page.addWidget(window.cloud_model)
+    window.cloud_key = QLineEdit()
+    window.cloud_key.setEchoMode(QLineEdit.EchoMode.Password)
+    window.cloud_key.setPlaceholderText("API-ключ или переменная RPG_VKR_LLM_API_KEY")
+    page.addWidget(window.cloud_key)
+    window.cloud_allowed = QCheckBox("Разрешаю отправлять сцену в API по условиям моего провайдера")
+    page.addWidget(window.cloud_allowed)
+    window.cloud_notice = plain_label(
+        "Подписка ChatGPT Plus не включает API. Возможны отдельные расходы/лимиты. "
+        "Ключ хранится только в памяти; запросы идут после вашего действия."
+    )
+    page.addWidget(window.cloud_notice)
+    window.ai_provider.currentIndexChanged.connect(lambda _: provider_changed(window))
     window.director_mode = QCheckBox("Мастер: развивать сцену и запоминать новые детали")
     window.director_mode.setChecked(True)
     window.director_mode.toggled.connect(lambda enabled: cancel_narration(window))
     page.addWidget(window.director_mode)
+    window.director_mode.setVisible(window._legacy_controls)
     window.local_model = QComboBox()
     window.local_model.setAccessibleName("Установленная локальная модель")
     page.addWidget(window.local_model)
@@ -62,8 +80,10 @@ def install_narrator_panels(window):
     window.auto_narration = QCheckBox("Рассказ после быстрых кнопок (чат отвечает всегда)")
     window.auto_narration.setChecked(True)
     page.addWidget(window.auto_narration)
+    window.auto_narration.setVisible(window._legacy_controls)
     window.narrate_button = QPushButton("Рассказать текущую сцену")
     page.addWidget(window.narrate_button)
+    window.narrate_button.setVisible(window._legacy_controls)
     window.cancel_narration_button = QPushButton("Отменить ожидание")
     page.addWidget(window.cancel_narration_button)
     window.narrator_status = plain_label(
@@ -95,7 +115,7 @@ def install_narrator_panels(window):
     window._narrator_frame = None
     window._chat_text = None
     window._profile_intent = None
-    window.find_models_button.clicked.connect(window.ollama.list_models)
+    window.find_models_button.clicked.connect(lambda: find_models(window))
     window.narrate_button.clicked.connect(lambda: request_narration(window))
     window.cancel_narration_button.clicked.connect(lambda: cancel_narration(window))
     window.enable_local_narrator.toggled.connect(lambda enabled: change_mode(window, enabled))
@@ -106,10 +126,74 @@ def install_narrator_panels(window):
     window.ollama.intent_ready.connect(lambda intent: accept_intent(window, intent))
     window.ollama.proposal_ready.connect(lambda proposal: accept_proposal(window, proposal))
     window.ollama.profile_ready.connect(lambda profile: accept_profile(window, profile))
+    window.ollama.progress.connect(window.narrator_status.setText)
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
     window.ollama.diagnostics_ready.connect(window.narrator_details.setPlainText)
+    provider_changed(window)
     refresh_narrator_panels(window)
+
+
+def provider_changed(window):
+    if window.ollama.busy or window._chat_text is not None or window._narrating_session is not None:
+        cancel_narration(window)
+    cloud = window.ai_provider.currentData() != "local"
+    for widget in (window.cloud_model, window.cloud_key, window.cloud_allowed, window.cloud_notice):
+        widget.setVisible(cloud)
+    window.director_mode.setEnabled(not cloud)
+    if cloud:
+        window._local_models = (
+            tuple(window.ollama.models)
+            if not window.ollama.cloud
+            else getattr(window, "_local_models", ())
+        )
+        window.director_mode.setChecked(True)
+        window.find_models_button.setText("Применить настройки облачного API")
+        window.local_model.clear()
+    else:
+        window.ollama.use_local()
+        window.find_models_button.setText("Найти установленные модели")
+        window.local_model.clear()
+        window.local_model.addItems(list(getattr(window, "_local_models", ())))
+        window.ollama.models = tuple(getattr(window, "_local_models", ()))
+
+
+def prepare_model(window):
+    if window.ai_provider.currentData() == "local":
+        window.ollama.use_local()
+        return bool(window.local_model.currentText())
+    import os
+
+    from rpg_vkr.narrative.cloud import CloudProfile
+
+    if not window.cloud_allowed.isChecked():
+        failed(
+            window,
+            "Для облака разрешите отправку сцены в API. Локальный режим доступен без этого.",
+        )
+        return False
+    try:
+        profile = CloudProfile(
+            window.ai_provider.currentData(),
+            window.cloud_model.text().strip(),
+            window.cloud_key.text().strip() or os.environ.get("RPG_VKR_LLM_API_KEY", ""),
+        )
+    except ValueError as error:
+        failed(window, str(error))
+        return False
+    window.ollama.configure_cloud(profile)
+    window.local_model.clear()
+    window.local_model.addItem(profile.model)
+    return True
+
+
+def find_models(window):
+    if window.ai_provider.currentData() == "local":
+        window.ollama.list_models()
+    elif prepare_model(window):
+        window.narrator_status.setText(
+            "Профиль API выбран. Запрос к модели будет отправлен с вашим сообщением."
+        )
 
 
 def change_mode(window, enabled):
@@ -173,16 +257,17 @@ def models_ready(window, models):
     window.narrator_status.setText(
         f"Локальных моделей найдено: {len(models)}. Выберите модель и запросите рассказ."
         if models
-        else "Установленных локальных моделей нет. Облачные модели не предлагаются."
+        else "Локальных моделей нет. Облачный API настраивается отдельно."
     )
     refresh_narrator_panels(window)
 
 
 def request_narration(window):
+    if window.ai_provider.currentData() != "local" and not prepare_model(window):
+        return
     if (
         getattr(window, "_closing", False)
         or not window.enable_local_narrator.isChecked()
-        or window.manual_chatgpt.isChecked()
         or window.ollama.busy
         or not window.local_model.currentText()
         or any(n.turn_index == len(window._session.turns) for n in window._session.narrations)
@@ -209,6 +294,7 @@ def request_narration(window):
         history=recent_dialogue(window._session),
         clarify=bool(turn and turn.intent == "уточнить намерение"),
         dialogue=dialogue_context(window._session),
+        plain=window.director_mode.isChecked(),
         campaign=campaign_context(
             window._session, turn.meaning.target if turn and turn.meaning else actor
         ),
@@ -218,7 +304,9 @@ def request_narration(window):
 def request_chat(window, text):
     if not window.enable_local_narrator.isChecked() or not window.ai_chat.isChecked():
         return False
-    if not window.manual_chatgpt.isChecked() and not window.local_model.currentText():
+    if not prepare_model(window):
+        if window.ai_provider.currentData() != "local":
+            return True
         failed(window, "Для свободного чата найдите и выберите локальную модель в «Рассказчик».")
         return True
     cancel_narration(window)
@@ -228,20 +316,16 @@ def request_chat(window, text):
     window.action_input.clear()
     window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
     window.statusBar().showMessage("ИИ понимает сообщение…")
-    if window.manual_chatgpt.isChecked():
-        from rpg_vkr.ui.manual_master import open_exchange
-
-        open_exchange(window, text)
-        window.narrator_status.setText(
-            "Запрос готов. Скопируйте его в ChatGPT и верните JSON-ответ."
-        )
-        return True
     if window.director_mode.isChecked():
+        from rpg_vkr.narrative.intent import Interpretation
+        from rpg_vkr.narrative.story import mechanical_request
         from rpg_vkr.storage.knowledge import retrieve
 
-        local = simple_action(text)
-        if local and local.command == "исследовать окрестности":
-            accept_intent(window, local)
+        command = mechanical_request(text)
+        if command:
+            accept_intent(
+                window, Interpretation("action", command, "", "", source="local-fallback")
+            )
         else:
             window.ollama.develop(
                 build_frame(window._session),
@@ -249,6 +333,9 @@ def request_chat(window, text):
                 text,
                 memory=retrieve(window._session, text),
                 campaign=campaign_context(window._session, last_interlocutor(window._session)),
+                history=[
+                    {"player": t.action, "result": t.text[:700]} for t in window._session.turns[-2:]
+                ],
             )
         return True
     window.ollama.interpret(
@@ -366,28 +453,11 @@ def accept_proposal(window, proposal):
     ):
         return
     if proposal.mechanical_command:
-        from rpg_vkr.narrative.intent import Interpretation
-
-        before = len(window._session.turns)
-        text = window._chat_text
-        accept_intent(window, Interpretation("action", proposal.mechanical_command, "", ""))
-        if window.manual_chatgpt.isChecked() and len(window._session.turns) == before + 1:
-            from rpg_vkr.ui.manual_master import open_exchange
-
-            window._narrating_session = window._session
-            window._narrating_index = len(window._session.turns)
-            open_exchange(window, text, prose=True)
-            window.narrator_status.setText(
-                "Действие рассчитано. Второй запрос передаст ChatGPT готовый итог для рассказа."
-            )
+        failed(window, "Рассказчик не имеет права выполнять игровые команды.")
         return
     text = window._chat_text
     try:
-        source = (
-            "chatgpt-manual"
-            if window.manual_chatgpt.isChecked()
-            else window.local_model.currentText()
-        )
+        source = window.local_model.currentText()
         window._session.submit_scene(text, proposal, source, base_turn=window._narrating_index)
     except (ValueError, TypeError) as error:
         failed(window, str(error))
@@ -399,9 +469,7 @@ def accept_proposal(window, proposal):
     window._dirty = True
     window._refresh_character()
     window._render_journal()
-    window.narrator_status.setText(
-        "Мастер продолжил сцену. Новые детали записаны; сохраните сессию."
-    )
+    window.narrator_status.setText("Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.")
     refresh_narrator_panels(window)
 
 

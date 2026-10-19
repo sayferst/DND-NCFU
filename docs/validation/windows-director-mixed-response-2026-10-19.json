@@ -1,0 +1,27 @@
+{
+  "source": "user-provided Windows diagnostic text, not a new agent experiment",
+  "input": "осмотрюсь, где я",
+  "model": "qwen3:1.7b",
+  "stage": "director",
+  "reported_response_bytes": 1401,
+  "done_reason": "stop",
+  "thinking_length": 0,
+  "validation": "ValueError: Cannot mix mechanics and speculative outcomes",
+  "response": {
+    "mechanical_command": "продать бинт",
+    "focus_id": "guard",
+    "narration": "Путана осматривает окрестности, внимательно разглядывая деревню. Стражник, наблюдая за дорогой, не обращает внимания на движение. Путана подходит к жительнице, чтобы узнать о поручении. Жительница, собирая яблоки, не обращает внимания на нее. Впереди виднеется площадь и таверна. Что вы сделаете?",
+    "facts": [
+      {
+        "subject": "guard",
+        "key": "motive",
+        "value": "Наблюдать за дорогой и поддерживать порядок у ворот."
+      },
+      {
+        "subject": "villager",
+        "key": "motive",
+        "value": "Закончить сборы на рынок и получить помощь без унижения."
+      }
+    ]
+  }
+}

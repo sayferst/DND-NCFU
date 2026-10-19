@@ -148,6 +148,7 @@ class OllamaClient(QObject):
     narration_ready = Signal(object)
     intent_ready = Signal(object)
     proposal_ready = Signal(object)
+    progress = Signal(str)
     profile_ready = Signal(object)
     failed = Signal(str)
     busy_changed = Signal(bool)
@@ -176,6 +177,7 @@ class OllamaClient(QObject):
             raise ValueError("Only a local Ollama address is allowed")
         self.base_url = base_url
         self.timeout_ms = timeout_ms
+        self.story_timeout_ms = 150000
         self.models_timeout_ms = models_timeout_ms
         self.manager = QNetworkAccessManager(self)
         self.manager.setProxy(QNetworkProxy(QNetworkProxy.ProxyType.NoProxy))
@@ -192,6 +194,10 @@ class OllamaClient(QObject):
         self._profile_target = ""
         self._dialogue = None
         self._clarify = False
+        self.cloud = None
+        self._story = None
+        self._story_attempt = 0
+        self._story_diagnostics = []
         self.models = ()
         self.last_diagnostic = "Запросов к модели ещё не было."
 
@@ -207,46 +213,55 @@ class OllamaClient(QObject):
             reply.deleteLater()
             self.busy_changed.emit(False)
 
+    def configure_cloud(self, profile):
+        self.cloud = profile
+        self.manager.setProxy(QNetworkProxy(QNetworkProxy.ProxyType.DefaultProxy))
+        self.models = (profile.model,)
+
+    def use_local(self):
+        self.cloud = None
+        self.manager.setProxy(QNetworkProxy(QNetworkProxy.ProxyType.NoProxy))
+
     def list_models(self):
         self._start("/api/tags", "models")
 
-    def develop(self, frame, model, text, *, memory, campaign):
-        from rpg_vkr.domain.conflict import peaceful_contact
-        from rpg_vkr.narrative.director import MASTER_CONTRACT, proposal_schema
+    def develop(self, frame, model, text, *, memory, campaign, history=()):
+        self._start_story(frame, model, text, memory=memory, campaign=campaign, history=history)
+
+    def _start_story(
+        self, frame, model, text, *, memory=None, campaign=None, history=(), confirmed=False
+    ):
+        from rpg_vkr.narrative.story import story_payload
 
         if model not in self.models:
-            self.failed.emit("Выберите установленную локальную модель.")
+            self.failed.emit("Выберите установленную модель.")
             return
         self._frame, self._model = frame, model
-        context = {
-            "scene": frame.to_dict(),
-            "player_message": text,
-            "campaign": {k: v for k, v in campaign.items() if k != "constraints"},
-            "memory": memory,
-            "reaction_model": peaceful_contact(),
-        }
-        self._start(
-            "/api/chat",
-            "director",
-            {
-                "model": model,
-                "stream": False,
-                "think": False,
-                "keep_alive": 0,
-                "format": proposal_schema(),
-                "options": {
-                    "num_ctx": 8192,
-                    "num_predict": 900,
-                    "temperature": 0.55,
-                    "num_gpu": 0,
-                    "num_thread": 4,
-                },
-                "messages": [
-                    {"role": "system", "content": MASTER_CONTRACT},
-                    {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-                ],
-            },
+        self._story_attempt = 0
+        self._story_diagnostics = []
+        self.progress.emit("Мастер пишет ответ. На процессоре первая генерация может занять время.")
+        payload = story_payload(
+            frame,
+            model,
+            text,
+            memory=memory,
+            campaign=campaign,
+            history=history,
+            confirmed=confirmed,
         )
+        self._story = {"frame": frame, "text": text, "payload": payload, "confirmed": confirmed}
+        self._start("/api/chat", "story_result" if confirmed else "director", payload)
+
+    def _retry_story(self, kind, reason):
+        if kind not in {"director", "story_result"} or self._story_attempt >= 1:
+            return False
+        from rpg_vkr.narrative.story import repair_payload
+
+        self._story_attempt += 1
+        self.progress.emit("Первая попытка не подошла. Мастер повторяет ответ; мир ещё не изменён.")
+        payload = repair_payload(self._story["payload"], reason)
+        self._start("/api/chat", kind, payload)
+        return True
 
     def interpret(self, frame, model, text, *, history=(), campaign=None, conversation=None):
         if model not in self.models:
@@ -328,7 +343,19 @@ class OllamaClient(QObject):
         clarify=False,
         dialogue=None,
         campaign=None,
+        plain=False,
     ):
+        if plain:
+            self._start_story(
+                frame,
+                model,
+                player_message,
+                memory=dialogue,
+                campaign=campaign,
+                history=history,
+                confirmed=True,
+            )
+            return
         if model not in self.models:
             self.failed.emit("Выберите установленную локальную модель из обновлённого списка.")
             return
@@ -476,7 +503,16 @@ class OllamaClient(QObject):
         self.cancel()
         self._kind, self._reason = kind, ""
         self._buffer = bytearray()
-        request = QNetworkRequest(QUrl(self.base_url + path))
+        if self.cloud:
+            if kind not in {"director", "story_result"} or payload is None:
+                self.failed.emit("Облачный API доступен только новому режиму мастера.")
+                return
+            payload = self.cloud.payload(payload)
+        request = QNetworkRequest(QUrl(self.cloud.endpoint if self.cloud else self.base_url + path))
+        if self.cloud:
+            request.setRawHeader(
+                QByteArray(b"Authorization"), QByteArray(("Bearer " + self.cloud.key).encode())
+            )
         request.setAttribute(
             QNetworkRequest.Attribute.RedirectPolicyAttribute,
             QNetworkRequest.RedirectPolicy.ManualRedirectPolicy,
@@ -490,7 +526,14 @@ class OllamaClient(QObject):
         self._reply = reply
         reply.readyRead.connect(lambda: self._read(reply))
         reply.finished.connect(lambda: self._finished(reply))
-        self.timer.start(self.models_timeout_ms if kind == "models" else self.timeout_ms)
+        limit = (
+            self.models_timeout_ms
+            if kind == "models"
+            else self.story_timeout_ms
+            if kind in {"director", "story_result"}
+            else self.timeout_ms
+        )
+        self.timer.start(limit)
         self.busy_changed.emit(True)
 
     def _timeout(self):
@@ -499,7 +542,7 @@ class OllamaClient(QObject):
                 "Ollama недоступна: поиск моделей не завершился за отведённое время. "
                 "Автономная игра продолжает работать."
                 if self._kind == "models"
-                else "Локальная модель не ответила за отведённое время. "
+                else "Модель не ответила за отведённое время. "
                 "Автономный рассказ остаётся в журнале."
             )
             self._reply.abort()
@@ -530,19 +573,26 @@ class OllamaClient(QObject):
         if error != QNetworkReply.NetworkError.NoError or status != 200:
             self._report(kind, model, raw, None, f"HTTP {status}; ошибка сети")
             self.failed.emit(
-                "Ollama недоступна или отклонила запрос. Автономная игра продолжает работать."
+                f"Облачный API отклонил запрос (HTTP {status}). Проверьте ключ, модель и доступ."
+                if self.cloud
+                else "Ollama недоступна или отклонила запрос. Автономная игра продолжает работать."
             )
             return
         data = None
         stage = {
             "intent": "Распознавание сообщения",
-            "director": "Развитие сцены мастером",
+            "director": "Рассказ мастера",
+            "story_result": "Описание результата",
             "narration": "Художественный ответ",
             "models": "Поиск моделей",
             "profile": "Создание деталей персонажа",
         }[kind]
         try:
             data = json.loads(raw)
+            if self.cloud:
+                from rpg_vkr.narrative.cloud import normalize_completion
+
+                data = normalize_completion(data)
             if isinstance(data, dict) and (
                 data.get("done_reason") == "length" or data.get("done") is False
             ):
@@ -569,14 +619,24 @@ class OllamaClient(QObject):
                 )
                 self._report(kind, model, raw, data, "OK")
                 self.profile_ready.emit(profile)
-            elif kind == "director":
-                from rpg_vkr.domain.director import Proposal
+            elif kind in {"director", "story_result"}:
+                from rpg_vkr.narrative.story import story_proposal, story_text
 
-                if data["message"].get("role") != "assistant":
-                    raise ValueError("Invalid master role")
-                proposal = Proposal.from_dict(json.loads(data["message"]["content"]))
-                self._report(kind, model, raw, data, "OK")
-                self.proposal_ready.emit(proposal)
+                if kind == "director":
+                    proposal = story_proposal(data, self._frame, self._story["text"])
+                    self._report(kind, model, raw, data, "OK")
+                    self.proposal_ready.emit(proposal)
+                else:
+                    text = story_text(data, confirmed=True)
+                    note = Narration(
+                        self._frame.turn_index,
+                        model,
+                        text,
+                        self._frame.fingerprint,
+                        segments=split_story(text),
+                    )
+                    self._report(kind, model, raw, data, "OK")
+                    self.narration_ready.emit(note)
             elif kind == "intent":
                 intent = parse_interpretation(data)
                 self._report(kind, model, raw, data, "OK")
@@ -592,6 +652,14 @@ class OllamaClient(QObject):
             self.failed.emit(f"{stage}: {error}")
         except (ValueError, TypeError, KeyError, RecursionError) as error:
             self._report(kind, model, raw, data, f"{type(error).__name__}: {error}")
+            if self._retry_story(kind, error):
+                return
+            if kind in {"director", "story_result"}:
+                self.failed.emit(
+                    f"{stage}: модель не дала пригодного рассказа после двух попыток. "
+                    "Подробности — в техническом ответе. Ввод или выполненный итог сохранены."
+                )
+                return
             reason = (
                 "ответ обрезан до завершения"
                 if isinstance(data, dict)
@@ -608,5 +676,9 @@ class OllamaClient(QObject):
             )
 
     def _report(self, kind, model, raw, data, reason):
-        self.last_diagnostic = response_diagnostic(kind, model, raw, data, reason)
+        diagnostic = response_diagnostic(kind, model, raw, data, reason)
+        if kind in {"director", "story_result"}:
+            self._story_diagnostics.append(f"Попытка {self._story_attempt + 1}\n" + diagnostic)
+            diagnostic = "\n\n".join(self._story_diagnostics[-2:])
+        self.last_diagnostic = diagnostic
         self.diagnostics_ready.emit(self.last_diagnostic)
