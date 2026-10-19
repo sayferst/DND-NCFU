@@ -40,13 +40,15 @@ class ActionPlan:
     clarification: str = ""
 
 
-def action_plan(session, text):
+def action_plan(session, text, *, allow_interactions=False):
     """Return None for conversation; a blocked plan must not go to the writer."""
     from rpg_vkr.narrative.dialogue import last_interlocutor
 
     value = unquoted(text)
     if not re.search(ATTACK, value):
         if re.match(r"(?:я\s+)?(?:хочу\s+)?(?:обыс\w*|заберу|забрать|украсть|украду)\b", value):
+            if allow_interactions and not re.search(r"обыс|труп", value):
+                return None
             return ActionPlan(
                 clarification=(
                     "Обыск и кража пока не реализованы. Предметы не получены; мир не изменён."
@@ -92,7 +94,7 @@ def action_plan(session, text):
         lead,
     ):
         return None
-    visible = [key for key, spec in ACTORS.items() if spec[1] == session.world.location]
+    visible = [key for key in ACTORS if session.actor_is_here(key)]
     mentioned = [
         key for key, pattern in TARGETS.items() if re.search(r"\b(?:" + pattern + r")\b", value)
     ]

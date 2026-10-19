@@ -38,6 +38,17 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
         ("villager", "жительница"),
         ("merchant", "торговец"),
     ):
+        from rpg_vkr.domain.combat import ACTORS
+
+        if not any(a.startswith(ACTORS[actor][0]) for a in frame.visible_actors) and re.search(
+            r"\b" + root + r"\s+(?:стоит рядом|сидит рядом|протягивает|поднимает голову|"
+            r"отвечает|говорит|смотрит на вас)\b",
+            text,
+            re.I,
+        ):
+            issues.append(
+                "Этого персонажа нет рядом с героем. Не возвращай прежний разговор в новую сцену."
+            )
         if (
             speaker
             and actor != speaker
@@ -65,6 +76,15 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
             "Не запрещай намерение игрока по моральным причинам: исход определяет движок."
         )
     resolution = (campaign or {}).get("resolution", ())
+    interaction = (campaign or {}).get("interaction_result", "")
+    if "не удалось" in interaction and re.search(
+        r"\bвы\s+(?:бер[её]те|взяли|забираете|забрали|убегаете|убежали|уходите|ушли)\b",
+        prose,
+        re.I,
+    ):
+        issues.append(
+            "Попытка не удалась. Не описывай получение вещи или уход как свершившийся факт."
+        )
     if re.search(r"\b(?:убит[аы]?|умер\w*|мертв\w*|труп\w*|погиб\w*)\b", prose, re.I):
         issues.append("Смерть персонажа игровыми правилами не подтверждена. Не объявляй смерть.")
     if not resolution and re.search(

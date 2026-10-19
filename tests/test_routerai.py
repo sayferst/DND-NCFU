@@ -44,6 +44,8 @@ def router_server(
     bad_first=False,
     redirect=False,
     suggestion=None,
+    world_plans=None,
+    writer_text=None,
 ):
     records = []
     keys = [ALLOWANCE] if keys is None else keys
@@ -98,6 +100,22 @@ def router_server(
                     and "Режим: предложить категорию" in body["messages"][0]["content"]
                 ):
                     text = json.dumps(suggestion, ensure_ascii=False)
+                if world_plans is not None:
+                    if "Режим: план изменений мира" in body["messages"][0]["content"]:
+                        request = json.loads(body["messages"][1]["content"])
+                        text = json.dumps(
+                            world_plans.get(
+                                request["player_message"],
+                                {
+                                    "steps": [],
+                                    "places": [],
+                                    "check": "none",
+                                },
+                            ),
+                            ensure_ascii=False,
+                        )
+                    elif writer_text:
+                        text = writer_text
                 result = {
                     "model": MODEL,
                     "choices": [
@@ -139,6 +157,7 @@ def configure(window, monkeypatch, url):
     monkeypatch.setattr(routerai, "CATALOG_URL", url + "/api/v1/models")
     monkeypatch.setattr(routerai, "KEY_URL", url + "/api/v1/key")
     window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
+    window.cloud_model.setText(MODEL)
     window.cloud_key.setText("routerai-test-key")
     window.cloud_allowed.setChecked(True)
     window.enable_local_narrator.setChecked(True)
@@ -346,7 +365,7 @@ def test_switching_provider_clears_old_key_and_requires_new_consent(window):
     window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
     assert window.cloud_key.text() == ""
     assert not window.cloud_allowed.isChecked()
-    assert window.cloud_model.text() == MODEL
+    assert window.cloud_model.text() == "deepseek/deepseek-v4-flash-latest"
     assert not window.cloud_free_only.isVisible()
 
 

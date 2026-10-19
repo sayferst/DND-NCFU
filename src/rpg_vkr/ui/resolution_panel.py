@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QComboBox, QGroupBox, QLabel, QPlainTextEdit, QPus
 from rpg_vkr.commands import normalise_action
 from rpg_vkr.domain.challenge import CHALLENGES, proposed_challenge
 from rpg_vkr.domain.character import ABILITY_NAMES
-from rpg_vkr.domain.combat import ACTORS, ATTACK_COMMANDS, STEALTH_COMMANDS
+from rpg_vkr.domain.combat import ATTACK_COMMANDS, STEALTH_COMMANDS
 from rpg_vkr.domain.inspection import requested_abilities
 from rpg_vkr.narrative.presentation import present_turn
 
@@ -61,7 +61,7 @@ def refresh_guidance(window):
     actor_id = actor_id or (session.combat.active if command == "атаковать" else None)
     if session.world.hp == 0:
         text = "Герой выбыл. Загрузите сессию или создайте нового героя."
-    elif actor_id and ACTORS[actor_id][1] != session.world.location:
+    elif actor_id and not session.actor_is_here(actor_id):
         text = "Цели здесь нет. Сначала доберитесь до её места."
     elif actor_id and session.combat.actor(actor_id).hp == 0:
         text = "Цель уже повержена. Повторной награды нет."

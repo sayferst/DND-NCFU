@@ -7,7 +7,7 @@ from rpg_vkr.narrative.context import build_frame
 
 def master_reply(session, meaning):
     if meaning and meaning.target:
-        if ACTORS[meaning.target][1] != session.world.location:
+        if not session.actor_is_here(meaning.target):
             return "Отсюда этого человека не видно. Кого рядом вы хотите рассмотреть?"
         profile = session.campaign.profile(meaning.target)
         if profile:
@@ -63,6 +63,11 @@ def campaign_context(session, target=""):
         ),
         "hero_description": session.campaign.raw_player_description,
         "world_brief": session.campaign.world_brief,
+        "interaction_result": (
+            session.turns[-1].interaction.summary
+            if session.turns and session.turns[-1].interaction
+            else ""
+        ),
         "challenge_result": (
             session.turns[-1].challenge.story()
             if session.turns and session.turns[-1].challenge

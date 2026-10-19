@@ -41,6 +41,16 @@ def present_turn(turn) -> TurnPresentation:
 
 
 def _present_turn(turn) -> TurnPresentation:
+    if turn.interaction:
+        record = turn.interaction
+        details = "Изменения предметов и места применены одной проверенной цепочкой."
+        if record.roll:
+            details = (
+                check_details(record.check, record.roll, "завладение чужим предметом")
+                + "\n"
+                + details
+            )
+        return TurnPresentation("Итог действия в мире", record.summary, details)
     if turn.challenge:
         from rpg_vkr.domain.challenge import CHALLENGES
 

@@ -74,10 +74,7 @@ def last_interlocutor(session):
             "идти на рынок",
         }:
             break
-        if (
-            turn.actor_id in ADDRESSEES.values()
-            and ACTORS[turn.actor_id][1] == session.world.location
-        ):
+        if turn.actor_id in ADDRESSEES.values() and session.actor_is_here(turn.actor_id):
             return turn.actor_id
     return None
 
@@ -176,7 +173,7 @@ def resolve_conversation(
         target = last_interlocutor(session)
         if target is None:
             target = {"wares": "merchant", "directions": "guard"}.get(topic)
-    if target is None or ACTORS[target][1] != session.world.location:
+    if target is None or not session.actor_is_here(target):
         return (
             "Рассказчик",
             "Уточните, к кому обращаетесь. Собеседник должен находиться рядом.",

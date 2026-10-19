@@ -88,7 +88,7 @@ def refresh_combat_panel(window):
     window.combat_targets.blockSignals(True)
     window.combat_targets.clear()
     for actor in window._session.combat.actors:
-        if ACTORS[actor.id][1] == window._session.world.location:
+        if window._session.actor_is_here(actor.id):
             mark = disposition_label(actor)
             window.combat_targets.addItem(f"{ACTORS[actor.id][0]} [{mark}]", actor.id)
             index = window.combat_targets.count() - 1

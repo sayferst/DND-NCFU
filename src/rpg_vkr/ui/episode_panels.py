@@ -515,7 +515,10 @@ class EpisodePanels:
             items.append(("Бинт", str(state.bandages), "Восстановить до 4 ОЗ"))
         if state.basket:
             items.append(("Корзина поручения", "1", "Доставить на рынок"))
-        items.extend((name, "1", purpose) for name, purpose in self._session.extra_items)
+        items.extend(
+            (name, str(quantity), purpose)
+            for name, quantity, purpose in self._session.extra_inventory_rows
+        )
         self.inventory_table.setRowCount(len(items))
         for row, values in enumerate(items):
             for column, value in enumerate(values):

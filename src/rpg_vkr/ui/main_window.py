@@ -21,7 +21,7 @@ from rpg_vkr.application import Session
 from rpg_vkr.attribution import SRD_ATTRIBUTION
 from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 from rpg_vkr.domain.progression import describe_progress
-from rpg_vkr.domain.world import LOCATIONS, inventory_text, quest_text
+from rpg_vkr.domain.world import inventory_text, quest_text
 from rpg_vkr.storage.slots import SaveError, SaveSlots, default_save_directory
 from rpg_vkr.ui.character_dialog import CharacterDialog
 from rpg_vkr.ui.creation_dialog import CreationDialog
@@ -264,10 +264,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         )
         if hasattr(self, "journal"):
             self.journal.hero_name = character.name
-        self.scene_title.setText(LOCATIONS[world.location])
+        self.scene_title.setText(self._session.current_place_name)
         self.resource_label.setText(
             f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
-            f"бинты {world.bandages} · {LOCATIONS[world.location]}"
+            f"бинты {world.bandages} · {self._session.current_place_name}"
         )
         extras = "; ".join(name + " ×1" for name, _ in self._session.extra_items)
         self.inventory_label.setText(

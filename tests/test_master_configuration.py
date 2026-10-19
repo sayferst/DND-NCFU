@@ -125,7 +125,9 @@ def test_creation_world_field_has_independent_limit_and_does_not_rewrite_biograp
 def test_world_brief_cannot_be_disguised_as_a_legacy_schema():
     session = Session.create_hero(Character(), "scout", seed=5, world_brief="Морское фэнтези")
     with pytest.raises(ValueError, match="schema 17"):
-        Session.from_dict(session.to_dict(), version=16)
+        Session.from_dict(
+            {k: v for k, v in session.to_dict().items() if k != "interactive_world"}, version=16
+        )
 
 
 def test_real_v16_fixture_preserves_canon_prose_and_rng_without_rewriting_source(tmp_path):

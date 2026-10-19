@@ -47,6 +47,12 @@ def install_narrator_panels(window):
     window.ai_chat = QCheckBox("Понимать свободный текст через ИИ и отвечать в чате")
     window.ai_chat.setChecked(True)
     page.addWidget(window.ai_chat)
+    window.world_agent = QCheckBox("DeepSeek: применять действия через проверяемый план мира")
+    window.world_agent.setChecked(not window._legacy_controls)
+    page.addWidget(window.world_agent)
+    window.world_agent.toggled.connect(
+        lambda _: cancel_if_busy(window) if hasattr(window, "ollama") else None
+    )
     window.prompt_notice = plain_label(
         "Инструкция мастера: prompts/master_system_prompt.txt. "
         "Личная версия: prompts/master_system_prompt.local.txt — "
@@ -162,6 +168,7 @@ def install_narrator_panels(window):
     window.ollama.challenge_ready.connect(
         lambda category: accept_challenge_suggestion(window, category)
     )
+    window.ollama.world_plan_ready.connect(lambda result: accept_world_plan(window, result))
     window.ollama.progress.connect(window.narrator_status.setText)
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
@@ -180,6 +187,7 @@ def provider_changed(window):
         cancel_narration(window)
     window.routerai_catalog.cancel()
     provider = window.ai_provider.currentData()
+    window.world_agent.setVisible(provider == "routerai")
     previous = getattr(window, "_previous_ai_provider", None)
     if previous is not None and previous != provider:
         window.cloud_key.clear()
@@ -208,7 +216,7 @@ def provider_changed(window):
             "Ключи и баланс приложение не изменяет."
         )
         if not window.cloud_model.text().strip():
-            window.cloud_model.setText("deepseek/deepseek-v4-pro-0813")
+            window.cloud_model.setText("deepseek/deepseek-v4-flash-latest")
     else:
         window.cloud_notice.setText(
             "Подписка ChatGPT Plus не включает API. Возможны отдельные расходы/лимиты. "
@@ -412,7 +420,9 @@ def request_narration(window):
     window.ollama.narrate(
         window._narrator_frame,
         window.local_model.currentText(),
-        player_message=turn.action if turn and (turn.intent or turn.challenge) else "",
+        player_message=turn.action
+        if turn and (turn.intent or turn.challenge or turn.interaction)
+        else "",
         dialogue_actor=actor,
         history=recent_dialogue(window._session),
         clarify=bool(turn and turn.intent == "уточнить намерение"),
@@ -439,6 +449,15 @@ def request_chat(window, text):
     window.action_input.clear()
     window.narrator_status.setText("ИИ понимает ваше сообщение. Мир пока не изменён.")
     window.statusBar().showMessage("ИИ понимает сообщение…")
+    if world_agent_enabled(window):
+        window.ollama.plan_world(
+            build_frame(window._session),
+            window.local_model.currentText(),
+            text,
+            window._session.interaction_state().context(),
+            window._session.campaign.world_brief,
+        )
+        return True
     if window.director_mode.isChecked():
         from rpg_vkr.domain.director import Proposal
         from rpg_vkr.narrative.intent import Interpretation
@@ -525,9 +544,26 @@ def accept_challenge_suggestion(window, category):
 
 def request_local_actions(window, text):
     """Explicit mechanics work even when the selected model/key is unavailable."""
+    import re
+
+    from rpg_vkr.commands import normalise_action
     from rpg_vkr.narrative.actions import action_plan
 
-    plan = action_plan(window._session, text)
+    value = normalise_action(text)
+    if re.fullmatch(
+        r"(?:(?:хочу\s+)?(?:осмотреть|посмотреть|проверить|покажи|показать)\s+)?(?:свой\s+|мой\s+)?инвентар[ьe]",
+        value,
+    ):
+        cancel_narration(window)
+        window._session.submit(text, intent="инвентарь", intent_source="local-fallback")
+        window.action_input.remember(text)
+        window.action_input.clear()
+        window._dirty = True
+        window._refresh_character()
+        window._render_journal()
+        window.narrator_status.setText("Инвентарь показан по сохранённому состоянию мира.")
+        return True
+    plan = action_plan(window._session, text, allow_interactions=world_agent_enabled(window))
     if plan is None:
         return request_challenge(window, text)
     cancel_narration(window)
@@ -558,6 +594,92 @@ def request_local_actions(window, text):
     if window.enable_local_narrator.isChecked() and window.ai_chat.isChecked():
         request_narration(window)
     return True
+
+
+def world_agent_enabled(window):
+    return (
+        window.world_agent.isChecked()
+        and window.enable_local_narrator.isChecked()
+        and window.ai_chat.isChecked()
+        and window.ai_provider.currentData() == "routerai"
+        and window.cloud_model.text().strip().startswith("deepseek/")
+    )
+
+
+def accept_world_plan(window, result):
+    from rpg_vkr.domain.interactions import (
+        PlanConfirmationRequired,
+        apply_plan,
+        bind_plan,
+        requests_physical_change,
+    )
+
+    if (
+        window._chat_text is None
+        or window._narrating_session is not window._session
+        or window._narrating_index != len(window._session.turns)
+        or not world_agent_enabled(window)
+    ):
+        return
+    plan, category = result
+    text = window._chat_text
+    if category != "none":
+        accept_challenge_suggestion(window, category)
+        return
+    if not plan.steps:
+        if requests_physical_change(text):
+            failed(window, "Мастер не составил план этого действия. Мир не изменён; ввод сохранён.")
+            return
+        continue_story(window, text)
+        return
+    confirmation = False
+    try:
+        _, risky, _, _ = apply_plan(
+            window._session.interaction_state(), plan, turn_index=len(window._session.turns) + 1
+        )
+        try:
+            bind_plan(text, plan)
+        except PlanConfirmationRequired:
+            confirmation = True
+    except (ValueError, TypeError, KeyError) as error:
+        failed(window, "План не выполнен: " + str(error))
+        return
+    names = {t.id: t.name for t in window._session.interaction_state().things}
+    names.update({p.id: p.name for p in window._session.interaction_state().places + plan.places})
+    verbs = {
+        "take": "Взять",
+        "drop": "Оставить",
+        "put": "Переложить",
+        "give": "Передать",
+        "move": "Перейти",
+        "look": "Осмотреться",
+        "inventory": "Инвентарь",
+    }
+    preview = "\n".join(verbs[s.op] + ": " + names.get(s.target, s.target) for s in plan.steps)
+    question = (
+        "Попытка завладеть чужой вещью: проверка Ловкости, сложность 15. "
+        "Свидетели могут стать враждебными. Бросить кубик?\n\n"
+        if risky
+        else "Мастер понял вашу формулировку так. Выполнить?\n\n"
+    ) + preview
+    if (risky or confirmation) and not window._confirm(question):
+        cancel_narration(window)
+        window.narrator_status.setText("Попытка отменена; предметы и кубики не изменены.")
+        return
+    cancel_narration(window)
+    try:
+        window._session.submit_interaction(text, plan, confirmed_plan=confirmation)
+    except (ValueError, TypeError, KeyError) as error:
+        window.action_input.setText(text)
+        failed(window, "План не выполнен: " + str(error))
+        return
+    window.action_input.remember(text)
+    window.action_input.clear()
+    window._dirty = True
+    window._refresh_character()
+    window._render_journal()
+    window.narrator_status.setText("Вещи, место и последствия изменены в сохранённом состоянии.")
+    request_narration(window)
 
 
 def request_challenge(window, text, *, suggested_kind=None):

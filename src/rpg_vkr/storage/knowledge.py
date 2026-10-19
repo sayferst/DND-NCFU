@@ -26,13 +26,30 @@ class CampaignIndex:
             CREATE TABLE relationships(actor TEXT PRIMARY KEY, payload TEXT);
             CREATE TABLE inventory(owner TEXT PRIMARY KEY, payload TEXT);
             CREATE TABLE examples(id INTEGER PRIMARY KEY, tags TEXT, text TEXT, license TEXT);
+            CREATE TABLE objects(id TEXT PRIMARY KEY, name TEXT, holder TEXT, owner TEXT,
+                                 quantity INTEGER, container INTEGER);
+            CREATE TABLE places(id TEXT PRIMARY KEY, name TEXT, parent TEXT, anchor TEXT,
+                                description TEXT);
         """)
-        self.location = session.world.location
+        self.location = session.current_place_id
 
         def dump(value):
             return json.dumps(value, ensure_ascii=False)
 
-        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (17, dump(session.to_dict())))
+        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (18, dump(session.to_dict())))
+        if session.interactive_world:
+            state = session.interactive_world
+            self.db.executemany(
+                "INSERT INTO objects VALUES (?,?,?,?,?,?)",
+                [
+                    (t.id, t.name, t.holder, t.owner, t.quantity, int(t.container))
+                    for t in state.things
+                ],
+            )
+            self.db.executemany(
+                "INSERT INTO places VALUES (?,?,?,?,?)",
+                [(p.id, p.name, p.parent, p.anchor, p.description) for p in state.places],
+            )
         self.db.execute(
             "INSERT INTO entities VALUES (?,?,?,?)",
             ("hero", "hero", self.location, dump(asdict(session.character))),
@@ -48,6 +65,14 @@ class CampaignIndex:
             value = {"name": name, "public_profile": profile.to_dict() if profile else None}
             if key in GOALS:
                 value.update(goal=GOALS[key], activity=activity(session, key))
+            if session.interactive_world and any(
+                t.owner == key and session.interactive_world.root_holder(t) != key
+                for t in session.interactive_world.things
+            ):
+                value.update(
+                    activity="Её или его собственность больше не находится при владельце.",
+                    goal="Вернуть свою собственность и разобраться в случившемся.",
+                )
             self.db.execute(
                 "INSERT INTO entities VALUES (?,?,?,?)", (key, "actor", location, dump(value))
             )
@@ -195,7 +220,7 @@ def restore_session(path):
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
         if (
             len(values) != 1
-            or values[0][0] not in (12, 13, 14, 15, 16, 17)
+            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18)
             or len(values[0][1]) > 4 * 1024 * 1024
         ):
             raise ValueError("Invalid campaign snapshot")

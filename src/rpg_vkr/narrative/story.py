@@ -61,8 +61,12 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         if event.get("source") == "rules":
             entry["rules_result"] = event.get("result", event.get("confirmed_result", ""))[:350]
         elif event.get("source") == "scene-director-5":
-            entry["npc_reply"] = spoken(event.get("result", ""))[:350]
-            entry["actor_id"] = event.get("actor_id", "")
+            from rpg_vkr.domain.combat import ACTORS
+
+            actor_id = event.get("actor_id", "")
+            if actor_id in ACTORS and ACTORS[actor_id][0] in facts["visible_actors"]:
+                entry["npc_reply"] = spoken(event.get("result", ""))[:350]
+                entry["actor_id"] = actor_id
         recent.append(entry)
     context = {
         "player_message": text,
@@ -70,6 +74,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "hero_description": (campaign or {}).get("hero_description", ""),
         "world_brief": (campaign or {}).get("world_brief", ""),
         "challenge_result": (campaign or {}).get("challenge_result", "") if confirmed else "",
+        "interaction_result": (campaign or {}).get("interaction_result", "") if confirmed else "",
         "resolution": (campaign or {}).get("resolution", []) if confirmed else [],
         "known_observations": (campaign or {}).get("known_observations", []),
         "memory": memory,
@@ -168,7 +173,9 @@ def validate_story_text(text, *, confirmed=False):
     prose = re.sub(r"«[^»]*»|(?:^|\n)\s*—[^\n]*", "", text)
     if not confirmed and re.search(
         r"\bвы\s+(?:получили|получаете|продали|продаете|купили|покупаете|"
-        r"нанесли|наносите|потеряли|потеряете|потратили)\b",
+        r"нанесли|наносите|потеряли|потеряете|потратили|забрали|забираете|"
+        r"бер[её]те|взяли|выбрасываете|выбросили|перекладываете|переложили|"
+        r"переда[её]те|передали|убегаете|убежали|уходите|ушли|перемещаетесь)\b",
         prose,
         re.I,
     ):

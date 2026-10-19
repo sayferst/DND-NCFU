@@ -108,7 +108,7 @@ def build_frame(session):
     actors = tuple(
         f"{ACTORS[a.id][0]}: {disposition_label(a).lower()}, {health_description(a)}"
         for a in session.combat.actors
-        if ACTORS[a.id][1] == world.location
+        if session.actor_is_here(a.id)
     )
     memories = []
     for event in session.memory.events:
@@ -122,11 +122,24 @@ def build_frame(session):
     if session.extra_items:
         items += "; " + "; ".join(name for name, _ in session.extra_items)
     confirmed = present_turn(session.turns[-1]).story if session.turns else session.introduction
+    scene = describe_scene(world)
+    if session.interactive_world:
+        state = session.interactive_world
+        place = state.place()
+        scene = place.description or (
+            describe_scene(world) if place.id in LOCATIONS else place.name
+        )
+        visible = [t for t in state.things if state.here(t) and state.root_holder(t) != "hero"]
+        scene += "\nПредметы в этом месте: " + (
+            "; ".join(f"{t.name} ×{t.quantity}" for t in visible)
+            or "нет зарегистрированных предметов"
+        )
+        scene += "\nПри вас: " + state.inventory() + "."
     return NarrativeFrame(
         len(session.turns),
         hero,
-        LOCATIONS[world.location],
-        describe_scene(world),
+        session.current_place_name,
+        scene,
         f"{world.hp}/{world.max_hp}",
         items,
         (

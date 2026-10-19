@@ -26,6 +26,13 @@ from rpg_vkr.domain.dice import D20Roll, DiceRoller
 from rpg_vkr.domain.director import SceneRecord, validate_scene
 from rpg_vkr.domain.inspection import COMMAND as INSPECT_COMMAND
 from rpg_vkr.domain.inspection import Inspection, inspect, requested_abilities
+from rpg_vkr.domain.interactions import (
+    Interaction,
+    InteractiveWorld,
+    WorldPlan,
+    apply_plan,
+    bind_plan,
+)
 from rpg_vkr.domain.meaning import Meaning
 from rpg_vkr.domain.memory import WorldMemory, snapshot
 from rpg_vkr.domain.progression import (
@@ -37,6 +44,7 @@ from rpg_vkr.domain.progression import (
 )
 from rpg_vkr.domain.social import DialogueRecord, grievance
 from rpg_vkr.domain.world import (
+    LOCATIONS,
     OBSERVE_COMMANDS,
     WHERE_COMMANDS,
     WORLD_COMMANDS,
@@ -81,6 +89,7 @@ class Turn:
     scene: SceneRecord | None = None
     notes: tuple[str, ...] = ()
     challenge: Challenge | None = None
+    interaction: Interaction | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -113,6 +122,7 @@ class Session:
             0, snapshot(self.world, self.character, self.combat, self.progress)
         )
         self._narrations: list[Narration] = []
+        self.interactive_world: InteractiveWorld | None = None
 
     @classmethod
     def create_hero(
@@ -136,13 +146,107 @@ class Session:
 
     @property
     def extra_items(self) -> tuple[tuple[str, str], ...]:
-        if not self.progress.enabled:
-            return ()
-        kit = ARCHETYPES[self.progress.class_id]
-        return (
-            (kit.equipment, "Оружие для авторской схватки"),
-            ("Дорожный учебник", "Изучить один раз для обучения Интеллекту"),
+        kit = ARCHETYPES[self.progress.class_id] if self.progress.enabled else None
+        base = (
+            (
+                (kit.equipment, "Оружие для авторской схватки"),
+                ("Дорожный учебник", "Изучить один раз для обучения Интеллекту"),
+            )
+            if kit
+            else ()
         )
+        return base + tuple(
+            (f"{t.name} ×{t.quantity}", "Переносимый предмет мира")
+            for t in (self.interactive_world.carried() if self.interactive_world else ())
+        )
+
+    @property
+    def current_place_id(self):
+        return self.interactive_world.current if self.interactive_world else self.world.location
+
+    @property
+    def current_place_name(self):
+        return (
+            self.interactive_world.place().name
+            if self.interactive_world
+            else LOCATIONS[self.world.location]
+        )
+
+    @property
+    def extra_inventory_rows(self):
+        base = self.extra_items[:2] if self.progress.enabled else ()
+        return tuple((name, 1, purpose) for name, purpose in base) + tuple(
+            (t.name, t.quantity, "Переносимый предмет мира")
+            for t in (self.interactive_world.carried() if self.interactive_world else ())
+        )
+
+    def actor_is_here(self, actor_id):
+        return actor_id in ACTORS and ACTORS[actor_id][1] == self.current_place_id
+
+    def interaction_state(self):
+        return self.interactive_world or InteractiveWorld.initial(self.world.location)
+
+    def submit_interaction(self, action, plan, *, confirmed_plan=False):
+        action = _text(action, 500).strip()
+        if not isinstance(plan, WorldPlan) or not plan.steps:
+            raise ValueError("Нет плана изменения мира.")
+        bind_plan(action, plan, confirmed=confirmed_plan)
+        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+            raise ValueError("Эта цепочка недоступна в бою или после выбытия.")
+        before = self.interaction_state()
+        index = len(self.turns) + 1
+        _, risky, _, _ = apply_plan(before, plan, turn_index=index)
+        checkpoint = self.dice.checkpoint()
+        try:
+            roll = self.dice.roll_d20() if risky else None
+            check = (
+                resolve_ability_check("dexterity", self.character.dexterity, roll.value, 15)
+                if roll
+                else None
+            )
+            after, _, witnesses, messages = apply_plan(
+                before,
+                plan,
+                check_succeeded=check.succeeded if check else True,
+                turn_index=index,
+            )
+            record = Interaction(before, plan, after, witnesses, "\n".join(messages), roll, check)
+            combat = replace(
+                self.combat,
+                actors=tuple(
+                    replace(a, disposition="hostile") if a.id in witnesses and a.hp > 0 else a
+                    for a in self.combat.actors
+                ),
+            )
+            anchor = after.place().anchor
+            world = replace(
+                self.world,
+                location=anchor,
+                trading=False if after.current != before.current else self.world.trading,
+                market_known=self.world.market_known or anchor == "market",
+            )
+            turn = Turn(
+                action,
+                "Мир",
+                record.summary,
+                roll,
+                check,
+                player_name=self.character.name,
+                intent_source="model",
+                interaction=record,
+            )
+            memory = self.memory.append(
+                turn,
+                snapshot(self.world, self.character, self.combat, self.progress),
+                snapshot(world, self.character, combat, self.progress),
+            )
+        except Exception:
+            self.dice.restore(checkpoint)
+            raise
+        self.world, self.combat, self.memory = world, combat, memory
+        self.interactive_world = after
+        self._turns.append(turn)
+        return turn
 
     def submit_challenge(self, action: str, *, suggested_kind=None) -> Turn:
         action = _text(action, 500).strip()
@@ -260,7 +364,7 @@ class Session:
                 or not meaning
                 or profile.actor_id != meaning.target
                 or profile.created_at_turn != len(self.turns) + 1
-                or ACTORS[profile.actor_id][1] != self.world.location
+                or not self.actor_is_here(profile.actor_id)
             ):
                 raise ValueError("NPC proposal does not match this scene")
             candidate = self.campaign.add(profile)
@@ -269,7 +373,7 @@ class Session:
         if (
             meaning
             and meaning.target
-            and ACTORS[meaning.target][1] == self.world.location
+            and self.actor_is_here(meaning.target)
             and not candidate.profile(meaning.target)
             and meaning.speech_act == "question"
             and meaning.topic in {"appearance", "background", "other"}
@@ -327,6 +431,8 @@ class Session:
             self.dice.restore(checkpoint)
             raise
         self.memory = memory
+        if self.interactive_world and world.location != self.world.location:
+            self.interactive_world = replace(self.interactive_world, current=world.location)
         self.world = world
         self.combat = combat
         self.progress = progress
@@ -350,7 +456,15 @@ class Session:
             raise ValueError(plan.clarification)
         if len(self.turns) + len(plan.commands) > MAX_TURNS:
             raise ValueError("Достигнут предел действий. Сохраните сессию.")
-        state = (self.world, self.character, self.combat, self.progress, self.campaign, self.memory)
+        state = (
+            self.world,
+            self.character,
+            self.combat,
+            self.progress,
+            self.campaign,
+            self.memory,
+            self.interactive_world,
+        )
         checkpoint, count = self.dice.checkpoint(), len(self.turns)
         result = []
         try:
@@ -377,9 +491,15 @@ class Session:
                 result[-1] = replace(result[-1], notes=plan.notes)
                 self._turns[-1] = result[-1]
         except Exception:
-            self.world, self.character, self.combat, self.progress, self.campaign, self.memory = (
-                state
-            )
+            (
+                self.world,
+                self.character,
+                self.combat,
+                self.progress,
+                self.campaign,
+                self.memory,
+                self.interactive_world,
+            ) = state
             del self._turns[count:]
             self.dice.restore(checkpoint)
             raise
@@ -398,6 +518,8 @@ class Session:
         if action_plan(self, action) is not None:
             raise ValueError("Это действие требует игровых правил, а не свободной сцены.")
         record = SceneRecord(base_turn, self.world.location, model, proposal)
+        if proposal.focus_id and not self.actor_is_here(proposal.focus_id):
+            raise ValueError("Собеседника нет в текущем месте.")
         validate_scene(record, self.turns, self.world.location, self.combat, self.world.hp)
         target = proposal.focus_id
         dialogue = None
@@ -441,6 +563,19 @@ class Session:
         return turn
 
     def _resolve_turn(self, action: str, command: str, meaning=None) -> tuple[Turn, WorldState]:
+        from rpg_vkr.domain.combat import ANGER_COMMANDS, ATTACK_COMMANDS, STEALTH_COMMANDS
+
+        target = (
+            ATTACK_COMMANDS.get(command)
+            or ANGER_COMMANDS.get(command)
+            or STEALTH_COMMANDS.get(command)
+            or CHAT_TARGETS.get(command)
+            or NPC_CONTACTS.get(command)
+        )
+        if target and not self.actor_is_here(target):
+            return Turn(
+                action, "Рассказчик", "Этого персонажа здесь нет. Разговор или действие недоступны."
+            ), self.world
         if command in COMBAT_COMMANDS or (
             self.combat.active is not None and command == "использовать бинт"
         ):
@@ -571,19 +706,22 @@ class Session:
             outcome = perform_action(self.world, command, self.character, self.dice)
             text = outcome.text
             if command in OBSERVE_COMMANDS:
-                text = describe_scene(self.world)
-                visible = [
-                    actor
-                    for actor in self.combat.actors
-                    if ACTORS[actor.id][1] == self.world.location
-                ]
+                if self.interactive_world:
+                    from rpg_vkr.narrative.context import build_frame
+
+                    text = build_frame(self).scene
+                else:
+                    text = describe_scene(self.world)
+                visible = [actor for actor in self.combat.actors if self.actor_is_here(actor.id)]
                 text += "\n" + "\n".join(
                     f"{ACTORS[actor.id][0]}: {disposition_label(actor).lower()}, "
                     f"{health_description(actor)}."
                     for actor in visible
                 )
             if command == "инвентарь" and self.extra_items:
-                text += "; " + "; ".join(name + " ×1" for name, _ in self.extra_items)
+                text += "; " + "; ".join(
+                    f"{name} ×{quantity}" for name, quantity, _ in self.extra_inventory_rows
+                )
             speaker = next((name for name in NPC_SPEAKERS if text.startswith(name + ":")), "Мир")
             turn = Turn(
                 action, speaker, text, outcome.roll, outcome.check, NAMES_TO_IDS.get(speaker)
@@ -685,6 +823,9 @@ class Session:
 
     def to_dict(self) -> dict:
         return {
+            "interactive_world": self.interactive_world.to_dict()
+            if self.interactive_world
+            else None,
             "campaign": self.campaign.to_dict(),
             "memory": self.memory.to_dict(),
             "narrations": [note.to_dict() for note in self.narrations],
@@ -701,7 +842,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 17) -> "Session":
+    def from_dict(cls, data: object, version: int = 18) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -720,9 +861,12 @@ class Session:
             15,
             16,
             17,
+            18,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 18:
+            keys.add("interactive_world")
         if version >= 10:
             keys.add("campaign")
         if version >= 7:
@@ -764,6 +908,8 @@ class Session:
             raise ValueError("Invalid turn history")
         for item in turns:
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 18:
+                turn_keys.add("interaction")
             if version >= 17:
                 turn_keys.add("challenge")
             if version >= 16:
@@ -848,6 +994,50 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if version >= 18 and item["interaction"] is not None:
+                if (
+                    item["speaker"] != "Мир"
+                    or intent is not None
+                    or meaning is not None
+                    or dialogue is not None
+                    or item["actor_id"] is not None
+                    or any(
+                        item[k] is not None for k in ("combat", "inspection", "scene", "challenge")
+                    )
+                ):
+                    raise ValueError("Interaction mixed with another action")
+                record = Interaction.restore(
+                    item["interaction"], session.dice, len(session.turns) + 1
+                )
+                if (
+                    item["roll"] != (asdict(record.roll) if record.roll else None)
+                    or stored_check != (asdict(record.check) if record.check else None)
+                    or text != record.summary
+                ):
+                    raise ValueError("Interaction turn mismatch")
+                session.combat = replace(
+                    session.combat,
+                    actors=tuple(
+                        replace(a, disposition="hostile")
+                        if a.id in record.witnesses and a.hp > 0
+                        else a
+                        for a in session.combat.actors
+                    ),
+                )
+                session._turns.append(
+                    Turn(
+                        action,
+                        "Мир",
+                        text,
+                        record.roll,
+                        record.check,
+                        origin=origin,
+                        player_name=player_name,
+                        intent_source=intent_source,
+                        interaction=record,
+                    )
+                )
+                continue
             if version >= 17 and item["challenge"] is not None:
                 if (
                     item["speaker"] != "Правила"
@@ -1185,8 +1375,47 @@ class Session:
             else WorldMemory(len(session.turns), final)
         )
         fields = dict(session.memory.baseline)
+        interactive = None
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
+            if turn.interaction:
+                record = turn.interaction
+                expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
+                if (
+                    record.before != expected_before
+                    or fields["world.hp"] <= 0
+                    or fields["combat.active"] is not None
+                    or record.check
+                    and record.check.score != fields["hero.dexterity"]
+                ):
+                    raise ValueError("Interaction does not match historical scene")
+                expected_fields = dict(fields)
+                anchor = record.after.place().anchor
+                expected_fields.update(
+                    {
+                        "world.location": anchor,
+                        "world.trading": (
+                            False
+                            if record.after.current != record.before.current
+                            else fields["world.trading"]
+                        ),
+                        "world.market_known": fields["world.market_known"] or anchor == "market",
+                    }
+                )
+                for actor in record.witnesses:
+                    if fields[f"actor.{actor}.hp"] > 0:
+                        expected_fields[f"actor.{actor}.disposition"] = "hostile"
+                expected_changes = {
+                    k: (fields[k], v) for k, v in expected_fields.items() if v != fields[k]
+                }
+                actual_changes = {c.field: (c.before, c.after) for c in event.changes}
+                if actual_changes != expected_changes:
+                    raise ValueError("Interaction attempted unapproved numeric changes")
+                interactive = record.after
+            elif interactive:
+                for change in event.changes:
+                    if change.field == "world.location":
+                        interactive = replace(interactive, current=change.after)
             if turn.challenge:
                 record = turn.challenge
                 if (
@@ -1198,6 +1427,12 @@ class Session:
                 ):
                     raise ValueError("Challenge does not match historical state")
             if turn.scene:
+                if (
+                    interactive
+                    and turn.scene.proposal.focus_id
+                    and ACTORS[turn.scene.proposal.focus_id][1] != interactive.current
+                ):
+                    raise ValueError("Scene addresses an absent actor")
                 historical_combat = CombatState.from_dict(
                     {
                         "actors": [
@@ -1242,6 +1477,12 @@ class Session:
                     raise ValueError("Inspection attempted unapproved world changes")
             for change in event.changes:
                 fields[change.field] = change.after
+        stored_interactive = data.get("interactive_world")
+        if (interactive.to_dict() if interactive else None) != (
+            InteractiveWorld.from_dict(stored_interactive).to_dict() if stored_interactive else None
+        ):
+            raise ValueError("Final objects do not match recorded transactions")
+        session.interactive_world = interactive
         if version >= 7:
             notes = data["narrations"]
             if not isinstance(notes, list) or len(notes) > len(session.turns) + 1:
