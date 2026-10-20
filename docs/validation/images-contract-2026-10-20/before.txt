@@ -1,0 +1,126 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+___________ test_fixed_image_price_allows_documented_minimal_request ___________
+
+    def test_fixed_image_price_allows_documented_minimal_request():
+        data = catalog(RECRAFT, "0.75", supported_parameters=[], per_request_limits={})
+>       quote = quote_model(data, RECRAFT, "1K")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_images_contract_revision.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'id': 'recraft/recraft-v4.1-flash', 'per_request_limits': {}, 'pricing': {'image_output': '0.75'}, 'pricing_units': {'image_output': 'image'}, ...}]}
+model = 'recraft/recraft-v4.1-flash', size = '1K', reference_count = 0
+
+    def quote_model(catalog, model, size, reference_count=0):
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if not isinstance(parameters, list) or "size" not in parameters:
+>           raise ValueError("Каталог не подтверждает параметр size. Нужен контракт Images API.")
+E           ValueError: Каталог не подтверждает параметр size. Нужен контракт Images API.
+
+src/rpg_vkr/visuals/policy.py:95: ValueError
+______ test_resolution_parameter_does_not_require_size_or_invented_limits ______
+
+    def test_resolution_parameter_does_not_require_size_or_invented_limits():
+        data = catalog(supported_parameters=["resolution"], per_request_limits={})
+>       quote = quote_model(data, FLUX, "2K")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_images_contract_revision.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'id': 'black-forest-labs/flux-3-image-klein', 'per_request_limits': {}, 'pricing': {'image_output': '0.97'}, 'pricing_units': {'image_output': 'image'}, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '2K', reference_count = 0
+
+    def quote_model(catalog, model, size, reference_count=0):
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if not isinstance(parameters, list) or "size" not in parameters:
+>           raise ValueError("Каталог не подтверждает параметр size. Нужен контракт Images API.")
+E           ValueError: Каталог не подтверждает параметр size. Нужен контракт Images API.
+
+src/rpg_vkr/visuals/policy.py:95: ValueError
+_______________ test_reference_uses_documented_image_url_object ________________
+
+    def test_reference_uses_documented_image_url_object():
+        quote = quote_model(catalog(), FLUX, "1K", 1)
+        data_url = "data:image/png;base64," + base64.b64encode(PNG).decode()
+>       assert payload(quote, "pixel art", [data_url])["input_references"] == [
+            {"type": "image_url", "image_url": {"url": data_url}}
+        ]
+E       AssertionError: assert ['data:image/...SUVORK5CYII='] == [{'image_url'... 'image_url'}]
+E         
+E         At index 0 diff: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=' != {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='}}
+E         Use -v to get more diff
+
+tests/test_images_contract_revision.py:37: AssertionError
+_____________________ test_documented_usage_cost_is_rubles _____________________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x325988f0) at 0x7fc409405740>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc40945ddf0>
+
+    def test_documented_usage_cost_is_rubles(qt_app, monkeypatch):
+        transport = ImagesTransport()
+        monkeypatch.setattr(
+            transport,
+            "read",
+            lambda *a, **kw: json.dumps(
+                {"data": [{"b64_json": base64.b64encode(PNG).decode()}], "usage": {"cost": 0.97}}
+            ).encode(),
+        )
+        png, actual, receipt = transport.generate({"n": 1}, "fake-key")
+>       assert png.startswith(b"\x89PNG") and actual == 970000
+E       AssertionError: assert (True and None == 970000)
+E        +  where True = <built-in method startswith of bytes object at 0x7fc409487bb0>(b'\x89PNG')
+E        +    where <built-in method startswith of bytes object at 0x7fc409487bb0> = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\...\x01\x95+\x0e\x1b\x00\x00\x00\rIDAT\x08\x99c```\xf8\x0f\x00\x01\x04\x01\x00}\xb2\xc8\xdf\x00\x00\x00\x00IEND\xaeB`\x82'.startswith
+
+tests/test_images_contract_revision.py:52: AssertionError
+______________ test_individual_ordinary_item_stays_economy_model _______________
+
+visual = (<rpg_vkr.ui.main_window.MainWindow(0x3293ae50) at 0x7fc409434e00>, <rpg_vkr.ui.visuals_panel.VisualController(0x3342a4d0) at 0x7fc40909f800>, <test_visual_controller.FakeTransport object at 0x7fc409063ce0>)
+
+    def test_individual_ordinary_item_stays_economy_model(visual):
+        window, controller, fake = visual
+        entry = next(e for e in knowledge_entries(window._session) if e.category == "items")
+        target = entity_target(window._session, entry, shared=False)
+        assert target.subject.startswith("entity:") and not target.common
+        controller.request(target)
+        finish(controller)
+>       assert len(fake.posts) == 1 and fake.posts[0]["model"] == RECRAFT
+E       AssertionError: assert (1 == 1 and 'black-forest...3-image-klein' == 'recraft/recraft-v4.1-flash'
+E        +  where 1 = len([{'model': 'black-forest-labs/flux-3-image-klein', 'n': 1, 'prompt': 'Original medieval fantasy pixel art; coherent li...e, framing or lighting.\n\nPUBLIC VISUAL BRIEF:\nЗолото\nДальнейшие сведения пока неизвестны.\n', 'size': '1024x1024'}])
+E        +    where [{'model': 'black-forest-labs/flux-3-image-klein', 'n': 1, 'prompt': 'Original medieval fantasy pixel art; coherent li...e, framing or lighting.\n\nPUBLIC VISUAL BRIEF:\nЗолото\nДальнейшие сведения пока неизвестны.\n', 'size': '1024x1024'}] = <test_visual_controller.FakeTransport object at 0x7fc409063ce0>.posts
+E         
+E         - recraft/recraft-v4.1-flash
+E         + black-forest-labs/flux-3-image-klein)
+
+tests/test_images_contract_revision.py:63: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+=========================== short test summary info ============================
+FAILED tests/test_images_contract_revision.py::test_fixed_image_price_allows_documented_minimal_request
+FAILED tests/test_images_contract_revision.py::test_resolution_parameter_does_not_require_size_or_invented_limits
+FAILED tests/test_images_contract_revision.py::test_reference_uses_documented_image_url_object
+FAILED tests/test_images_contract_revision.py::test_documented_usage_cost_is_rubles
+FAILED tests/test_images_contract_revision.py::test_individual_ordinary_item_stays_economy_model
+5 failed in 0.60s
