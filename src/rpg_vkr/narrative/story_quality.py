@@ -64,7 +64,7 @@ def unsupported_numeric_claim(prose):
     )
 
 
-def numeric_claim_matches_receipt(prose, receipt):
+def numeric_claim_matches_receipt(prose, receipt, balances=None):
     """A completed roll never authorizes an unrelated resource reward."""
     changes = {c["field"]: c for c in receipt.get("resource_changes", [])}
     units = {
@@ -87,18 +87,30 @@ def numeric_claim_matches_receipt(prose, receipt):
         "триста": 300,
     }
     claims = re.findall(
-        r"\bвы\s+(?:получ\w*|нашли|потеря\w*|потрат\w*|добав\w*|увелич\w*|подня\w*)"
+        r"\bвы\s+(получ\w*|нашли|потеря\w*|потрат\w*|добав\w*|увелич\w*|подня\w*)"
         r"[^.!?\n]{0,90}?([0-9]+|сто|десять|двадцать|пятьдесят|семьдесят|пятнадцать|двести|триста)"
         r"\s+(золот|монет|опыт|здоров|сил|ловкост|интеллект)\w*",
         prose,
         re.I,
     )
-    if not claims:
+    balances = balances or {}
+    wallet = re.findall(
+        r"в (?:вашем )?кошельке[^.!?\n]{0,50}?(\d+|сто|десять|двадцать|семьдесят)"
+        r"\s+(?:золот|монет)\w*",
+        prose,
+        re.I,
+    )
+    for number in wallet:
+        amount = int(number) if number.isdigit() else numbers[number.casefold()]
+        if balances.get("world.gold") != amount:
+            return False
+    if not claims and not wallet:
         return False
-    for number, unit in claims:
+    for verb, number, unit in claims:
         change = changes.get(units[unit.casefold()])
         amount = int(number) if number.isdigit() else numbers[number.casefold()]
-        if not change or abs(change["after"] - change["before"]) != amount:
+        direction = -1 if verb.casefold().startswith(("потер", "потрат")) else 1
+        if not change or change["after"] - change["before"] != direction * amount:
             return False
     return True
 
@@ -111,7 +123,9 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
     resolution = campaign.get("resolution") or []
     receipt = campaign.get("receipt") or {}
     interaction = campaign.get("interaction_result", "")
-    if unsupported_numeric_claim(prose) and not numeric_claim_matches_receipt(prose, receipt):
+    if unsupported_numeric_claim(prose) and not numeric_claim_matches_receipt(
+        prose, receipt, campaign.get("resource_balances")
+    ):
         issues.append("Рассказ назначил неподтверждённое изменение ресурсов или характеристик.")
     hero_name = frame.hero.split(",", 1)[0]
     rename = re.search(
@@ -179,14 +193,24 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
     # A known actor cannot reappear after the hero leaves their place.
     from rpg_vkr.domain.combat import ACTORS
 
-    for actor in ACTORS.values():
-        name = actor[0]
-        if not any(a.startswith(name + ":") for a in frame.visible_actors) and re.search(
+    roster = campaign.get("validation_roster") or [
+        {
+            "name": actor[0],
+            "here": any(a.startswith(actor[0] + ":") for a in frame.visible_actors),
+            "alive": True,
+        }
+        for actor in ACTORS.values()
+    ]
+    for actor in roster:
+        if actor["here"] and actor["alive"]:
+            continue
+        name = actor["name"]
+        if re.search(
             r"\b" + re.escape(name) + r"\s+(?:говорит|отвечает|поднимает голову|смотрит на вас)\b",
             prose,
             re.I,
         ):
-            issues.append("Этого персонажа нет рядом с героем.")
+            issues.append("Собеседника нет рядом либо он выбыл; прямой разговор не подтверждён.")
     # Counts are compared to the actual roster instead of always assuming one guard.
     for name in {a.split(":", 1)[0].split()[0] for a in frame.visible_actors}:
         count = sum(a.split(":", 1)[0].split()[0] == name for a in frame.visible_actors)

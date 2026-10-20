@@ -130,17 +130,25 @@ def test_cancelled_risk_keeps_the_whole_input_and_performs_no_transaction(
 
 def test_invalid_second_step_cannot_apply_the_first_step(window, qt_app, monkeypatch):
     window._session = Session(seed=5)
-    before = window._session.to_dict(), window._session.dice.checkpoint()
+    session = window._session
+    before = session.world, session.interactive_world, session.catalog, session.dice.checkpoint()
     bad = envelope(WorldPlan((Step("take", "produce_basket"), Step("move", "unknown"))))
-    with router_server(world_plans={TAKE: bad}) as (url, records):
+    with router_server(
+        world_plans={TAKE: bad}, writer_text="Путь не подтверждён; вы остаётесь у ворот."
+    ) as (url, records):
         configure(window, monkeypatch, url)
         window.world_agent.setChecked(True)
         window.action_input.setText(TAKE)
         window.send_button.click()
         wait_for(qt_app, lambda: not window.ollama.busy)
-        assert (window._session.to_dict(), window._session.dice.checkpoint()) == before
-        assert window.action_input.text() == TAKE
-        assert len([r for r in records if r["method"] == "POST"]) == 1
+        assert (
+            session.world,
+            session.interactive_world,
+            session.catalog,
+            session.dice.checkpoint(),
+        ) == before
+        assert session.turns[-1].scene and not session.turns[-1].interaction
+        assert len([r for r in records if r["method"] == "POST"]) == 2
 
 
 def test_empty_model_plan_explains_obstacle_without_transferring_items(window, qt_app, monkeypatch):

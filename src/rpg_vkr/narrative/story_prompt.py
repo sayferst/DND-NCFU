@@ -104,6 +104,13 @@ def render_context(context):
             "npc_voice задаёт мотивы и память говорящего. Не раскрывай скрытые мотивы "
             "как известные герою факты; используй их для выбора реплики."
         )
+    if brief.get("target_id"):
+        actor = next((a for a in brief.get("actors", []) if a["id"] == brief["target_id"]), {})
+        if actor.get("social_memory"):
+            lines.append(
+                "Память общения собеседника: "
+                + json.dumps(actor["social_memory"], ensure_ascii=False)
+            )
     lines.append("Здоровье героя: " + facts["health"])
     if brief.get("mode") != "dialogue" and facts.get("visible_actors"):
         lines.append("Рядом видны: " + "; ".join(facts["visible_actors"]))

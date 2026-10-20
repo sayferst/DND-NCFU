@@ -2,6 +2,8 @@
 
 import json
 import re
+import time
+import uuid
 from urllib.parse import urlsplit
 
 from PySide6.QtCore import QByteArray, QObject, Qt, QTimer, QUrl, Signal
@@ -175,6 +177,7 @@ class OllamaClient(QObject):
     challenge_ready = Signal(str)
     world_plan_ready = Signal(object)
     world_seed_ready = Signal(object)
+    event_ready = Signal(object)
 
     def __init__(
         self,
@@ -228,8 +231,46 @@ class OllamaClient(QObject):
         self._story_diagnostics = []
         self.models = ()
         self.last_failure = None
+        self.turn_id = ""
+        self.request_count = 0
+        self.request_limit = 3
+        self._observing_request = None
+        self.events = []
         self.last_diagnostic = "Запросов к модели ещё не было."
         self.instruction_hash = ""
+
+    def begin_turn(self):
+        self.turn_id = str(uuid.uuid4())
+        self.request_count = 0
+        self.last_failure = None
+
+    def record_validation(self, accepted, reason="", warnings=()):
+        self._emit_event(
+            {
+                "event_type": "prose_validation",
+                "stage": "inline_reply",
+                "outcome": "accepted" if accepted else "rejected",
+                "code": "" if accepted else "canon_or_format",
+                "reason": reason,
+                "warnings": list(warnings),
+                "model": self.response_model or self._model,
+            }
+        )
+
+    def _emit_event(self, value):
+        from datetime import UTC, datetime
+
+        value = {
+            "id": str(uuid.uuid4()),
+            "turn_id": self.turn_id,
+            "timestamp_utc": datetime.now(UTC).isoformat(),
+            **value,
+        }
+        # No raw response, player text, prompt, key or HTTP header is persisted here.
+        value["reason"] = re.sub(r"sk-[A-Za-z0-9_-]+", "[secret]", value.get("reason", ""))[:800]
+        self.events.append(value)
+        self.events = self.events[-500:]
+        self.event_ready.emit(value)
 
     @property
     def busy(self):
@@ -242,6 +283,8 @@ class OllamaClient(QObject):
         reply, self._reply = self._reply, None
         self.timer.stop()
         if reply is not None:
+            if self._observing_request:
+                self._observe_response("cancelled", "cancelled", "Ожидание отменено", None)
             reply.abort()
             reply.deleteLater()
         if was_busy:
@@ -370,7 +413,7 @@ class OllamaClient(QObject):
             'inventory: target="". available_here=false означает, что предмет далеко: '
             "сначала нужен связный переход. "
             "Не возвращай пустой план вместо явного взятия или ухода. "
-            "Используй ТОЛЬКО ID и количества из state. Корзина переносится вместе с содержимым. "
+            "Используй ТОЛЬКО ID и количества из state. Контейнер переносится вместе с содержимым. "
             "quantity=0 означает всё доступное количество этого предмета. "
             "resource_pools содержит настоящие старые запасы героя: legacy_gold — золотые "
             "монеты (не медные единицы), legacy_bandages — бинты. Для их передачи, "
@@ -561,7 +604,11 @@ class OllamaClient(QObject):
         self._start("/api/chat", "story_result" if confirmed else "director", payload)
 
     def _retry_story(self, kind, reason):
-        if kind not in {"director", "story_result"} or self._story_attempt >= 1:
+        if (
+            kind not in {"director", "story_result"}
+            or self._story_attempt >= 1
+            or self.request_count >= self.request_limit
+        ):
             return False
         from rpg_vkr.narrative.story import repair_payload
 
@@ -844,6 +891,19 @@ class OllamaClient(QObject):
             self.failed.emit(message)
 
     def _send(self, path, kind, payload=None):
+        if payload is not None:
+            if not self.turn_id:
+                self.begin_turn()
+            if self.request_count >= self.request_limit:
+                self.last_failure = {
+                    "code": "request_budget",
+                    "stage": kind,
+                    "reason": "Исчерпан предел трёх генераций на ход.",
+                }
+                self.busy_changed.emit(False)
+                self.failed.emit(self.last_failure["reason"] + " Выполненные действия сохранены.")
+                return
+        self.last_failure = None
         self._kind, self._reason = kind, ""
         self._buffer = bytearray()
         if self.cloud:
@@ -854,6 +914,14 @@ class OllamaClient(QObject):
                 self.failed.emit("Облачный API доступен только новому режиму мастера.")
                 return
             payload = self.cloud.payload(payload)
+        if payload is not None:
+            self.request_count += 1
+            self._observing_request = {
+                "attempt": self.request_count,
+                "stage": kind,
+                "started": time.monotonic(),
+                "model": self._model,
+            }
         request = QNetworkRequest(QUrl(self.cloud.endpoint if self.cloud else self.base_url + path))
         if self.cloud:
             request.setRawHeader(
@@ -1190,6 +1258,8 @@ class OllamaClient(QObject):
                             "interaction_result": context.get("interaction_result", ""),
                             "death_confirmed": context.get("death_confirmed", False),
                             "receipt": context.get("receipt"),
+                            "resource_balances": context.get("resource_balances", {}),
+                            "validation_roster": context.get("validation_roster", []),
                         },
                     )
                     note = Narration(
@@ -1234,14 +1304,18 @@ class OllamaClient(QObject):
             if kind in {"director", "story_result"}:
                 self.failed.emit(
                     f"{stage}: {self.last_failure['code']}: {error}. "
-                    "После двух попыток описание не принято; игровые действия не повторялись."
+                    f"После {self._story_attempt + 1} попыток описание не принято; "
+                    "игровые действия не повторялись."
                 )
                 return
+            labels = {
+                "invalid_format": "неверный формат",
+                "token_limit": "ответ обрезан",
+                "canon_conflict": "противоречие фактам",
+                "unsupported_or_invalid_plan": "неподдержанный или неверный план",
+            }
             reason = (
-                "ответ обрезан до завершения"
-                if isinstance(data, dict)
-                and (data.get("done_reason") == "length" or data.get("done") is False)
-                else "неверный формат ответа"
+                labels.get(self.last_failure["code"], self.last_failure["code"]) + ": " + str(error)
             )
             self.failed.emit(
                 f"{stage}: {reason}. Подробности — в разделе «Рассказчик». "
@@ -1252,7 +1326,72 @@ class OllamaClient(QObject):
                 )
             )
 
+    def _observe_response(self, outcome, code, reason, data):
+        request, self._observing_request = self._observing_request, None
+        if request is None:
+            return
+        usage = data.get("usage") if isinstance(data, dict) else None
+        if not isinstance(usage, dict):
+            usage = None
+        safe_usage = (
+            None
+            if usage is None
+            else {
+                key: value
+                for key, value in usage.items()
+                if key
+                in {
+                    "input_tokens",
+                    "output_tokens",
+                    "prompt_tokens",
+                    "completion_tokens",
+                    "total_tokens",
+                }
+                and type(value) is int
+                and value >= 0
+            }
+        )
+        warnings = []
+        if (
+            outcome == "accepted"
+            and request["stage"] in {"director", "story_result"}
+            and self._story
+        ):
+            from rpg_vkr.narrative.story_quality import quality_warnings
+
+            warnings = list(
+                quality_warnings(
+                    (data or {}).get("message", {}).get("content", ""),
+                    self._story["text"],
+                    brief=self._story["context"].get("turn_brief", {}),
+                    previous=self._story["previous"],
+                )
+            )
+        self._emit_event(
+            {
+                "event_type": "model_response",
+                "stage": request["stage"],
+                "attempt": request["attempt"],
+                "model": (data or {}).get("response_model") or request["model"],
+                "elapsed_ms": round((time.monotonic() - request["started"]) * 1000),
+                "outcome": outcome,
+                "code": code,
+                "reason": reason,
+                "finish_reason": data.get("done_reason") if isinstance(data, dict) else None,
+                "usage": safe_usage,
+                "warnings": warnings,
+            }
+        )
+
     def _report(self, kind, model, raw, data, reason):
+        accepted = reason.startswith(("OK", "Формат и", "Получен проект"))
+        failure = self.last_failure or {}
+        self._observe_response(
+            "accepted" if accepted else "rejected" if data else "failed",
+            "" if accepted else failure.get("code", "invalid_format"),
+            reason,
+            data,
+        )
         diagnostic = response_diagnostic(kind, model, raw, data, reason)
         if kind in {"director", "story_result"} and self.instruction_hash:
             diagnostic += "\nБазовая инструкция SHA-256: " + self.instruction_hash

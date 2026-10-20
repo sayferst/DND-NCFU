@@ -1,0 +1,283 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 960 items
+
+tests/test_adventure.py ...................                              [  1%]
+tests/test_adventure_consistency.py ........                             [  2%]
+tests/test_adventure_ui.py ............                                  [  4%]
+tests/test_catalog.py ...............................                    [  7%]
+tests/test_catalog_ui.py .........                                       [  8%]
+tests/test_character.py ........................                         [ 10%]
+tests/test_character_dialog.py ...                                       [ 11%]
+tests/test_chat_intents.py ...................                           [ 13%]
+tests/test_combat.py .......................                             [ 15%]
+tests/test_combat_storage.py ..............                              [ 16%]
+tests/test_combat_ui.py ......                                           [ 17%]
+tests/test_conversation_revision.py ........................             [ 20%]
+tests/test_creation_and_roles.py ......                                  [ 20%]
+tests/test_dialogue.py .............                                     [ 21%]
+tests/test_dice.py ...                                                   [ 22%]
+tests/test_environment.py ...                                            [ 22%]
+tests/test_episode_panels.py ..............                              [ 24%]
+tests/test_fixture_git_checkout.py ..                                    [ 24%]
+tests/test_fixture_repair.py ...........                                 [ 25%]
+tests/test_free_attempts.py .................................            [ 28%]
+tests/test_free_cloud.py .........                                       [ 29%]
+tests/test_inspection.py ..............................                  [ 32%]
+tests/test_launch.py ...                                                 [ 33%]
+tests/test_local_narrator.py ........................................... [ 37%]
+..................                                                       [ 39%]
+tests/test_master_campaign.py ..........................                 [ 42%]
+tests/test_master_configuration.py ...........                           [ 43%]
+tests/test_master_language_profiles.py ........                          [ 44%]
+tests/test_mechanics_before_prose.py ................................... [ 47%]
+....                                                                     [ 48%]
+tests/test_model_metrics.py ......                                       [ 48%]
+tests/test_offline.py ..........                                         [ 50%]
+tests/test_plain_master.py .........................                     [ 52%]
+tests/test_presentation.py .................                             [ 54%]
+tests/test_progression.py ......................................         [ 58%]
+tests/test_resolution_ui.py ............                                 [ 59%]
+tests/test_resource_ledger.py ..........................                 [ 62%]
+tests/test_response_contract.py ........................................ [ 66%]
+                                                                         [ 66%]
+tests/test_response_delivery.py .......................                  [ 68%]
+tests/test_routerai.py .......................................           [ 72%]
+tests/test_save_migration.py ..........                                  [ 73%]
+tests/test_save_slots.py ....................                            [ 76%]
+tests/test_scene_director.py ..............................              [ 79%]
+tests/test_semantic_challenges.py .............                          [ 80%]
+tests/test_session.py ....................                               [ 82%]
+tests/test_sqlite_lifecycle.py .........                                 [ 83%]
+tests/test_story_conversation_quality.py ................                [ 85%]
+tests/test_trade_context.py .........                                    [ 86%]
+tests/test_window.py .......................                             [ 88%]
+tests/test_windows_test_ids.py .                                         [ 88%]
+tests/test_workspace_tools.py .............                              [ 90%]
+tests/test_workspace_ui.py ..................                            [ 91%]
+tests/test_world.py ..............................                       [ 95%]
+tests/test_world_agent_ui.py ........                                    [ 95%]
+tests/test_world_memory.py ..................                            [ 97%]
+tests/test_world_transactions.py ....................F.                  [100%]
+
+=================================== FAILURES ===================================
+________ test_failed_transfer_and_absent_npc_cannot_be_undone_by_writer ________
+
+    def test_failed_transfer_and_absent_npc_cannot_be_undone_by_writer():
+        s = Session(seed=2)
+        s.submit_interaction("беру корзину и убегаю в лес", escape_plan())
+        with pytest.raises(ValueError, match="не удалась"):
+            check_story_quality(
+                "Вы берёте корзину и убегаете в лес.",
+                build_frame(s),
+                s.turns[-1].action,
+                campaign={"interaction_result": s.turns[-1].text},
+            )
+        away = Session(seed=5)
+        away.submit_interaction("беру корзину и убегаю в лес", escape_plan())
+        with pytest.raises(ValueError, match="нет рядом"):
+>           check_story_quality(
+                "Жительница поднимает голову и смотрит на вас.", build_frame(away), "Осмотрюсь"
+            )
+
+tests/test_world_transactions.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'Жительница поднимает голову и смотрит на вас.'
+frame = NarrativeFrame(turn_index=1, hero='Путник, учебная песочница без развития', location='Лесная тропа', scene='Деревья об...nВы переместились: Лесная тропа.', memories=('Событие 1, Дорога у деревни: Место: Ворота деревни → Дорога у деревни',))
+player_text = 'Осмотрюсь'
+
+    def check_story_quality(text, frame, player_text, *, brief=None, previous=(), campaign=None):
+        """Reject grounded false outcomes, not synonyms, metaphors or an NPC's refusal."""
+        brief, campaign = brief or {}, campaign or {}
+        prose, normal = prose_only(text), player_text.casefold().replace("ё", "е")
+        issues = []
+        resolution = campaign.get("resolution") or []
+        receipt = campaign.get("receipt") or {}
+        interaction = campaign.get("interaction_result", "")
+        if unsupported_numeric_claim(prose) and not numeric_claim_matches_receipt(
+            prose, receipt, campaign.get("resource_balances")
+        ):
+            issues.append("Рассказ назначил неподтверждённое изменение ресурсов или характеристик.")
+        hero_name = frame.hero.split(",", 1)[0]
+        rename = re.search(
+            r"\b(?:теперь вас зовут|ваше (?:новое )?имя)\s*[:—-]?\s*([А-ЯЁ][а-яё]+)", prose, re.I
+        )
+        if rename and rename[1].casefold() != hero_name.casefold():
+            issues.append("Имя героя нельзя изменить художественным ответом.")
+        # A transfer must have an engine receipt, independently of the writer's wording.
+        if not receipt.get("committed") and re.search(
+            r"(?:вам|герою)\s+(?:вруча\w*|переда\w*|отда\w*)[^.!?\n]{0,60}(?:ключ\w*|монет\w*|меч\w*|предмет\w*)|"
+            r"клад\w*\s+вам\s+в\s+ладон\w*",
+            prose,
+            re.I,
+        ):
+            issues.append("Передача предмета не подтверждена движком.")
+        # Preserve player agency. Requested conduct and faithful quotation are allowed.
+        evidence = {
+            r"\bвы\s+(?:вдруг\s+)?(?:замолч\w*|молч\w*)": r"молч|тишин|не говоря",
+            r"\bвы\s+(?:вдруг\s+)?(?:реш\w*|соглас\w*|отказ\w*)": r"реш|соглас|отказ|не буду|не хочу",
+            r"\bвы\s+(?:вдруг\s+)?(?:влюб\w*|боите\w*)": r"люб|бою|страх",
+            r"\bвы\s+чувству\w*[^.!?\n]{0,60}(?:любов\w*|нежност\w*|страх\w*|вину)": (
+                r"чувств|люб|бою|страх|вин"
+            ),
+        }
+        for pattern, requested in evidence.items():
+            if re.search(pattern, prose, re.I) and not re.search(requested, normal):
+                issues.append(
+                    "Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку."
+                )
+        invented_speech = re.search(
+            r"«([^»]+)»[\s,—–-]*(?:произносите|отвечаете|говорите|спрашиваете|предлагаете)\s+вы\b",
+            text,
+            re.I,
+        )
+        if invented_speech and " ".join(words(invented_speech[1])) not in " ".join(words(player_text)):
+            issues.append("Модель сочинила реплику за игрока.")
+        if re.search(r"\bвы\s+(?:произносите|отвечаете|говорите|спрашиваете)\s*[:,—]\s*«", text, re.I):
+            quote = spoken(text)
+            if " ".join(words(quote)) not in " ".join(words(player_text)):
+                issues.append("Модель сочинила реплику за игрока.")
+        owned = frame.inventory.casefold()
+        for item in ("нож", "кинжал", "меч", "топор", "лук", "арбалет", "посох"):
+            if not re.search(r"\b" + item, owned) and re.search(
+                r"(?:ваш\w* (?:пояс\w*|рук\w*|сумк\w*)|при вас|у вас)[^.!?\n]{0,70}\b" + item + r"\w*",
+                prose,
+                re.I,
+            ):
+                issues.append("Неподтверждённое снаряжение героя: " + item)
+        if re.search(r"(?mi)^\s*(?:…|\.{3})?\s*(?:(?:нет|да)[,:]\s*)?я\b|^\s*(?:вы|игрок)\s*:", prose):
+            issues.append("Модель сочинила неатрибутированную реплику за игрока.")
+        if re.search(r"\bвы не можете.{0,50}(?:убить|напасть).{0,25}без причин", prose, re.I):
+            issues.append("Не запрещай намерение по моральным причинам; исход определяет движок.")
+        if not receipt.get("committed"):
+            from rpg_vkr.narrative.turn_brief import mentioned_actors
+    
+            objects = campaign.get("objects", [])
+            if (
+                objects
+                and mentioned_actors(prose, objects)
+                and re.search(
+                    r"\bвы\s+(?:бер[её]те|забираете|взяли|забрали|выбросили|передали)\b", prose, re.I
+                )
+            ):
+                issues.append("Неподтверждённый перенос зарегистрированного предмета.")
+        # A known actor cannot reappear after the hero leaves their place.
+        from rpg_vkr.domain.combat import ACTORS
+    
+        roster = campaign.get("validation_roster") or [
+            {
+                "name": actor[0],
+                "here": any(a.startswith(actor[0] + ":") for a in frame.visible_actors),
+                "alive": True,
+            }
+            for actor in ACTORS.values()
+        ]
+        for actor in roster:
+            if actor["here"] and actor["alive"]:
+                continue
+            name = actor["name"]
+            if re.search(
+                r"\b" + re.escape(name) + r"\s+(?:говорит|отвечает|поднимает голову|смотрит на вас)\b",
+                prose,
+                re.I,
+            ):
+                issues.append(
+                    "Этот собеседник отсутствует или выбыл; непосредственный разговор не подтверждён."
+                )
+        # Counts are compared to the actual roster instead of always assuming one guard.
+        for name in {a.split(":", 1)[0].split()[0] for a in frame.visible_actors}:
+            count = sum(a.split(":", 1)[0].split()[0] == name for a in frame.visible_actors)
+            match = re.search(
+                r"\b(два|двое|три|трое|четыре)\s+" + re.escape(name.rstrip("ая")) + r"\w*", prose, re.I
+            )
+            if (
+                match
+                and {"два": 2, "двое": 2, "три": 3, "трое": 3, "четыре": 4}[match[1].casefold()] > count
+            ):
+                issues.append(
+                    f"Количество существ ({name}) не совпадает с реестром: подтверждено {count}."
+                )
+        # Death checks bind a named actor, so 'dead leaves/silence' are not casualties.
+        alive_names = [a.split(":", 1)[0] for a in frame.visible_actors if ": погиб" not in a]
+        dead_names = [a.split(":", 1)[0] for a in frame.visible_actors if ": погиб" in a]
+        for name in dead_names:
+            root = re.escape(name[:-1] if name[-1:] in "аяйь" else name)
+            if re.search(r"\b" + root + r"\w*\s+(?:говорит|отвечает|встаёт|встает|бежит)", prose, re.I):
+                issues.append("Погибший персонаж не может действовать без подтверждённого эффекта.")
+        if not campaign.get("death_confirmed"):
+            for name in alive_names:
+                root = re.escape(name[:-1] if name[-1:] in "аяйь" else name)
+                if re.search(r"\b" + root + r"\w*\s+(?:погиб\w*|умер\w*|мертв\w*)", prose, re.I):
+                    issues.append("Смерть этого персонажа не подтверждена движком.")
+        if not resolution and re.search(
+            r"\bвы\s+(?:убили|убиваете|зарезали|вонзили|вонзаете|нанесли удар|наносите удар)\b",
+            prose,
+            re.I,
+        ):
+            issues.append("Сначала нужен расчёт атаки движком.")
+        if resolution:
+            last = resolution[-1]
+            if not last.get("rolled") and re.search(
+                r"\b(?:вонзаете|вонзили|удар достигает|попали|наносите удар)\b", prose, re.I
+            ):
+                issues.append("Действие заблокировано до броска; атака не выполнена.")
+            if last.get("hit") is False and re.search(
+                r"\b(?:удар (?:достигает|попадает)|вонзаете|наносите ран\w*|попали)\b", prose, re.I
+            ):
+                issues.append("По расчёту промах; попадание не подтверждено.")
+            if not last.get("defeated") and re.search(
+                r"\b(?:повержен\w*|падает без сознания|схватка завершена)\b", prose, re.I
+            ):
+                issues.append("Противник ещё не повержен.")
+        if "не удалось" in interaction:
+            if re.search(r"\bвы\s+(?:взяли|забрали|бер[её]те|забираете)\b", prose, re.I):
+                issues.append("Попытка не удалась: передача не могла дать предмет герою.")
+            # Travel is governed by per-step receipts; old atomic failures still have no prefix.
+            moves = [step for step in receipt.get("steps", []) if step["operation"] == "move"]
+            if (
+                moves
+                and not any(step["status"] == "completed" for step in moves)
+                and re.search(r"\bвы\s+(?:убежали|ушли|уходите|убегаете)\b", prose, re.I)
+            ):
+                issues.append("Неудачная цепочка не подтвердила переход.")
+        if issues:
+>           raise NarrativeConflict("; ".join(dict.fromkeys(issues)))
+E           rpg_vkr.narrative.failures.NarrativeConflict: Этот собеседник отсутствует или выбыл; непосредственный разговор не подтверждён.
+
+src/rpg_vkr/narrative/story_quality.py:273: NarrativeConflict
+
+During handling of the above exception, another exception occurred:
+
+    def test_failed_transfer_and_absent_npc_cannot_be_undone_by_writer():
+        s = Session(seed=2)
+        s.submit_interaction("беру корзину и убегаю в лес", escape_plan())
+        with pytest.raises(ValueError, match="не удалась"):
+            check_story_quality(
+                "Вы берёте корзину и убегаете в лес.",
+                build_frame(s),
+                s.turns[-1].action,
+                campaign={"interaction_result": s.turns[-1].text},
+            )
+        away = Session(seed=5)
+        away.submit_interaction("беру корзину и убегаю в лес", escape_plan())
+>       with pytest.raises(ValueError, match="нет рядом"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'нет рядом'
+E        Input: 'Этот собеседник отсутствует или выбыл; непосредственный разговор не подтверждён.'
+
+tests/test_world_transactions.py:266: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_world_transactions.py::test_failed_transfer_and_absent_npc_cannot_be_undone_by_writer
+=================== 1 failed, 959 passed in 78.13s (0:01:18) ===================

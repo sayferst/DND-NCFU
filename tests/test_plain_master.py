@@ -69,7 +69,7 @@ def test_two_bad_attempts_restore_input_without_side_effects(window, qt_app):
         assert len(requests) == 3
         assert window._session.to_dict() == before
         assert window.action_input.text() == "осмотрюсь, где я"
-        assert "двух попыток" in window.narrator_status.text()
+        assert "2 попыток" in window.narrator_status.text()
 
 
 def test_compound_question_needs_spoken_answer():

@@ -254,6 +254,9 @@ def begin_world(window):
     cancel_narration(window)
     window._generating_session = session
     window._world_seed_attempts = 0
+    window.ollama.begin_turn()
+    window._telemetry_session = session
+    window._model_base_turn = 0
     window.action_input.setEnabled(False)
     window.send_button.setEnabled(False)
     if window.enable_local_narrator.isChecked() and prepare_model(window):

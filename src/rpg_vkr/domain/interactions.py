@@ -289,7 +289,11 @@ def nonexecuting(text, roots=None):
     value = re.sub(r"\b(?:ничего не говоря|не говоря ни слова)\b", "молча", value)
     if not value.strip():
         return True
-    if re.match(r"\s*(?:я\s+)?(?:цитирую|говорю|сказал|спрашиваю|можно ли|могу ли)\b", value):
+    if re.match(r"\s*(?:если|можно ли|могу ли)\b", value):
+        return True
+    if re.match(r"\s*(?:я\s+)?(?:цитирую|говорю|сказал|спрашиваю)\b", value) and not re.search(
+        r"\bи\s+(?:затем\s+)?(?:иду|пойду|беру|возьму|отдаю|ухожу|бегу|лечу|атакую)\b", value
+    ):
         return True
     if "?" in text and not re.search(r"[.;]\s*(?:затем |потом )?", value):
         return True
@@ -305,8 +309,13 @@ def bind_plan(text, plan, *, confirmed=False):
 
     value = re.sub(r"\b(?:ничего не говоря|не говоря ни слова)\b", "молча", unquoted(text))
     changes_world = any(s.op not in {"look", "inventory"} for s in plan.steps)
-    if changes_world and (nonexecuting(text) or re.search(r"\bесли\b", value)):
+    if changes_world and nonexecuting(text):
         raise ValueError("Вопрос, отрицание или речь не подтверждают изменение мира.")
+    if changes_world and re.search(r"\bесли\b", value) and not confirmed:
+        raise PlanConfirmationRequired(
+            "Условие не имеет отдельной проверяемой механики. "
+            "Подтвердите выполнение показанных шагов с текущими ограничениями мира."
+        )
     cues = {
         "take": r"бер|взя|взять|возьм|забир|забер|прихват|утащ|хват|крад|укра|содержим",
         "drop": r"брос|выбрас|выкин|выкид|остав|выки[нд]",

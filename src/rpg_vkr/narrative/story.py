@@ -73,6 +73,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
     context = {
         "obstacle": (campaign or {}).get("obstacle", ""),
         "receipt": (campaign or {}).get("receipt") if confirmed else None,
+        "resource_balances": (campaign or {}).get("resource_balances", {}),
         "persistent_memory": (campaign or {}).get("persistent_memory", {}),
         "proposed_memories": (campaign or {}).get("proposed_memories", []),
         "player_message": text,
@@ -81,6 +82,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "world_brief": (campaign or {}).get("world_brief", ""),
         "catalog_scene": catalog_scene,
         "objects": (campaign or {}).get("objects", []),
+        "validation_roster": (campaign or {}).get("validation_roster", []),
         "actor_attempt_result": (campaign or {}).get("actor_attempt_result", "")
         if confirmed
         else "",
@@ -213,7 +215,8 @@ def legacy_story_text(text, *, confirmed=False):
 
 
 def story_proposal(data, frame, player_text, *, context=None, previous=()):
-    text = story_text(data)
+    # Numeric claims are checked against actual balances/receipt below, not by the format parser.
+    text = story_text(data, confirmed=True)
     context = context or {}
     master = master_question(player_text)
     brief = context.get("turn_brief") or turn_brief(frame, player_text, master=master)
@@ -252,6 +255,19 @@ def repair_payload(payload, reason):
         + str(reason)[:900]
         + ". Ответь обычным законченным русским текстом, без игровых команд и JSON."
     )
-    result["options"]["num_predict"] = writing_profile(payload["model"])["repair_predict"]
+    initial = payload.get("options", {}).get("num_predict", 900)
+    result["options"]["num_predict"] = min(
+        6000,
+        max(
+            writing_profile(payload["model"])["repair_predict"],
+            initial,
+            int(initial * 1.5) if "лимит" in str(reason).casefold() else initial,
+        ),
+    )
+    if "лимит" in str(reason).casefold():
+        result["messages"][0]["content"] += (
+            " Предыдущий текст был обрезан: напиши заново компактный законченный ответ "
+            "в доступный бюджет; не продолжай с середины фразы."
+        )
     result["options"]["temperature"] = 0.2
     return result

@@ -49,7 +49,7 @@ def install_narrator_panels(window):
     window.ai_chat = QCheckBox("Понимать свободный текст через ИИ и отвечать в чате")
     window.ai_chat.setChecked(True)
     page.addWidget(window.ai_chat)
-    window.world_agent = QCheckBox("DeepSeek: применять действия через проверяемый план мира")
+    window.world_agent = QCheckBox("Применять действия ИИ через проверяемый план мира")
     window.world_agent.setChecked(not window._legacy_controls)
     page.addWidget(window.world_agent)
     window.world_agent.toggled.connect(
@@ -116,6 +116,8 @@ def install_narrator_panels(window):
         "Выбран автономный рассказчик. Загрузок и запросов к ИИ нет."
     )
     page.addWidget(window.narrator_status)
+    window.narrator_metrics = plain_label("Метрики генерации: запросов пока нет.")
+    page.addWidget(window.narrator_metrics)
     window.show_narrator_details = QCheckBox("Показать последний технический ответ ИИ")
     page.addWidget(window.show_narrator_details)
     window.narrator_details = QPlainTextEdit()
@@ -175,6 +177,7 @@ def install_narrator_panels(window):
     window.ollama.failed.connect(lambda message: failed(window, message))
     window.ollama.busy_changed.connect(lambda busy: refresh_narrator_panels(window))
     window.ollama.diagnostics_ready.connect(window.narrator_details.setPlainText)
+    window.ollama.event_ready.connect(lambda event: record_model_event(window, event))
     window.cloud_key.textEdited.connect(lambda _: cancel_if_busy(window))
     window.cloud_model.textEdited.connect(lambda _: cancel_if_busy(window))
     window.cloud_allowed.toggled.connect(
@@ -189,7 +192,7 @@ def provider_changed(window):
         cancel_narration(window)
     window.routerai_catalog.cancel()
     provider = window.ai_provider.currentData()
-    window.world_agent.setVisible(provider == "routerai")
+    window.world_agent.setVisible(provider == "routerai" or not window._legacy_controls)
     previous = getattr(window, "_previous_ai_provider", None)
     if previous is not None and previous != provider:
         window.cloud_key.clear()
@@ -382,7 +385,12 @@ def failed(window, message):
     failure = getattr(window.ollama, "last_failure", None) or {}
     if (
         window._chat_text
-        and failure.get("stage") == "world_plan"
+        and (
+            failure.get("stage") == "world_plan"
+            or message.startswith(
+                ("План не выполнен:", "Попытка не выполнена:", "Сделка не выполнена:")
+            )
+        )
         and failure.get("code") not in {"network", "access_or_budget", "request_budget"}
         and not getattr(window, "_recovering_plan", False)
     ):
@@ -401,6 +409,7 @@ def failed(window, message):
     window._narrating_session = None
     window._narrator_frame = None
     window._render_journal()
+    window._model_turn_open = False
     window.narrator_status.setText(message)
     window.statusBar().showMessage(message, 10000)
     refresh_narrator_panels(window)
@@ -422,6 +431,10 @@ def models_ready(window, models):
 
 
 def request_narration(window):
+    if not getattr(window, "_model_turn_open", False):
+        window.ollama.begin_turn()
+        window._telemetry_session = window._session
+        window._model_turn_open = True
     if window.ai_provider.currentData() != "local" and not prepare_model(window):
         return
     if (
@@ -472,6 +485,10 @@ def request_chat(window, text):
         failed(window, "Для свободного чата найдите и выберите локальную модель в «Рассказчик».")
         return True
     cancel_narration(window)
+    window.ollama.begin_turn()
+    window._telemetry_session = window._session
+    window._model_base_turn = len(window._session.turns)
+    window._model_turn_open = True
     window._pending_memories = []
     window._chat_target_id = ""
     window._story_obstacle = ""
@@ -588,9 +605,11 @@ def accept_inline_reply(window, text, reply):
             {"message": {"role": "assistant", "content": reply}}, frame, text, context=context
         )
     except (ValueError, TypeError) as error:
+        window.ollama.record_validation(False, str(error))
         window._story_obstacle = "Предыдущий текст противоречил фактам: " + str(error)
         continue_story(window, text)
         return
+    window.ollama.record_validation(True)
     accept_proposal(window, proposal)
 
 
@@ -702,6 +721,7 @@ def catalog_context(window, text):
         state["objects"] = sorted(state["objects"], key=lambda o: not o["available_here"])[:40]
         state["actors_here"] = state["actors_here"][:20]
     state["recent_actions"] = [t.action[:300] for t in window._session.turns[-4:]]
+    state["conversation_memory"] = campaign_context(window._session).get("actors", [])
     index = CatalogIndex(window._session)
     try:
         state["catalog_records"] = index.relevant(text)
@@ -942,6 +962,7 @@ def accept_world_plan(window, result):
         continue_story(window, text)
         return
     confirmation = False
+    confirmation_reason = ""
     try:
         state = window._session.interaction_state()
         catalog = window._session.catalog
@@ -982,8 +1003,9 @@ def accept_world_plan(window, result):
         )
         try:
             bind_plan(text, plan)
-        except PlanConfirmationRequired:
+        except PlanConfirmationRequired as error:
             confirmation = True
+            confirmation_reason = str(error)
     except (ValueError, TypeError, KeyError) as error:
         failed(window, "План не выполнен: " + str(error))
         return
@@ -1000,11 +1022,16 @@ def accept_world_plan(window, result):
     }
     preview = "\n".join(verbs[s.op] + ": " + names.get(s.target, s.target) for s in plan.steps)
     question = (
-        "Попытка завладеть чужой вещью: проверка Ловкости, сложность 15. "
-        "Свидетели могут стать враждебными. Бросить кубик?\n\n"
-        if risky
-        else "Мастер понял вашу формулировку так. Выполнить?\n\n"
-    ) + preview
+        (
+            "Попытка завладеть чужой вещью: проверка Ловкости, сложность 15. "
+            "Свидетели могут стать враждебными. Бросить кубик?\n\n"
+            if risky
+            else "Мастер понял вашу формулировку так. Выполнить?\n\n"
+        )
+        + confirmation_reason
+        + "\n"
+        + preview
+    )
     if (risky or confirmation) and not window._confirm(question):
         cancel_narration(window)
         window.narrator_status.setText("Попытка отменена; предметы и кубики не изменены.")
@@ -1226,6 +1253,7 @@ def accept_proposal(window, proposal, *, source=None):
     window._dirty = True
     window._refresh_character()
     window._render_journal()
+    window._model_turn_open = False
     window.narrator_status.setText("Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.")
     refresh_narrator_panels(window)
 
@@ -1313,6 +1341,7 @@ def accept_narration(window, note):
     window._dirty = True
     window._render_journal()
     window._refresh_slots()
+    window._model_turn_open = False
     window.narrator_status.setText("Рассказ добавлен. Сохраните сессию в ячейку для продолжения.")
     refresh_narrator_panels(window)
 
@@ -1335,10 +1364,57 @@ def after_action(window, turn):
         )
 
 
+def record_model_event(window, event):
+    repository = window._campaign_repository
+    session = getattr(window, "_telemetry_session", window._session)
+    base = getattr(window, "_model_base_turn", len(session.turns))
+    event = {
+        **event,
+        "world_committed": any(
+            t.interaction or t.catalog or t.trade or t.combat or t.challenge or t.intent
+            for t in session.turns[base:]
+        ),
+    }
+    if repository:
+        try:
+            repository.record_model_call(
+                getattr(window, "_telemetry_session", window._session), event
+            )
+        except (ValueError, OSError, sqlite3.Error):
+            window.narrator_metrics.setText(
+                "Не удалось записать метрики; состояние игры сохранено отдельно."
+            )
+            return
+    refresh_model_metrics(window)
+
+
+def refresh_model_metrics(window):
+    repository = window._campaign_repository
+    try:
+        rows = repository.model_stats(window._session) if repository else []
+    except (ValueError, OSError, sqlite3.Error):
+        return
+    calls = [r for r in rows if r["event_type"] == "model_response"]
+    total = sum(r["count"] for r in calls)
+    rejected = sum(r["count"] for r in calls if r["outcome"] == "rejected")
+    failed_count = sum(r["count"] for r in calls if r["outcome"] in {"failed", "cancelled"})
+    inline = sum(
+        r["count"]
+        for r in rows
+        if r["event_type"] == "prose_validation" and r["outcome"] == "rejected"
+    )
+    window.narrator_metrics.setText(
+        f"Кампания: генераций {total}; отклонённых ответов {rejected}; "
+        f"сбоев/отмен {failed_count}; отклонений встроенного рассказа {inline}. "
+        "Приём формата плана не означает успех действия или оценку качества модели."
+    )
+
+
 def refresh_narrator_panels(window):
     if not hasattr(window, "ollama"):
         return
     session = window._session
+    refresh_model_metrics(window)
     if window._narrating_session is not None and (
         window._narrating_session is not session or window._narrating_index != len(session.turns)
     ):

@@ -33,6 +33,10 @@ class CampaignRepository:
                 raise ValueError("По пути памяти находится другая база; файл не изменён.")
             db.execute(f"PRAGMA application_id={APPLICATION_ID}")
             db.executescript("""
+                CREATE TABLE IF NOT EXISTS model_calls(
+                    id TEXT PRIMARY KEY, campaign TEXT NOT NULL, event_type TEXT NOT NULL,
+                    outcome TEXT NOT NULL, code TEXT NOT NULL, payload TEXT NOT NULL);
+                CREATE INDEX IF NOT EXISTS model_calls_campaign ON model_calls(campaign);
                 CREATE TABLE IF NOT EXISTS campaigns(
                     id TEXT PRIMARY KEY, hero TEXT NOT NULL, title TEXT NOT NULL,
                     revision INTEGER NOT NULL, digest TEXT NOT NULL, payload TEXT NOT NULL,
@@ -75,6 +79,50 @@ class CampaignRepository:
     @staticmethod
     def identity(session):
         return session.campaign.world_id + ":" + session.campaign.hero_id
+
+    def record_model_call(self, session, event):
+        # Store only an explicit safe projection, never arbitrary client payloads.
+        fields = {
+            "id",
+            "turn_id",
+            "timestamp_utc",
+            "event_type",
+            "stage",
+            "attempt",
+            "model",
+            "elapsed_ms",
+            "outcome",
+            "code",
+            "reason",
+            "finish_reason",
+            "usage",
+            "warnings",
+            "world_committed",
+        }
+        value = {k: v for k, v in event.items() if k in fields}
+        if value.get("event_type") not in {"model_response", "prose_validation"}:
+            raise ValueError("Unknown model metric")
+        with closing(sqlite3.connect(self.path)) as db, db:
+            db.execute(
+                "INSERT OR IGNORE INTO model_calls VALUES (?,?,?,?,?,?)",
+                (
+                    value["id"],
+                    self.identity(session),
+                    value["event_type"],
+                    value["outcome"],
+                    value.get("code", ""),
+                    dump(value),
+                ),
+            )
+
+    def model_stats(self, session):
+        with closing(sqlite3.connect(self.path)) as db:
+            rows = db.execute(
+                "SELECT event_type,outcome,code,COUNT(*) FROM model_calls "
+                "WHERE campaign=? GROUP BY event_type,outcome,code",
+                (self.identity(session),),
+            ).fetchall()
+        return [{"event_type": t, "outcome": o, "code": c, "count": n} for t, o, c, n in rows]
 
     def sync(self, session):
         token = (

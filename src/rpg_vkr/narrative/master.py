@@ -84,10 +84,8 @@ def campaign_context(session, target=""):
     from rpg_vkr.domain.receipts import receipt
 
     scene = session.interaction_state()
-    actors = []
+    actors, validation_roster = [], []
     for actor in scene.actor_refs:
-        if actor.place != scene.current:
-            continue
         if actor.id in ACTORS:
             state = session.combat.actor(actor.id)
             alive = state.hp > 0
@@ -102,13 +100,45 @@ def campaign_context(session, target=""):
                 and (entity.state or {}).get("hp", 1) > 0
                 and (entity.state or {}).get("life") != "dead"
             )
-        actors.append({"id": actor.id, "name": actor.name, "available": alive})
+        validation_roster.append(
+            {
+                "id": actor.id,
+                "name": actor.name,
+                "here": actor.place == scene.current,
+                "alive": alive,
+            }
+        )
+        if actor.place != scene.current:
+            continue
+        from rpg_vkr.domain.social import grievance
+
+        actors.append(
+            {
+                "id": actor.id,
+                "name": actor.name,
+                "available": alive,
+                "social_memory": {
+                    "grievance": grievance(session.turns, actor.id),
+                    "recent_acts": [
+                        t.dialogue.act
+                        for t in session.turns
+                        if t.dialogue and t.dialogue.target == actor.id
+                    ][-4:],
+                },
+            }
+        )
     return {
         "receipt": receipt(session),
+        "resource_balances": {
+            "world.gold": session.world.gold,
+            "world.hp": session.world.hp,
+            "progress.xp": session.progress.xp,
+        },
         "objects": [
             {"id": t.id, "name": t.name, "holder": t.holder} for t in scene.things if scene.here(t)
         ],
         "actors": actors,
+        "validation_roster": validation_roster,
         "persistent_memory": session._memory_provider(
             session.turns[-1].action if session.turns else ""
         )
