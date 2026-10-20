@@ -232,6 +232,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._build_workspace(play_layout, slots_group, note)
         self._build_episode_panels(layout)
         install_resolution_panel(self, columns)
+        from rpg_vkr.ui.flash_settings import install_flash_settings
+
+        install_flash_settings(self)
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(bool(text.strip()))
@@ -598,6 +601,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def submit_action(self, *, use_ai=True, origin="typed") -> None:
         action = self.action_input.text().strip()
         if not action:
+            return
+        if use_ai and getattr(self, "_flash_pending", False):
+            self.narrator_status.setText(
+                "Проверяется подключение Flash. Реплика сохранена в поле ввода; "
+                "отправьте после проверки."
+            )
             return
         if origin == "typed" and request_local_actions(self, action):
             return
