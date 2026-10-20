@@ -1318,7 +1318,7 @@ class OllamaClient(QObject):
                 labels.get(self.last_failure["code"], self.last_failure["code"]) + ": " + str(error)
             )
             self.failed.emit(
-                f"{stage}: {reason}. Подробности — в разделе «Рассказчик». "
+                f"{stage}: {reason}. Подробности — в диагностике ИИ-мастера. "
                 + (
                     "Намерение не выполнено; текст возвращён в поле ввода."
                     if kind in {"intent", "challenge", "world_plan"}

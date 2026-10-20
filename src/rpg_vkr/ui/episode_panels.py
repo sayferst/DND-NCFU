@@ -345,6 +345,8 @@ class EpisodePanels:
             "Кубики",
             "Память мира",
             "Рассказчик",
+            "Мастер",
+            "Художник",
             "Каталог мира",
             "Хроники мира",
             "Команды",
@@ -394,6 +396,8 @@ class EpisodePanels:
         self._refresh_episode_panels()
 
     def open_section(self, name: str) -> None:
+        if name == "Рассказчик" and not self._legacy_controls:
+            name = "Мастер"
         if name == "Каталог мира" and not self._legacy_controls:
             name = "Хроники мира"
         for index in range(self.tabs.count()):

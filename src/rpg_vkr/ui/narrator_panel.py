@@ -35,7 +35,9 @@ def install_narrator_panels(window):
     window.import_campaign_button.clicked.connect(lambda: import_campaign(window))
     memory.addWidget(window.import_campaign_button)
 
-    page = window._episode_page("Рассказчик")
+    page = window._episode_page("Рассказчик" if window._legacy_controls else "Мастер")
+    if not window._legacy_controls:
+        window.artist_page = window._episode_page("Художник")
     page.addWidget(
         plain_label(
             "ИИ-мастер понимает обычную речь и отвечает художественным текстом. "
@@ -542,7 +544,7 @@ def request_chat(window, text):
     if not prepare_model(window):
         if window.ai_provider.currentData() != "local":
             return True
-        failed(window, "Для свободного чата найдите и выберите локальную модель в «Рассказчик».")
+        failed(window, "Выберите модель и настройте подключение в панели ИИ-мастера.")
         return True
     cancel_narration(window)
     window.ollama.begin_turn()

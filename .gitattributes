@@ -25,3 +25,6 @@ docs/validation/images-2026-10-20/*.txt -text whitespace=-blank-at-eol
 
 # Connection regression evidence: preserve raw Qt/pytest diagnostics.
 docs/validation/connection-2026-10-20/*.txt -text whitespace=-blank-at-eol
+
+# Master/Artist UI acceptance evidence.
+docs/validation/artist-2026-10-20/*.txt -text whitespace=-blank-at-eol

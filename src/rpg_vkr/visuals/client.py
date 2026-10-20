@@ -99,15 +99,25 @@ class ImagesTransport:
 
     def metadata(self, key):
         try:
-            allowance = parse_allowance(
-                json.loads(self.read(self.base + "/key", key=key, maximum=65536))
-            )
-            catalog = json.loads(self.read(self.base + "/models", maximum=8 * 1024 * 1024))
-            return allowance, catalog
+            data = json.loads(self.read(self.base + "/key", key=key, maximum=65536))
         except (ValueError, TypeError, RecursionError):
             raise ImageError(
-                "metadata", "Не подтверждены ключ, лимит или каталог изображений."
+                "metadata", "RouterAI вернул неверный JSON проверки ключа Художника."
             ) from None
+        try:
+            allowance = parse_allowance(data)
+        except (ValueError, TypeError, RecursionError) as error:
+            message = (
+                str(error) if isinstance(error, ValueError) else "Неверный формат лимита ключа."
+            )
+            raise ImageError("allowance", message) from None
+        return allowance, self.catalog()
+
+    def catalog(self):
+        try:
+            return json.loads(self.read(self.base + "/models", maximum=16 * 1024 * 1024))
+        except (ValueError, TypeError, RecursionError):
+            raise ImageError("catalog", "Каталог изображений вернул неверный JSON.") from None
 
     def download(self, url):
         parsed = urllib.parse.urlsplit(url)

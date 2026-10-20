@@ -242,6 +242,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             try:
                 install_visuals(self)
             except (ValueError, OSError, sqlite3.Error):
+                if hasattr(self, "artist_page"):
+                    self.artist_page.addWidget(
+                        QLabel("Хранилище изображений недоступно. Мастер работает отдельно.")
+                    )
                 self.settings_form.addRow(
                     QLabel(
                         "Хранилище изображений недоступно. "

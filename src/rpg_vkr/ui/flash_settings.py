@@ -22,7 +22,7 @@ def connection_message(window, text):
 
 
 def install_flash_settings(window):
-    form = window.settings_form
+    form = window.settings_form if window._legacy_controls else window.connection_options_layout
     window._connection_path = window._saves.directory.parent / "ai-connection.json"
     window._credential_path = window._saves.directory.parent / "routerai-credential.bin"
     window._flash_preferences = ConnectionPreferences.load(window._connection_path)
@@ -38,7 +38,7 @@ def install_flash_settings(window):
     form.addRow("Мастер:", window.flash_status)
     window.flash_configure = QPushButton("Настроить API-ключ и выбрать модель…")
     window.flash_configure.clicked.connect(lambda: configure(window))
-    form.addRow(window.flash_configure)
+    window.settings_form.addRow(window.flash_configure)
     options = getattr(window, "connection_options_layout", form)
     window.remember_key = QCheckBox("Запоминать последний ключ на этом ПК · Windows")
     window.remember_key.setEnabled(windows_credentials_available())
@@ -139,7 +139,7 @@ def restore_enabled(window):
 
 
 def configure(window):
-    window.open_section("Рассказчик")
+    window.open_section("Рассказчик" if window._legacy_controls else "Мастер")
     # Opening the form must not replace a provider, erase its key or change the model.
     window.cloud_key.setFocus()
 

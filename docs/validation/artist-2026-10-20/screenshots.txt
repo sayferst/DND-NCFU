@@ -1,0 +1,4 @@
+Fontconfig error: No writable cache directories
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+7 Qt screenshots; synthetic key/catalog; only GET key+models; no paid request.

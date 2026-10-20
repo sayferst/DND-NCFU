@@ -60,7 +60,8 @@ class VisualController(QObject):
         self.worker = ImagesWorker(self)
         self.worker.finished.connect(self.finished)
         self.notice = (
-            "Изображения создаются только по явному запросу. Месячный бюджет по умолчанию0₽."
+            "Изображения создаются только по вашей команде. "
+            "Расходы и качество настраиваются в бюджете Художника."
         )
         self.install_settings()
 
@@ -71,6 +72,8 @@ class VisualController(QObject):
         self.changed.emit()
 
     def key(self):
+        if hasattr(self.window, "artist_panel"):
+            return self.window.artist_panel.effective_key()
         window = self.window
         return (
             (
@@ -83,8 +86,14 @@ class VisualController(QObject):
         )
 
     def install_settings(self):
-        form = self.window.settings_form
-        title = QLabel("Визуальная память · RouterAI Images")
+        if self.window._legacy_controls:
+            form = self.window.settings_form
+        else:
+            from rpg_vkr.ui.artist_panel import ArtistPanel
+
+            self.window.artist_panel = ArtistPanel(self.window, self)
+            form = self.window.artist_panel.budget_form
+        title = QLabel("Бюджет и качество изображений")
         title.setProperty("heading", True)
         form.addRow(title)
         self.consent = QCheckBox("Разрешить отправку публичных описаний и референсов в RouterAI")
@@ -122,9 +131,12 @@ class VisualController(QObject):
         self.totals = QLabel()
         self.totals.setWordWrap(True)
         form.addRow(self.totals)
-        self.label = QLabel(self.notice)
-        self.label.setWordWrap(True)
-        form.addRow(self.label)
+        if hasattr(self.window, "artist_panel"):
+            self.label = self.window.artist_panel.operation_status
+        else:
+            self.label = QLabel(self.notice)
+            self.label.setWordWrap(True)
+            form.addRow(self.label)
         self.cancel_button = QPushButton("Отменить очередь / ожидание изображения")
         self.cancel_button.clicked.connect(self.cancel)
         form.addRow(self.cancel_button)
@@ -175,6 +187,8 @@ class VisualController(QObject):
                 return
             settings.save(self.settings_path)
             self.settings = settings
+            if hasattr(self.window, "artist_panel"):
+                self.window.artist_panel.refresh_model_details()
             self.status("Настройки изображений сохранены. Генерация не запускалась.")
         except (ValueError, OSError) as error:
             self.status(str(error))
@@ -268,11 +282,14 @@ class VisualController(QObject):
             return
         if not self.settings.consent or self.settings.monthly_micros <= 0:
             self.status(
-                "В настройках изображений разрешите передачу данных и задайте месячный бюджет."
+                "В панели «Художник» откройте бюджет, разрешите передачу данных "
+                "и задайте месячный лимит."
             )
             return
         if not self.key():
-            self.status("Нужен действительный ключ RouterAI в параметрах подключения.")
+            self.status(
+                "В панели «Художник» укажите отдельный ключ RouterAI или выберите ключ Мастера."
+            )
             return
         pending = [self.active] if self.active else []
         if any(
@@ -476,6 +493,8 @@ class VisualController(QObject):
         dialog.exec()
 
     def close(self):
+        if hasattr(self.window, "artist_panel"):
+            self.window.artist_panel.close()
         self.closed = True
         self.queue.clear()
         if not self.worker.busy:

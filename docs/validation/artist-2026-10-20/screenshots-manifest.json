@@ -1,0 +1,34 @@
+{
+  "synthetic_loopback": true,
+  "paid_requests": 0,
+  "files": [
+    {
+      "path": "artist-1280.png",
+      "sha256": "53f884381856dedf49b50f2d5321a0e8c8a6049bfe4e3d54602a048fd906c29c"
+    },
+    {
+      "path": "artist-budget-light-1280.png",
+      "sha256": "558d71e01e8731e39ab1ab5425da7851d40f7453cfe3226125c9eb6f0e8b4270"
+    },
+    {
+      "path": "artist-compact-models-640.png",
+      "sha256": "2b35023a0ac887671560fbe9a7bef528c6862399f336a7eff3acd665d9368145"
+    },
+    {
+      "path": "artist-compact-top-640.png",
+      "sha256": "6c3937d31e179e5e68e7ebae3b633abf4164c0e56154051209eded3d340773cd"
+    },
+    {
+      "path": "flux-details-1280.png",
+      "sha256": "fcf07596e1b60f23cbbbc04cef7c3ad6b989225d724d9461f745db77dde896f1"
+    },
+    {
+      "path": "master-1280.png",
+      "sha256": "1253f09c453b1af507e709e7a9214f35ea45057ed4edc2c191f2f3df72543cfc"
+    },
+    {
+      "path": "models-popup.png",
+      "sha256": "8025bb801507e39107a3a2e9ac226975ca65fef392a73913c045c3b106aeeb7d"
+    }
+  ]
+}

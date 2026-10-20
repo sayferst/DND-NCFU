@@ -39,3 +39,6 @@ Thumbs.db
 *.log
 
 # Do not ignore all JSON/CSV/SQLite files: experiments may need them.
+
+# Optional separately encrypted image-provider credential.
+artist-credential.bin
