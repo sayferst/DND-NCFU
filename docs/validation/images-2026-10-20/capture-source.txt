@@ -1,0 +1,58 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from dataclasses import replace
+from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtCore import QTimer
+from PySide6.QtTest import QTest
+from response_cases import new_session
+from test_chronicles import learn
+from test_images_client import PNG
+from test_visual_controller import FakeTransport
+from rpg_vkr.storage.slots import SaveSlots
+from rpg_vkr.ui.main_window import MainWindow
+from rpg_vkr.ui.knowledge import knowledge_entries
+from rpg_vkr.visuals.context import entity_target
+
+app=QApplication([])
+out=Path('docs/validation/images-2026-10-20/screenshots');out.mkdir(exist_ok=True)
+with TemporaryDirectory() as folder:
+    session=new_session();learn(session,'public_name','Веста')
+    window=MainWindow(session=session,saves=SaveSlots(Path(folder)/'saves'))
+    window._confirm=lambda *_:True
+    window.show()
+    def snap(name,section,size=(1280,900)):
+        window.resize(*size);window.open_section(section);app.processEvents()
+        window.grab().save(str(out/(name+'.png')))
+        print(name,window.width(),window.height(),flush=True)
+    snap('menu','Главное меню',(1280,800))
+    snap('adventure','Приключение')
+    snap('chronicles','Хроники мира')
+    npc=next(e for e in knowledge_entries(session) if e.key=='vesta')
+    controller=window.visuals;target=entity_target(session,npc)
+    # Synthetic 1px fixture only, never an API image or a game-canon modification.
+    request=controller.registry.reserve(target.campaign,target.subject,'synthetic-fixture',100,100)
+    controller.registry.mark_submitted(request)
+    controller.registry.complete(request,PNG,receipt='SYNTHETIC NO API CALL')
+    controller.registry.bind(target.campaign,target.entity,target.subject)
+    window.chronicles_panel.search.setText('Веста');controller.changed.emit();app.processEvents()
+    snap('chronicles-cache','Хроники мира')
+    snap('chronicles-compact','Хроники мира',(640,620))
+    def modal(name):
+        dialog=app.activeModalWidget()
+        if dialog:
+            dialog.grab().save(str(out/(name+'.png')));dialog.reject()
+        else: QTimer.singleShot(30,lambda:modal(name))
+    QTimer.singleShot(50,lambda:modal('versions'))
+    controller.view(target.campaign,target.entity)
+    controller.worker.transport=FakeTransport();controller.key=lambda:'fake-key'
+    controller.settings=replace(controller.settings,monthly_micros=10000000,consent=True)
+    QTimer.singleShot(80,lambda:modal('cost-confirmation-SYNTHETIC'))
+    controller.request(target,regenerate=True)
+    for i in range(30):
+        QTest.qWait(20)
+        if not controller.active: break
+    assert not controller.worker.transport.posts
+    snap('image-settings','Настройки')
+    page=window.tabs.currentWidget();page.verticalScrollBar().setValue(page.verticalScrollBar().maximum())
+    app.processEvents();window.grab().save(str(out/'image-settings-bottom.png'))
+    window.close()

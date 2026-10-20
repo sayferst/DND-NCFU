@@ -1,0 +1,42 @@
+{
+  "synthetic_fixture": true,
+  "paid_requests": 0,
+  "files": [
+    {
+      "path": "screenshots/adventure.png",
+      "sha256": "96ccbbff6928575a02f494f5d3540bd1463047ff3f8cd782c35c9dd958af9786"
+    },
+    {
+      "path": "screenshots/chronicles-cache.png",
+      "sha256": "137776081ad2f37985ea9fcb56b02fbade65c1d320be414a3002253563947661"
+    },
+    {
+      "path": "screenshots/chronicles-compact.png",
+      "sha256": "04e51148206326a686de8c7387860cd55d2f9c18d778e9a8d0084b101c00e7d2"
+    },
+    {
+      "path": "screenshots/chronicles.png",
+      "sha256": "e814df5e489e9c029d927a74ab39884185775a339656b64f99661596f5be9e01"
+    },
+    {
+      "path": "screenshots/cost-confirmation-SYNTHETIC.png",
+      "sha256": "8a5f8f05197e8268bf04fa57b2cb54f36d6fab2cc6f261a1ddab80a0cfc6ab8e"
+    },
+    {
+      "path": "screenshots/image-settings-bottom.png",
+      "sha256": "364f71094f82d07f1cc034bb18025e353c2bc8230a9e111cbb0b321a501d504b"
+    },
+    {
+      "path": "screenshots/image-settings.png",
+      "sha256": "83a9d3c8a4293cb9110019ffffe131bd7c070866ea7ffc865d42397d84e75a43"
+    },
+    {
+      "path": "screenshots/menu.png",
+      "sha256": "60f7e6428739bd2f9127222768ba770fac5c160e8d00de9809b6e210d28caf19"
+    },
+    {
+      "path": "screenshots/versions.png",
+      "sha256": "62b3f0cc253b3bd10ce4bfa894dbe78a5094e717ee351f77990f89522ba0b354"
+    }
+  ]
+}

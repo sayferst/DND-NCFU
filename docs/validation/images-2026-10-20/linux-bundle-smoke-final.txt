@@ -1,0 +1,2 @@
+Resources OK. No model requests.
+Fontconfig error: No writable cache directories
