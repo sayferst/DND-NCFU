@@ -86,7 +86,7 @@ def test_npc_portrait_then_scene_passes_same_reference_bytes(visual):
     controller.request_scene()
     finish(controller)
     body = fake.posts[-1]
-    assert body["model"] == FLUX and body["input_references"][0].startswith(
+    assert body["model"] == FLUX and body["input_references"][0]["image_url"]["url"].startswith(
         "data:image/png;base64,"
     )
     scene = scene_target(window._session)
@@ -167,7 +167,7 @@ def test_missing_reference_capability_never_silently_drops_identity(visual, monk
 
     def metadata(key):
         data = catalog()
-        data["data"][0]["supported_parameters"] = ["size"]
+        data["data"][0]["per_request_limits"]["max_input_references"] = 0
         return SimpleNamespace(remaining=Decimal(100)), data
 
     monkeypatch.setattr(fake, "metadata", metadata)

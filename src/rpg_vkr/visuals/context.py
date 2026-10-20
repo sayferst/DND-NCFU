@@ -32,6 +32,7 @@ class VisualTarget:
     participants: tuple[str, ...] = ()
     labels: tuple[tuple[str, str], ...] = ()
     shared_subjects: tuple[tuple[str, str], ...] = ()
+    economy_eligible: bool = False
 
 
 def public_brief(entry):
@@ -76,6 +77,7 @@ def entity_target(session, entry, *, shared=None):
         (entry.key,),
         ((entry.key, entry.title),),
         ((entry.key, subject),) if common else (),
+        entry.category == "items" and ordinary,
     )
 
 

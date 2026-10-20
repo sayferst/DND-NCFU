@@ -73,13 +73,30 @@ class ImageQuote:
     total: int
     reference_limit: int
     supports_references: bool
+    size_parameter: str = "size"
+
+    @property
+    def size_description(self):
+        return self.size if self.size_parameter else "по умолчанию модели (размер не задан)"
 
 
-def route(category, common, references):
-    return RECRAFT if category == "items" and common and not references else FLUX
+def route(category, economy_eligible, references):
+    return RECRAFT if category == "items" and economy_eligible and not references else FLUX
+
+
+def route_reason(category, economy_eligible, references):
+    if references:
+        return "Есть прежние изображения: FLUX сохраняет визуальную идентичность."
+    if category == "items" and economy_eligible:
+        return "Обычный предмет без референсов: экономичная Recraft."
+    return "Персонаж, существо, локация, событие или уникальный объект: качественная FLUX."
 
 
 def quote_model(catalog, model, size, reference_count=0):
+    if model not in {RECRAFT, FLUX} or size not in SIZES:
+        raise ValueError("Неизвестная модель или разрешение изображений.")
+    if type(reference_count) is not int or not 0 <= reference_count <= 32:
+        raise ValueError("Некорректное количество референсов.")
     rows = _data(catalog)
     if not isinstance(rows, list):
         raise ValueError("Каталог изображений имеет неизвестный формат.")
@@ -91,23 +108,37 @@ def quote_model(catalog, model, size, reference_count=0):
     if not isinstance(prices, dict) or not isinstance(units, dict):
         raise ValueError("Неизвестная цена.")
     parameters = row.get("supported_parameters", [])
-    if not isinstance(parameters, list) or "size" not in parameters:
-        raise ValueError("Каталог не подтверждает параметр size. Нужен контракт Images API.")
-    limits = row.get("per_request_limits") or {}
+    if parameters is None:
+        parameters = []
+    if not isinstance(parameters, list):
+        raise ValueError("Неизвестный формат параметров модели.")
+    size_parameter = (
+        "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+    )
+    limits = row.get("per_request_limits", {})
+    if limits is None:
+        limits = {}
     if not isinstance(limits, dict):
         raise ValueError("Неизвестные ограничения модели.")
     supported = limits.get("supported_resolutions")
-    if not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size])):
+    if supported is not None and (
+        not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+    ):
         raise ValueError("Выбранное разрешение не подтверждено каталогом.")
-    cap = limits.get("max_input_references", 0)
+    # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+    # supported_parameters can be incomplete. Without an advertised upper limit,
+    # use one reference, not an invented multi-image capacity.
+    cap = limits.get("max_input_references", 1 if model == FLUX else 0)
     if type(cap) is not int or not 0 <= cap <= 32:
         raise ValueError("Неизвестен лимит референсов.")
-    supports = model == FLUX and "input_references" in parameters and cap > 0
+    supports = model == FLUX and cap > 0
     if reference_count and (not supports or reference_count > cap):
         raise ValueError("Каталог не подтверждает нужное количество input_references.")
     total = None
     variants = row.get("image_pricing", [])
-    if variants and not isinstance(variants, list):
+    if variants is None:
+        variants = []
+    if not isinstance(variants, list):
         raise ValueError("Неизвестный тариф вариантов.")
     exact = [
         r
@@ -116,12 +147,25 @@ def quote_model(catalog, model, size, reference_count=0):
         and r.get("unit") == "image"
         and r.get("variant") in (size, SIZES[size])
     ]
+    # A priced resolution variant is model-specific evidence too. The Images
+    # guide defines both transports; supported_parameters need not repeat them.
+    if not size_parameter and len(exact) == 1:
+        size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+    if not size_parameter and (
+        size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
+    ):
+        raise ValueError(
+            "Нельзя подтвердить выбранный размер и его цену: в каталоге нет "
+            "size/resolution или подходящего тарифа разрешения."
+        )
     generic = [
         r
         for r in variants
         if isinstance(r, dict) and r.get("unit") == "image" and r.get("variant") is None
     ]
     choices = exact or generic
+    if len(choices) > 1 or variants and not choices:
+        raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
     if len(choices) == 1:
         total = micros(choices[0].get("price"))
     elif units.get("image_output") == "image":
@@ -138,7 +182,7 @@ def quote_model(catalog, model, size, reference_count=0):
             total += micros(price)
         else:
             raise ValueError("Есть дополнительные расходы без проверенного полного расчёта.")
-    return ImageQuote(model, size, total, cap, supports)
+    return ImageQuote(model, size, total, cap, supports, size_parameter)
 
 
 def payload(quote, prompt, references=()):
@@ -146,9 +190,19 @@ def payload(quote, prompt, references=()):
         raise ValueError("Некорректное визуальное описание.")
     if len(references) > quote.reference_limit or references and not quote.supports_references:
         raise ValueError("Референсы не разрешены для этой модели.")
-    result = {"model": quote.model, "prompt": prompt, "n": 1, "size": SIZES[quote.size]}
+    result = {"model": quote.model, "prompt": prompt, "n": 1}
+    if quote.model == RECRAFT:
+        # Exact model-page example: Recraft accepts a square aspect_ratio,
+        # including the minimal request without a size control.
+        result["aspect_ratio"] = "1:1"
+    if quote.size_parameter:
+        result[quote.size_parameter] = (
+            SIZES[quote.size] if quote.size_parameter == "size" else quote.size
+        )
     if references:
         if quote.model != FLUX:
             raise ValueError("Recraft принимает только текст.")
-        result["input_references"] = list(references)
+        result["input_references"] = [
+            {"type": "image_url", "image_url": {"url": reference}} for reference in references
+        ]
     return result

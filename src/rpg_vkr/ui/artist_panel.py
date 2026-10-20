@@ -313,7 +313,8 @@ class ArtistPanel(QObject):
                     else self.controller.settings.quality_cap
                 )
                 description += (
-                    f"\nРазмер {size}: полная цена {rub(quote.total)}; ваш порог {rub(cap)}. "
+                    f"\nРазмер {quote.size_description}: полная цена {rub(quote.total)}; "
+                    f"ваш порог {rub(cap)}. "
                     f"Референсы: до {quote.reference_limit if quote.supports_references else 0}."
                 )
             except ValueError as error:

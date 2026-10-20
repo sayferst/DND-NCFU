@@ -1,0 +1,8 @@
+{
+  "date": "2026-10-20",
+  "origin": "Owner-provided pasted file_00000000ae548211a1440cdf512c751b, Генерация изображений; not a live API test",
+  "sha256": "0ee51ab544568df481d1cba8bc433ef145a1529ed1d6f3ff6940cee71a8f2337",
+  "bytes": 20159,
+  "endpoint": "POST https://routerai.ru/api/v1/images",
+  "live_paid_requests": 0
+}

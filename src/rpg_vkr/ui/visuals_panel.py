@@ -34,6 +34,7 @@ from rpg_vkr.visuals.policy import (
     payload,
     quote_model,
     route,
+    route_reason,
     rub,
 )
 from rpg_vkr.visuals.registry import VisualRegistry
@@ -55,6 +56,7 @@ class VisualController(QObject):
         self.queue = deque()
         self.active = None
         self.stage = ""
+        self.last_route = ""
         self.cancelled = False
         self.closed = False
         self.worker = ImagesWorker(self)
@@ -311,6 +313,7 @@ class VisualController(QObject):
         self.active = self.queue.popleft()
         self.cancelled = False
         self.stage = "metadata"
+        self.last_route = ""
         self.status("Проверяются актуальные тарифы изображений и лимит ключа…")
         key = self.key()
         self._key = key
@@ -342,7 +345,7 @@ class VisualController(QObject):
                 allowance, catalog = result["value"]
                 self.prepare_paid(allowance, catalog)
             except (ValueError, OSError) as error:
-                self.status(str(error))
+                self.status((self.last_route + "\n" if self.last_route else "") + str(error))
                 self.active = None
                 self.pump()
             return
@@ -352,7 +355,8 @@ class VisualController(QObject):
             self.status(result["error"])
         else:
             self.status(
-                "Изображение сохранено локально. "
+                self.last_route
+                + "\nИзображение сохранено локально. "
                 + ("Ожидание было отменено; повтор не выполнен." if self.cancelled else "")
             )
         self.refresh_totals()
@@ -372,7 +376,9 @@ class VisualController(QObject):
         previous = self.registry.latest_for(target.campaign, target.entity)
         if previous and previous["id"] not in {a["id"] for a in candidates}:
             candidates.insert(0, previous | {"caption": target.title})
-        model = route(target.category, target.common, bool(candidates))
+        model = route(target.category, target.economy_eligible, bool(candidates))
+        reason = route_reason(target.category, target.economy_eligible, bool(candidates))
+        self.last_route = f"Автовыбор: {model}. {reason}"
         size = (
             self.settings.scene_size if target.category == "events" else self.settings.portrait_size
         )
@@ -386,7 +392,7 @@ class VisualController(QObject):
             raise ValueError("Цена FLUX выше разрешённого порога. Запрос не отправлен.")
         beyond = model == RECRAFT and quote.total > self.settings.economy_cap
         text = (
-            f"{target.title}\nМодель: {model}\nРазмер: {size}; изображений:1\n"
+            f"{target.title}\n{self.last_route}\nРазмер: {quote.size_description}; изображений:1\n"
             f"Ожидаемый полный расход: {rub(quote.total)}\n"
             f"Референсов: {len(refs)} из {len(candidates)}. "
             "API может не вернуть фактическую сумму — тогда останется резерв.\n"
@@ -438,7 +444,7 @@ class VisualController(QObject):
                 raise
 
         self.stage = "generate"
-        self.status(f"Генерация: {model}, резерв {rub(quote.total)}. Повтора не будет.")
+        self.status(f"{self.last_route}\nРезерв {rub(quote.total)}. Повтора не будет.")
         self.worker.start(generate)
         self.refresh_totals()
 

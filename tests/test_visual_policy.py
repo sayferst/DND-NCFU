@@ -41,8 +41,8 @@ def test_routing_prices_size_variants_and_text_only_recraft():
         {"pricing_units": {"image_output": "token"}},
         {"pricing": {"image_output": "0.75", "prompt": "0.01"}},
         {"pricing": {"image_output": "NaN"}},
-        {"supported_parameters": []},
-        {"per_request_limits": {}},
+        {"supported_parameters": "invalid"},
+        {"per_request_limits": {"max_input_references": 0}},
         {"per_request_limits": {"supported_resolutions": ["1K"], "max_input_references": "many"}},
     ],
 )

@@ -149,6 +149,10 @@ class ImagesTransport:
             currency = "RUB" if cost is not None else data.get("currency", usage.get("currency"))
             if cost is None:
                 cost = data.get("cost", usage.get("cost"))
+                # Images guide defines usage.cost in rubles. An explicit foreign
+                # currency remains foreign, even on this endpoint.
+                if currency is None and "cost" in usage and "cost" not in data:
+                    currency = "RUB"
             billing = {}
             try:
                 number = Decimal(str(cost))

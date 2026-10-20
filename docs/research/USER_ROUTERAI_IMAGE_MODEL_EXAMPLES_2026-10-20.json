@@ -1,0 +1,13 @@
+{
+  "origin": "User message 2026-10-20 after Images guide: Python requests/curl examples copied from model pages, plus two screenshots; normalized request fields, not a live API response",
+  "endpoint": "POST https://routerai.ru/api/v1/images",
+  "requests": [
+    {"model": "recraft/recraft-v4.1-flash", "prompt": "A serene sunset over mountains, digital art", "n": 1, "aspect_ratio": "1:1"},
+    {"model": "black-forest-labs/flux-3-image-klein", "prompt": "A serene sunset over mountains, digital art", "n": 1, "aspect_ratio": "21:9", "input_references": [{"type": "image_url", "image_url": {"url": "https://example.com/reference.png"}}]}
+  ],
+  "response_fields": ["data[].b64_json", "usage.cost (RUB)"],
+  "screenshots_indicative_only_rub_per_image": {"recraft/recraft-v4.1-flash": "0.75", "black-forest-labs/flux-3-image-klein": "0.86"},
+  "screenshots_recraft_description": "approximately 1K raster images; not a guarantee of exact 1024x1024 output",
+  "runtime_prices": "Always current API catalogue; screenshot values are not runtime constants",
+  "paid_requests_executed": 0
+}

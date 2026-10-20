@@ -16,7 +16,7 @@ PNG = base64.b64decode(
 
 
 @contextmanager
-def images_server(status=200, mode="base64"):
+def images_server(status=200, mode="base64", usage=None):
     records = []
 
     class Handler(BaseHTTPRequestHandler):
@@ -44,7 +44,9 @@ def images_server(status=200, mode="base64"):
                     if mode == "base64"
                     else {"url": f"http://127.0.0.1:{self.server.server_port}/file.png"}
                 )
-                raw = json.dumps({"data": [row], "cost_rub": "0.75", "id": "receipt"}).encode()
+                response = {"data": [row], "id": "receipt"}
+                response.update({"usage": usage} if usage is not None else {"cost_rub": "0.75"})
+                raw = json.dumps(response).encode()
             self.send_response(status)
             if status == 302:
                 self.send_header("Location", "https://example.invalid/do-not-follow")
