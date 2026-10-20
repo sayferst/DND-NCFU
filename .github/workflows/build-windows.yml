@@ -1,0 +1,42 @@
+name: Windows portable
+on:
+  workflow_dispatch:
+    inputs:
+      installer:
+        description: Also build optional installer (requires Inno Setup on runner)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  portable:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Build, inspect and run packaged application offline
+        shell: powershell
+        env:
+          BUILD_INSTALLER: ${{ inputs.installer }}
+        run: |
+          if ($env:BUILD_INSTALLER -eq 'true') {
+            & .\scripts\build_windows.ps1 -Installer
+          } else {
+            & .\scripts\build_windows.ps1
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload checked package and build reports
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: DND-NCFU-Windows-x64
+          path: |
+            dist/DND-NCFU-Windows-x64-v*.zip
+            dist/DND-NCFU-Windows-x64-v*.zip.sha256
+            dist/DND-NCFU-Setup.exe
+          if-no-files-found: error
+          retention-days: 14

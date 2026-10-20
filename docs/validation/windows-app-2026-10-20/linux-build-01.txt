@@ -1,0 +1,22 @@
+46 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.8
+46 INFO: Python: 3.12.14
+47 INFO: Platform: Linux-6.18.55-x86_64-with-glibc2.41
+48 INFO: Python environment: /workspace/DND-NCFU/.venv
+48 INFO: Removing temporary files and cleaning cache in /home/agent/.cache/pyinstaller
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/__main__.py", line 321, in <module>
+    run()
+  File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/__main__.py", line 215, in run
+    run_build(pyi_config, spec_file, **vars(args))
+  File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/__main__.py", line 70, in run_build
+    PyInstaller.building.build_main.main(pyi_config, spec_file, **kwargs)
+  File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/building/build_main.py", line 1272, in main
+    build(specfile, distpath, workpath, clean_build)
+  File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/building/build_main.py", line 1210, in build
+    exec(code, spec_namespace)
+  File "DND-NCFU.spec", line 12, in <module>
+    license_data = helper['prepare_licenses'](Path(WORKPATH) / 'licenses')
+                                                   ^^^^^^^^
+NameError: name 'WORKPATH' is not defined. Did you mean: 'HOMEPATH'?

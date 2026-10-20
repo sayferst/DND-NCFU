@@ -205,3 +205,66 @@ def test_archive_requires_native_packaged_evidence(fake_bundle, tmp_path):
     with pytest.raises(ValueError, match="Native Windows"):
         archive(fake_bundle, tmp_path / "game.zip", checks)
     assert not (tmp_path / "game.zip").exists()
+
+
+def test_archive_checks_every_file_and_keeps_verification_reports(fake_bundle, tmp_path):
+    """Synthetic PE/reports exercise the archiver, never claim a Windows execution."""
+    import hashlib
+    import zipfile
+
+    from rpg_vkr.build_info import VERSION
+
+    checks = tmp_path / "checks"
+    checks.mkdir()
+    for mode in ("self-check", "smoke-test"):
+        (checks / (mode + ".json")).write_text(
+            json.dumps(
+                {
+                    "ok": True,
+                    "frozen": True,
+                    "version": VERSION,
+                    "platform": "Windows-synthetic-test-only",
+                    "dpapi": "native-roundtrip-passed",
+                }
+            ),
+            encoding="utf-8",
+        )
+    destination = tmp_path / "portable.zip"
+    archive(fake_bundle, destination, checks)
+    with zipfile.ZipFile(destination) as bundled:
+        manifest = json.loads(bundled.read("DND-NCFU/BUILD_MANIFEST.json"))
+        for item in manifest["files"]:
+            assert (
+                hashlib.sha256(bundled.read("DND-NCFU/" + item["path"])).hexdigest()
+                == item["sha256"]
+            )
+        assert "DND-NCFU/verification/smoke-test.json" in bundled.namelist()
+    assert (
+        destination.with_suffix(".zip.sha256")
+        .read_text()
+        .startswith(hashlib.sha256(destination.read_bytes()).hexdigest())
+    )
+
+
+def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp_path):
+    import os
+    import subprocess
+    from pathlib import Path
+
+    launcher = Path(__file__).resolve().parents[1] / "scripts/run_game.py"
+    report = tmp_path / "report.json"
+    environment = os.environ.copy()
+    environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "untouched-real-data")
+    result = subprocess.run(
+        [sys.executable, str(launcher), "--smoke-test", "--report", str(report)],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    actual = json.loads(report.read_text(encoding="utf-8"))
+    assert actual["ok"] and actual["references"] and actual["save_sqlite"] and actual["rng"]
+    assert actual["loopback_posts"] == actual["network_requests"] == 2
+    assert actual["external_model_requests"] == 0
+    assert not (tmp_path / "untouched-real-data").exists()

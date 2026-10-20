@@ -206,7 +206,13 @@ def smoke_test(app):
                 import PySide6
 
                 for module in (_sqlite3, _ssl, PySide6):
-                    if not Path(module.__file__).resolve().is_relative_to(RESOURCE_ROOT.resolve()):
+                    origin = getattr(module, "__file__", None)
+                    if origin is None and module.__name__ in sys.builtin_module_names:
+                        # Some build interpreters embed stdlib extensions in libpython.
+                        continue
+                    if origin is None or not Path(origin).resolve().is_relative_to(
+                        RESOURCE_ROOT.resolve()
+                    ):
                         raise ValueError("Dependency loaded outside bundle")
             return {
                 "mode": "smoke-test",

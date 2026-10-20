@@ -27,6 +27,9 @@ def interact():
         assert len(windows) == 1
         window = windows[0]
         assert window.isVisible()
+        assert window.windowTitle() == 'DND-NCFU — Хроники забытых королевств'
+        assert not window.windowIcon().isNull()
+        assert app.applicationVersion() == '0.2.0'
         assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
         window.resume_button.click()
         if phase == 'save':

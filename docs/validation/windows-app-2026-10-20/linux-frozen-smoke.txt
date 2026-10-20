@@ -1,0 +1,2 @@
+Fontconfig error: No writable cache directories
+{"ok": false, "error_type": "AttributeError"}
