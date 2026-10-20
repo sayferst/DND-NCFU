@@ -1,0 +1,271 @@
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 1168 items
+
+tests\test_adventure.py ...................                                                                                                                          [  1%]
+tests\test_adventure_consistency.py ........                                                                                                                         [  2%]
+tests\test_adventure_ui.py ............                                                                                                                              [  3%]
+tests\test_artist_panel.py ......................                                                                                                                    [  5%]
+tests\test_catalog.py ...............................                                                                                                                [  7%]
+tests\test_catalog_ui.py .........                                                                                                                                   [  8%]
+tests\test_character.py ........................                                                                                                                     [ 10%]
+tests\test_character_dialog.py ...                                                                                                                                   [ 10%]
+tests\test_chat_intents.py ...................                                                                                                                       [ 12%]
+tests\test_chronicles.py ..............                                                                                                                              [ 13%]
+tests\test_cloud_gate.py ...                                                                                                                                         [ 14%]
+tests\test_combat.py .......................                                                                                                                         [ 16%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 17%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 17%]
+tests\test_connection_metadata.py ..........                                                                                                                         [ 18%]
+tests\test_connection_revision.py ......................                                                                                                             [ 20%]
+tests\test_conversation_revision.py ........................                                                                                                         [ 22%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 23%]
+tests\test_dialogue.py .............                                                                                                                                 [ 24%]
+tests\test_dice.py ...                                                                                                                                               [ 24%]
+tests\test_environment.py ...                                                                                                                                        [ 24%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 25%]
+tests\test_fantasy_menu.py ......                                                                                                                                    [ 26%]
+tests\test_fixture_git_checkout.py ..                                                                                                                                [ 26%]
+tests\test_fixture_repair.py ...........                                                                                                                             [ 27%]
+tests\test_flash_settings.py ...................                                                                                                                     [ 29%]
+tests\test_free_attempts.py .................................                                                                                                        [ 31%]
+tests\test_free_cloud.py .........                                                                                                                                   [ 32%]
+tests\test_images_client.py .........                                                                                                                                [ 33%]
+tests\test_images_contract_revision.py .........................................                                                                                     [ 36%]
+tests\test_inspection.py ..............................                                                                                                              [ 39%]
+tests\test_launch.py ...                                                                                                                                             [ 39%]
+tests\test_local_narrator.py .............................................................                                                                           [ 45%]
+tests\test_master_campaign.py ..........................                                                                                                             [ 47%]
+tests\test_master_configuration.py ...........                                                                                                                       [ 48%]
+tests\test_master_language_profiles.py ........                                                                                                                      [ 48%]
+tests\test_mechanics_before_prose.py .......................................                                                                                         [ 52%]
+tests\test_model_metrics.py ......                                                                                                                                   [ 52%]
+tests\test_object_descriptions.py ...................                                                                                                                [ 54%]
+tests\test_offline.py ..........                                                                                                                                     [ 55%]
+tests\test_plain_master.py .........................                                                                                                                 [ 57%]
+tests\test_presentation.py .................                                                                                                                         [ 58%]
+tests\test_progression.py ......................................                                                                                                     [ 62%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 63%]
+tests\test_resource_ledger.py ..........................                                                                                                             [ 65%]
+tests\test_response_contract.py ........................................                                                                                             [ 68%]
+tests\test_response_delivery.py ...........................                                                                                                          [ 71%]
+tests\test_routerai.py .......................................                                                                                                       [ 74%]
+tests\test_save_migration.py ..........                                                                                                                              [ 75%]
+tests\test_save_slots.py ....................                                                                                                                        [ 76%]
+tests\test_scene_director.py ..............................                                                                                                          [ 79%]
+tests\test_semantic_challenges.py .............                                                                                                                      [ 80%]
+tests\test_session.py ....................                                                                                                                           [ 82%]
+tests\test_sqlite_lifecycle.py .........                                                                                                                             [ 83%]
+tests\test_story_conversation_quality.py ................                                                                                                            [ 84%]
+tests\test_trade_context.py .........                                                                                                                                [ 85%]
+tests\test_visual_commands.py .........                                                                                                                              [ 86%]
+tests\test_visual_context.py .....                                                                                                                                   [ 86%]
+tests\test_visual_controller.py .........                                                                                                                            [ 87%]
+tests\test_visual_policy.py ........                                                                                                                                 [ 87%]
+tests\test_visual_registry.py ........                                                                                                                               [ 88%]
+tests\test_window.py .......................                                                                                                                         [ 90%]
+tests\test_windows_test_ids.py .                                                                                                                                     [ 90%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 91%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 93%]
+tests\test_world.py ..............................                                                                                                                   [ 95%]
+tests\test_world_agent_ui.py ........                                                                                                                                [ 96%]
+tests\test_world_memory.py ..................                                                                                                                        [ 98%]
+tests\test_world_transactions.py ......................                                                                                                              [100%]
+
+==================================================================== 1168 passed in 264.89s (0:04:24) =====================================================================
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m ruff check .
+All checks passed!
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m ruff format --check .
+173 files already formatted
+Environment and prototype checks passed. Manual Windows GUI check is still required.
+PS D:\Projects\DND-NCFU> Set-Location D:\Projects\DND-NCFU
+>> & {
+>>     $ErrorActionPreference = 'Stop'
+>>     $backup = 'D:\Projects\DND-backup-' + (Get-Date -Format 'yyyyMMdd-HHmmss')
+>>     New-Item -ItemType Directory $backup | Out-Null
+>>     if (Test-Path '..\DND-NCFU-data') {
+>>         Copy-Item '..\DND-NCFU-data' $backup -Recurse
+>>     }
+>>     if (Test-Path 'prompts\master_system_prompt.local.txt') {
+>>         Copy-Item 'prompts\master_system_prompt.local.txt' $backup
+>>     }
+>>     git pull --ff-only
+>>     if ($LASTEXITCODE -ne 0) { throw 'Обновление остановлено.' }
+>>     .\scripts\build_windows.ps1
+>> }
+remote: Enumerating objects: 191, done.
+remote: Counting objects: 100% (191/191), done.
+remote: Compressing objects: 100% (61/61), done.
+remote: Total 156 (delta 87), reused 156 (delta 87), pack-reused 0 (from 0)
+Receiving objects: 100% (156/156), 772.28 KiB | 1.22 MiB/s, done.
+Resolving deltas: 100% (87/87), completed with 28 local objects.
+From https://github.com/sayferst/DND-NCFU
+   355d8da..e630fbe  setup/development-environment -> origin/setup/development-environment
+Enumerating objects: 2382, done.
+Counting objects: 100% (2382/2382), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (948/948), done.
+Writing objects: 100% (2382/2382), done.
+Total 2382 (delta 1599), reused 2037 (delta 1363), pack-reused 0 (from 0)
+Updating 355d8da..e630fbe
+Fast-forward
+ .gitattributes                                     |    6 +
+ .github/workflows/build-windows.yml                |   42 +
+ AGENTS.md                                          |   72 +
+ CHANGELOG.md                                       |   20 +
+ DECISIONS.md                                       |   31 +
+ DND-NCFU.spec                                      |   42 +-
+ KNOWN_ISSUES.md                                    |   23 +
+ LICENSES_AND_ATTRIBUTIONS.md                       |   29 +
+ PROJECT_STATUS.md                                  |   26 +
+ README.md                                          |   11 +
+ RESEARCH_LOG.md                                    |   39 +
+ TEST_PLAN.md                                       |   38 +
+ docs/IMAGE_PRICE_REPAIR.md                         |   51 +
+ docs/INSTALL_WINDOWS.md                            |    4 +
+ docs/WINDOWS_APP.md                                |  194 +++
+ docs/validation/image-quote-2026-10-20/README.md   |   48 +
+ .../image-quote-2026-10-20/after-cap.txt           |   28 +
+ .../image-quote-2026-10-20/after-flux-cap.txt      |    3 +
+ docs/validation/image-quote-2026-10-20/after.txt   |    3 +
+ docs/validation/image-quote-2026-10-20/before.txt  |  612 +++++++++
+ .../image-quote-2026-10-20/full-final.txt          |   96 ++
+ .../full-price-limits-final.txt                    |   96 ++
+ .../image-quote-2026-10-20/immutable-audit.json    |  382 ++++++
+ .../image-quote-2026-10-20/linux-build-final.txt   |   76 ++
+ .../linux-build-price-limits.txt                   |   76 ++
+ .../image-quote-2026-10-20/linux-build.txt         |   76 ++
+ .../linux-frozen-manifest.json                     | 1441 ++++++++++++++++++++
+ .../linux-frozen-self-check.json                   |   22 +
+ .../linux-frozen-self-check.txt                    |    2 +
+ .../linux-frozen-smoke-test.json                   |   46 +
+ .../linux-frozen-smoke-test.txt                    |    2 +
+ .../image-quote-2026-10-20/owner-image-models.json |   36 +
+ .../price-settings-preview.png                     |  Bin 0 -> 66885 bytes
+ .../public-catalog-status.txt                      |    1 +
+ docs/validation/windows-app-2026-10-20/AUDIT.md    |   29 +
+ docs/validation/windows-app-2026-10-20/README.md   |   37 +
+ .../windows-app-2026-10-20/full-final.txt          |   95 ++
+ .../windows-app-2026-10-20/immutable-audit.json    |  381 ++++++
+ .../windows-app-2026-10-20/linux-build-01.txt      |   22 +
+ .../windows-app-2026-10-20/linux-build-02.txt      |   76 ++
+ .../windows-app-2026-10-20/linux-build-03.txt      |   76 ++
+ .../linux-frozen-manifest.json                     | 1441 ++++++++++++++++++++
+ .../linux-frozen-self-check-02.json                |   22 +
+ .../linux-frozen-self-check-02.txt                 |    2 +
+ .../linux-frozen-self-check.json                   |   22 +
+ .../linux-frozen-self-check.txt                    |    2 +
+ .../linux-frozen-smoke-test-02.json                |   46 +
+ .../linux-frozen-smoke-test-02.txt                 |    2 +
+ .../windows-app-2026-10-20/linux-frozen-smoke.json |    4 +
+ .../windows-app-2026-10-20/linux-frozen-smoke.txt  |    2 +
+ .../windows-app-2026-10-20/loading-preview.png     |  Bin 0 -> 586719 bytes
+ .../windows-app-2026-10-20/source-self-check.txt   |    2 +
+ .../windows-app-2026-10-20/source-smoke.txt        |    2 +
+ .../windows-app-2026-10-20/stage-packaging.txt     |    2 +
+ .../windows-app-2026-10-20/stage-runtime-02.txt    |    2 +
+ .../windows-app-2026-10-20/stage-runtime.txt       |  310 +++++
+ installer/DND-NCFU.iss                             |   40 +
+ licenses/third-party/GPL-3.0-only.txt              |  674 +++++++++
+ licenses/third-party/LGPL-3.0-only.txt             |  165 +++
+ licenses/third-party/OpenSSL-LICENSE.txt           |  177 +++
+ licenses/third-party/Qt-GPL-exception-1.0.txt      |   22 +
+ licenses/third-party/SOURCES.json                  |   22 +
+ scripts/build_windows.ps1                          |   96 +-
+ scripts/create_app_icon.py                         |   85 ++
+ scripts/release_tools.py                           |  260 ++++
+ scripts/run_game.py                                |    2 +-
+ src/rpg_vkr/app.py                                 |   90 +-
+ src/rpg_vkr/bootstrap.py                           |   27 +
+ src/rpg_vkr/build_info.py                          |    8 +
+ src/rpg_vkr/diagnostics.py                         |   54 +
+ src/rpg_vkr/packaged_probe.py                      |  244 ++++
+ src/rpg_vkr/resources.py                           |   41 +-
+ src/rpg_vkr/self_check.py                          |   75 +
+ src/rpg_vkr/storage/slots.py                       |   12 +-
+ src/rpg_vkr/ui/assets/DND-NCFU.ico                 |  Bin 0 -> 20849 bytes
+ src/rpg_vkr/ui/assets/DND-NCFU.png                 |  Bin 0 -> 9429 bytes
+ src/rpg_vkr/ui/assets/README.md                    |    6 +
+ src/rpg_vkr/ui/loading_screen.py                   |  111 ++
+ src/rpg_vkr/ui/main_window.py                      |    4 +-
+ src/rpg_vkr/ui/visuals_panel.py                    |   14 +-
+ src/rpg_vkr/visuals/policy.py                      |   61 +-
+ tests/test_artist_panel.py                         |    2 +-
+ tests/test_catalog_image_prices.py                 |  199 +++
+ tests/test_desktop_release.py                      |  270 ++++
+ tests/test_launch.py                               |   30 +-
+ tests/test_visual_policy.py                        |    2 +-
+ 86 files changed, 8948 insertions(+), 96 deletions(-)
+ create mode 100644 .github/workflows/build-windows.yml
+ create mode 100644 docs/IMAGE_PRICE_REPAIR.md
+ create mode 100644 docs/WINDOWS_APP.md
+ create mode 100644 docs/validation/image-quote-2026-10-20/README.md
+ create mode 100644 docs/validation/image-quote-2026-10-20/after-cap.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/after-flux-cap.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/after.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/before.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/full-final.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/full-price-limits-final.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/immutable-audit.json
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-build-final.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-build-price-limits.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-build.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-frozen-manifest.json
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-frozen-self-check.json
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-frozen-self-check.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-frozen-smoke-test.json
+ create mode 100644 docs/validation/image-quote-2026-10-20/linux-frozen-smoke-test.txt
+ create mode 100644 docs/validation/image-quote-2026-10-20/owner-image-models.json
+ create mode 100644 docs/validation/image-quote-2026-10-20/price-settings-preview.png
+ create mode 100644 docs/validation/image-quote-2026-10-20/public-catalog-status.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/AUDIT.md
+ create mode 100644 docs/validation/windows-app-2026-10-20/README.md
+ create mode 100644 docs/validation/windows-app-2026-10-20/full-final.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/immutable-audit.json
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-build-01.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-build-02.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-build-03.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-manifest.json
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-self-check-02.json
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-self-check-02.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-self-check.json
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-self-check.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-smoke-test-02.json
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-smoke-test-02.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-smoke.json
+ create mode 100644 docs/validation/windows-app-2026-10-20/linux-frozen-smoke.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/loading-preview.png
+ create mode 100644 docs/validation/windows-app-2026-10-20/source-self-check.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/source-smoke.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/stage-packaging.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/stage-runtime-02.txt
+ create mode 100644 docs/validation/windows-app-2026-10-20/stage-runtime.txt
+ create mode 100644 installer/DND-NCFU.iss
+ create mode 100644 licenses/third-party/GPL-3.0-only.txt
+ create mode 100644 licenses/third-party/LGPL-3.0-only.txt
+ create mode 100644 licenses/third-party/OpenSSL-LICENSE.txt
+ create mode 100644 licenses/third-party/Qt-GPL-exception-1.0.txt
+ create mode 100644 licenses/third-party/SOURCES.json
+ create mode 100644 scripts/create_app_icon.py
+ create mode 100644 scripts/release_tools.py
+ create mode 100644 src/rpg_vkr/bootstrap.py
+ create mode 100644 src/rpg_vkr/build_info.py
+ create mode 100644 src/rpg_vkr/diagnostics.py
+ create mode 100644 src/rpg_vkr/packaged_probe.py
+ create mode 100644 src/rpg_vkr/self_check.py
+ create mode 100644 src/rpg_vkr/ui/assets/DND-NCFU.ico
+ create mode 100644 src/rpg_vkr/ui/assets/DND-NCFU.png
+ create mode 100644 src/rpg_vkr/ui/loading_screen.py
+ create mode 100644 tests/test_catalog_image_prices.py
+ create mode 100644 tests/test_desktop_release.py
+.\scripts\build_windows.ps1 : Невозможно загрузить файл D:\Projects\DND-NCFU\scripts\build_windows.ps1, так как выполнение сценариев отключено в этой системе. Для получени
+я дополнительных сведений см. about_Execution_Policies по адресу https:/go.microsoft.com/fwlink/?LinkID=135170.
+строка:14 знак:5
++     .\scripts\build_windows.ps1
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : Ошибка безопасности: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+PS D:\Projects\DND-NCFU>

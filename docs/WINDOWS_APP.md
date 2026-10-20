@@ -45,7 +45,7 @@ Set-Location D:\Projects\DND-NCFU
     }
     git pull --ff-only
     if ($LASTEXITCODE -ne 0) { throw 'Обновление остановлено. Не делайте reset; сохраните вывод.' }
-    & .\scripts\build_windows.ps1
+    & .\scripts\build_windows.cmd
     if ($LASTEXITCODE -ne 0) { throw 'Сборка остановлена; сохраните вывод.' }
     Start-Process '.\dist\DND-NCFU\DND-NCFU.exe' -ArgumentList '--data-dir "D:\Projects\DND-NCFU-data"'
 }
@@ -71,11 +71,21 @@ Set-Location D:\Projects\DND-NCFU
 
 ```powershell
 Set-Location D:\Projects\DND-NCFU
-.\scripts\build_windows.ps1
+.\scripts\build_windows.cmd
 ```
 
-При запрете локальных сценариев политикой ПК используйте разрешённую в вашей
-системе процедуру запуска скриптов; глобальные политики автоматически не меняются.
+`build_windows.cmd` запускает существующий `build_windows.ps1` в отдельном процессе
+PowerShell с `-NoProfile -ExecutionPolicy Bypass`. Это устраняет показанный на ПК
+владельца запрет запуска `.ps1`; постоянные политики Windows не меняются.
+Если проект уже обновлён, тот же запуск можно выполнить напрямую:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1
+```
+
+При запуске `.cmd` двойным щелчком окно сборки может закрыться после завершения;
+для просмотра вывода запускайте команду выше или `.cmd` из открытого PowerShell.
+Пакет EXE по-прежнему создаёт один прежний PowerShell-сборщик.
 
 ## Запуск игроком без терминала
 
@@ -164,7 +174,7 @@ main этой задачей не выполняется. Если workflow ещ
 Подготовлен `installer/DND-NCFU.iss`. Для разработчика с установленным Inno Setup6:
 
 ```powershell
-.\scripts\build_windows.ps1 -Installer
+.\scripts\build_windows.cmd -Installer
 ```
 
 Сначала проходят все portable-проверки, затем запускается ISCC. Без компилятора

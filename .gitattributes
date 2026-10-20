@@ -41,3 +41,7 @@ scripts/build_windows.ps1 -text
 docs/validation/windows-app-2026-10-20/*.txt -text whitespace=-blank-at-eol
 # Price-regression replay evidence remains byte-stable across checkout.
 docs/validation/image-quote-2026-10-20/* -text whitespace=-blank-at-eol
+
+# Native Windows command launcher and exact owner-supplied PowerShell evidence.
+scripts/build_windows.cmd text eol=crlf
+docs/validation/windows-build-policy-2026-10-20.txt -text whitespace=-blank-at-eol
