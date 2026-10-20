@@ -1,0 +1,28 @@
+....................................................F................... [ 72%]
+............................                                             [100%]
+=================================== FAILURES ===================================
+__________ test_preflight_error_explains_automatically_selected_model __________
+
+visual = (<rpg_vkr.ui.main_window.MainWindow(0x310ec180) at 0x7f679b651280>, <rpg_vkr.ui.visuals_panel.VisualController(0x2e2002f0) at 0x7f679b5aae00>, <test_visual_controller.FakeTransport object at 0x7f67a1757c20>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f679b678f50>
+
+    def test_preflight_error_explains_automatically_selected_model(visual, monkeypatch):
+        from decimal import Decimal
+        from types import SimpleNamespace
+    
+        window, controller, fake = visual
+        monkeypatch.setattr(
+            fake, "metadata", lambda _: (SimpleNamespace(remaining=Decimal(100)), catalog(FLUX, "5.01"))
+        )
+        controller.request_scene()
+        finish(controller)
+        assert not fake.posts and not controller.registry.ledger()
+>       assert FLUX in controller.notice and "порога" in controller.notice
+E       AssertionError: assert ('black-forest-labs/flux-3-image-klein' in 'Автовыбор: black-forest-labs/flux-3-image-klein. Персонаж, существо, локация, событие или уникальный объект: качественная FLUX.\nПолная цена изображения выше предела 5 ₽. Запрос не отправлен.' and 'порога' in 'Автовыбор: black-forest-labs/flux-3-image-klein. Персонаж, существо, локация, событие или уникальный объект: качественная FLUX.\nПолная цена изображения выше предела 5 ₽. Запрос не отправлен.')
+E        +  where 'Автовыбор: black-forest-labs/flux-3-image-klein. Персонаж, существо, локация, событие или уникальный объект: качественная FLUX.\nПолная цена изображения выше предела 5 ₽. Запрос не отправлен.' = <rpg_vkr.ui.visuals_panel.VisualController(0x2e2002f0) at 0x7f679b5aae00>.notice
+E        +  and   'Автовыбор: black-forest-labs/flux-3-image-klein. Персонаж, существо, локация, событие или уникальный объект: качественная FLUX.\nПолная цена изображения выше предела 5 ₽. Запрос не отправлен.' = <rpg_vkr.ui.visuals_panel.VisualController(0x2e2002f0) at 0x7f679b5aae00>.notice
+
+tests/test_images_contract_revision.py:200: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_images_contract_revision.py::test_preflight_error_explains_automatically_selected_model
+1 failed, 99 passed in 24.44s

@@ -145,6 +145,12 @@ def smoke_test(app):
                                 "id": FLUX,
                                 "pricing": {"image_output": "0.97"},
                                 "pricing_units": {"image_output": "image"},
+                                "supported_parameters": ["resolution", "input_references"],
+                                "max_image_references": 10,
+                                "supported_image_sizes": ["1K"],
+                                "image_pricing": [
+                                    {"unit": "image", "variant": "1k", "price": "0.97"}
+                                ],
                             }
                         ]
                     },

@@ -39,3 +39,5 @@ docs/validation/object-descriptions-2026-10-20/*.txt -text whitespace=-blank-at-
 # Preserve Windows PowerShell 5.1 UTF-8 BOM and immutable raw release evidence.
 scripts/build_windows.ps1 -text
 docs/validation/windows-app-2026-10-20/*.txt -text whitespace=-blank-at-eol
+# Price-regression replay evidence remains byte-stable across checkout.
+docs/validation/image-quote-2026-10-20/* -text whitespace=-blank-at-eol

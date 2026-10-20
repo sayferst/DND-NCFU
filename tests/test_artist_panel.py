@@ -235,7 +235,7 @@ def test_budget_is_in_artist_panel_and_keeps_approved_limits(artist_window):
     w = artist_window
     w.artist_panel.show_budget()
     assert w.visuals.monthly.isVisible() and w.visuals.consent.isVisible()
-    assert w.visuals.economy.maximum() == 0.85 and w.visuals.quality.maximum() == 5
+    assert w.visuals.economy.maximum() == 5 and w.visuals.quality.maximum() == 10
     assert w.visuals.settings.monthly_micros == 0
     assert w.visuals.settings.confirm and not w.visuals.settings.consent
 

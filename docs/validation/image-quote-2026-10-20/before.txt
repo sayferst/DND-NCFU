@@ -1,0 +1,612 @@
+.FFFFF......FFFF                                                         [100%]
+=================================== FAILURES ===================================
+_ test_owner_catalog_matches_selected_resolution_without_base_price_fallback[1K-969350] _
+
+size = '1K', total = 969350
+
+    @pytest.mark.parametrize(
+        "size,total",
+        [("768", 861645), ("1K", 969350), ("1.5K", 1184761), ("2K", 1507878), ("4K", 3877399)],
+    )
+    def test_owner_catalog_matches_selected_resolution_without_base_price_fallback(size, total):
+>       quote = quote_model(owner_catalog(), FLUX, size, 1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_image_prices.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'default_parameters': None, 'id': 'black-forest-labs/flux-3-image-klein', 'image_pricing': [{'price': 0.861...t-v4.1-flash', 'image_pricing': [{'price': 0.75393864, 'unit': 'image', 'variant': None}], 'max_image_count': 6, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '1K', reference_count = 1
+
+    def quote_model(catalog, model, size, reference_count=0):
+        if model not in {RECRAFT, FLUX} or size not in SIZES:
+            raise ValueError("Неизвестная модель или разрешение изображений.")
+        if type(reference_count) is not int or not 0 <= reference_count <= 32:
+            raise ValueError("Некорректное количество референсов.")
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if parameters is None:
+            parameters = []
+        if not isinstance(parameters, list):
+            raise ValueError("Неизвестный формат параметров модели.")
+        size_parameter = (
+            "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+        )
+        limits = row.get("per_request_limits", {})
+        if limits is None:
+            limits = {}
+        if not isinstance(limits, dict):
+            raise ValueError("Неизвестные ограничения модели.")
+        supported = limits.get("supported_resolutions")
+        if supported is not None and (
+            not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+        # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+        # supported_parameters can be incomplete. Without an advertised upper limit,
+        # use one reference, not an invented multi-image capacity.
+        cap = limits.get("max_input_references", 1 if model == FLUX else 0)
+        if type(cap) is not int or not 0 <= cap <= 32:
+            raise ValueError("Неизвестен лимит референсов.")
+        supports = model == FLUX and cap > 0
+        if reference_count and (not supports or reference_count > cap):
+            raise ValueError("Каталог не подтверждает нужное количество input_references.")
+        total = None
+        variants = row.get("image_pricing", [])
+        if variants is None:
+            variants = []
+        if not isinstance(variants, list):
+            raise ValueError("Неизвестный тариф вариантов.")
+        exact = [
+            r
+            for r in variants
+            if isinstance(r, dict)
+            and r.get("unit") == "image"
+            and r.get("variant") in (size, SIZES[size])
+        ]
+        # A priced resolution variant is model-specific evidence too. The Images
+        # guide defines both transports; supported_parameters need not repeat them.
+        if not size_parameter and len(exact) == 1:
+            size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+        if not size_parameter and (
+            size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
+        ):
+            raise ValueError(
+                "Нельзя подтвердить выбранный размер и его цену: в каталоге нет "
+                "size/resolution или подходящего тарифа разрешения."
+            )
+        generic = [
+            r
+            for r in variants
+            if isinstance(r, dict) and r.get("unit") == "image" and r.get("variant") is None
+        ]
+        choices = exact or generic
+        if len(choices) > 1 or variants and not choices:
+>           raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
+E           ValueError: Полная цена выбранного варианта изображения неизвестна или неоднозначна.
+
+src/rpg_vkr/visuals/policy.py:168: ValueError
+_ test_owner_catalog_matches_selected_resolution_without_base_price_fallback[1.5K-1184761] _
+
+size = '1.5K', total = 1184761
+
+    @pytest.mark.parametrize(
+        "size,total",
+        [("768", 861645), ("1K", 969350), ("1.5K", 1184761), ("2K", 1507878), ("4K", 3877399)],
+    )
+    def test_owner_catalog_matches_selected_resolution_without_base_price_fallback(size, total):
+>       quote = quote_model(owner_catalog(), FLUX, size, 1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_image_prices.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'default_parameters': None, 'id': 'black-forest-labs/flux-3-image-klein', 'image_pricing': [{'price': 0.861...t-v4.1-flash', 'image_pricing': [{'price': 0.75393864, 'unit': 'image', 'variant': None}], 'max_image_count': 6, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '1.5K'
+reference_count = 1
+
+    def quote_model(catalog, model, size, reference_count=0):
+        if model not in {RECRAFT, FLUX} or size not in SIZES:
+            raise ValueError("Неизвестная модель или разрешение изображений.")
+        if type(reference_count) is not int or not 0 <= reference_count <= 32:
+            raise ValueError("Некорректное количество референсов.")
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if parameters is None:
+            parameters = []
+        if not isinstance(parameters, list):
+            raise ValueError("Неизвестный формат параметров модели.")
+        size_parameter = (
+            "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+        )
+        limits = row.get("per_request_limits", {})
+        if limits is None:
+            limits = {}
+        if not isinstance(limits, dict):
+            raise ValueError("Неизвестные ограничения модели.")
+        supported = limits.get("supported_resolutions")
+        if supported is not None and (
+            not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+        # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+        # supported_parameters can be incomplete. Without an advertised upper limit,
+        # use one reference, not an invented multi-image capacity.
+        cap = limits.get("max_input_references", 1 if model == FLUX else 0)
+        if type(cap) is not int or not 0 <= cap <= 32:
+            raise ValueError("Неизвестен лимит референсов.")
+        supports = model == FLUX and cap > 0
+        if reference_count and (not supports or reference_count > cap):
+            raise ValueError("Каталог не подтверждает нужное количество input_references.")
+        total = None
+        variants = row.get("image_pricing", [])
+        if variants is None:
+            variants = []
+        if not isinstance(variants, list):
+            raise ValueError("Неизвестный тариф вариантов.")
+        exact = [
+            r
+            for r in variants
+            if isinstance(r, dict)
+            and r.get("unit") == "image"
+            and r.get("variant") in (size, SIZES[size])
+        ]
+        # A priced resolution variant is model-specific evidence too. The Images
+        # guide defines both transports; supported_parameters need not repeat them.
+        if not size_parameter and len(exact) == 1:
+            size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+        if not size_parameter and (
+            size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
+        ):
+            raise ValueError(
+                "Нельзя подтвердить выбранный размер и его цену: в каталоге нет "
+                "size/resolution или подходящего тарифа разрешения."
+            )
+        generic = [
+            r
+            for r in variants
+            if isinstance(r, dict) and r.get("unit") == "image" and r.get("variant") is None
+        ]
+        choices = exact or generic
+        if len(choices) > 1 or variants and not choices:
+>           raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
+E           ValueError: Полная цена выбранного варианта изображения неизвестна или неоднозначна.
+
+src/rpg_vkr/visuals/policy.py:168: ValueError
+_ test_owner_catalog_matches_selected_resolution_without_base_price_fallback[2K-1507878] _
+
+size = '2K', total = 1507878
+
+    @pytest.mark.parametrize(
+        "size,total",
+        [("768", 861645), ("1K", 969350), ("1.5K", 1184761), ("2K", 1507878), ("4K", 3877399)],
+    )
+    def test_owner_catalog_matches_selected_resolution_without_base_price_fallback(size, total):
+>       quote = quote_model(owner_catalog(), FLUX, size, 1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_image_prices.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'default_parameters': None, 'id': 'black-forest-labs/flux-3-image-klein', 'image_pricing': [{'price': 0.861...t-v4.1-flash', 'image_pricing': [{'price': 0.75393864, 'unit': 'image', 'variant': None}], 'max_image_count': 6, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '2K', reference_count = 1
+
+    def quote_model(catalog, model, size, reference_count=0):
+        if model not in {RECRAFT, FLUX} or size not in SIZES:
+            raise ValueError("Неизвестная модель или разрешение изображений.")
+        if type(reference_count) is not int or not 0 <= reference_count <= 32:
+            raise ValueError("Некорректное количество референсов.")
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if parameters is None:
+            parameters = []
+        if not isinstance(parameters, list):
+            raise ValueError("Неизвестный формат параметров модели.")
+        size_parameter = (
+            "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+        )
+        limits = row.get("per_request_limits", {})
+        if limits is None:
+            limits = {}
+        if not isinstance(limits, dict):
+            raise ValueError("Неизвестные ограничения модели.")
+        supported = limits.get("supported_resolutions")
+        if supported is not None and (
+            not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+        # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+        # supported_parameters can be incomplete. Without an advertised upper limit,
+        # use one reference, not an invented multi-image capacity.
+        cap = limits.get("max_input_references", 1 if model == FLUX else 0)
+        if type(cap) is not int or not 0 <= cap <= 32:
+            raise ValueError("Неизвестен лимит референсов.")
+        supports = model == FLUX and cap > 0
+        if reference_count and (not supports or reference_count > cap):
+            raise ValueError("Каталог не подтверждает нужное количество input_references.")
+        total = None
+        variants = row.get("image_pricing", [])
+        if variants is None:
+            variants = []
+        if not isinstance(variants, list):
+            raise ValueError("Неизвестный тариф вариантов.")
+        exact = [
+            r
+            for r in variants
+            if isinstance(r, dict)
+            and r.get("unit") == "image"
+            and r.get("variant") in (size, SIZES[size])
+        ]
+        # A priced resolution variant is model-specific evidence too. The Images
+        # guide defines both transports; supported_parameters need not repeat them.
+        if not size_parameter and len(exact) == 1:
+            size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+        if not size_parameter and (
+            size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
+        ):
+            raise ValueError(
+                "Нельзя подтвердить выбранный размер и его цену: в каталоге нет "
+                "size/resolution или подходящего тарифа разрешения."
+            )
+        generic = [
+            r
+            for r in variants
+            if isinstance(r, dict) and r.get("unit") == "image" and r.get("variant") is None
+        ]
+        choices = exact or generic
+        if len(choices) > 1 or variants and not choices:
+>           raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
+E           ValueError: Полная цена выбранного варианта изображения неизвестна или неоднозначна.
+
+src/rpg_vkr/visuals/policy.py:168: ValueError
+_ test_owner_catalog_matches_selected_resolution_without_base_price_fallback[4K-3877399] _
+
+size = '4K', total = 3877399
+
+    @pytest.mark.parametrize(
+        "size,total",
+        [("768", 861645), ("1K", 969350), ("1.5K", 1184761), ("2K", 1507878), ("4K", 3877399)],
+    )
+    def test_owner_catalog_matches_selected_resolution_without_base_price_fallback(size, total):
+>       quote = quote_model(owner_catalog(), FLUX, size, 1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_image_prices.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'default_parameters': None, 'id': 'black-forest-labs/flux-3-image-klein', 'image_pricing': [{'price': 0.861...t-v4.1-flash', 'image_pricing': [{'price': 0.75393864, 'unit': 'image', 'variant': None}], 'max_image_count': 6, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '4K', reference_count = 1
+
+    def quote_model(catalog, model, size, reference_count=0):
+        if model not in {RECRAFT, FLUX} or size not in SIZES:
+            raise ValueError("Неизвестная модель или разрешение изображений.")
+        if type(reference_count) is not int or not 0 <= reference_count <= 32:
+            raise ValueError("Некорректное количество референсов.")
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if parameters is None:
+            parameters = []
+        if not isinstance(parameters, list):
+            raise ValueError("Неизвестный формат параметров модели.")
+        size_parameter = (
+            "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+        )
+        limits = row.get("per_request_limits", {})
+        if limits is None:
+            limits = {}
+        if not isinstance(limits, dict):
+            raise ValueError("Неизвестные ограничения модели.")
+        supported = limits.get("supported_resolutions")
+        if supported is not None and (
+            not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+        # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+        # supported_parameters can be incomplete. Without an advertised upper limit,
+        # use one reference, not an invented multi-image capacity.
+        cap = limits.get("max_input_references", 1 if model == FLUX else 0)
+        if type(cap) is not int or not 0 <= cap <= 32:
+            raise ValueError("Неизвестен лимит референсов.")
+        supports = model == FLUX and cap > 0
+        if reference_count and (not supports or reference_count > cap):
+            raise ValueError("Каталог не подтверждает нужное количество input_references.")
+        total = None
+        variants = row.get("image_pricing", [])
+        if variants is None:
+            variants = []
+        if not isinstance(variants, list):
+            raise ValueError("Неизвестный тариф вариантов.")
+        exact = [
+            r
+            for r in variants
+            if isinstance(r, dict)
+            and r.get("unit") == "image"
+            and r.get("variant") in (size, SIZES[size])
+        ]
+        # A priced resolution variant is model-specific evidence too. The Images
+        # guide defines both transports; supported_parameters need not repeat them.
+        if not size_parameter and len(exact) == 1:
+            size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+        if not size_parameter and (
+            size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
+        ):
+            raise ValueError(
+                "Нельзя подтвердить выбранный размер и его цену: в каталоге нет "
+                "size/resolution или подходящего тарифа разрешения."
+            )
+        generic = [
+            r
+            for r in variants
+            if isinstance(r, dict) and r.get("unit") == "image" and r.get("variant") is None
+        ]
+        choices = exact or generic
+        if len(choices) > 1 or variants and not choices:
+>           raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
+E           ValueError: Полная цена выбранного варианта изображения неизвестна или неоднозначна.
+
+src/rpg_vkr/visuals/policy.py:168: ValueError
+_________________ test_owner_top_level_reference_limit_is_used _________________
+
+    def test_owner_top_level_reference_limit_is_used():
+>       quote = quote_model(owner_catalog(), FLUX, "768", 10)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_image_prices.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'default_parameters': None, 'id': 'black-forest-labs/flux-3-image-klein', 'image_pricing': [{'price': 0.861...t-v4.1-flash', 'image_pricing': [{'price': 0.75393864, 'unit': 'image', 'variant': None}], 'max_image_count': 6, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '768'
+reference_count = 10
+
+    def quote_model(catalog, model, size, reference_count=0):
+        if model not in {RECRAFT, FLUX} or size not in SIZES:
+            raise ValueError("Неизвестная модель или разрешение изображений.")
+        if type(reference_count) is not int or not 0 <= reference_count <= 32:
+            raise ValueError("Некорректное количество референсов.")
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if parameters is None:
+            parameters = []
+        if not isinstance(parameters, list):
+            raise ValueError("Неизвестный формат параметров модели.")
+        size_parameter = (
+            "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+        )
+        limits = row.get("per_request_limits", {})
+        if limits is None:
+            limits = {}
+        if not isinstance(limits, dict):
+            raise ValueError("Неизвестные ограничения модели.")
+        supported = limits.get("supported_resolutions")
+        if supported is not None and (
+            not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+        # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+        # supported_parameters can be incomplete. Without an advertised upper limit,
+        # use one reference, not an invented multi-image capacity.
+        cap = limits.get("max_input_references", 1 if model == FLUX else 0)
+        if type(cap) is not int or not 0 <= cap <= 32:
+            raise ValueError("Неизвестен лимит референсов.")
+        supports = model == FLUX and cap > 0
+        if reference_count and (not supports or reference_count > cap):
+>           raise ValueError("Каталог не подтверждает нужное количество input_references.")
+E           ValueError: Каталог не подтверждает нужное количество input_references.
+
+src/rpg_vkr/visuals/policy.py:136: ValueError
+__________ test_conflicting_case_alias_prices_cannot_be_undercounted ___________
+
+    def test_conflicting_case_alias_prices_cannot_be_undercounted():
+        data = owner_catalog()
+        data["data"][0]["image_pricing"].append({"unit": "image", "variant": "1K", "price": 3.0})
+>       with pytest.raises(ValueError, match="цен"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_catalog_image_prices.py:74: Failed
+_____________ test_two_capability_locations_use_the_stricter_limit _____________
+
+    def test_two_capability_locations_use_the_stricter_limit():
+        data = owner_catalog()
+        data["data"][0]["per_request_limits"] = {"max_input_references": 2}
+>       quote = quote_model(data, FLUX, "1K", 2)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_image_prices.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = {'data': [{'default_parameters': None, 'id': 'black-forest-labs/flux-3-image-klein', 'image_pricing': [{'price': 0.861...t-v4.1-flash', 'image_pricing': [{'price': 0.75393864, 'unit': 'image', 'variant': None}], 'max_image_count': 6, ...}]}
+model = 'black-forest-labs/flux-3-image-klein', size = '1K', reference_count = 2
+
+    def quote_model(catalog, model, size, reference_count=0):
+        if model not in {RECRAFT, FLUX} or size not in SIZES:
+            raise ValueError("Неизвестная модель или разрешение изображений.")
+        if type(reference_count) is not int or not 0 <= reference_count <= 32:
+            raise ValueError("Некорректное количество референсов.")
+        rows = _data(catalog)
+        if not isinstance(rows, list):
+            raise ValueError("Каталог изображений имеет неизвестный формат.")
+        candidates = [r for r in rows if isinstance(r, dict) and r.get("id") == model]
+        if len(candidates) != 1:
+            raise ValueError("Точная модель не найдена в актуальном каталоге.")
+        row = candidates[0]
+        prices, units = row.get("pricing", {}), row.get("pricing_units", {})
+        if not isinstance(prices, dict) or not isinstance(units, dict):
+            raise ValueError("Неизвестная цена.")
+        parameters = row.get("supported_parameters", [])
+        if parameters is None:
+            parameters = []
+        if not isinstance(parameters, list):
+            raise ValueError("Неизвестный формат параметров модели.")
+        size_parameter = (
+            "resolution" if "resolution" in parameters else "size" if "size" in parameters else ""
+        )
+        limits = row.get("per_request_limits", {})
+        if limits is None:
+            limits = {}
+        if not isinstance(limits, dict):
+            raise ValueError("Неизвестные ограничения модели.")
+        supported = limits.get("supported_resolutions")
+        if supported is not None and (
+            not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+        # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
+        # supported_parameters can be incomplete. Without an advertised upper limit,
+        # use one reference, not an invented multi-image capacity.
+        cap = limits.get("max_input_references", 1 if model == FLUX else 0)
+        if type(cap) is not int or not 0 <= cap <= 32:
+            raise ValueError("Неизвестен лимит референсов.")
+        supports = model == FLUX and cap > 0
+        if reference_count and (not supports or reference_count > cap):
+            raise ValueError("Каталог не подтверждает нужное количество input_references.")
+        total = None
+        variants = row.get("image_pricing", [])
+        if variants is None:
+            variants = []
+        if not isinstance(variants, list):
+            raise ValueError("Неизвестный тариф вариантов.")
+        exact = [
+            r
+            for r in variants
+            if isinstance(r, dict)
+            and r.get("unit") == "image"
+            and r.get("variant") in (size, SIZES[size])
+        ]
+        # A priced resolution variant is model-specific evidence too. The Images
+        # guide defines both transports; supported_parameters need not repeat them.
+        if not size_parameter and len(exact) == 1:
+            size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+        if not size_parameter and (
+            size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
+        ):
+            raise ValueError(
+                "Нельзя подтвердить выбранный размер и его цену: в каталоге нет "
+                "size/resolution или подходящего тарифа разрешения."
+            )
+        generic = [
+            r
+            for r in variants
+            if isinstance(r, dict) and r.get("unit") == "image" and r.get("variant") is None
+        ]
+        choices = exact or generic
+        if len(choices) > 1 or variants and not choices:
+>           raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
+E           ValueError: Полная цена выбранного варианта изображения неизвестна или неоднозначна.
+
+src/rpg_vkr/visuals/policy.py:168: ValueError
+_ test_regenerate_with_owner_prices_keeps_old_image_as_reference_and_posts_once[items] _
+
+visual = (<rpg_vkr.ui.main_window.MainWindow(0x1a4fc170) at 0x7fece2013440>, <rpg_vkr.ui.visuals_panel.VisualController(0x1b4d00c0) at 0x7fece1652d00>, <test_visual_controller.FakeTransport object at 0x7fece1f16c90>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fece1fb6060>
+category = 'items'
+
+    @pytest.mark.parametrize("category", ["items", "people"])
+    def test_regenerate_with_owner_prices_keeps_old_image_as_reference_and_posts_once(
+        visual, monkeypatch, category
+    ):
+        window, controller, fake = visual
+        data = owner_catalog()
+        monkeypatch.setattr(
+            fake, "metadata", lambda key: (SimpleNamespace(remaining=Decimal(100)), copy.deepcopy(data))
+        )
+        entry = next(e for e in knowledge_entries(window._session) if e.category == category)
+        target = entity_target(window._session, entry, shared=False)
+        original = window._session.to_dict(), window._session.dice.checkpoint()
+        controller.request(target)
+        finish(controller)
+        first = controller.registry.latest_for(target.campaign, target.entity)
+        assert first is not None
+        fake.posts.clear()
+        controller.request(target, regenerate=True)
+        controller.request(target, regenerate=True)
+        finish(controller)
+>       assert len(fake.posts) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = <test_visual_controller.FakeTransport object at 0x7fece1f16c90>.posts
+
+tests/test_catalog_image_prices.py:107: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ test_regenerate_with_owner_prices_keeps_old_image_as_reference_and_posts_once[people] _
+
+visual = (<rpg_vkr.ui.main_window.MainWindow(0x1b9c75f0) at 0x7fece86a5b00>, <rpg_vkr.ui.visuals_panel.VisualController(0x1c111800) at 0x7fece1445340>, <test_visual_controller.FakeTransport object at 0x7fece1e69370>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fece1654cb0>
+category = 'people'
+
+    @pytest.mark.parametrize("category", ["items", "people"])
+    def test_regenerate_with_owner_prices_keeps_old_image_as_reference_and_posts_once(
+        visual, monkeypatch, category
+    ):
+        window, controller, fake = visual
+        data = owner_catalog()
+        monkeypatch.setattr(
+            fake, "metadata", lambda key: (SimpleNamespace(remaining=Decimal(100)), copy.deepcopy(data))
+        )
+        entry = next(e for e in knowledge_entries(window._session) if e.category == category)
+        target = entity_target(window._session, entry, shared=False)
+        original = window._session.to_dict(), window._session.dice.checkpoint()
+        controller.request(target)
+        finish(controller)
+        first = controller.registry.latest_for(target.campaign, target.entity)
+>       assert first is not None
+E       assert None is not None
+
+tests/test_catalog_image_prices.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_catalog_image_prices.py::test_owner_catalog_matches_selected_resolution_without_base_price_fallback[1K-969350]
+FAILED tests/test_catalog_image_prices.py::test_owner_catalog_matches_selected_resolution_without_base_price_fallback[1.5K-1184761]
+FAILED tests/test_catalog_image_prices.py::test_owner_catalog_matches_selected_resolution_without_base_price_fallback[2K-1507878]
+FAILED tests/test_catalog_image_prices.py::test_owner_catalog_matches_selected_resolution_without_base_price_fallback[4K-3877399]
+FAILED tests/test_catalog_image_prices.py::test_owner_top_level_reference_limit_is_used
+FAILED tests/test_catalog_image_prices.py::test_conflicting_case_alias_prices_cannot_be_undercounted
+FAILED tests/test_catalog_image_prices.py::test_two_capability_locations_use_the_stricter_limit
+FAILED tests/test_catalog_image_prices.py::test_regenerate_with_owner_prices_keeps_old_image_as_reference_and_posts_once[items]
+FAILED tests/test_catalog_image_prices.py::test_regenerate_with_owner_prices_keeps_old_image_as_reference_and_posts_once[people]
+9 failed, 7 passed in 0.86s

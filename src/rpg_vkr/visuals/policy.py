@@ -10,6 +10,7 @@ from rpg_vkr.ui.workspace_tools import atomic_text
 
 RECRAFT = "recraft/recraft-v4.1-flash"
 FLUX = "black-forest-labs/flux-3-image-klein"
+PRICE_LIMITS = {RECRAFT: 5_000_000, FLUX: 10_000_000}
 SIZES = {
     "768": "768x768",
     "1K": "1024x1024",
@@ -42,9 +43,9 @@ class VisualSettings:
             type(self.monthly_micros) is not int
             or not 0 <= self.monthly_micros <= 2000000000
             or type(self.economy_cap) is not int
-            or not 0 < self.economy_cap <= 850000
+            or not 0 < self.economy_cap <= PRICE_LIMITS[RECRAFT]
             or type(self.quality_cap) is not int
-            or not 0 < self.quality_cap <= 5000000
+            or not 0 < self.quality_cap <= PRICE_LIMITS[FLUX]
             or type(self.confirm) is not bool
             or type(self.consent) is not bool
             or self.portrait_size not in SIZES
@@ -92,6 +93,15 @@ def route_reason(category, economy_eligible, references):
     return "Персонаж, существо, локация, событие или уникальный объект: качественная FLUX."
 
 
+def _resolution_matches(value, size):
+    # RouterAI publishes e.g. supported_image_sizes="1K", image_pricing.variant="1k".
+    # Normalize spelling only: quality tiers and other dimensions remain distinct.
+    return isinstance(value, str) and value.strip().casefold() in (
+        size.casefold(),
+        SIZES[size].casefold(),
+    )
+
+
 def quote_model(catalog, model, size, reference_count=0):
     if model not in {RECRAFT, FLUX} or size not in SIZES:
         raise ValueError("Неизвестная модель или разрешение изображений.")
@@ -120,18 +130,31 @@ def quote_model(catalog, model, size, reference_count=0):
         limits = {}
     if not isinstance(limits, dict):
         raise ValueError("Неизвестные ограничения модели.")
-    supported = limits.get("supported_resolutions")
-    if supported is not None and (
-        not isinstance(supported, list) or not any(s in supported for s in (size, SIZES[size]))
-    ):
-        raise ValueError("Выбранное разрешение не подтверждено каталогом.")
-    # Owner-supplied FLUX model-page examples explicitly confirm image-to-image.
-    # supported_parameters can be incomplete. Without an advertised upper limit,
-    # use one reference, not an invented multi-image capacity.
-    cap = limits.get("max_input_references", 1 if model == FLUX else 0)
-    if type(cap) is not int or not 0 <= cap <= 32:
+    for supported in (limits.get("supported_resolutions"), row.get("supported_image_sizes")):
+        if supported is not None and (
+            not isinstance(supported, list)
+            or not any(_resolution_matches(value, size) for value in supported)
+        ):
+            raise ValueError("Выбранное разрешение не подтверждено каталогом.")
+    count = row.get("max_image_count")
+    if count is not None and (type(count) is not int or count < 1):
+        raise ValueError("Каталог не разрешает создать одно изображение.")
+    # Current catalog uses top-level fields; older responses nested limits.
+    # Both are authoritative when present. Never discard a stricter restriction.
+    caps = [
+        value
+        for value in (limits.get("max_input_references"), row.get("max_image_references"))
+        if value is not None
+    ]
+    if any(type(value) is not int or not 0 <= value <= 32 for value in caps):
         raise ValueError("Неизвестен лимит референсов.")
-    supports = model == FLUX and cap > 0
+    cap = min(caps) if caps else (1 if model == FLUX else 0)
+    advertised = row.get("supported_image_references")
+    if advertised is not None and type(advertised) is not bool:
+        raise ValueError("Неизвестна поддержка референсов.")
+    supports = model == FLUX and cap > 0 and advertised is not False
+    if not supports:
+        cap = 0
     if reference_count and (not supports or reference_count > cap):
         raise ValueError("Каталог не подтверждает нужное количество input_references.")
     total = None
@@ -145,12 +168,14 @@ def quote_model(catalog, model, size, reference_count=0):
         for r in variants
         if isinstance(r, dict)
         and r.get("unit") == "image"
-        and r.get("variant") in (size, SIZES[size])
+        and _resolution_matches(r.get("variant"), size)
     ]
     # A priced resolution variant is model-specific evidence too. The Images
     # guide defines both transports; supported_parameters need not repeat them.
     if not size_parameter and len(exact) == 1:
-        size_parameter = "resolution" if exact[0]["variant"] == size else "size"
+        size_parameter = (
+            "resolution" if exact[0]["variant"].strip().casefold() == size.casefold() else "size"
+        )
     if not size_parameter and (
         size != "1K" or any(isinstance(r, dict) and r.get("variant") is not None for r in variants)
     ):
@@ -165,7 +190,11 @@ def quote_model(catalog, model, size, reference_count=0):
     ]
     choices = exact or generic
     if len(choices) > 1 or variants and not choices:
-        raise ValueError("Полная цена выбранного варианта изображения неизвестна или неоднозначна.")
+        raise ValueError(
+            f"Полная цена изображения {size} "
+            + ("неоднозначна: несколько тарифов." if len(choices) > 1 else "не найдена в каталоге.")
+            + " Обновите модели в панели «Художник». Платный запрос не отправлен."
+        )
     if len(choices) == 1:
         total = micros(choices[0].get("price"))
     elif units.get("image_output") == "image":

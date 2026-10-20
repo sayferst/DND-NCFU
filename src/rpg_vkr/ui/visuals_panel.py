@@ -28,6 +28,7 @@ from rpg_vkr.visuals.client import ImageError, ImagesWorker
 from rpg_vkr.visuals.context import entity_target, make_prompt, reference_candidates, scene_target
 from rpg_vkr.visuals.policy import (
     FLUX,
+    PRICE_LIMITS,
     RECRAFT,
     SIZES,
     VisualSettings,
@@ -111,11 +112,11 @@ class VisualController(QObject):
             return spin
 
         self.monthly = money(self.settings.monthly_micros, 2000)
-        self.economy = money(self.settings.economy_cap, 0.85)
-        self.quality = money(self.settings.quality_cap, 5)
+        self.economy = money(self.settings.economy_cap, PRICE_LIMITS[RECRAFT] / 1000000)
+        self.quality = money(self.settings.quality_cap, PRICE_LIMITS[FLUX] / 1000000)
         form.addRow("Месячный бюджет изображений:", self.monthly)
-        form.addRow("Порог Recraft:", self.economy)
-        form.addRow("Порог FLUX:", self.quality)
+        form.addRow("Порог Recraft (до 5 ₽):", self.economy)
+        form.addRow("Порог FLUX (до 10 ₽):", self.quality)
         self.portrait = QComboBox()
         self.portrait.addItems(SIZES)
         self.portrait.setCurrentText(self.settings.portrait_size)
@@ -386,6 +387,11 @@ class VisualController(QObject):
             size = "1K"
         quote = quote_model(catalog, model, size, 1 if candidates else 0)
         refs = candidates[: quote.reference_limit] if quote.supports_references else []
+        if quote.total > PRICE_LIMITS[model]:
+            raise ValueError(
+                f"Полная цена изображения выше предела {rub(PRICE_LIMITS[model])}. "
+                "Запрос не отправлен."
+            )
         if quote.total > round(allowance.remaining * 1000000):
             raise ValueError("Лимита ключа RouterAI недостаточно для полной цены запроса.")
         if quote.total > self.settings.quality_cap and model == FLUX:

@@ -59,6 +59,6 @@ def test_zero_budget_defaults_and_nonsecret_settings(tmp_path):
     s.save(tmp_path / "visual.json")
     assert VisualSettings.load(tmp_path / "visual.json") == s
     with pytest.raises(ValueError):
-        VisualSettings(quality_cap=5000001)
+        VisualSettings(quality_cap=10000001)
     with pytest.raises(ValueError):
         VisualSettings(monthly_micros=-1)

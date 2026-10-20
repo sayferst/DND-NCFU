@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "id": "black-forest-labs/flux-3-image-klein",
+      "pricing": {"image_output": 0.86164416},
+      "pricing_units": {"image_output": "image"},
+      "per_request_limits": null,
+      "supported_parameters": ["resolution", "aspect_ratio", "n", "input_references"],
+      "default_parameters": null,
+      "max_image_references": 10,
+      "supported_image_sizes": ["768", "1K", "1.5K", "2K", "4K"],
+      "max_image_count": 1,
+      "supported_image_references": true,
+      "image_pricing": [
+        {"unit": "image", "variant": "768", "price": 0.86164416},
+        {"unit": "image", "variant": "1k", "price": 0.96934968},
+        {"unit": "image", "variant": "1.5k", "price": 1.18476072},
+        {"unit": "image", "variant": "2k", "price": 1.50787728},
+        {"unit": "image", "variant": "4k", "price": 3.87739872}
+      ]
+    },
+    {
+      "id": "recraft/recraft-v4.1-flash",
+      "pricing": {"image_output": 0.75393864},
+      "pricing_units": {"image_output": "image"},
+      "per_request_limits": null,
+      "supported_parameters": ["aspect_ratio", "n"],
+      "default_parameters": null,
+      "max_image_references": 0,
+      "supported_image_sizes": null,
+      "max_image_count": 6,
+      "supported_image_references": false,
+      "image_pricing": [{"unit": "image", "variant": null, "price": 0.75393864}]
+    }
+  ]
+}
