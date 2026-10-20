@@ -1,0 +1,119 @@
+{
+  "source_commit": "0079e449fc8b09ffec12fdcabc388c7e9a96d1fc",
+  "before": [
+    {
+      "id": "direct",
+      "message": "Иду в галерею.",
+      "valid": true,
+      "status": "accepted",
+      "error": ""
+    },
+    {
+      "id": "harmless_negation",
+      "message": "Иду в галерею, не оглядываясь.",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "conditional_target",
+      "message": "Иду в галерею, если она открыта.",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "speech_and_action",
+      "message": "Говорю Весте спасибо и иду в галерею.",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "action_then_question",
+      "message": "Иду в галерею. Кто там?",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "unknown_wording",
+      "message": "Шагаю в галерею.",
+      "valid": true,
+      "status": "PlanConfirmationRequired",
+      "error": "Подтвердите, как мастер понял вашу формулировку."
+    },
+    {
+      "id": "negated_intent",
+      "message": "Не иду в галерею.",
+      "valid": false,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "question_only",
+      "message": "Могу ли я идти в галерею?",
+      "valid": false,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    }
+  ],
+  "after": [
+    {
+      "id": "direct",
+      "message": "Иду в галерею.",
+      "valid": true,
+      "status": "accepted",
+      "error": ""
+    },
+    {
+      "id": "harmless_negation",
+      "message": "Иду в галерею, не оглядываясь.",
+      "valid": true,
+      "status": "accepted",
+      "error": ""
+    },
+    {
+      "id": "conditional_target",
+      "message": "Иду в галерею, если она открыта.",
+      "valid": true,
+      "status": "PlanConfirmationRequired",
+      "error": "Условие не имеет отдельной проверяемой механики. Подтвердите выполнение показанных шагов с текущими ограничениями мира."
+    },
+    {
+      "id": "speech_and_action",
+      "message": "Говорю Весте спасибо и иду в галерею.",
+      "valid": true,
+      "status": "accepted",
+      "error": ""
+    },
+    {
+      "id": "action_then_question",
+      "message": "Иду в галерею. Кто там?",
+      "valid": true,
+      "status": "accepted",
+      "error": ""
+    },
+    {
+      "id": "unknown_wording",
+      "message": "Шагаю в галерею.",
+      "valid": true,
+      "status": "PlanConfirmationRequired",
+      "error": "Подтвердите, как мастер понял вашу формулировку."
+    },
+    {
+      "id": "negated_intent",
+      "message": "Не иду в галерею.",
+      "valid": false,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "question_only",
+      "message": "Могу ли я идти в галерею?",
+      "valid": false,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    }
+  ]
+}

@@ -1,0 +1,297 @@
+{
+  "kind": "authored synthetic replies; not actual DeepSeek inference",
+  "timestamp_utc": "2026-10-20T09:54:45.408735+00:00",
+  "base_commit": "c697b75c146820d48bbd5e911c96aa08dc1b48f0",
+  "source_hashes": {
+    "src/rpg_vkr/narrative/__init__.py": "09c05ba656c4f4d18821527b5cf76c8bb6b23727e26dbfdd461689709c9b079c",
+    "src/rpg_vkr/narrative/actions.py": "f2ddbdcd747979bf2f931421171c1773ece62270a86697a0a4d84a2a7600ed0b",
+    "src/rpg_vkr/narrative/cloud.py": "65c8163d453a34740ef1ad2d76b88e68e097587edecbb4fd2b615404025ee8b0",
+    "src/rpg_vkr/narrative/context.py": "8c17147da968a79ab79ce6ae79c4a13204dc646cc94110635a27af00360c50ca",
+    "src/rpg_vkr/narrative/dialogue.py": "ad65c7ed412c612b3cdfbae317cbcf3cc689769c1ba0cefaa6594c38a329de3c",
+    "src/rpg_vkr/narrative/examples.py": "318908ebc6a2f1b8cd97032ec7e94b26f38eff61259b96e8bf3378b57fb8cb0f",
+    "src/rpg_vkr/narrative/failures.py": "30dc938281e7f65a908076ff559e6f06b060e2e1b1316432d79716691a6d7b33",
+    "src/rpg_vkr/narrative/genres.py": "15885e392e059dfe9a5a714005d6597a4bee95fe6af83d523531bfe25e906b0e",
+    "src/rpg_vkr/narrative/instructions.py": "9f9adb32b15a90188aeb9dc06ab616e28315807ddd9b550039fc5b428028533e",
+    "src/rpg_vkr/narrative/intent.py": "c05b3b89875c49287fe08e92ecbda06f2b3fca3dc7d6a8bc3d5a18c132203f7c",
+    "src/rpg_vkr/narrative/limits.py": "7492081aae9788ab3aabe479f84c99ff570958ed4cb1b50d8f3c4018eba8da2c",
+    "src/rpg_vkr/narrative/master.py": "e970bb7750244ecd43b93ac588fa7fe4ad49fb165028cea71928a78d13b52426",
+    "src/rpg_vkr/narrative/offline.py": "fb189a9b0516338e144536eb76a0ca12b89cde4e6b6231966d43798c3b73a2e6",
+    "src/rpg_vkr/narrative/ollama.py": "24923588d1752be5e4d6d2f0ea61af3faca7b44d5584fd7381d7f3d99f551fdf",
+    "src/rpg_vkr/narrative/presentation.py": "f2498b9aa2d46edcd21311144667eca8563cd59fe33109f5e3ae5aa29ae73fc7",
+    "src/rpg_vkr/narrative/records.py": "327d9c31b9ef95a4dec193010f16f6d1ba9e638ccbde9b85eaba65d4f1de0f68",
+    "src/rpg_vkr/narrative/routerai.py": "1c75fa82e33a32263055bd4ce6f9be96428d3f85d96ef49f73bf1aaa40cc303d",
+    "src/rpg_vkr/narrative/routing.py": "ab325eb5b66112b7bc90188cb8fc3aff25bb4f6123ea95d70e7c2d172da8b377",
+    "src/rpg_vkr/narrative/scenes.py": "72aa9f5725cf938a67708651b0862777eeda84aaf70c65b513f94f084f1bb320",
+    "src/rpg_vkr/narrative/segments.py": "fbae43fa7392b26c5676cd86ae020a5bcacca454d0c75445b3baa6c028e19088",
+    "src/rpg_vkr/narrative/speech.py": "70d9b7d89e5b00de91fd737396c5ff5aa6565f35ca047fdd8b1b0fd2b3c85f46",
+    "src/rpg_vkr/narrative/story.py": "8e524dfeacfc8864a1f6867f1252805c4e2f1d95af93215809124124c03f78ba",
+    "src/rpg_vkr/narrative/story_prompt.py": "dcfcc981598c02b1cc68293c3cb1f2ebb94c737860eb5859cdb32b172410a631",
+    "src/rpg_vkr/narrative/story_quality.py": "083118e2a3dd44d5422a7374b8ef644520ed20f635cdbeef3dd775722b1292bb",
+    "src/rpg_vkr/narrative/turn_brief.py": "2cd2cc08c419315bfaba468cee2be68784d7c3bf8ad58253377208ab43665b4b"
+  },
+  "corpus_sha256": "2b58a78bbc28663f0dc909e24365ca7da71a35c015bc68a3a63667e92f1e01c9",
+  "summary": {
+    "valid_replies": 28,
+    "valid_accepted": 28,
+    "valid_rejected": 0,
+    "invalid_controls": 8,
+    "invalid_rejected": 8,
+    "invalid_accepted": 0,
+    "actual_model_inferences": 0,
+    "real_api_calls": 0
+  },
+  "cases": [
+    {
+      "id": "ordinary_observation",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "brief_yes",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "brief_refusal",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "long_scene",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "received_answer",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "take_pause",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "avoid_answer",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "dead_silence",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "dead_leaves",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "sensory_cold",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "wellbeing_synonym",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "help_synonym",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "npc_refuses_name",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "declines_quest",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_name_direct",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_name_inflected",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_name_question",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_insult",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "negotiation",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "exploration",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "unknown_place_explanation",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "unsupported_magic_obstacle",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "simple_physical_attempt",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "repeated_true_instruction",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "committed_attack_literal",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "committed_attack_paraphrase",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "partial_failure_prefix",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "failed_attempt_honest",
+      "valid": true,
+      "accepted": true,
+      "reason": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "fake_reward",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Рассказчик назначил неподтверждённый механический результат.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "fake_reward_indirect",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Рассказчик назначил неподтверждённый механический результат.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "invented_hero_reply",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Модель сочинила реплику за игрока.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "invented_feeling",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "renamed_hero",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Имя героя нельзя изменить художественным ответом.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "malformed_response_language",
+      "valid": false,
+      "accepted": false,
+      "reason": "ResponseFormatError: В ответе посторонний язык; нужен русский текст.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "unsolicited_kill",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Сначала нужен расчёт атаки движком.",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "npc_action_not_registered",
+      "valid": false,
+      "accepted": false,
+      "reason": "NarrativeConflict: Передача предмета не подтверждена движком.",
+      "state_and_rng_unchanged": true
+    }
+  ]
+}

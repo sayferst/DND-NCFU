@@ -1,0 +1,39 @@
+{
+  "messages": [
+    {
+      "message": "Веста, здравствуйте.",
+      "posts": 1,
+      "turn_count": 1,
+      "actor_id": "vesta",
+      "last_interlocutor": "vesta",
+      "status": "Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.",
+      "draft": "",
+      "last_diagnostic": "Этап: world_plan; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 343 байт; завершение: stop\nДлина thinking: 0\nПроверка: OK: план получен, изменения ещё не применены\nОтвет (до 6000 символов):\n{\"steps\": [], \"places\": [], \"check\": \"none\", \"reply\": \"Веста отрывается от карты. «Здравствуйте. Вы ищете переправу?»\", \"dialogue_target\": \"vesta\"}"
+    },
+    {
+      "message": "Как тебя зовут?",
+      "posts": 1,
+      "turn_count": 2,
+      "actor_id": "vesta",
+      "last_interlocutor": "vesta",
+      "status": "Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.",
+      "draft": "",
+      "last_diagnostic": "Этап: world_plan; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 347 байт; завершение: stop\nДлина thinking: 0\nПроверка: OK: план получен, изменения ещё не применены\nОтвет (до 6000 символов):\n{\"steps\": [], \"places\": [], \"check\": \"none\", \"reply\": \"Веста кивает. «Меня зовут Веста. Я составляю карты речных путей».\", \"dialogue_target\": \"vesta\"}"
+    }
+  ],
+  "requests": [
+    {
+      "kind": "plan",
+      "player": "Веста, здравствуйте.",
+      "prior_npc_reply_in_payload": false
+    },
+    {
+      "kind": "plan",
+      "player": "Как тебя зовут?",
+      "prior_npc_reply_in_payload": true
+    }
+  ],
+  "dynamic_focus_error": null,
+  "external_calls": 0,
+  "loopback_key_checks": 2
+}

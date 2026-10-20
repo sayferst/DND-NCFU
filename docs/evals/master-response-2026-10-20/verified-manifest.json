@@ -1,0 +1,32 @@
+{
+  "source_commit": "0079e449fc8b09ffec12fdcabc388c7e9a96d1fc",
+  "actual_model_inferences": 0,
+  "paid_requests": 0,
+  "external_requests": 0,
+  "fixture": "all synthetic; only loopback HTTP",
+  "corpus_sha256": "2b58a78bbc28663f0dc909e24365ca7da71a35c015bc68a3a63667e92f1e01c9",
+  "inputs_unchanged": true,
+  "files": {
+    "DIAGNOSIS_AND_PLAN.md": "9447d9054b4f2af9398d9ce0a2370b1c388a370d236af64b0111bda31d2190de",
+    "audit.py.source.txt": "b60449e4581b3ff21993191360cf3dca38c3db4205c61ab0bcad193137803aa8",
+    "before.json": "981c69bf91c90d8b13215a2d69b6c161cab9945e040836f02689ed92a8749e67",
+    "bindings-after.json": "5f0839015baa736851c1f719a2214524a7651eebd9bca7c004b3bd15f76e45a6",
+    "cases.json": "2b58a78bbc28663f0dc909e24365ca7da71a35c015bc68a3a63667e92f1e01c9",
+    "final.json": "35692284d10b33c4e53fd50c3a68efbf6ef49bbe2a57786ae8d44738259d2756",
+    "protected-bytes.json": "9af2ebf11358f0ce14122ae0320ea6a48556043919db3dbab872a0c0976cdd7d",
+    "release.json": "d198e1eebb44783b41c1ffb52a9270b62e2bfddf2f1537a5129c90ba49867a8f",
+    "stage1.json": "959ddcc20e7bb2c7ec36c3944dfcf474226b034e31b826c1965c61eaa538b1b5",
+    "transport-after.json": "75120602f49b50ececf8665fc8cbf70b5571965b6d6686436f07e116f90238a9",
+    "transport-after.raw.txt": "f3633fdb6242ebab642489030728c4f05a13e798e913d678b25320b09a800c0a",
+    "transport-before.json": "f39dfff0775b4d5428ef509414d5679a8193bfdc8fa53990e6be482bb4b20de4",
+    "transport.py.source.txt": "2e1183ab1b228b1e28fc47ff90b86b7229afa413812ead51a9e863babc52969e",
+    "ui-after.json": "330071172af32a73c597cadeaba4463b43e51802f503cc741b440599e3ce28e8",
+    "ui-after.raw.txt": "0bd732cb47b72f3392021ac157686a33ef5f54a5e3f76b896671a5f42c94d3dd",
+    "ui-before.json": "f714f6c2ffff8cef4f0786d0e0bd1174c3860d65da473a2e39613c1e21a54db1",
+    "ui-inline.json": "99498fbeb2ecd5c991488bb6dc279834a5f81837d076e2c7218950b004561e43",
+    "ui-inline.raw.txt": "4a6e0a177b31a581aecb6a7b26624bafc8490982c2c951f0a034b466392914c7",
+    "ui_inline.py.source.txt": "99b4f2bc5912961d1365ad68531082b12159e9687feec66a2f994a8955cf3b89",
+    "ui_probe.py.source.txt": "2262e275f442ab7c9b8347a206f6a4dc4033d112c1b258f58d49501498c1aea5",
+    "verified.json": "4b5b3b71357324684941ba4e124aa54e24178b0904c545ae55fe56558380c986"
+  }
+}

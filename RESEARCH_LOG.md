@@ -937,3 +937,15 @@ rawdocs/validation/linux-master-response-final-2026-10-20.txt. Шесть нов
 verified—1failed/959passed (устаревшая проверка подписи исключения);release—
 964passed, но форматирование1файла. Они исправлены и не объявляются успешными.
 НастоящиеDeepSeek/Windows/99%/стоимость этим не измерялись.
+
+### 2026-10-20 — 1Q, повтор исходных независимых probes после0079e44
+Неизменные36ответов: допустимые10/28→28/28; ошибочныепропуски3/8→0/8,
+отклоненывсе8. Исходныйtransport14сценариев:22→17loopbackPOST, принято5→10,
+отклонений16→6, HTTP503остаётся1. СтарыйUIбезreply: Веста2+3POST/IDNone→
+2+2POST/IDvesta; новыйпротоколreplyотдельно1+1POST. Binding6положительных:
+1accepted/1confirmation/4hard→4accepted/2confirmation/0hard;2отрицательныхблокируются.
+Источник:docs/evals/master-response-2026-10-20/RESULTS.md, verified.json,
+transport-after.json, ui-after.json, ui-inline.json, bindings-after.json,
+verified-manifest.json. Корпуспрежний; промежуточныепрогонынеперезаписаны.
+РеальныйDeepSeek/API/цена/Windowsнепроверялись; невыдаватьэто за99%илинаучное
+доказательствопревосходствамодели. Подготовленывоспроизводимыеисходникиprobes.

@@ -1,0 +1,72 @@
+"""Default UI integration probe, own loopback server, temporary campaign data."""
+import contextlib, importlib.util, io, json, os, threading, time
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+os.environ['QT_QPA_PLATFORM']='offscreen'
+from PySide6.QtWidgets import QApplication
+from rpg_vkr.ui.main_window import MainWindow
+from rpg_vkr.storage.slots import SaveSlots
+from rpg_vkr.narrative.dialogue import last_interlocutor
+from rpg_vkr.domain.director import Proposal
+spec=importlib.util.spec_from_file_location('audit',Path(__file__).with_name('audit.py'))
+audit=importlib.util.module_from_spec(spec)
+with contextlib.redirect_stdout(io.StringIO()):spec.loader.exec_module(audit)
+app=QApplication.instance() or QApplication([])
+requests=[];current=[''];rows=[];key_checks=[]
+first='Веста, здравствуйте.'
+second='Как тебя зовут?'
+answers={first:'Веста отрывается от карты. «Здравствуйте. Вы ищете переправу?»',
+         second:'Веста кивает. «Меня зовут Веста. Я составляю карты речных путей».'}
+class Handler(BaseHTTPRequestHandler):
+    def log_message(self,*args):pass
+    def do_GET(self):
+        key_checks.append(self.path)
+        raw=json.dumps({'data':{'disabled':False,'limit':'2000','usage_monthly':'0','limit_remaining':'2000','limit_reset':'monthly'}}).encode()
+        self.send_response(200);self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw)
+    def do_POST(self):
+        body=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))))
+        is_plan='Режим: план изменений мира' in body['messages'][0]['content']
+        if is_plan:
+            current[0]=json.loads(body['messages'][1]['content'])['player_message']
+            content=json.dumps({'steps':[],'places':[],'check':'none'})
+        else:content=answers[current[0]]
+        requests.append({'kind':'plan' if is_plan else 'writer','player':current[0],
+                         'prior_npc_reply_in_payload':'Вы ищете переправу?' in body['messages'][1]['content']})
+        raw=json.dumps({'model':audit.MODEL,'choices':[{'message':{'role':'assistant','content':content},'finish_reason':'stop'}]},ensure_ascii=False).encode()
+        self.send_response(200);self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw)
+server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+import rpg_vkr.narrative.cloud as cloud
+import rpg_vkr.narrative.routerai as routerai
+url=f'http://127.0.0.1:{server.server_port}'
+cloud.ENDPOINTS['routerai']=url+'/api/v1/chat/completions'
+routerai.KEY_URL=url+'/api/v1/key'
+with TemporaryDirectory() as directory:
+    window=MainWindow(session=audit.new_session(),saves=SaveSlots(Path(directory)/'saves'))
+    window.ollama.base_url=f'http://127.0.0.1:{server.server_port}'
+    window.ollama.models=(audit.MODEL,)
+    window.local_model.addItem(audit.MODEL);window.local_model.setCurrentText(audit.MODEL)
+    window.ai_provider.setCurrentIndex(window.ai_provider.findData('routerai'))
+    window.cloud_model.setText(audit.MODEL)
+    window.cloud_key.setText('synthetic-test-key')
+    window.cloud_allowed.setChecked(True)
+    window.director_mode.setChecked(True);window.world_agent.setChecked(True)
+    window.ai_chat.setChecked(True);window.enable_local_narrator.setChecked(True)
+    for text in (first,second):
+        start=len(requests);window.action_input.setText(text);window.send_button.click()
+        deadline=time.monotonic()+5
+        while window.ollama.busy and time.monotonic()<deadline:app.processEvents();time.sleep(.003)
+        assert not window.ollama.busy
+        rows.append({'message':text,'posts':len(requests)-start,'turn_count':len(window._session.turns),
+                     'actor_id':window._session.turns[-1].actor_id if window._session.turns else None,
+                     'last_interlocutor':last_interlocutor(window._session),
+                     'status':window.narrator_status.text(),'draft':window.action_input.text(),
+                     'last_diagnostic':window.ollama.last_diagnostic})
+    try:Proposal('','vesta',answers[first],());dynamic_proposal_error=None
+    except ValueError as e:dynamic_proposal_error=str(e)
+    window._dirty=False;window.action_input.clear();window._diary_draft=False;window.close();window.deleteLater();app.processEvents()
+server.shutdown();server.server_close();thread.join()
+value={'messages':rows,'requests':requests,'dynamic_focus_error':dynamic_proposal_error,'external_calls':0,'loopback_key_checks':len(key_checks)}
+Path(__file__).with_name('ui-probe.json').write_text(json.dumps(value,ensure_ascii=False,indent=2),encoding='utf-8')
+print(json.dumps(value,ensure_ascii=False,indent=2))

@@ -1,5 +1,24 @@
 # План проверок
 
+Актуально1Q: **964 passed,0failed/skipped,77.92с**, полный scripts/check.py;
+pip/Ruff успешны,135Python-файлов. Raw:linux-master-response-final-2026-10-20.txt.
+Исходный неизменяемый корпус:28 допустимых и8 отрицательных ответов;
+сравнение в docs/evals/master-response-2026-10-20/RESULTS.md, воспроизведение
+через scripts/evaluate_response_contract.py --output НОВЫЙ_ФАЙЛ.json.
+Файл результата создаётся эксклюзивно; исходные результаты не перезаписываются.
+
+Новые test_response_contract.py/test_response_delivery.py/test_model_metrics.py
+проверяют требуемые метафоры, нового NPC, короткий и длинный ответ, частичный
+исход, RNG/JSON/SQLite/restart, знак ресурсов, общую проверку, отрицание/цитату,
+составное действие, условие, один POST на разговор, бюджет3, отсутствие повтора
+действий, классы сбоев, долговечные метрики и отсутствие ключей/промптов в них.
+Эти тесты используют подготовленные тексты и настоящий loopback HTTP/Qt;
+их нельзя выдавать за качество DeepSeek, цену, скорость или Windows GUI.
+Ручная приёмка Windows и отдельный ограниченный по расходам опыт DeepSeek
+остаются необходимыми.
+
+## История 1P
+
 Актуально1P: **892 passed,0failed/skipped,69.27с**, полный scripts/check.py,
 Linux/Python3.12.14/SQLite3.53.1/Git2.52.0, pip/Ruff успешны,127Python-файлов.
 Raw:docs/validation/linux-generated-campaigns-verified-2026-10-19.txt.

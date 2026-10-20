@@ -1,0 +1,341 @@
+{
+  "summary": {
+    "cases": 14,
+    "model_inferences": 0,
+    "actual_external_requests": 0,
+    "loopback_post_responses": 17,
+    "accepted_cases": 10,
+    "failed_cases": 4,
+    "rejected_response_validations": 6,
+    "network_failure_cases": 1,
+    "after": null
+  },
+  "cases": [
+    {
+      "id": "ordinary_observation",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": ""
+    },
+    {
+      "id": "brief_yes",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": "villager"
+    },
+    {
+      "id": "received_answer",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": ""
+    },
+    {
+      "id": "wellbeing_synonym",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": "villager"
+    },
+    {
+      "id": "new_npc_name_inflected",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": "vesta"
+    },
+    {
+      "id": "new_npc_name_direct",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": "vesta"
+    },
+    {
+      "id": "unsupported_magic_obstacle",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": ""
+    },
+    {
+      "id": "exploration",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "proposal",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": ""
+    },
+    {
+      "id": "partial_failure_prefix",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "narration",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": null
+    },
+    {
+      "id": "committed_attack_literal",
+      "mode": "normal",
+      "expected_valid": true,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "Формат и ограниченные проверки содержания пройдены; литературное качество не оценено"
+      ],
+      "final": [
+        "narration",
+        "accepted"
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": null
+    },
+    {
+      "id": "fake_reward_indirect",
+      "mode": "normal",
+      "expected_valid": false,
+      "response_count": 2,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        },
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": true,
+          "limit": 1200
+        }
+      ],
+      "validation_reasons": [
+        "NarrativeConflict: Рассказ назначил неподтверждённое изменение ресурсов или характеристик.",
+        "NarrativeConflict: Рассказ назначил неподтверждённое изменение ресурсов или характеристик."
+      ],
+      "final": [
+        "failed",
+        "Рассказ мастера: canon_conflict: Рассказ назначил неподтверждённое изменение ресурсов или характеристик.. После 2 попыток описание не принято; игровые действия не повторялись."
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": null
+    },
+    {
+      "id": "http_503",
+      "mode": "http_503",
+      "expected_valid": null,
+      "response_count": 1,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        }
+      ],
+      "validation_reasons": [
+        "HTTP 503; ошибка сети"
+      ],
+      "final": [
+        "failed",
+        "Ollama недоступна или отклонила запрос. Автономная игра продолжает работать."
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": null
+    },
+    {
+      "id": "length",
+      "mode": "length",
+      "expected_valid": null,
+      "response_count": 2,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        },
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": true,
+          "limit": 1350
+        }
+      ],
+      "validation_reasons": [
+        "ValueError: Ответ обрезан до завершения: достигнут лимит генерации",
+        "ValueError: Ответ обрезан до завершения: достигнут лимит генерации"
+      ],
+      "final": [
+        "failed",
+        "Рассказ мастера: token_limit: Ответ обрезан до завершения: достигнут лимит генерации. После 2 попыток описание не принято; игровые действия не повторялись."
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": null
+    },
+    {
+      "id": "invalid_json",
+      "mode": "invalid_json",
+      "expected_valid": null,
+      "response_count": 2,
+      "calls": [
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": false,
+          "limit": 900
+        },
+        {
+          "model": "deepseek/audit-no-provider",
+          "repair_requested": true,
+          "limit": 1200
+        }
+      ],
+      "validation_reasons": [
+        "JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        "JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      ],
+      "final": [
+        "failed",
+        "Рассказ мастера: invalid_format: Expecting property name enclosed in double quotes: line 1 column 2 (char 1). После 2 попыток описание не принято; игровые действия не повторялись."
+      ],
+      "state_and_rng_unchanged": true,
+      "proposed_focus": null
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+"""Independent diagnostic probes against unchanged e5e8996; no provider calls."""
+import hashlib
+import json
+import os
+from collections import Counter
+from copy import deepcopy
+from pathlib import Path
+
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+from rpg_vkr.application import Session
+from rpg_vkr.domain.adventure import build_world
+from rpg_vkr.domain.character import Character
+from rpg_vkr.domain.interactions import Step, WorldPlan, bind_plan
+from rpg_vkr.narrative.context import build_frame
+from rpg_vkr.narrative.dialogue import last_interlocutor
+from rpg_vkr.narrative.master import campaign_context
+from rpg_vkr.narrative.story import story_context, story_payload, story_proposal, story_text
+from rpg_vkr.narrative.story_quality import check_story_quality
+from rpg_vkr.storage.knowledge import retrieve
+
+OUT = Path(__file__).resolve().parent
+MODEL = 'deepseek/audit-no-provider'
+
+def new_session(seed=5):
+    session = Session.create_hero(Character(name='Лея'), 'scout', seed=seed,
+                                  description='Картограф ищет сестру', world_brief='Речной город, тайны гильдий')
+    value = {
+        'title':'Переправа', 'opening':'Под аркой шумит река. Веста сверяет карту, дозорный осматривает мост.',
+        'private_plot':'Пропажа сестры связана с изменением торгового пути.',
+        'hooks':['Узнать о закрытой переправе'], 'start':'landing',
+        'places':[
+            {'id':'landing','name':'Мост над рекой','parent':'','description':'Каменная арка нависает над рекой.'},
+            {'id':'gallery','name':'Галерея карт','parent':'landing','description':'Пустая галерея ведёт к мосту.'}],
+        'definitions':[
+            {'id':'cartographer_type','name':'Веста','kind':'actor','categories':['npcs'],
+             'properties':{'hp_max':8,'goals':['Сохранить карты'],'appearance':'Седая коса, синий плащ'}},
+            {'id':'sentinel_type','name':'Дозорный','kind':'actor','categories':['npcs'],
+             'properties':{'hp_max':10,'goals':['Охранять мост'],'appearance':'Латный нагрудник'}},
+            {'id':'token_type','name':'Медный жетон','kind':'item','categories':['miscellaneous'],
+             'properties':{'mass_g':5,'volume_ml':1},'price_cp':10}],
+        'entities':[
+            {'id':'vesta','definition_id':'cartographer_type','parent_id':'landing','state':{'hp':8}},
+            {'id':'sentinel','definition_id':'sentinel_type','parent_id':'landing','state':{'hp':10}},
+            {'id':'token','definition_id':'token_type','parent_id':'vesta','owner_id':'vesta','quantity':1}]
+    }
+    session.start_world(build_world(value, session, 'diagnostic-fixture'))
+    return session
+
+def context_for(session, message, confirmed=False, history=()):
+    return story_context(build_frame(session), MODEL, message,
+        memory=retrieve(session, message), campaign=campaign_context(session, last_interlocutor(session)),
+        confirmed=confirmed, history=history)
+
+def response(text):
+    return {'message':{'role':'assistant','content':text}, 'done':True, 'done_reason':'stop'}
+
+cases=[]
+def case(id, category, message, text, *, session=None, valid=True, confirmed=False, history=(), reason=''):
+    cases.append(dict(id=id,category=category,message=message,text=text,session=session or Session(seed=42),
+                      valid=valid,confirmed=confirmed,history=history,annotation=reason))
+
+case('ordinary_observation','question','Что видно над дорогой?',
+     'Над дорогой плывут низкие облака. В просветах между ними виднеется бледное небо.')
+case('brief_yes','short','Жительница, здесь можно постоять?', '«Да, можно».')
+case('brief_refusal','short','Жительница, дадите мне яблоко?', '«Нет, простите».')
+case('long_scene','length','Мастер, подробно опиши погоду над рекой',
+     '''Над рекой поднимается туман, сквозь него пробивается вечерний свет. Облака движутся к дальним холмам, открывая узкую полосу бледного неба. Ветер сначала касается верхушек травы, затем пробегает по самой дороге. Между колеями ещё держится пыль, но у обочины она уже потемнела от влаги. На деревянных створках ворот выступили мелкие капли. Из щелей тянет прохладой, и скрип петель слышен отчётливее обычного. Дальше по дороге воздух кажется плотнее: там дымка смешалась с низкой тучей. Она не закрывает холмы целиком, только сглаживает их очертания. Временами ветер стихает, и тогда доносится ровный шум воды. Река скрыта за поворотом, но её близость выдаёт сырой запах. Сухой лист кружится у колеи и ненадолго застревает между камнями. Трава уходит волнами к подножию холма. На тёмном фоне неба особенно заметны светлые края облаков. Дождя пока нет, хотя воздух уже тяжёлый, прохладный. Дорога блестит только в низинах, где сохранилась утренняя влага. За воротами голоса звучат глуше, словно их прикрыли тканью. Последний луч скользит по верхнему бревну и гаснет. Склон напротив медленно теряет цвет, оставляя лишь тёмные полосы травы. Над ним виден просвет, в котором облака на мгновение стали серебристыми. По дороге ещё можно различить направление старых следов, но в сумерках они сливаются с неровностями земли. Воздух пахнет мокрой древесиной, речной водой и холодным камнем. Под аркой ветер поворачивает и поднимает с земли несколько пылинок. Они видны в последней светлой полосе, затем исчезают в тени. Вдалеке перекликаются птицы; их короткие голоса затихают раньше, чем успевает вернуться эхо. Небо над холмами темнеет ровно, без резкого порыва и без близкой грозы. Только на востоке остаётся узкая щель света, похожая на отражение в воде.''',
+     reason='Distinct authored sentences; complete long scene, no repeated scaffold.')
+case('received_answer','figurative','Мастер, где мельница?',
+     'Вы получили ответ на свой вопрос: мельница стоит ниже по течению, за каменным мостом.')
+case('take_pause','figurative','Я делаю паузу и жду ответа.',
+     'Вы берёте паузу. Шум ветра заполняет тишину, пока собеседник подбирает слова.')
+case('avoid_answer','figurative','Я отвечаю уклончиво.',
+     'Вы уходите от прямого ответа. Жительница замечает это и больше не настаивает.')
+case('dead_silence','figurative','Что слышно в галерее?',
+     'В галерее царит мертвая тишина. Даже шум воды сюда почти не доносится.', session=new_session())
+case('dead_leaves','figurative','Мастер, что за шорох под ногами?',
+     'Под ногами шуршат мертвые листья. Порыв ветра подхватывает один и несёт к дороге.')
+case('sensory_cold','observation','Я касаюсь камня у дороги.',
+     'Вы чувствуете холод камня под ладонью. На его поверхности блестит влага.')
+case('wellbeing_synonym','dialogue','Жительница, как у вас дела?',
+     'Жительница морщится. «С рассвета ломит спину, будто всю ночь таскала жернова».')
+case('help_synonym','dialogue','Жительница, нужна ли вам помощь?',
+     'Жительница щурится от ветра. «Станьте рядом и заслоните меня от порывов».')
+case('npc_refuses_name','dialogue','Жительница, как вас зовут?',
+     'Жительница отворачивается. «Я незнакомцам не представляюсь. Не обижайтесь».')
+case('declines_quest','refusal','Жительница, не буду брать поручение.',
+     'Вы отказываетесь от поручения. «Что ж, поищу другого помощника», — отвечает жительница.')
+case('new_npc_name_direct','new_npc','Веста, как у тебя дела?',
+     'Веста поправляет карту. «Весь день ищу, где река подмыла опоры; к вечеру стало яснее».', session=new_session())
+case('new_npc_name_inflected','new_npc','Спрашиваю у Весты, как у неё дела.',
+     'Веста поправляет карту. «Река подмыла опоры, придётся менять маршрут».', session=new_session())
+case('new_npc_name_question','new_npc','Как тебя зовут?',
+     'Веста поднимает глаза. «Я Веста, картограф этой переправы».', session=new_session())
+case('new_npc_insult','insult','Веста, твой план никуда не годится.',
+     'Веста сжимает край карты. «Тогда предложите путь лучше, только сперва посмотрите на опоры».', session=new_session())
+case('negotiation','negotiation','Веста, давай обсудим другой маршрут.',
+     'Веста разглаживает карту. «Можно обойти через верховья, но на это уйдёт лишний день».', session=new_session())
+case('exploration','exploration','Осматриваю стену, ищу следы ремонта.',
+     'На старой кладке различим более светлый раствор. Вдоль шва ещё держатся влажные песчинки.', session=new_session())
+case('unknown_place_explanation','unknown_place','Хочу попасть в город за перевалом.',
+     'От моста видна лишь ближняя дорога. Чтобы найти путь за перевал, сначала понадобится карта или проводник.', session=new_session())
+case('unsupported_magic_obstacle','magic','Хочу телепортироваться за реку.',
+     'У героя пока нет подтверждённого способа телепортации. Можно поискать переправу или узнать, кто владеет такой магией.', session=new_session())
+case('simple_physical_attempt','unexpected_action','Я пробую свистнуть, чтобы привлечь внимание.',
+     'На резкий свист оборачивается дозорный. «Кого ищете?» — спрашивает он, оставаясь у моста.', session=new_session())
+case('repeated_true_instruction','repeat', 'Ещё подскажи, что здесь важно?',
+     'У северной опоры моста под светлым камнем проходит узкая трещина, и от неё тянет сыростью. Дозорный ждёт у перил.', session=new_session(),
+     history=({'result':'У северной опоры моста под светлым камнем проходит узкая трещина, и от неё тянет сыростью. Веста держит карту.', 'source':'scene-director-5'},),
+     reason='Previously established spatial fact can legitimately be mentioned again.')
+
+attack=new_session()
+attack.submit_actor_attempt('атакую дозорного','sentinel','attack',False,'Удар','diagnostic-fixture')
+case('committed_attack_literal','confirmed_attack','атакую дозорного',
+     'Вы наносите удар дозорному. Он отступает на шаг и снова поднимает оружие.', session=attack,confirmed=True)
+case('committed_attack_paraphrase','confirmed_attack','атакую дозорного',
+     'Удар достигает дозорного. Он отступает на шаг и снова поднимает оружие.', session=attack,confirmed=True)
+partial=new_session(seed=1)
+partial.submit_interaction('иду в галерею',WorldPlan((Step('move','gallery'),)))
+partial.submit_interaction('иду к мосту и забираю жетон',WorldPlan((Step('move','landing'),Step('take','token',1))))
+assert not partial.turns[-1].interaction.check.succeeded
+case('partial_failure_prefix','failed_check','иду к мосту и забираю жетон',
+     'Вы уходите из галереи к мосту, но завладеть жетоном не удаётся. Веста замечает протянутую руку.', session=partial,confirmed=True)
+case('failed_attempt_honest','failed_check','иду к мосту и забираю жетон',
+     'У моста Веста прикрывает жетон ладонью. Предмет остаётся у неё.', session=partial,confirmed=True)
+
+case('fake_reward','negative_control','осматриваю окрестности',
+     'Вы получили сто золотых монет и новый меч за осмотр дороги.',valid=False)
+case('fake_reward_indirect','negative_control','осматриваю окрестности',
+     'Теперь в вашем кошельке лежат семьдесят золотых монет, хотя прежде их было восемь.',valid=False)
+case('invented_hero_reply','negative_control','осматриваю окрестности',
+     '«Я согласен на любые условия», — говорите вы, решив помочь незнакомцу.',valid=False)
+case('invented_feeling','negative_control','осматриваю окрестности',
+     'Вы чувствуете необъяснимую любовь к встречному и решаете остаться навсегда.',valid=False)
+case('renamed_hero','negative_control','осматриваю окрестности',
+     'Теперь вас зовут Альмар: прежнее имя забыто, а семья всегда жила в степи.',valid=False)
+case('malformed_response_language','negative_control','осматриваю окрестности','走近门口 поговорить с ним.',valid=False)
+case('unsolicited_kill','negative_control','поговорить со стражником',
+     'Вы убили стражника одним ударом. Он падает, и схватка завершается.',valid=False)
+case('npc_action_not_registered','canon_gap','Что дальше?',
+     'Из-за опоры выходит человек по имени Северин и кладёт вам в ладонь серебряный ключ.', session=new_session(),valid=False,
+     reason='New actor and transfer were not registered; a good writer is not an executor.')
+
+results=[]
+for c in cases:
+    session=c['session']; before=(deepcopy(session.to_dict()),session.dice.checkpoint())
+    context=context_for(session,c['message'],c['confirmed'],c['history'])
+    accepted=False; error=''; proposal=None
+    try:
+        if c['confirmed']:
+            text=story_text(response(c['text']),confirmed=True)
+            check_story_quality(text,build_frame(session),c['message'],brief=context['turn_brief'],previous=c['history'],
+                campaign={k:context.get(k) for k in ('hero_description','resolution','interaction_result','death_confirmed')})
+        else:
+            proposal=story_proposal(response(c['text']),build_frame(session),c['message'],context=context,previous=c['history'])
+        accepted=True
+    except (ValueError,TypeError,KeyError) as e:error=type(e).__name__+': '+str(e)
+    assert before==(session.to_dict(),session.dice.checkpoint()), c['id']
+    results.append({k:v for k,v in c.items() if k not in ('session','history')}|{
+        'accepted':accepted,'error':error,'brief':context['turn_brief'],
+        'focus_id':proposal.focus_id if proposal else None,
+        'state_and_rng_unchanged':True})
+
+bindings=[]
+for id,text,valid in [
+    ('direct','Иду в галерею.',True),('harmless_negation','Иду в галерею, не оглядываясь.',True),
+    ('conditional_target','Иду в галерею, если она открыта.',True),
+    ('speech_and_action','Говорю Весте спасибо и иду в галерею.',True),
+    ('action_then_question','Иду в галерею. Кто там?',True),
+    ('unknown_wording','Шагаю в галерею.',True),
+    ('negated_intent','Не иду в галерею.',False),('question_only','Могу ли я идти в галерею?',False)]:
+    try:bind_plan(text,WorldPlan((Step('move','gallery'),)));status='accepted';error=''
+    except Exception as e:status=type(e).__name__;error=str(e)
+    bindings.append(dict(id=id,message=text,valid=valid,status=status,error=error))
+
+valid=[r for r in results if r['valid']]; invalid=[r for r in results if not r['valid']]
+summary={
+    'source_commit':'e5e89968f5e2e27bf5319009476e61a90a65a9b2',
+    'kind':'synthetic authored replies, unchanged runtime; no actual DeepSeek inference',
+    'valid_replies':len(valid),'valid_accepted':sum(r['accepted'] for r in valid),
+    'valid_rejected':sum(not r['accepted'] for r in valid),
+    'invalid_controls':len(invalid),'invalid_rejected':sum(not r['accepted'] for r in invalid),
+    'invalid_accepted':sum(r['accepted'] for r in invalid),
+    'all_state_rng_unchanged':all(r['state_and_rng_unchanged'] for r in results),
+    'binding_valid':sum(r['valid'] for r in bindings),
+    'binding_valid_accepted':sum(r['valid'] and r['status']=='accepted' for r in bindings),
+    'binding_confirmation_required':sum(r['valid'] and r['status']=='PlanConfirmationRequired' for r in bindings),
+    'binding_valid_hard_rejected':sum(r['valid'] and r['status']=='ValueError' for r in bindings),
+    'after':None,'after_reason':'Implementation awaits user confirmation.'}
+(OUT/'baseline.json').write_text(json.dumps({'summary':summary,'cases':results,'bindings':bindings},ensure_ascii=False,indent=2),encoding='utf-8')
+(OUT/'cases.json').write_text(json.dumps([{k:v for k,v in r.items() if k in ('id','category','message','text','valid','annotation','confirmed')} for r in results],ensure_ascii=False,indent=2),encoding='utf-8')
+print(json.dumps(summary,ensure_ascii=False,indent=2))
+for r in results:
+ print(r['id'], 'ACCEPT' if r['accepted'] else 'REJECT',r['error'])

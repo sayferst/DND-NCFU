@@ -1,0 +1,49 @@
+{
+  "messages": [
+    {
+      "message": "Веста, здравствуйте.",
+      "posts": 2,
+      "turn_count": 1,
+      "actor_id": "vesta",
+      "last_interlocutor": "vesta",
+      "status": "Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.",
+      "draft": "",
+      "last_diagnostic": "Попытка 1\nЭтап: director; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 242 байт; завершение: stop\nДлина thinking: 0\nПроверка: Формат и ограниченные проверки содержания пройдены; литературное качество не оценено\nОтвет (до 6000 символов):\nВеста отрывается от карты. «Здравствуйте. Вы ищете переправу?»\nБазовая инструкция SHA-256: 7cbb0bff4b2a7cb727219e5ed0ac9bcd32397bbfaae021e9f21e0f153d044e95"
+    },
+    {
+      "message": "Как тебя зовут?",
+      "posts": 2,
+      "turn_count": 2,
+      "actor_id": "vesta",
+      "last_interlocutor": "vesta",
+      "status": "Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.",
+      "draft": "",
+      "last_diagnostic": "Попытка 1\nЭтап: director; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 246 байт; завершение: stop\nДлина thinking: 0\nПроверка: Формат и ограниченные проверки содержания пройдены; литературное качество не оценено\nОтвет (до 6000 символов):\nВеста кивает. «Меня зовут Веста. Я составляю карты речных путей».\nБазовая инструкция SHA-256: 7cbb0bff4b2a7cb727219e5ed0ac9bcd32397bbfaae021e9f21e0f153d044e95"
+    }
+  ],
+  "requests": [
+    {
+      "kind": "plan",
+      "player": "Веста, здравствуйте.",
+      "prior_npc_reply_in_payload": false
+    },
+    {
+      "kind": "writer",
+      "player": "Веста, здравствуйте.",
+      "prior_npc_reply_in_payload": false
+    },
+    {
+      "kind": "plan",
+      "player": "Как тебя зовут?",
+      "prior_npc_reply_in_payload": true
+    },
+    {
+      "kind": "writer",
+      "player": "Как тебя зовут?",
+      "prior_npc_reply_in_payload": true
+    }
+  ],
+  "dynamic_focus_error": null,
+  "external_calls": 0,
+  "loopback_key_checks": 4
+}

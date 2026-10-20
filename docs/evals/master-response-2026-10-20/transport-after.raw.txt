@@ -1,0 +1,26 @@
+{
+  "cases": 14,
+  "model_inferences": 0,
+  "actual_external_requests": 0,
+  "loopback_post_responses": 17,
+  "accepted_cases": 10,
+  "failed_cases": 4,
+  "rejected_response_validations": 6,
+  "network_failure_cases": 1,
+  "after": null
+}
+ordinary_observation 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+brief_yes 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+received_answer 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+wellbeing_synonym 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+new_npc_name_inflected 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+new_npc_name_direct 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+unsupported_magic_obstacle 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+exploration 1 ('proposal', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+partial_failure_prefix 1 ('narration', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+committed_attack_literal 1 ('narration', 'accepted') ['Формат и ограниченные проверки содержания пройдены; литературное качество не оценено']
+fake_reward_indirect 2 ('failed', 'Рассказ мастера: canon_conflict: Рассказ назначил неподтверждённое изменение ресурсов или характеристик.. После 2 попыток описание не принято; игровые действия не повторялись.') ['NarrativeConflict: Рассказ назначил неподтверждённое изменение ресурсов или характеристик.', 'NarrativeConflict: Рассказ назначил неподтверждённое изменение ресурсов или характеристик.']
+http_503 1 ('failed', 'Ollama недоступна или отклонила запрос. Автономная игра продолжает работать.') ['HTTP 503; ошибка сети']
+length 2 ('failed', 'Рассказ мастера: token_limit: Ответ обрезан до завершения: достигнут лимит генерации. После 2 попыток описание не принято; игровые действия не повторялись.') ['ValueError: Ответ обрезан до завершения: достигнут лимит генерации', 'ValueError: Ответ обрезан до завершения: достигнут лимит генерации']
+invalid_json 2 ('failed', 'Рассказ мастера: invalid_format: Expecting property name enclosed in double quotes: line 1 column 2 (char 1). После 2 попыток описание не принято; игровые действия не повторялись.') ['JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)', 'JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)']
+Fontconfig error: No writable cache directories
