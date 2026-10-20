@@ -15,7 +15,7 @@ def test_versions_campaign_isolation_and_restart(tmp_path):
         asset = r.complete(request, b"image" + bytes([i]), refs=["old-id"], actual=700000)
     assert [a["version"] for a in r.versions("world:A", "npc:1")] == [2, 1]
     assert not r.versions("world:B", "npc:1")
-    restored = VisualRegistry(tmp_path)
+    restored = VisualRegistry(tmp_path, recover=True)
     assert restored.asset_path(asset).read_bytes() == b"image\x01"
     assert restored.totals()["actual"] == 1400000
     with pytest.raises(ValueError):
@@ -44,7 +44,7 @@ def test_crash_retains_submitted_reserve_but_releases_unsent(tmp_path):
     a = r.reserve("A", "npc", "m", 100, 1000)
     r.mark_submitted(a)
     r.reserve("A", "item", "m", 100, 1000)
-    restored = VisualRegistry(tmp_path)
+    restored = VisualRegistry(tmp_path, recover=True)
     statuses = {x["subject"]: x["status"] for x in restored.ledger()}
     assert statuses == {"npc": "uncertain", "item": "cancelled"}
     assert restored.totals()["committed"] == 100

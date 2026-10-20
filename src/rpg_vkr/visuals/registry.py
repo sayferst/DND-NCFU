@@ -16,7 +16,7 @@ def month_now():
 
 
 class VisualRegistry:
-    def __init__(self, directory):
+    def __init__(self, directory, *, recover=False):
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
         self.path = self.directory / "visuals.sqlite3"
@@ -26,6 +26,9 @@ class VisualRegistry:
                 raise ValueError("По пути изображений находится другая база.")
             db.execute("PRAGMA application_id=1146505555")
             db.executescript("""
+                CREATE TABLE IF NOT EXISTS aliases(
+                    campaign TEXT NOT NULL, entity TEXT NOT NULL, subject TEXT NOT NULL,
+                    PRIMARY KEY(campaign,entity));
                 CREATE TABLE IF NOT EXISTS requests(
                     id TEXT PRIMARY KEY, campaign TEXT NOT NULL, subject TEXT NOT NULL,
                     month TEXT NOT NULL, model TEXT NOT NULL, status TEXT NOT NULL,
@@ -44,14 +47,15 @@ class VisualRegistry:
                     created TEXT NOT NULL, UNIQUE(campaign,subject,version));
                 CREATE INDEX IF NOT EXISTS asset_subject ON assets(campaign,subject,version);
             """)
-            # A crash is not evidence that the provider did not bill the request.
-            db.execute(
-                "UPDATE requests SET status='uncertain',code='interrupted' WHERE status='submitted'"
-            )
-            db.execute(
-                "UPDATE requests SET status='cancelled',code='not_submitted' "
-                "WHERE status='reserved'"
-            )
+            if recover:
+                db.execute(
+                    "UPDATE requests SET status='uncertain',code='interrupted' "
+                    "WHERE status='submitted'"
+                )
+                db.execute(
+                    "UPDATE requests SET status='cancelled',code='not_submitted' "
+                    "WHERE status='reserved'"
+                )
 
     def connect(self):
         db = sqlite3.connect(self.path, timeout=10)
@@ -218,3 +222,19 @@ class VisualRegistry:
         if hashlib.sha256(path.read_bytes()).hexdigest() != asset["sha256"]:
             raise ValueError("Изображение повреждено; повторная генерация не запущена.")
         return path
+
+    def bind(self, campaign, entity, subject):
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "INSERT INTO aliases VALUES(?,?,?) ON CONFLICT(campaign,entity) "
+                "DO UPDATE SET subject=excluded.subject",
+                (campaign, entity, subject),
+            )
+
+    def latest_for(self, campaign, entity):
+        with closing(self.connect()) as db:
+            row = db.execute(
+                "SELECT subject FROM aliases WHERE campaign=? AND entity=?", (campaign, entity)
+            ).fetchone()
+        choices = self.versions(campaign, row[0] if row else "entity:" + entity)
+        return choices[0] if choices else None
