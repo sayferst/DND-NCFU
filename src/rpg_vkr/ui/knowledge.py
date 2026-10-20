@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 
 from rpg_vkr.domain.combat import ACTORS
 from rpg_vkr.domain.director import known_facts
+from rpg_vkr.domain.object_descriptions import object_profile, profile_note
 from rpg_vkr.domain.social import grievance
 from rpg_vkr.domain.world import LOCATIONS
 from rpg_vkr.narrative.context import visible_changes
@@ -20,6 +21,8 @@ CATEGORIES = {
     "events": "События",
 }
 LABELS = {
+    "object_type": "Тип предмета",
+    "purpose": "Назначение",
     "public_name": "Известное имя",
     "role": "Род занятий",
     "appearance": "Внешность",
@@ -83,7 +86,12 @@ def public_notes(session):
 def revealed_fields(notes):
     """Explicit public knowledge fields use the existing MemoryNote envelope, not NLP."""
     result = {}
+    profile = {}
     for note in notes:
+        for key, value in profile_note(note).items():
+            profile.setdefault(key, value)  # First description stays stable across retellings.
+        if not note.private and note.kind == "appearance":
+            profile.setdefault("appearance", note.text)
         if note.kind != "knowledge":
             continue
         try:
@@ -97,7 +105,7 @@ def revealed_fields(notes):
             and isinstance(value["value"], str)
         ):
             result[value["field"]] = value["value"]
-    return result
+    return profile | result
 
 
 def observation_history(session, definitions):
@@ -272,13 +280,24 @@ def knowledge_entries(session):
             or seen_properties.get("appearance")
             or "Дальнейшие сведения пока неизвестны."
         )
+        if not actor:
+            profile = object_profile(definition, state, revealed, observed=key in observed)
+            description = (
+                profile.get("description")
+                or profile.get("appearance")
+                or "Внешний вид пока не описан."
+            )
         details = [("Последнее известное место", place_names.get(place, "Неизвестно"))]
         for field, label in LABELS.items():
-            value = revealed.get(field)
+            value = revealed.get(field) if actor else profile.get(field, revealed.get(field))
             if not value and field in {"appearance", "description"}:
                 value = state.get("public_" + field) or seen_properties.get("public_" + field)
             if value:
-                details.append((label, value))
+                details.append(
+                    ("Внешний вид" if not actor and field == "appearance" else label, value)
+                )
+        if not actor and not profile.get("purpose"):
+            details.append(("Назначение", "Пока не установлено."))
         if actor:
             disposition = state.get("disposition")
             details.append(

@@ -81,6 +81,12 @@ def render_context(context):
         )
     if context.get("hero_description"):
         lines.append("Описание героя (данные): " + context["hero_description"])
+    if context.get("public_objects"):
+        lines.append(
+            "Сохранённые публичные описания вещей (сохрани форму, материал и назначение; "
+            "не раскрывай неизвестные эффекты): "
+            + json.dumps(context["public_objects"], ensure_ascii=False)
+        )
     lines.append("Известные вещи героя: " + facts["inventory"])
     if context.get("persistent_memory"):
         lines.append(

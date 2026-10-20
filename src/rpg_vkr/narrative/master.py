@@ -29,6 +29,7 @@ def campaign_context(session, target=""):
     profile = session.campaign.profile(target)
     from rpg_vkr.narrative.actions import NOTES
     from rpg_vkr.narrative.presentation import present_turn
+    from rpg_vkr.ui.knowledge import knowledge_entries
 
     resolution = []
     from rpg_vkr.domain.catalog_actions import ActorAttempt
@@ -137,6 +138,20 @@ def campaign_context(session, target=""):
         "objects": [
             {"id": t.id, "name": t.name, "holder": t.holder} for t in scene.things if scene.here(t)
         ],
+        "public_objects": [
+            {
+                "id": e.key,
+                "name": e.title,
+                "description": e.description,
+                "fields": {
+                    k: v
+                    for k, v in e.fields
+                    if k in {"Тип предмета", "Внешний вид", "Назначение", "Материал", "Описание"}
+                },
+            }
+            for e in knowledge_entries(session)
+            if e.category == "items" and e.here
+        ][:12],
         "actors": actors,
         "validation_roster": validation_roster,
         "persistent_memory": session._memory_provider(

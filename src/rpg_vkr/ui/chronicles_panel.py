@@ -136,6 +136,10 @@ class ChroniclesPanel(QWidget):
         self.expand_card = QPushButton("Открыть карточку")
         self.expand_card.clicked.connect(self.open_card)
         row.addWidget(self.expand_card)
+        self.describe_button = QPushButton("Уточнить описание")
+        self.describe_button.setToolTip("Подготовить вопрос мастеру без отправки и расходов")
+        self.describe_button.clicked.connect(self.describe_object)
+        row.addWidget(self.describe_button)
         self.export_button = QPushButton("Экспорт известных сведений…")
         self.export_button.clicked.connect(self.export)
         row.addWidget(self.export_button)
@@ -167,6 +171,27 @@ class ChroniclesPanel(QWidget):
         close.clicked.connect(dialog.accept)
         layout.addWidget(close)
         dialog.exec()
+
+    def describe_object(self):
+        item = self.list.currentItem()
+        if not item:
+            return
+        entry = item.data(Qt.ItemDataRole.UserRole)
+        if entry.category != "items":
+            return
+        if self.window.action_input.text().strip():
+            self.status.setText("В поле действия уже есть текст. Сохраните или отправьте его.")
+            return
+        self.window.action_input.setText(
+            f"Мастер, подробно опиши предмет «{entry.title}»: его конкретный тип, "
+            "внешний вид и известное назначение. Сохрани описание в Хрониках. "
+            "Используй уже известные признаки, не раскрывай неизученные свойства."
+        )
+        self.window.open_section("Приключение")
+        self.window.action_input.setFocus()
+        self.window.statusBar().showMessage(
+            "Вопрос подготовлен. Нажмите «Отправить» для обращения к мастеру."
+        )
 
     def resizeEvent(self, event):
         compact = self.width() < 850
@@ -297,6 +322,9 @@ class ChroniclesPanel(QWidget):
             )
 
     def select(self, item):
+        self.describe_button.setVisible(
+            bool(item and item.data(Qt.ItemDataRole.UserRole).category == "items")
+        )
         if item:
             parchment = self.window.theme_choice.currentText() != "Тёмная"
             self.detail.setStyleSheet(

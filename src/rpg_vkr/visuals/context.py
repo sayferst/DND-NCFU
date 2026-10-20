@@ -6,17 +6,26 @@ from dataclasses import dataclass
 
 from rpg_vkr.storage.campaigns import CampaignRepository
 from rpg_vkr.storage.catalog import live_records
-from rpg_vkr.ui.knowledge import knowledge_entries
+from rpg_vkr.ui.knowledge import knowledge_entries, public_notes, revealed_fields
 
 STYLE = (
     "Original medieval fantasy pixel art; coherent limited jewel-tone palette, "
-    "crisp pixel clusters, readable silhouettes, deliberate lighting and detailed environments. "
+    "crisp pixel clusters, readable silhouettes and deliberate lighting. "
     "No text, letters, labels, UI, frames, captions, watermarks, statistics or character sheets. "
     "Render only supplied publicly observed features. Do not invent secret identities, "
     "hidden affiliations, unseen possessions, wounds or outcomes. Reference images preserve "
     "the same visual identity, not necessarily the same pose, framing or lighting."
 )
-VISUAL_FIELDS = {"Внешность", "Описание", "Материал", "Род занятий"}
+VISUAL_FIELDS = {
+    "Тип предмета",
+    "Внешний вид",
+    "Назначение",
+    "Внешность",
+    "Описание",
+    "Материал",
+    "Род занятий",
+}
+VISUAL_PROMPT_VERSION = "object-art-2"
 
 
 @dataclass(frozen=True)
@@ -36,7 +45,13 @@ class VisualTarget:
 
 
 def public_brief(entry):
-    parts = [entry.title, entry.description]
+    from rpg_vkr.ui.knowledge import CATEGORIES
+
+    parts = [
+        "Категория объекта: " + CATEGORIES[entry.category],
+        "Название: " + entry.title,
+        entry.description,
+    ]
     parts.extend(name + ": " + value for name, value in entry.fields if name in VISUAL_FIELDS)
     return "\n".join(parts)[:6000]
 
@@ -63,7 +78,9 @@ def entity_target(session, entry, *, shared=None):
         and not set(tags).intersection({"quest", "bosses", "unique"})
         and not (entity.get("state") or {}).get("public_appearance")
     )
-    common = ordinary if shared is None else ordinary and shared
+    individual = revealed_fields([n for n in public_notes(session) if n.subject == entry.key])
+    shareable = ordinary and not any(k in individual for k in {"appearance", "material"})
+    common = shareable if shared is None else shareable and shared
     subject = ("type:" + type_id) if common else ("entity:" + entry.key)
     return VisualTarget(
         CampaignRepository.identity(session),
@@ -166,8 +183,46 @@ def reference_candidates(registry, target):
 
 
 def make_prompt(target, references):
+    if target.category == "items":
+        composition = (
+            "SINGLE OBJECT STUDY, not a story scene. The subject is the named ITEM itself. "
+            "Show one complete specimen, or the coherent set if the item itself is a set. "
+            "Center it fully inside the frame, large readable silhouette, "
+            "plain subdued background. "
+            "No people, characters, faces, hands, wearer, owner, carrier, animals, mannequin "
+            "or scene of use. Show clothing/armour empty and laid out, never worn by a person. "
+            "Do not add a container or accessories unless they are part of this very item. "
+            "Purpose explains the object's design; do not illustrate someone using it. "
+            "If a reference contains a person or background, extract ONLY the named object's "
+            "shape and visible details; do not reproduce the reference's people or composition. "
+            "Preserve all supplied visible features and material; avoid invented ornament, "
+            "magic glow, runes, damage or effects when not publicly established."
+        )
+    elif target.category in {"people", "creatures"}:
+        composition = (
+            "PORTRAIT OF THE NAMED SUBJECT. One known individual, no unrelated characters."
+        )
+    elif target.category == "places":
+        composition = (
+            "LOCATION VIEW. Focus on the named place, not a portrait of an invented inhabitant."
+        )
+    else:
+        composition = (
+            "EVENT OR SCENE. Include only the supplied publicly known participants and objects."
+        )
     mapping = "\n".join(
         f"Reference {i + 1}: same visual identity as {a.get('caption', 'known object')}"
         for i, a in enumerate(references)
     )
-    return STYLE + "\n\nPUBLIC VISUAL BRIEF:\n" + target.brief + "\n" + mapping
+    return (
+        "VISUAL PROMPT VERSION: "
+        + VISUAL_PROMPT_VERSION
+        + "\n"
+        + STYLE
+        + "\n\nCOMPOSITION:\n"
+        + composition
+        + "\n\nPUBLIC VISUAL BRIEF:\n"
+        + target.brief
+        + "\n"
+        + mapping
+    )

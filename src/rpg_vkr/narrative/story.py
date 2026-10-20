@@ -82,6 +82,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "world_brief": (campaign or {}).get("world_brief", ""),
         "catalog_scene": catalog_scene,
         "objects": (campaign or {}).get("objects", []),
+        "public_objects": (campaign or {}).get("public_objects", []),
         "validation_roster": (campaign or {}).get("validation_roster", []),
         "actor_attempt_result": (campaign or {}).get("actor_attempt_result", "")
         if confirmed

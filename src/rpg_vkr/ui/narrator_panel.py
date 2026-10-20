@@ -758,6 +758,31 @@ def catalog_context(window, text):
     from rpg_vkr.storage.catalog import CatalogIndex
 
     state = window._session.interaction_state().context()
+    from rpg_vkr.ui.knowledge import knowledge_entries
+
+    public_objects = []
+    for entry in knowledge_entries(window._session):
+        if entry.category != "items" or not entry.here:
+            continue
+        fields = dict(entry.fields)
+        public_objects.append(
+            {
+                "id": entry.key,
+                "name": entry.title,
+                "description": entry.description,
+                "object_type": fields.get("Тип предмета", ""),
+                "appearance": fields.get("Внешний вид", ""),
+                "purpose": fields.get("Назначение", ""),
+                "material": fields.get("Материал", ""),
+            }
+        )
+    public_objects.sort(key=lambda row: row["name"].casefold() not in text.casefold())
+    state["public_objects"] = public_objects[:12]
+    state["description_requests"] = [
+        row
+        for row in public_objects
+        if row["description"] == "Внешний вид пока не описан." or not row["appearance"]
+    ][:3]
     target = getattr(window, "_context_target_id", "")
     state["selected_target"] = target if window._session.actor_is_here(target) else ""
     if window._campaign_repository:
