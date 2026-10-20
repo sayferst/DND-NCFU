@@ -32,3 +32,6 @@ docs/validation/artist-2026-10-20/*.txt -text whitespace=-blank-at-eol
 # Owner-supplied Images guide and raw contract-regression evidence.
 docs/research/USER_ROUTERAI_IMAGES_GUIDE_2026-10-20.md -text whitespace=cr-at-eol
 docs/validation/images-contract-2026-10-20/*.txt -text whitespace=-blank-at-eol
+
+# Public-object regression evidence, including the interrupted initial test.
+docs/validation/object-descriptions-2026-10-20/*.txt -text whitespace=-blank-at-eol
