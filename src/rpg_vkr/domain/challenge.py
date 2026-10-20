@@ -19,6 +19,22 @@ CHALLENGES = {
 }
 
 
+def validate_assessment(value):
+    from rpg_vkr.domain.campaign import plain
+    from rpg_vkr.domain.character import ABILITY_NAMES
+
+    if not isinstance(value, dict) or set(value) != {"ability", "dc", "purpose"}:
+        raise ValueError("Неверное предложение общей проверки.")
+    if (
+        value["ability"] not in ABILITY_NAMES
+        or type(value["dc"]) is not int
+        or not 5 <= value["dc"] <= 25
+    ):
+        raise ValueError("Неизвестная характеристика или сложность вне 5–25.")
+    plain(value["purpose"], 400)
+    return value
+
+
 @dataclass(frozen=True)
 class Challenge:
     kind: str
@@ -26,15 +42,26 @@ class Challenge:
     roll: D20Roll
     check: AbilityCheck
     version: str = "challenge-homebrew-1"
+    assessment: dict | None = None
 
     def __post_init__(self):
         from rpg_vkr.domain.world import LOCATIONS
 
-        if self.kind not in CHALLENGES or self.location not in LOCATIONS:
+        if (
+            self.kind not in CHALLENGES and self.kind != "general"
+        ) or self.location not in LOCATIONS:
             raise ValueError("Unknown challenge")
-        if self.version != "challenge-homebrew-1":
+        if self.version not in {"challenge-homebrew-1", "challenge-homebrew-2"}:
             raise ValueError("Unknown challenge version")
-        ability, difficulty, _ = CHALLENGES[self.kind]
+        if self.version == "challenge-homebrew-2":
+            spec = validate_assessment(self.assessment)
+            if self.kind != "general":
+                raise ValueError("Неверная категория общей проверки.")
+            ability, difficulty = spec["ability"], spec["dc"]
+        else:
+            if self.kind not in CHALLENGES or self.assessment is not None:
+                raise ValueError("Legacy challenge schema changed")
+            ability, difficulty, _ = CHALLENGES[self.kind]
         if (
             not isinstance(self.check, AbilityCheck)
             or any(
@@ -55,16 +82,23 @@ class Challenge:
             raise ValueError("Challenge calculation mismatch")
 
     def story(self):
-        _, _, purpose = CHALLENGES[self.kind]
+        purpose = self.assessment["purpose"] if self.assessment else CHALLENGES[self.kind][2]
         result = "Проверка удалась" if self.check.succeeded else "Проверка не удалась"
         return f"{result}: {purpose}."
 
     def to_dict(self):
-        return asdict(self)
+        value = asdict(self)
+        if self.version == "challenge-homebrew-1":
+            value.pop("assessment")
+        return value
 
     @classmethod
     def restore(cls, data, dice):
-        if not isinstance(data, dict) or set(data) != set(cls.__dataclass_fields__):
+        if not isinstance(data, dict) or set(data) != (
+            set(cls.__dataclass_fields__)
+            if data.get("version") == "challenge-homebrew-2"
+            else set(cls.__dataclass_fields__) - {"assessment"}
+        ):
             raise ValueError("Invalid challenge record")
         if not isinstance(data["roll"], dict) or any(
             type(data["roll"].get(key)) is not int for key in ("index", "value")
@@ -74,7 +108,12 @@ class Challenge:
         if data["roll"] != asdict(roll):
             raise ValueError("Challenge RNG mismatch")
         result = cls(
-            data["kind"], data["location"], roll, AbilityCheck(**data["check"]), data["version"]
+            data["kind"],
+            data["location"],
+            roll,
+            AbilityCheck(**data["check"]),
+            data["version"],
+            data.get("assessment"),
         )
         if result.to_dict() != data:
             raise ValueError("Challenge record mismatch")

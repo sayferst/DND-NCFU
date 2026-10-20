@@ -55,6 +55,15 @@ def receipt(session):
         "place_id": session.current_place_id,
         "place": session.current_place_name,
         "steps": steps,
+        "resource_changes": [
+            asdict(change)
+            for change in session.memory.events[-1].changes
+            if change.field in {"world.gold", "world.hp", "progress.xp"}
+            or change.field.startswith("hero.")
+            and type(change.after) is int
+        ]
+        if session.memory.events
+        else [],
         "committed": True,
         "replay_allowed": False,
     }

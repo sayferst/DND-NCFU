@@ -379,6 +379,21 @@ def failed(window, message):
         if fallback:
             accept_intent(window, fallback)
             return
+    failure = getattr(window.ollama, "last_failure", None) or {}
+    if (
+        window._chat_text
+        and failure.get("stage") == "world_plan"
+        and failure.get("code") not in {"network", "access_or_budget", "request_budget"}
+        and not getattr(window, "_recovering_plan", False)
+    ):
+        window._recovering_plan = True
+        window._story_obstacle = (
+            "Изменение состояния не подтверждено: "
+            + failure.get("reason", message)
+            + ". Ответь на намерение; объясни препятствие без вымышленного успеха."
+        )
+        continue_story(window, window._chat_text)
+        return
     if window._chat_text and not window.action_input.text():
         window.action_input.setText(window._chat_text)
     window._chat_text = None
@@ -458,6 +473,9 @@ def request_chat(window, text):
         return True
     cancel_narration(window)
     window._pending_memories = []
+    window._chat_target_id = ""
+    window._story_obstacle = ""
+    window._recovering_plan = False
     window._chat_text = text
     window._narrating_session = window._session
     window._narrating_index = len(window._session.turns)
@@ -526,6 +544,8 @@ def continue_story(window, text):
     from rpg_vkr.storage.knowledge import retrieve
 
     campaign = campaign_context(window._session, last_interlocutor(window._session))
+    campaign["requested_target"] = getattr(window, "_chat_target_id", "")
+    campaign["obstacle"] = getattr(window, "_story_obstacle", "")
     campaign["proposed_memories"] = [
         n for n in getattr(window, "_pending_memories", []) if not n["private"]
     ]
@@ -545,6 +565,33 @@ def continue_story(window, text):
             for t in window._session.turns[-3:]
         ],
     )
+
+
+def accept_inline_reply(window, text, reply):
+    """The planner may also write a conversation; validate it without another POST."""
+    from rpg_vkr.narrative.story import story_context, story_proposal
+    from rpg_vkr.storage.knowledge import retrieve
+
+    frame = build_frame(window._session)
+    campaign = campaign_context(window._session, last_interlocutor(window._session))
+    campaign["requested_target"] = getattr(window, "_chat_target_id", "")
+    campaign["obstacle"] = getattr(window, "_story_obstacle", "")
+    context = story_context(
+        frame,
+        window.local_model.currentText(),
+        text,
+        campaign=campaign,
+        memory=retrieve(window._session, text),
+    )
+    try:
+        proposal = story_proposal(
+            {"message": {"role": "assistant", "content": reply}}, frame, text, context=context
+        )
+    except (ValueError, TypeError) as error:
+        window._story_obstacle = "Предыдущий текст противоречил фактам: " + str(error)
+        continue_story(window, text)
+        return
+    accept_proposal(window, proposal)
 
 
 def accept_challenge_suggestion(window, category):
@@ -621,8 +668,7 @@ def world_agent_enabled(window):
         window.world_agent.isChecked()
         and window.enable_local_narrator.isChecked()
         and window.ai_chat.isChecked()
-        and window.ai_provider.currentData() == "routerai"
-        and window.cloud_model.text().strip().startswith("deepseek/")
+        and (window.ai_provider.currentData() == "routerai" or not window._legacy_controls)
     )
 
 
@@ -687,16 +733,20 @@ def accept_world_plan(window, result):
         validate_plan_properties,
     )
 
-    plan, category, definitions, entities, reason, queries, attempt, memories, trade = result
+    plan, category, definitions, entities, reason, queries, attempt, memories, trade = result[:9]
+    hints = result[9] if len(result) > 9 else {}
+    window._chat_target_id = hints.get("dialogue_target") or ""
+    window._story_obstacle = hints.get("obstacle") or ""
     window._pending_memories = memories
     text = window._chat_text
     if trade:
         import re
 
+        from rpg_vkr.domain.interactions import nonexecuting
         from rpg_vkr.domain.trade import transact
         from rpg_vkr.narrative.speech import unquoted
 
-        if "?" in text or re.search(r"\b(?:не|если|говорю|спрашиваю|цитирую)\b", unquoted(text)):
+        if nonexecuting(text, r"(?:куп|прод|меня|отда)") or re.search(r"\bесли\b", unquoted(text)):
             failed(window, "Вопрос, отрицание и цитата не выполняют сделку.")
             return
         try:
@@ -865,6 +915,9 @@ def accept_world_plan(window, result):
             window._session.campaign.world_brief,
         )
         return
+    if hints.get("assessment"):
+        request_challenge(window, text, assessment=hints["assessment"])
+        return
     if category != "none":
         accept_challenge_suggestion(window, category)
         return
@@ -878,9 +931,14 @@ def accept_world_plan(window, result):
         except (ValueError, TypeError, KeyError) as error:
             failed(window, "Память не принята: " + str(error))
             return
-        if requests_physical_change(text):
-            failed(window, "Мастер не составил план этого действия. Мир не изменён; ввод сохранён.")
+        if hints.get("reply"):
+            accept_inline_reply(window, text, hints["reply"])
             return
+        if requests_physical_change(text):
+            window._story_obstacle = (
+                "План изменения мира не подтверждён. Объясни препятствие или уточни способ; "
+                "не описывай успешное перемещение или получение предмета."
+            )
         continue_story(window, text)
         return
     confirmation = False
@@ -973,14 +1031,20 @@ def accept_world_plan(window, result):
     window._refresh_character()
     window._render_journal()
     window.narrator_status.setText("Вещи, место и последствия изменены в сохранённом состоянии.")
-    request_narration(window)
+    if hints.get("reply") and not plan.steps:
+        window._chat_text = text
+        window._narrating_session = window._session
+        window._narrating_index = len(window._session.turns)
+        accept_inline_reply(window, text, hints["reply"])
+    else:
+        request_narration(window)
 
 
-def request_challenge(window, text, *, suggested_kind=None):
+def request_challenge(window, text, *, suggested_kind=None, assessment=None):
     from rpg_vkr.domain.challenge import CHALLENGES, proposed_challenge
     from rpg_vkr.domain.character import ABILITY_NAMES
 
-    kind = suggested_kind or proposed_challenge(text)
+    kind = "general" if assessment else suggested_kind or proposed_challenge(text)
     if kind is None:
         return False
     cancel_narration(window)
@@ -989,7 +1053,13 @@ def request_challenge(window, text, *, suggested_kind=None):
             "Эта проверка недоступна во время схватки или после выбытия."
         )
         return True
-    ability, difficulty, purpose = CHALLENGES[kind]
+    if assessment:
+        from rpg_vkr.domain.challenge import validate_assessment
+
+        validate_assessment(assessment)
+        ability, difficulty, purpose = (assessment[k] for k in ("ability", "dc", "purpose"))
+    else:
+        ability, difficulty, purpose = CHALLENGES[kind]
     if not window._confirm(
         f"Чтобы {purpose}, предлагается проверка: {ABILITY_NAMES[ability]}, "
         f"сложность {difficulty}. Бросить кубик?\n\n"
@@ -998,7 +1068,7 @@ def request_challenge(window, text, *, suggested_kind=None):
         window.narrator_status.setText("Бросок отменён. Ваш текст остался в поле ввода.")
         return True
     try:
-        window._session.submit_challenge(text, suggested_kind=suggested_kind)
+        window._session.submit_challenge(text, suggested_kind=suggested_kind, assessment=assessment)
     except ValueError as error:
         window.narrator_status.setText(str(error))
         return True

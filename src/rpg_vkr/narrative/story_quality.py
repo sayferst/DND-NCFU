@@ -3,6 +3,8 @@
 import re
 from difflib import SequenceMatcher
 
+from rpg_vkr.narrative.failures import NarrativeConflict
+
 
 def spoken(text):
     matches = re.findall(r"«([^»]+)»|(?:^|\n)\s*—\s*([^\n]+)", text)
@@ -62,6 +64,45 @@ def unsupported_numeric_claim(prose):
     )
 
 
+def numeric_claim_matches_receipt(prose, receipt):
+    """A completed roll never authorizes an unrelated resource reward."""
+    changes = {c["field"]: c for c in receipt.get("resource_changes", [])}
+    units = {
+        "золот": "world.gold",
+        "монет": "world.gold",
+        "опыт": "progress.xp",
+        "здоров": "world.hp",
+        "сил": "hero.strength",
+        "ловкост": "hero.dexterity",
+        "интеллект": "hero.intelligence",
+    }
+    numbers = {
+        "сто": 100,
+        "десять": 10,
+        "двадцать": 20,
+        "пятьдесят": 50,
+        "семьдесят": 70,
+        "пятнадцать": 15,
+        "двести": 200,
+        "триста": 300,
+    }
+    claims = re.findall(
+        r"\bвы\s+(?:получ\w*|нашли|потеря\w*|потрат\w*|добав\w*|увелич\w*|подня\w*)"
+        r"[^.!?\n]{0,90}?([0-9]+|сто|десять|двадцать|пятьдесят|семьдесят|пятнадцать|двести|триста)"
+        r"\s+(золот|монет|опыт|здоров|сил|ловкост|интеллект)\w*",
+        prose,
+        re.I,
+    )
+    if not claims:
+        return False
+    for number, unit in claims:
+        change = changes.get(units[unit.casefold()])
+        amount = int(number) if number.isdigit() else numbers[number.casefold()]
+        if not change or abs(change["after"] - change["before"]) != amount:
+            return False
+    return True
+
+
 def check_story_quality(text, frame, player_text, *, brief=None, previous=(), campaign=None):
     """Reject grounded false outcomes, not synonyms, metaphors or an NPC's refusal."""
     brief, campaign = brief or {}, campaign or {}
@@ -70,7 +111,7 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
     resolution = campaign.get("resolution") or []
     receipt = campaign.get("receipt") or {}
     interaction = campaign.get("interaction_result", "")
-    if not receipt.get("committed") and not resolution and unsupported_numeric_claim(prose):
+    if unsupported_numeric_claim(prose) and not numeric_claim_matches_receipt(prose, receipt):
         issues.append("Рассказ назначил неподтверждённое изменение ресурсов или характеристик.")
     hero_name = frame.hero.split(",", 1)[0]
     rename = re.search(
@@ -203,5 +244,5 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
         ):
             issues.append("Неудачная цепочка не подтвердила переход.")
     if issues:
-        raise ValueError("; ".join(dict.fromkeys(issues)))
+        raise NarrativeConflict("; ".join(dict.fromkeys(issues)))
     return quality_warnings(text, player_text, brief=brief, previous=previous)

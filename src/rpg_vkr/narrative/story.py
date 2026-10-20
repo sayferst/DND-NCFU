@@ -5,6 +5,7 @@ import re
 from copy import deepcopy
 
 from rpg_vkr.domain.director import Proposal, StoryFact, mechanical_commands
+from rpg_vkr.narrative.failures import NarrativeConflict, ResponseFormatError
 from rpg_vkr.narrative.instructions import load_instructions
 from rpg_vkr.narrative.routing import addressed_to_master, simple_action
 from rpg_vkr.narrative.speech import speech_details
@@ -179,15 +180,15 @@ def validate_story_text(text, *, confirmed=False, legacy=False):
     from rpg_vkr.narrative.story_quality import prose_only, unsupported_numeric_claim
 
     if not isinstance(text, str) or not text.strip() or len(text) > MAX_PROSE:
-        raise ValueError("Пустой или слишком большой текст рассказа.")
+        raise ResponseFormatError("Пустой или слишком большой текст рассказа.")
     if any(ord(c) < 32 and c not in "\n\t" for c in text) or re.search(r"<[^>]+>", text):
-        raise ValueError("В ответе недопустимая разметка или управляющие символы.")
+        raise ResponseFormatError("В ответе недопустимая разметка или управляющие символы.")
     if re.search(r"[\u3400-\u9fff\u3040-\u30ff\uac00-\ud7af]", text):
-        raise ValueError("В ответе посторонний язык; нужен русский текст.")
+        raise ResponseFormatError("В ответе посторонний язык; нужен русский текст.")
     if not re.search(r"[А-Яа-яЁё]", text):
-        raise ValueError("В ответе нет русского текста.")
+        raise ResponseFormatError("В ответе нет русского текста.")
     if not confirmed and unsupported_numeric_claim(prose_only(text)):
-        raise ValueError("Рассказчик назначил неподтверждённый механический результат.")
+        raise NarrativeConflict("Рассказчик назначил неподтверждённый механический результат.")
 
 
 def legacy_story_text(text, *, confirmed=False):

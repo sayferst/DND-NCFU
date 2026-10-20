@@ -566,25 +566,37 @@ class Session:
         self._turns.append(turn)
         return turn
 
-    def submit_challenge(self, action: str, *, suggested_kind=None) -> Turn:
+    def submit_challenge(self, action: str, *, suggested_kind=None, assessment=None) -> Turn:
         action = _text(action, 500).strip()
-        kind = proposed_challenge(action)
-        if suggested_kind is not None:
-            from rpg_vkr.narrative.actions import action_plan
+        if assessment:
+            from rpg_vkr.domain.challenge import validate_assessment
 
-            if (
-                suggested_kind not in CHALLENGES
-                or (kind and suggested_kind != kind)
-                or (kind is None and not needs_model_review(action))
-                or action_plan(self, action) is not None
-            ):
-                raise ValueError("Предложение проверки не соответствует попытке.")
-            kind = suggested_kind
-        if kind is None:
-            raise ValueError("Для этой попытки пока нет проверяемой проверки.")
+            validate_assessment(assessment)
+            from rpg_vkr.domain.interactions import nonexecuting
+
+            if nonexecuting(action):
+                raise ValueError("Вопрос или отрицание не выполняют проверку.")
+            kind = "general"
+        else:
+            kind = proposed_challenge(action)
+            if suggested_kind is not None:
+                from rpg_vkr.narrative.actions import action_plan
+
+                if (
+                    suggested_kind not in CHALLENGES
+                    or (kind and suggested_kind != kind)
+                    or (kind is None and not needs_model_review(action))
+                    or action_plan(self, action) is not None
+                ):
+                    raise ValueError("Предложение проверки не соответствует попытке.")
+                kind = suggested_kind
+            if kind is None:
+                raise ValueError("Для этой попытки пока нет проверяемой проверки.")
         if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Эта проверка недоступна во время схватки или после выбытия.")
-        ability, difficulty, _ = CHALLENGES[kind]
+        ability, difficulty = (
+            (assessment["ability"], assessment["dc"]) if assessment else CHALLENGES[kind][:2]
+        )
         checkpoint = self.dice.checkpoint()
         try:
             roll = self.dice.roll_d20()
@@ -595,6 +607,8 @@ class Session:
                 resolve_ability_check(
                     ability, self.character.score(ability), roll.value, difficulty
                 ),
+                version="challenge-homebrew-2" if assessment else "challenge-homebrew-1",
+                assessment=assessment,
             )
             turn = Turn(
                 action,
@@ -1219,6 +1233,7 @@ class Session:
                     "interaction": turn.interaction.to_dict() if turn.interaction else None,
                     "catalog": turn.catalog.to_dict() if turn.catalog else None,
                     "trade": turn.trade.to_dict() if turn.trade else None,
+                    "challenge": turn.challenge.to_dict() if turn.challenge else None,
                 }
                 for turn in self._turns
             ],
@@ -1609,6 +1624,8 @@ class Session:
                 ):
                     raise ValueError("Challenge mixed with another action")
                 record = Challenge.restore(item["challenge"], session.dice)
+                if version < 22 and record.assessment is not None:
+                    raise ValueError("General assessment requires schema 22")
                 if (
                     item["roll"] != asdict(record.roll)
                     or stored_check != asdict(record.check)

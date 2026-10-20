@@ -143,21 +143,21 @@ def test_invalid_second_step_cannot_apply_the_first_step(window, qt_app, monkeyp
         assert len([r for r in records if r["method"] == "POST"]) == 1
 
 
-def test_empty_model_plan_cannot_turn_a_transfer_into_uncommitted_prose(
-    window, qt_app, monkeypatch
-):
+def test_empty_model_plan_explains_obstacle_without_transferring_items(window, qt_app, monkeypatch):
     window._session = Session(seed=5)
-    before = window._session.to_dict(), window._session.dice.checkpoint()
-    with router_server(world_plans={}, writer_text=WRITER) as (url, records):
+    session = window._session
+    before = session.world, session.dice.checkpoint(), session.interactive_world
+    explanation = "Вы пока не завладели корзиной. Нужно уточнить способ, чтобы разрешить попытку."
+    with router_server(world_plans={}, writer_text=explanation) as (url, records):
         configure(window, monkeypatch, url)
         window.world_agent.setChecked(True)
         window.action_input.setText(TAKE)
         window.send_button.click()
         wait_for(qt_app, lambda: not window.ollama.busy)
-        assert (window._session.to_dict(), window._session.dice.checkpoint()) == before
-        assert window.action_input.text() == TAKE
-        assert "не составил план" in window.narrator_status.text()
-        assert len([r for r in records if r["method"] == "POST"]) == 1
+        assert (session.world, session.dice.checkpoint(), session.interactive_world) == before
+        assert len(session.turns) == 1 and session.turns[0].scene
+        assert session.narrations[-1].text == explanation
+        assert len([r for r in records if r["method"] == "POST"]) == 2
 
 
 def test_world_agent_dialogue_stays_dialogue_without_item_transfers(window, qt_app, monkeypatch):

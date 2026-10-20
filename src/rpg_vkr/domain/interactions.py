@@ -281,15 +281,31 @@ class WorldPlan:
         )
 
 
+def nonexecuting(text, roots=None):
+    """Bind negation to an action, rather than banning every occurrence of 'не'."""
+    from rpg_vkr.narrative.speech import unquoted
+
+    value = unquoted(text).casefold().replace("ё", "е")
+    value = re.sub(r"\b(?:ничего не говоря|не говоря ни слова)\b", "молча", value)
+    if not value.strip():
+        return True
+    if re.match(r"\s*(?:я\s+)?(?:цитирую|говорю|сказал|спрашиваю|можно ли|могу ли)\b", value):
+        return True
+    if "?" in text and not re.search(r"[.;]\s*(?:затем |потом )?", value):
+        return True
+    action = roots or (
+        r"(?:брать|бер|взя|взять|возьм|забир|забер|идти|иду|пой|ухо|уй|бег|отда|даю|"
+        r"брос|выки|клад|подним|прыга|уби|атак|леч|колд|переда)"
+    )
+    return bool(re.search(r"\bне\s+(?:(?:хочу|буду|собираюсь|стану)\s+)?" + action + r"\w*", value))
+
+
 def bind_plan(text, plan, *, confirmed=False):
     from rpg_vkr.narrative.speech import unquoted
 
     value = re.sub(r"\b(?:ничего не говоря|не говоря ни слова)\b", "молча", unquoted(text))
     changes_world = any(s.op not in {"look", "inventory"} for s in plan.steps)
-    if changes_world and (
-        "?" in text
-        or re.search(r"\b(?:если|не|цитирую|говорю|спрашиваю|могу ли|можно ли)\b", value)
-    ):
+    if changes_world and (nonexecuting(text) or re.search(r"\bесли\b", value)):
         raise ValueError("Вопрос, отрицание или речь не подтверждают изменение мира.")
     cues = {
         "take": r"бер|взя|взять|возьм|забир|забер|прихват|утащ|хват|крад|укра|содержим",
@@ -310,7 +326,7 @@ def requests_physical_change(text):
     value = re.sub(
         r"\b(?:ничего не говоря|не говоря ни слова)\b", "молча", unquoted(text).casefold()
     )
-    if "?" in text or re.search(r"\b(?:если|не|говорю|спрашиваю|можно ли|могу ли)\b", value):
+    if nonexecuting(text):
         return False
     return bool(
         re.search(

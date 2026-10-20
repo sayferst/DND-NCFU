@@ -71,7 +71,7 @@ def _present_turn(turn) -> TurnPresentation:
         from rpg_vkr.domain.challenge import CHALLENGES
 
         record = turn.challenge
-        purpose = CHALLENGES[record.kind][2]
+        purpose = record.assessment["purpose"] if record.assessment else CHALLENGES[record.kind][2]
         title = ABILITY_NAMES[record.check.ability] + (
             " — успех" if record.check.succeeded else " — неудача"
         )
