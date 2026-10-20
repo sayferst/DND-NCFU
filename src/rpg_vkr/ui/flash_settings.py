@@ -3,6 +3,7 @@
 import os
 
 from PySide6.QtCore import QTimer
+from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import QCheckBox, QLabel, QPushButton
 
 from rpg_vkr.storage.connection import (
@@ -40,6 +41,8 @@ def install_flash_settings(window):
     window.connection_save.clicked.connect(lambda: save_connection(window))
     form.addRow(window.connection_save)
     link = QLabel('<a href="https://routerai.ru/settings/keys">Получить ключ на RouterAI</a>')
+    window.flash_link = link
+    style_connection_link(window)
     link.setOpenExternalLinks(True)
     form.addRow(link)
     note = QLabel(
@@ -81,6 +84,14 @@ def install_flash_settings(window):
     # Preference is restored, but no model request is issued. Metadata checks require key + consent.
     if preferences.enabled and preferences.provider == "routerai":
         QTimer.singleShot(0, lambda: restore_enabled(window))
+
+
+def style_connection_link(window):
+    color = window.palette().color(QPalette.ColorRole.Link).name()
+    window.flash_link.setText(
+        f'<a style="color:{color}" href="https://routerai.ru/settings/keys">'
+        "Получить ключ на RouterAI</a>"
+    )
 
 
 def restore_enabled(window):

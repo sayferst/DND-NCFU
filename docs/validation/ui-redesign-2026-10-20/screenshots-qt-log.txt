@@ -1,0 +1,17 @@
+Fontconfig error: No writable cache directories
+menu-desktop 1280 800
+menu-compact 640 620
+menu-fullhd 1920 1080
+chronicles-desktop 1440 900
+This plugin does not support raise()
+chronicles-compact 640 620
+This plugin does not support propagateSizeHints()
+adventure-desktop 1440 900
+adventure-compact 640 620
+This plugin does not support propagateSizeHints()
+inventory 1280 900
+hero 1280 900
+map 1280 900
+settings 1280 900
+saves 1280 900
+chronicles-light 1280 900

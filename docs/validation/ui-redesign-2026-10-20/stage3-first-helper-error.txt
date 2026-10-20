@@ -1,0 +1,115 @@
+F..FFF.F..........                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_flash_verifies_key_then_model_without_generating _____________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x61d4d30) at 0x7f5e8cc1d980>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5e8cd3c680>
+
+    def test_flash_verifies_key_then_model_without_generating(flash, monkeypatch):
+        with router_server() as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(lambda: flash._flash_verified)
+E           TypeError: wait_for() missing 1 required positional argument: 'predicate'
+
+tests/test_flash_settings.py:28: TypeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+__ test_flash_rejects_invalid_metadata_without_paid_substitution[invalid_key] __
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x6cef380) at 0x7f5e89cf7500>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5e8ccd8e00>
+mode = 'invalid_key'
+
+    @pytest.mark.parametrize("mode", ["invalid_key", "empty_balance", "missing_model"])
+    def test_flash_rejects_invalid_metadata_without_paid_substitution(flash, monkeypatch, mode):
+        import test_routerai
+    
+        if mode == "missing_model":
+            monkeypatch.setitem(test_routerai.QUOTE, "id", "deepseek/other")
+        options = (
+            {"key_status": 401}
+            if mode == "invalid_key"
+            else {"keys": [{**ALLOWANCE, "limit_remaining": "0"}]}
+            if mode == "empty_balance"
+            else {}
+        )
+        with router_server(**options) as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(lambda: not flash._flash_pending)
+E           TypeError: wait_for() missing 1 required positional argument: 'predicate'
+
+tests/test_flash_settings.py:78: TypeError
+_ test_flash_rejects_invalid_metadata_without_paid_substitution[empty_balance] _
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x69d5390) at 0x7f5e89d4b680>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5e8ccda450>
+mode = 'empty_balance'
+
+    @pytest.mark.parametrize("mode", ["invalid_key", "empty_balance", "missing_model"])
+    def test_flash_rejects_invalid_metadata_without_paid_substitution(flash, monkeypatch, mode):
+        import test_routerai
+    
+        if mode == "missing_model":
+            monkeypatch.setitem(test_routerai.QUOTE, "id", "deepseek/other")
+        options = (
+            {"key_status": 401}
+            if mode == "invalid_key"
+            else {"keys": [{**ALLOWANCE, "limit_remaining": "0"}]}
+            if mode == "empty_balance"
+            else {}
+        )
+        with router_server(**options) as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(lambda: not flash._flash_pending)
+E           TypeError: wait_for() missing 1 required positional argument: 'predicate'
+
+tests/test_flash_settings.py:78: TypeError
+_ test_flash_rejects_invalid_metadata_without_paid_substitution[missing_model] _
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x70bf2b0) at 0x7f5e89d01f40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5e932b9d30>
+mode = 'missing_model'
+
+    @pytest.mark.parametrize("mode", ["invalid_key", "empty_balance", "missing_model"])
+    def test_flash_rejects_invalid_metadata_without_paid_substitution(flash, monkeypatch, mode):
+        import test_routerai
+    
+        if mode == "missing_model":
+            monkeypatch.setitem(test_routerai.QUOTE, "id", "deepseek/other")
+        options = (
+            {"key_status": 401}
+            if mode == "invalid_key"
+            else {"keys": [{**ALLOWANCE, "limit_remaining": "0"}]}
+            if mode == "empty_balance"
+            else {}
+        )
+        with router_server(**options) as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(lambda: not flash._flash_pending)
+E           TypeError: wait_for() missing 1 required positional argument: 'predicate'
+
+tests/test_flash_settings.py:78: TypeError
+______________ test_changing_provider_invalidates_verified_flash _______________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x5c18d80) at 0x7f5e89d49bc0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5e8ccc3e30>
+
+    def test_changing_provider_invalidates_verified_flash(flash, monkeypatch):
+        with router_server() as (url, _):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(lambda: flash._flash_verified)
+E           TypeError: wait_for() missing 1 required positional argument: 'predicate'
+
+tests/test_flash_settings.py:113: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_flash_settings.py::test_flash_verifies_key_then_model_without_generating
+FAILED tests/test_flash_settings.py::test_flash_rejects_invalid_metadata_without_paid_substitution[invalid_key]
+FAILED tests/test_flash_settings.py::test_flash_rejects_invalid_metadata_without_paid_substitution[empty_balance]
+FAILED tests/test_flash_settings.py::test_flash_rejects_invalid_metadata_without_paid_substitution[missing_model]
+FAILED tests/test_flash_settings.py::test_changing_provider_invalidates_verified_flash
+5 failed, 13 passed in 3.41s

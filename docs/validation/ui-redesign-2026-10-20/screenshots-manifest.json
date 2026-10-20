@@ -1,0 +1,74 @@
+{
+  "screenshots/adventure-compact.png": {
+    "bytes": 56559,
+    "sha256": "dc83a5bc123e4e8a01142bcd96dec6a42f2254c4e6f2b5ae5f3ad068cea1a62a"
+  },
+  "screenshots/adventure-desktop.png": {
+    "bytes": 98213,
+    "sha256": "9e999f9f35cbb21bcceaba727191fdc6e4d8b21bc607460090b0291ee6aa39ce"
+  },
+  "screenshots/character-creation.png": {
+    "bytes": 66358,
+    "sha256": "3d397afbc712694be799871c03abb352c3adddbb039578c0046a5a01532904ba"
+  },
+  "screenshots/chronicles-card.png": {
+    "bytes": 97120,
+    "sha256": "bd6b7c78df54c00554622c1a2548d55efc6f9a018b514155c063095a04dbdde5"
+  },
+  "screenshots/chronicles-compact.png": {
+    "bytes": 44317,
+    "sha256": "2be941de4856a84503c4b192131db84844a24a4220847b6d6b52cf93b98e83ac"
+  },
+  "screenshots/chronicles-desktop.png": {
+    "bytes": 112933,
+    "sha256": "7dbf4596193390c235fb6f6cf330cce458f531ce4506f1f4d49d9c01e4165816"
+  },
+  "screenshots/chronicles-expanded.png": {
+    "bytes": 31620,
+    "sha256": "c2801cdfe8dff1e3c805c8b89a0714ebe897fd3b47ccdbd31759b75c952f39ac"
+  },
+  "screenshots/chronicles-light.png": {
+    "bytes": 91254,
+    "sha256": "aa5ac4c235dfa613727b4598c4a60ca2fa0b61c797942a58f71d1c4a8c4b8266"
+  },
+  "screenshots/chronicles-tooltip.png": {
+    "bytes": 14460,
+    "sha256": "2bc376e8efdc7382526ed54c833d4e932c242e699fba8533eeac74010a283951"
+  },
+  "screenshots/compact-rolls.png": {
+    "bytes": 28560,
+    "sha256": "c7910030c6e4bc0459bcf9baebc535b774c3dbfea4ebd5cdda65243e93ed3628"
+  },
+  "screenshots/hero.png": {
+    "bytes": 88451,
+    "sha256": "71517ad2041de361b418643d2542278b1962abb80deeb8fc72a193aaed13c786"
+  },
+  "screenshots/inventory.png": {
+    "bytes": 60783,
+    "sha256": "f1b237683224326299220e1bb4baba7aa6746e0d809f66188ac14e1606fff956"
+  },
+  "screenshots/map.png": {
+    "bytes": 44366,
+    "sha256": "e51f5c0f97d1092cc2bff20861bda1c07753d113fbaa096af31a77a8dd973ed5"
+  },
+  "screenshots/menu-compact.png": {
+    "bytes": 450377,
+    "sha256": "7bbda99975b28045f5acc1cd888f80644379bc2c133ea3bb11584b9d66c7527d"
+  },
+  "screenshots/menu-desktop.png": {
+    "bytes": 1266798,
+    "sha256": "60f7e6428739bd2f9127222768ba770fac5c160e8d00de9809b6e210d28caf19"
+  },
+  "screenshots/menu-fullhd.png": {
+    "bytes": 2364407,
+    "sha256": "dc9c214318ada9c810ebf66da33c424068ec90b5f33fe584a1e7d1be8ac984d0"
+  },
+  "screenshots/saves.png": {
+    "bytes": 60586,
+    "sha256": "13bfff16dccb8b1c26ca8adc20f01c09a572a12b7ed1384acddc7bf243998133"
+  },
+  "screenshots/settings.png": {
+    "bytes": 77803,
+    "sha256": "4b2dba21d2f7806a05b65bc7bb9def02d028b7bd080459daa482b85c1496644a"
+  }
+}

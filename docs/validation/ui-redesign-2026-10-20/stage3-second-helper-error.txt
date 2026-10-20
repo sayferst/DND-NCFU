@@ -1,0 +1,185 @@
+F..FFF.F..........                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_flash_verifies_key_then_model_without_generating _____________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x11eb0590) at 0x7f5cb0bf58c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5cb0d34fb0>
+
+    def test_flash_verifies_key_then_model_without_generating(flash, monkeypatch):
+        with router_server() as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(flash.ollama, lambda: flash._flash_verified)
+
+tests/test_flash_settings.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <rpg_vkr.narrative.ollama.OllamaClient(0x126f42c0) at 0x7f5cb0c53800>
+predicate = <function test_flash_verifies_key_then_model_without_generating.<locals>.<lambda> at 0x7f5cb0ca6660>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+>           app.processEvents()
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OllamaClient' object has no attribute 'processEvents'
+
+tests/test_local_narrator.py:26: AttributeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+__ test_flash_rejects_invalid_metadata_without_paid_substitution[invalid_key] __
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x12e06c50) at 0x7f5cadd01bc0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5cadd27e30>
+mode = 'invalid_key'
+
+    @pytest.mark.parametrize("mode", ["invalid_key", "empty_balance", "missing_model"])
+    def test_flash_rejects_invalid_metadata_without_paid_substitution(flash, monkeypatch, mode):
+        import test_routerai
+    
+        if mode == "missing_model":
+            monkeypatch.setitem(test_routerai.QUOTE, "id", "deepseek/other")
+        options = (
+            {"key_status": 401}
+            if mode == "invalid_key"
+            else {"keys": [{**ALLOWANCE, "limit_remaining": "0"}]}
+            if mode == "empty_balance"
+            else {}
+        )
+        with router_server(**options) as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(flash.ollama, lambda: not flash._flash_pending)
+
+tests/test_flash_settings.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <rpg_vkr.narrative.ollama.OllamaClient(0x12fac910) at 0x7f5cb0cc1640>
+predicate = <function test_flash_rejects_invalid_metadata_without_paid_substitution.<locals>.<lambda> at 0x7f5cadcd05e0>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+>           app.processEvents()
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OllamaClient' object has no attribute 'processEvents'
+
+tests/test_local_narrator.py:26: AttributeError
+_ test_flash_rejects_invalid_metadata_without_paid_substitution[empty_balance] _
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x130c3440) at 0x7f5cadaa23c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5cb0caab10>
+mode = 'empty_balance'
+
+    @pytest.mark.parametrize("mode", ["invalid_key", "empty_balance", "missing_model"])
+    def test_flash_rejects_invalid_metadata_without_paid_substitution(flash, monkeypatch, mode):
+        import test_routerai
+    
+        if mode == "missing_model":
+            monkeypatch.setitem(test_routerai.QUOTE, "id", "deepseek/other")
+        options = (
+            {"key_status": 401}
+            if mode == "invalid_key"
+            else {"keys": [{**ALLOWANCE, "limit_remaining": "0"}]}
+            if mode == "empty_balance"
+            else {}
+        )
+        with router_server(**options) as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(flash.ollama, lambda: not flash._flash_pending)
+
+tests/test_flash_settings.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <rpg_vkr.narrative.ollama.OllamaClient(0x13244080) at 0x7f5cadcc2040>
+predicate = <function test_flash_rejects_invalid_metadata_without_paid_substitution.<locals>.<lambda> at 0x7f5cadcd23e0>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+>           app.processEvents()
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OllamaClient' object has no attribute 'processEvents'
+
+tests/test_local_narrator.py:26: AttributeError
+_ test_flash_rejects_invalid_metadata_without_paid_substitution[missing_model] _
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x133679b0) at 0x7f5cadb06e00>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5cb09e0ec0>
+mode = 'missing_model'
+
+    @pytest.mark.parametrize("mode", ["invalid_key", "empty_balance", "missing_model"])
+    def test_flash_rejects_invalid_metadata_without_paid_substitution(flash, monkeypatch, mode):
+        import test_routerai
+    
+        if mode == "missing_model":
+            monkeypatch.setitem(test_routerai.QUOTE, "id", "deepseek/other")
+        options = (
+            {"key_status": 401}
+            if mode == "invalid_key"
+            else {"keys": [{**ALLOWANCE, "limit_remaining": "0"}]}
+            if mode == "empty_balance"
+            else {}
+        )
+        with router_server(**options) as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(flash.ollama, lambda: not flash._flash_pending)
+
+tests/test_flash_settings.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <rpg_vkr.narrative.ollama.OllamaClient(0x134d5830) at 0x7f5cada7ed40>
+predicate = <function test_flash_rejects_invalid_metadata_without_paid_substitution.<locals>.<lambda> at 0x7f5cadb2b1a0>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+>           app.processEvents()
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OllamaClient' object has no attribute 'processEvents'
+
+tests/test_local_narrator.py:26: AttributeError
+______________ test_changing_provider_invalidates_verified_flash _______________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x11bb2d10) at 0x7f5cb0a7a240>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5cb0c2e000>
+
+    def test_changing_provider_invalidates_verified_flash(flash, monkeypatch):
+        with router_server() as (url, _):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(flash.ollama, lambda: flash._flash_verified)
+
+tests/test_flash_settings.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <rpg_vkr.narrative.ollama.OllamaClient(0x133c4ed0) at 0x7f5cadab5a40>
+predicate = <function test_changing_provider_invalidates_verified_flash.<locals>.<lambda> at 0x7f5cadcab240>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+>           app.processEvents()
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OllamaClient' object has no attribute 'processEvents'
+
+tests/test_local_narrator.py:26: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_flash_settings.py::test_flash_verifies_key_then_model_without_generating
+FAILED tests/test_flash_settings.py::test_flash_rejects_invalid_metadata_without_paid_substitution[invalid_key]
+FAILED tests/test_flash_settings.py::test_flash_rejects_invalid_metadata_without_paid_substitution[empty_balance]
+FAILED tests/test_flash_settings.py::test_flash_rejects_invalid_metadata_without_paid_substitution[missing_model]
+FAILED tests/test_flash_settings.py::test_changing_provider_invalidates_verified_flash
+5 failed, 13 passed in 3.44s

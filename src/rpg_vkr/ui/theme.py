@@ -66,7 +66,10 @@ def apply_theme(widget, theme="Системная"):
         QPushButton:disabled { color: $muted; border-color: $border; }
         QLineEdit, QSpinBox, QComboBox, QPlainTextEdit, QTextBrowser, QListWidget,
         QTableWidget, QTreeWidget { background: $field; border: 1px solid $border;
-            border-radius: 6px; padding: 6px; selection-background-color: $hover; }
+            border-radius: 6px; padding: 6px; selection-background-color: $hover;
+            selection-color: $text; }
+        QListWidget::item:selected, QTableWidget::item:selected {
+            background: $hover; color: $text; }
         QComboBox { padding-right: 26px; }
         QComboBox QAbstractItemView { background: $panel; color: $text; }
         QHeaderView::section { background: $panel; color: $gold; border: none; padding: 8px; }
@@ -80,6 +83,8 @@ def apply_theme(widget, theme="Системная"):
         QMenu::item:selected { background: $hover; }
         QStatusBar { color: $muted; background: $bg; }
         QCheckBox { spacing: 9px; padding: 4px; }
+        QCheckBox::indicator:unchecked { border: 1px solid $muted; border-radius: 3px;
+            background: $field; width: 14px; height: 14px; }
         QSplitter::handle { background: $bg; width: 8px; height: 8px; }
         QLabel[eyebrow="true"] { color: $gold; font-size: 11px; letter-spacing: 2px; }
         QLabel[heading="true"] { color: $gold; font-family: Georgia; font-size: 26px; }

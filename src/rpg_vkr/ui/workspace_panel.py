@@ -363,6 +363,10 @@ class WorkspaceActions:
 
             apply_theme(self, preferences.theme)
             palette = self.palette()
+            if hasattr(self, "flash_link"):
+                from rpg_vkr.ui.flash_settings import style_connection_link
+
+                style_connection_link(self)
         self.journal.set_role_theme(palette.color(QPalette.ColorRole.Base).lightness() < 128)
         if hasattr(self, "combat_targets"):
             self._refresh_episode_panels()

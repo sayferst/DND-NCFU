@@ -17,6 +17,8 @@ dist/
 !.env.example
 *.pem
 *.key
+routerai-credential.bin
+ai-connection.json
 secrets/
 .idea/
 .vscode/

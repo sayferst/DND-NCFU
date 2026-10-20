@@ -1,0 +1,9 @@
+{
+  "base": "d322732",
+  "protected_files_checked": 60,
+  "changed_protected_files": [],
+  "existing_instructions_preserved_as_prefix": {
+    "AGENTS.md": true,
+    "prompts/master_system_prompt.txt": true
+  }
+}

@@ -1,0 +1,68 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from PySide6.QtWidgets import QApplication, QToolTip
+from PySide6.QtCore import QEvent, Qt, QTimer
+from PySide6.QtGui import QHelpEvent
+from rpg_vkr.ui.main_window import MainWindow
+from rpg_vkr.ui.creation_dialog import CreationDialog
+from rpg_vkr.storage.slots import SaveSlots
+from response_cases import new_session
+from test_chronicles import learn
+from rpg_vkr.domain.adventure import MemoryNote
+
+app=QApplication([])
+output=Path('docs/validation/ui-redesign-2026-10-20/screenshots')
+output.mkdir(exist_ok=True)
+with TemporaryDirectory() as directory:
+    session=new_session()
+    learn(session,'public_name','Веста')
+    learn(session,'role','Картограф речных путей')
+    learn(session,'appearance','Потёртый плащ с медной застёжкой, на пальцах следы чернил.')
+    session.chronicle=session.chronicle.remember((MemoryNote('vesta','rumour','Говорят, она ищет потерянную гавань.',2,False,0,'capture:fixture'),))
+    window=MainWindow(session=session,saves=SaveSlots(Path(directory)/'saves'))
+    window.show()
+    def snap(name, size, section):
+        window.resize(*size)
+        window.open_section(section)
+        app.processEvents()
+        window.grab().save(str(output/(name+'.png')))
+        print(name,window.width(),window.height(),flush=True)
+    snap('menu-desktop',(1280,800),'Главное меню')
+    snap('menu-compact',(640,620),'Главное меню')
+    snap('menu-fullhd',(1920,1080),'Главное меню')
+    snap('chronicles-desktop',(1440,900),'Хроники мира')
+    panel=window.chronicles_panel
+    panel.search.setText('Веста')
+    app.processEvents()
+    window.grab().save(str(output/'chronicles-card.png'))
+    point=panel.list.visualItemRect(panel.list.item(0)).center()
+    app.sendEvent(panel.list.viewport(),QHelpEvent(QEvent.Type.ToolTip,point,panel.list.viewport().mapToGlobal(point)))
+    app.processEvents()
+    for widget in app.topLevelWidgets():
+        if widget.metaObject().className()=='QTipLabel':
+            widget.grab().save(str(output/'chronicles-tooltip.png'))
+    QToolTip.hideText()
+    snap('chronicles-compact',(640,620),'Хроники мира')
+    def capture_modal(name):
+        popup=app.activeModalWidget()
+        popup.grab().save(str(output/(name+'.png')))
+        popup.accept()
+    QTimer.singleShot(30,lambda: capture_modal('chronicles-expanded'))
+    panel.open_card()
+    snap('adventure-desktop',(1440,900),'Приключение')
+    snap('adventure-compact',(640,620),'Приключение')
+    QTimer.singleShot(30,lambda: capture_modal('compact-rolls'))
+    window.show_compact_rolls()
+    snap('inventory',(1280,900),'Инвентарь')
+    snap('hero',(1280,900),'Герой')
+    snap('map',(1280,900),'Карта')
+    snap('settings',(1280,900),'Настройки')
+    snap('saves',(1280,900),'Сохранения')
+    dialog=CreationDialog(window)
+    dialog.show()
+    app.processEvents()
+    dialog.grab().save(str(output/'character-creation.png'))
+    dialog.reject()
+    window.theme_choice.setCurrentText('Светлая')
+    snap('chronicles-light',(1280,900),'Хроники мира')
+    window.close()
