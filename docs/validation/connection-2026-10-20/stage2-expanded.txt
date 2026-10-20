@@ -1,0 +1,27 @@
+
+==================================== ERRORS ====================================
+______________ ERROR collecting tests/test_connection_metadata.py ______________
+tests/test_connection_metadata.py:82: in <module>
+    @pytest.mark.parametrize("key", ["Bearer sk-test", "sk-\n-header", "ключ", "x" * 4097, ""])
+     ^^^^^^
+E   NameError: name 'pytest' is not defined
+______________ ERROR collecting tests/test_connection_revision.py ______________
+tests/test_connection_revision.py:4: in <module>
+    from test_connection_metadata import metadata_server
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+.venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/test_connection_metadata.py:82: in <module>
+    @pytest.mark.parametrize("key", ["Bearer sk-test", "sk-\n-header", "ключ", "x" * 4097, ""])
+     ^^^^^^
+E   NameError: name 'pytest' is not defined
+=========================== short test summary info ============================
+ERROR tests/test_connection_metadata.py - NameError: name 'pytest' is not def...
+ERROR tests/test_connection_revision.py - NameError: name 'pytest' is not def...
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+2 errors in 0.39s

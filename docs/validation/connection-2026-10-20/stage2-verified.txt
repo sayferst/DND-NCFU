@@ -1,0 +1,49 @@
+....F................F.................................................. [ 75%]
+.......................                                                  [100%]
+=================================== FAILURES ===================================
+_____ test_bad_key_format_makes_no_http_request[\u043a\u043b\u044e\u0447] ______
+
+qt_app = <PySide6.QtWidgets.QApplication(0x36492a30) at 0x7f69039181c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6903924050>
+key = 'ключ'
+
+    @pytest.mark.parametrize("key", ["Bearer sk-test", "sk-\n-header", "ключ", "x" * 4097, ""])
+    def test_bad_key_format_makes_no_http_request(qt_app, monkeypatch, key):
+        with metadata_server(monkeypatch) as records:
+            client = RouterAIClient()
+            errors = []
+            client.failed.connect(errors.append)
+            client.check_key(key)
+            assert len(errors) == 1 and not client.busy and not records
+            assert "API-ключ" in errors[0]
+>           assert key not in errors[0] if key else True
+E           assert False
+
+tests/test_connection_metadata.py:93: AssertionError
+________________ test_changed_key_cannot_accept_an_old_success _________________
+
+connection_window = <rpg_vkr.ui.main_window.MainWindow(0x394c3150) at 0x7f68fce03c80>
+qt_app = <PySide6.QtWidgets.QApplication(0x36492a30) at 0x7f69039181c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f68fcd0cef0>
+
+    def test_changed_key_cannot_accept_an_old_success(connection_window, qt_app, monkeypatch):
+        from PySide6.QtTest import QTest
+    
+        w = connection_window
+        setup_key(w)
+        with metadata_server(monkeypatch, delay=0.1) as records:
+            w.find_models_button.click()
+            wait_for(qt_app, lambda: bool(records))
+            # A programmatic change is also caught by the snapshot, without relying on textEdited.
+            w.cloud_key.setText("a-different-synthetic-key")
+            QTest.qWait(200)
+            assert not w.enable_local_narrator.isChecked()
+>           assert not w._flash_pending
+E           assert not True
+E            +  where True = <rpg_vkr.ui.main_window.MainWindow(0x394c3150) at 0x7f68fce03c80>._flash_pending
+
+tests/test_connection_revision.py:160: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_connection_metadata.py::test_bad_key_format_makes_no_http_request[\u043a\u043b\u044e\u0447]
+FAILED tests/test_connection_revision.py::test_changed_key_cannot_accept_an_old_success
+2 failed, 93 passed in 31.51s

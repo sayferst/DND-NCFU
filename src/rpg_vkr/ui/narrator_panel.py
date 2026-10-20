@@ -142,18 +142,16 @@ def install_narrator_panels(window):
     from rpg_vkr.narrative.routerai import RouterAIClient
 
     window.routerai_catalog = RouterAIClient(window)
+    window.routerai_key_client = RouterAIClient(window)
     window._routerai_quotes = {}
-    window.routerai_catalog_button.clicked.connect(window.routerai_catalog.list_models)
+    window.routerai_catalog_button.clicked.connect(lambda: load_routerai_models(window))
     window.routerai_model_list.activated.connect(lambda index: select_routerai_model(window, index))
     window.routerai_catalog.catalog_ready.connect(
         lambda quotes: routerai_models_ready(window, quotes)
     )
-    window.routerai_catalog.failed.connect(
-        lambda message: window.narrator_status.setText(message)
-        if window.ai_provider.currentData() == "routerai" and not window.ollama.busy
-        else None
-    )
+    window.routerai_catalog.failed.connect(lambda message: catalog_failed(window, message))
     window.routerai_catalog.busy_changed.connect(lambda _: refresh_narrator_panels(window))
+    window.routerai_key_client.busy_changed.connect(lambda _: refresh_narrator_panels(window))
     window._narrating_session = None
     window._narrating_index = None
     window._narrator_frame = None
@@ -181,9 +179,14 @@ def install_narrator_panels(window):
     window.ollama.event_ready.connect(lambda event: record_model_event(window, event))
     window.cloud_key.textEdited.connect(lambda _: cancel_if_busy(window))
     window.cloud_model.textEdited.connect(lambda _: cancel_if_busy(window))
+    window.cloud_model.textChanged.connect(lambda _: refresh_model_price(window))
     window.cloud_allowed.toggled.connect(
         lambda allowed: None if allowed else cancel_if_busy(window)
     )
+    if not window._legacy_controls:
+        from rpg_vkr.ui.connection_panel import install_connection_layout
+
+        install_connection_layout(window, page)
     provider_changed(window)
     refresh_narrator_panels(window)
 
@@ -192,6 +195,7 @@ def provider_changed(window):
     if window.ollama.busy or window._chat_text is not None or window._narrating_session is not None:
         cancel_narration(window)
     window.routerai_catalog.cancel()
+    window.routerai_key_client.cancel()
     provider = window.ai_provider.currentData()
     window.world_agent.setVisible(provider == "routerai" or not window._legacy_controls)
     previous = getattr(window, "_previous_ai_provider", None)
@@ -199,6 +203,8 @@ def provider_changed(window):
         window.cloud_key.clear()
         window.cloud_model.clear()
         window.cloud_allowed.setChecked(False)
+        if hasattr(window, "show_api_key"):
+            window.show_api_key.setChecked(False)
     window._previous_ai_provider = provider
     cloud = window.ai_provider.currentData() != "local"
     for widget in (window.cloud_model, window.cloud_key, window.cloud_allowed, window.cloud_notice):
@@ -240,12 +246,19 @@ def provider_changed(window):
         window.director_mode.setChecked(True)
         window.find_models_button.setText("Применить настройки облачного API")
         window.local_model.clear()
+        window.local_model.setVisible(window._legacy_controls)
+        window.ollama.use_local()
     else:
+        window.local_model.show()
         window.ollama.use_local()
         window.find_models_button.setText("Найти установленные модели")
         window.local_model.clear()
         window.local_model.addItems(list(getattr(window, "_local_models", ())))
         window.ollama.models = tuple(getattr(window, "_local_models", ()))
+
+    from rpg_vkr.ui.connection_panel import refresh_connection_layout
+
+    refresh_connection_layout(window)
 
 
 def cancel_if_busy(window):
@@ -253,25 +266,51 @@ def cancel_if_busy(window):
         cancel_narration(window)
 
 
+def load_routerai_models(window):
+    if window.ai_provider.currentData() != "routerai":
+        return
+    if hasattr(window, "catalog_status"):
+        window.catalog_status.setText("Загрузка каталога RouterAI… API-ключ не передаётся.")
+    window.routerai_catalog.list_models()
+
+
+def catalog_failed(window, message):
+    if window.ai_provider.currentData() != "routerai":
+        return
+    if hasattr(window, "catalog_status"):
+        window.catalog_status.setText(message + " Можно оставить ID модели вручную.")
+    if not window.ollama.busy:
+        window.narrator_status.setText(message)
+
+
+def refresh_model_price(window):
+    quote = window._routerai_quotes.get(window.cloud_model.text().strip())
+    window.routerai_price.setText(
+        quote.label if quote else "Цена не подтверждена. Можно обновить каталог RouterAI."
+    )
+
+
 def routerai_models_ready(window, quotes):
     if window.ai_provider.currentData() != "routerai" or getattr(window, "_closing", False):
         return
+    from rpg_vkr.ui.connection_panel import filter_models
+
     window._routerai_quotes = {quote.id: quote for quote in quotes}
-    window.routerai_model_list.clear()
-    window.routerai_model_list.addItem("Выберите модель из каталога", "")
-    for quote in quotes:
-        window.routerai_model_list.addItem(quote.label, quote.id)
+    filter_models(window)
     current = window.cloud_model.text().strip()
-    index = window.routerai_model_list.findData(current)
-    if index > 0 and current in window._routerai_quotes:
-        window.routerai_model_list.setCurrentIndex(index)
+    if current in window._routerai_quotes:
         window.routerai_price.setText(window._routerai_quotes[current].label)
     else:
-        window.routerai_price.setText("Выберите модель. Указанного ID нет в полученном каталоге.")
-    if not window.ollama.busy:
-        window.narrator_status.setText(
-            "Каталог RouterAI получен. Загрузка каталога не запускает генерацию."
+        window.routerai_price.setText("ID введён вручную; цена и наличие модели не подтверждены.")
+    if hasattr(window, "catalog_status"):
+        unknown = sum(q.prompt_rub is None for q in quotes)
+        window.catalog_status.setText(
+            f"Каталог загружен: {len(quotes)} текстовых моделей; "
+            f"без подтверждённой цены: {unknown}. "
+            "Это не проверка ключа. Выберите модель и подключите мастера."
         )
+    if not window.ollama.busy:
+        window.narrator_status.setText("Каталог получен. Платных запросов не было.")
 
 
 def select_routerai_model(window, index):
@@ -294,7 +333,7 @@ def prepare_model(window):
     if not window.cloud_allowed.isChecked():
         failed(
             window,
-            "Для облака разрешите отправку сцены в API. Локальный режим доступен без этого.",
+            "Для облака разрешите отправку сцены в API. Реплика не отправлена.",
         )
         return False
     try:
@@ -327,6 +366,10 @@ def prepare_model(window):
 def find_models(window):
     if window.ai_provider.currentData() == "local":
         window.ollama.list_models()
+    elif not window._legacy_controls:
+        from rpg_vkr.ui.flash_settings import connect_selected
+
+        connect_selected(window)
     elif prepare_model(window):
         window.narrator_status.setText(
             "Профиль API выбран. Запрос к модели будет отправлен с вашим сообщением."
@@ -353,6 +396,14 @@ def change_mode(window, enabled):
 
 
 def cancel_narration(window):
+    if window.routerai_catalog.busy and hasattr(window, "catalog_status"):
+        window.catalog_status.setText("Загрузка каталога отменена. Предыдущий список сохранён.")
+    window.routerai_catalog.cancel()
+    window.routerai_key_client.cancel()
+    if hasattr(window, "_flash_pending") and window._flash_pending:
+        from rpg_vkr.ui.flash_settings import cancel_connection
+
+        cancel_connection(window)
     if getattr(window, "_generating_session", None) is window._session:
         window.ollama.cancel()
         from rpg_vkr.ui.adventure_panel import generation_failed
@@ -1439,9 +1490,15 @@ def refresh_narrator_panels(window):
         and bool(window.local_model.currentText())
         and not any(n.turn_index == len(session.turns) for n in session.narrations)
     )
-    window.cancel_narration_button.setEnabled(busy)
-    window.routerai_catalog_button.setEnabled(not busy and not window.routerai_catalog.busy)
-    window.routerai_model_list.setEnabled(not busy and not window.routerai_catalog.busy)
+    checking = window.routerai_catalog.busy or window.routerai_key_client.busy
+    pending = getattr(window, "_flash_pending", False)
+    window.cancel_narration_button.setEnabled(busy or checking or pending)
+    window.find_models_button.setEnabled(not busy and not pending)
+    window.routerai_catalog_button.setEnabled(not busy and not checking and not pending)
+    window.routerai_model_list.setEnabled(not busy and not pending)
+    from rpg_vkr.ui.connection_panel import refresh_connection_layout
+
+    refresh_connection_layout(window)
     window.mode_label.setText("Мастер" if enabled else "Мастер · подключение выключено")
     frame = build_frame(session)
     context = (

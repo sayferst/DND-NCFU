@@ -659,6 +659,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self.visuals.close()
         self._closing = True
         self.routerai_catalog.cancel()
+        self.routerai_key_client.cancel()
         self.ollama.cancel()
         event.accept()
 
@@ -677,7 +678,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             return
         if use_ai and getattr(self, "_flash_pending", False):
             self.narrator_status.setText(
-                "Проверяется подключение Flash. Реплика сохранена в поле ввода; "
+                "Проверяется подключение мастера. Реплика сохранена в поле ввода; "
                 "отправьте после проверки."
             )
             return

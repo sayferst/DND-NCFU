@@ -1,0 +1,2 @@
+Fontconfig error: No writable cache directories
+4 Qt screenshots; loopback GET only; synthetic masked key; no model/image POST.

@@ -5,6 +5,7 @@ import threading
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import pytest
 from test_local_narrator import wait_for
 from test_routerai import ALLOWANCE, MODEL, QUOTE
 
@@ -41,7 +42,7 @@ def metadata_server(monkeypatch, *, catalog=None, status=200, key_status=200, de
             self.end_headers()
             try:
                 self.wfile.write(raw)
-            except (BrokenPipeError, ConnectionResetError):
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
                 pass
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -77,3 +78,32 @@ def test_real_large_catalog_is_not_mistaken_for_invalid_key(qt_app, monkeypatch)
         wait_for(qt_app, lambda: bool(ready or errors))
         assert ready and not errors
         assert records == [("/models", False)]
+
+
+@pytest.mark.parametrize("key", ["Bearer sk-test", "sk-\n-header", "ключ", "x" * 4097, ""])
+def test_bad_key_format_makes_no_http_request(qt_app, monkeypatch, key):
+    with metadata_server(monkeypatch) as records:
+        client = RouterAIClient()
+        errors = []
+        client.failed.connect(errors.append)
+        client.check_key(key)
+        assert len(errors) == 1 and not client.busy and not records
+        assert "API-ключ" in errors[0]
+        assert errors[0] == (
+            "Укажите API-ключ провайдера без пробелов, переносов и префикса Bearer; "
+            "не пароль ChatGPT."
+        )
+
+
+@pytest.mark.parametrize("units", [{}, {"prompt": "request", "completion": "token"}])
+def test_unpriced_catalog_does_not_invent_token_prices(units):
+    (quote,) = parse_models({"data": [QUOTE | {"pricing_units": units}]}, include_unpriced=True)
+    assert quote.id == MODEL and quote.prompt_rub is None and "₽/млн" not in quote.label
+
+
+def test_unpriced_mode_still_rejects_image_only_models():
+    with pytest.raises(ValueError):
+        parse_models(
+            {"data": [QUOTE | {"architecture": {"output_modalities": ["image"]}}]},
+            include_unpriced=True,
+        )
