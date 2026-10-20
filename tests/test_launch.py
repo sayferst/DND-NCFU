@@ -19,6 +19,9 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 
 app = QApplication([])
 def interact():
+    if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+        QTimer.singleShot(20, interact)
+        return
     try:
         windows = [w for w in app.topLevelWidgets() if isinstance(w, QMainWindow)]
         assert len(windows) == 1
@@ -26,7 +29,7 @@ def interact():
         assert window.isVisible()
         assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
         window.resume_button.click()
-        if sys.argv[2] == 'save':
+        if phase == 'save':
             window.font_size.setValue(16)
             window.theme_choice.setCurrentText('Тёмная')
             window.action_input.setText('помочь')
@@ -75,7 +78,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
 import rpg_vkr.ui.cloud_gate as cloud_gate
 cloud_gate.require_cloud = lambda _: True
-runpy.run_path(sys.argv[1], run_name='__main__')
+launcher, phase = sys.argv[1:]
+sys.argv = [launcher]
+runpy.run_path(launcher, run_name='__main__')
 """
     environment = os.environ.copy()
     environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "user-data")
@@ -120,9 +125,12 @@ def fill_creator():
         app.exit(1)
 
 def interact():
+    if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+        QTimer.singleShot(20, interact)
+        return
     try:
         window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
-        if sys.argv[2] == 'create':
+        if phase == 'create':
             QTimer.singleShot(0, fill_creator)
             window.new_character()
             assert window._session.character.name == 'Мира'
@@ -167,7 +175,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
 import rpg_vkr.ui.cloud_gate as cloud_gate
 cloud_gate.require_cloud = lambda _: True
-runpy.run_path(sys.argv[1], run_name='__main__')
+launcher, phase = sys.argv[1:]
+sys.argv = [launcher]
+runpy.run_path(launcher, run_name='__main__')
 """
     environment = os.environ.copy()
     environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "created-data")
@@ -195,12 +205,15 @@ from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow
 app = QApplication([])
 def interact():
+    if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+        QTimer.singleShot(20, interact)
+        return
     try:
         from rpg_vkr.application import Session
         from rpg_vkr.domain.character import ABILITY_NAMES, Character
         from rpg_vkr.domain.progression import ARCHETYPES
         window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
-        if sys.argv[2] == 'fight':
+        if phase == 'fight':
             character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
                                   ARCHETYPES['fighter'].scores, strict=True)))
             window._session = Session.create_hero(character, 'fighter', seed=5)
@@ -261,7 +274,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
 import rpg_vkr.ui.cloud_gate as cloud_gate
 cloud_gate.require_cloud = lambda _: True
-runpy.run_path(sys.argv[1], run_name='__main__')
+launcher, phase = sys.argv[1:]
+sys.argv = [launcher]
+runpy.run_path(launcher, run_name='__main__')
 """
     environment = os.environ.copy()
     environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "combat-data")

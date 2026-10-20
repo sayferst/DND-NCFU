@@ -2,7 +2,6 @@
 
 import json
 import os
-import sys
 import tempfile
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -24,14 +23,9 @@ class SlotInfo:
 
 
 def default_save_directory() -> Path:
-    override = os.environ.get("RPG_VKR_DATA_DIR")
-    if override:
-        return Path(override).expanduser() / "saves"
-    if getattr(sys, "frozen", False):
-        user_root = Path(os.environ.get("LOCALAPPDATA", str(Path.home() / ".local/share")))
-        return user_root / "DND-NCFU" / "saves"
-    repository = Path(__file__).resolve().parents[3]
-    return repository.parent / f"{repository.name}-data" / "saves"
+    from rpg_vkr.resources import data_directory
+
+    return data_directory() / "saves"
 
 
 class SaveSlots:

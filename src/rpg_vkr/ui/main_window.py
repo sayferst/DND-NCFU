@@ -60,7 +60,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self._archive_error = "Рабочая память недоступна: " + str(error)
         self._dirty = False
         self._current_slot: int | None = None
-        self.setWindowTitle("Пограничье — первый прототип")
+        from rpg_vkr.build_info import DISPLAY_NAME
+
+        self.setWindowTitle(DISPLAY_NAME)
         self.resize(1180, 800)
         self.setMinimumSize(640, 620)
         about = self.menuBar().addMenu("Справка").addAction("О программе и лицензии")
