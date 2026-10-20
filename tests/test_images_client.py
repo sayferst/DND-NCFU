@@ -69,7 +69,9 @@ def test_one_post_image_and_never_authenticate_download(qt_app, mode):
         png, cost, receipt = client.generate(
             {"model": "m", "prompt": "pixel art", "n": 1}, "fake-key"
         )
-        assert png.startswith(b"\x89PNG") and cost == 750000 and receipt == "receipt"
+        assert (
+            png.startswith(b"\x89PNG") and cost == 750000 and json.loads(receipt)["id"] == "receipt"
+        )
         assert len([r for r in records if r[0] == "POST"]) == 1
         assert records[0][2] == "Bearer fake-key"
         if mode == "url":

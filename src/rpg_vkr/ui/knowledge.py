@@ -364,7 +364,7 @@ def knowledge_entries(session):
                     partial=False,
                 )
             )
-    for i, note in enumerate(notes):
+    for note in notes:
         if note.kind == "event" or (
             note.kind in {"clue", "thread", "rumour"} and note.subject in {"world", "hero"}
         ):

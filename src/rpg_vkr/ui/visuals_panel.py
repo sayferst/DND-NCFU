@@ -208,6 +208,7 @@ class VisualController(QObject):
                 else ("факт неизвестен, резерв " + rub(row["expected_micros"]))
             )
             self.ledger.addItem(text)
+            self.ledger.item(self.ledger.count() - 1).setToolTip(row["receipt"])
             self.ledger.item(self.ledger.count() - 1).setData(Qt.ItemDataRole.UserRole, row["id"])
 
     def reconcile(self):
@@ -408,7 +409,12 @@ class VisualController(QObject):
                 registry.bind(target.campaign, target.entity, target.subject)
                 return asset
             except ImageError as error:
-                registry.fail(identity, error.code)
+                registry.fail(
+                    identity,
+                    error.code,
+                    actual=getattr(error, "actual", None),
+                    receipt=getattr(error, "receipt", ""),
+                )
                 raise
             except Exception:
                 registry.fail(identity, "storage_or_processing")

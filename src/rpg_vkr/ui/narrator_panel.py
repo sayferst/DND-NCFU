@@ -40,8 +40,8 @@ def install_narrator_panels(window):
         plain_label(
             "ИИ-мастер понимает обычную речь и отвечает художественным текстом. "
             "Мастер создаёт детали и реакции NPC; механику и изменения ресурсов проверяет движок. "
-            "Без модели доступны базовые автономные действия через текст. "
-            "Для локального режима нужны Ollama и установленная модель."
+            "Для игры нужен включённый облачный мастер. "
+            "Без подключения доступны сохранения, дневник и просмотр знаний."
         )
     )
     window.enable_local_narrator = QCheckBox("Включить ИИ-мастера")
@@ -63,7 +63,8 @@ def install_narrator_panels(window):
     )
     page.addWidget(window.prompt_notice)
     window.ai_provider = QComboBox()
-    window.ai_provider.addItem("Локально: Ollama · без оплаты API", "local")
+    if window._legacy_controls:
+        window.ai_provider.addItem("Локально: Ollama · без оплаты API", "local")
     window.ai_provider.addItem("Облако: OpenAI API · отдельный доступ", "openai")
     window.ai_provider.addItem("Облако: OpenRouter API · условия провайдера", "openrouter")
     window.ai_provider.addItem("Облако: RouterAI · тарифы в рублях", "routerai")
@@ -113,7 +114,7 @@ def install_narrator_panels(window):
     window.cancel_narration_button = QPushButton("Отменить ожидание")
     page.addWidget(window.cancel_narration_button)
     window.narrator_status = plain_label(
-        "Выбран автономный рассказчик. Загрузок и запросов к ИИ нет."
+        "Мастер выключен. Настройте облачное подключение для игры."
     )
     page.addWidget(window.narrator_status)
     window.narrator_metrics = plain_label("Метрики генерации: запросов пока нет.")
@@ -335,10 +336,18 @@ def find_models(window):
 def change_mode(window, enabled):
     if not enabled:
         cancel_narration(window)
+    if not window._legacy_controls:
+        window.narrator_status.setText(
+            "Облачный мастер выбран. Проверьте модель, ключ и разрешение отправки сцены."
+            if enabled
+            else "Мастер выключен. Для новых действий включите облачное подключение."
+        )
+        refresh_narrator_panels(window)
+        return
     window.narrator_status.setText(
         "Локальный режим выбран. Найдите установленную модель; обычные действия уже доступны."
         if enabled
-        else "Выбран автономный рассказчик. Сохранённые тексты ИИ остаются в истории."
+        else "Мастер выключен. История сохранена; для новых действий включите облако."
     )
     refresh_narrator_panels(window)
 
@@ -1433,7 +1442,7 @@ def refresh_narrator_panels(window):
     window.cancel_narration_button.setEnabled(busy)
     window.routerai_catalog_button.setEnabled(not busy and not window.routerai_catalog.busy)
     window.routerai_model_list.setEnabled(not busy and not window.routerai_catalog.busy)
-    window.mode_label.setText("Мастер" if enabled else "Мастер · автономный режим")
+    window.mode_label.setText("Мастер" if enabled else "Мастер · подключение выключено")
     frame = build_frame(session)
     context = (
         f"{frame.hero}\n{frame.location}; здоровье {frame.health}\n"

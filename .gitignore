@@ -19,6 +19,8 @@ dist/
 *.key
 routerai-credential.bin
 ai-connection.json
+/visuals/
+visuals.sqlite3*
 secrets/
 .idea/
 .vscode/

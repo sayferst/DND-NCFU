@@ -1,0 +1,9 @@
+Fontconfig error: No writable cache directories
+menu 1280 800
+adventure 1280 900
+chronicles 1280 900
+chronicles-cache 1280 900
+chronicles-compact 640 620
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+image-settings 1280 900

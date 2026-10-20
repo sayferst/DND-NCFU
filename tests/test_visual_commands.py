@@ -1,7 +1,10 @@
 import pytest
-from test_visual_controller import finish, visual as visual
+from test_visual_controller import finish
+from test_visual_controller import visual as _visual_fixture
 
 from rpg_vkr.visuals.commands import visual_request
+
+visual = _visual_fixture
 
 
 @pytest.mark.parametrize(

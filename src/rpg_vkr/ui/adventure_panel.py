@@ -268,6 +268,11 @@ def begin_world(window):
     if window.enable_local_narrator.isChecked() and prepare_model(window):
         request_world(window)
     else:
+        if not window._legacy_controls:
+            generation_failed(
+                window, "Облачное подключение не настроено. Повторите после настройки."
+            )
+            return
         finish_world(
             window,
             offline_world(session),

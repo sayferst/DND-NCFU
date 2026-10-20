@@ -80,6 +80,8 @@ def install_flash_settings(window):
             stored = load_secret(window._credential_path)
             window.cloud_key.setText(stored)
             window.remember_key.setChecked(bool(stored))
+    if not window._legacy_controls and preferences.provider == "local":
+        window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
     window._updating_flash = False
     # Preference is restored, but no model request is issued. Metadata checks require key + consent.
     if preferences.enabled and preferences.provider == "routerai":

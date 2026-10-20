@@ -3,9 +3,9 @@
 import json
 from dataclasses import dataclass
 from functools import lru_cache
-from pathlib import Path
 
 from rpg_vkr.domain.interactions import ActorRef, InteractiveWorld, Thing, identifier, label
+from rpg_vkr.resources import RESOURCE_ROOT
 
 CATEGORIES = {
     "quest": "1. Квестовые предметы",
@@ -302,7 +302,7 @@ class Catalog:
 
 @lru_cache(maxsize=1)
 def seed_payload():
-    path = Path(__file__).resolve().parents[3] / "data/catalog/seed-v1.json"
+    path = RESOURCE_ROOT / "data/catalog/seed-v1.json"
     return json.dumps(json.loads(path.read_text(encoding="utf-8")), ensure_ascii=False)
 
 

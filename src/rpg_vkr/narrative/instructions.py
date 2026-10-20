@@ -1,11 +1,19 @@
 """Editable storyteller instructions, read as data for each new request."""
 
 import hashlib
+import sys
 from pathlib import Path
 
-PROMPTS = Path(__file__).resolve().parents[3] / "prompts"
+from rpg_vkr.resources import RESOURCE_ROOT
+from rpg_vkr.storage.slots import default_save_directory
+
+PROMPTS = RESOURCE_ROOT / "prompts"
 DEFAULT_PATH = PROMPTS / "master_system_prompt.txt"
-LOCAL_PATH = PROMPTS / "master_system_prompt.local.txt"
+LOCAL_PATH = (
+    default_save_directory().parent / "prompts/master_system_prompt.local.txt"
+    if getattr(sys, "frozen", False)
+    else PROMPTS / "master_system_prompt.local.txt"
+)
 MAX_BYTES = 65536
 MAX_CHARACTERS = 24000
 

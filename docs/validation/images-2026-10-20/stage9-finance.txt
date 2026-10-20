@@ -1,0 +1,57 @@
+..........F......F........                                               [100%]
+=================================== FAILURES ===================================
+______________ test_duplicate_inflight_and_cross_campaign_budget _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-209/test_duplicate_inflight_and_cr0')
+
+    def test_duplicate_inflight_and_cross_campaign_budget(tmp_path):
+        r = VisualRegistry(tmp_path)
+        a = r.reserve("A", "sword", "model", 750000, 1000000)
+        with pytest.raises(ValueError):
+            r.reserve("A", "sword", "model", 750000, 5000000)
+        with pytest.raises(ValueError):
+            r.reserve("B", "axe", "model", 750000, 1000000)
+        r.mark_submitted(a)
+        with pytest.raises(ValueError):
+            r.mark_submitted(a)
+>       r.fail(a, "timeout")
+
+tests/test_visual_registry.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.visuals.registry.VisualRegistry object at 0x7fd446cd4d10>
+identity = '22f553ff41c24b05832930e42c6e0d18', code = 'timeout'
+
+    def fail(self, identity, code, *, certainly_unpaid=False, actual=None, receipt=""):
+        with closing(self.connect()) as db, db:
+>           db.execute(
+                "UPDATE requests SET status=?,code=?,actual_micros=?,receipt=? WHERE id=? AND status IN "
+                "('reserved','submitted')",
+                ("failed_preflight" if certainly_unpaid else "uncertain", code[:80], identity),
+            )
+E           sqlite3.ProgrammingError: Incorrect number of bindings supplied. The current statement uses 5, and there are 3 supplied.
+
+src/rpg_vkr/visuals/registry.py:123: ProgrammingError
+_______________ test_failed_post_keeps_reserve_and_never_retries _______________
+
+visual = (<rpg_vkr.ui.main_window.MainWindow(0x27e3c580) at 0x7fd44d378980>, <rpg_vkr.ui.visuals_panel.VisualController(0x28441370) at 0x7fd445a3d180>, <test_visual_controller.FakeTransport object at 0x7fd4451a35f0>)
+
+    def test_failed_post_keeps_reserve_and_never_retries(visual):
+        window, controller, fake = visual
+        fake.error = True
+        target = scene_target(window._session)
+        controller.request(target)
+        finish(controller)
+        assert len(fake.posts) == 1
+        row = controller.registry.ledger()[0]
+>       assert row["status"] == "uncertain" and row["actual_micros"] is None
+E       AssertionError: assert ('submitted' == 'uncertain'
+E         
+E         - uncertain
+E         + submitted)
+
+tests/test_visual_controller.py:105: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_visual_registry.py::test_duplicate_inflight_and_cross_campaign_budget
+FAILED tests/test_visual_controller.py::test_failed_post_keeps_reserve_and_never_retries
+2 failed, 24 passed in 7.43s

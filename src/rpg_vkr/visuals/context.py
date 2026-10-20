@@ -58,7 +58,8 @@ def entity_target(session, entry, *, shared=None):
         and bool(type_id)
         and not properties.get("unidentified")
         and not properties.get("unique")
-        and not set(tags).intersection({"quest_items", "bosses", "unique"})
+        and definition.get("rarity", "common") == "common"
+        and not set(tags).intersection({"quest", "bosses", "unique"})
         and not (entity.get("state") or {}).get("public_appearance")
     )
     common = ordinary if shared is None else ordinary and shared

@@ -239,7 +239,15 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         if not self._legacy_controls:
             from rpg_vkr.ui.visuals_panel import install_visuals
 
-            install_visuals(self)
+            try:
+                install_visuals(self)
+            except (ValueError, OSError, sqlite3.Error):
+                self.settings_form.addRow(
+                    QLabel(
+                        "Хранилище изображений недоступно. "
+                        "Игра и текстовый мастер работают отдельно."
+                    )
+                )
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(bool(text.strip()))
@@ -316,11 +324,20 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         )
         if hasattr(self, "journal"):
             self.journal.hero_name = character.name
-        self.scene_title.setText(self._session.current_place_name)
+        draft = (
+            not self._legacy_controls
+            and not self._session.generated_world
+            and not self._session.turns
+        )
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
         self.resource_label.setText(
             f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
             f"бинты {world.bandages} · {self._session.current_place_name}"
         )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+            if hasattr(self, "map_location"):
+                self.map_location.setText("Мир ещё не создан.")
         extras = "; ".join(name + " ×1" for name, _ in self._session.extra_items)
         self.inventory_label.setText(
             "Инвентарь: " + inventory_text(world) + ("; " + extras if extras else "")
@@ -460,7 +477,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             "О программе и лицензии",
             "DND-NCFU · Хроники забытых королевств\nВерсия 1R · Автор проекта: sayferst\n"
             "Учебная RPG для ВКР по моделированию конфликтных ситуаций.\n"
-            "Python 3.12 · PySide6 · SQLite. Автономная игра, необязательный ИИ-мастер.\n\n"
+            "Python 3.12 · PySide6 · SQLite. Облачный ИИ-мастер, локальные сохранения.\n\n"
             + SRD_ATTRIBUTION
             + "\n\nАдаптация: вычислительная реализация модификаторов и базовых проверок "
             "характеристик, русский интерфейс. Сюжет и учебный профиль — авторские. "

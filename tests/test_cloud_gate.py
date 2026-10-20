@@ -35,3 +35,22 @@ def test_generated_campaign_has_no_legacy_people(qt_app, tmp_path):
         )
     finally:
         window.close()
+
+
+def test_cloud_world_failure_never_starts_an_offline_world(qt_app, tmp_path):
+    from test_adventure import hero
+
+    from rpg_vkr.ui.adventure_panel import generation_failed
+
+    session = hero()
+    window = MainWindow(session=session, saves=SaveSlots(tmp_path / "saves"))
+    try:
+        before = session.to_dict(), session.dice.checkpoint()
+        window._generating_session = session
+        generation_failed(window, "Сеть недоступна")
+        assert not session.generated_world
+        assert (session.to_dict(), session.dice.checkpoint()) == before
+        assert "Стражник" not in window.journal.toPlainText()
+        assert window._generating_session is None and window.action_input.isEnabled()
+    finally:
+        window.close()

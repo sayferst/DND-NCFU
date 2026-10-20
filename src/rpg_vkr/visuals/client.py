@@ -3,6 +3,7 @@
 import base64
 import ipaddress
 import json
+import re
 import socket
 import threading
 import urllib.error
@@ -123,10 +124,32 @@ class ImagesTransport:
         return self.read(url, maximum=MAX_BYTES, timeout=60)
 
     def generate(self, payload, key):
+        actual, receipt = None, ""
         try:
             data = json.loads(
                 self.read(self.base + "/images", key=key, payload=payload, timeout=180)
             )
+            usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
+            cost = data.get("cost_rub", usage.get("cost_rub"))
+            currency = "RUB" if cost is not None else data.get("currency", usage.get("currency"))
+            if cost is None:
+                cost = data.get("cost", usage.get("cost"))
+            billing = {}
+            try:
+                number = Decimal(str(cost))
+                if number.is_finite() and 0 <= number <= Decimal("1000000000000"):
+                    billing = {
+                        "amount": str(number),
+                        "currency": currency if currency in {"RUB", "USD", "EUR"} else "unknown",
+                    }
+                    if currency == "RUB":
+                        actual = int((number * 1000000).to_integral_value(rounding="ROUND_CEILING"))
+            except (ValueError, ArithmeticError):
+                pass
+            request_id = str(data.get("id", ""))
+            if not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", request_id) or key in request_id:
+                request_id = ""
+            receipt = json.dumps({"id": request_id, "billing": billing}, ensure_ascii=False)
             rows = data["data"]
             if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict):
                 raise ValueError
@@ -140,22 +163,17 @@ class ImagesTransport:
             else:
                 raise ValueError
             png = normalized_png(raw)
-            usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
-            cost = data.get("cost_rub", usage.get("cost_rub"))
-            if cost is None and data.get("currency") == "RUB":
-                cost = data.get("cost")
-            actual = None
-            if cost is not None and not isinstance(cost, bool):
-                number = Decimal(str(cost))
-                if number.is_finite() and number >= 0:
-                    actual = int((number * 1000000).to_integral_value(rounding="ROUND_CEILING"))
-            return png, actual, str(data.get("id", ""))[:128]
-        except ImageError:
+            return png, actual, receipt
+        except ImageError as error:
+            error.actual = actual
+            error.receipt = receipt
             raise
         except (ValueError, TypeError, KeyError, RecursionError, ArithmeticError):
-            raise ImageError(
+            error = ImageError(
                 "format", "Images API вернул неподдержанный формат; расход требует сверки."
-            ) from None
+            )
+            error.actual, error.receipt = actual, receipt
+            raise error from None
 
 
 class ImagesWorker(QObject):

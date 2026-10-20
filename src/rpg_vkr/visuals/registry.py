@@ -118,12 +118,19 @@ class VisualRegistry:
             if result.rowcount != 1:
                 raise ValueError("Запрос уже отправлен или отменён; повтор запрещён.")
 
-    def fail(self, identity, code, *, certainly_unpaid=False):
+    def fail(self, identity, code, *, certainly_unpaid=False, actual=None, receipt=""):
         with closing(self.connect()) as db, db:
             db.execute(
-                "UPDATE requests SET status=?,code=? WHERE id=? AND status IN "
+                "UPDATE requests SET status=?,code=?,actual_micros=?,receipt=? "
+                "WHERE id=? AND status IN "
                 "('reserved','submitted')",
-                ("failed_preflight" if certainly_unpaid else "uncertain", code[:80], identity),
+                (
+                    "failed_preflight" if certainly_unpaid else "uncertain",
+                    code[:80],
+                    actual,
+                    receipt[:256],
+                    identity,
+                ),
             )
 
     def reconcile(self, identity, actual):

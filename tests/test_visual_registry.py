@@ -62,3 +62,51 @@ def test_zero_budget_wrong_database_corruption_and_traversal(tmp_path):
         db.execute("CREATE TABLE evidence(x)")
     with pytest.raises(ValueError):
         VisualRegistry(folder)
+
+
+def test_second_reader_does_not_recover_live_request(tmp_path):
+    r = VisualRegistry(tmp_path)
+    identity = r.reserve("world", "object", "model", 10, 100)
+    r.mark_submitted(identity)
+    other = VisualRegistry(tmp_path)
+    assert other.ledger()[0]["status"] == "submitted"
+
+
+def test_exe_data_is_external_and_explicit_d_drive_override_wins(tmp_path, monkeypatch):
+    import sys
+
+    from rpg_vkr.storage.slots import default_save_directory
+
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.delenv("RPG_VKR_DATA_DIR", raising=False)
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "user"))
+    assert default_save_directory() == tmp_path / "user/DND-NCFU/saves"
+    monkeypatch.setenv("RPG_VKR_DATA_DIR", str(tmp_path / "D-drive"))
+    assert default_save_directory() == tmp_path / "D-drive/saves"
+
+
+def test_failed_download_keeps_known_billing(tmp_path):
+    r = VisualRegistry(tmp_path)
+    identity = r.reserve("A", "npc", "flux", 970000, 5000000)
+    r.mark_submitted(identity)
+    r.fail(identity, "download", actual=860000, receipt="provider-billing")
+    row = r.ledger()[0]
+    assert row["actual_micros"] == 860000 and row["status"] == "uncertain"
+    assert r.totals()["committed"] == 860000
+
+
+def test_atomic_month_budget_with_simultaneous_connections(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+
+    r = VisualRegistry(tmp_path)
+
+    def reserve(i):
+        try:
+            return r.reserve(str(i), "object", "model", 750000, 1000000)
+        except ValueError:
+            return None
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(reserve, range(2)))
+    assert sum(x is not None for x in results) == 1
+    assert r.totals()["committed"] == 750000

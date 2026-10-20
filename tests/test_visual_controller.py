@@ -144,3 +144,47 @@ def test_declined_confirmation_and_world_change_cost_nothing(visual, monkeypatch
     window._session = new_session()
     finish(controller)
     assert not fake.posts and not controller.registry.ledger()
+
+
+def test_unknown_price_or_over_flux_cap_never_posts(visual, monkeypatch):
+    window, controller, fake = visual
+    for price in ["5.01", "NaN"]:
+        monkeypatch.setattr(
+            fake,
+            "metadata",
+            lambda key, p=price: (SimpleNamespace(remaining=Decimal(100)), catalog(FLUX, p)),
+        )
+        controller.request_scene()
+        finish(controller)
+    assert not fake.posts and not controller.registry.ledger()
+
+
+def test_missing_reference_capability_never_silently_drops_identity(visual, monkeypatch):
+    window, controller, fake = visual
+    entry = next(e for e in knowledge_entries(window._session) if e.category == "people")
+    controller.request(entity_target(window._session, entry))
+    finish(controller)
+
+    def metadata(key):
+        data = catalog()
+        data["data"][0]["supported_parameters"] = ["size"]
+        return SimpleNamespace(remaining=Decimal(100)), data
+
+    monkeypatch.setattr(fake, "metadata", metadata)
+    controller.request_scene()
+    finish(controller)
+    assert len(fake.posts) == 1
+
+
+def test_missing_image_store_does_not_break_text_game(qt_app, tmp_path):
+    import sqlite3
+
+    root = tmp_path / "visuals"
+    root.mkdir()
+    with sqlite3.connect(root / "visuals.sqlite3") as db:
+        db.execute("CREATE TABLE unrelated(x)")
+    window = MainWindow(session=new_session(), saves=SaveSlots(tmp_path / "saves"))
+    try:
+        assert window._session.generated_world and not hasattr(window, "visuals")
+    finally:
+        window.close()

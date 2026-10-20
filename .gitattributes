@@ -21,3 +21,4 @@ docs/validation/linux-master-response-*-2026-10-20.txt -text whitespace=-blank-a
 docs/evals/master-response-2026-10-20/* -text whitespace=-blank-at-eol
 docs/research/ui/OWNER_UI_SPEC.md -text whitespace=-blank-at-eol
 docs/validation/ui-redesign-2026-10-20/*.txt -text whitespace=-blank-at-eol
+docs/validation/images-2026-10-20/*.txt -text whitespace=-blank-at-eol

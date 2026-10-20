@@ -3,12 +3,13 @@
 import json
 import re
 from functools import lru_cache
-from pathlib import Path
+
+from rpg_vkr.resources import RESOURCE_ROOT
 
 
 @lru_cache(maxsize=1)
 def cards():
-    path = Path(__file__).resolve().parents[3] / "data/narrative/genre-cards-v1.json"
+    path = RESOURCE_ROOT / "data/narrative/genre-cards-v1.json"
     return tuple(json.loads(path.read_text(encoding="utf-8"))["cards"])
 
 

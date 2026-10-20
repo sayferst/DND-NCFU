@@ -90,8 +90,9 @@ def test_compact_calculations_reuse_same_widget_without_mutating_state(qt_app, t
 def test_compact_chronicles_filters_and_expandable_card(qt_app, tmp_path):
     from PySide6.QtCore import QTimer
     from PySide6.QtWidgets import QTextBrowser
+    from response_cases import new_session
 
-    window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+    window = MainWindow(session=new_session(), saves=SaveSlots(tmp_path / "saves"))
     window.resize(640, 620)
     window.show()
     window.open_section("Хроники мира")

@@ -1,0 +1,27 @@
+Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+Ignoring macholib: markers 'sys_platform == "darwin"' don't match your environment
+Ignoring pefile: markers 'sys_platform == "win32"' don't match your environment
+Ignoring pywin32-ctypes: markers 'sys_platform == "win32"' don't match your environment
+Collecting altgraph==0.17.5 (from -r requirements-build.lock (line 3))
+  Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+Requirement already satisfied: iniconfig==2.3.1 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 15)) (2.3.1)
+Requirement already satisfied: packaging==26.3 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 25)) (26.3)
+Requirement already satisfied: pluggy==1.7.0 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 37)) (1.7.0)
+Requirement already satisfied: pygments==2.21.0 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 43)) (2.21.0)
+Collecting pyinstaller==6.16.0 (from -r requirements-build.lock (line 49))
+  Downloading pyinstaller-6.16.0-py3-none-manylinux2014_x86_64.whl (733 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 733.8/733.8 kB 3.4 MB/s eta 0:00:00
+Collecting pyinstaller-hooks-contrib==2026.8 (from -r requirements-build.lock (line 63))
+  Downloading pyinstaller_hooks_contrib-2026.8-py3-none-any.whl (462 kB)
+Requirement already satisfied: pyside6-essentials==6.10.1 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 67)) (6.10.1)
+Requirement already satisfied: pytest==8.4.2 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 74)) (8.4.2)
+Requirement already satisfied: ruff==0.14.1 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 82)) (0.14.1)
+Collecting setuptools==84.2.0 (from -r requirements-build.lock (line 103))
+  Downloading setuptools-84.2.0-py3-none-any.whl (875 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 875.8/875.8 kB 3.2 MB/s eta 0:00:00
+Requirement already satisfied: shiboken6==6.10.1 in ./.venv/lib/python3.12/site-packages (from -r requirements-build.lock (line 107)) (6.10.1)
+Installing collected packages: altgraph, setuptools, pyinstaller-hooks-contrib, pyinstaller
+Successfully installed altgraph-0.17.5 pyinstaller-6.16.0 pyinstaller-hooks-contrib-2026.8 setuptools-84.2.0
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip

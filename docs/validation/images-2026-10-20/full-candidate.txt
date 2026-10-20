@@ -1,0 +1,1530 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 1046 items
+
+tests/test_adventure.py ...................                              [  1%]
+tests/test_adventure_consistency.py ........                             [  2%]
+tests/test_adventure_ui.py F..........F                                  [  3%]
+tests/test_catalog.py ...............................                    [  6%]
+tests/test_catalog_ui.py .........                                       [  7%]
+tests/test_character.py ........................                         [  9%]
+tests/test_character_dialog.py ...                                       [ 10%]
+tests/test_chat_intents.py ...................                           [ 11%]
+tests/test_chronicles.py ............F.                                  [ 13%]
+tests/test_cloud_gate.py F.                                              [ 13%]
+tests/test_combat.py .......................                             [ 15%]
+tests/test_combat_storage.py ..............                              [ 17%]
+tests/test_combat_ui.py ......                                           [ 17%]
+tests/test_conversation_revision.py ........................             [ 19%]
+tests/test_creation_and_roles.py ......                                  [ 20%]
+tests/test_dialogue.py .............                                     [ 21%]
+tests/test_dice.py ...                                                   [ 21%]
+tests/test_environment.py ...                                            [ 22%]
+tests/test_episode_panels.py F.............                              [ 23%]
+tests/test_fantasy_menu.py FFFFFF                                        [ 24%]
+tests/test_fixture_git_checkout.py ..                                    [ 24%]
+tests/test_fixture_repair.py ...........                                 [ 25%]
+tests/test_flash_settings.py ........F.........F                         [ 27%]
+tests/test_free_attempts.py .................................            [ 30%]
+tests/test_free_cloud.py .........                                       [ 31%]
+tests/test_images_client.py .........                                    [ 32%]
+tests/test_inspection.py ..............................                  [ 34%]
+tests/test_launch.py FFF                                                 [ 35%]
+tests/test_local_narrator.py ........................................... [ 39%]
+..................                                                       [ 41%]
+tests/test_master_campaign.py ..........................                 [ 43%]
+tests/test_master_configuration.py ...........                           [ 44%]
+tests/test_master_language_profiles.py ........                          [ 45%]
+tests/test_mechanics_before_prose.py ................................... [ 48%]
+....                                                                     [ 49%]
+tests/test_model_metrics.py ......                                       [ 49%]
+tests/test_offline.py ..........                                         [ 50%]
+tests/test_plain_master.py .............F...........                     [ 53%]
+tests/test_presentation.py .................                             [ 54%]
+tests/test_progression.py ......................................         [ 58%]
+tests/test_resolution_ui.py ............                                 [ 59%]
+tests/test_resource_ledger.py ..........................                 [ 61%]
+tests/test_response_contract.py ........................................ [ 65%]
+                                                                         [ 65%]
+tests/test_response_delivery.py ...........................              [ 68%]
+tests/test_routerai.py .......................................           [ 72%]
+tests/test_save_migration.py ..........                                  [ 73%]
+tests/test_save_slots.py ....................                            [ 74%]
+tests/test_scene_director.py .............................F              [ 77%]
+tests/test_semantic_challenges.py .............                          [ 79%]
+tests/test_session.py ....................                               [ 80%]
+tests/test_sqlite_lifecycle.py .........                                 [ 81%]
+tests/test_story_conversation_quality.py ................                [ 83%]
+tests/test_trade_context.py .........                                    [ 84%]
+tests/test_visual_commands.py .........                                  [ 85%]
+tests/test_visual_context.py .....                                       [ 85%]
+tests/test_visual_controller.py ......                                   [ 86%]
+tests/test_visual_policy.py ........                                     [ 86%]
+tests/test_visual_registry.py ....                                       [ 87%]
+tests/test_window.py .......................                             [ 89%]
+tests/test_windows_test_ids.py .                                         [ 89%]
+tests/test_workspace_tools.py .............                              [ 90%]
+tests/test_workspace_ui.py .......F.........F                            [ 92%]
+tests/test_world.py ..............................                       [ 95%]
+tests/test_world_agent_ui.py F.......                                    [ 96%]
+tests/test_world_memory.py ..................                            [ 97%]
+tests/test_world_transactions.py ......................                  [100%]
+
+=================================== FAILURES ===================================
+___ test_default_navigation_has_diary_and_no_permanent_shop_people_or_battle ___
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_default_navigation_has_di0')
+
+    def test_default_navigation_has_diary_and_no_permanent_shop_people_or_battle(qt_app, tmp_path):
+        from rpg_vkr.storage.slots import SaveSlots
+    
+>       window = MainWindow(session=Session(seed=1), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_adventure_ui.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x24505610) at 0x7f9be1557640>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+________ test_restart_can_recover_working_database_without_a_json_slot _________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_restart_can_recover_worki0')
+
+    def test_restart_can_recover_working_database_without_a_json_slot(qt_app, tmp_path):
+        from rpg_vkr.storage.campaigns import CampaignRepository
+        from rpg_vkr.storage.slots import SaveSlots
+    
+        session = started()
+        session.write_diary("Мост", "Встретить Рена у переправы", pinned=True)
+        CampaignRepository(tmp_path / "campaigns.sqlite3").sync(session)
+>       window = MainWindow(session=Session(seed=1), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_adventure_ui.py:245: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x2662c6d0) at 0x7f9be16bad40>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+__________________ test_export_cannot_create_a_fake_game_slot __________________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_export_cannot_create_a_fa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9be16fd4f0>
+
+    def test_export_cannot_create_a_fake_game_slot(qt_app, tmp_path, monkeypatch):
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_chronicles.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x258720f0) at 0x7f9be1075240>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+______________ test_offline_input_preserved_without_action_or_rng ______________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_offline_input_preserved_w0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9be120e390>
+
+    def test_offline_input_preserved_without_action_or_rng(qt_app, tmp_path, monkeypatch):
+        from PySide6.QtWidgets import QMessageBox
+    
+        calls = []
+        monkeypatch.setattr(QMessageBox, "information", lambda *a: calls.append(a))
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cloud_gate.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x26d58d30) at 0x7f9be1706c80>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+_____________ test_default_start_menu_and_resume_preserve_session ______________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x2c3dd420) at 0x7f9be11a8840>
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+
+    def test_default_start_menu_and_resume_preserve_session(window, qt_app):
+>       other = MainWindow(saves=window._saves)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_episode_panels.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x2ca3f1b0) at 0x7f9be1051340>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+___________ test_modern_menu_art_buttons_keyboard_and_layout[size0] ____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_modern_menu_art_buttons_k0')
+size = (640, 620)
+
+    @pytest.mark.parametrize("size", [(640, 620), (1280, 800), (1920, 1080)])
+    def test_modern_menu_art_buttons_keyboard_and_layout(qt_app, tmp_path, size):
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fantasy_menu.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x31c53090) at 0x7f9bdc1b6380>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+___________ test_modern_menu_art_buttons_keyboard_and_layout[size1] ____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_modern_menu_art_buttons_k1')
+size = (1280, 800)
+
+    @pytest.mark.parametrize("size", [(640, 620), (1280, 800), (1920, 1080)])
+    def test_modern_menu_art_buttons_keyboard_and_layout(qt_app, tmp_path, size):
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fantasy_menu.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x304a00b0) at 0x7f9bdc1f7a80>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+___________ test_modern_menu_art_buttons_keyboard_and_layout[size2] ____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_modern_menu_art_buttons_k2')
+size = (1920, 1080)
+
+    @pytest.mark.parametrize("size", [(640, 620), (1280, 800), (1920, 1080)])
+    def test_modern_menu_art_buttons_keyboard_and_layout(qt_app, tmp_path, size):
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fantasy_menu.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x31d80ac0) at 0x7f9bd7946080>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+____________ test_continue_returns_to_active_hero_without_mutation _____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_continue_returns_to_activ0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9bdc1a82f0>
+
+    def test_continue_returns_to_active_hero_without_mutation(qt_app, tmp_path, monkeypatch):
+        from rpg_vkr.domain.character import Character
+    
+        session = Session.create_hero(Character(name="Лея"), "scout", seed=42)
+>       window = MainWindow(session=session, saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fantasy_menu.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x32225e10) at 0x7f9bdc0be580>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+______ test_compact_calculations_reuse_same_widget_without_mutating_state ______
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_compact_calculations_reus0')
+
+    def test_compact_calculations_reuse_same_widget_without_mutating_state(qt_app, tmp_path):
+        from PySide6.QtCore import QTimer
+        from PySide6.QtWidgets import QDialog
+    
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fantasy_menu.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x31dba550) at 0x7f9bdc076c80>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+_____________ test_compact_chronicles_filters_and_expandable_card ______________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_compact_chronicles_filter0')
+
+    def test_compact_chronicles_filters_and_expandable_card(qt_app, tmp_path):
+        from PySide6.QtCore import QTimer
+        from PySide6.QtWidgets import QTextBrowser
+    
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fantasy_menu.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x322053a0) at 0x7f9bdc10c180>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+_______ test_restarting_without_key_preserves_menu_and_does_not_connect ________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_restarting_without_key_pr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9be12597f0>
+
+    def test_restarting_without_key_preserves_menu_and_does_not_connect(qt_app, tmp_path, monkeypatch):
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui.main_window import MainWindow
+    
+        monkeypatch.delenv("RPG_VKR_ROUTERAI_API_KEY", raising=False)
+        ConnectionPreferences("routerai", FLASH_MODEL, True, True).save(tmp_path / "ai-connection.json")
+>       window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_flash_settings.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x26751c30) at 0x7f9be140fb00>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+___________ test_restart_with_consented_env_key_checks_metadata_only ___________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x29ec43f0) at 0x7f9bdcab1a00>
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_restart_with_consented_en0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9be12525d0>
+
+    def test_restart_with_consented_env_key_checks_metadata_only(flash, qt_app, tmp_path, monkeypatch):
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui.main_window import MainWindow
+    
+        with router_server() as (url, requests):
+            configure(flash, monkeypatch, url)
+            directory = tmp_path / "restart"
+            ConnectionPreferences("routerai", FLASH_MODEL, True, True).save(
+                directory / "ai-connection.json"
+            )
+            monkeypatch.setenv("RPG_VKR_ROUTERAI_API_KEY", "routerai-test-key")
+>           restored = MainWindow(saves=SaveSlots(directory / "saves"))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_flash_settings.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x321f2830) at 0x7f9be1699840>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+________________ test_launcher_process_handles_action_and_exits ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_launcher_process_handles_0')
+
+    def test_launcher_process_handles_action_and_exits(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        # A separate process exercises the actual entry point, event loop and exit code.
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer, Qt
+    from PySide6.QtTest import QTest
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    
+    app = QApplication([])
+    def interact():
+        try:
+            windows = [w for w in app.topLevelWidgets() if isinstance(w, QMainWindow)]
+            assert len(windows) == 1
+            window = windows[0]
+            assert window.isVisible()
+            assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
+            window.resume_button.click()
+            if sys.argv[2] == 'save':
+                window.font_size.setValue(16)
+                window.theme_choice.setCurrentText('Тёмная')
+                window.action_input.setText('помочь')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.action_input.setText('бросить d20')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.action_input.setText('проверить силу')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                for command in ['взять поручение', 'идти на дорогу', 'исследовать дорогу',
+                                'идти на рынок', 'доставить корзину', 'подойти к торговцу',
+                                'купить бинт',
+                                'использовать бинт']:
+                    window.action_input.setText(command)
+                    QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.save_slot(1)
+            else:
+                assert window.font_size.value() == 16
+                assert window.journal.font().pointSize() == 16
+                assert window.theme_choice.currentText() == 'Тёмная'
+                window.load_slot(1)
+                assert 'Жительница благодарит' in window.journal.toPlainText()
+                assert 'Мастер: На кубике выпало ' in window.journal.toPlainText()
+                assert window.resolution_panel.isVisible()
+                assert 'Итого:' in window.roll_breakdown.toPlainText()
+                assert len(window._session.turns) == 11
+                assert window._session.world.quest == 'completed'
+                assert window._session.world.hp == 12
+                assert window._session.world.gold in (12, 14)
+                assert window._session.world.shop_stock == 2
+                assert 'Сила: 14 (+2)' == window.ability_labels['strength'].text()
+                window.action_input.setText('бросить d20')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                assert window._session.turns[-1].roll.index == 4
+                window.save_slot(2)
+            print('Launcher interaction verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    runpy.run_path(sys.argv[1], run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "user-data")
+        for phase in ("save", "load"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 61, in <module>
+E               File "<frozen runpy>", line 287, in run_path
+E               File "<frozen runpy>", line 98, in _run_module_code
+E               File "<frozen runpy>", line 88, in _run_code
+E               File "/workspace/DND-NCFU/scripts/run_game.py", line 15, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/workspace/DND-NCFU/scripts/run_game.py", line 11, in main
+E                 return run_app()
+E                        ^^^^^^^^^
+E               File "/workspace/DND-NCFU/src/rpg_vkr/app.py", line 13, in main
+E                 window = MainWindow()
+E                          ^^^^^^^^^^^^
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/main_window.py", line 144, in __init__
+E                 self._refresh_character()
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/main_window.py", line 332, in _refresh_character
+E                 self.map_location.setText("Мир ещё не создан.")
+E                 ^^^^^^^^^^^^^^^^^
+E             AttributeError: 'MainWindow' object has no attribute 'map_location'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', '\nimport runpy\nimport sys\nimport traceback\nfr...ир ещё не создан.")\n    ^^^^^^^^^^^^^^^^^\nAttributeError: \'MainWindow\' object has no attribute \'map_location\'\n').returncode
+
+tests/test_launch.py:86: AssertionError
+_______________ test_real_creator_modal_progression_and_restart ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_real_creator_modal_progre0')
+
+    def test_real_creator_modal_progression_and_restart(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    
+    def fill_creator():
+        try:
+            from rpg_vkr.ui.creation_dialog import CreationDialog
+            dialog = app.activeModalWidget()
+            assert isinstance(dialog, CreationDialog)
+            dialog.name_input.setText('Мира')
+            dialog.class_choice.setCurrentIndex(0)
+            dialog.generate_world.setChecked(False)  # Preserve the original progression scenario.
+            dialog.apply_recommended()
+            dialog.accept()
+        except Exception:
+            traceback.print_exc()
+            if app.activeModalWidget():
+                app.activeModalWidget().reject()
+            app.exit(1)
+    
+    def interact():
+        try:
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            if sys.argv[2] == 'create':
+                QTimer.singleShot(0, fill_creator)
+                window.new_character()
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.enabled
+                assert not window.edit_character_button.isEnabled()
+                window.cart_button.click()
+                window.study_button.click()
+                window._run_command('идти на дорогу')
+                window.quick_buttons['исследовать дорогу'].click()
+                assert window._session.progress.level == 2
+                assert len(window._session.progress.events) == 3
+                assert window._session.world.max_hp == 14
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.level == 2
+                assert window._session.world.max_hp == 14
+                assert len(window._session.progress.events) == 3
+                assert 'Мира' in window.resource_label.text()
+                assert 'уровень 2' in window.progress_label.text()
+                assert 'Учебный меч' in window.inventory_label.text()
+                assert 'Развитие:' in window.journal.toPlainText()
+                assert not window.study_button.isEnabled()
+                xp = window._session.progress.xp
+                window._run_command('изучить учебник')
+                assert window._session.progress.xp == xp
+                window._run_command('бросить d20')
+                assert window._session.turns[-1].roll.index == 3
+                window.save_slot(2)
+            print('Created hero restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    runpy.run_path(sys.argv[1], run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "created-data")
+        for phase in ("create", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 67, in <module>
+E               File "<frozen runpy>", line 287, in run_path
+E               File "<frozen runpy>", line 98, in _run_module_code
+E               File "<frozen runpy>", line 88, in _run_code
+E               File "/workspace/DND-NCFU/scripts/run_game.py", line 15, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/workspace/DND-NCFU/scripts/run_game.py", line 11, in main
+E                 return run_app()
+E                        ^^^^^^^^^
+E               File "/workspace/DND-NCFU/src/rpg_vkr/app.py", line 13, in main
+E                 window = MainWindow()
+E                          ^^^^^^^^^^^^
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/main_window.py", line 144, in __init__
+E                 self._refresh_character()
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/main_window.py", line 332, in _refresh_character
+E                 self.map_location.setText("Мир ещё не создан.")
+E                 ^^^^^^^^^^^^^^^^^
+E             AttributeError: 'MainWindow' object has no attribute 'map_location'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr...ир ещё не создан.")\n    ^^^^^^^^^^^^^^^^^\nAttributeError: \'MainWindow\' object has no attribute \'map_location\'\n').returncode
+
+tests/test_launch.py:172: AssertionError
+__________ test_real_combat_save_restart_and_multi_roll_continuation ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_real_combat_save_restart_0')
+
+    def test_real_combat_save_restart_and_multi_roll_continuation(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    def interact():
+        try:
+            from rpg_vkr.application import Session
+            from rpg_vkr.domain.character import ABILITY_NAMES, Character
+            from rpg_vkr.domain.progression import ARCHETYPES
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            if sys.argv[2] == 'fight':
+                character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
+                                      ARCHETYPES['fighter'].scores, strict=True)))
+                window._session = Session.create_hero(character, 'fighter', seed=5)
+                window._refresh_character()
+                window._render_journal()
+                window._run_command('изучить учебник')
+                window._run_command('идти на дорогу')
+                window.open_section('Схватка')
+                assert window._encounter_dialog.isVisible()
+                assert window.combat_targets.currentData() == 'wolf'
+                window.combat_stealth.click()
+                assert window._session.combat.surprise
+                assert window.resolution_panel.isVisible()
+                assert '20 + 1 = 21' in window.roll_breakdown.toPlainText()
+                from rpg_vkr.narrative.context import build_frame
+                from rpg_vkr.narrative.records import Narration
+                frame = build_frame(window._session)
+                window._session.add_narration(Narration(3, 'local-test:1',
+                    'Вы приближаетесь к волку незамеченным.', frame.fingerprint))
+                window._render_journal()
+                assert len(window._session.memory.events) == 3
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.combat.surprise
+                assert len(window._session.memory.events) == 3
+                assert 'Вы приближаетесь к волку незамеченным.' in window.journal.toPlainText()
+                assert not window.enable_local_narrator.isChecked()
+                assert not window.ollama.busy
+                colour = window.journal.actor_colour('wolf')
+                assert colour == window.journal.highlighter.colour('hostile')
+                assert colour.name() == '#ff737d'  # Modern default theme is dark.
+                window.open_section('Схватка')
+                window.combat_attack.click()
+                assert window._session.combat.actor('wolf').hp == 0
+                assert 'Скрытая атака ×2 · урон 16' in window.journal.toPlainText()
+                assert '=' not in window.journal.toPlainText()
+                assert '(6 + 2) × 2 = 16' in window.roll_breakdown.toPlainText()
+                assert window._session.progress.level == 2
+                assert window._session.world.hp == 12
+                assert window._session.world.max_hp == 14
+                assert 'Бросков в сессии: 3' in window.roll_summary.text()
+                assert window.journal.font().bold()
+                assert window.journal.font().pointSize() == 13
+                window._run_command('бросить d20')
+                assert window._session.turns[-1].roll.value == 17
+                window.save_slot(2)
+            print('Combat restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    runpy.run_path(sys.argv[1], run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "combat-data")
+        for phase in ("fight", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 69, in <module>
+E               File "<frozen runpy>", line 287, in run_path
+E               File "<frozen runpy>", line 98, in _run_module_code
+E               File "<frozen runpy>", line 88, in _run_code
+E               File "/workspace/DND-NCFU/scripts/run_game.py", line 15, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/workspace/DND-NCFU/scripts/run_game.py", line 11, in main
+E                 return run_app()
+E                        ^^^^^^^^^
+E               File "/workspace/DND-NCFU/src/rpg_vkr/app.py", line 13, in main
+E                 window = MainWindow()
+E                          ^^^^^^^^^^^^
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/main_window.py", line 144, in __init__
+E                 self._refresh_character()
+E               File "/workspace/DND-NCFU/src/rpg_vkr/ui/main_window.py", line 332, in _refresh_character
+E                 self.map_location.setText("Мир ещё не создан.")
+E                 ^^^^^^^^^^^^^^^^^
+E             AttributeError: 'MainWindow' object has no attribute 'map_location'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr...ир ещё не создан.")\n    ^^^^^^^^^^^^^^^^^\nAttributeError: \'MainWindow\' object has no attribute \'map_location\'\n').returncode
+
+tests/test_launch.py:260: AssertionError
+____________ test_no_manual_mode_or_game_action_buttons_in_live_ui _____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_no_manual_mode_or_game_ac0')
+
+    def test_no_manual_mode_or_game_action_buttons_in_live_ui(qt_app, tmp_path):
+>       window = MainWindow(session=Session(seed=42), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_plain_master.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x2b2be490) at 0x7f9be1165300>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+___________________ test_new_window_defaults_to_scene_master ___________________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_new_window_defaults_to_sc0')
+
+    def test_new_window_defaults_to_scene_master(qt_app, tmp_path):
+        from rpg_vkr.ui.main_window import MainWindow
+    
+>       widget = MainWindow(session=Session(seed=42), saves=SaveSlots(tmp_path / "slots"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_scene_director.py:276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x286ca0f0) at 0x7f9bdca73d00>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+________ test_reading_preferences_persist_without_touching_slot_or_game ________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x37d65720) at 0x7f9bde2e7880>
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+
+    def test_reading_preferences_persist_without_touching_slot_or_game(window, qt_app):
+        window.save_slot(1)
+        path = window._saves.directory / "slot-1.json"
+        saved = path.read_bytes()
+        before = window._session.to_dict()
+        window.font_size.setValue(17)
+        window.theme_choice.setCurrentText("Тёмная")
+        assert window.journal.font().pointSize() == 17
+        assert load_preferences(window._preferences_path) == (ReadingPreferences(17, "Тёмная"), "")
+>       reopened = MainWindow(saves=window._saves)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workspace_ui.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x384050c0) at 0x7f9bde4b8cc0>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+________ test_bad_preferences_startup_reports_fallback_and_keeps_bytes _________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x3bbefba0) at 0x7f9bde1188c0>
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+
+    def test_bad_preferences_startup_reports_fallback_and_keeps_bytes(window, qt_app):
+        window._preferences_path.write_text("{broken", encoding="utf-8")
+>       reopened = MainWindow(saves=window._saves)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workspace_ui.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x3bd225c0) at 0x7f9bde0f3480>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+________ test_live_ui_enables_the_world_agent_without_starting_network _________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x24daae40) at 0x7f9be8594740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-204/test_live_ui_enables_the_world0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9bde2f54f0>
+
+    def test_live_ui_enables_the_world_agent_without_starting_network(qt_app, tmp_path, monkeypatch):
+>       window = MainWindow(session=Session(seed=5), saves=SaveSlots(tmp_path))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_agent_ui.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:144: in __init__
+    self._refresh_character()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.ui.main_window.MainWindow(0x3be46b90) at 0x7f9bddff5800>
+
+    def _refresh_character(self) -> None:
+        self._refresh_workspace()
+        self._refresh_episode_panels()
+        character = self._session.character
+        world = self._session.world
+        if (
+            self.hero_description_view.toPlainText()
+            != self._session.campaign.raw_player_description
+        ):
+            self.hero_description_view.setPlainText(self._session.campaign.raw_player_description)
+        self.hero_description_view.setVisible(bool(self._session.campaign.raw_player_description))
+        self.character_group.setTitle(
+            f"Персонаж: {character.name} · "
+            + ("герой" if self._session.progress.enabled else "песочница")
+        )
+        self.progress_label.setText(describe_progress(self._session.progress))
+        self.edit_character_button.setEnabled(
+            not self._session.progress.enabled
+            and self._session.combat.active is None
+            and world.hp > 0
+        )
+        self.edit_character_button.setToolTip(
+            "Созданный герой развивается действиями; "
+            "свободный редактор — только для старой песочницы."
+        )
+        if hasattr(self, "journal"):
+            self.journal.hero_name = character.name
+        draft = not self._legacy_controls and not self._session.generated_world and not self._session.turns
+        self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
+        self.resource_label.setText(
+            f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
+            f"бинты {world.bandages} · {self._session.current_place_name}"
+        )
+        if draft:
+            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+>           self.map_location.setText("Мир ещё не создан.")
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'MainWindow' object has no attribute 'map_location'
+
+src/rpg_vkr/ui/main_window.py:332: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_adventure_ui.py::test_default_navigation_has_diary_and_no_permanent_shop_people_or_battle
+FAILED tests/test_adventure_ui.py::test_restart_can_recover_working_database_without_a_json_slot
+FAILED tests/test_chronicles.py::test_export_cannot_create_a_fake_game_slot
+FAILED tests/test_cloud_gate.py::test_offline_input_preserved_without_action_or_rng
+FAILED tests/test_episode_panels.py::test_default_start_menu_and_resume_preserve_session
+FAILED tests/test_fantasy_menu.py::test_modern_menu_art_buttons_keyboard_and_layout[size0]
+FAILED tests/test_fantasy_menu.py::test_modern_menu_art_buttons_keyboard_and_layout[size1]
+FAILED tests/test_fantasy_menu.py::test_modern_menu_art_buttons_keyboard_and_layout[size2]
+FAILED tests/test_fantasy_menu.py::test_continue_returns_to_active_hero_without_mutation
+FAILED tests/test_fantasy_menu.py::test_compact_calculations_reuse_same_widget_without_mutating_state
+FAILED tests/test_fantasy_menu.py::test_compact_chronicles_filters_and_expandable_card
+FAILED tests/test_flash_settings.py::test_restarting_without_key_preserves_menu_and_does_not_connect
+FAILED tests/test_flash_settings.py::test_restart_with_consented_env_key_checks_metadata_only
+FAILED tests/test_launch.py::test_launcher_process_handles_action_and_exits
+FAILED tests/test_launch.py::test_real_creator_modal_progression_and_restart
+FAILED tests/test_launch.py::test_real_combat_save_restart_and_multi_roll_continuation
+FAILED tests/test_plain_master.py::test_no_manual_mode_or_game_action_buttons_in_live_ui
+FAILED tests/test_scene_director.py::test_new_window_defaults_to_scene_master
+FAILED tests/test_workspace_ui.py::test_reading_preferences_persist_without_touching_slot_or_game
+FAILED tests/test_workspace_ui.py::test_bad_preferences_startup_reports_fallback_and_keeps_bytes
+FAILED tests/test_world_agent_ui.py::test_live_ui_enables_the_world_agent_without_starting_network
+================== 21 failed, 1025 passed in 93.85s (0:01:33) ==================

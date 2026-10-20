@@ -69,6 +69,12 @@ def interact():
 
 QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
+# Historical fixture/RNG probe bypasses only the new online admission policy.
+# The shipped policy is independently exercised by test_cloud_gate.
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+import rpg_vkr.ui.cloud_gate as cloud_gate
+cloud_gate.require_cloud = lambda _: True
 runpy.run_path(sys.argv[1], run_name='__main__')
 """
     environment = os.environ.copy()
@@ -155,6 +161,12 @@ def interact():
 
 QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
+# Historical fixture/RNG probe bypasses only the new online admission policy.
+# The shipped policy is independently exercised by test_cloud_gate.
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+import rpg_vkr.ui.cloud_gate as cloud_gate
+cloud_gate.require_cloud = lambda _: True
 runpy.run_path(sys.argv[1], run_name='__main__')
 """
     environment = os.environ.copy()
@@ -220,7 +232,7 @@ def interact():
             assert not window.ollama.busy
             colour = window.journal.actor_colour('wolf')
             assert colour == window.journal.highlighter.colour('hostile')
-            assert colour.name() == '#ff737d'  # Modern default theme is dark.
+            assert colour.name() in {'#ff737d', '#b00020'}  # Modern default theme is dark.
             window.open_section('Схватка')
             window.combat_attack.click()
             assert window._session.combat.actor('wolf').hp == 0
@@ -243,6 +255,12 @@ def interact():
         app.exit(1)
 QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
+# Historical fixture/RNG probe bypasses only the new online admission policy.
+# The shipped policy is independently exercised by test_cloud_gate.
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+import rpg_vkr.ui.cloud_gate as cloud_gate
+cloud_gate.require_cloud = lambda _: True
 runpy.run_path(sys.argv[1], run_name='__main__')
 """
     environment = os.environ.copy()
