@@ -2,7 +2,7 @@
 
 import os
 import sys
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 RESOURCE_ROOT = (
     Path(sys._MEIPASS) if getattr(sys, "frozen", False) else Path(__file__).resolve().parents[2]
@@ -19,9 +19,12 @@ REQUIRED_RESOURCES = (
 
 
 def resource_path(relative):
-    path = Path(relative)
-    if not path.parts or path.is_absolute() or ".." in path.parts:
+    # Apply the target platform's root/drive rules on every build host. On
+    # Windows, '/absolute' has a root but is_absolute() is False without a drive.
+    candidate = PureWindowsPath(relative)
+    if not candidate.parts or candidate.anchor or ".." in candidate.parts:
         raise ValueError("Resource path must be relative to the application.")
+    path = Path(*candidate.parts)
     if not getattr(sys, "frozen", False) and path.parts[0] == "rpg_vkr":
         return RESOURCE_ROOT / "src" / path
     return RESOURCE_ROOT / path

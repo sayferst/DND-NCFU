@@ -1,0 +1,76 @@
+56 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.8
+57 INFO: Python: 3.12.14
+58 INFO: Platform: Linux-6.18.55-x86_64-with-glibc2.41
+58 INFO: Python environment: /workspace/DND-NCFU/.venv
+59 INFO: Removing temporary files and cleaning cache in /home/agent/.cache/pyinstaller
+310 INFO: Module search paths (PYTHONPATH):
+['/workspace/DND-NCFU/src',
+ '/workspace/DND-NCFU/src',
+ '/workspace/DND-NCFU',
+ '/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python312.zip',
+ '/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12',
+ '/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload',
+ '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages',
+ '/workspace/DND-NCFU/scripts',
+ '/workspace/DND-NCFU/src']
+425 INFO: Appending 'datas' from .spec
+425 INFO: checking Analysis
+425 INFO: Building Analysis because Analysis-00.toc is non existent
+425 INFO: Looking for Python shared library...
+432 INFO: Using Python shared library: /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/libpython3.12.so.1.0
+432 INFO: Running Analysis Analysis-00.toc
+432 INFO: Target bytecode optimization level: 0
+432 INFO: Initializing module dependency graph...
+433 INFO: Initializing module graph hook caches...
+438 INFO: Analyzing modules for base_library.zip ...
+1096 INFO: Processing standard module hook 'hook-encodings.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+2406 INFO: Processing standard module hook 'hook-pickle.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3127 INFO: Processing standard module hook 'hook-heapq.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3442 INFO: Caching module dependency graph...
+3473 INFO: Analyzing /workspace/DND-NCFU/scripts/run_game.py
+3532 INFO: Processing standard module hook 'hook-platform.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3540 INFO: Processing standard module hook 'hook-PySide6.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3651 INFO: Processing standard module hook 'hook-shiboken6.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3780 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+4571 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+5292 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+6385 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+6955 INFO: Processing standard module hook 'hook-_ctypes.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+7376 INFO: Processing standard module hook 'hook-difflib.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+7404 INFO: Processing standard module hook 'hook-sqlite3.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+8212 INFO: Analyzing hidden import 'rpg_vkr.domain.conflict'
+8215 INFO: Processing module hooks (post-graph stage)...
+8246 INFO: Processing standard module hook 'hook-PySide6.QtDBus.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+8376 INFO: Performing binary vs. data reclassification (165 entries)
+8483 INFO: Looking for ctypes DLLs
+8489 INFO: Analyzing run-time hooks ...
+8490 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+8492 INFO: Including run-time hook 'pyi_rth_pyside6.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+8494 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks/pre_find_module_path'
+8495 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+8502 INFO: Creating base_library.zip...
+8516 INFO: Looking for dynamic libraries
+9594 WARNING: Library not found: could not resolve 'libtiff.so.5', dependency of '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PySide6/Qt/plugins/imageformats/libqtiff.so'.
+9605 INFO: Warnings written to /tmp/dnd-resource-path-20261020/work/DND-NCFU/warn-DND-NCFU.txt
+9617 INFO: Graph cross-reference written to /tmp/dnd-resource-path-20261020/work/DND-NCFU/xref-DND-NCFU.html
+9631 INFO: checking PYZ
+9631 INFO: Building PYZ because PYZ-00.toc is non existent
+9631 INFO: Building PYZ (ZlibArchive) /tmp/dnd-resource-path-20261020/work/DND-NCFU/PYZ-00.pyz
+9879 INFO: Building PYZ (ZlibArchive) /tmp/dnd-resource-path-20261020/work/DND-NCFU/PYZ-00.pyz completed successfully.
+9882 WARNING: Ignoring icon; supported only on Windows and macOS!
+9890 INFO: checking PKG
+9890 INFO: Building PKG because PKG-00.toc is non existent
+9890 INFO: Building PKG (CArchive) DND-NCFU.pkg
+9900 INFO: Building PKG (CArchive) DND-NCFU.pkg completed successfully.
+9901 INFO: Bootloader /workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+9901 INFO: checking EXE
+9901 INFO: Building EXE because EXE-00.toc is non existent
+9901 INFO: Building EXE from EXE-00.toc
+9901 INFO: Copying bootloader EXE to /tmp/dnd-resource-path-20261020/work/DND-NCFU/DND-NCFU
+9901 INFO: Appending PKG archive to custom ELF section in EXE
+9906 INFO: Building EXE from EXE-00.toc completed successfully.
+9908 INFO: checking COLLECT
+9908 INFO: Building COLLECT because COLLECT-00.toc is non existent
+9908 INFO: Building COLLECT COLLECT-00.toc
+10248 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+10251 INFO: Build complete! The results are available in: /tmp/dnd-resource-path-20261020/dist

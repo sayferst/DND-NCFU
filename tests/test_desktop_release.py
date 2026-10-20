@@ -53,10 +53,40 @@ def test_resource_probe_ignores_user_override_and_does_not_touch_saves(
         write_report(destination, report)
 
 
-@pytest.mark.parametrize("relative", ["../outside", "data/../../outside", "/absolute"])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "../outside",
+        "data/../../outside",
+        "/absolute",
+        r"\outside",
+        r"C:\outside",
+        "C:relative",
+        r"\\server\share\file",
+        r"\\?\C:\outside",
+        r"data\..\outside",
+        "",
+        ".",
+    ],
+)
 def test_resource_paths_cannot_escape_application(relative):
     with pytest.raises(ValueError):
         resources.resource_path(relative)
+
+
+@pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+def test_resource_separators_resolve_to_the_same_existing_file(relative):
+    path = resources.resource_path(relative)
+    assert path.is_file()
+    assert resources.resource_path(relative.replace("/", "\\")) == path
+
+
+def test_frozen_resource_paths_use_bundle_root(tmp_path, monkeypatch):
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(resources, "RESOURCE_ROOT", tmp_path)
+    assert resources.resource_path(r"rpg_vkr\ui\assets\DND-NCFU.ico") == (
+        tmp_path / "rpg_vkr" / "ui" / "assets" / "DND-NCFU.ico"
+    )
 
 
 def test_missing_resource_is_a_real_error_without_asserts(qt_app, monkeypatch, tmp_path):

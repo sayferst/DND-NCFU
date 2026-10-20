@@ -1,0 +1,309 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 40 items / 21 deselected / 19 selected
+
+tests/test_desktop_release.py ...FFFFFF..FFFFFFFF                        [100%]
+
+=================================== FAILURES ===================================
+___________ test_resource_paths_cannot_escape_application[\\outside] ___________
+
+relative = '\\outside'
+
+    @pytest.mark.parametrize(
+        "relative",
+        [
+            "../outside",
+            "data/../../outside",
+            "/absolute",
+            r"\outside",
+            r"C:\outside",
+            "C:relative",
+            r"\\server\share\file",
+            r"\\?\C:\outside",
+            r"data\..\outside",
+            "",
+            ".",
+        ],
+    )
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_desktop_release.py:73: Failed
+__________ test_resource_paths_cannot_escape_application[C:\\outside] __________
+
+relative = 'C:\\outside'
+
+    @pytest.mark.parametrize(
+        "relative",
+        [
+            "../outside",
+            "data/../../outside",
+            "/absolute",
+            r"\outside",
+            r"C:\outside",
+            "C:relative",
+            r"\\server\share\file",
+            r"\\?\C:\outside",
+            r"data\..\outside",
+            "",
+            ".",
+        ],
+    )
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_desktop_release.py:73: Failed
+__________ test_resource_paths_cannot_escape_application[C:relative] ___________
+
+relative = 'C:relative'
+
+    @pytest.mark.parametrize(
+        "relative",
+        [
+            "../outside",
+            "data/../../outside",
+            "/absolute",
+            r"\outside",
+            r"C:\outside",
+            "C:relative",
+            r"\\server\share\file",
+            r"\\?\C:\outside",
+            r"data\..\outside",
+            "",
+            ".",
+        ],
+    )
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_desktop_release.py:73: Failed
+____ test_resource_paths_cannot_escape_application[\\\\server\\share\\file] ____
+
+relative = '\\\\server\\share\\file'
+
+    @pytest.mark.parametrize(
+        "relative",
+        [
+            "../outside",
+            "data/../../outside",
+            "/absolute",
+            r"\outside",
+            r"C:\outside",
+            "C:relative",
+            r"\\server\share\file",
+            r"\\?\C:\outside",
+            r"data\..\outside",
+            "",
+            ".",
+        ],
+    )
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_desktop_release.py:73: Failed
+______ test_resource_paths_cannot_escape_application[\\\\?\\C:\\outside] _______
+
+relative = '\\\\?\\C:\\outside'
+
+    @pytest.mark.parametrize(
+        "relative",
+        [
+            "../outside",
+            "data/../../outside",
+            "/absolute",
+            r"\outside",
+            r"C:\outside",
+            "C:relative",
+            r"\\server\share\file",
+            r"\\?\C:\outside",
+            r"data\..\outside",
+            "",
+            ".",
+        ],
+    )
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_desktop_release.py:73: Failed
+_______ test_resource_paths_cannot_escape_application[data\\..\\outside] _______
+
+relative = 'data\\..\\outside'
+
+    @pytest.mark.parametrize(
+        "relative",
+        [
+            "../outside",
+            "data/../../outside",
+            "/absolute",
+            r"\outside",
+            r"C:\outside",
+            "C:relative",
+            r"\\server\share\file",
+            r"\\?\C:\outside",
+            r"data\..\outside",
+            "",
+            ".",
+        ],
+    )
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_desktop_release.py:73: Failed
+_ test_resource_separators_resolve_to_the_same_existing_file[rpg_vkr/ui/assets/kingdom.png] _
+
+relative = 'rpg_vkr/ui/assets/kingdom.png'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/rpg_vkr\\ui\\assets\\kingdom.png') == PosixPath('/workspace/DND-NCFU/src/rpg_vkr/ui/assets/kingdom.png')
+E        +  where PosixPath('/workspace/DND-NCFU/rpg_vkr\\ui\\assets\\kingdom.png') = <function resource_path at 0x7fa5c0e6c040>('rpg_vkr\\ui\\assets\\kingdom.png')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'rpg_vkr\\ui\\assets\\kingdom.png' = <built-in method replace of str object at 0x7fa5c0f6a290>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f6a290> = 'rpg_vkr/ui/assets/kingdom.png'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+_ test_resource_separators_resolve_to_the_same_existing_file[rpg_vkr/ui/assets/DND-NCFU.png] _
+
+relative = 'rpg_vkr/ui/assets/DND-NCFU.png'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/rpg_vkr\\ui\\assets\\DND-NCFU.png') == PosixPath('/workspace/DND-NCFU/src/rpg_vkr/ui/assets/DND-NCFU.png')
+E        +  where PosixPath('/workspace/DND-NCFU/rpg_vkr\\ui\\assets\\DND-NCFU.png') = <function resource_path at 0x7fa5c0e6c040>('rpg_vkr\\ui\\assets\\DND-NCFU.png')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'rpg_vkr\\ui\\assets\\DND-NCFU.png' = <built-in method replace of str object at 0x7fa5c0f6a2e0>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f6a2e0> = 'rpg_vkr/ui/assets/DND-NCFU.png'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+_ test_resource_separators_resolve_to_the_same_existing_file[rpg_vkr/ui/assets/DND-NCFU.ico] _
+
+relative = 'rpg_vkr/ui/assets/DND-NCFU.ico'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/rpg_vkr\\ui\\assets\\DND-NCFU.ico') == PosixPath('/workspace/DND-NCFU/src/rpg_vkr/ui/assets/DND-NCFU.ico')
+E        +  where PosixPath('/workspace/DND-NCFU/rpg_vkr\\ui\\assets\\DND-NCFU.ico') = <function resource_path at 0x7fa5c0e6c040>('rpg_vkr\\ui\\assets\\DND-NCFU.ico')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'rpg_vkr\\ui\\assets\\DND-NCFU.ico' = <built-in method replace of str object at 0x7fa5c0f6a330>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f6a330> = 'rpg_vkr/ui/assets/DND-NCFU.ico'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+_ test_resource_separators_resolve_to_the_same_existing_file[data/catalog/seed-v1.json] _
+
+relative = 'data/catalog/seed-v1.json'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/data\\catalog\\seed-v1.json') == PosixPath('/workspace/DND-NCFU/data/catalog/seed-v1.json')
+E        +  where PosixPath('/workspace/DND-NCFU/data\\catalog\\seed-v1.json') = <function resource_path at 0x7fa5c0e6c040>('data\\catalog\\seed-v1.json')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'data\\catalog\\seed-v1.json' = <built-in method replace of str object at 0x7fa5c0f6a380>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f6a380> = 'data/catalog/seed-v1.json'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+_ test_resource_separators_resolve_to_the_same_existing_file[data/catalog/public-descriptions-v1.json] _
+
+relative = 'data/catalog/public-descriptions-v1.json'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/data\\catalog\\public-descriptions-v1.json') == PosixPath('/workspace/DND-NCFU/data/catalog/public-descriptions-v1.json')
+E        +  where PosixPath('/workspace/DND-NCFU/data\\catalog\\public-descriptions-v1.json') = <function resource_path at 0x7fa5c0e6c040>('data\\catalog\\public-descriptions-v1.json')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'data\\catalog\\public-descriptions-v1.json' = <built-in method replace of str object at 0x7fa5c0f50030>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f50030> = 'data/catalog/public-descriptions-v1.json'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+_ test_resource_separators_resolve_to_the_same_existing_file[data/narrative/genre-cards-v1.json] _
+
+relative = 'data/narrative/genre-cards-v1.json'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/data\\narrative\\genre-cards-v1.json') == PosixPath('/workspace/DND-NCFU/data/narrative/genre-cards-v1.json')
+E        +  where PosixPath('/workspace/DND-NCFU/data\\narrative\\genre-cards-v1.json') = <function resource_path at 0x7fa5c0e6c040>('data\\narrative\\genre-cards-v1.json')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'data\\narrative\\genre-cards-v1.json' = <built-in method replace of str object at 0x7fa5c0f6a3d0>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f6a3d0> = 'data/narrative/genre-cards-v1.json'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+_ test_resource_separators_resolve_to_the_same_existing_file[prompts/master_system_prompt.txt] _
+
+relative = 'prompts/master_system_prompt.txt'
+
+    @pytest.mark.parametrize("relative", resources.REQUIRED_RESOURCES)
+    def test_resource_separators_resolve_to_the_same_existing_file(relative):
+        path = resources.resource_path(relative)
+        assert path.is_file()
+>       assert resources.resource_path(relative.replace("/", "\\")) == path
+E       AssertionError: assert PosixPath('/workspace/DND-NCFU/prompts\\master_system_prompt.txt') == PosixPath('/workspace/DND-NCFU/prompts/master_system_prompt.txt')
+E        +  where PosixPath('/workspace/DND-NCFU/prompts\\master_system_prompt.txt') = <function resource_path at 0x7fa5c0e6c040>('prompts\\master_system_prompt.txt')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+E        +    and   'prompts\\master_system_prompt.txt' = <built-in method replace of str object at 0x7fa5c0f6a420>('/', '\\')
+E        +      where <built-in method replace of str object at 0x7fa5c0f6a420> = 'prompts/master_system_prompt.txt'.replace
+
+tests/test_desktop_release.py:81: AssertionError
+__________________ test_frozen_resource_paths_use_bundle_root __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-256/test_frozen_resource_paths_use0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa5bb3115e0>
+
+    def test_frozen_resource_paths_use_bundle_root(tmp_path, monkeypatch):
+        monkeypatch.setattr(sys, "frozen", True, raising=False)
+        monkeypatch.setattr(resources, "RESOURCE_ROOT", tmp_path)
+>       assert resources.resource_path(r"rpg_vkr\ui\assets\DND-NCFU.ico") == (
+            tmp_path / "rpg_vkr" / "ui" / "assets" / "DND-NCFU.ico"
+        )
+E       AssertionError: assert PosixPath('/tmp/pytest-of-agent/pytest-256/test_frozen_resource_paths_use0/rpg_vkr\\ui\\assets\\DND-NCFU.ico') == ((((PosixPath('/tmp/pytest-of-agent/pytest-256/test_frozen_resource_paths_use0') / 'rpg_vkr') / 'ui') / 'assets') / 'DND-NCFU.ico')
+E        +  where PosixPath('/tmp/pytest-of-agent/pytest-256/test_frozen_resource_paths_use0/rpg_vkr\\ui\\assets\\DND-NCFU.ico') = <function resource_path at 0x7fa5c0e6c040>('rpg_vkr\\ui\\assets\\DND-NCFU.ico')
+E        +    where <function resource_path at 0x7fa5c0e6c040> = resources.resource_path
+
+tests/test_desktop_release.py:87: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[\\outside]
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[C:\\outside]
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[C:relative]
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[\\\\server\\share\\file]
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[\\\\?\\C:\\outside]
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[data\\..\\outside]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[rpg_vkr/ui/assets/kingdom.png]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[rpg_vkr/ui/assets/DND-NCFU.png]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[rpg_vkr/ui/assets/DND-NCFU.ico]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[data/catalog/seed-v1.json]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[data/catalog/public-descriptions-v1.json]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[data/narrative/genre-cards-v1.json]
+FAILED tests/test_desktop_release.py::test_resource_separators_resolve_to_the_same_existing_file[prompts/master_system_prompt.txt]
+FAILED tests/test_desktop_release.py::test_frozen_resource_paths_use_bundle_root
+================= 14 failed, 5 passed, 21 deselected in 0.24s ==================

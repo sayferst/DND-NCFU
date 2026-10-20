@@ -1,0 +1,169 @@
+PS D:\Projects\DND-NCFU> Set-Location D:\Projects\DND-NCFU
+>> git pull --ff-only
+>> if ($LASTEXITCODE -ne 0) { throw 'Обновление остановлено.' }
+>> .\scripts\build_windows.cmd
+remote: Enumerating objects: 33, done.
+remote: Counting objects: 100% (33/33), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 18 (delta 15), reused 18 (delta 15), pack-reused 0 (from 0)
+Unpacking objects: 100% (18/18), 9.48 KiB | 103.00 KiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   e630fbe..a261dd7  setup/development-environment -> origin/setup/development-environment
+Updating e630fbe..a261dd7
+Fast-forward
+ .gitattributes                                     |   4 +
+ AGENTS.md                                          |  12 +
+ CHANGELOG.md                                       |   6 +
+ DECISIONS.md                                       |   7 +
+ KNOWN_ISSUES.md                                    |   8 +
+ LICENSES_AND_ATTRIBUTIONS.md                       |   6 +
+ PROJECT_STATUS.md                                  |   5 +
+ README.md                                          |   4 +
+ RESEARCH_LOG.md                                    |   9 +
+ TEST_PLAN.md                                       |   8 +
+ docs/WINDOWS_APP.md                                |  20 +-
+ .../validation/windows-build-policy-2026-10-20.txt | 271 +++++++++++++++++++++
+ scripts/build_windows.cmd                          |   5 +
+ 13 files changed, 360 insertions(+), 5 deletions(-)
+ create mode 100644 docs/validation/windows-build-policy-2026-10-20.txt
+ create mode 100644 scripts/build_windows.cmd
+Ignoring macholib: markers 'sys_platform == "darwin"' don't match your environment
+Collecting altgraph==0.17.5 (from -r requirements-build.lock (line 3))
+  Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+Requirement already satisfied: colorama==0.4.6 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 9)) (0.4.6)
+Requirement already satisfied: iniconfig==2.3.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 15)) (2.3.1)
+Requirement already satisfied: packaging==26.3 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 25)) (26.3)
+Collecting pefile==2023.2.7 (from -r requirements-build.lock (line 33))
+  Downloading pefile-2023.2.7-py3-none-any.whl (71 kB)
+Requirement already satisfied: pluggy==1.7.0 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 37)) (1.7.0)
+Requirement already satisfied: pygments==2.21.0 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 43)) (2.21.0)
+Collecting pyinstaller==6.16.0 (from -r requirements-build.lock (line 49))
+  Downloading pyinstaller-6.16.0-py3-none-win_amd64.whl (1.4 MB)
+     ---------------------------------------- 1.4/1.4 MB 334.3 kB/s eta 0:00:00
+Collecting pyinstaller-hooks-contrib==2026.8 (from -r requirements-build.lock (line 63))
+  Downloading pyinstaller_hooks_contrib-2026.8-py3-none-any.whl (462 kB)
+Requirement already satisfied: pyside6-essentials==6.10.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 67)) (6.10.1)
+Requirement already satisfied: pytest==8.4.2 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 74)) (8.4.2)
+Collecting pywin32-ctypes==0.2.3 (from -r requirements-build.lock (line 78))
+  Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+Requirement already satisfied: ruff==0.14.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 82)) (0.14.1)
+Collecting setuptools==84.2.0 (from -r requirements-build.lock (line 103))
+  Downloading setuptools-84.2.0-py3-none-any.whl (875 kB)
+     ---------------------------------------- 875.8/875.8 kB 130.9 kB/s eta 0:00:00
+Requirement already satisfied: shiboken6==6.10.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 107)) (6.10.1)
+Installing collected packages: altgraph, setuptools, pywin32-ctypes, pyinstaller-hooks-contrib, pefile, pyinstaller
+Successfully installed altgraph-0.17.5 pefile-2023.2.7 pyinstaller-6.16.0 pyinstaller-hooks-contrib-2026.8 pywin32-ctypes-0.2.3 setuptools-84.2.0
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip install --upgrade pip
+Already matches committed bytes: tests/fixtures/save-v15.json
+SHA-256 verified. Expected hashes and game saves were not changed.
+Platform: Windows AMD64
+Python: 3.12.10; SQLite: 3.49.1
+Running: git --version
+git version 2.56.0.windows.2
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+No broken requirements found.
+Running: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pytest
+=========================================================================== test session starts ===========================================================================
+platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+rootdir: D:\Projects\DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 1215 items
+
+tests\test_adventure.py ...................                                                                                                                          [  1%]
+tests\test_adventure_consistency.py ........                                                                                                                         [  2%]
+tests\test_adventure_ui.py ............                                                                                                                              [  3%]
+tests\test_artist_panel.py ......................                                                                                                                    [  5%]
+tests\test_catalog.py ...............................                                                                                                                [  7%]
+tests\test_catalog_image_prices.py .......................                                                                                                           [  9%]
+tests\test_catalog_ui.py .........                                                                                                                                   [ 10%]
+tests\test_character.py ........................                                                                                                                     [ 12%]
+tests\test_character_dialog.py ...                                                                                                                                   [ 12%]
+tests\test_chat_intents.py ...................                                                                                                                       [ 13%]
+tests\test_chronicles.py ..............                                                                                                                              [ 15%]
+tests\test_cloud_gate.py ...                                                                                                                                         [ 15%]
+tests\test_combat.py .......................                                                                                                                         [ 17%]
+tests\test_combat_storage.py ..............                                                                                                                          [ 18%]
+tests\test_combat_ui.py ......                                                                                                                                       [ 18%]
+tests\test_connection_metadata.py ..........                                                                                                                         [ 19%]
+tests\test_connection_revision.py ......................                                                                                                             [ 21%]
+tests\test_conversation_revision.py ........................                                                                                                         [ 23%]
+tests\test_creation_and_roles.py ......                                                                                                                              [ 24%]
+tests\test_desktop_release.py ....F...................                                                                                                               [ 26%]
+tests\test_dialogue.py .............                                                                                                                                 [ 27%]
+tests\test_dice.py ...                                                                                                                                               [ 27%]
+tests\test_environment.py ...                                                                                                                                        [ 27%]
+tests\test_episode_panels.py ..............                                                                                                                          [ 28%]
+tests\test_fantasy_menu.py ......                                                                                                                                    [ 29%]
+tests\test_fixture_git_checkout.py ..                                                                                                                                [ 29%]
+tests\test_fixture_repair.py ...........                                                                                                                             [ 30%]
+tests\test_flash_settings.py ...................                                                                                                                     [ 31%]
+tests\test_free_attempts.py .................................                                                                                                        [ 34%]
+tests\test_free_cloud.py .........                                                                                                                                   [ 35%]
+tests\test_images_client.py .........                                                                                                                                [ 36%]
+tests\test_images_contract_revision.py .........................................                                                                                     [ 39%]
+tests\test_inspection.py ..............................                                                                                                              [ 41%]
+tests\test_launch.py ...                                                                                                                                             [ 42%]
+tests\test_local_narrator.py .............................................................                                                                           [ 47%]
+tests\test_master_campaign.py ..........................                                                                                                             [ 49%]
+tests\test_master_configuration.py ...........                                                                                                                       [ 50%]
+tests\test_master_language_profiles.py ........                                                                                                                      [ 50%]
+tests\test_mechanics_before_prose.py .......................................                                                                                         [ 54%]
+tests\test_model_metrics.py ......                                                                                                                                   [ 54%]
+tests\test_object_descriptions.py ...................                                                                                                                [ 56%]
+tests\test_offline.py ..........                                                                                                                                     [ 56%]
+tests\test_plain_master.py .........................                                                                                                                 [ 59%]
+tests\test_presentation.py .................                                                                                                                         [ 60%]
+tests\test_progression.py ......................................                                                                                                     [ 63%]
+tests\test_resolution_ui.py ............                                                                                                                             [ 64%]
+tests\test_resource_ledger.py ..........................                                                                                                             [ 66%]
+tests\test_response_contract.py ........................................                                                                                             [ 69%]
+tests\test_response_delivery.py ...........................                                                                                                          [ 72%]
+tests\test_routerai.py .......................................                                                                                                       [ 75%]
+tests\test_save_migration.py ..........                                                                                                                              [ 76%]
+tests\test_save_slots.py ....................                                                                                                                        [ 77%]
+tests\test_scene_director.py ..............................                                                                                                          [ 80%]
+tests\test_semantic_challenges.py .............                                                                                                                      [ 81%]
+tests\test_session.py ....................                                                                                                                           [ 83%]
+tests\test_sqlite_lifecycle.py .........                                                                                                                             [ 83%]
+tests\test_story_conversation_quality.py ................                                                                                                            [ 85%]
+tests\test_trade_context.py .........                                                                                                                                [ 85%]
+tests\test_visual_commands.py .........                                                                                                                              [ 86%]
+tests\test_visual_context.py .....                                                                                                                                   [ 86%]
+tests\test_visual_controller.py .........                                                                                                                            [ 87%]
+tests\test_visual_policy.py ........                                                                                                                                 [ 88%]
+tests\test_visual_registry.py ........                                                                                                                               [ 89%]
+tests\test_window.py .......................                                                                                                                         [ 90%]
+tests\test_windows_test_ids.py .                                                                                                                                     [ 91%]
+tests\test_workspace_tools.py .............                                                                                                                          [ 92%]
+tests\test_workspace_ui.py ..................                                                                                                                        [ 93%]
+tests\test_world.py ..............................                                                                                                                   [ 96%]
+tests\test_world_agent_ui.py ........                                                                                                                                [ 96%]
+tests\test_world_memory.py ..................                                                                                                                        [ 98%]
+tests\test_world_transactions.py ......................                                                                                                              [100%]
+
+================================================================================ FAILURES =================================================================================
+________________________________________________________ test_resource_paths_cannot_escape_application[/absolute] _________________________________________________________
+
+relative = '/absolute'
+
+    @pytest.mark.parametrize("relative", ["../outside", "data/../../outside", "/absolute"])
+    def test_resource_paths_cannot_escape_application(relative):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\test_desktop_release.py:58: Failed
+========================================================================= short test summary info =========================================================================
+FAILED tests/test_desktop_release.py::test_resource_paths_cannot_escape_application[/absolute] - Failed: DID NOT RAISE <class 'ValueError'>
+=============================================================== 1 failed, 1214 passed in 275.80s (0:04:35) ================================================================
+Проверки не прошли. Сборка остановлена.
+D:\Projects\DND-NCFU\scripts\build_windows.ps1:20 знак:28
++ ... STEXITCODE -ne 0) { throw 'Проверки не прошли. Сборка остановлена.' }
++                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Проверки не прошли. Сборка остановлена.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Проверки не прошли. Сборка остановлена.
+
+PS D:\Projects\DND-NCFU>
