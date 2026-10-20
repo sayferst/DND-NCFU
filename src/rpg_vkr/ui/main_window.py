@@ -300,7 +300,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self.home_summary.setText(
                 self._session.chronicle.seed.title + " · " + self._session.current_place_name
             )
-            self.home_title.setText(self._session.chronicle.seed.title)
+            if self._legacy_controls:
+                self.home_title.setText(self._session.chronicle.seed.title)
             places = [
                 p
                 for p in self._session.interaction_state().places
@@ -319,6 +320,18 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                     if p.id in self._session.visited_places
                 )
             )
+        if hasattr(self, "chronicles_panel"):
+            from rpg_vkr.ui.chronicles_panel import card_html
+
+            places = [e for e in self.chronicles_panel.entries if e.category == "places"]
+            self.known_places.setRowCount(len(places))
+            for row, place in enumerate(places):
+                item = QTableWidgetItem(place.title)
+                item.setData(Qt.ItemDataRole.UserRole, place.key)
+                item.setToolTip(card_html(place, True))
+                self.known_places.setItem(row, 0, item)
+                self.known_places.setItem(row, 1, QTableWidgetItem(place.description))
+            self.map_location.setText("Вы здесь: " + self._session.current_place_name)
         self._persist_campaign()
         if hasattr(self, "diary_list"):
             from rpg_vkr.ui.adventure_panel import refresh_diary

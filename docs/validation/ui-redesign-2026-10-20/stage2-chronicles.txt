@@ -1,0 +1,21 @@
+.................................F.....................                  [100%]
+=================================== FAILURES ===================================
+____________ test_loaded_generated_campaign_opens_with_its_own_map _____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0xa72fb30) at 0x7fbb9c7236c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-177/test_loaded_generated_campaign0')
+
+    def test_loaded_generated_campaign_opens_with_its_own_map(qt_app, tmp_path):
+        from rpg_vkr.storage.slots import SaveSlots
+    
+        window = MainWindow(session=started(), saves=SaveSlots(tmp_path / "saves"))
+>       assert window.home_title.text() == "Карта переправы"
+E       AssertionError: assert 'DND-NCFU' == 'Карта переправы'
+E         
+E         - Карта переправы
+E         + DND-NCFU
+
+tests/test_adventure_ui.py:204: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_adventure_ui.py::test_loaded_generated_campaign_opens_with_its_own_map
+1 failed, 54 passed in 15.33s

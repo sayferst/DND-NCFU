@@ -1,0 +1,74 @@
+.............F...........................................                [100%]
+=================================== FAILURES ===================================
+______ test_heard_about_remote_npc_does_not_reveal_unobserved_appearance _______
+
+    def test_heard_about_remote_npc_does_not_reveal_unobserved_appearance():
+        session = new_session()
+        session.submit_interaction("иду в галерею", WorldPlan((Step("move", "gallery"),)))
+        # A new actor is registered somewhere the hero has not visited in this campaign view.
+        definition = Definition(
+            "stranger_type",
+            "SECRET-TRUE-NAME",
+            "actor",
+            ("npcs",),
+            {"hp_max": 10, "appearance": "SECRET-UNSEEN-APPEARANCE"},
+        )
+>       session.register_catalog(
+            "слушаю рассказ",
+            (definition,),
+            (Entity("remote_stranger", "stranger_type", "landing"),),
+            "Незнакомец у моста",
+            "test",
+        )
+
+tests/test_chronicles.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/application.py:365: in register_catalog
+    catalog, expanded = register(self.catalog or seed_catalog(), record.before, record)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+catalog = Catalog(definitions=(Definition(id='mat_granite', name='Гранит', kind='material', categories=('materials',), propertie...token', definition_id='token_type', parent_id='vesta', owner_id='vesta', quantity=1, state=None)), version='catalog-1')
+world = InteractiveWorld(current='gallery', places=(Place(id='landing', name='Мост над рекой', parent='', anchor='gate', descr...ctors=(ActorRef(id='vesta', name='Веста', place='landing'), ActorRef(id='sentinel', name='Дозорный', place='landing')))
+record = Registration(definitions=(Definition(id='stranger_type', name='SECRET-TRUE-NAME', kind='actor', categories=('npcs',), ...tors=(ActorRef(id='vesta', name='Веста', place='landing'), ActorRef(id='sentinel', name='Дозорный', place='landing'))))
+
+    def register(catalog, world, record):
+        """Create canon only in the present scene. A definition alone is not an owned item."""
+        from dataclasses import replace
+    
+        if record.before != world:
+            raise ValueError("Сцена регистрации устарела.")
+        existing_defs = {d.id for d in catalog.definitions}
+        existing_entities = (
+            {e.id for e in catalog.entities}
+            | {t.id for t in world.things}
+            | {a.id for a in world.actor_refs}
+            | {p.id for p in world.places}
+            | {"hero"}
+        )
+        if any(d.id in existing_defs for d in record.definitions):
+            raise ValueError("Установленный тип нельзя незаметно перезаписать.")
+        if any(e.id in existing_entities for e in record.entities):
+            raise ValueError("Установленную сущность нельзя незаметно заменить.")
+        if any(
+            r.id.startswith(("legacy_", "resource_", "trade_", "type_actor_", "imported_type_"))
+            or r.id == "type_currency"
+            for r in (*record.definitions, *record.entities)
+        ):
+            raise ValueError("Этот диапазон ID зарезервирован адаптером старых данных.")
+        if any(d.origin != "generated" for d in record.definitions):
+            raise ValueError("Модель может создавать только записи с происхождением generated.")
+        result = Catalog(catalog.definitions + record.definitions, catalog.entities + record.entities)
+        types = {d.id: d for d in result.definitions}
+        actors = list(world.actor_refs)
+        things = list(world.things)
+        for e in record.entities:
+            if types[e.definition_id].kind == "actor":
+                if e.parent_id != world.current or e.owner_id:
+>                   raise ValueError("Новое существо появляется в текущей сцене без владельца.")
+E                   ValueError: Новое существо появляется в текущей сцене без владельца.
+
+src/rpg_vkr/domain/catalog.py:414: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_chronicles.py::test_heard_about_remote_npc_does_not_reveal_unobserved_appearance
+1 failed, 56 passed in 15.41s

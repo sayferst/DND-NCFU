@@ -127,6 +127,16 @@ class EpisodePanels:
         self.map_location = plain_label()
         map_layout.addWidget(self.map_location)
         self.known_places = readonly_table(["Место", "Что известно"])
+        if not self._legacy_controls:
+
+            def open_place(row, column):
+                key = self.known_places.item(row, 0).data(Qt.ItemDataRole.UserRole)
+                if key:
+                    self.open_section("Хроники мира")
+                    self.chronicles_panel.open_entry(key)
+
+            self.known_places.cellDoubleClicked.connect(open_place)
+            self.known_places.setToolTip("Двойной щелчок или Enter: карточка места в Хрониках")
         map_layout.addWidget(self.known_places, 1)
         self.travel_buttons = {}
         for location, name in LOCATIONS.items():
@@ -336,6 +346,7 @@ class EpisodePanels:
             "Память мира",
             "Рассказчик",
             "Каталог мира",
+            "Хроники мира",
             "Команды",
             "Сохранения",
             "Настройки",
@@ -348,6 +359,8 @@ class EpisodePanels:
         navigation_row.addWidget(QLabel("Раздел:"))
         navigation_row.addWidget(self.navigation, 1)
         self._panel_button(navigation_row, "К игре", self.resume_session)
+        if not self._legacy_controls:
+            self._panel_button(navigation_row, "Хроники", lambda: self.open_section("Хроники мира"))
         self._panel_button(navigation_row, "Меню", lambda: self.open_section("Главное меню"))
         self.navigation_bar = QWidget()
         self.navigation_bar.setLayout(navigation_row)
@@ -375,6 +388,8 @@ class EpisodePanels:
         self._refresh_episode_panels()
 
     def open_section(self, name: str) -> None:
+        if name == "Каталог мира" and not self._legacy_controls:
+            name = "Хроники мира"
         for index in range(self.tabs.count()):
             if self.tabs.tabText(index) == name:
                 self.tabs.setCurrentIndex(index)

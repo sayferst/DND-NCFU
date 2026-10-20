@@ -23,6 +23,12 @@ from rpg_vkr.storage.catalog import CatalogIndex
 
 
 def install_catalog_panel(window):
+    if not window._legacy_controls:
+        from rpg_vkr.ui.chronicles_panel import ChroniclesPanel
+
+        window.chronicles_panel = ChroniclesPanel(window)
+        window.tabs.addTab(window.chronicles_panel, "Хроники мира")
+        return
     page = QWidget()
     layout = QVBoxLayout(page)
     hint = QLabel(
@@ -69,6 +75,9 @@ def install_catalog_panel(window):
 
 
 def refresh_catalog_panel(window):
+    if hasattr(window, "chronicles_panel"):
+        window.chronicles_panel.refresh()
+        return
     if not hasattr(window, "catalog_table"):
         return
     index = CatalogIndex(window._session)

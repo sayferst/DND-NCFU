@@ -65,7 +65,10 @@ def install_adventure_panel(window):
     window.recover_campaign.clicked.connect(lambda: recover(window))
     archive_row.addWidget(window.campaign_choice, 1)
     archive_row.addWidget(window.recover_campaign)
-    layout.addLayout(archive_row)
+    if window._legacy_controls:
+        layout.addLayout(archive_row)
+    else:
+        window.saves_layout.insertLayout(0, archive_row)
     window.generate_world_button = QPushButton("Создать мир мастером для нового героя")
     window.generate_world_button.clicked.connect(lambda: begin_world(window))
     layout.addWidget(window.generate_world_button)

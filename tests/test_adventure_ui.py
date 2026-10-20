@@ -201,7 +201,8 @@ def test_loaded_generated_campaign_opens_with_its_own_map(qt_app, tmp_path):
     from rpg_vkr.storage.slots import SaveSlots
 
     window = MainWindow(session=started(), saves=SaveSlots(tmp_path / "saves"))
-    assert window.home_title.text() == "Карта переправы"
+    assert window.home_title.text() == "DND-NCFU"
+    assert "Карта переправы" in window.home_summary.text()
     assert window.known_places.rowCount() == 1
     assert window.known_places.item(0, 0).text() == "Пристань туманов"
     window.close()

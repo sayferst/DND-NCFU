@@ -94,9 +94,9 @@ def sync_chrome(window, index):
         window.mode_label,
         window.resource_label,
         window.navigation_bar,
-        window.resolution_panel,
     ):
         widget.setVisible(not menu)
+    window.resolution_panel.setVisible(not menu and window.tabs.tabText(index) == "Приключение")
     window.menuBar().setVisible(not menu)
     window.statusBar().setVisible(not menu)
     window._content_layout.setContentsMargins(*((0, 0, 0, 0) if menu else (20, 16, 12, 16)))

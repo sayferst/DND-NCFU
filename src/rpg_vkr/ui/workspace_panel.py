@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QScrollArea,
     QSpinBox,
     QVBoxLayout,
     QWidget,
@@ -105,6 +106,7 @@ class WorkspaceActions:
 
         settings = QWidget()
         settings_layout = QFormLayout(settings)
+        self.settings_form = settings_layout
         self.font_size = QSpinBox()
         self.font_size.setRange(9, 20)
         self.font_size.setValue(preferences.font_size)
@@ -122,9 +124,13 @@ class WorkspaceActions:
         self.preferences_status = QLabel(warning or "Настройки чтения не меняют игровые ячейки.")
         self.preferences_status.setWordWrap(True)
         settings_layout.addRow(self.preferences_status)
-        self.tabs.addTab(settings, "Настройки")
+        settings_scroll = QScrollArea()
+        settings_scroll.setWidgetResizable(True)
+        settings_scroll.setWidget(settings)
+        self.tabs.addTab(settings_scroll, "Настройки")
         saves_tab = QWidget()
         saves_layout = QVBoxLayout(saves_tab)
+        self.saves_layout = saves_layout
         saves_layout.addWidget(slots_group)
         saves_layout.addWidget(slots_note)
         saves_layout.addStretch()
