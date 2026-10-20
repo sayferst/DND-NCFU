@@ -370,7 +370,13 @@ def knowledge_entries(session):
         ):
             result.append(
                 KnowledgeEntry(
-                    "note:" + str(i),
+                    "note:"
+                    + hashlib.sha256(
+                        json.dumps(
+                            [note.subject, note.kind, note.text, note.turn, note.source],
+                            ensure_ascii=False,
+                        ).encode()
+                    ).hexdigest()[:32],
                     "events",
                     f"{'Слух' if note.kind == 'rumour' else 'Хроника'} · ход {note.turn}",
                     note.text,

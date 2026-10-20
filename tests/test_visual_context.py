@@ -57,3 +57,23 @@ def test_type_images_are_shared_by_explicit_stable_type_not_name(tmp_path):
     target = entity_target(session, item, shared=True)
     assert target.subject.startswith("type:")
     assert entity_target(session, item, shared=False).subject == "entity:" + item.key
+
+
+def test_hidden_identifiers_are_not_embedded_in_reference_prompt():
+    session = new_session()
+    scene = scene_target(session)
+    prompt = make_prompt(scene, [{"subject": "entity:SECRET-SPY-ID", "caption": "Незнакомка"}])
+    assert "SECRET-SPY-ID" not in prompt and "Незнакомка" in prompt
+
+
+def test_note_identity_does_not_depend_on_other_memory_positions():
+    from rpg_vkr.domain.adventure import MemoryNote
+
+    session = new_session()
+    note = MemoryNote("world", "event", "На мосту прозвучал колокол.", 2, False, 0, "test:event")
+    session.chronicle = session.chronicle.remember((note,))
+    entry = next(e for e in knowledge_entries(session) if e.description == note.text)
+    first = entry.key
+    other = MemoryNote("world", "knowledge", "Известна дорога к реке.", 2, False, 0, "test:extra")
+    session.chronicle = replace(session.chronicle, memories=(other,) + session.chronicle.memories)
+    assert next(e for e in knowledge_entries(session) if e.description == note.text).key == first

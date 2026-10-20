@@ -31,6 +31,7 @@ class VisualTarget:
     brief: str
     participants: tuple[str, ...] = ()
     labels: tuple[tuple[str, str], ...] = ()
+    shared_subjects: tuple[tuple[str, str], ...] = ()
 
 
 def public_brief(entry):
@@ -73,6 +74,7 @@ def entity_target(session, entry, *, shared=None):
         public_brief(entry),
         (entry.key,),
         ((entry.key, entry.title),),
+        ((entry.key, subject),) if common else (),
     )
 
 
@@ -88,13 +90,27 @@ def scene_target(session, *, event=None):
     if event is not None:
         if event.key not in by_id or by_id[event.key] != event or event.category != "events":
             raise ValueError("Событие недоступно в публичных знаниях.")
-        # Match a known historical turn to observations; never add current strangers to old events.
-        chosen = [
-            e
-            for e in entries
-            if e.last_seen <= event.last_seen
-            and e.category in {"people", "creatures", "items", "places"}
-        ]
+        # Directly select the confirmed turn snapshot, not a guess from current co-location.
+        index = event.last_seen - 1
+        historical = None
+        if 0 <= index < len(session.turns):
+            turn = session.turns[index]
+            for record in (turn.interaction, turn.trade, turn.catalog):
+                after = getattr(record, "after", None)
+                if hasattr(after, "actor_refs"):
+                    historical = after
+        if historical is not None:
+            ids = {a.id for a in historical.actor_refs if a.place == historical.current}
+            ids.add(historical.current)
+            ids.update(
+                t.id
+                for t in historical.things
+                if historical.root_holder(t) in {"hero", historical.current}
+            )
+            chosen = [e for e in entries if e.key in ids]
+        else:
+            # No reliable participants available: illustrate the public event alone.
+            chosen = []
         key = "event:" + event.key
         brief = public_brief(event)
     else:
@@ -129,6 +145,7 @@ def scene_target(session, *, event=None):
         brief[:12000],
         tuple(e.key for e in chosen),
         tuple((e.key, e.title) for e in chosen),
+        tuple((e.key, t.subject) for e in chosen if (t := entity_target(session, e)).common),
     )
 
 
@@ -137,6 +154,9 @@ def reference_candidates(registry, target):
     found = []
     for entity in target.participants:
         asset = registry.latest_for(target.campaign, entity)
+        if asset is None and entity in dict(target.shared_subjects):
+            versions = registry.versions(target.campaign, dict(target.shared_subjects)[entity])
+            asset = versions[0] if versions else None
         if asset and asset["id"] not in {a["id"] for a in found}:
             found.append(asset | {"caption": dict(target.labels).get(entity, "Известный объект")})
     return found
