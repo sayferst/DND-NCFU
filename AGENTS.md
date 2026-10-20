@@ -1267,3 +1267,12 @@ PowerShell5.1-скрипт сохранён с UTF-8 BOM, проверяет loc
 нативная Windows-проверка. Реальный Linux smoke выявил встроенные в libpython
 _sqlite3/_ssl без __file__; допустим только настоящий builtin, остальные модули
 обязаны находиться в bundle. Ошибочный raw сохранён, повторная сборка отдельная.
+
+### 1X / итог приёмки упаковки
+На34eec5b scripts/check.py:1192passed/138.82с,0failed/skipped,182Pythonфайла,
+pip/Ruffуспешны. НастоящаяLinuxсборка03 и переносскириллицей/пробелами внеcwd
+прошлиself/smoke; аудит287файлов/255361071байт.75защищённыхфайловнеизменны.
+Документы docs/WINDOWS_APP.md иvalidation/windows-app-2026-10-20/README.md
+различают исходные/синтетические/реальныеLinux/непроверенныеWindowsрезультаты.
+Исходнаяветка main поgitremote; workflow_dispatch требуетworkflowвmain, ноmerge
+неразрешёнэтойзадачей. НеобещатькнопкуRunдоэтого и невыдаватьLinuxзаEXE.
