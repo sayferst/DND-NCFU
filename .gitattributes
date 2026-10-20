@@ -19,5 +19,5 @@ docs/validation/linux-generated-campaigns-*-2026-10-19.txt -text whitespace=-bla
 docs/validation/linux-master-response-*-2026-10-20.txt -text whitespace=-blank-at-eol
 # Freeze before/after research inputs, raw outputs and replay sources across Windows checkout.
 docs/evals/master-response-2026-10-20/* -text whitespace=-blank-at-eol
-docs/research/ui/OWNER_UI_SPEC.md -text
+docs/research/ui/OWNER_UI_SPEC.md -text whitespace=-blank-at-eol
 docs/validation/ui-redesign-2026-10-20/*.txt -text whitespace=-blank-at-eol
