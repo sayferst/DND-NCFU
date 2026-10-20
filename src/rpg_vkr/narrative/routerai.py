@@ -12,6 +12,8 @@ from decimal import Decimal, InvalidOperation
 from PySide6.QtCore import QByteArray, QObject, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
+from rpg_vkr.narrative.cloud import validate_api_key
+
 CATALOG_URL = "https://routerai.ru/api/v1/models"
 KEY_URL = "https://routerai.ru/api/v1/key"
 MAX_MONTHLY_RUB = Decimal("2000")
@@ -33,12 +35,14 @@ def amount(value):
 @dataclass(frozen=True)
 class ModelQuote:
     id: str
-    prompt_rub: Decimal
-    completion_rub: Decimal
+    prompt_rub: Decimal | None
+    completion_rub: Decimal | None
     supported_parameters: tuple[str, ...]
 
     @property
     def label(self):
+        if self.prompt_rub is None or self.completion_rub is None:
+            return f"{self.id} · цена не подтверждена каталогом"
         return (
             f"{self.id} · вход {self.prompt_rub * 1_000_000:.2f} ₽/млн · "
             f"выход {self.completion_rub * 1_000_000:.2f} ₽/млн"
@@ -57,7 +61,7 @@ def _data(value):
     return value.get("data") if isinstance(value, dict) else value
 
 
-def parse_models(data):
+def parse_models(data, *, include_unpriced=False):
     rows = _data(data)
     if not isinstance(rows, list) or len(rows) > 10_000:
         raise ValueError("RouterAI не вернул каталог моделей.")
@@ -68,9 +72,10 @@ def parse_models(data):
         if not re.fullmatch(MODEL_ID, row["id"]):
             continue
         prices, units = row.get("pricing"), row.get("pricing_units")
-        if not isinstance(prices, dict) or not isinstance(units, dict):
-            continue
-        if units.get("prompt") != "token" or units.get("completion") != "token":
+        prices = prices if isinstance(prices, dict) else {}
+        units = units if isinstance(units, dict) else {}
+        token_prices = units.get("prompt") == "token" and units.get("completion") == "token"
+        if not token_prices and not include_unpriced:
             continue  # A request/image/second must not be displayed as a token price.
         architecture = row.get("architecture") or {}
         if not isinstance(architecture, dict):
@@ -78,6 +83,18 @@ def parse_models(data):
         outputs = architecture.get("output_modalities")
         if outputs is not None and (not isinstance(outputs, list) or "text" not in outputs):
             continue
+        if outputs is None:
+            modality = architecture.get("modality", "")
+            if (
+                isinstance(modality, str)
+                and "->" in modality
+                and "text" not in modality.split("->")[-1]
+            ):
+                continue
+            if not any(k in prices for k in ("prompt", "completion")) and not (
+                isinstance(outputs, list) and "text" in outputs
+            ):
+                continue
         parameters = row.get("supported_parameters", [])
         if (
             not isinstance(parameters, list)
@@ -85,17 +102,20 @@ def parse_models(data):
             or any(not isinstance(p, str) for p in parameters)
         ):
             continue
+        prompt = completion = None
         try:
-            quotes[row["id"]] = ModelQuote(
-                row["id"],
-                amount(prices.get("prompt")),
-                amount(prices.get("completion")),
-                tuple(parameters),
-            )
+            if token_prices:
+                prompt, completion = amount(prices.get("prompt")), amount(prices.get("completion"))
         except ValueError:
+            prompt = completion = None
+        if prompt is None and not include_unpriced:
             continue
+        quotes[row["id"]] = ModelQuote(row["id"], prompt, completion, tuple(parameters))
     if not quotes:
-        raise ValueError("В каталоге нет текстовых моделей с ценами в рублях за токен.")
+        raise ValueError(
+            "В каталоге нет подходящих текстовых моделей"
+            + ("." if include_unpriced else " с ценами в рублях за токен.")
+        )
     return tuple(quotes[key] for key in sorted(quotes))
 
 
@@ -167,12 +187,18 @@ class RouterAIClient(QObject):
         self._get(CATALOG_URL, "catalog")
 
     def check_key(self, key):
+        try:
+            validate_api_key(key)
+        except ValueError as error:
+            self.failed.emit(str(error))
+            return
         self._get(KEY_URL, "key", key)
 
     def _get(self, url, kind, key=""):
         self.cancel()
         self._kind, self._reason, self._buffer = kind, "", bytearray()
         request = QNetworkRequest(QUrl(url))
+        request.setRawHeader(QByteArray(b"Accept"), QByteArray(b"application/json"))
         request.setAttribute(
             QNetworkRequest.Attribute.RedirectPolicyAttribute,
             QNetworkRequest.RedirectPolicy.ManualRedirectPolicy,
@@ -196,7 +222,7 @@ class RouterAIClient(QObject):
     def _read(self, reply):
         if reply is not self._reply:
             return
-        maximum = 4 * 1024 * 1024 if self._kind == "catalog" else 65536
+        maximum = 16 * 1024 * 1024 if self._kind == "catalog" else 65536
         self._buffer.extend(bytes(reply.read(maximum + 1 - len(self._buffer))))
         if len(self._buffer) > maximum:
             self._reason = "Ответ RouterAI о моделях/лимите слишком большой. Генерация не началась."
@@ -210,10 +236,11 @@ class RouterAIClient(QObject):
         status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         network_error = reply.error()
         self._reply = None
+        reason, kind, raw = self._reason, self._kind, bytes(self._buffer)
         reply.deleteLater()
         self.busy_changed.emit(False)
-        if self._reason:
-            self.failed.emit(self._reason)
+        if reason:
+            self.failed.emit(reason)
             return
         if status != 200 or network_error != QNetworkReply.NetworkError.NoError:
             detail = {
@@ -222,16 +249,25 @@ class RouterAIClient(QObject):
                 403: "доступ отклонён",
                 429: "слишком много запросов",
             }.get(status, "проверьте соединение и доступ")
-            self.failed.emit(f"RouterAI: {detail} (HTTP {status}). Генерация не началась.")
+            if status is None:
+                detail = {
+                    QNetworkReply.NetworkError.HostNotFoundError: "не найден сервер (DNS/интернет)",
+                    QNetworkReply.NetworkError.SslHandshakeFailedError: "ошибка TLS-соединения",
+                    QNetworkReply.NetworkError.ConnectionRefusedError: "сервер отклонил соединение",
+                    QNetworkReply.NetworkError.ProxyAuthenticationRequiredError: "ошибка прокси",
+                }.get(network_error, "ошибка сети; проверьте интернет, прокси и доступ к RouterAI")
+            stage = "каталог моделей" if kind == "catalog" else "проверка ключа и лимита"
+            code = f"HTTP {status}" if status is not None else "сеть/TLS"
+            self.failed.emit(f"RouterAI · {stage}: {detail} ({code}). Платных запросов не было.")
             return
         try:
-            data = json.loads(bytes(self._buffer))
+            data = json.loads(raw)
         except (ValueError, TypeError, RecursionError):
             self.failed.emit("RouterAI вернул неверный JSON метаданных. Генерация не началась.")
             return
         try:
-            if self._kind == "catalog":
-                self.catalog_ready.emit(parse_models(data))
+            if kind == "catalog":
+                self.catalog_ready.emit(parse_models(data, include_unpriced=True))
             else:
                 self.key_ready.emit(parse_allowance(data))
         except ValueError as error:

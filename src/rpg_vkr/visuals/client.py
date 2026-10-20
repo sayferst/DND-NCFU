@@ -14,6 +14,7 @@ from decimal import Decimal
 from PySide6.QtCore import QBuffer, QByteArray, QIODevice, QObject, Signal
 from PySide6.QtGui import QImageReader
 
+from rpg_vkr.narrative.cloud import validate_api_key
 from rpg_vkr.narrative.routerai import parse_allowance
 
 BASE = "https://routerai.ru/api/v1"
@@ -70,6 +71,10 @@ class ImagesTransport:
         if key:
             if not url.startswith(self.base + "/") or any(c.isspace() for c in key):
                 raise ImageError("key", "Недопустимый адрес или формат ключа.")
+            try:
+                validate_api_key(key)
+            except ValueError:
+                raise ImageError("key", "Недопустимый формат ключа API.") from None
             headers["Authorization"] = "Bearer " + key
         if payload is not None:
             headers["Content-Type"] = "application/json"

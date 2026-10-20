@@ -1,0 +1,70 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_____________ test_catalog_keeps_text_model_when_price_is_unknown ______________
+
+    def test_catalog_keeps_text_model_when_price_is_unknown():
+>       quote, = parse_models({'data': [QUOTE | {'pricing_units': {}}]}, include_unpriced=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_models() got an unexpected keyword argument 'include_unpriced'
+
+tests/test_connection_revision.py:78: TypeError
+___________ test_real_large_catalog_is_not_mistaken_for_invalid_key ____________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x208d36e0) at 0x7f7c407696c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c406eda90>
+
+    def test_real_large_catalog_is_not_mistaken_for_invalid_key(qt_app, monkeypatch):
+        row = QUOTE | {'description': 'x' * (5 * 1024 * 1024)}
+        with metadata_server(monkeypatch, catalog={'data': [row]}) as records:
+            client = RouterAIClient()
+            ready, errors = [], []
+            client.catalog_ready.connect(ready.append)
+            client.failed.connect(errors.append)
+            client.list_models()
+            wait_for(qt_app, lambda: bool(ready or errors))
+>           assert ready and not errors
+E           assert ([])
+
+tests/test_connection_revision.py:94: AssertionError
+----------------------------- Captured stderr call -----------------------------
+QIODevice::read (QNetworkReplyHttpImpl): device not open
+_________ test_cloud_panel_does_not_show_an_empty_local_model_control __________
+
+connection_window = <rpg_vkr.ui.main_window.MainWindow(0x20c63780) at 0x7f7c4060e940>
+
+    def test_cloud_panel_does_not_show_an_empty_local_model_control(connection_window):
+>       assert connection_window.local_model.isHidden()
+E       assert False
+E        +  where False = <built-in method isHidden of PySide6.QtWidgets.QComboBox object at 0x7f7c3e66dec0>()
+E        +    where <built-in method isHidden of PySide6.QtWidgets.QComboBox object at 0x7f7c3e66dec0> = <PySide6.QtWidgets.QComboBox(0x2223ba10) at 0x7f7c3e66dec0>.isHidden
+E        +      where <PySide6.QtWidgets.QComboBox(0x2223ba10) at 0x7f7c3e66dec0> = <rpg_vkr.ui.main_window.MainWindow(0x20c63780) at 0x7f7c4060e940>.local_model
+
+tests/test_connection_revision.py:99: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_______________ test_restart_retains_a_non_flash_selected_model ________________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x208d36e0) at 0x7f7c407696c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-214/test_restart_retains_a_non_fla0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c406ec7a0>
+
+    def test_restart_retains_a_non_flash_selected_model(qt_app, tmp_path, monkeypatch):
+        with metadata_server(monkeypatch) as records:
+            ConnectionPreferences('routerai', MODEL, True, True).save(tmp_path / 'ai-connection.json')
+            monkeypatch.setenv('RPG_VKR_ROUTERAI_API_KEY', 'synthetic-key')
+            window = MainWindow(saves=SaveSlots(tmp_path / 'saves'))
+            try:
+                wait_for(qt_app, lambda: bool(records) and not window._flash_pending)
+>               assert window.cloud_model.text() == MODEL
+E               AssertionError: assert 'deepseek/dee...-flash-latest' == 'deepseek/dee...k-v4-pro-0813'
+E                 
+E                 - deepseek/deepseek-v4-pro-0813
+E                 + deepseek/deepseek-v4-flash-latest
+
+tests/test_connection_revision.py:109: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_connection_revision.py::test_catalog_keeps_text_model_when_price_is_unknown
+FAILED tests/test_connection_revision.py::test_real_large_catalog_is_not_mistaken_for_invalid_key
+FAILED tests/test_connection_revision.py::test_cloud_panel_does_not_show_an_empty_local_model_control
+FAILED tests/test_connection_revision.py::test_restart_retains_a_non_flash_selected_model
+4 failed in 1.71s

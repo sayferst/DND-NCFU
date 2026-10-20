@@ -10,6 +10,15 @@ ENDPOINTS = {
 }
 
 
+def validate_api_key(key):
+    if not isinstance(key, str) or not re.fullmatch(r"[!-~]{1,4096}", key):
+        raise ValueError(
+            "Укажите API-ключ провайдера без пробелов, переносов и префикса Bearer; "
+            "не пароль ChatGPT."
+        )
+    return key
+
+
 @dataclass(frozen=True)
 class CloudProfile:
     provider: str
@@ -23,8 +32,7 @@ class CloudProfile:
             raise ValueError("Неизвестный API-провайдер.")
         if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
             raise ValueError("Укажите идентификатор облачной модели.")
-        if not self.key or any(c.isspace() for c in self.key):
-            raise ValueError("Укажите API-ключ провайдера, не пароль ChatGPT.")
+        validate_api_key(self.key)
         if type(self.free_only) is not bool:
             raise ValueError("Неверный режим оплаты API.")
         if (
