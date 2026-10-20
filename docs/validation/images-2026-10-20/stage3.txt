@@ -1,0 +1,153 @@
+....E........                                                            [100%]  + Exception Group Traceback (most recent call last):
+  |   File "<frozen runpy>", line 198, in _run_module_as_main
+  |   File "<frozen runpy>", line 88, in _run_code
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pytest/__main__.py", line 9, in <module>
+  |     raise SystemExit(pytest.console_main())
+  |                      ^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py", line 201, in console_main
+  |     code = main()
+  |            ^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py", line 175, in main
+  |     ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_caller.py", line 197, in __call__
+  |     return self._hookexec(
+  |            ^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 183, in _hookexec
+  |     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_execution.py", line 195, in _multicall
+  |     raise exception
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_execution.py", line 147, in _multicall
+  |     res = hook_impl.function(*args)
+  |           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/main.py", line 336, in pytest_cmdline_main
+  |     return wrap_session(config, _main)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/main.py", line 331, in wrap_session
+  |     config._ensure_unconfigure()
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py", line 1131, in _ensure_unconfigure
+  |     self._cleanup_stack.close()
+  |   File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 618, in close
+  |     self.__exit__(None, None, None)
+  |   File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 610, in __exit__
+  |     raise exc_details[1]
+  |   File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 595, in __exit__
+  |     if cb(*exc_details):
+  |        ^^^^^^^^^^^^^^^^
+  |   File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 478, in _exit_wrapper
+  |     callback(*args, **kwds)
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 95, in cleanup
+  |     collect_unraisable(config)
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 81, in collect_unraisable
+  |     raise ExceptionGroup("multiple unraisable exception warnings", errors)
+  | ExceptionGroup: multiple unraisable exception warnings (3 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 33, in gc_collect_harder
+    |     gc.collect()
+    | ResourceWarning: unclosed <socket.socket [closed] fd=15, family=2, type=1, proto=6>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 67, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored in: <socket.socket [closed] fd=15, family=2, type=1, proto=6>
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    +---------------- 2 ----------------
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 33, in gc_collect_harder
+    |     gc.collect()
+    | ResourceWarning: unclosed <socket.socket [closed] fd=14, family=2, type=1, proto=6>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 67, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored in: <socket.socket [closed] fd=14, family=2, type=1, proto=6>
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    +---------------- 3 ----------------
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 33, in gc_collect_harder
+    |     gc.collect()
+    | ResourceWarning: unclosed <socket.socket [closed] fd=13, family=2, type=1, proto=6>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 67, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored in: <socket.socket [closed] fd=13, family=2, type=1, proto=6>
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    +------------------------------------
+Fontconfig error: No writable cache directories
+
+==================================== ERRORS ====================================
+____ ERROR at setup of test_error_and_redirect_never_retry_or_echo_key[401] ____
+  + Exception Group Traceback (most recent call last):
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 344, in from_call
+  |     result: TResult | None = func()
+  |                              ^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/runner.py", line 246, in <lambda>
+  |     lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_caller.py", line 197, in __call__
+  |     return self._hookexec(
+  |            ^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 183, in _hookexec
+  |     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_execution.py", line 195, in _multicall
+  |     raise exception
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_execution.py", line 167, in _multicall
+  |     teardown.throw(exception)
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/logging.py", line 843, in pytest_runtest_setup
+  |     yield
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_execution.py", line 167, in _multicall
+  |     teardown.throw(exception)
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/capture.py", line 895, in pytest_runtest_setup
+  |     return (yield)
+  |             ^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/pluggy/_execution.py", line 147, in _multicall
+  |     res = hook_impl.function(*args)
+  |           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 153, in pytest_runtest_setup
+  |     collect_unraisable(item.config)
+  |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 81, in collect_unraisable
+  |     raise ExceptionGroup("multiple unraisable exception warnings", errors)
+  | ExceptionGroup: multiple unraisable exception warnings (2 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "<string>", line 2, in __init__
+    | ResourceWarning: unclosed <socket.socket [closed] fd=14, family=2, type=1, proto=6>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 67, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored in: <socket.socket [closed] fd=14, family=2, type=1, proto=6>
+    | Enable tracemalloc to get traceback where the object was allocated.
+    | See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    +---------------- 2 ----------------
+    | Traceback (most recent call last):
+    |   File "<string>", line 2, in __init__
+    | ResourceWarning: unclosed <socket.socket [closed] fd=13, family=2, type=1, proto=6>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py", line 67, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored in: <socket.socket [closed] fd=13, family=2, type=1, proto=6>
+    | Enable tracemalloc to get traceback where the object was allocated.
+    | See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    +------------------------------------
+=========================== short test summary info ============================
+ERROR tests/test_images_client.py::test_error_and_redirect_never_retry_or_echo_key[401]
+12 passed, 1 error in 3.75s
