@@ -1,0 +1,22 @@
+{
+  "synthetic_loopback": true,
+  "paid_requests": 0,
+  "files": [
+    {
+      "path": "catalog-error-light-1280.png",
+      "sha256": "0cb56a22b59cd3c2c7f13cd82fe6e5c5eeb8de4717a91a9e0a68060f9234dac3"
+    },
+    {
+      "path": "compact-connect-640.png",
+      "sha256": "d6f0575d31440935d8fca1211885abde681e57043aa35ef87771522f9397d86c"
+    },
+    {
+      "path": "compact-top-640.png",
+      "sha256": "acffebb43c2f45d6fba460a934221309d2db2a88dcfcf2ab4d78c107882b3b3e"
+    },
+    {
+      "path": "connected-dark-1280.png",
+      "sha256": "53b8fd7138486ec6b7b05eec8443d82c1e3da0e9421754a10be59b1c4cb67545"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
+import hashlib
+import json
+import pytest
+from PySide6.QtWidgets import QApplication
+from test_connection_metadata import metadata_server
+from test_routerai import MODEL
+from test_local_narrator import wait_for
+from rpg_vkr.storage.slots import SaveSlots
+from rpg_vkr.ui.main_window import MainWindow
+
+app=QApplication([])
+out=Path('docs/validation/connection-2026-10-20/screenshots');out.mkdir(exist_ok=True)
+with TemporaryDirectory() as folder, pytest.MonkeyPatch.context() as patch:
+    patch.delenv('RPG_VKR_ROUTERAI_API_KEY',raising=False)
+    patch.delenv('RPG_VKR_LLM_API_KEY',raising=False)
+    w=MainWindow(saves=SaveSlots(Path(folder)/'saves'))
+    w.resize(1280,950);w.show();w.open_section('Рассказчик');app.processEvents()
+    def snap(name):
+        app.processEvents();w.grab().save(str(out/(name+'.png')))
+    with metadata_server(patch) as records:
+        w.routerai_catalog_button.click()
+        wait_for(app,lambda: bool(w._routerai_quotes))
+        w.cloud_model.setText(MODEL)
+        w.cloud_key.setText('synthetic-key')
+        w.cloud_allowed.setChecked(True)
+        w.find_models_button.click()
+        wait_for(app,lambda:not w._flash_pending)
+        assert w.find_models_button.isVisible() and w.ai_provider.isVisible()
+        assert w.enable_local_narrator.isChecked()
+        snap('connected-dark-1280')
+        w.resize(640,620);app.processEvents()
+        snap('compact-top-640')
+        page=w.tabs.currentWidget();page.verticalScrollBar().setValue(page.verticalScrollBar().maximum())
+        snap('compact-connect-640')
+        assert records==[('/models',False),('/key',True)]
+    w.resize(1280,950);w.theme_choice.setCurrentText('Светлая')
+    page=w.tabs.currentWidget();page.verticalScrollBar().setValue(0)
+    with metadata_server(patch,status=403) as records:
+        w.routerai_catalog_button.click();wait_for(app,lambda:not w.routerai_catalog.busy)
+        assert '403' in w.catalog_status.text()
+        assert w.enable_local_narrator.isChecked()
+        snap('catalog-error-light-1280')
+        assert records==[('/models',False)]
+    w.close()
+manifest={'synthetic_loopback':True,'paid_requests':0,'files':[{'path':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(out.glob('*.png'))]}
+(out.parent/'screenshots-manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+print('4 Qt screenshots; loopback GET only; synthetic masked key; no model/image POST.')
