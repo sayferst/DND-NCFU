@@ -81,8 +81,7 @@ class CreationDialog(QDialog):
         layout.addRow(self.generate_world)
         generation_note = QLabel(
             "Место и сюжет выбирает мастер по описаниям выше. Включите ИИ до "
-            "создания героя; без подключения доступен автономный случайный "
-            "старт."
+            "создания героя; для нового мира требуется облачное подключение."
         )
         generation_note.setWordWrap(True)
         layout.addRow(generation_note)

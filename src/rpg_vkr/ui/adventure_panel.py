@@ -248,8 +248,11 @@ def recover(window):
 
 
 def begin_world(window):
+    from rpg_vkr.ui.cloud_gate import require_cloud
     from rpg_vkr.ui.narrator_panel import cancel_narration, prepare_model
 
+    if not require_cloud(window):
+        return
     session = window._session
     if not session.progress.enabled or session.turns or session.generated_world:
         window.world_generation_status.setText("Создайте нового героя, чтобы начать новый мир.")
@@ -331,6 +334,15 @@ def finish_world(window, seed, status):
 
 def generation_failed(window, message):
     if getattr(window, "_generating_session", None) is window._session:
+        if not window._legacy_controls:
+            window._generating_session = None
+            window.action_input.setEnabled(True)
+            window.send_button.setEnabled(bool(window.action_input.text().strip()))
+            window.world_generation_status.setText("Мир не создан: " + message)
+            window.narrator_status.setText("Мир не создан: " + message)
+            window._refresh_character()
+            window._render_journal()
+            return
         finish_world(
             window,
             offline_world(window._session),

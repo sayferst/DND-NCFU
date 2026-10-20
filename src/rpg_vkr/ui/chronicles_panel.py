@@ -210,7 +210,11 @@ class ChroniclesPanel(QWidget):
             self.state.setCurrentIndex(0)
             self.detail.clear()
         self._session = session
-        self.entries = knowledge_entries(session)
+        self.entries = (
+            knowledge_entries(session)
+            if session.generated_world or self.window._legacy_controls
+            else ()
+        )
         category = self.categories.currentItem()
         chosen = category.data(Qt.ItemDataRole.UserRole) if category else ""
         self.categories.blockSignals(True)

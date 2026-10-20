@@ -189,7 +189,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         input_row = QHBoxLayout()
         self.action_input = HistoryLineEdit()
         self.action_input.setAccessibleName("Ваше действие")
-        self.action_input.setPlaceholderText("Например: спрашиваю жительницу, чем она занята")
+        self.action_input.setPlaceholderText("Опишите действие героя или обратитесь к мастеру")
         self.action_input.setMaxLength(500)
         action_label.setBuddy(self.action_input)
         input_row.addWidget(self.action_input, stretch=1)
@@ -405,6 +405,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.action_input.setText(draft)
 
     def new_character(self) -> None:
+        from rpg_vkr.ui.cloud_gate import require_cloud
+
+        if not require_cloud(self):
+            return
         dialog = CreationDialog(self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
@@ -469,6 +473,15 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 "narrator",
                 "Мастер",
                 "Создаётся ваш мир: место появления, обитатели и сюжетные зацепки…",
+            )
+            return
+        if (
+            not self._legacy_controls
+            and not self._session.generated_world
+            and not self._session.turns
+        ):
+            self.journal.append_message(
+                "narrator", "Мастер", "Настройте облачного мастера и создайте новую легенду."
             )
             return
         notes = {note.turn_index: note for note in self._session.narrations}
@@ -629,6 +642,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
     def submit_action(self, *, use_ai=True, origin="typed") -> None:
         action = self.action_input.text().strip()
         if not action:
+            return
+        from rpg_vkr.ui.cloud_gate import require_cloud
+
+        if not require_cloud(self):
             return
         if use_ai and getattr(self, "_flash_pending", False):
             self.narrator_status.setText(
