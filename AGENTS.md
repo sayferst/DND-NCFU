@@ -1150,3 +1150,11 @@ probeGETkey+models отдельнымImagesWorker, безPOST. Late/cancel/keych
 Artist+Images31passed/13.69с(stage3-final.txt). ПроверкииспользуютлокальныйHTTP/
 FakeTransport, невыдавать ихзаживойAPIилиWindowsDPAPI. Платныхзапросовнет.
 Полныйпрогонещёнеокончен. Разрешёнобычныйcommit/push прежнейветки после проверки.
+
+### 1U: итоговая проверка и выпуск
+Полныйscripts/check.py:1108passed/123.21с,0failed/skipped, pip/Ruffуспешны,
+168Python-файлов. Послеэтогоruntimeнеменялся. 22новыхArtistслучая,70защищённых
+файловнеизменны. Семьснимковэтапапросмотрены,ихSHA/исходниксохранены;однафинальная
+строкабюджетауточненапослеснимков,структураUIтаже. DocsMASTER_AND_ARTIST иvalidation
+отражаютсинтетику/GET/DPAPIограничения. НикакихплатныхPOST. Разрешёнобычныйpush
+прежнейветки;датьполныйблокbackup/pull/repair/check/runдляWindows.

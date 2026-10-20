@@ -1,5 +1,10 @@
 # План проверок
 
+Актуально 1U: **1108 passed, 0 failed/skipped, 123.21 с**, pip/Ruff успешны,
+168 Python-файлов. [Проверка Мастера/Художника](docs/validation/artist-2026-10-20/README.md).
+
+## История 1T
+
 Актуально 1T: **1086 passed, 0 failed/skipped, 113.63 с**; pip/Ruff успешны.
 [Отчёт подключения](docs/validation/connection-2026-10-20/README.md).
 
@@ -775,3 +780,13 @@ pip/Ruff успешны,165Python-файлов. Raw: connection-2026-10-20/full-
 Сравнение четырёх независимых исходных случаев:before4failed → after4passed.
 Это проверка приложения на синтетике, не статистика реальной модели.
 Ручная Windows/DPAPI/живой RouterAI приёмка остаётся; платных проб не было.
+
+
+## 2026-10-20 — 1U: подключение Художника
+
+Итог scripts/check.py: **1108passed,0failed/skipped,123.21с**, pip/Ruff успешны,
+168Python-файлов; raw docs/validation/artist-2026-10-20/full-final.txt.
+22новыхслучая test_artist_panel: UI/имена/поиск/два ключа/GET/отказы/отмена/
+сохранение/бюджет/выборбезгенерации/доставкаключавFakeTransport/SessionиRNG.
+ПоследнийцелевойArtist+Images:31passed/13.69с. Промежуточныепрогонывтомжекаталоге.
+ТестыкартинокбезнастоящихPOST, DPAPIс подменой шифрования; невыдаватьзаживуюприёмку.
