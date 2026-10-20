@@ -108,13 +108,14 @@ def test_pronoun_uses_visible_interlocutor_and_all_questions_are_answered(tmp_pa
     assert brief["target_id"] == "villager"
     assert len(context["memory"]["npcs"]) == 1
     name = brief["public_name"]
-    for incomplete in (
-        "Женщина придерживает корзину. «Что-то случилось?»",
-        f"Женщина поправляет ручку корзины. «Хорошо, спасибо. Я {name}».",
-        "Женщина кивает. «Держусь, спасибо. Поможете собрать яблоки?»",
-    ):
-        with pytest.raises(ValueError, match="Не отвечено"):
-            story_proposal(response(incomplete), build_frame(session), text, context=context)
+    # Topic wording is advisory: a refusal or an indirect response is legitimate.
+    indirect = story_proposal(
+        response("Женщина отворачивается. «Я не хочу сейчас говорить о себе»."),
+        build_frame(session),
+        text,
+        context=context,
+    )
+    assert indirect.focus_id == "villager"
     value = story_proposal(
         response(
             f"Женщина отодвигает корзину от дороги. «Меня зовут {name}. "
@@ -157,8 +158,8 @@ def test_ambiguous_target_is_clarified_locally_without_network(window, qt_app, i
     assert not window.ollama.busy
     assert len(window._session.turns) == 1
     assert window._session.turns[-1].scene.model == "local-clarification"
-    assert "стражнику" in window._session.turns[-1].text
-    assert "женщине" in window._session.turns[-1].text
+    assert "Стражник" in window._session.turns[-1].text
+    assert "Жительница" in window._session.turns[-1].text
     assert (window._session.world, window._session.dice.checkpoint()) == before
 
 
@@ -192,10 +193,10 @@ def test_repeats_between_turns_and_within_answer_are_detected():
         "Женщина с яблоками поправляет корзину и смотрит на дорогу за воротами. «Что-то случилось?»"
     )
     frame = build_frame(Session(seed=42))
-    with pytest.raises(ValueError, match="повторяет|Скопировано"):
-        check_story_quality(text, frame, "как дела?", previous=[{"result": text}])
-    with pytest.raises(ValueError, match="повторяется"):
-        check_story_quality(text + "\n" + text, frame, "как дела?")
+    assert "similar_to_previous" in check_story_quality(
+        text, frame, "как дела?", previous=[{"result": text}]
+    )
+    assert "repeat_in_answer" in check_story_quality(text + "\n" + text, frame, "как дела?")
     check_story_quality(text, frame, "повтори описание", previous=[{"result": text}])
 
 
@@ -264,9 +265,7 @@ def test_repair_feedback_reports_all_missing_topics_not_just_first_defect():
     repaired = repair_payload(payload, captured.value)
     instruction = repaired["messages"][0]["content"]
     assert "мысли, чувства" in instruction
-    assert "снаряжение" in instruction
-    assert "Не отвечено на вопрос об имени" in instruction
-    assert "нужна ли помощь" in instruction
+    assert "Не отвечено на вопрос об имени" not in instruction
     assert len(payload["messages"]) == len(repaired["messages"]) == 2
 
 

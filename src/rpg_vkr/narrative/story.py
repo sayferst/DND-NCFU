@@ -49,17 +49,6 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         facts.pop("confirmed_result", None)
     brief = turn_brief(frame, text, campaign=campaign, memory=memory, master=master_question(text))
     catalog_scene = (campaign or {}).get("catalog_scene", [])
-    actors = [r for r in catalog_scene if r["definition"]["kind"] == "actor"]
-    for row in actors:
-        name = row["definition"]["name"]
-        if any(word.casefold() in text.casefold() for word in name.split() if len(word) > 2):
-            brief = {
-                "mode": "scene",
-                "target_id": "",
-                "clarification": "",
-                "tasks": ["На обращение отвечает " + name + "; слова NPC в кавычках."],
-            }
-            break
     if confirmed:
         brief = {**brief, "mode": "result", "clarification": ""}
     if brief.get("mode") == "dialogue":
@@ -72,15 +61,17 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         entry = {"player_message": event.get("player", event.get("player_message", ""))[:300]}
         if event.get("source") == "rules":
             entry["rules_result"] = event.get("result", event.get("confirmed_result", ""))[:350]
-        elif event.get("source") == "scene-director-5":
-            from rpg_vkr.domain.combat import ACTORS
-
+        elif event.get("source") in {"scene-director-5", "scene-director-6"}:
             actor_id = event.get("actor_id", "")
-            if actor_id in ACTORS and ACTORS[actor_id][0] in facts["visible_actors"]:
+            if actor_id and any(
+                (a.get("id") == actor_id) for a in (campaign or {}).get("actors", [])
+            ):
                 entry["npc_reply"] = spoken(event.get("result", ""))[:350]
                 entry["actor_id"] = actor_id
         recent.append(entry)
     context = {
+        "obstacle": (campaign or {}).get("obstacle", ""),
+        "receipt": (campaign or {}).get("receipt") if confirmed else None,
         "persistent_memory": (campaign or {}).get("persistent_memory", {}),
         "proposed_memories": (campaign or {}).get("proposed_memories", []),
         "player_message": text,
@@ -88,6 +79,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "hero_description": (campaign or {}).get("hero_description", ""),
         "world_brief": (campaign or {}).get("world_brief", ""),
         "catalog_scene": catalog_scene,
+        "objects": (campaign or {}).get("objects", []),
         "actor_attempt_result": (campaign or {}).get("actor_attempt_result", "")
         if confirmed
         else "",
@@ -99,7 +91,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "memory": memory,
         "recent_events": recent,
         "turn_brief": brief,
-        "writing_profile": writing_profile(model),
+        "writing_profile": writing_profile(model, text),
         "task": "Опиши уже подтверждённый итог без повторного действия."
         if confirmed
         else (
@@ -180,7 +172,25 @@ def story_text(data, *, confirmed=False):
     return text.strip()
 
 
-def validate_story_text(text, *, confirmed=False):
+def validate_story_text(text, *, confirmed=False, legacy=False):
+    if legacy:
+        return legacy_story_text(text, confirmed=confirmed)
+    from rpg_vkr.narrative.limits import MAX_PROSE
+    from rpg_vkr.narrative.story_quality import prose_only, unsupported_numeric_claim
+
+    if not isinstance(text, str) or not text.strip() or len(text) > MAX_PROSE:
+        raise ValueError("Пустой или слишком большой текст рассказа.")
+    if any(ord(c) < 32 and c not in "\n\t" for c in text) or re.search(r"<[^>]+>", text):
+        raise ValueError("В ответе недопустимая разметка или управляющие символы.")
+    if re.search(r"[\u3400-\u9fff\u3040-\u30ff\uac00-\ud7af]", text):
+        raise ValueError("В ответе посторонний язык; нужен русский текст.")
+    if not re.search(r"[А-Яа-яЁё]", text):
+        raise ValueError("В ответе нет русского текста.")
+    if not confirmed and unsupported_numeric_claim(prose_only(text)):
+        raise ValueError("Рассказчик назначил неподтверждённый механический результат.")
+
+
+def legacy_story_text(text, *, confirmed=False):
     if not isinstance(text, str) or not 20 <= len(text.strip()) <= 1500:
         raise ValueError("Нужен законченный рассказ от 20 до 1500 символов")
     if re.search(r"[\u3400-\u9fff\u3040-\u30ff\uac00-\ud7af]|<|>", text):
@@ -212,13 +222,24 @@ def story_proposal(data, frame, player_text, *, context=None, previous=()):
         player_text,
         brief=brief,
         previous=previous,
-        campaign={"hero_description": context.get("hero_description", "")},
+        campaign=context,
     )
     target = "" if master else brief.get("target_id", "")
+    if not target and not master:
+        from rpg_vkr.narrative.turn_brief import mentioned_actors
+
+        candidates = mentioned_actors(text, brief.get("actors", []))
+        if len(candidates) == 1 and spoken(text):
+            target = candidates[0]
     if not spoken(text):
         target = ""
     facts = ()
-    if target and "name" in brief.get("topics", ()) and not brief.get("name_established"):
+    if (
+        target in {"guard", "villager", "merchant"}
+        and "name" in brief.get("topics", ())
+        and not brief.get("name_established")
+        and brief["public_name"].casefold() in text.casefold()
+    ):
         facts = (StoryFact(target, "public_name", brief["public_name"]),)
     return Proposal("", target, text, facts)
 

@@ -25,18 +25,29 @@ class Meaning:
     version: str = "meaning-1"
 
     def __post_init__(self):
-        if self.kind not in {"master", "dialogue"} or self.target not in {
+        valid_target = self.target in {
             "",
             "guard",
             "villager",
             "merchant",
-        }:
+        }
+        if self.version == "meaning-2":
+            import re
+
+            valid_target = isinstance(self.target, str) and (
+                not self.target or bool(re.fullmatch(r"[a-z][a-z0-9_]{0,63}", self.target))
+            )
+        if self.kind not in {"master", "dialogue"} or not valid_target:
             raise ValueError("Invalid semantic addressee")
         if self.kind == "master" and self.speech_act != "question":
             raise ValueError("A master question cannot perform a social action")
         if self.kind == "dialogue" and not self.target:
             raise ValueError("Missing interlocutor")
-        if self.speech_act not in ACTS or self.topic not in TOPICS or self.version != "meaning-1":
+        if (
+            self.speech_act not in ACTS
+            or self.topic not in TOPICS
+            or self.version not in {"meaning-1", "meaning-2"}
+        ):
             raise ValueError("Invalid semantic interpretation")
 
     def to_dict(self):

@@ -129,7 +129,7 @@ def test_old_v6_starts_memory_at_final_state_without_replaying_and_saves_v7(tmp_
     assert session.memory.events[0].turn_index == 4
     assert session.memory.events[0].roll_indices == (2, 3)
     slots.save(2, session)
-    assert json.loads((slots.directory / "slot-2.json").read_bytes())["schema_version"] == 21
+    assert json.loads((slots.directory / "slot-2.json").read_bytes())["schema_version"] == 22
     assert slots.load(2).to_dict() == session.to_dict()
     assert slots.load(2).submit("бросить кубик").roll.value == 17
     assert (slots.directory / "slot-1.json").read_bytes() == raw
@@ -215,6 +215,6 @@ def test_wrong_context_hash_and_excessive_prose_are_rejected_without_mutation():
     with pytest.raises(ValueError):
         session.add_narration(Narration(0, "local-test:1", "Текст", "0" * 64))
     with pytest.raises(ValueError):
-        Narration(0, "local-test:1", "X" * 1501, "0" * 64)
+        Narration(0, "local-test:1", "X" * 16001, "0" * 64)
     assert session.to_dict() == before
     assert digest(snapshot(session.world, session.character, session.combat, session.progress))

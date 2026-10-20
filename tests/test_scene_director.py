@@ -104,8 +104,13 @@ def test_scene_preconditions_are_enforced(change):
     else:
         session.submit("атаковать стражника")
         revision = len(session.turns)
-    with pytest.raises(ValueError):
+    if change in {"hostile", "combat"}:
+        before = session.world, session.dice.checkpoint(), session.combat
         session.submit_scene("привет", value, "test:1", base_turn=revision)
+        assert (session.world, session.dice.checkpoint(), session.combat) == before
+    else:
+        with pytest.raises(ValueError):
+            session.submit_scene("привет", value, "test:1", base_turn=revision)
 
 
 @pytest.mark.parametrize(

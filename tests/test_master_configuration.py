@@ -180,4 +180,4 @@ def test_real_transport_sends_instruction_and_persists_its_hash(qt_app, tmp_path
         ]
         assert "бытовые детали" in system
         assert notes[0].instruction_hash == instruction_hash(system)
-        assert notes[0].prompt_version == "narrator-prose-13"
+        assert notes[0].prompt_version == "narrator-prose-14"

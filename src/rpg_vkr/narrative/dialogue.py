@@ -74,7 +74,7 @@ def last_interlocutor(session):
             "идти на рынок",
         }:
             break
-        if turn.actor_id in ADDRESSEES.values() and session.actor_is_here(turn.actor_id):
+        if turn.actor_id and session.actor_is_here(turn.actor_id):
             return turn.actor_id
     return None
 

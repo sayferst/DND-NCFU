@@ -834,7 +834,6 @@ class Session:
 
     def submit_scene(self, action, proposal, model, *, base_turn, instruction_hash=""):
         """Commit validated fiction and its visible segments in one transaction."""
-        from rpg_vkr.domain.meaning import Meaning
         from rpg_vkr.narrative.context import build_frame
         from rpg_vkr.narrative.segments import split_story
         from rpg_vkr.narrative.speech import speech_details
@@ -847,15 +846,26 @@ class Session:
         record = SceneRecord(base_turn, self.world.location, model, proposal)
         if proposal.focus_id and not self.actor_is_here(proposal.focus_id):
             raise ValueError("Собеседника нет в текущем месте.")
-        validate_scene(record, self.turns, self.world.location, self.combat, self.world.hp)
+        validate_scene(
+            record,
+            self.turns,
+            self.world.location,
+            self.combat,
+            self.world.hp,
+            scene=self.interaction_state(),
+            catalog=self.catalog,
+        )
         target = proposal.focus_id
         dialogue = None
         if target:
             act, topic = speech_details(action)
             if act == "contact" and "спро" in action.casefold():
                 act, topic = "question", "other"
-            _, _, _, dialogue = resolve_conversation(
-                self, action, target, meaning=Meaning("dialogue", target, act, topic)
+            from rpg_vkr.domain.social import grievance_after
+
+            before = grievance(self.turns, target)
+            dialogue = DialogueRecord(
+                target, act, topic, before, grievance_after(before, act), "homebrew-social-2"
             )
         turn = Turn(
             action,
@@ -879,7 +889,14 @@ class Session:
                     model,
                     proposal.narration,
                     build_frame(self).fingerprint,
-                    segments=split_story(proposal.narration, target),
+                    segments=split_story(
+                        proposal.narration,
+                        target,
+                        next(
+                            (a.name for a in self.interaction_state().actor_refs if a.id == target),
+                            None,
+                        ),
+                    ),
                     instruction_hash=instruction_hash,
                 )
             )
@@ -1172,6 +1189,12 @@ class Session:
         target = turn.dialogue.target if turn and turn.dialogue else None
         if any(segment.speaker_id not in {"master", target} for segment in note.segments):
             raise ValueError("Narration contains an unapproved speaker")
+        if target:
+            actor = next((a for a in self.interaction_state().actor_refs if a.id == target), None)
+            if not actor or any(
+                s.speaker_id == target and s.display_name != actor.name for s in note.segments
+            ):
+                raise ValueError("Narration speaker identity differs from the scene")
 
     def to_dict(self) -> dict:
         return {
@@ -1202,7 +1225,7 @@ class Session:
         }
 
     @classmethod
-    def from_dict(cls, data: object, version: int = 21) -> "Session":
+    def from_dict(cls, data: object, version: int = 22) -> "Session":
         if type(version) is not int or version not in (
             1,
             2,
@@ -1225,6 +1248,7 @@ class Session:
             19,
             20,
             21,
+            22,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -1349,6 +1373,8 @@ class Session:
             dialogue = None
             if version >= 9 and item["dialogue"] is not None:
                 dialogue = DialogueRecord.from_dict(item["dialogue"])
+                if version < 22 and dialogue.rules_version != "homebrew-social-1":
+                    raise ValueError("New conversation requires schema 22")
                 if (
                     dialogue.before != grievance(session.turns, dialogue.target)
                     or item["actor_id"] != dialogue.target
@@ -1373,7 +1399,7 @@ class Session:
                     or meaning.topic != dialogue.topic
                 ):
                     raise ValueError("Social record does not match saved semantics")
-            text = _text(item["text"], 4000)
+            text = _text(item["text"], 16000 if version >= 22 else 4000)
             roll = None
             check = None
             stored_check = item.get("check")
@@ -1605,6 +1631,8 @@ class Session:
                 continue
             if version >= 12 and item["scene"] is not None:
                 record = SceneRecord.from_dict(item["scene"])
+                if version < 22 and record.version == "scene-director-6":
+                    raise ValueError("New scene requires session schema 22")
                 if (
                     record.base_turn != len(session.turns)
                     or text != record.proposal.narration
@@ -2116,7 +2144,10 @@ class Session:
                 if (
                     interactive
                     and turn.scene.proposal.focus_id
-                    and ACTORS[turn.scene.proposal.focus_id][1] != interactive.current
+                    and not any(
+                        a.id == turn.scene.proposal.focus_id and a.place == interactive.current
+                        for a in interactive.actor_refs
+                    )
                 ):
                     raise ValueError("Scene addresses an absent actor")
                 historical_combat = CombatState.from_dict(
@@ -2140,6 +2171,8 @@ class Session:
                     fields["world.location"],
                     historical_combat,
                     fields["world.hp"],
+                    scene=interactive or InteractiveWorld.initial(fields["world.location"]),
+                    catalog=historical_catalog,
                 )
                 if event.changes:
                     raise ValueError("Narrative scene attempted a mechanical change")

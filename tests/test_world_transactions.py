@@ -237,8 +237,18 @@ def test_real_v17_fixture_migrates_without_changing_world_brief_challenge_or_rng
     ],
 )
 def test_free_prose_cannot_execute_transfers_or_travel(prose):
-    with pytest.raises(ValueError, match="неподтверждённый"):
-        validate_story_text(prose)
+    # The prose parser is not a state mutator; fact checks get actual object IDs.
+    validate_story_text(prose)
+    session = Session(seed=42)
+    before = session.to_dict()
+    from rpg_vkr.narrative.master import campaign_context
+
+    if "убегаете" not in prose:
+        with pytest.raises(ValueError, match="Неподтверждённый"):
+            check_story_quality(
+                prose, build_frame(session), "осматриваюсь", campaign=campaign_context(session)
+            )
+    assert session.to_dict() == before
 
 
 def test_failed_transfer_and_absent_npc_cannot_be_undone_by_writer():

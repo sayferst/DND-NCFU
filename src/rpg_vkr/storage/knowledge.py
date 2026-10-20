@@ -37,7 +37,7 @@ class CampaignIndex:
         def dump(value):
             return json.dumps(value, ensure_ascii=False)
 
-        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (21, dump(session.to_dict())))
+        self.db.execute("INSERT INTO snapshot VALUES (?,?)", (22, dump(session.to_dict())))
         from rpg_vkr.storage.catalog import populate_catalog
 
         populate_catalog(self.db, session)
@@ -224,7 +224,7 @@ def restore_session(path):
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
         if (
             len(values) != 1
-            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18, 19, 20, 21)
+            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22)
             or len(values[0][1]) > 32 * 1024 * 1024
         ):
             raise ValueError("Invalid campaign snapshot")

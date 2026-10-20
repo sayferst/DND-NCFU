@@ -16,3 +16,4 @@ data/catalog/seed-v1*.json -text
 # Raw campaign package evidence, including deliberately failed first runs.
 docs/validation/linux-adventure-*-2026-10-19.txt -text whitespace=-blank-at-eol
 docs/validation/linux-generated-campaigns-*-2026-10-19.txt -text whitespace=-blank-at-eol
+docs/validation/linux-master-response-*-2026-10-20.txt -text whitespace=-blank-at-eol

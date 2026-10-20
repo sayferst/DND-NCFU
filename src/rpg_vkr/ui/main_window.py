@@ -470,7 +470,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             ]
             if len(named) == 1:
                 actor_id = named[0]
-        if note.prompt_version in {"narrator-prose-11", "narrator-prose-12", "narrator-prose-13"}:
+        if note.prompt_version in {
+            "narrator-prose-11",
+            "narrator-prose-12",
+            "narrator-prose-13",
+            "narrator-prose-14",
+        }:
             self.journal.append_master_story(note.text, actor_id=actor_id)
         elif note.segments:
             self.journal.append_segments(note.segments)

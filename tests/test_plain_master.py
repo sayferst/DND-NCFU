@@ -45,7 +45,7 @@ def test_real_http_prose_and_single_repair_after_hero_creation(window, qt_app, m
         wait_for(qt_app, lambda: not window.ollama.busy)
         assert len(window._session.turns) == 1
         assert len(requests) == 1 + calls
-        assert window._session.turns[0].scene.version == "scene-director-5"
+        assert window._session.turns[0].scene.version == "scene-director-6"
         assert (window._session.world, window._session.dice.checkpoint()) == before
         for _, body in requests[1:]:
             assert "format" not in body
@@ -77,8 +77,7 @@ def test_compound_question_needs_spoken_answer():
     data = {
         "message": {"role": "assistant", "content": "Жительница стоит у ворот и собирает яблоки."}
     }
-    with pytest.raises(ValueError, match="прямо ответить"):
-        story_proposal(data, frame, "подойду к девушке и спрошу, как дела")
+    assert story_proposal(data, frame, "подойду к девушке и спрошу, как дела").narration
 
 
 def test_user_supplied_bad_transaction_is_never_extracted():

@@ -1,0 +1,948 @@
+{
+  "summary": {
+    "source_commit": "e5e89968f5e2e27bf5319009476e61a90a65a9b2",
+    "kind": "synthetic authored replies, unchanged runtime; no actual DeepSeek inference",
+    "valid_replies": 28,
+    "valid_accepted": 10,
+    "valid_rejected": 18,
+    "invalid_controls": 8,
+    "invalid_rejected": 5,
+    "invalid_accepted": 3,
+    "all_state_rng_unchanged": true,
+    "binding_valid": 6,
+    "binding_valid_accepted": 1,
+    "binding_confirmation_required": 1,
+    "binding_valid_hard_rejected": 4,
+    "after": null,
+    "after_reason": "Implementation awaits user confirmation."
+  },
+  "cases": [
+    {
+      "id": "ordinary_observation",
+      "category": "question",
+      "message": "Что видно над дорогой?",
+      "text": "Над дорогой плывут низкие облака. В просветах между ними виднеется бледное небо.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не указан адресат: К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [
+          "directions"
+        ],
+        "tasks": [
+          "Прямой ответ о дороге из доступных фактов."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": "К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?"
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "brief_yes",
+      "category": "short",
+      "message": "Жительница, здесь можно постоять?",
+      "text": "«Да, можно».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Нужен законченный рассказ от 20 до 1500 символов",
+      "brief": {
+        "mode": "scene",
+        "target_id": "villager",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "brief_refusal",
+      "category": "short",
+      "message": "Жительница, дадите мне яблоко?",
+      "text": "«Нет, простите».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Нужен законченный рассказ от 20 до 1500 символов",
+      "brief": {
+        "mode": "scene",
+        "target_id": "villager",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "long_scene",
+      "category": "length",
+      "message": "Мастер, подробно опиши погоду над рекой",
+      "text": "Над рекой поднимается туман, сквозь него пробивается вечерний свет. Облака движутся к дальним холмам, открывая узкую полосу бледного неба. Ветер сначала касается верхушек травы, затем пробегает по самой дороге. Между колеями ещё держится пыль, но у обочины она уже потемнела от влаги. На деревянных створках ворот выступили мелкие капли. Из щелей тянет прохладой, и скрип петель слышен отчётливее обычного. Дальше по дороге воздух кажется плотнее: там дымка смешалась с низкой тучей. Она не закрывает холмы целиком, только сглаживает их очертания. Временами ветер стихает, и тогда доносится ровный шум воды. Река скрыта за поворотом, но её близость выдаёт сырой запах. Сухой лист кружится у колеи и ненадолго застревает между камнями. Трава уходит волнами к подножию холма. На тёмном фоне неба особенно заметны светлые края облаков. Дождя пока нет, хотя воздух уже тяжёлый, прохладный. Дорога блестит только в низинах, где сохранилась утренняя влага. За воротами голоса звучат глуше, словно их прикрыли тканью. Последний луч скользит по верхнему бревну и гаснет. Склон напротив медленно теряет цвет, оставляя лишь тёмные полосы травы. Над ним виден просвет, в котором облака на мгновение стали серебристыми. По дороге ещё можно различить направление старых следов, но в сумерках они сливаются с неровностями земли. Воздух пахнет мокрой древесиной, речной водой и холодным камнем. Под аркой ветер поворачивает и поднимает с земли несколько пылинок. Они видны в последней светлой полосе, затем исчезают в тени. Вдалеке перекликаются птицы; их короткие голоса затихают раньше, чем успевает вернуться эхо. Небо над холмами темнеет ровно, без резкого порыва и без близкой грозы. Только на востоке остаётся узкая щель света, похожая на отражение в воде.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "Distinct authored sentences; complete long scene, no repeated scaffold.",
+      "accepted": false,
+      "error": "ValueError: Нужен законченный рассказ от 20 до 1500 символов",
+      "brief": {
+        "mode": "description",
+        "target_id": "",
+        "tasks": []
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "received_answer",
+      "category": "figurative",
+      "message": "Мастер, где мельница?",
+      "text": "Вы получили ответ на свой вопрос: мельница стоит ниже по течению, за каменным мостом.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Рассказчик назначил неподтверждённый механический результат",
+      "brief": {
+        "mode": "description",
+        "target_id": "",
+        "tasks": []
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "take_pause",
+      "category": "figurative",
+      "message": "Я делаю паузу и жду ответа.",
+      "text": "Вы берёте паузу. Шум ветра заполняет тишину, пока собеседник подбирает слова.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Рассказчик назначил неподтверждённый механический результат",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "avoid_answer",
+      "category": "figurative",
+      "message": "Я отвечаю уклончиво.",
+      "text": "Вы уходите от прямого ответа. Жительница замечает это и больше не настаивает.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Рассказчик назначил неподтверждённый механический результат",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "dead_silence",
+      "category": "figurative",
+      "message": "Что слышно в галерее?",
+      "text": "В галерее царит мертвая тишина. Даже шум воды сюда почти не доносится.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Смерть персонажа игровыми правилами не подтверждена. Не объявляй смерть.",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "dead_leaves",
+      "category": "figurative",
+      "message": "Мастер, что за шорох под ногами?",
+      "text": "Под ногами шуршат мертвые листья. Порыв ветра подхватывает один и несёт к дороге.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Смерть персонажа игровыми правилами не подтверждена. Не объявляй смерть.",
+      "brief": {
+        "mode": "description",
+        "target_id": "",
+        "tasks": []
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "sensory_cold",
+      "category": "observation",
+      "message": "Я касаюсь камня у дороги.",
+      "text": "Вы чувствуете холод камня под ладонью. На его поверхности блестит влага.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не указан адресат: К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [
+          "directions"
+        ],
+        "tasks": [
+          "Прямой ответ о дороге из доступных фактов."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": "К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?"
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "wellbeing_synonym",
+      "category": "dialogue",
+      "message": "Жительница, как у вас дела?",
+      "text": "Жительница морщится. «С рассвета ломит спину, будто всю ночь таскала жернова».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не отвечено на вопрос «как дела». Дай содержательный ответ NPC.",
+      "brief": {
+        "mode": "dialogue",
+        "target_id": "villager",
+        "topics": [
+          "wellbeing"
+        ],
+        "tasks": [
+          "Прямой ответ NPC, как у него дела сейчас, с учётом его занятия."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "help_synonym",
+      "category": "dialogue",
+      "message": "Жительница, нужна ли вам помощь?",
+      "text": "Жительница щурится от ветра. «Станьте рядом и заслоните меня от порывов».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не отвечено на вопрос «нужна ли помощь». Дай содержательный ответ NPC.",
+      "brief": {
+        "mode": "dialogue",
+        "target_id": "villager",
+        "topics": [
+          "help"
+        ],
+        "tasks": [
+          "Ответ NPC: нужна ли помощь и с чем; предложение не означает согласие героя."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "npc_refuses_name",
+      "category": "dialogue",
+      "message": "Жительница, как вас зовут?",
+      "text": "Жительница отворачивается. «Я незнакомцам не представляюсь. Не обижайтесь».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не отвечено на вопрос об имени. NPC должен представиться: Марта",
+      "brief": {
+        "mode": "dialogue",
+        "target_id": "villager",
+        "topics": [
+          "name"
+        ],
+        "tasks": [
+          "Собеседник представляется указанным именем в прямой речи; имя не менять."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "Марта",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "declines_quest",
+      "category": "refusal",
+      "message": "Жительница, не буду брать поручение.",
+      "text": "Вы отказываетесь от поручения. «Что ж, поищу другого помощника», — отвечает жительница.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку.",
+      "brief": {
+        "mode": "dialogue",
+        "target_id": "villager",
+        "topics": [
+          "help"
+        ],
+        "tasks": [
+          "Ответ NPC: нужна ли помощь и с чем; предложение не означает согласие героя."
+        ],
+        "speech_act": "refusal",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_name_direct",
+      "category": "new_npc",
+      "message": "Веста, как у тебя дела?",
+      "text": "Веста поправляет карту. «Весь день ищу, где река подмыла опоры; к вечеру стало яснее».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "clarification": "",
+        "tasks": [
+          "На обращение отвечает Веста; слова NPC в кавычках."
+        ]
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_name_inflected",
+      "category": "new_npc",
+      "message": "Спрашиваю у Весты, как у неё дела.",
+      "text": "Веста поправляет карту. «Река подмыла опоры, придётся менять маршрут».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не указан адресат: К кому вы обращаетесь? Назовите собеседника рядом с вами.",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [
+          "wellbeing"
+        ],
+        "tasks": [
+          "Прямой ответ NPC, как у него дела сейчас, с учётом его занятия."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": "К кому вы обращаетесь? Назовите собеседника рядом с вами."
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_name_question",
+      "category": "new_npc",
+      "message": "Как тебя зовут?",
+      "text": "Веста поднимает глаза. «Я Веста, картограф этой переправы».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Не указан адресат: К кому вы обращаетесь? Назовите собеседника рядом с вами.",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [
+          "name"
+        ],
+        "tasks": [
+          "Собеседник представляется указанным именем в прямой речи; имя не менять."
+        ],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": "К кому вы обращаетесь? Назовите собеседника рядом с вами."
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "new_npc_insult",
+      "category": "insult",
+      "message": "Веста, твой план никуда не годится.",
+      "text": "Веста сжимает край карты. «Тогда предложите путь лучше, только сперва посмотрите на опоры».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "clarification": "",
+        "tasks": [
+          "На обращение отвечает Веста; слова NPC в кавычках."
+        ]
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "negotiation",
+      "category": "negotiation",
+      "message": "Веста, давай обсудим другой маршрут.",
+      "text": "Веста разглаживает карту. «Можно обойти через верховья, но на это уйдёт лишний день».",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "clarification": "",
+        "tasks": [
+          "На обращение отвечает Веста; слова NPC в кавычках."
+        ]
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "exploration",
+      "category": "exploration",
+      "message": "Осматриваю стену, ищу следы ремонта.",
+      "text": "На старой кладке различим более светлый раствор. Вдоль шва ещё держатся влажные песчинки.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "unknown_place_explanation",
+      "category": "unknown_place",
+      "message": "Хочу попасть в город за перевалом.",
+      "text": "От моста видна лишь ближняя дорога. Чтобы найти путь за перевал, сначала понадобится карта или проводник.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "unsupported_magic_obstacle",
+      "category": "magic",
+      "message": "Хочу телепортироваться за реку.",
+      "text": "У героя пока нет подтверждённого способа телепортации. Можно поискать переправу или узнать, кто владеет такой магией.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "simple_physical_attempt",
+      "category": "unexpected_action",
+      "message": "Я пробую свистнуть, чтобы привлечь внимание.",
+      "text": "На резкий свист оборачивается дозорный. «Кого ищете?» — спрашивает он, оставаясь у моста.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "repeated_true_instruction",
+      "category": "repeat",
+      "message": "Ещё подскажи, что здесь важно?",
+      "text": "У северной опоры моста под светлым камнем проходит узкая трещина, и от неё тянет сыростью. Дозорный ждёт у перил.",
+      "valid": true,
+      "confirmed": false,
+      "annotation": "Previously established spatial fact can legitimately be mentioned again.",
+      "accepted": false,
+      "error": "ValueError: Ответ почти повторяет предыдущий рассказ. Ответь на НОВОЕ сообщение.; Скопировано длинное предложение из прошлого хода. Продолжи разговор.; Не указан адресат: К кому вы обращаетесь? Назовите собеседника рядом с вами.",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": "К кому вы обращаетесь? Назовите собеседника рядом с вами."
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "committed_attack_literal",
+      "category": "confirmed_attack",
+      "message": "атакую дозорного",
+      "text": "Вы наносите удар дозорному. Он отступает на шаг и снова поднимает оружие.",
+      "valid": true,
+      "confirmed": true,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "result",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "committed_attack_paraphrase",
+      "category": "confirmed_attack",
+      "message": "атакую дозорного",
+      "text": "Удар достигает дозорного. Он отступает на шаг и снова поднимает оружие.",
+      "valid": true,
+      "confirmed": true,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "result",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "partial_failure_prefix",
+      "category": "failed_check",
+      "message": "иду к мосту и забираю жетон",
+      "text": "Вы уходите из галереи к мосту, но завладеть жетоном не удаётся. Веста замечает протянутую руку.",
+      "valid": true,
+      "confirmed": true,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Попытка не удалась. Не описывай получение вещи или уход как свершившийся факт.",
+      "brief": {
+        "mode": "result",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "failed_attempt_honest",
+      "category": "failed_check",
+      "message": "иду к мосту и забираю жетон",
+      "text": "У моста Веста прикрывает жетон ладонью. Предмет остаётся у неё.",
+      "valid": true,
+      "confirmed": true,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "result",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "fake_reward",
+      "category": "negative_control",
+      "message": "осматриваю окрестности",
+      "text": "Вы получили сто золотых монет и новый меч за осмотр дороги.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Рассказчик назначил неподтверждённый механический результат",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "fake_reward_indirect",
+      "category": "negative_control",
+      "message": "осматриваю окрестности",
+      "text": "Теперь в вашем кошельке лежат семьдесят золотых монет, хотя прежде их было восемь.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "invented_hero_reply",
+      "category": "negative_control",
+      "message": "осматриваю окрестности",
+      "text": "«Я согласен на любые условия», — говорите вы, решив помочь незнакомцу.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Модель сочинила реплику за игрока. Не пиши слова героя.",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "invented_feeling",
+      "category": "negative_control",
+      "message": "осматриваю окрестности",
+      "text": "Вы чувствуете необъяснимую любовь к встречному и решаете остаться навсегда.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку.",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "renamed_hero",
+      "category": "negative_control",
+      "message": "осматриваю окрестности",
+      "text": "Теперь вас зовут Альмар: прежнее имя забыто, а семья всегда жила в степи.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "malformed_response_language",
+      "category": "negative_control",
+      "message": "осматриваю окрестности",
+      "text": "走近门口 поговорить с ним.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: В рассказ попали посторонний язык или разметка",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "unsolicited_kill",
+      "category": "negative_control",
+      "message": "поговорить со стражником",
+      "text": "Вы убили стражника одним ударом. Он падает, и схватка завершается.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "",
+      "accepted": false,
+      "error": "ValueError: Сначала нужен расчёт атаки движком. Не назначай боевой исход в свободной сцене.; NPC должен прямо ответить на вопрос или обращение, а не описывать пейзаж",
+      "brief": {
+        "mode": "dialogue",
+        "target_id": "guard",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": null,
+      "state_and_rng_unchanged": true
+    },
+    {
+      "id": "npc_action_not_registered",
+      "category": "canon_gap",
+      "message": "Что дальше?",
+      "text": "Из-за опоры выходит человек по имени Северин и кладёт вам в ладонь серебряный ключ.",
+      "valid": false,
+      "confirmed": false,
+      "annotation": "New actor and transfer were not registered; a good writer is not an executor.",
+      "accepted": true,
+      "error": "",
+      "brief": {
+        "mode": "scene",
+        "target_id": "",
+        "topics": [],
+        "tasks": [],
+        "speech_act": "question",
+        "approach_requested": false,
+        "public_name": "",
+        "name_established": false,
+        "clarification": ""
+      },
+      "focus_id": "",
+      "state_and_rng_unchanged": true
+    }
+  ],
+  "bindings": [
+    {
+      "id": "direct",
+      "message": "Иду в галерею.",
+      "valid": true,
+      "status": "accepted",
+      "error": ""
+    },
+    {
+      "id": "harmless_negation",
+      "message": "Иду в галерею, не оглядываясь.",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "conditional_target",
+      "message": "Иду в галерею, если она открыта.",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "speech_and_action",
+      "message": "Говорю Весте спасибо и иду в галерею.",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "action_then_question",
+      "message": "Иду в галерею. Кто там?",
+      "valid": true,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "unknown_wording",
+      "message": "Шагаю в галерею.",
+      "valid": true,
+      "status": "PlanConfirmationRequired",
+      "error": "Подтвердите, как мастер понял вашу формулировку."
+    },
+    {
+      "id": "negated_intent",
+      "message": "Не иду в галерею.",
+      "valid": false,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    },
+    {
+      "id": "question_only",
+      "message": "Могу ли я идти в галерею?",
+      "valid": false,
+      "status": "ValueError",
+      "error": "Вопрос, отрицание или речь не подтверждают изменение мира."
+    }
+  ]
+}

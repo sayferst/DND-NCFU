@@ -1,0 +1,54 @@
+{
+  "messages": [
+    {
+      "message": "Веста, здравствуйте.",
+      "posts": 2,
+      "turn_count": 1,
+      "actor_id": null,
+      "last_interlocutor": null,
+      "status": "Рассказ сохранён в памяти сессии. Сохраните сессию в ячейку.",
+      "draft": "",
+      "last_diagnostic": "Попытка 1\nЭтап: director; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 242 байт; завершение: stop\nДлина thinking: 0\nПроверка: Формат и ограниченные проверки содержания пройдены; литературное качество не оценено\nОтвет (до 6000 символов):\nВеста отрывается от карты. «Здравствуйте. Вы ищете переправу?»\nБазовая инструкция SHA-256: b4e6cb7d1a32a93eee5b3f5d79f1997a1c8467ea83f5f2a463e8257e1d8deca6"
+    },
+    {
+      "message": "Как тебя зовут?",
+      "posts": 3,
+      "turn_count": 1,
+      "actor_id": null,
+      "last_interlocutor": null,
+      "status": "Рассказ мастера: модель не дала пригодного рассказа после двух попыток. Подробности — в техническом ответе. Ввод или выполненный итог сохранены.",
+      "draft": "Как тебя зовут?",
+      "last_diagnostic": "Попытка 1\nЭтап: director; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 246 байт; завершение: stop\nДлина thinking: 0\nПроверка: ValueError: Не указан адресат: К кому вы обращаетесь? Назовите собеседника рядом с вами.\nОтвет (до 6000 символов):\nВеста кивает. «Меня зовут Веста. Я составляю карты речных путей».\nБазовая инструкция SHA-256: b4e6cb7d1a32a93eee5b3f5d79f1997a1c8467ea83f5f2a463e8257e1d8deca6\n\nПопытка 2\nЭтап: director; модель: deepseek/audit-no-provider\nФактическая модель API: deepseek/audit-no-provider\nРазмер ответа: 246 байт; завершение: stop\nДлина thinking: 0\nПроверка: ValueError: Не указан адресат: К кому вы обращаетесь? Назовите собеседника рядом с вами.\nОтвет (до 6000 символов):\nВеста кивает. «Меня зовут Веста. Я составляю карты речных путей».\nБазовая инструкция SHA-256: b4e6cb7d1a32a93eee5b3f5d79f1997a1c8467ea83f5f2a463e8257e1d8deca6"
+    }
+  ],
+  "requests": [
+    {
+      "kind": "plan",
+      "player": "Веста, здравствуйте.",
+      "prior_npc_reply_in_payload": false
+    },
+    {
+      "kind": "writer",
+      "player": "Веста, здравствуйте.",
+      "prior_npc_reply_in_payload": false
+    },
+    {
+      "kind": "plan",
+      "player": "Как тебя зовут?",
+      "prior_npc_reply_in_payload": true
+    },
+    {
+      "kind": "writer",
+      "player": "Как тебя зовут?",
+      "prior_npc_reply_in_payload": true
+    },
+    {
+      "kind": "writer",
+      "player": "Как тебя зовут?",
+      "prior_npc_reply_in_payload": true
+    }
+  ],
+  "dynamic_focus_error": "Unknown scene speaker",
+  "external_calls": 0,
+  "loopback_key_checks": 5
+}

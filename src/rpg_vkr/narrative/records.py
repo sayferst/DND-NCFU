@@ -3,9 +3,10 @@
 import re
 from dataclasses import asdict, dataclass
 
+from rpg_vkr.narrative.limits import MAX_PROSE
 from rpg_vkr.narrative.segments import Segment
 
-PROMPT_VERSION = "narrator-prose-13"
+PROMPT_VERSION = "narrator-prose-14"
 SUPPORTED_PROMPTS = {
     "narrator-prose-1",
     "narrator-prose-2",
@@ -19,6 +20,7 @@ SUPPORTED_PROMPTS = {
     "narrator-prose-10",
     "narrator-prose-11",
     "narrator-prose-12",
+    "narrator-prose-13",
     PROMPT_VERSION,
 }
 
@@ -43,7 +45,7 @@ class Narration:
         if (
             not isinstance(self.text, str)
             or not self.text.strip()
-            or len(self.text) > 1500
+            or len(self.text) > (MAX_PROSE if self.prompt_version == PROMPT_VERSION else 1500)
             or any(ord(c) < 32 and c not in "\n\t" for c in self.text)
         ):
             raise ValueError("Invalid narration text")
@@ -56,7 +58,7 @@ class Narration:
 
         if (
             not isinstance(self.segments, tuple)
-            or len(self.segments) > 24
+            or len(self.segments) > (64 if self.prompt_version == PROMPT_VERSION else 24)
             or not all(isinstance(item, Segment) for item in self.segments)
         ):
             raise ValueError("Invalid visible segments")
@@ -75,7 +77,7 @@ class Narration:
     def to_dict(self):
         result = asdict(self)
         if (
-            self.prompt_version not in {"narrator-prose-12", PROMPT_VERSION}
+            self.prompt_version not in {"narrator-prose-12", "narrator-prose-13", PROMPT_VERSION}
             and not self.instruction_hash
         ):
             result.pop("instruction_hash")

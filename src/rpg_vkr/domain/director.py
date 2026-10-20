@@ -7,6 +7,7 @@ from rpg_vkr.commands import CHAT_TARGETS, NPC_CONTACTS, allowed_intents
 from rpg_vkr.domain.campaign import plain
 from rpg_vkr.domain.combat import ACTORS
 from rpg_vkr.domain.world import LOCATIONS
+from rpg_vkr.narrative.limits import MAX_PROSE
 
 FACT_KEYS = {"sensory_detail", "motive", "concern", "rumour", "occupation_detail", "public_name"}
 SUBJECTS = {*LOCATIONS, "guard", "villager", "merchant"}
@@ -74,9 +75,11 @@ class Proposal:
             if self.focus_id or self.narration or self.facts:
                 raise ValueError("Cannot mix mechanics and speculative outcomes")
             return
-        if self.focus_id not in {"", "guard", "villager", "merchant"}:
+        if not isinstance(self.focus_id, str) or (
+            self.focus_id and not re.fullmatch(r"[a-z][a-z0-9_]{0,63}", self.focus_id)
+        ):
             raise ValueError("Unknown scene speaker")
-        plain(self.narration, 1500)
+        plain(self.narration, MAX_PROSE)
         if len(self.facts) > 3 or not all(isinstance(f, StoryFact) for f in self.facts):
             raise ValueError("Too many scene facts")
         ids = [(f.subject, f.key) for f in self.facts]
@@ -104,7 +107,7 @@ class SceneRecord:
     location: str
     model: str
     proposal: Proposal
-    version: str = "scene-director-5"
+    version: str = "scene-director-6"
 
     def __post_init__(self):
         if type(self.base_turn) is not int or not 0 <= self.base_turn < 2000:
@@ -115,6 +118,7 @@ class SceneRecord:
             "scene-director-3",
             "scene-director-4",
             "scene-director-5",
+            "scene-director-6",
         }:
             raise ValueError("Invalid scene context")
         if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
@@ -129,6 +133,11 @@ class SceneRecord:
     def from_dict(cls, value):
         if not isinstance(value, dict) or set(value) != set(cls.__dataclass_fields__):
             raise ValueError("Invalid saved scene")
+        if value["version"] != "scene-director-6" and (
+            len(value["proposal"]["narration"]) > 1500
+            or value["proposal"]["focus_id"] not in {"", "guard", "villager", "merchant"}
+        ):
+            raise ValueError("Legacy scene limits exceeded")
         p = dict(value["proposal"])
         p["facts"] = list(p["facts"])
         return cls(**(value | {"proposal": Proposal.from_dict(p)}))
@@ -146,9 +155,43 @@ def known_facts(turns):
     return result
 
 
-def validate_scene(record, turns, location, combat, hp):
+def validate_scene(record, turns, location, combat, hp, *, scene=None, catalog=None):
     if record.base_turn != len(turns) or record.location != location:
         raise ValueError("Сцена устарела. Мир не изменён.")
+    if record.version == "scene-director-6":
+        if hp <= 0:
+            raise ValueError("Герой выбыл; загрузите сохранение или начните новую игру.")
+        target = record.proposal.focus_id
+        if target:
+            if scene is None or not any(
+                a.id == target and a.place == scene.current for a in scene.actor_refs
+            ):
+                raise ValueError("Собеседника нет в текущем месте.")
+            if target in ACTORS:
+                alive = combat.actor(target).hp > 0
+            else:
+                entity = (
+                    next((e for e in catalog.entities if e.id == target), None) if catalog else None
+                )
+                alive = bool(
+                    entity
+                    and (entity.state or {}).get("hp", 1) > 0
+                    and (entity.state or {}).get("life") != "dead"
+                )
+            if not alive:
+                raise ValueError("Погибший или поверженный собеседник не отвечает.")
+        from rpg_vkr.narrative.story import validate_story_text
+
+        validate_story_text(record.proposal.narration, confirmed=True)
+        current = known_facts(turns)
+        for fact in record.proposal.facts:
+            if fact.subject not in {location, target}:
+                raise ValueError("Предложение изменяет сведения вне текущей сцены.")
+            if (fact.subject, fact.key) in current and current[
+                fact.subject, fact.key
+            ] != fact.value:
+                raise ValueError("Мастер попытался заменить уже установленный факт.")
+        return
     if combat.active or hp <= 0:
         raise ValueError("Для этой ситуации сначала нужны игровые правила, не свободная сцена.")
     target = record.proposal.focus_id
@@ -173,7 +216,7 @@ def validate_scene(record, turns, location, combat, hp):
     }:
         from rpg_vkr.narrative.story import validate_story_text
 
-        validate_story_text(text)
+        validate_story_text(text, legacy=True)
         if target and not re.search(r"«[^»]+»|(?:^|\n)\s*—\s*\S", text):
             raise ValueError("В сцене отсутствует прямая речь выбранного NPC.")
         return

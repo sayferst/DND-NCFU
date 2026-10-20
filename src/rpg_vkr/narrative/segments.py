@@ -4,6 +4,7 @@ import re
 from dataclasses import asdict, dataclass
 
 from rpg_vkr.domain.campaign import plain
+from rpg_vkr.narrative.limits import MAX_PROSE
 
 
 @dataclass(frozen=True)
@@ -13,7 +14,11 @@ class Segment:
     text: str
 
     def __post_init__(self):
-        if self.speaker_id not in {"master", "guard", "villager", "merchant"}:
+        if (
+            not isinstance(self.speaker_id, str)
+            or not re.fullmatch(r"[a-z][a-z0-9_]{0,63}", self.speaker_id)
+            or self.speaker_id == "hero"
+        ):
             raise ValueError("Invalid visible speaker")
         expected = {
             "master": "Мастер",
@@ -21,9 +26,10 @@ class Segment:
             "villager": "Жительница",
             "merchant": "Торговец",
         }
-        if self.display_name != expected[self.speaker_id]:
+        if self.speaker_id in expected and self.display_name != expected[self.speaker_id]:
             raise ValueError("Untrusted speaker name")
-        plain(self.text, 1500)
+        plain(self.display_name, 100)
+        plain(self.text, MAX_PROSE)
 
     def to_dict(self):
         return asdict(self)
@@ -35,17 +41,23 @@ class Segment:
         return cls(**value)
 
 
-def split_story(text, actor_id=None):
+def split_story(text, actor_id=None, display_name=None):
     from rpg_vkr.domain.combat import ACTORS
 
-    if actor_id not in {"guard", "villager", "merchant"}:
+    if not actor_id:
         return (Segment("master", "Мастер", text),)
     result, offset = [], 0
     for match in re.finditer(r"«[^»]+»|(?:^|\n)\s*—\s*[^\n]+", text):
         before = text[offset : match.start()].strip()
         if before:
             result.append(Segment("master", "Мастер", before))
-        result.append(Segment(actor_id, ACTORS[actor_id][0], match[0].strip().removeprefix("— ")))
+        result.append(
+            Segment(
+                actor_id,
+                display_name or ACTORS.get(actor_id, (actor_id,))[0],
+                match[0].strip().removeprefix("— "),
+            )
+        )
         offset = match.end()
     tail = text[offset:].strip()
     if tail and result and all(c in ".,!?…" for c in tail):

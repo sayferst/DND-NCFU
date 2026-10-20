@@ -122,7 +122,7 @@ class CampaignRepository:
                     digest,
                     payload,
                     datetime.now(UTC).isoformat(),
-                    21,
+                    22,
                 ),
             )
             db.execute("DELETE FROM current_events WHERE campaign=?", (campaign,))

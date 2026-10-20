@@ -1,5 +1,6 @@
 """Small authored social reactions, replayed separately from combat/world deltas."""
 
+import re
 from dataclasses import asdict, dataclass
 
 NPC_IDS = {"guard", "villager", "merchant"}
@@ -31,11 +32,15 @@ class DialogueRecord:
     rules_version: str = "homebrew-social-1"
 
     def __post_init__(self):
-        if self.rules_version != "homebrew-social-1":
+        if self.rules_version not in {"homebrew-social-1", "homebrew-social-2"}:
             raise ValueError("Unsupported social rules")
         if (
             not all(isinstance(v, str) for v in (self.target, self.act, self.topic))
-            or self.target not in NPC_IDS
+            or (
+                self.target not in NPC_IDS
+                if self.rules_version == "homebrew-social-1"
+                else not re.fullmatch(r"[a-z][a-z0-9_]{0,63}", self.target)
+            )
             or self.act not in ACTS
             or self.topic not in TOPICS
         ):

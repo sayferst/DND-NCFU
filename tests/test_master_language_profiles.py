@@ -33,7 +33,7 @@ def test_new_user_language_sample_is_not_accepted_as_a_turn():
             source["input"],
         )
     assert "реплику за игрока" in str(caught.value)
-    assert "подход героя описан несколько раз" in str(caught.value)
+    # Repeated approach is a style warning, invented player speech remains a hard failure.
     assert session.to_dict() == before
 
 
@@ -93,7 +93,7 @@ def test_writer_gets_readable_russian_tasks_and_a_single_speaker():
     prompt = payload["messages"][1]["content"]
     assert not prompt.startswith("{")
     assert "Игрок написал: " + json.dumps(text, ensure_ascii=False) in prompt
-    assert "В этом ходе говорит только: Жительница" in prompt
+    assert "Основной собеседник: Жительница" in prompt
     assert "Занятие: собирает рассыпавшиеся яблоки" in prompt
     assert "Нужно ответить:" in prompt
     assert "turn_brief" not in prompt and "public_name" not in prompt

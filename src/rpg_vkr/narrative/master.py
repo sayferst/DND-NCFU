@@ -81,7 +81,34 @@ def campaign_context(session, target=""):
                     break
         finally:
             index.close()
+    from rpg_vkr.domain.receipts import receipt
+
+    scene = session.interaction_state()
+    actors = []
+    for actor in scene.actor_refs:
+        if actor.place != scene.current:
+            continue
+        if actor.id in ACTORS:
+            state = session.combat.actor(actor.id)
+            alive = state.hp > 0
+        else:
+            entity = (
+                next((e for e in session.catalog.entities if e.id == actor.id), None)
+                if session.catalog
+                else None
+            )
+            alive = bool(
+                entity
+                and (entity.state or {}).get("hp", 1) > 0
+                and (entity.state or {}).get("life") != "dead"
+            )
+        actors.append({"id": actor.id, "name": actor.name, "available": alive})
     return {
+        "receipt": receipt(session),
+        "objects": [
+            {"id": t.id, "name": t.name, "holder": t.holder} for t in scene.things if scene.here(t)
+        ],
+        "actors": actors,
         "persistent_memory": session._memory_provider(
             session.turns[-1].action if session.turns else ""
         )
