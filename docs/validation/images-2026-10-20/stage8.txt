@@ -1,0 +1,13 @@
+........E........                                                        [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_visual_chat_never_calls_text_master_or_changes_session _
+file /workspace/DND-NCFU/tests/test_visual_commands.py, line 33
+  def test_visual_chat_never_calls_text_master_or_changes_session(visual, monkeypatch):
+E       fixture 'visual' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, pytestconfig, qt_app, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, window
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/workspace/DND-NCFU/tests/test_visual_commands.py:33
+=========================== short test summary info ============================
+ERROR tests/test_visual_commands.py::test_visual_chat_never_calls_text_master_or_changes_session
+16 passed, 1 error in 3.51s

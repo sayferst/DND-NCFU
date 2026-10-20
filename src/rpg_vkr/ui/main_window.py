@@ -649,6 +649,11 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         action = self.action_input.text().strip()
         if not action:
             return
+        if not self._legacy_controls:
+            from rpg_vkr.ui.visual_commands import handle_visual_text
+
+            if handle_visual_text(self, action):
+                return
         from rpg_vkr.ui.cloud_gate import require_cloud
 
         if not require_cloud(self):

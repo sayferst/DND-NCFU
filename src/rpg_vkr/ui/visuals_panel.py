@@ -241,13 +241,13 @@ class VisualController(QObject):
                 if entry.category == "events"
                 else (entity_target(self.window._session, entry, shared=shared))
             )
-            self.request(target, regenerate=regenerate)
+            return self.request(target, regenerate=regenerate)
         except (ValueError, OSError) as error:
             self.status(str(error))
 
     def request_scene(self):
         try:
-            self.request(scene_target(self.window._session))
+            return self.request(scene_target(self.window._session))
         except ValueError as error:
             self.status(str(error))
 
@@ -261,7 +261,7 @@ class VisualController(QObject):
         if cached and not regenerate:
             self.status("Изображение уже сохранено. Открытие не расходует деньги.")
             self.view(target.campaign, target.entity)
-            return
+            return True
         if not self.locked:
             self.status("Генерация занята другим экземпляром игры. Просмотр кэша доступен.")
             return
@@ -285,6 +285,7 @@ class VisualController(QObject):
             return
         self.queue.append(target)
         self.pump()
+        return True
 
     def pump(self):
         if self.closed or self.active or self.worker.busy or not self.queue:
