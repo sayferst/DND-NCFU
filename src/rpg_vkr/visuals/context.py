@@ -30,6 +30,7 @@ class VisualTarget:
     type_id: str
     brief: str
     participants: tuple[str, ...] = ()
+    labels: tuple[tuple[str, str], ...] = ()
 
 
 def public_brief(entry):
@@ -71,6 +72,7 @@ def entity_target(session, entry, *, shared=None):
         type_id,
         public_brief(entry),
         (entry.key,),
+        ((entry.key, entry.title),),
     )
 
 
@@ -126,6 +128,7 @@ def scene_target(session, *, event=None):
         "",
         brief[:12000],
         tuple(e.key for e in chosen),
+        tuple((e.key, e.title) for e in chosen),
     )
 
 
@@ -135,12 +138,13 @@ def reference_candidates(registry, target):
     for entity in target.participants:
         asset = registry.latest_for(target.campaign, entity)
         if asset and asset["id"] not in {a["id"] for a in found}:
-            found.append(asset)
+            found.append(asset | {"caption": dict(target.labels).get(entity, "Известный объект")})
     return found
 
 
 def make_prompt(target, references):
     mapping = "\n".join(
-        f"Reference {i + 1}: visual identity {a['subject']}" for i, a in enumerate(references)
+        f"Reference {i + 1}: same visual identity as {a.get('caption', 'known object')}"
+        for i, a in enumerate(references)
     )
     return STYLE + "\n\nPUBLIC VISUAL BRIEF:\n" + target.brief + "\n" + mapping

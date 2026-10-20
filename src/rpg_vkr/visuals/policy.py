@@ -35,6 +35,7 @@ class VisualSettings:
     portrait_size: str = "1K"
     scene_size: str = "1K"
     confirm: bool = True
+    consent: bool = False
 
     def __post_init__(self):
         if (
@@ -45,6 +46,7 @@ class VisualSettings:
             or type(self.quality_cap) is not int
             or not 0 < self.quality_cap <= 5000000
             or type(self.confirm) is not bool
+            or type(self.consent) is not bool
             or self.portrait_size not in SIZES
             or self.scene_size not in SIZES
         ):

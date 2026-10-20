@@ -1,14 +1,16 @@
 from dataclasses import replace
+
 from response_cases import new_session
 from test_chronicles import learn
 from test_images_client import PNG
+
 from rpg_vkr.ui.knowledge import knowledge_entries
 from rpg_vkr.visuals.context import (
     STYLE,
     entity_target,
-    scene_target,
     make_prompt,
     reference_candidates,
+    scene_target,
 )
 from rpg_vkr.visuals.registry import VisualRegistry
 

@@ -170,6 +170,10 @@ class ChroniclesPanel(QWidget):
 
     def resizeEvent(self, event):
         compact = self.width() < 850
+        if hasattr(self, "image_controls"):
+            self.image_controls.setVisible(not compact)
+            self.image_menu_button.setVisible(compact)
+            self.status.setVisible(not compact)
         self.expand_card.setVisible(compact)
         self.export_button.setText("Экспорт…" if compact else "Экспорт известных сведений…")
         self.splitter.setOrientation(

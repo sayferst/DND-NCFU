@@ -236,6 +236,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         from rpg_vkr.ui.flash_settings import install_flash_settings
 
         install_flash_settings(self)
+        if not self._legacy_controls:
+            from rpg_vkr.ui.visuals_panel import install_visuals
+
+            install_visuals(self)
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(bool(text.strip()))
@@ -634,6 +638,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         ):
             event.ignore()
             return
+        if hasattr(self, "visuals"):
+            self.visuals.close()
         self._closing = True
         self.routerai_catalog.cancel()
         self.ollama.cancel()
