@@ -1,0 +1,96 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 1215 items
+
+tests/test_adventure.py ...................                              [  1%]
+tests/test_adventure_consistency.py ........                             [  2%]
+tests/test_adventure_ui.py ............                                  [  3%]
+tests/test_artist_panel.py ......................                        [  5%]
+tests/test_catalog.py ...............................                    [  7%]
+tests/test_catalog_image_prices.py .......................               [  9%]
+tests/test_catalog_ui.py .........                                       [ 10%]
+tests/test_character.py ........................                         [ 12%]
+tests/test_character_dialog.py ...                                       [ 12%]
+tests/test_chat_intents.py ...................                           [ 13%]
+tests/test_chronicles.py ..............                                  [ 15%]
+tests/test_cloud_gate.py ...                                             [ 15%]
+tests/test_combat.py .......................                             [ 17%]
+tests/test_combat_storage.py ..............                              [ 18%]
+tests/test_combat_ui.py ......                                           [ 18%]
+tests/test_connection_metadata.py ..........                             [ 19%]
+tests/test_connection_revision.py ......................                 [ 21%]
+tests/test_conversation_revision.py ........................             [ 23%]
+tests/test_creation_and_roles.py ......                                  [ 24%]
+tests/test_desktop_release.py ........................                   [ 26%]
+tests/test_dialogue.py .............                                     [ 27%]
+tests/test_dice.py ...                                                   [ 27%]
+tests/test_environment.py ...                                            [ 27%]
+tests/test_episode_panels.py ..............                              [ 28%]
+tests/test_fantasy_menu.py ......                                        [ 29%]
+tests/test_fixture_git_checkout.py ..                                    [ 29%]
+tests/test_fixture_repair.py ...........                                 [ 30%]
+tests/test_flash_settings.py ...................                         [ 31%]
+tests/test_free_attempts.py .................................            [ 34%]
+tests/test_free_cloud.py .........                                       [ 35%]
+tests/test_images_client.py .........                                    [ 36%]
+tests/test_images_contract_revision.py ................................. [ 38%]
+........                                                                 [ 39%]
+tests/test_inspection.py ..............................                  [ 41%]
+tests/test_launch.py ...                                                 [ 42%]
+tests/test_local_narrator.py ........................................... [ 45%]
+..................                                                       [ 47%]
+tests/test_master_campaign.py ..........................                 [ 49%]
+tests/test_master_configuration.py ...........                           [ 50%]
+tests/test_master_language_profiles.py ........                          [ 50%]
+tests/test_mechanics_before_prose.py ................................... [ 53%]
+....                                                                     [ 54%]
+tests/test_model_metrics.py ......                                       [ 54%]
+tests/test_object_descriptions.py ...................                    [ 56%]
+tests/test_offline.py ..........                                         [ 56%]
+tests/test_plain_master.py .........................                     [ 59%]
+tests/test_presentation.py .................                             [ 60%]
+tests/test_progression.py ......................................         [ 63%]
+tests/test_resolution_ui.py ............                                 [ 64%]
+tests/test_resource_ledger.py ..........................                 [ 66%]
+tests/test_response_contract.py ........................................ [ 69%]
+                                                                         [ 69%]
+tests/test_response_delivery.py ...........................              [ 72%]
+tests/test_routerai.py .......................................           [ 75%]
+tests/test_save_migration.py ..........                                  [ 76%]
+tests/test_save_slots.py ....................                            [ 77%]
+tests/test_scene_director.py ..............................              [ 80%]
+tests/test_semantic_challenges.py .............                          [ 81%]
+tests/test_session.py ....................                               [ 83%]
+tests/test_sqlite_lifecycle.py .........                                 [ 83%]
+tests/test_story_conversation_quality.py ................                [ 85%]
+tests/test_trade_context.py .........                                    [ 85%]
+tests/test_visual_commands.py .........                                  [ 86%]
+tests/test_visual_context.py .....                                       [ 86%]
+tests/test_visual_controller.py .........                                [ 87%]
+tests/test_visual_policy.py ........                                     [ 88%]
+tests/test_visual_registry.py ........                                   [ 89%]
+tests/test_window.py .......................                             [ 90%]
+tests/test_windows_test_ids.py .                                         [ 91%]
+tests/test_workspace_tools.py .............                              [ 92%]
+tests/test_workspace_ui.py ..................                            [ 93%]
+tests/test_world.py ..............................                       [ 96%]
+tests/test_world_agent_ui.py ........                                    [ 96%]
+tests/test_world_memory.py ..................                            [ 98%]
+tests/test_world_transactions.py ......................                  [100%]
+
+======================= 1215 passed in 144.94s (0:02:24) =======================
+Running: /workspace/DND-NCFU/.venv/bin/python -m ruff check .
+All checks passed!
+Running: /workspace/DND-NCFU/.venv/bin/python -m ruff format --check .
+183 files already formatted
+Environment and prototype checks passed. Manual Windows GUI check is still required.
