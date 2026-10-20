@@ -44,11 +44,13 @@ def apply_theme(widget, theme="Системная"):
         palette.setColor(role, QColor(colors[token]))
     palette.setColor(QPalette.ColorRole.Highlight, QColor(colors["hover"]))
     palette.setColor(QPalette.ColorRole.HighlightedText, QColor(colors["text"]))
+    palette.setColor(QPalette.ColorRole.Link, QColor(colors["gold"]))
+    palette.setColor(QPalette.ColorRole.LinkVisited, QColor(colors["muted"]))
     widget.setPalette(palette)
     widget.setFont(QFont("Segoe UI", 11))
     widget.setStyleSheet(
         Template("""
-        QWidget { color: $text; }
+        QWidget { color: $text; background-color: $bg; }
         QMainWindow, QDialog, QScrollArea, QTabWidget::pane { background: $bg; }
         QLabel { background: transparent; }
         QTabWidget::pane { border: none; }
@@ -89,14 +91,22 @@ def sync_chrome(window, index):
     if window._legacy_controls:
         return
     menu = window.tabs.tabText(index) == "Главное меню"
+    adventure = window.tabs.tabText(index) == "Приключение"
+    compact = window.width() < 900
     for widget in (
         window.scene_title,
         window.mode_label,
         window.resource_label,
         window.navigation_bar,
     ):
-        widget.setVisible(not menu)
-    window.resolution_panel.setVisible(not menu and window.tabs.tabText(index) == "Приключение")
+        widget.setVisible(
+            not menu and (widget is window.navigation_bar or not compact or adventure)
+        )
+    window.mode_label.setVisible(not menu and not compact)
+    if not getattr(window, "_roll_dialog_open", False):
+        window.resolution_panel.setVisible(not menu and adventure and not compact)
+    window.compact_rolls.setVisible(not menu and adventure and compact)
+    window.chronicles_shortcut.setVisible(not menu and not compact)
     window.menuBar().setVisible(not menu)
     window.statusBar().setVisible(not menu)
     window._content_layout.setContentsMargins(*((0, 0, 0, 0) if menu else (20, 16, 12, 16)))

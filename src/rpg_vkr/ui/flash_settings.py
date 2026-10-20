@@ -48,6 +48,16 @@ def install_flash_settings(window):
     )
     note.setWordWrap(True)
     form.addRow(note)
+    for widget in (
+        window.flash_enabled,
+        window.flash_status,
+        window.flash_configure,
+        window.remember_key,
+        window.connection_save,
+        link,
+        note,
+    ):
+        widget.setFont(window.font())
     window.flash_enabled.toggled.connect(lambda checked: toggle_flash(window, checked))
     window.routerai_catalog.key_ready.connect(lambda allowance: key_verified(window, allowance))
     window.routerai_catalog.catalog_ready.connect(lambda quotes: models_verified(window, quotes))

@@ -69,6 +69,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         body = QWidget(self)
         self.setCentralWidget(body)
         columns = QHBoxLayout(body)
+        self._columns_layout = columns
         columns.setContentsMargins(0, 0, 12, 0)
         content = QWidget()
         columns.addWidget(content, stretch=1)
@@ -256,6 +257,33 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         if hasattr(self, "quick_controls"):
             # The text field remains the main input on compact screens.
             self.quick_controls.setVisible(self._legacy_controls and self.width() >= 1000)
+        if hasattr(self, "resolution_panel") and not self._legacy_controls:
+            from rpg_vkr.ui.theme import sync_chrome
+
+            sync_chrome(self, self.tabs.currentIndex())
+
+    def show_compact_rolls(self):
+        """Reuse the very same calculations in a readable dialog on a small screen."""
+        from rpg_vkr.ui.theme import sync_chrome
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Кубики и результат")
+        dialog.resize(520, 540)
+        layout = QVBoxLayout(dialog)
+        self._roll_dialog_open = True
+        self.resolution_panel.setMaximumWidth(16777215)
+        layout.addWidget(self.resolution_panel)
+        close = QPushButton("Закрыть")
+        close.clicked.connect(dialog.accept)
+        layout.addWidget(close)
+        self.resolution_panel.show()
+        try:
+            dialog.exec()
+        finally:
+            self._columns_layout.addWidget(self.resolution_panel)
+            self.resolution_panel.setMaximumWidth(330)
+            self._roll_dialog_open = False
+            sync_chrome(self, self.tabs.currentIndex())
 
     def _refresh_character(self) -> None:
         self._refresh_workspace()

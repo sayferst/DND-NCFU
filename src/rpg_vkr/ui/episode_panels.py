@@ -360,7 +360,13 @@ class EpisodePanels:
         navigation_row.addWidget(self.navigation, 1)
         self._panel_button(navigation_row, "К игре", self.resume_session)
         if not self._legacy_controls:
-            self._panel_button(navigation_row, "Хроники", lambda: self.open_section("Хроники мира"))
+            self.chronicles_shortcut = self._panel_button(
+                navigation_row, "Хроники", lambda: self.open_section("Хроники мира")
+            )
+            self.compact_rolls = self._panel_button(
+                navigation_row, "Кубики", self.show_compact_rolls
+            )
+            self.compact_rolls.hide()
         self._panel_button(navigation_row, "Меню", lambda: self.open_section("Главное меню"))
         self.navigation_bar = QWidget()
         self.navigation_bar.setLayout(navigation_row)
@@ -399,6 +405,7 @@ class EpisodePanels:
 
             target = self._session.combat.active or self.combat_targets.currentData()
             if target:
+                self.resume_session()
                 show_encounter(self, target)
             return
         if name == "Лавка":

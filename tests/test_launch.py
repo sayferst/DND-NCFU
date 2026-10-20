@@ -218,7 +218,9 @@ def interact():
             assert 'Вы приближаетесь к волку незамеченным.' in window.journal.toPlainText()
             assert not window.enable_local_narrator.isChecked()
             assert not window.ollama.busy
-            assert window.journal.actor_colour('wolf').name() == '#b00020'
+            colour = window.journal.actor_colour('wolf')
+            assert colour == window.journal.highlighter.colour('hostile')
+            assert colour.name() == '#ff737d'  # Modern default theme is dark.
             window.open_section('Схватка')
             window.combat_attack.click()
             assert window._session.combat.actor('wolf').hp == 0

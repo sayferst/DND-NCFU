@@ -26,6 +26,8 @@ from rpg_vkr.domain.progression import ARCHETYPES, POINT_BUDGET, validate_creati
 class CreationDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
+        if parent is not None and not getattr(parent, "_legacy_controls", False):
+            self.setFont(parent.font())
         self.setWindowTitle("Создать героя · авторские правила")
         self.setMinimumSize(480, 550)
         self.resize(580, 740)

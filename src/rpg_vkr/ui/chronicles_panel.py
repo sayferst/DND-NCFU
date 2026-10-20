@@ -7,7 +7,9 @@ from pathlib import Path
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
+    QBoxLayout,
     QComboBox,
+    QDialog,
     QFileDialog,
     QHBoxLayout,
     QLabel,
@@ -98,12 +100,17 @@ class ChroniclesPanel(QWidget):
         self.categories = QListWidget()
         self.categories.setAccessibleName("Разделы Хроник мира")
         left.addWidget(self.categories, 1)
+        self.compact_categories = QComboBox()
+        self.compact_categories.setAccessibleName("Разделы Хроник мира в небольшом окне")
+        left.addWidget(self.compact_categories)
+        self.refinements = QBoxLayout(QBoxLayout.Direction.TopToBottom)
+        left.addLayout(self.refinements)
         self.state = QComboBox()
         self.state.addItems(["Все знания", "Рядом", "Содержит слухи", "Частично известно"])
-        left.addWidget(self.state)
+        self.refinements.addWidget(self.state)
         self.sort = QComboBox()
         self.sort.addItems(["По названию", "Последние встречи"])
-        left.addWidget(self.sort)
+        self.refinements.addWidget(self.sort)
         self.splitter.addWidget(self.filters)
         self.list = EntryList()
         self.list.setAccessibleName("Известные объекты; стрелки — выбор, Enter — карточка")
@@ -126,26 +133,60 @@ class ChroniclesPanel(QWidget):
         self.status = QLabel()
         self.status.setWordWrap(True)
         row.addWidget(self.status, 1)
-        export = QPushButton("Экспорт известных сведений…")
-        export.clicked.connect(self.export)
-        row.addWidget(export)
+        self.expand_card = QPushButton("Открыть карточку")
+        self.expand_card.clicked.connect(self.open_card)
+        row.addWidget(self.expand_card)
+        self.export_button = QPushButton("Экспорт известных сведений…")
+        self.export_button.clicked.connect(self.export)
+        row.addWidget(self.export_button)
         layout.addLayout(row)
         self.categories.currentRowChanged.connect(lambda _: self.filter())
+        self.compact_categories.currentIndexChanged.connect(self.categories.setCurrentRow)
         self.search.textChanged.connect(lambda _: self.filter())
         self.state.currentIndexChanged.connect(lambda _: self.filter())
         self.sort.currentIndexChanged.connect(lambda _: self.filter())
         self.list.currentItemChanged.connect(lambda current, old: self.select(current))
-        self.list.itemActivated.connect(lambda _: self.detail.setFocus())
+        self.list.itemActivated.connect(lambda _: self.open_card())
+
+    def open_card(self):
+        if self.width() >= 850:
+            self.detail.setFocus()
+            return
+        if not self.list.currentItem():
+            return
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Хроники мира · карточка")
+        dialog.resize(560, 530)
+        layout = QVBoxLayout(dialog)
+        detail = QTextBrowser()
+        detail.setFont(self.detail.font())
+        detail.setStyleSheet(self.detail.styleSheet())
+        detail.setHtml(self.detail.toHtml())
+        layout.addWidget(detail)
+        close = QPushButton("Закрыть")
+        close.clicked.connect(dialog.accept)
+        layout.addWidget(close)
+        dialog.exec()
 
     def resizeEvent(self, event):
         compact = self.width() < 850
+        self.expand_card.setVisible(compact)
+        self.export_button.setText("Экспорт…" if compact else "Экспорт известных сведений…")
         self.splitter.setOrientation(
             Qt.Orientation.Vertical if compact else Qt.Orientation.Horizontal
         )
-        self.filters.setMaximumHeight(160 if compact else 16777215)
-        self.list.setMaximumHeight(170 if compact else 16777215)
+        self.categories.setVisible(not compact)
+        self.compact_categories.setVisible(compact)
+        self.refinements.setDirection(
+            QBoxLayout.Direction.LeftToRight if compact else QBoxLayout.Direction.TopToBottom
+        )
+        self.filters.setMinimumHeight(138 if compact else 0)
+        self.filters.setMaximumHeight(138 if compact else 16777215)
+        self.list.setMinimumHeight(65 if compact else 0)
+        self.list.setMaximumHeight(95 if compact else 16777215)
+        self.detail.setMinimumHeight(100 if compact else 0)
         if compact:
-            self.splitter.setSizes([140, 140, 260])
+            self.splitter.setSizes([138, 75, 260])
         super().resizeEvent(event)
 
     def refresh(self):
@@ -186,6 +227,13 @@ class ChroniclesPanel(QWidget):
         if self.categories.currentRow() < 0:
             self.categories.setCurrentRow(0)
         self.categories.blockSignals(False)
+        self.compact_categories.blockSignals(True)
+        self.compact_categories.clear()
+        for index in range(self.categories.count()):
+            item = self.categories.item(index)
+            self.compact_categories.addItem(item.icon(), item.text())
+        self.compact_categories.setCurrentIndex(self.categories.currentRow())
+        self.compact_categories.blockSignals(False)
         self.summary.setText(
             f"{session.character.name} · {session.current_place_name} · "
             "Только открытые сведения. Слухи отмечены отдельно."
@@ -193,6 +241,9 @@ class ChroniclesPanel(QWidget):
         self.filter()
 
     def filter(self):
+        self.compact_categories.blockSignals(True)
+        self.compact_categories.setCurrentIndex(self.categories.currentRow())
+        self.compact_categories.blockSignals(False)
         selected = self.list.currentItem()
         key = selected.data(Qt.ItemDataRole.UserRole).key if selected else ""
         category = self.categories.currentItem()
