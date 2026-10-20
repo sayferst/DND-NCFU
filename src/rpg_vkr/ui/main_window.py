@@ -73,6 +73,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         content = QWidget()
         columns.addWidget(content, stretch=1)
         layout = QVBoxLayout(content)
+        self._content_layout = layout
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(12)
 
@@ -242,7 +243,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         self._refresh_slots()
         self._refresh_character()
-        if session is None:
+        if not self._legacy_controls:
+            self.open_section("Главное меню")
+        elif session is None:
             self.open_section("Главное меню")
 
     def resizeEvent(self, event) -> None:
@@ -403,7 +406,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         QMessageBox.information(
             self,
             "О программе и лицензии",
-            "Учебный офлайн-прототип DND-NCFU.\n\n"
+            "DND-NCFU · Хроники забытых королевств\nВерсия 1R · Автор проекта: sayferst\n"
+            "Учебная RPG для ВКР по моделированию конфликтных ситуаций.\n"
+            "Python 3.12 · PySide6 · SQLite. Автономная игра, необязательный ИИ-мастер.\n\n"
             + SRD_ATTRIBUTION
             + "\n\nАдаптация: вычислительная реализация модификаторов и базовых проверок "
             "характеристик, русский интерфейс. Сюжет и учебный профиль — авторские. "

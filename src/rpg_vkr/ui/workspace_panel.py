@@ -197,7 +197,7 @@ class WorkspaceActions:
         state = "есть изменения" if self._dirty else "без изменений"
         draft = " · черновик не сохраняется" if self.action_input.text().strip() else ""
         self.session_status.setText(f"{slot} · {state}{draft}")
-        self.setWindowTitle(f"Пограничье{' *' if self._dirty else ''} — учебный прототип")
+        self.setWindowTitle(f"DND-NCFU{' *' if self._dirty else ''} — Хроники забытых королевств")
 
     def _quest_command(self) -> None:
         self._run_command(
@@ -350,7 +350,13 @@ class WorkspaceActions:
                 QPalette.ColorRole.WindowText,
             ):
                 palette.setColor(QPalette.ColorGroup.Disabled, role, QColor("#858585"))
-        self.setPalette(palette)
+        if self._legacy_controls:
+            self.setPalette(palette)
+        else:
+            from rpg_vkr.ui.theme import apply_theme
+
+            apply_theme(self, preferences.theme)
+            palette = self.palette()
         self.journal.set_role_theme(palette.color(QPalette.ColorRole.Base).lightness() < 128)
         if hasattr(self, "combat_targets"):
             self._refresh_episode_panels()

@@ -84,27 +84,33 @@ class EpisodePanels:
         return button
 
     def _build_episode_panels(self, root_layout) -> None:
-        menu = self._episode_page("Главное меню")
-        self.home_title = plain_label("DND-NCFU · Приключение")
-        menu.addWidget(self.home_title)
-        self.home_summary = plain_label()
-        menu.addWidget(self.home_summary)
-        self._panel_button(menu, "Новый герой…", self.new_character)
-        self.resume_button = self._panel_button(
-            menu, "Вернуться к текущей сессии", self.resume_session
-        )
-        self._panel_button(menu, "Загрузить сохранение…", self.choose_load)
-        self._panel_button(menu, "Сохранить текущую сессию…", self.quick_save)
-        self._panel_button(menu, "Настройки", lambda: self.open_section("Настройки"))
-        self._panel_button(menu, "Как играть", lambda: self.open_section("Как играть"))
-        self._panel_button(menu, "Выйти", self.close)
-        menu.addWidget(
-            plain_label(
-                "Рабочая кампания сохраняется в SQLite. Три ячейки — отдельные "
-                "контрольные точки, они обновляются вручную."
+        if self._legacy_controls:
+            menu = self._episode_page("Главное меню")
+            self.home_title = plain_label("DND-NCFU · Приключение")
+            menu.addWidget(self.home_title)
+            self.home_summary = plain_label()
+            menu.addWidget(self.home_summary)
+            self._panel_button(menu, "Новый герой…", self.new_character)
+            self.resume_button = self._panel_button(
+                menu, "Вернуться к текущей сессии", self.resume_session
             )
-        )
-        menu.addStretch()
+            self._panel_button(menu, "Загрузить сохранение…", self.choose_load)
+            self._panel_button(menu, "Сохранить текущую сессию…", self.quick_save)
+            self._panel_button(menu, "Настройки", lambda: self.open_section("Настройки"))
+            self._panel_button(menu, "Как играть", lambda: self.open_section("Как играть"))
+            self._panel_button(menu, "Выйти", self.close)
+            menu.addWidget(
+                plain_label(
+                    "Рабочая кампания сохраняется в SQLite. Три ячейки — отдельные "
+                    "контрольные точки, они обновляются вручную."
+                )
+            )
+            menu.addStretch()
+
+        else:
+            from rpg_vkr.ui.main_menu import MainMenu
+
+            self.tabs.addTab(MainMenu(self), "Главное меню")
 
         map_layout = self._episode_page("Карта")
         map_layout.addWidget(
@@ -343,7 +349,9 @@ class EpisodePanels:
         navigation_row.addWidget(self.navigation, 1)
         self._panel_button(navigation_row, "К игре", self.resume_session)
         self._panel_button(navigation_row, "Меню", lambda: self.open_section("Главное меню"))
-        root_layout.insertLayout(root_layout.indexOf(self.tabs), navigation_row)
+        self.navigation_bar = QWidget()
+        self.navigation_bar.setLayout(navigation_row)
+        root_layout.insertWidget(root_layout.indexOf(self.tabs), self.navigation_bar)
         self.navigation.currentIndexChanged.connect(
             lambda index: self.tabs.setCurrentIndex(self.navigation.itemData(index))
         )
@@ -390,6 +398,10 @@ class EpisodePanels:
         self.navigation.blockSignals(True)
         self.navigation.setCurrentIndex(self.navigation.findData(index))
         self.navigation.blockSignals(False)
+        if hasattr(self, "resolution_panel"):
+            from rpg_vkr.ui.theme import sync_chrome
+
+            sync_chrome(self, index)
 
     def resume_session(self) -> None:
         self.tabs.setCurrentIndex(0)
@@ -453,9 +465,10 @@ class EpisodePanels:
         merchant_available = merchant.hp > 0 and merchant.disposition == "neutral" and peace
         villager_available = villager.hp > 0 and villager.disposition == "neutral" and peace
         progress = self._session.progress
-        self.resume_button.setText(
-            "Вернуться к текущему герою" if progress.enabled else "Открыть учебную песочницу"
-        )
+        if self._legacy_controls:
+            self.resume_button.setText(
+                "Вернуться к текущему герою" if progress.enabled else "Открыть учебную песочницу"
+            )
         self.study_button.setEnabled(progress.enabled and not progress.practiced("book") and peace)
         self.cart_button.setEnabled(
             progress.enabled
@@ -471,6 +484,12 @@ class EpisodePanels:
             f"Текущий герой: {self._session.character.name}. Место: {LOCATIONS[state.location]}. "
             "Загрузка и новый герой заменяют текущую сессию только после обычного подтверждения."
         )
+        if not self._legacy_controls:
+            self.home_summary.setText(
+                f"{self._session.character.name} · {self._session.current_place_name}"
+                if progress.enabled or self._session.turns
+                else "Новое приключение ждёт своего героя"
+            )
         self.map_location.setText("Вы здесь: " + LOCATIONS[state.location])
         for location, button in self.travel_buttons.items():
             known = location != "market" or state.market_known

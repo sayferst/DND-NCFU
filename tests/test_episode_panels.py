@@ -16,7 +16,8 @@ def test_default_start_menu_and_resume_preserve_session(window, qt_app):
         assert other.tabs.tabText(other.tabs.currentIndex()) == "Главное меню"
         before = other._session.to_dict()
         other.resume_button.click()
-        assert other.tabs.currentIndex() == 0
+        # An empty startup does not silently resume a newly created sandbox.
+        assert other.tabs.tabText(other.tabs.currentIndex()) == "Сохранения"
         assert other._session.to_dict() == before
     finally:
         other.close()
