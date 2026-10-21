@@ -2,7 +2,6 @@
 
 import argparse
 import base64
-import getpass
 import json
 import os
 import queue
@@ -325,7 +324,7 @@ def host(root, store):
     if key:
         print("Используется сохранённый ключ RouterAI. Замена: tester_host.cmd key.", flush=True)
     if not key:
-        key = getpass.getpass("Введите RouterAI API-ключ (не отображается): ").strip()
+        key = input("Введите RouterAI API-ключ (ввод виден): ").strip()
         Upstream(key)  # Validate before protecting; no request is made.
         save_secret(root / "routerai-key.bin", key)
     gateway = Gateway(store, Upstream(key))
@@ -501,11 +500,67 @@ def build(root, store, identity):
             temporary.unlink(missing_ok=True)
 
 
-def replace_owner_key(root):
+def clipboard_key_text():
+    # Fixed PowerShell code: clipboard text is DATA, never a command or process argument.
+    command = (
+        "[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false); "
+        "$ErrorActionPreference = 'Stop'; $dndClipboard = Get-Clipboard -Raw; "
+        "if ($null -eq $dndClipboard -or $dndClipboard.Length -gt 8192) { exit 2 }; "
+        "[Console]::Out.Write($dndClipboard)"
+    )
+    try:
+        result = subprocess.run(
+            [
+                "powershell.exe",
+                "-STA",
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                command,
+            ],
+            capture_output=True,
+            timeout=10,
+            check=True,
+        )
+        if len(result.stdout) > 32768:
+            raise ValueError
+        return result.stdout.decode("utf-8-sig")
+    except (OSError, ValueError, subprocess.SubprocessError):
+        raise ValueError(
+            "Буфер обмена недоступен или слишком большой. "
+            "Скопируйте только новый API-ключ и повторите key --clipboard."
+        ) from None
+
+
+def replace_owner_key(root, *, from_clipboard=False):
     from rpg_vkr.narrative.cloud import validate_api_key
 
-    value = getpass.getpass("Новый RouterAI API-ключ (не отображается): ").strip()
-    validate_api_key(value)
+    if from_clipboard:
+        input(
+            "Скопируйте новый API-ключ из кабинета RouterAI, затем нажмите Enter. "
+            "Вставлять его в это окно не нужно: "
+        )
+        value = clipboard_key_text()
+    else:
+        value = input("Новый RouterAI API-ключ (ввод виден): ")
+    # Browser copy controls can place a BOM/zero-width separator at the boundaries.
+    # Internal characters are never removed or joined, so two pasted keys cannot merge.
+    value = value.strip().strip("\ufeff\u200b").strip()
+    try:
+        validate_api_key(value)
+    except ValueError:
+        raise ValueError(
+            "Ключ не сохранён: ввод пустой или содержит лишние символы. "
+            "Используйте tester_host.cmd key --clipboard и скопируйте только сам ключ, "
+            "без слов API, Bearer, кавычек или JSON."
+        ) from None
+    if (value.startswith('"') and value.endswith('"')) or (
+        value.startswith("'") and value.endswith("'")
+    ):
+        raise ValueError(
+            "Ключ не сохранён: скопируйте его без кавычек и повторите key --clipboard."
+        )
     save_secret(root / "routerai-key.bin", value)
     print("Новый ключ сохранён для Мастера и Художника. Перезапустите хост для применения.")
 
@@ -514,7 +569,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("start")
-    commands.add_parser("key", help="Заменить сохранённый RouterAI API-ключ")
+    key_command = commands.add_parser("key", help="Заменить сохранённый RouterAI API-ключ")
+    key_command.add_argument(
+        "--clipboard", action="store_true", help="Прочитать ключ из буфера после Enter"
+    )
     commands.add_parser("diagnose", help="Проверить метаданные без генерации и туннеля")
     for name in ("build", "revoke", "extend"):
         command = commands.add_parser(name)
@@ -542,7 +600,10 @@ def main():
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 0 if report["ok"] else 2
         elif args.command == "key":
-            replace_owner_key(root)
+            if args.clipboard:
+                replace_owner_key(root, from_clipboard=True)
+            else:
+                replace_owner_key(root)
         elif args.command == "start":
             with host_lock(root):
                 host(root, store)

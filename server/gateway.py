@@ -246,8 +246,11 @@ class Store:
 
 class Upstream:
     def __init__(self, key):
-        if not key or any(c.isspace() for c in key):
-            raise ValueError("Set DND_ROUTERAI_KEY on the server")
+        if not isinstance(key, str) or not re.fullmatch(r"[!-~]{1,4096}", key):
+            raise ValueError(
+                "Ключ RouterAI пустой или содержит недопустимые символы. "
+                "Замените его командой tester_host.cmd key --clipboard."
+            )
         self.key = key
 
     def request(self, route, body=None):

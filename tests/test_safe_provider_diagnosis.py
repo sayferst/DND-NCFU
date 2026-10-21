@@ -106,7 +106,7 @@ def test_replacing_revoked_key_changes_only_owner_credential(tmp_path, monkeypat
     from scripts import tester_host
 
     seen = {}
-    monkeypatch.setattr(tester_host.getpass, "getpass", lambda _: "new-owner-secret-do-not-print")
+    monkeypatch.setattr("builtins.input", lambda _: "new-owner-secret-do-not-print")
     monkeypatch.setattr(tester_host, "save_secret", lambda path, value: seen.update({path: value}))
     old = tmp_path / "signing-key.bin"
     old.write_bytes(b"fixture-other-key-untouched")
@@ -119,7 +119,7 @@ def test_replacing_revoked_key_changes_only_owner_credential(tmp_path, monkeypat
 def test_invalid_replacement_preserves_old_key(tmp_path, monkeypatch):
     from scripts import tester_host
 
-    monkeypatch.setattr(tester_host.getpass, "getpass", lambda _: "Bearer wrong format")
+    monkeypatch.setattr("builtins.input", lambda _: "Bearer wrong format")
     monkeypatch.setattr(
         tester_host, "save_secret", lambda *_: pytest.fail("must not replace old key")
     )
