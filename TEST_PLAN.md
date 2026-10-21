@@ -972,3 +972,13 @@ Setup→автоactivation→герой/пожелания→созданиeми
 НативныеWindows/реальныеRouterAIгенерации требуютотдельноговыполнения владельцем:
 Linuxself/smoke иfakeHTTP недоказывают ихуспех. Не активировать productiongrant
 автоматическимsmoke; требуется изоляциядоMainWindow и внешнихсетевыхзапросов0.
+
+## Проверка ошибок ownerhost,21.10.2026
+
+tests/test_host_metadata_errors.py проверяет настоящий Upstream с fakeHTTPConnection:
+GET/api/v1/key, timeout20,64КиБ,closeприошибке;dict/listwrapperсохраняютсядообщего
+allowancevalidator. Проверяются HTTP401/402/403/429/500, TLS/timeout/network,
+disabled/limitNone/limit0/слишкомбольшой/дневной/исчерпанный/нечисловойлимит.
+Исключения/ответы сsyntheticsecretнеэхопечатать. Нетреальныхзапросов/paidPOST.
+НаWindows послеpull повторить tester_host.cmd start, затем анализировать новую
+конкретнуюпричину. Не проситьключ, не очищатьDPAPI/SQLite/квоты ради проверки.

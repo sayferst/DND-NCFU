@@ -31,7 +31,16 @@ from rpg_vkr.discovery import (  # noqa: E402
     public_endpoint,
 )
 from rpg_vkr.storage.connection import load_secret, save_secret  # noqa: E402
-from server.gateway import FLUX, RECRAFT, TEXT_MODEL, Gateway, Server, Store, Upstream  # noqa: E402
+from server.gateway import (  # noqa: E402
+    FLUX,
+    RECRAFT,
+    TEXT_MODEL,
+    Denied,
+    Gateway,
+    Server,
+    Store,
+    Upstream,
+)
 
 BRANCH = "tester-host-address"
 DISCOVERY = "https://raw.githubusercontent.com/sayferst/DND-NCFU/" + BRANCH + "/endpoint.json"
@@ -148,19 +157,60 @@ def private_key(root):
     return Ed25519PrivateKey.from_private_bytes(base64.b64decode(encoded, validate=True))
 
 
+def metadata_failure(error, label):
+    messages = {
+        "upstream_http_401": (
+            "Ключ RouterAI отклонён (HTTP401). Проверьте его командой tester_host.cmd key."
+        ),
+        "upstream_http_403": (
+            "RouterAI запретил доступ (HTTP403). Проверьте права ключа и доступ из вашей сети."
+        ),
+        "upstream_http_402": (
+            "RouterAI сообщил об ограничении оплаты (HTTP402). Проверьте баланс в кабинете."
+        ),
+        "upstream_http_429": (
+            "RouterAI ограничил частоту запросов (HTTP429). Повторите запуск позже."
+        ),
+        "upstream_tls": (
+            "Не удалось проверить TLS-сертификат RouterAI. Проверьте дату "
+            "Windows и HTTPS-соединение."
+        ),
+        "upstream_timeout": (
+            "Истекло время ожидания RouterAI. Проверьте интернет и повторите запуск."
+        ),
+        "upstream_network": (
+            "Не удалось соединиться с RouterAI. Проверьте интернет и доступ к routerai.ru."
+        ),
+        "upstream_invalid_json": "RouterAI вернул неподдержанный формат метаданных.",
+        "upstream_response_size": "Ответ метаданных RouterAI превысил допустимый размер.",
+    }
+    reason = messages.get(error.code)
+    if reason is None:
+        match = re.fullmatch(r"upstream_http_([1-5][0-9]{2})", error.code)
+        reason = (
+            f"RouterAI вернул HTTP {match[1]} при проверке метаданных. Повторите запуск позже."
+            if match
+            else "RouterAI временно не подтвердил метаданные. Повторите запуск позже."
+        )
+    return ValueError(label + ": " + reason + " Платная генерация не запускалась.")
+
+
 def check_provider(gateway):
     # Metadata GETs only: catch bad key, missing approved models and unknown prices
     # before reporting host readiness. Does not generate or consume a tester grant.
     from rpg_vkr.narrative.routerai import parse_allowance
 
     try:
-        allowance = parse_allowance(gateway.upstream.request("key"))
-        if allowance.remaining <= 0:
-            raise ValueError
-    except Exception:
+        metadata = gateway.upstream.request("key")
+    except Denied as error:
+        raise metadata_failure(error, "Проверка ключа") from None
+    try:
+        parse_allowance(metadata)
+    except (ValueError, TypeError, ArithmeticError) as error:
+        # parse_allowance only emits controlled validation messages, never provider values.
+        reason = str(error) if isinstance(error, ValueError) else "Неверный формат лимита ключа."
         raise ValueError(
-            "RouterAI не подтвердил ключ и положительный лимит. "
-            "Проверьте ключ/баланс/лимит в кабинете; затем tester_host.cmd key."
+            "Проверка ключа RouterAI: " + reason + " Платная генерация не запускалась."
         ) from None
     try:
         catalog = gateway.catalog()
@@ -183,7 +233,9 @@ def check_provider(gateway):
                 {"model": model, "prompt": "metadata price check", "resolution": "1K", "n": 1},
                 "image",
             )
-    except Exception:
+    except Denied as error:
+        raise metadata_failure(error, "Проверка каталога") from None
+    except (ValueError, TypeError, KeyError, ArithmeticError):
         raise ValueError(
             "Каталог RouterAI не подтвердил утверждённые модели или цены. "
             "Платная генерация не запускалась; передайте владельцу проекта эту ошибку."

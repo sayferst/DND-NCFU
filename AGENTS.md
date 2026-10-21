@@ -1486,3 +1486,19 @@ TESTER_WITHOUT_DOMAIN.md заменяетподготовительную,наз
 publickey; никакогосервера/платныхPOSTвоблаке. Runtimeпослеэтогоитоганеменятьбез
 новойпричины. Windowsинструкция start/build/revoke/extend вTESTER_WITHOUT_DOMAIN.md;
 nativeSetup/DPAPI и реальныйRouterAIтребуютприёмкивладельцем, не обещать100%безнеё.
+
+## 21.10.2026 — отказ host keymetadata
+
+Владелец получил общийотказstartдважды. Точнаяпричинаживогоответанеизвестна,
+необъявлятьневерныйключ/недостатокбалансадоказанными. UpstreamдляGETkeyтеперь
+принимаетdoclistwrapper, основнойparse_allowanceпрежний;64КиБ/20с. Безопасные
+HTTP/TLS/network/timeout/formatкодынесодержатответов/ключей/exceptionrepr.
+OwnerCLIпоказываетконтролируемуюпричинуправилключа;лимиты/бюджеты/платныеPOST
+неослаблять. Ключине проситьвчате.21новыйслучая, целевые59passed/10.98с.
+Финальныйполныйraw—validation/host-key-diagnostics-2026-10-21/full-final-01.txt.
+Runtimeигры/EXEнеизменён, Linuxупаковкуповторятьдляhost-onlyfixненужно;
+Windowsвладелецобновляетисходникииповторяетstart. ПрефиксAGENTSсохранять.
+
+Итогhostmetadatafix:1329passed/213.93с,0failed/skipped,pip/RuffOK,209Python-файлов.
+21новыйслучай, целевые59passed/10.98с; отдельные21passed/0.18с. Все75защищённых
+хэшей прежние относительно0.3.1. Не повторять успешныйполныйнаборбезновойпричины.

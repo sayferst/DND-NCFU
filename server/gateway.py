@@ -253,7 +253,11 @@ class Upstream:
             raise Denied(400, "route")
         connection = http.client.HTTPSConnection(
             "routerai.ru",
-            timeout=20 if route == "models" else 900 if route == "chat/completions" else 180,
+            timeout=20
+            if route in {"key", "models"}
+            else 900
+            if route == "chat/completions"
+            else 180,
         )
         try:
             connection.request(
@@ -263,15 +267,36 @@ class Upstream:
                 {"Authorization": "Bearer " + self.key, "Content-Type": "application/json"},
             )
             reply = connection.getresponse()
-            raw = reply.read(MAX_REPLY + 1)
-            if reply.status != 200 or len(raw) > MAX_REPLY:
-                raise Denied(503, "upstream_unavailable")
+            metadata = route in {"key", "models"}
+            if reply.status != 200:
+                code = f"upstream_http_{reply.status}" if metadata else "upstream_unavailable"
+                raise Denied(503, code)
+            maximum = 65536 if route == "key" else MAX_REPLY
+            raw = reply.read(maximum + 1)
+            if len(raw) > maximum:
+                raise Denied(503, "upstream_response_size" if metadata else "upstream_unavailable")
             result = json.loads(raw)
-            if not isinstance(result, dict):
+            # RouterAI key metadata also supports the documented one-element array wrapper.
+            if not isinstance(result, dict) and not (route == "key" and isinstance(result, list)):
                 raise ValueError
             return result
-        except (OSError, ValueError, http.client.HTTPException):
-            raise Denied(503, "upstream_unavailable") from None
+        except ssl.SSLError:
+            raise Denied(
+                503, "upstream_tls" if route in {"key", "models"} else "upstream_unavailable"
+            ) from None
+        except TimeoutError:
+            raise Denied(
+                503, "upstream_timeout" if route in {"key", "models"} else "upstream_unavailable"
+            ) from None
+        except (OSError, http.client.HTTPException):
+            raise Denied(
+                503, "upstream_network" if route in {"key", "models"} else "upstream_unavailable"
+            ) from None
+        except (ValueError, RecursionError):
+            raise Denied(
+                503,
+                "upstream_invalid_json" if route in {"key", "models"} else "upstream_unavailable",
+            ) from None
         finally:
             connection.close()
 
