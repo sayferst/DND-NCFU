@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1792615396316,
-  "issued": 1792615396,
-  "expires": 1795380196,
-  "endpoint": "https://writer-dispatch-operators-showcase.trycloudflare.com/api/v1",
-  "signature": "3FWocQQ1QLVhe+hrUsBbHQhdTzIdO2nqZ20zpvJwMacrz8xsBvGYQH9nrJO1W1Da4rZ1DvKVTOOslsv4GR3oDA=="
+  "sequence": 1792616546319,
+  "issued": 1792616546,
+  "expires": 1795381346,
+  "endpoint": "https://exhibitions-entitled-tribal-template.trycloudflare.com/api/v1",
+  "signature": "yq2txT3HpVVJVMcdudnZmPe4j2MuS1c4W+IuzZAY4EMPW1fL6sUgUoSQa1WAp4FVt8J43weSe0RRF8XC2DKzAQ=="
 }
