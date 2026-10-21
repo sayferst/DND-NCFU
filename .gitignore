@@ -42,3 +42,7 @@ Thumbs.db
 
 # Optional separately encrypted image-provider credential.
 artist-credential.bin
+
+# Owner-operated gateway state and scoped tester credentials.
+/gateway-data/
+tester-access.bin

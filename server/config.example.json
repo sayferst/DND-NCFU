@@ -1,0 +1,15 @@
+{
+  "client_release_profile": {
+    "mode": "tester",
+    "gateway": "https://game.example.org:8443/api/v1",
+    "text_model": "deepseek/deepseek-v4-flash-latest",
+    "commit": "example"
+  },
+  "server": {
+    "database": "/srv/dnd-data/access.sqlite3",
+    "global_rub": 100,
+    "routerai_secret_environment": "DND_ROUTERAI_KEY",
+    "tls_certificate": "/etc/dnd-tls/fullchain.pem",
+    "tls_private_key": "/etc/dnd-tls/privkey.pem"
+  }
+}

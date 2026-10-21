@@ -1,0 +1,8 @@
+{
+  "untrusted_certificate_rejected": true,
+  "unauthorized_status": 401,
+  "authorized_status": 200,
+  "quota_received": true,
+  "revoked_status": 401,
+  "paid_upstream_posts": 0
+}
