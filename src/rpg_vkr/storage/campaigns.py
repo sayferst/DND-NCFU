@@ -142,13 +142,20 @@ class CampaignRepository:
             raise ValueError("Снимок кампании превысил 32 МБ; сохраните отдельный архив.")
         digest = hashlib.sha256(payload.encode()).hexdigest()
         campaign = self.identity(session)
-        title = session.chronicle.seed.title if session.generated_world else "Учебная кампания"
+        title = (
+            session.chronicle.seed.title
+            if session.generated_world
+            else "Мир ещё не создан"
+            if session.progress.enabled
+            else "Учебная кампания"
+        )
         types, entities = live_records(session)
         with closing(sqlite3.connect(self.path)) as db, db:
             previous = db.execute(
                 "SELECT revision,digest FROM campaigns WHERE id=?", (campaign,)
             ).fetchone()
             if previous and previous[1] == digest:
+                db.execute("UPDATE campaigns SET title=? WHERE id=?", (title, campaign))
                 self._last_token = token
                 self._retained = (
                     session,

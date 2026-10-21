@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 57 items
+
+tests/test_world_start_gate.py ..............                            [ 24%]
+tests/test_desktop_release.py ........................................   [ 94%]
+tests/test_launch.py ...                                                 [100%]
+
+============================= 57 passed in 16.31s ==============================

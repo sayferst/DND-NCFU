@@ -1,0 +1,54 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 67 items
+
+tests/test_world_start_gate.py ......F.....                              [ 17%]
+tests/test_cloud_gate.py ...                                             [ 22%]
+tests/test_adventure_ui.py ............                                  [ 40%]
+tests/test_desktop_release.py ........................................   [100%]
+
+=================================== FAILURES ===================================
+_____ test_new_legend_creates_and_persists_its_world_before_starting_chat ______
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0xcb8f4f0) at 0x7f75d350e280>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f75d40cf980>
+qt_app = <PySide6.QtWidgets.QApplication(0x88f5c80) at 0x7f75db0e1ac0>
+
+    def test_new_legend_creates_and_persists_its_world_before_starting_chat(
+        modern, monkeypatch, qt_app
+    ):
+        brief = (Path(__file__).parents[1] / "docs/research/USER_WORLD_BRIEF_2026-10-21.txt").read_text(
+            encoding="utf-8"
+        )
+    
+        def create(dialog):
+            dialog.name_input.setText("Асуна")
+            dialog.world_brief_input.setPlainText(brief)
+            return QDialog.DialogCode.Accepted
+    
+        monkeypatch.setattr(CreationDialog, "exec", create)
+        monkeypatch.setattr(modern, "_confirm", lambda _: True)
+        reply = "Над причалом хлопает парус. Рен оборачивается к Асуне и ждёт вопроса."
+        with router_server(
+            world_seed=world_value(),
+            world_plans={"начать": {"steps": [], "places": [], "check": "none", "reply": reply}},
+        ) as (url, records):
+            configure(modern, monkeypatch, url)
+            modern.new_character()
+            wait_for(qt_app, lambda: not modern.ollama.busy)
+            assert modern._session.generated_world
+            assert modern._session.character.name == "Асуна"
+>           assert modern._session.campaign.world_brief == brief.strip()
+E           AssertionError: assert 'Создай живой...авила мира.\n' == 'Создай живой...правила мира.'
+E             
+E             Skipping 2673 identical leading characters in diff, use -v to show
+E             - авила мира.
+E             + авила мира.
+E             ?            +
+
+tests/test_world_start_gate.py:110: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_world_start_gate.py::test_new_legend_creates_and_persists_its_world_before_starting_chat
+======================== 1 failed, 66 passed in 15.16s =========================

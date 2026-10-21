@@ -32,6 +32,8 @@ def interact():
         assert app.applicationVersion() == '0.2.0'
         assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
         window.resume_button.click()
+        window.resume_session()
+        window._legacy_controls = True  # Replay historical rules after opening the modern layout.
         if phase == 'save':
             window.font_size.setValue(16)
             window.theme_choice.setCurrentText('Тёмная')
@@ -75,12 +77,10 @@ def interact():
 
 QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
-# Historical fixture/RNG probe bypasses only the new online admission policy.
-# The shipped policy is independently exercised by test_cloud_gate.
+# Historical fixture/RNG replay opts into legacy controls explicitly.
+# Modern admission is tested by test_world_start_gate and the packaged smoke test.
 from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
-import rpg_vkr.ui.cloud_gate as cloud_gate
-cloud_gate.require_cloud = lambda _: True
 launcher, phase = sys.argv[1:]
 sys.argv = [launcher]
 runpy.run_path(launcher, run_name='__main__')
@@ -133,6 +133,8 @@ def interact():
         return
     try:
         window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+        window.resume_session()
+        window._legacy_controls = True  # Replay historical rules after opening the modern layout.
         if phase == 'create':
             QTimer.singleShot(0, fill_creator)
             window.new_character()
@@ -172,12 +174,10 @@ def interact():
 
 QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
-# Historical fixture/RNG probe bypasses only the new online admission policy.
-# The shipped policy is independently exercised by test_cloud_gate.
+# Historical fixture/RNG replay opts into legacy controls explicitly.
+# Modern admission is tested by test_world_start_gate and the packaged smoke test.
 from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
-import rpg_vkr.ui.cloud_gate as cloud_gate
-cloud_gate.require_cloud = lambda _: True
 launcher, phase = sys.argv[1:]
 sys.argv = [launcher]
 runpy.run_path(launcher, run_name='__main__')
@@ -216,6 +216,8 @@ def interact():
         from rpg_vkr.domain.character import ABILITY_NAMES, Character
         from rpg_vkr.domain.progression import ARCHETYPES
         window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+        window.resume_session()
+        window._legacy_controls = True  # Replay historical rules after opening the modern layout.
         if phase == 'fight':
             character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
                                   ARCHETYPES['fighter'].scores, strict=True)))
@@ -271,12 +273,10 @@ def interact():
         app.exit(1)
 QTimer.singleShot(0, interact)
 QTimer.singleShot(10000, lambda: app.exit(2))
-# Historical fixture/RNG probe bypasses only the new online admission policy.
-# The shipped policy is independently exercised by test_cloud_gate.
+# Historical fixture/RNG replay opts into legacy controls explicitly.
+# Modern admission is tested by test_world_start_gate and the packaged smoke test.
 from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
-import rpg_vkr.ui.cloud_gate as cloud_gate
-cloud_gate.require_cloud = lambda _: True
 launcher, phase = sys.argv[1:]
 sys.argv = [launcher]
 runpy.run_path(launcher, run_name='__main__')

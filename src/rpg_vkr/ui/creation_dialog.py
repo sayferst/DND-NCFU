@@ -79,6 +79,7 @@ class CreationDialog(QDialog):
         self.generate_world = QCheckBox("Создать новый мир и сюжет мастером")
         self.generate_world.setChecked(not getattr(parent, "_legacy_controls", False))
         layout.addRow(self.generate_world)
+        self.generate_world.setVisible(getattr(parent, "_legacy_controls", False))
         generation_note = QLabel(
             "Место и сюжет выбирает мастер по описаниям выше. Включите ИИ до "
             "создания героя; для нового мира требуется облачное подключение."

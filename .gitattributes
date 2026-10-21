@@ -46,3 +46,5 @@ docs/validation/image-quote-2026-10-20/* -text whitespace=-blank-at-eol
 scripts/build_windows.cmd text eol=crlf
 docs/validation/windows-build-policy-2026-10-20.txt -text whitespace=-blank-at-eol
 docs/validation/windows-resource-path-2026-10-20/*.txt -text whitespace=-blank-at-eol
+docs/validation/world-start-2026-10-21/*.txt -text whitespace=-blank-at-eol
+docs/research/USER_WORLD_BRIEF_2026-10-21.txt -text whitespace=-blank-at-eol

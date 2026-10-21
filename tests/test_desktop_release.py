@@ -295,6 +295,7 @@ def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp
     assert result.returncode == 0, result.stderr
     actual = json.loads(report.read_text(encoding="utf-8"))
     assert actual["ok"] and actual["references"] and actual["save_sqlite"] and actual["rng"]
-    assert actual["loopback_posts"] == actual["network_requests"] == 2
+    assert actual["loopback_posts"] == 4 and actual["network_requests"] == 6
+    assert actual["world_creation"] and actual["world_brief_preserved"]
     assert actual["external_model_requests"] == 0
     assert not (tmp_path / "untouched-real-data").exists()

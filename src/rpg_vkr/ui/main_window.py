@@ -154,6 +154,17 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         play_layout.addWidget(legend)
         play_layout.addWidget(self.journal, stretch=1)
 
+        if not self._legacy_controls:
+            from rpg_vkr.ui.adventure_panel import retry_world
+
+            self.world_start_status = QLabel()
+            self.world_start_status.setWordWrap(True)
+            self.world_start_status.setTextFormat(Qt.TextFormat.PlainText)
+            play_layout.addWidget(self.world_start_status)
+            self.world_retry_button = QPushButton("Создать мир для этого героя")
+            self.world_retry_button.clicked.connect(lambda: retry_world(self))
+            play_layout.addWidget(self.world_retry_button)
+
         quick = QGridLayout()
         self.quick_buttons: dict[str, QPushButton] = {}
         for index, (label, command) in enumerate(
@@ -256,7 +267,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 )
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
-            lambda text: self.send_button.setEnabled(bool(text.strip()))
+            lambda text: self.send_button.setEnabled(
+                bool(text.strip()) and self._generating_session is not self._session
+            )
         )
         self.action_input.returnPressed.connect(self.submit_action)
         self.send_button.clicked.connect(self.submit_action)
@@ -330,18 +343,16 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         )
         if hasattr(self, "journal"):
             self.journal.hero_name = character.name
-        draft = (
-            not self._legacy_controls
-            and not self._session.generated_world
-            and not self._session.turns
-        )
+        draft = not self._legacy_controls and not self._session.generated_world
         self.scene_title.setText("Мир ещё не создан" if draft else self._session.current_place_name)
         self.resource_label.setText(
             f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
             f"бинты {world.bandages} · {self._session.current_place_name}"
         )
         if draft:
-            self.resource_label.setText("Настройте облачного мастера и начните новую легенду.")
+            from rpg_vkr.ui.adventure_panel import world_start_message
+
+            self.resource_label.setText(world_start_message(self))
             if hasattr(self, "map_location"):
                 self.map_location.setText("Мир ещё не создан.")
         extras = "; ".join(name + " ×1" for name, _ in self._session.extra_items)
@@ -389,7 +400,13 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 item.setToolTip(card_html(place, True))
                 self.known_places.setItem(row, 0, item)
                 self.known_places.setItem(row, 1, QTableWidgetItem(place.description))
-            self.map_location.setText("Вы здесь: " + self._session.current_place_name)
+            self.map_location.setText(
+                "Мир ещё не создан." if draft else "Вы здесь: " + self._session.current_place_name
+            )
+        if hasattr(self, "world_start_status"):
+            from rpg_vkr.ui.adventure_panel import refresh_world_start
+
+            refresh_world_start(self)
         self._persist_campaign()
         if hasattr(self, "diary_list"):
             from rpg_vkr.ui.adventure_panel import refresh_diary
@@ -458,7 +475,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._refresh_slots()
         self.tabs.setCurrentIndex(0)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
-        if dialog.generate_world.isChecked():
+        if not self._legacy_controls or dialog.generate_world.isChecked():
             from rpg_vkr.ui.adventure_panel import begin_world
 
             begin_world(self)
@@ -502,19 +519,17 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 "Создаётся ваш мир: место появления, обитатели и сюжетные зацепки…",
             )
             return
-        if (
-            not self._legacy_controls
-            and not self._session.generated_world
-            and not self._session.turns
-        ):
-            self.journal.append_message(
-                "narrator", "Мастер", "Настройте облачного мастера и создайте новую легенду."
-            )
-            return
+        draft = not self._legacy_controls and not self._session.generated_world
+        if draft:
+            from rpg_vkr.ui.adventure_panel import world_start_message
+
+            self.journal.append_message("narrator", "Мастер", world_start_message(self))
+            if not self._session.turns:
+                return
         notes = {note.turn_index: note for note in self._session.narrations}
         if 0 in notes:
             self._append_narration(notes[0])
-        else:
+        elif not draft:
             self.journal.append_message("narrator", "Мастер", self._session.introduction)
         for index, turn in enumerate(self._session.turns, 1):
             if turn.combat or turn.inspection:
@@ -678,9 +693,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
 
             if handle_visual_text(self, action):
                 return
-        from rpg_vkr.ui.cloud_gate import require_cloud
+        from rpg_vkr.ui.cloud_gate import require_cloud, require_world
 
-        if not require_cloud(self):
+        if not require_cloud(self) or not require_world(self):
             return
         if use_ai and getattr(self, "_flash_pending", False):
             self.narrator_status.setText(

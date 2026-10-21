@@ -1,0 +1,418 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 1243 items
+
+tests/test_adventure.py ...................                              [  1%]
+tests/test_adventure_consistency.py ........                             [  2%]
+tests/test_adventure_ui.py ............                                  [  3%]
+tests/test_artist_panel.py ......................                        [  4%]
+tests/test_catalog.py ...............................                    [  7%]
+tests/test_catalog_image_prices.py .......................               [  9%]
+tests/test_catalog_ui.py .........                                       [  9%]
+tests/test_character.py ........................                         [ 11%]
+tests/test_character_dialog.py ...                                       [ 12%]
+tests/test_chat_intents.py ...................                           [ 13%]
+tests/test_chronicles.py ..............                                  [ 14%]
+tests/test_cloud_gate.py ...                                             [ 15%]
+tests/test_combat.py .......................                             [ 16%]
+tests/test_combat_storage.py ..............                              [ 18%]
+tests/test_combat_ui.py ......                                           [ 18%]
+tests/test_connection_metadata.py ..........                             [ 19%]
+tests/test_connection_revision.py ......................                 [ 21%]
+tests/test_conversation_revision.py ........................             [ 23%]
+tests/test_creation_and_roles.py ......                                  [ 23%]
+tests/test_desktop_release.py ........................................   [ 26%]
+tests/test_dialogue.py .............                                     [ 27%]
+tests/test_dice.py ...                                                   [ 27%]
+tests/test_environment.py ...                                            [ 28%]
+tests/test_episode_panels.py ..............                              [ 29%]
+tests/test_fantasy_menu.py ......                                        [ 29%]
+tests/test_fixture_git_checkout.py ..                                    [ 30%]
+tests/test_fixture_repair.py ...........                                 [ 30%]
+tests/test_flash_settings.py ...................                         [ 32%]
+tests/test_free_attempts.py .................................            [ 35%]
+tests/test_free_cloud.py .........                                       [ 35%]
+tests/test_images_client.py .........                                    [ 36%]
+tests/test_images_contract_revision.py ................................. [ 39%]
+........                                                                 [ 39%]
+tests/test_inspection.py ..............................                  [ 42%]
+tests/test_launch.py FFF                                                 [ 42%]
+tests/test_local_narrator.py ........................................... [ 45%]
+..................                                                       [ 47%]
+tests/test_master_campaign.py ..........................                 [ 49%]
+tests/test_master_configuration.py ...........                           [ 50%]
+tests/test_master_language_profiles.py ........                          [ 51%]
+tests/test_mechanics_before_prose.py ................................... [ 53%]
+....                                                                     [ 54%]
+tests/test_model_metrics.py ......                                       [ 54%]
+tests/test_object_descriptions.py ...................                    [ 56%]
+tests/test_offline.py ..........                                         [ 56%]
+tests/test_plain_master.py .........................                     [ 58%]
+tests/test_presentation.py .................                             [ 60%]
+tests/test_progression.py ......................................         [ 63%]
+tests/test_resolution_ui.py ............                                 [ 64%]
+tests/test_resource_ledger.py ..........................                 [ 66%]
+tests/test_response_contract.py ........................................ [ 69%]
+                                                                         [ 69%]
+tests/test_response_delivery.py ...........................              [ 71%]
+tests/test_routerai.py .......................................           [ 74%]
+tests/test_save_migration.py ..........                                  [ 75%]
+tests/test_save_slots.py ....................                            [ 77%]
+tests/test_scene_director.py ..............................              [ 79%]
+tests/test_semantic_challenges.py .............                          [ 80%]
+tests/test_session.py ....................                               [ 82%]
+tests/test_sqlite_lifecycle.py .........                                 [ 83%]
+tests/test_story_conversation_quality.py ................                [ 84%]
+tests/test_trade_context.py .........                                    [ 85%]
+tests/test_visual_commands.py .........                                  [ 85%]
+tests/test_visual_context.py .....                                       [ 86%]
+tests/test_visual_controller.py .........                                [ 87%]
+tests/test_visual_policy.py ........                                     [ 87%]
+tests/test_visual_registry.py ........                                   [ 88%]
+tests/test_window.py .......................                             [ 90%]
+tests/test_windows_test_ids.py .                                         [ 90%]
+tests/test_workspace_tools.py .............                              [ 91%]
+tests/test_workspace_ui.py ..................                            [ 92%]
+tests/test_world.py ..............................                       [ 95%]
+tests/test_world_agent_ui.py ........                                    [ 95%]
+tests/test_world_memory.py ..................                            [ 97%]
+tests/test_world_start_gate.py ............                              [ 98%]
+tests/test_world_transactions.py ......................                  [100%]
+
+=================================== FAILURES ===================================
+________________ test_launcher_process_handles_action_and_exits ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-265/test_launcher_process_handles_0')
+
+    def test_launcher_process_handles_action_and_exits(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        # A separate process exercises the actual entry point, event loop and exit code.
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer, Qt
+    from PySide6.QtTest import QTest
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    
+    app = QApplication([])
+    def interact():
+        if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+            QTimer.singleShot(20, interact)
+            return
+        try:
+            windows = [w for w in app.topLevelWidgets() if isinstance(w, QMainWindow)]
+            assert len(windows) == 1
+            window = windows[0]
+            assert window.isVisible()
+            assert window.windowTitle() == 'DND-NCFU — Хроники забытых королевств'
+            assert not window.windowIcon().isNull()
+            assert app.applicationVersion() == '0.2.0'
+            assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
+            window.resume_button.click()
+            if phase == 'save':
+                window.font_size.setValue(16)
+                window.theme_choice.setCurrentText('Тёмная')
+                window.action_input.setText('помочь')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.action_input.setText('бросить d20')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.action_input.setText('проверить силу')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                for command in ['взять поручение', 'идти на дорогу', 'исследовать дорогу',
+                                'идти на рынок', 'доставить корзину', 'подойти к торговцу',
+                                'купить бинт',
+                                'использовать бинт']:
+                    window.action_input.setText(command)
+                    QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.save_slot(1)
+            else:
+                assert window.font_size.value() == 16
+                assert window.journal.font().pointSize() == 16
+                assert window.theme_choice.currentText() == 'Тёмная'
+                window.load_slot(1)
+                assert 'Жительница благодарит' in window.journal.toPlainText()
+                assert 'Мастер: На кубике выпало ' in window.journal.toPlainText()
+                assert window.resolution_panel.isVisible()
+                assert 'Итого:' in window.roll_breakdown.toPlainText()
+                assert len(window._session.turns) == 11
+                assert window._session.world.quest == 'completed'
+                assert window._session.world.hp == 12
+                assert window._session.world.gold in (12, 14)
+                assert window._session.world.shop_stock == 2
+                assert 'Сила: 14 (+2)' == window.ability_labels['strength'].text()
+                window.action_input.setText('бросить d20')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                assert window._session.turns[-1].roll.index == 4
+                window.save_slot(2)
+            print('Launcher interaction verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    # Historical fixture/RNG probe bypasses only the new online admission policy.
+    # The shipped policy is independently exercised by test_cloud_gate.
+    from pathlib import Path
+    sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+    import rpg_vkr.ui.cloud_gate as cloud_gate
+    cloud_gate.require_cloud = lambda _: True
+    launcher, phase = sys.argv[1:]
+    sys.argv = [launcher]
+    runpy.run_path(launcher, run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "user-data")
+        for phase in ("save", "load"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Launcher interaction verified
+E             Fontconfig error: No writable cache directories
+E             This plugin does not support propagateSizeHints()
+E             
+E           assert 2 == 0
+E            +  where 2 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', '\nimport runpy\nimport sys\nimport traceback\nfr...fied\n', stderr='Fontconfig error: No writable cache directories\nThis plugin does not support propagateSizeHints()\n').returncode
+
+tests/test_launch.py:100: AssertionError
+_______________ test_real_creator_modal_progression_and_restart ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-265/test_real_creator_modal_progre0')
+
+    def test_real_creator_modal_progression_and_restart(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    
+    def fill_creator():
+        try:
+            from rpg_vkr.ui.creation_dialog import CreationDialog
+            dialog = app.activeModalWidget()
+            assert isinstance(dialog, CreationDialog)
+            dialog.name_input.setText('Мира')
+            dialog.class_choice.setCurrentIndex(0)
+            dialog.generate_world.setChecked(False)  # Preserve the original progression scenario.
+            dialog.apply_recommended()
+            dialog.accept()
+        except Exception:
+            traceback.print_exc()
+            if app.activeModalWidget():
+                app.activeModalWidget().reject()
+            app.exit(1)
+    
+    def interact():
+        if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+            QTimer.singleShot(20, interact)
+            return
+        try:
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            if phase == 'create':
+                QTimer.singleShot(0, fill_creator)
+                window.new_character()
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.enabled
+                assert not window.edit_character_button.isEnabled()
+                window.cart_button.click()
+                window.study_button.click()
+                window._run_command('идти на дорогу')
+                window.quick_buttons['исследовать дорогу'].click()
+                assert window._session.progress.level == 2
+                assert len(window._session.progress.events) == 3
+                assert window._session.world.max_hp == 14
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.level == 2
+                assert window._session.world.max_hp == 14
+                assert len(window._session.progress.events) == 3
+                assert 'Мира' in window.resource_label.text()
+                assert 'уровень 2' in window.progress_label.text()
+                assert 'Учебный меч' in window.inventory_label.text()
+                assert 'Развитие:' in window.journal.toPlainText()
+                assert not window.study_button.isEnabled()
+                xp = window._session.progress.xp
+                window._run_command('изучить учебник')
+                assert window._session.progress.xp == xp
+                window._run_command('бросить d20')
+                assert window._session.turns[-1].roll.index == 3
+                window.save_slot(2)
+            print('Created hero restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    # Historical fixture/RNG probe bypasses only the new online admission policy.
+    # The shipped policy is independently exercised by test_cloud_gate.
+    from pathlib import Path
+    sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+    import rpg_vkr.ui.cloud_gate as cloud_gate
+    cloud_gate.require_cloud = lambda _: True
+    launcher, phase = sys.argv[1:]
+    sys.argv = [launcher]
+    runpy.run_path(launcher, run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "created-data")
+        for phase in ("create", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 41, in interact
+E             AssertionError
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr...able cache directories\nTraceback (most recent call last):\n  File "<string>", line 41, in interact\nAssertionError\n').returncode
+
+tests/test_launch.py:197: AssertionError
+__________ test_real_combat_save_restart_and_multi_roll_continuation ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-265/test_real_combat_save_restart_0')
+
+    def test_real_combat_save_restart_and_multi_roll_continuation(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    def interact():
+        if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+            QTimer.singleShot(20, interact)
+            return
+        try:
+            from rpg_vkr.application import Session
+            from rpg_vkr.domain.character import ABILITY_NAMES, Character
+            from rpg_vkr.domain.progression import ARCHETYPES
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            if phase == 'fight':
+                character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
+                                      ARCHETYPES['fighter'].scores, strict=True)))
+                window._session = Session.create_hero(character, 'fighter', seed=5)
+                window._refresh_character()
+                window._render_journal()
+                window._run_command('изучить учебник')
+                window._run_command('идти на дорогу')
+                window.open_section('Схватка')
+                assert window._encounter_dialog.isVisible()
+                assert window.combat_targets.currentData() == 'wolf'
+                window.combat_stealth.click()
+                assert window._session.combat.surprise
+                assert window.resolution_panel.isVisible()
+                assert '20 + 1 = 21' in window.roll_breakdown.toPlainText()
+                from rpg_vkr.narrative.context import build_frame
+                from rpg_vkr.narrative.records import Narration
+                frame = build_frame(window._session)
+                window._session.add_narration(Narration(3, 'local-test:1',
+                    'Вы приближаетесь к волку незамеченным.', frame.fingerprint))
+                window._render_journal()
+                assert len(window._session.memory.events) == 3
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.combat.surprise
+                assert len(window._session.memory.events) == 3
+                assert 'Вы приближаетесь к волку незамеченным.' in window.journal.toPlainText()
+                assert not window.enable_local_narrator.isChecked()
+                assert not window.ollama.busy
+                colour = window.journal.actor_colour('wolf')
+                assert colour == window.journal.highlighter.colour('hostile')
+                assert colour.name() in {'#ff737d', '#b00020'}  # Modern default theme is dark.
+                window.open_section('Схватка')
+                window.combat_attack.click()
+                assert window._session.combat.actor('wolf').hp == 0
+                assert 'Скрытая атака ×2 · урон 16' in window.journal.toPlainText()
+                assert '=' not in window.journal.toPlainText()
+                assert '(6 + 2) × 2 = 16' in window.roll_breakdown.toPlainText()
+                assert window._session.progress.level == 2
+                assert window._session.world.hp == 12
+                assert window._session.world.max_hp == 14
+                assert 'Бросков в сессии: 3' in window.roll_summary.text()
+                assert window.journal.font().bold()
+                assert window.journal.font().pointSize() == 13
+                window._run_command('бросить d20')
+                assert window._session.turns[-1].roll.value == 17
+                window.save_slot(2)
+            print('Combat restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    # Historical fixture/RNG probe bypasses only the new online admission policy.
+    # The shipped policy is independently exercised by test_cloud_gate.
+    from pathlib import Path
+    sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+    import rpg_vkr.ui.cloud_gate as cloud_gate
+    cloud_gate.require_cloud = lambda _: True
+    launcher, phase = sys.argv[1:]
+    sys.argv = [launcher]
+    runpy.run_path(launcher, run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "combat-data")
+        for phase in ("fight", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             This plugin does not support propagateSizeHints()
+E             Traceback (most recent call last):
+E               File "<string>", line 27, in interact
+E             AssertionError
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr...t propagateSizeHints()\nTraceback (most recent call last):\n  File "<string>", line 27, in interact\nAssertionError\n').returncode
+
+tests/test_launch.py:296: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_launch.py::test_launcher_process_handles_action_and_exits
+FAILED tests/test_launch.py::test_real_creator_modal_progression_and_restart
+FAILED tests/test_launch.py::test_real_combat_save_restart_and_multi_roll_continuation
+================== 3 failed, 1240 passed in 161.04s (0:02:41) ==================

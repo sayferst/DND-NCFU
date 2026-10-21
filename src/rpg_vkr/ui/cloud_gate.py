@@ -36,3 +36,15 @@ def require_cloud(window):
     window.statusBar().showMessage(NOTICE)
     QMessageBox.information(window, "Нужен онлайн-мастер", NOTICE)
     return False
+
+
+def require_world(window):
+    """A connected writer cannot turn an unfinished hero into the legacy episode."""
+    if window._legacy_controls or window._session.generated_world:
+        return True
+    from rpg_vkr.ui.adventure_panel import world_start_message
+
+    message = world_start_message(window)
+    window.narrator_status.setText(message)
+    window.statusBar().showMessage(message)
+    return False

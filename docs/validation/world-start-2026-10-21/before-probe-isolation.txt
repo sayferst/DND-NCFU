@@ -1,0 +1,112 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 14 items / 13 deselected / 1 selected
+
+tests/test_world_start_gate.py F                                         [100%]
+
+=================================== FAILURES ===================================
+______ test_packaged_creation_probe_ignores_and_preserves_personal_prompt ______
+
+qt_app = <PySide6.QtWidgets.QApplication(0x101ed680) at 0x7f7ffe3d4300>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-270/test_packaged_creation_probe_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7ffe347ce0>
+
+    def test_packaged_creation_probe_ignores_and_preserves_personal_prompt(qt_app, tmp_path, monkeypatch):
+        from test_adventure import started
+    
+        from rpg_vkr.narrative import instructions
+        from rpg_vkr.packaged_probe import world_creation_probe
+    
+        personal = tmp_path / "personal-master.txt"
+        personal.write_bytes(b"")
+        monkeypatch.setattr(instructions, "LOCAL_PATH", personal)
+>       world_creation_probe(qt_app, tmp_path / "probe", started().chronicle.seed)
+
+tests/test_world_start_gate.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <PySide6.QtWidgets.QApplication(0x101ed680) at 0x7f7ffe3d4300>
+root = PosixPath('/tmp/pytest-of-agent/pytest-270/test_packaged_creation_probe_i0/probe')
+seed = WorldSeed(title='Карта переправы', opening='Ветер шевелит ленты на мачте. Рен раскладывает дорожные припасы у причала....n='catalog-1'), source='synthetic-model', signature='f72266f6cf8d3ee6ba8029e8d3d26be3c71281621dc367ec8697dcebbecdd9e6')
+
+    def world_creation_probe(app, root, seed):
+        """Exercise the real new-hero dialog, world request, chat and scene in the bundle."""
+        import time
+    
+        from PySide6.QtCore import QEventLoop, QTimer
+        from PySide6.QtWidgets import QApplication
+    
+        from rpg_vkr.narrative import cloud, routerai
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui.creation_dialog import CreationDialog
+        from rpg_vkr.ui.main_window import MainWindow
+        from rpg_vkr.visuals.context import scene_target
+    
+        value = {
+            "title": seed.title,
+            "opening": seed.opening,
+            "private_plot": seed.private_plot,
+            "hooks": list(seed.hooks),
+            "start": seed.scene.current,
+            "places": [
+                {"id": p.id, "name": p.name, "parent": p.parent, "description": p.description}
+                for p in seed.scene.places
+            ],
+            "definitions": [d.to_dict() for d in seed.catalog.definitions if d.origin == "generated"],
+            "entities": [e.to_dict() for e in seed.catalog.entities],
+        }
+        brief = "Приключенческое фэнтези: речные дороги, свободный выбор героя, память о поступках."
+        window = MainWindow(saves=SaveSlots(root / "world-creation/saves"))
+        window._confirm = lambda *_: True
+        previous_endpoint, previous_key_url = cloud.ENDPOINTS["routerai"], routerai.KEY_URL
+    
+        def create():
+            dialog = QApplication.activeModalWidget()
+            if not isinstance(dialog, CreationDialog):
+                raise ValueError("Hero creation dialog missing")
+            dialog.name_input.setText("Проверка нового мира")
+            dialog.world_brief_input.setPlainText(brief)
+            dialog.accept()
+    
+        def wait():
+            deadline = time.monotonic() + 10
+            while window.ollama.busy and time.monotonic() < deadline:
+                pause = QEventLoop()
+                QTimer.singleShot(10, pause.quit)
+                pause.exec()
+            if window.ollama.busy:
+                raise ValueError("Loopback world creation timed out")
+    
+        try:
+            with loopback(value) as (base, calls):
+                cloud.ENDPOINTS["routerai"], routerai.KEY_URL = (
+                    base + "/chat/completions",
+                    base + "/key",
+                )
+                window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
+                window.cloud_model.setText("deepseek/deepseek-v4-flash-latest")
+                window.cloud_key.setText("probe-key")
+                window.cloud_allowed.setChecked(True)
+                window.enable_local_narrator.setChecked(True)
+                window.action_input.setText("начать")
+                window.submit_action()
+                if calls or window._session.turns or window.ollama.busy:
+                    raise ValueError("Uncreated world accepted a chat action")
+                QTimer.singleShot(0, create)
+                window.new_character()
+                window.action_input.setText("начать")
+                window.submit_action()
+                wait()
+                session = window._session
+                if not session.generated_world or session.turns or len(calls) != 1:
+>                   raise ValueError("World creation did not finish before chat")
+E                   ValueError: World creation did not finish before chat
+
+src/rpg_vkr/packaged_probe.py:175: ValueError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+=========================== short test summary info ============================
+FAILED tests/test_world_start_gate.py::test_packaged_creation_probe_ignores_and_preserves_personal_prompt
+======================= 1 failed, 13 deselected in 0.97s =======================

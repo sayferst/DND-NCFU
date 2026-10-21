@@ -1,0 +1,436 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 9 items
+
+tests/test_world_start_gate.py EEEEEEEEE                                 [100%]
+
+==================================== ERRORS ====================================
+_ ERROR at setup of test_configured_master_cannot_play_a_hero_without_a_world[\u043d\u0430\u0447\u0430\u0442\u044c] _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_configured_master_cannot_0')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x3904ef30) at 0x7fba2a64f800>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ ERROR at setup of test_configured_master_cannot_play_a_hero_without_a_world[\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c\u0441\u044f] _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_configured_master_cannot_1')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x39779fd0) at 0x7fba29bfb800>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_ ERROR at setup of test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u044c] _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_configured_master_cannot_2')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x395fefe0) at 0x7fba29d1abc0>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_ ERROR at setup of test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u0434\u0442\u0438 \u043d\u0430 \u0434\u043e\u0440\u043e\u0433\u0443] _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_configured_master_cannot_3')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x39694220) at 0x7fba29befc80>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_ ERROR at setup of test_generation_cannot_be_cancelled_by_chat_or_repeated_start _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_generation_cannot_be_canc0')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x39640e30) at 0x7fba29ccfe00>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_ ERROR at setup of test_invalid_world_has_visible_error_and_can_retry_same_hero _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_invalid_world_has_visible0')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x395efe90) at 0x7fba29d78f80>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_ ERROR at setup of test_new_legend_creates_and_persists_its_world_before_starting_chat _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_new_legend_creates_and_pe0')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x39696b30) at 0x7fba29c2b7c0>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_________ ERROR at setup of test_draft_campaign_is_named_as_unfinished _________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_draft_campaign_is_named_a0')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x3953fec0) at 0x7fba29cefe80>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+_ ERROR at setup of test_old_turn_without_world_never_changes_draft_into_village _
+
+qt_app = <PySide6.QtWidgets.QApplication(0x391b83d0) at 0x7fba29f1b0c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-260/test_old_turn_without_world_ne0')
+
+    @pytest.fixture
+    def modern(qt_app, tmp_path):
+>       window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_start_gate.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:146: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:355: in _refresh_character
+    self.resource_label.setText(world_start_message(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/ui/adventure_panel.py:392: in world_start_message
+    if cloud_ready(window)
+       ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x3961b3f0) at 0x7fba29cb7e80>
+
+    def cloud_ready(window):
+        return (
+>           window.ai_provider.currentData() != "local"
+            ^^^^^^^^^^^^^^^^^^
+            and window.enable_local_narrator.isChecked()
+            and window.ai_chat.isChecked()
+            and window.cloud_allowed.isChecked()
+            and bool(window.cloud_model.text().strip())
+            and bool(
+                window.cloud_key.text().strip()
+                or os.environ.get(
+                    "RPG_VKR_ROUTERAI_API_KEY"
+                    if window.ai_provider.currentData() == "routerai"
+                    else "RPG_VKR_LLM_API_KEY",
+                    "",
+                )
+            )
+            and not getattr(window, "_flash_pending", False)
+        )
+E       AttributeError: 'MainWindow' object has no attribute 'ai_provider'
+
+src/rpg_vkr/ui/cloud_gate.py:14: AttributeError
+=========================== short test summary info ============================
+ERROR tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u043d\u0430\u0447\u0430\u0442\u044c]
+ERROR tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c\u0441\u044f]
+ERROR tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u044c]
+ERROR tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u0434\u0442\u0438 \u043d\u0430 \u0434\u043e\u0440\u043e\u0433\u0443]
+ERROR tests/test_world_start_gate.py::test_generation_cannot_be_cancelled_by_chat_or_repeated_start
+ERROR tests/test_world_start_gate.py::test_invalid_world_has_visible_error_and_can_retry_same_hero
+ERROR tests/test_world_start_gate.py::test_new_legend_creates_and_persists_its_world_before_starting_chat
+ERROR tests/test_world_start_gate.py::test_draft_campaign_is_named_as_unfinished
+ERROR tests/test_world_start_gate.py::test_old_turn_without_world_never_changes_draft_into_village
+============================== 9 errors in 0.74s ===============================

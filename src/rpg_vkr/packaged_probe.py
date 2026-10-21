@@ -18,7 +18,7 @@ PNG = base64.b64decode(
 
 
 @contextmanager
-def loopback():
+def loopback(world_seed=None):
     calls = []
 
     class Handler(BaseHTTPRequestHandler):
@@ -40,7 +40,52 @@ def loopback():
                     ]
                 }
             )
+            if world_seed is not None:
+                mode = body["messages"][0]["content"]
+                content = (
+                    world_seed
+                    if "Режим: новый мир" in mode
+                    else {
+                        "steps": [],
+                        "places": [],
+                        "check": "none",
+                        "reply": (
+                            "В тихом дворе шелестят листья. У стены стоит человек в сером плаще."
+                        ),
+                    }
+                )
+                value = {
+                    "choices": [
+                        {
+                            "message": {
+                                "role": "assistant",
+                                "content": json.dumps(content, ensure_ascii=False),
+                            },
+                            "finish_reason": "stop",
+                        }
+                    ]
+                }
             raw = json.dumps(value).encode()
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(raw)))
+            self.end_headers()
+            self.wfile.write(raw)
+
+        def do_GET(self):
+            if world_seed is None or self.path != "/key":
+                self.send_error(404)
+                return
+            raw = json.dumps(
+                {
+                    "data": {
+                        "disabled": False,
+                        "limit": "2000",
+                        "usage_monthly": "0",
+                        "limit_remaining": "2000",
+                        "limit_reset": "monthly",
+                    }
+                }
+            ).encode()
             self.send_response(200)
             self.send_header("Content-Length", str(len(raw)))
             self.end_headers()
@@ -55,6 +100,111 @@ def loopback():
         server.shutdown()
         server.server_close()
         thread.join()
+
+
+def world_creation_probe(app, root, seed):
+    """Exercise the real new-hero dialog, world request, chat and scene in the bundle."""
+    import time
+
+    from PySide6.QtCore import QEventLoop, QTimer
+    from PySide6.QtWidgets import QApplication
+
+    from rpg_vkr.narrative import cloud, instructions, routerai
+    from rpg_vkr.storage.slots import SaveSlots
+    from rpg_vkr.ui.creation_dialog import CreationDialog
+    from rpg_vkr.ui.main_window import MainWindow
+    from rpg_vkr.visuals.context import scene_target
+
+    value = {
+        "title": seed.title,
+        "opening": seed.opening,
+        "private_plot": seed.private_plot,
+        "hooks": list(seed.hooks),
+        "start": seed.scene.current,
+        "places": [
+            {"id": p.id, "name": p.name, "parent": p.parent, "description": p.description}
+            for p in seed.scene.places
+        ],
+        "definitions": [d.to_dict() for d in seed.catalog.definitions if d.origin == "generated"],
+        "entities": [e.to_dict() for e in seed.catalog.entities],
+    }
+    brief = "Приключенческое фэнтези: речные дороги, свободный выбор героя, память о поступках."
+    window = MainWindow(saves=SaveSlots(root / "world-creation/saves"))
+    window._confirm = lambda *_: True
+    previous_endpoint, previous_key_url = cloud.ENDPOINTS["routerai"], routerai.KEY_URL
+    previous_prompt = instructions.LOCAL_PATH
+
+    def create():
+        dialog = QApplication.activeModalWidget()
+        if not isinstance(dialog, CreationDialog):
+            raise ValueError("Hero creation dialog missing")
+        dialog.name_input.setText("Проверка нового мира")
+        dialog.world_brief_input.setPlainText(brief)
+        dialog.accept()
+
+    def wait():
+        deadline = time.monotonic() + 10
+        while window.ollama.busy and time.monotonic() < deadline:
+            pause = QEventLoop()
+            QTimer.singleShot(10, pause.quit)
+            pause.exec()
+        if window.ollama.busy:
+            raise ValueError("Loopback world creation timed out")
+
+    try:
+        instructions.LOCAL_PATH = root / ".no-personal-prompt-world-probe"
+        with loopback(value) as (base, calls):
+            cloud.ENDPOINTS["routerai"], routerai.KEY_URL = (
+                base + "/chat/completions",
+                base + "/key",
+            )
+            window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
+            window.cloud_model.setText("deepseek/deepseek-v4-flash-latest")
+            window.cloud_key.setText("probe-key")
+            window.cloud_allowed.setChecked(True)
+            window.enable_local_narrator.setChecked(True)
+            window.action_input.setText("начать")
+            window.submit_action()
+            if calls or window._session.turns or window.ollama.busy:
+                raise ValueError("Uncreated world accepted a chat action")
+            QTimer.singleShot(0, create)
+            window.new_character()
+            window.action_input.setText("начать")
+            window.submit_action()
+            wait()
+            session = window._session
+            if not session.generated_world or session.turns or len(calls) != 1:
+                raise ValueError("World creation did not finish before chat")
+            genesis = json.loads(calls[0][1]["messages"][1]["content"])
+            if genesis["world_brief"] != brief or session.campaign.world_brief != brief:
+                raise ValueError("World brief changed during generation")
+            window.submit_action()
+            wait()
+            if (
+                len(calls) != 2
+                or len(session.turns) != 1
+                or "Ворота деревни" in window.journal.toPlainText()
+            ):
+                raise ValueError("Generated chat returned to the legacy episode")
+            scene_target(session)
+            window.save_slot(1)
+            saved = session.to_dict()
+            window.load_slot(1)
+            repository = window._campaign_repository
+            if (
+                window._session.to_dict() != saved
+                or repository.load(repository.identity(session)).to_dict() != saved
+            ):
+                raise ValueError("Generated world not preserved in JSON/SQLite")
+    finally:
+        instructions.LOCAL_PATH = previous_prompt
+        cloud.ENDPOINTS["routerai"], routerai.KEY_URL = previous_endpoint, previous_key_url
+        window.ollama.cancel()
+        window._dirty = False
+        window.action_input.clear()
+        window.close()
+        window.deleteLater()
+        app.processEvents()
 
 
 def smoke_test(app):
@@ -113,6 +263,7 @@ def smoke_test(app):
                 "offline-packaging-probe",
             )
             session.start_world(seed)
+            world_creation_probe(app, root, seed)
             slots = SaveSlots(root / "data/saves")
             slots.save(1, session)
             restored = slots.load(1)
@@ -230,9 +381,11 @@ def smoke_test(app):
                 "visual_cache": True,
                 "references": True,
                 "gui_sections": sections,
+                "world_creation": True,
+                "world_brief_preserved": True,
                 "dpapi": credential,
-                "loopback_posts": 2,
-                "network_requests": 2,
+                "loopback_posts": 4,
+                "network_requests": 6,
                 "external_model_requests": 0,
                 "clean_windows_without_python": "requires separate manual acceptance",
             }

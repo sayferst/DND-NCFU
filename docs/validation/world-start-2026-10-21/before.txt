@@ -1,0 +1,167 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 9 items
+
+tests/test_world_start_gate.py FFFFFF.FF                                 [100%]
+
+=================================== FAILURES ===================================
+_ test_configured_master_cannot_play_a_hero_without_a_world[\u043d\u0430\u0447\u0430\u0442\u044c] _
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x3c32f30) at 0x7f8659b38f40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f86593e4ef0>
+action = 'начать'
+
+    @pytest.mark.parametrize("action", ["начать", "осмотреться", "инвентарь", "идти на дорогу"])
+    def test_configured_master_cannot_play_a_hero_without_a_world(modern, monkeypatch, action):
+        with router_server() as (url, records):
+            configure(modern, monkeypatch, url)
+            before = deepcopy(modern._session.to_dict()), modern._session.dice.checkpoint()
+            modern.action_input.setText(action)
+            modern.submit_action()
+>           assert modern.action_input.text() == action
+E           AssertionError: assert '' == 'начать'
+E             
+E             - начать
+
+tests/test_world_start_gate.py:37: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ test_configured_master_cannot_play_a_hero_without_a_world[\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c\u0441\u044f] _
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x5018aa0) at 0x7f8659339840>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f86592f28d0>
+action = 'осмотреться'
+
+    @pytest.mark.parametrize("action", ["начать", "осмотреться", "инвентарь", "идти на дорогу"])
+    def test_configured_master_cannot_play_a_hero_without_a_world(modern, monkeypatch, action):
+        with router_server() as (url, records):
+            configure(modern, monkeypatch, url)
+            before = deepcopy(modern._session.to_dict()), modern._session.dice.checkpoint()
+            modern.action_input.setText(action)
+            modern.submit_action()
+>           assert modern.action_input.text() == action
+E           AssertionError: assert '' == 'осмотреться'
+E             
+E             - осмотреться
+
+tests/test_world_start_gate.py:37: AssertionError
+_ test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u044c] _
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x5c32270) at 0x7f86592ca480>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8659302870>
+action = 'инвентарь'
+
+    @pytest.mark.parametrize("action", ["начать", "осмотреться", "инвентарь", "идти на дорогу"])
+    def test_configured_master_cannot_play_a_hero_without_a_world(modern, monkeypatch, action):
+        with router_server() as (url, records):
+            configure(modern, monkeypatch, url)
+            before = deepcopy(modern._session.to_dict()), modern._session.dice.checkpoint()
+            modern.action_input.setText(action)
+            modern.submit_action()
+>           assert modern.action_input.text() == action
+E           AssertionError: assert '' == 'инвентарь'
+E             
+E             - инвентарь
+
+tests/test_world_start_gate.py:37: AssertionError
+_ test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u0434\u0442\u0438 \u043d\u0430 \u0434\u043e\u0440\u043e\u0433\u0443] _
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x61be6d0) at 0x7f8659bb2480>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f86592a8dd0>
+action = 'идти на дорогу'
+
+    @pytest.mark.parametrize("action", ["начать", "осмотреться", "инвентарь", "идти на дорогу"])
+    def test_configured_master_cannot_play_a_hero_without_a_world(modern, monkeypatch, action):
+        with router_server() as (url, records):
+            configure(modern, monkeypatch, url)
+            before = deepcopy(modern._session.to_dict()), modern._session.dice.checkpoint()
+            modern.action_input.setText(action)
+            modern.submit_action()
+>           assert modern.action_input.text() == action
+E           AssertionError: assert '' == 'идти на дорогу'
+E             
+E             - идти на дорогу
+
+tests/test_world_start_gate.py:37: AssertionError
+________ test_generation_cannot_be_cancelled_by_chat_or_repeated_start _________
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x6be5bd0) at 0x7f86585cbcc0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f86587b4260>
+qt_app = <PySide6.QtWidgets.QApplication(0x3d9c3d0) at 0x7f8659b2a6c0>
+
+    def test_generation_cannot_be_cancelled_by_chat_or_repeated_start(modern, monkeypatch, qt_app):
+        with router_server(world_seed=world_value()) as (url, records):
+            configure(modern, monkeypatch, url)
+            begin_world(modern)
+            turn_id = modern.ollama.turn_id
+            modern.action_input.setText("начать")
+>           assert not modern.send_button.isEnabled()
+E           assert not True
+E            +  where True = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x7f86585d49c0>()
+E            +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x7f86585d49c0> = <PySide6.QtWidgets.QPushButton(0x759eef0) at 0x7f86585d49c0>.isEnabled
+E            +      where <PySide6.QtWidgets.QPushButton(0x759eef0) at 0x7f86585d49c0> = <rpg_vkr.ui.main_window.MainWindow(0x6be5bd0) at 0x7f86585cbcc0>.send_button
+
+tests/test_world_start_gate.py:49: AssertionError
+_________ test_invalid_world_has_visible_error_and_can_retry_same_hero _________
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x79cce90) at 0x7f86587b3240>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f86585cd0a0>
+qt_app = <PySide6.QtWidgets.QApplication(0x3d9c3d0) at 0x7f8659b2a6c0>
+
+    def test_invalid_world_has_visible_error_and_can_retry_same_hero(modern, monkeypatch, qt_app):
+        with router_server(world_seed="Это рассказ вместо объекта мира") as (url, records):
+            configure(modern, monkeypatch, url)
+            before = deepcopy(modern._session.to_dict()), modern._session.dice.checkpoint()
+            begin_world(modern)
+            wait_for(qt_app, lambda: not modern.ollama.busy)
+            assert modern._generating_session is None and not modern._session.generated_world
+            assert (modern._session.to_dict(), modern._session.dice.checkpoint()) == before
+>           assert len([r for r in records if r["method"] == "POST"]) == 2
+E           AssertionError: assert 1 == 2
+E            +  where 1 = len([{'authenticated': True, 'body': {'messages': [{'content': 'Ты — Мастер и рассказчик авторской фэнтези-RPG DND-NCFU. В...odel': 'deepseek/deepseek-v4-pro-0813', 'stream': False, 'temperature': 0.8}, 'has_auth': True, 'method': 'POST', ...}])
+
+tests/test_world_start_gate.py:69: AssertionError
+__________________ test_draft_campaign_is_named_as_unfinished __________________
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x8183f00) at 0x7f86587cc680>
+
+    def test_draft_campaign_is_named_as_unfinished(modern):
+        rows = modern._campaign_repository.list_campaigns()
+        assert len(rows) == 1
+>       assert "Мир ещё не создан" in rows[0][2]
+E       AssertionError: assert 'Мир ещё не создан' in 'Учебная кампания'
+
+tests/test_world_start_gate.py:123: AssertionError
+_________ test_old_turn_without_world_never_changes_draft_into_village _________
+
+modern = <rpg_vkr.ui.main_window.MainWindow(0x5d9d1a0) at 0x7f86585cadc0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8658670200>
+
+    def test_old_turn_without_world_never_changes_draft_into_village(modern, monkeypatch):
+        modern._session.submit("начать")  # Reproduce the previous release's contaminated draft.
+        modern._refresh_character()
+        modern._render_journal()
+        with router_server() as (url, records):
+            configure(modern, monkeypatch, url)
+            before = deepcopy(modern._session.to_dict())
+            modern.action_input.setText("начать")
+            modern.submit_action()
+            assert modern._session.to_dict() == before
+>           assert not modern.ollama.busy and not records
+E           assert (not True)
+E            +  where True = <rpg_vkr.narrative.ollama.OllamaClient(0x4ed7d30) at 0x7f865859a880>.busy
+E            +    where <rpg_vkr.narrative.ollama.OllamaClient(0x4ed7d30) at 0x7f865859a880> = <rpg_vkr.ui.main_window.MainWindow(0x5d9d1a0) at 0x7f86585cadc0>.ollama
+
+tests/test_world_start_gate.py:136: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u043d\u0430\u0447\u0430\u0442\u044c]
+FAILED tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c\u0441\u044f]
+FAILED tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u044c]
+FAILED tests/test_world_start_gate.py::test_configured_master_cannot_play_a_hero_without_a_world[\u0438\u0434\u0442\u0438 \u043d\u0430 \u0434\u043e\u0440\u043e\u0433\u0443]
+FAILED tests/test_world_start_gate.py::test_generation_cannot_be_cancelled_by_chat_or_repeated_start
+FAILED tests/test_world_start_gate.py::test_invalid_world_has_visible_error_and_can_retry_same_hero
+FAILED tests/test_world_start_gate.py::test_draft_campaign_is_named_as_unfinished
+FAILED tests/test_world_start_gate.py::test_old_turn_without_world_never_changes_draft_into_village
+========================= 8 failed, 1 passed in 4.05s ==========================

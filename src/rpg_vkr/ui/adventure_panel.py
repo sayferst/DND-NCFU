@@ -247,11 +247,46 @@ def recover(window):
     window.resume_session()
 
 
+def retry_world(window):
+    from rpg_vkr.application import Session
+    from rpg_vkr.ui.cloud_gate import require_cloud
+
+    session = window._session
+    if window._generating_session is session or not require_cloud(window):
+        return
+    if session.turns and session.progress.enabled and not session.generated_world:
+        if not window._confirm(
+            "В этой сессии мир не был создан. Сохранить её рабочую копию и начать новый мир "
+            "с исходной анкетой этого героя? Описание и пожелания к миру сохранятся. "
+            "Прежняя история останется в базе; ячейки сохранений не перезаписываются."
+        ):
+            return
+        try:
+            if window._campaign_repository is None:
+                raise ValueError("Рабочая база недоступна; сначала сохраните прежнюю сессию.")
+            window._campaign_repository.sync(session)
+        except (ValueError, OSError, sqlite3.Error) as error:
+            window.world_start_status.setText("Новая кампания не начата: " + str(error))
+            return
+        window._session = Session.create_hero(
+            session.progress.initial,
+            session.progress.class_id,
+            description=session.campaign.raw_player_description,
+            world_brief=session.campaign.world_brief,
+        )
+        window._current_slot = None
+        window._dirty = True
+        window._refresh_character()
+        window._rebuild_history()
+        window._refresh_slots()
+    begin_world(window)
+
+
 def begin_world(window):
     from rpg_vkr.ui.cloud_gate import require_cloud
     from rpg_vkr.ui.narrator_panel import cancel_narration, prepare_model
 
-    if not require_cloud(window):
+    if window._generating_session is window._session or not require_cloud(window):
         return
     session = window._session
     if not session.progress.enabled or session.turns or session.generated_world:
@@ -259,12 +294,14 @@ def begin_world(window):
         return
     cancel_narration(window)
     window._generating_session = session
+    window._world_generation_error = None
     window._world_seed_attempts = 0
     window.ollama.begin_turn()
     window._telemetry_session = session
     window._model_base_turn = 0
     window.action_input.setEnabled(False)
     window.send_button.setEnabled(False)
+    refresh_world_start(window)
     if window.enable_local_narrator.isChecked() and prepare_model(window):
         request_world(window)
     else:
@@ -289,18 +326,21 @@ def request_world(window, error=""):
     session = window._session
     window._world_seed_attempts += 1
     window.world_generation_status.setText("Мастер создаёт район и сюжетные зацепки…")
-    window.ollama.generate_world(
-        build_frame(session),
-        window.local_model.currentText(),
-        {
-            "hero": session.character.name,
-            "class": session.progress.class_id,
-            "hero_description": session.campaign.raw_player_description,
-            "world_brief": session.campaign.world_brief,
-            "variation": session.campaign.world_id,
-        },
-        error,
-    )
+    try:
+        window.ollama.generate_world(
+            build_frame(session),
+            window.local_model.currentText(),
+            {
+                "hero": session.character.name,
+                "class": session.progress.class_id,
+                "hero_description": session.campaign.raw_player_description,
+                "world_brief": session.campaign.world_brief,
+                "variation": session.campaign.world_id,
+            },
+            error,
+        )
+    except (ValueError, OSError) as failure:
+        generation_failed(window, str(failure))
     window._render_journal()
 
 
@@ -340,7 +380,16 @@ def finish_world(window, seed, status):
 def generation_failed(window, message):
     if getattr(window, "_generating_session", None) is window._session:
         if not window._legacy_controls:
+            failure = window.ollama.last_failure or {}
+            if (
+                failure.get("stage") == "world_seed"
+                and failure.get("code") == "invalid_format"
+                and window._world_seed_attempts < 2
+            ):
+                request_world(window, message)
+                return
             window._generating_session = None
+            window._world_generation_error = (window._session, message)
             window.action_input.setEnabled(True)
             window.send_button.setEnabled(bool(window.action_input.text().strip()))
             window.world_generation_status.setText("Мир не создан: " + message)
@@ -354,4 +403,48 @@ def generation_failed(window, message):
             "ИИ-генерация не завершилась: "
             + message
             + " Создан автономный старт; описание героя сохранено.",
+        )
+
+
+def world_start_message(window):
+    session = window._session
+    if window._generating_session is session:
+        return "Создаётся ваш мир. Дождитесь завершения; сообщение пока не отправлено."
+    failure = getattr(window, "_world_generation_error", None)
+    if failure and failure[0] is session:
+        return "Мир не создан: " + failure[1] + " Повторите создание мира кнопкой под журналом."
+    if session.turns:
+        return (
+            "В этой сессии нет созданного мастером мира. История сохранена; "
+            "создайте новый мир с этим героем кнопкой под журналом или откройте готовую кампанию."
+        )
+    if not session.progress.enabled:
+        return "Создайте героя через «Новую легенду»: мастер создаст для него мир."
+    from rpg_vkr.ui.cloud_gate import cloud_ready
+
+    return (
+        "Герой создан. Нажмите «Создать мир для этого героя» под журналом."
+        if hasattr(window, "ollama") and cloud_ready(window)
+        else "Герой сохранён. Настройте облачного мастера и повторите создание мира."
+    )
+
+
+def refresh_world_start(window):
+    if not hasattr(window, "world_retry_button"):
+        return
+    session = window._session
+    draft = not session.generated_world
+    window.world_start_status.setVisible(draft)
+    window.world_retry_button.setVisible(draft)
+    window.world_start_status.setText(world_start_message(window) if draft else "")
+    window.world_retry_button.setEnabled(
+        draft and session.progress.enabled and window._generating_session is not session
+    )
+    window.world_retry_button.setText(
+        "Создать новый мир с этим героем" if session.turns else "Создать мир для этого героя"
+    )
+    if hasattr(window, "scene_image_button"):
+        window.scene_image_button.setEnabled(not draft)
+        window.scene_image_button.setToolTip(
+            "Изобразить текущую сцену" if not draft else "Сначала завершите создание мира."
         )
