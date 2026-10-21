@@ -69,12 +69,22 @@ class VisualController(QObject):
         self.install_settings()
 
     def status(self, text):
+        console = getattr(self.window, "developer_console", None)
+        if console and not console.access.authorized:
+            text = text.replace(RECRAFT, "образ предмета").replace(FLUX, "образ сцены")
+            text = text.replace("RouterAI", "игровой сервис").replace("Images API", "Иллюстрации")
+            if "ключ" in text.casefold():
+                text = "Создание иллюстрации недоступно. Обратитесь к владельцу игры."
         self.notice = text
         self.label.setText(text)
         self.window.statusBar().showMessage(text, 12000)
         self.changed.emit()
 
     def key(self):
+        if getattr(getattr(self.window, "release_profile", None), "mode", "") == "tester":
+            from rpg_vkr.deployment import tester_token
+
+            return tester_token(self.window)
         if hasattr(self.window, "artist_panel"):
             return self.window.artist_panel.effective_key()
         window = self.window
@@ -285,8 +295,8 @@ class VisualController(QObject):
             return
         if not self.settings.consent or self.settings.monthly_micros <= 0:
             self.status(
-                "В панели «Художник» откройте бюджет, разрешите передачу данных "
-                "и задайте месячный лимит."
+                "Создание изображений пока не разрешено владельцем игры. "
+                "Обратитесь к нему для настройки доступа."
             )
             return
         if not self.key():
@@ -380,6 +390,9 @@ class VisualController(QObject):
         model = route(target.category, target.economy_eligible, bool(candidates))
         reason = route_reason(target.category, target.economy_eligible, bool(candidates))
         self.last_route = f"Автовыбор: {model}. {reason}"
+        console = getattr(self.window, "developer_console", None)
+        if console and not console.access.authorized:
+            self.last_route = "Создаём образ по известному описанию и сохранённым иллюстрациям."
         size = (
             self.settings.scene_size if target.category == "events" else self.settings.portrait_size
         )
@@ -477,7 +490,7 @@ class VisualController(QObject):
         info.setWordWrap(True)
         layout.addWidget(info)
         for row in versions:
-            choice.addItem(f"Версия {row['version']} · {row['model']}")
+            choice.addItem(f"Версия {row['version']}")
 
         def show(index):
             row = versions[index]
@@ -492,7 +505,7 @@ class VisualController(QObject):
                     )
                 )
                 info.setText(
-                    f"{row['created']} · {row['model']}\n"
+                    f"{row['created']}\n"
                     "Визуализация не изменяет канон и может отличаться от описания."
                 )
             except (OSError, ValueError) as error:
@@ -606,9 +619,7 @@ def install_visuals(window):
                 from rpg_vkr.ui.chronicles_panel import card_html
 
                 url = QUrl.fromLocalFile(str(window.visuals.registry.asset_path(asset))).toString()
-                panel.detail.setHtml(
-                    f'<p><img src="{url}" width="300"></p>' + card_html(entry)
-                )
+                panel.detail.setHtml(f'<p><img src="{url}" width="300"></p>' + card_html(entry))
             except (ValueError, OSError):
                 panel.visual_preview.setText("Изображение повреждено")
         else:
@@ -618,6 +629,7 @@ def install_visuals(window):
 
     panel.list.currentItemChanged.connect(lambda *_: refresh())
     window.visuals.changed.connect(refresh)
+    window.visuals.changed.connect(panel.refresh_images)
     refresh()
     panel.image_controls.setVisible(panel.width() >= 850)
     panel.image_menu_button.setVisible(panel.width() < 850)

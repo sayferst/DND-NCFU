@@ -325,6 +325,10 @@ def select_routerai_model(window, index):
 
 
 def prepare_model(window):
+    if getattr(getattr(window, "release_profile", None), "mode", "") == "tester":
+        from rpg_vkr.ui.tester_connection import configure
+
+        return configure(window)
     if window.ai_provider.currentData() == "local":
         window.ollama.use_local()
         return bool(window.local_model.currentText())

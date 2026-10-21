@@ -26,10 +26,15 @@ class CloudProfile:
     key: str = field(repr=False)
     free_only: bool = False
     supported_parameters: tuple[str, ...] = ()
+    endpoint_url: str = ""
 
     def __post_init__(self):
-        if self.provider not in ENDPOINTS:
+        if self.provider not in ENDPOINTS and self.provider != "gateway":
             raise ValueError("Неизвестный API-провайдер.")
+        if self.provider == "gateway":
+            from rpg_vkr.deployment import gateway_url
+
+            gateway_url(self.endpoint_url.removesuffix("/chat/completions"))
         if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
             raise ValueError("Укажите идентификатор облачной модели.")
         validate_api_key(self.key)
@@ -52,6 +57,8 @@ class CloudProfile:
 
     @property
     def endpoint(self):
+        if self.provider == "gateway":
+            return self.endpoint_url
         return ENDPOINTS[self.provider]
 
     def payload(self, local):

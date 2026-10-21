@@ -142,6 +142,7 @@ def test_real_loopback_documented_request_and_billing(qt_app, currency, expected
 
 def test_item_regeneration_switches_to_flux_with_same_saved_identity(visual):
     window, controller, fake = visual
+    assert window.developer_console.access.login("995539")  # Technical routing diagnostics.
     entry = next(e for e in knowledge_entries(window._session) if e.category == "items")
     target = entity_target(window._session, entry, shared=False)
     before = window._session.to_dict(), window._session.dice.checkpoint()
@@ -191,6 +192,7 @@ def test_preflight_error_explains_automatically_selected_model(visual, monkeypat
     from types import SimpleNamespace
 
     window, controller, fake = visual
+    assert window.developer_console.access.login("995539")  # Technical routing diagnostics.
     monkeypatch.setattr(
         fake, "metadata", lambda _: (SimpleNamespace(remaining=Decimal(100)), catalog(FLUX, "5.01"))
     )

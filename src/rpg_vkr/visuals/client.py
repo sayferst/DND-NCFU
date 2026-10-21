@@ -57,12 +57,18 @@ def normalized_png(raw):
 
 
 class ImagesTransport:
-    def __init__(self, *, test_base=None):
+    def __init__(self, *, test_base=None, gateway_base=None, gateway_key=""):
         if test_base:
             url = urllib.parse.urlsplit(test_base)
             if url.scheme != "http" or url.hostname != "127.0.0.1":
                 raise ValueError("Test endpoint must be explicit loopback.")
-        self.base = test_base or BASE
+        if gateway_base:
+            from rpg_vkr.deployment import gateway_url
+
+            gateway_base = gateway_url(gateway_base)
+        self.base = gateway_base or test_base or BASE
+        self.gateway_key = gateway_key
+        self.gateway = bool(gateway_base)
         self.test_base = test_base
         self.opener = urllib.request.build_opener(NoRedirect)
 
@@ -78,6 +84,11 @@ class ImagesTransport:
             headers["Authorization"] = "Bearer " + key
         if payload is not None:
             headers["Content-Type"] = "application/json"
+            if self.gateway:
+                from uuid import uuid4
+
+                headers["X-Request-ID"] = uuid4().hex
+                headers["X-DND-Stage"] = "image"
         request = urllib.request.Request(
             url, data=json.dumps(payload).encode() if payload is not None else None, headers=headers
         )
@@ -89,6 +100,15 @@ class ImagesTransport:
                 return raw
         except urllib.error.HTTPError as error:
             error.close()
+            if self.gateway:
+                raise ImageError(
+                    "http_" + str(error.code),
+                    "Допуск к игре не действует. Обратитесь к владельцу."
+                    if error.code == 401
+                    else "Лимит иллюстраций исчерпан. Повтор не выполнен."
+                    if error.code == 429
+                    else "Иллюстрация временно недоступна. Попробуйте позже.",
+                ) from None
             raise ImageError(
                 "http_" + str(error.code), f"Images API: HTTP {error.code}; повтор не выполнен."
             ) from None
@@ -115,7 +135,9 @@ class ImagesTransport:
 
     def catalog(self):
         try:
-            return json.loads(self.read(self.base + "/models", maximum=16 * 1024 * 1024))
+            return json.loads(
+                self.read(self.base + "/models", key=self.gateway_key, maximum=16 * 1024 * 1024)
+            )
         except (ValueError, TypeError, RecursionError):
             raise ImageError("catalog", "Каталог изображений вернул неверный JSON.") from None
 

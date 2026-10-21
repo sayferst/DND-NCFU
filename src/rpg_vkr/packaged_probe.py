@@ -131,6 +131,10 @@ def world_creation_probe(app, root, seed):
     }
     brief = "Приключенческое фэнтези: речные дороги, свободный выбор героя, память о поступках."
     window = MainWindow(saves=SaveSlots(root / "world-creation/saves"))
+    from rpg_vkr.deployment import ReleaseProfile
+
+    # Exercise the transport fixture, never a real endpoint from a tester release profile.
+    window.release_profile = ReleaseProfile()
     window._confirm = lambda *_: True
     previous_endpoint, previous_key_url = cloud.ENDPOINTS["routerai"], routerai.KEY_URL
     previous_prompt = instructions.LOCAL_PATH
@@ -233,7 +237,12 @@ def smoke_test(app):
 
     with tempfile.TemporaryDirectory(prefix="DND-probe-") as temporary:
         root = Path(temporary)
-        names = ("RPG_VKR_DATA_DIR", "RPG_VKR_ROUTERAI_API_KEY", "RPG_VKR_LLM_API_KEY")
+        names = (
+            "RPG_VKR_DATA_DIR",
+            "RPG_VKR_ROUTERAI_API_KEY",
+            "RPG_VKR_LLM_API_KEY",
+            "DND_TESTER_TOKEN",
+        )
         old = {name: os.environ.get(name) for name in names}
         for name in names:
             os.environ.pop(name, None)
@@ -357,14 +366,15 @@ def smoke_test(app):
                 for section in (
                     "Главное меню",
                     "Герой",
-                    "Хроники мира",
+                    "Энциклопедия мира",
                     "Фотоальбом",
                     "Мастер",
                     "Художник",
                 ):
                     window.open_section(section)
                     app.processEvents()
-                    if window.tabs.tabText(window.tabs.currentIndex()) != section:
+                    expected = "Разработчик" if section in {"Мастер", "Художник"} else section
+                    if window.tabs.tabText(window.tabs.currentIndex()) != expected:
                         raise ValueError("Packaged GUI section missing")
                 window.chronicles_panel.open_entry("probe_npc")
                 if not window.visuals.registry.latest_for(campaign, "probe_npc"):

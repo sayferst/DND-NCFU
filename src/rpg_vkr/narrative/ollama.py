@@ -944,6 +944,11 @@ class OllamaClient(QObject):
             request.setRawHeader(
                 QByteArray(b"Authorization"), QByteArray(("Bearer " + self.cloud.key).encode())
             )
+            if self.cloud.provider == "gateway":
+                from uuid import uuid4
+
+                request.setRawHeader(b"X-Request-ID", uuid4().hex.encode())
+                request.setRawHeader(b"X-DND-Stage", kind.encode())
         request.setAttribute(
             QNetworkRequest.Attribute.RedirectPolicyAttribute,
             QNetworkRequest.RedirectPolicy.ManualRedirectPolicy,
@@ -1018,6 +1023,15 @@ class OllamaClient(QObject):
 
             self.last_failure = classify("HTTP " + str(status), stage=kind, status=status or 0)
             self._report(kind, model, raw, None, f"HTTP {status}; ошибка сети")
+            if self.cloud and self.cloud.provider == "gateway":
+                self.failed.emit(
+                    "Допуск истёк или был отозван. Обратитесь к владельцу игры."
+                    if status == 401
+                    else "Достигнут лимит тестовой игры. Обратитесь к владельцу."
+                    if status == 429
+                    else "Игровой сервис временно недоступен. История и герой сохранены."
+                )
+                return
             if self.cloud and self.cloud.provider == "routerai" and status in {401, 402}:
                 self.failed.emit(
                     "RouterAI: ключ не принят (HTTP 401). Проверьте отдельный API-ключ RouterAI."

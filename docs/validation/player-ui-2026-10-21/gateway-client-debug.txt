@@ -1,0 +1,67 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_tester_world_and_image_use_only_gateway_after_owner_config_exists ____
+
+qt_app = <PySide6.QtWidgets.QApplication(0x945df30) at 0x7fe665945480>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-294/test_tester_world_and_image_us0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe665909f10>
+
+    def test_tester_world_and_image_use_only_gateway_after_owner_config_exists(
+        qt_app, tmp_path, monkeypatch
+    ):
+        import rpg_vkr.ui.tester_connection as connection
+    
+        with running(tmp_path / "server") as (base, token, _, upstream, _):
+            profile = ReleaseProfile("tester", base)
+            monkeypatch.setattr(connection, "load_release_profile", lambda: profile)
+            monkeypatch.setenv("DND_TESTER_TOKEN", token)
+            monkeypatch.setenv("RPG_VKR_ROUTERAI_API_KEY", "owner-key-must-not-be-used")
+            root = tmp_path / "client"
+            root.mkdir()
+            ConnectionPreferences("routerai", "deepseek/owner-flash", True, True).save(
+                root / "ai-connection.json"
+            )
+            original = upstream.request
+    
+            def response(route, body=None):
+                if route == "chat/completions":
+                    upstream.posts.append((route, body))
+                    return {
+                        "choices": [
+                            {
+                                "message": {"content": json.dumps(world_value(), ensure_ascii=False)},
+                                "finish_reason": "stop",
+                            }
+                        ],
+                        "model": profile.text_model,
+                        "cost_rub": 0.01,
+                    }
+                if route == "images":
+                    upstream.posts.append((route, body))
+                    return {"data": [{"b64_json": base64.b64encode(png()).decode()}], "cost_rub": 1}
+                return original(route, body)
+    
+            upstream.request = response
+            window = MainWindow(session=hero(), saves=SaveSlots(root / "saves"))
+            window.show()
+            monkeypatch.setattr(window, "_confirm", lambda _: True)
+            try:
+                qt_app.processEvents()
+                assert cloud_ready(window) and not window.cloud_key.text()
+                assert window.ollama.cloud.provider == "gateway"
+                assert window.ollama.cloud.key == token and not upstream.posts
+                window.show_world_creation()
+                window.world_creation_screen.create_button.click()
+                wait_for(qt_app, lambda: not window.ollama.busy)
+>               assert window._session.generated_world, (window.narrator_status.text(), window.narrator_details.toPlainText(), upstream.posts, window.world_creation_screen.detail.text())
+E               AssertionError: ("Мир не создан: Рождение нового мира: неверный формат: 'role'. Подробности — в диагностике ИИ-мастера. Мир не создан;...ике ИИ-мастера. Мир не создан; герой и его пожелания сохранены для повторной попытки. Повторите создание нового мира.")
+E               assert False
+E                +  where False = <rpg_vkr.application.Session object at 0x7fe665751460>.generated_world
+E                +    where <rpg_vkr.application.Session object at 0x7fe665751460> = <rpg_vkr.ui.main_window.MainWindow(0x97cd7a0) at 0x7fe6657a9d80>._session
+
+tests/test_tester_connection.py:80: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+=========================== short test summary info ============================
+FAILED tests/test_tester_connection.py::test_tester_world_and_image_use_only_gateway_after_owner_config_exists
+1 failed, 5 deselected in 1.43s

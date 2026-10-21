@@ -58,6 +58,9 @@ class DeveloperConsole(QWidget):
             "Подключение владельца: настройки в «ИИ-мастер» и «ИИ-художник»."
         )
         form.addRow(self.connection_info)
+        gateway_check = QPushButton("Проверить игровой шлюз · без генерации")
+        gateway_check.clicked.connect(self.check_gateway)
+        form.addRow(gateway_check)
         # Remove technical shortcuts from player settings too.
         for button in (window.flash_configure,):
             window.settings_form.removeWidget(button)
@@ -153,6 +156,30 @@ class DeveloperConsole(QWidget):
         self.access.logout()
         self.window.open_section("Главное меню")
         self.window.tabs.setTabVisible(self.window.tabs.indexOf(self), False)
+
+    def check_gateway(self):
+        if not self.access.authorized:
+            return
+        from rpg_vkr.deployment import tester_token
+        from rpg_vkr.narrative.routerai import RouterAIClient
+
+        profile = getattr(self.window, "release_profile", None)
+        if not profile or not profile.gateway:
+            self.connection_info.setText("Игровой шлюз пока не задан в профиле сборки.")
+            return
+        if not hasattr(self, "gateway_client"):
+            self.gateway_client = RouterAIClient(self)
+            self.gateway_client.key_ready.connect(
+                lambda value: self.connection_info.setText(
+                    f"Шлюз ответил, допуск принят. Доступная квота: {value.remaining} ₽."
+                )
+            )
+            self.gateway_client.failed.connect(self.connection_info.setText)
+        if not tester_token(self.window):
+            self.connection_info.setText("Для проверки нужен допуск тестировщика.")
+            return
+        self.connection_info.setText("Проверяется HTTPS-шлюз. Генерация не запускается.")
+        self.gateway_client._get(profile.gateway + "/key", "key", tester_token(self.window))
 
     def refresh(self):
         if not self.access.authorized:

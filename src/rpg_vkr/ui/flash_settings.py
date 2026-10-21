@@ -127,6 +127,8 @@ def snapshot(window):
 
 
 def restore_enabled(window):
+    if getattr(getattr(window, "release_profile", None), "mode", "") == "tester":
+        return
     if getattr(window, "_closing", False):
         return
     if not effective_key(window) or not window.cloud_allowed.isChecked():
