@@ -12,6 +12,7 @@ import sys
 import tempfile
 import threading
 import time
+import urllib.error
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
@@ -141,6 +142,54 @@ def check_health(endpoint):
             "async_jobs": True,
         }:
             raise ValueError("Шлюз не прошёл проверку доступности.")
+
+
+def public_check_reason(error):
+    """Only controlled categories: never echo exception URLs or response bodies."""
+    if isinstance(error, urllib.error.HTTPError):
+        return f"HTTP {error.code}"
+    if isinstance(error, (TimeoutError, urllib.error.URLError, OSError)):
+        return "сетевая ошибка, DNS, TLS или тайм-аут"
+    return "подпись, версия, адрес или формат ответа не прошли проверку"
+
+
+def wait_for_public_host(endpoint, public_key, sequence, *, timeout=300):
+    deadline = time.monotonic() + timeout
+    next_update = 0
+    last_status = None
+    while True:
+        phase = "подписанный документ GitHub"
+        try:
+            verified = fetch(DISCOVERY, public_key, previous=sequence)
+            if verified["endpoint"] != public_endpoint(endpoint):
+                raise ValueError("Адрес ещё не обновился.")
+            phase = "HTTPS-туннель Cloudflare (/api/v1/health)"
+            check_health(verified["endpoint"])
+            return verified
+        except (ValueError, OSError) as error:
+            reason = public_check_reason(error)
+            now = time.monotonic()
+            if now >= deadline:
+                raise ValueError(
+                    "Не удалось подтвердить готовность: "
+                    + phase
+                    + ": "
+                    + reason
+                    + ". Платная генерация не запускалась. "
+                    "Повторите start; если ошибка сохраняется, передайте эту строку."
+                ) from None
+            if now >= next_update or last_status != (phase, reason):
+                print(
+                    "Ожидаю доступность: "
+                    + phase
+                    + ": "
+                    + reason
+                    + ". Повторяю только проверку доступности (до 5 минут)…",
+                    flush=True,
+                )
+                next_update = now + 15
+                last_status = (phase, reason)
+            time.sleep(min(3, max(0, deadline - now)))
 
 
 def private_key(root):
@@ -383,20 +432,7 @@ def host(root, store):
         publish(manifest)
         # HTTP GET key is local-only/authenticated and never calls the paid upstream.
         public_key = base64.b64encode(private.public_key().public_bytes_raw()).decode()
-        deadline = time.monotonic() + 90
-        while True:
-            try:
-                verified = fetch(DISCOVERY, public_key, previous=sequence)
-                if verified["endpoint"] != public_endpoint(endpoint):
-                    raise ValueError("Адрес ещё не обновился.")
-                check_health(verified["endpoint"])
-                break
-            except Exception:
-                if time.monotonic() >= deadline:
-                    raise ValueError(
-                        "Публичный документ пока не доступен. Повторите start позже."
-                    ) from None
-                time.sleep(3)
+        wait_for_public_host(endpoint, public_key, sequence)
         (root / "host-ready.json").write_text(
             json.dumps(
                 {
