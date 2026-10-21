@@ -118,6 +118,14 @@ class WorkspaceActions:
         self.bold_text = QCheckBox("Жирный текст сообщений")
         self.bold_text.setChecked(preferences.bold_text)
         settings_layout.addRow(self.bold_text)
+        self.animation_mode = QComboBox()
+        self.animation_mode.addItems(["Плавные", "Уменьшенные", "Выключены"])
+        self.animation_mode.setCurrentIndex(preferences.animations)
+        settings_layout.addRow("Анимации интерфейса:", self.animation_mode)
+        self.animation_mode.currentIndexChanged.connect(self._change_reading)
+        fullscreen = QPushButton("Переключить полный экран · F11")
+        fullscreen.clicked.connect(self._toggle_fullscreen)
+        settings_layout.addRow(fullscreen)
         reset = QPushButton("Вернуть стандартные настройки")
         reset.clicked.connect(self._reset_reading)
         settings_layout.addRow(reset)
@@ -373,8 +381,13 @@ class WorkspaceActions:
 
     def _change_reading(self) -> None:
         preferences = ReadingPreferences(
-            self.font_size.value(), self.theme_choice.currentText(), self.bold_text.isChecked()
+            self.font_size.value(),
+            self.theme_choice.currentText(),
+            self.bold_text.isChecked(),
+            self.animation_mode.currentIndex(),
         )
+        if hasattr(self, "motion"):
+            self.motion.stop()
         self._apply_reading(preferences)
         try:
             save_preferences(self._preferences_path, preferences)

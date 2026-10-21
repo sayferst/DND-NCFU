@@ -15,8 +15,11 @@ class ReadingPreferences:
     font_size: int = 13
     theme: str = "Системная"
     bold_text: bool = True
+    animations: int = 0
 
     def __post_init__(self) -> None:
+        if type(self.animations) is not int or self.animations not in (0, 1, 2):
+            raise ValueError("Неизвестный режим анимаций.")
         if type(self.font_size) is not int or not 9 <= self.font_size <= 20:
             raise ValueError("Размер шрифта должен быть от 9 до 20.")
         if type(self.bold_text) is not bool:
@@ -52,6 +55,7 @@ def load_preferences(path: Path) -> tuple[ReadingPreferences, str]:
         if not isinstance(data, dict) or set(data) not in (
             {"font_size", "theme"},
             {"font_size", "theme", "bold_text"},
+            {"font_size", "theme", "bold_text", "animations"},
         ):
             raise ValueError("Неверный формат настроек.")
         preferences = ReadingPreferences(**data)

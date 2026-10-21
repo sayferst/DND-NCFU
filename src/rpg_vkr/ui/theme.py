@@ -54,6 +54,11 @@ def apply_theme(widget, theme="Системная"):
         QMainWindow, QDialog, QScrollArea, QTabWidget::pane { background: $bg; }
         QLabel { background: transparent; }
         QTabWidget::pane { border: none; }
+        QTabBar#sectionTabs::tab { background: $panel; color: $text; border: 1px solid $border;
+            border-radius: 5px; padding: 9px 12px; margin: 0 3px 0 0; }
+        QTabBar#sectionTabs::tab:selected { background: $hover; border-color: $gold; color: $gold; }
+        QTabBar#sectionTabs::tab:hover { border-color: $gold; }
+        QTabBar#sectionTabs::tab:disabled { color: $muted; }
         QGroupBox, QFrame[card="true"] { background: $panel; border: 1px solid $border;
             border-radius: 10px; padding: 14px; margin-top: 10px; }
         QGroupBox::title { color: $gold; subcontrol-origin: margin; left: 16px; padding: 0 6px; }
@@ -118,7 +123,9 @@ def sync_chrome(window, index):
     if not getattr(window, "_roll_dialog_open", False):
         window.resolution_panel.setVisible(not menu and adventure and not compact)
     window.compact_rolls.setVisible(not menu and adventure and compact)
-    window.chronicles_shortcut.setVisible(not menu and not compact)
+    window.chronicles_shortcut.setVisible(
+        not hasattr(window, "section_tabs") and not menu and not compact
+    )
     window.menuBar().setVisible(not menu)
     window.statusBar().setVisible(not menu)
     window._content_layout.setContentsMargins(*((0, 0, 0, 0) if menu else (20, 16, 12, 16)))

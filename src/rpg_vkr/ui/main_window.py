@@ -276,6 +276,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             from rpg_vkr.ui.developer_panel import install_developer
 
             install_developer(self)
+            from rpg_vkr.ui.section_tabs import install_section_tabs
+
+            install_section_tabs(self)
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(
