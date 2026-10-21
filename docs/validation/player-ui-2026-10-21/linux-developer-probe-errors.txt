@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/player_package_probe.py", line 26, in <module>
+    print(json.dumps({'profile':label,'files':len(result['files']),'bytes':sum(f['size'] for f in result['files']),'relocated':str(dest),'self_and_smoke_passed':True,'release_profile':result['release_profile']},indent=2))
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/player_package_probe.py", line 26, in <genexpr>
+    print(json.dumps({'profile':label,'files':len(result['files']),'bytes':sum(f['size'] for f in result['files']),'relocated':str(dest),'self_and_smoke_passed':True,'release_profile':result['release_profile']},indent=2))
+                                                                               ~^^^^^^^^
+KeyError: 'size'

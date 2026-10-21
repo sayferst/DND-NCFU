@@ -1,0 +1,235 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+testpaths: tests
+collected 1284 items
+
+tests/test_adventure.py ...................                              [  1%]
+tests/test_adventure_consistency.py ........                             [  2%]
+tests/test_adventure_ui.py ............                                  [  3%]
+tests/test_artist_panel.py ......................                        [  4%]
+tests/test_catalog.py ...............................                    [  7%]
+tests/test_catalog_image_prices.py .......................               [  8%]
+tests/test_catalog_ui.py .........                                       [  9%]
+tests/test_character.py ........................                         [ 11%]
+tests/test_character_dialog.py ...                                       [ 11%]
+tests/test_chat_intents.py ...................                           [ 13%]
+tests/test_chronicles.py ..............                                  [ 14%]
+tests/test_cloud_gate.py ...                                             [ 14%]
+tests/test_combat.py .......................                             [ 16%]
+tests/test_combat_storage.py ..............                              [ 17%]
+tests/test_combat_ui.py ......                                           [ 17%]
+tests/test_connection_metadata.py ..........                             [ 18%]
+tests/test_connection_revision.py ......................                 [ 20%]
+tests/test_conversation_revision.py ........................             [ 22%]
+tests/test_creation_and_roles.py ......                                  [ 22%]
+tests/test_desktop_release.py ........................................F  [ 25%]
+tests/test_developer_access.py ...                                       [ 26%]
+tests/test_dialogue.py .............                                     [ 27%]
+tests/test_dice.py ...                                                   [ 27%]
+tests/test_environment.py ...                                            [ 27%]
+tests/test_episode_panels.py ..............                              [ 28%]
+tests/test_fantasy_menu.py .......                                       [ 29%]
+tests/test_fixture_git_checkout.py ..                                    [ 29%]
+tests/test_fixture_repair.py ...........                                 [ 30%]
+tests/test_flash_settings.py ...................                         [ 31%]
+tests/test_free_attempts.py .................................            [ 34%]
+tests/test_free_cloud.py .........                                       [ 35%]
+tests/test_gateway.py ............                                       [ 35%]
+tests/test_images_client.py .........                                    [ 36%]
+tests/test_images_contract_revision.py ................................. [ 39%]
+........                                                                 [ 39%]
+tests/test_inspection.py ..............................                  [ 42%]
+tests/test_launch.py F..                                                 [ 42%]
+tests/test_local_narrator.py ........................................... [ 45%]
+..................                                                       [ 47%]
+tests/test_master_campaign.py ..........................                 [ 49%]
+tests/test_master_configuration.py ...........                           [ 50%]
+tests/test_master_language_profiles.py ........                          [ 50%]
+tests/test_mechanics_before_prose.py ................................... [ 53%]
+....                                                                     [ 53%]
+tests/test_model_metrics.py ......                                       [ 54%]
+tests/test_object_descriptions.py ...................                    [ 55%]
+tests/test_offline.py ..........                                         [ 56%]
+tests/test_photo_album.py .                                              [ 56%]
+tests/test_plain_master.py .........................                     [ 58%]
+tests/test_presentation.py .................                             [ 59%]
+tests/test_progression.py ......................................         [ 62%]
+tests/test_resolution_ui.py ............                                 [ 63%]
+tests/test_resource_ledger.py ..........................                 [ 65%]
+tests/test_response_contract.py ........................................ [ 68%]
+                                                                         [ 68%]
+tests/test_response_delivery.py ...........................              [ 70%]
+tests/test_routerai.py .......................................           [ 73%]
+tests/test_save_migration.py ..........                                  [ 74%]
+tests/test_save_slots.py ....................                            [ 76%]
+tests/test_scene_director.py ..............................              [ 78%]
+tests/test_section_tabs.py .                                             [ 78%]
+tests/test_semantic_challenges.py .............                          [ 79%]
+tests/test_session.py ....................                               [ 81%]
+tests/test_sqlite_lifecycle.py .........                                 [ 82%]
+tests/test_story_conversation_quality.py ................                [ 83%]
+tests/test_tester_connection.py ......                                   [ 83%]
+tests/test_trade_context.py .........                                    [ 84%]
+tests/test_visual_commands.py .........                                  [ 85%]
+tests/test_visual_context.py .....                                       [ 85%]
+tests/test_visual_controller.py .........                                [ 86%]
+tests/test_visual_policy.py ........                                     [ 86%]
+tests/test_visual_registry.py ........                                   [ 87%]
+tests/test_window.py .......................                             [ 89%]
+tests/test_windows_test_ids.py .                                         [ 89%]
+tests/test_workspace_tools.py .............                              [ 90%]
+tests/test_workspace_ui.py ..................                            [ 91%]
+tests/test_world.py ..............................                       [ 94%]
+tests/test_world_agent_ui.py ........                                    [ 94%]
+tests/test_world_creation_screen.py .......                              [ 95%]
+tests/test_world_generation_limits.py .......                            [ 95%]
+tests/test_world_memory.py ..................                            [ 97%]
+tests/test_world_start_gate.py ..............                            [ 98%]
+tests/test_world_transactions.py ......................                  [100%]
+
+=================================== FAILURES ===================================
+___ test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests ___
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-296/test_real_source_smoke_mode_is0')
+
+    def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp_path):
+        import os
+        import subprocess
+        from pathlib import Path
+    
+        launcher = Path(__file__).resolve().parents[1] / "scripts/run_game.py"
+        report = tmp_path / "report.json"
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "untouched-real-data")
+        result = subprocess.run(
+            [sys.executable, str(launcher), "--smoke-test", "--report", str(report)],
+            cwd=tmp_path,
+            env=environment,
+            capture_output=True,
+            timeout=30,
+        )
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: b'Fontconfig error: No writable cache directories
+E         '
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '/workspace/DND-NCFU/scripts/run_game.py', '--smoke-tes...=1, stdout=b'{"ok": false, "error_type": "ValueError"}\n', stderr=b'Fontconfig error: No writable cache directories\n').returncode
+
+tests/test_desktop_release.py:295: AssertionError
+________________ test_launcher_process_handles_action_and_exits ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-296/test_launcher_process_handles_0')
+
+    def test_launcher_process_handles_action_and_exits(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        # A separate process exercises the actual entry point, event loop and exit code.
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer, Qt
+    from PySide6.QtTest import QTest
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    
+    app = QApplication([])
+    def interact():
+        if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+            QTimer.singleShot(20, interact)
+            return
+        try:
+            windows = [w for w in app.topLevelWidgets() if isinstance(w, QMainWindow)]
+            assert len(windows) == 1
+            window = windows[0]
+            assert window.isVisible()
+            assert window.windowTitle() == 'DND-NCFU — Хроники забытых королевств'
+            assert not window.windowIcon().isNull()
+            assert app.applicationVersion() == '0.2.0'
+            assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
+            window.resume_button.click()
+            window.resume_session()
+            window._legacy_controls = True  # Replay historical rules after opening the modern layout.
+            if phase == 'save':
+                window.font_size.setValue(16)
+                window.theme_choice.setCurrentText('Тёмная')
+                window.action_input.setText('помочь')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.action_input.setText('бросить d20')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.action_input.setText('проверить силу')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                for command in ['взять поручение', 'идти на дорогу', 'исследовать дорогу',
+                                'идти на рынок', 'доставить корзину', 'подойти к торговцу',
+                                'купить бинт',
+                                'использовать бинт']:
+                    window.action_input.setText(command)
+                    QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                window.save_slot(1)
+            else:
+                assert window.font_size.value() == 16
+                assert window.journal.font().pointSize() == 16
+                assert window.theme_choice.currentText() == 'Тёмная'
+                window.load_slot(1)
+                assert 'Жительница благодарит' in window.journal.toPlainText()
+                assert 'Мастер: На кубике выпало ' in window.journal.toPlainText()
+                assert window.resolution_panel.isVisible()
+                assert 'Итого:' in window.roll_breakdown.toPlainText()
+                assert len(window._session.turns) == 11
+                assert window._session.world.quest == 'completed'
+                assert window._session.world.hp == 12
+                assert window._session.world.gold in (12, 14)
+                assert window._session.world.shop_stock == 2
+                assert 'Сила: 14 (+2)' == window.ability_labels['strength'].text()
+                window.action_input.setText('бросить d20')
+                QTest.keyClick(window.action_input, Qt.Key.Key_Return)
+                assert window._session.turns[-1].roll.index == 4
+                window.save_slot(2)
+            print('Launcher interaction verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    # Historical fixture/RNG replay opts into legacy controls explicitly.
+    # Modern admission is tested by test_world_start_gate and the packaged smoke test.
+    from pathlib import Path
+    sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+    launcher, phase = sys.argv[1:]
+    sys.argv = [launcher]
+    runpy.run_path(launcher, run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "user-data")
+        for phase in ("save", "load"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Fontconfig error: No writable cache directories
+E             Traceback (most recent call last):
+E               File "<string>", line 21, in interact
+E             AssertionError
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', '\nimport runpy\nimport sys\nimport traceback\nfr...able cache directories\nTraceback (most recent call last):\n  File "<string>", line 21, in interact\nAssertionError\n').returncode
+
+tests/test_launch.py:100: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_desktop_release.py::test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests
+FAILED tests/test_launch.py::test_launcher_process_handles_action_and_exits
+================== 2 failed, 1282 passed in 198.70s (0:03:18) ==================

@@ -1,0 +1,2 @@
+Fontconfig error: No writable cache directories
+10 screenshots: real Qt, synthetic cached images, no network.

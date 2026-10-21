@@ -1,0 +1,8 @@
+Fontconfig error: No writable cache directories
+9 screenshots: real Qt, synthetic cached images, no network.
+Exception ignored in atexit callback: <built-in function __moduleShutdown>
+Traceback (most recent call last):
+  File "/workspace/DND-NCFU/src/rpg_vkr/ui/motion.py", line 96, in eventFilter
+    mode = self.window.animation_mode.currentIndex()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Error calling Python override of QObject::eventFilter(): Internal C++ object (PySide6.QtWidgets.QComboBox) already deleted.

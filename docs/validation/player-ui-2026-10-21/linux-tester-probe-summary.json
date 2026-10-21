@@ -1,0 +1,13 @@
+{
+  "profile": "tester",
+  "files": 289,
+  "bytes": 258768331,
+  "relocated": "/tmp/dnd-player-relocated-20261021/\u041d\u043e\u0432\u0430\u044f \u0438\u0441\u0442\u043e\u0440\u0438\u044f tester/DND-NCFU",
+  "self_and_smoke_passed": true,
+  "release_profile": {
+    "mode": "tester",
+    "gateway": "https://offline-probe.invalid/api/v1",
+    "text_model": "deepseek/deepseek-v4-flash-latest",
+    "commit": "2dd729230839"
+  }
+}
