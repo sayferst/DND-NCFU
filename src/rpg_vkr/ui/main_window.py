@@ -272,6 +272,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                         "Игра и текстовый мастер работают отдельно."
                     )
                 )
+        if not self._legacy_controls:
+            from rpg_vkr.ui.developer_panel import install_developer
+
+            install_developer(self)
         self.action_input.textChanged.connect(lambda text: self._refresh_workspace())
         self.action_input.textChanged.connect(
             lambda text: self.send_button.setEnabled(

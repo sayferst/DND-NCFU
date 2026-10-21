@@ -19,7 +19,9 @@ def artist_window(qt_app, tmp_path, monkeypatch):
     monkeypatch.delenv("RPG_VKR_LLM_API_KEY", raising=False)
     window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
     window.show()
-    window.open_section("Художник")
+    from test_developer_access import enter_developer
+
+    enter_developer(qt_app, window, name="Художник")
     qt_app.processEvents()
     try:
         yield window
@@ -48,10 +50,11 @@ def finish(panel, qt_app):
 def test_two_named_panels_and_backward_navigation(artist_window):
     w = artist_window
     names = [w.navigation.itemText(i) for i in range(w.navigation.count())]
-    assert names.count("Мастер") == 1 and names.count("Художник") == 1
+    assert "Мастер" not in names and "Художник" not in names
     assert "Рассказчик" not in names
     w.open_section("Рассказчик")
-    assert w.tabs.tabText(w.tabs.currentIndex()) == "Мастер"
+    assert w.tabs.currentWidget() is w.developer_console
+    assert w.developer_console.pages.currentWidget() is w.developer_console.originals["Мастер"]
     w.open_section("Художник")
     assert w.artist_panel.key_input.isVisible()
     assert w.artist_panel.model_choice.isVisible()

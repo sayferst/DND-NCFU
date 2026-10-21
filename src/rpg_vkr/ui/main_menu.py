@@ -80,6 +80,11 @@ class MainMenu(QWidget):
         )
         exit_button.clicked.connect(window.close)
         layout.addWidget(exit_button, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.developer_button = QPushButton("⚙ Разработчик")
+        self.developer_button.setToolTip("Локальный доступ к техническим настройкам")
+        self.developer_button.clicked.connect(lambda: window.open_section("Разработчик"))
+        self.developer_button.setMaximumWidth(200)
+        layout.addWidget(self.developer_button, 0, Qt.AlignmentFlag.AlignHCenter)
         layout.addStretch(3)
         footer = QLabel("ОДИН ГЕРОЙ. ТЫСЯЧА ПУТЕЙ. ВАША ИСТОРИЯ.")
         footer.setStyleSheet(

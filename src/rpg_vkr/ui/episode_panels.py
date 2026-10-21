@@ -396,6 +396,13 @@ class EpisodePanels:
         self._refresh_episode_panels()
 
     def open_section(self, name: str) -> None:
+        if not self._legacy_controls and hasattr(self, "developer_console"):
+            from rpg_vkr.ui.developer_panel import TECHNICAL
+
+            if name in TECHNICAL:
+                if self.developer_console.enter("Мастер" if name == "Рассказчик" else name):
+                    self.show_game_body()
+                return
         self.show_game_body()
         if name == "Рассказчик" and not self._legacy_controls:
             name = "Мастер"
@@ -422,6 +429,13 @@ class EpisodePanels:
         raise ValueError(f"Unknown UI section: {name}")
 
     def _sync_navigation(self, index: int) -> None:
+        if (
+            hasattr(self, "developer_console")
+            and self.tabs.widget(index) is self.developer_console
+            and not self.developer_console.access.authorized
+        ):
+            self.tabs.setCurrentIndex(0)
+            return
         self.navigation.blockSignals(True)
         self.navigation.setCurrentIndex(self.navigation.findData(index))
         self.navigation.blockSignals(False)

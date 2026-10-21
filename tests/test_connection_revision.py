@@ -16,7 +16,9 @@ def connection_window(qt_app, tmp_path, monkeypatch):
     monkeypatch.delenv("RPG_VKR_LLM_API_KEY", raising=False)
     window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
     window.show()
-    window.open_section("Рассказчик")
+    from test_developer_access import enter_developer
+
+    enter_developer(qt_app, window, name="Рассказчик")
     qt_app.processEvents()
     try:
         yield window
