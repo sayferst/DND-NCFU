@@ -36,10 +36,15 @@ def test_modern_menu_art_buttons_keyboard_and_layout(qt_app, tmp_path, size):
         window.close()
 
 
-def test_continue_returns_to_active_hero_without_mutation(qt_app, tmp_path, monkeypatch):
+@pytest.mark.parametrize("created", [False, True], ids=["prepared", "generated"])
+def test_continue_returns_to_active_hero_without_mutation(qt_app, tmp_path, monkeypatch, created):
+    from response_cases import new_session
+
     from rpg_vkr.domain.character import Character
 
-    session = Session.create_hero(Character(name="Лея"), "scout", seed=42)
+    session = (
+        new_session() if created else Session.create_hero(Character(name="Лея"), "scout", seed=42)
+    )
     window = MainWindow(session=session, saves=SaveSlots(tmp_path / "saves"))
     monkeypatch.setattr(window, "_confirm", lambda _: True)
     window.show()
@@ -48,7 +53,14 @@ def test_continue_returns_to_active_hero_without_mutation(qt_app, tmp_path, monk
         window.action_input.setText("мой черновик")
         before = session.to_dict(), session.dice.checkpoint()
         window.resume_button.click()
-        assert window.tabs.currentIndex() == 0 and window.scene_title.isVisible()
+        if created:
+            assert window.tabs.currentIndex() == 0 and window.scene_title.isVisible()
+            assert window.screen_stack.currentWidget() is window.game_body
+        else:
+            assert window.screen_stack.currentWidget() is window.world_creation_screen
+            assert window.world_creation_screen.state == "ready"
+            assert window.world_creation_screen.create_button.isVisible()
+            assert not window.ollama.busy
         window.open_section("Главное меню")
         assert window.action_input.text() == "мой черновик"
         assert (session.to_dict(), session.dice.checkpoint()) == before

@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 14 items
+
+tests/test_fantasy_menu.py .......                                       [ 50%]
+tests/test_world_creation_screen.py .......                              [100%]
+
+============================== 14 passed in 8.09s ==============================

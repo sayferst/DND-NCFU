@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QStackedWidget,
     QTableWidgetItem,
     QTabWidget,
     QVBoxLayout,
@@ -69,7 +70,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         about.triggered.connect(self._show_about)
 
         body = QWidget(self)
-        self.setCentralWidget(body)
+        self.game_body = body
+        self.screen_stack = QStackedWidget()
+        self.screen_stack.addWidget(body)
+        self.setCentralWidget(self.screen_stack)
         columns = QHBoxLayout(body)
         self._columns_layout = columns
         columns.setContentsMargins(0, 0, 12, 0)
@@ -156,14 +160,17 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
 
         if not self._legacy_controls:
             from rpg_vkr.ui.adventure_panel import retry_world
+            from rpg_vkr.ui.world_creation_screen import WorldCreationScreen
 
-            self.world_start_status = QLabel()
-            self.world_start_status.setWordWrap(True)
-            self.world_start_status.setTextFormat(Qt.TextFormat.PlainText)
-            play_layout.addWidget(self.world_start_status)
-            self.world_retry_button = QPushButton("Создать мир для этого героя")
-            self.world_retry_button.clicked.connect(lambda: retry_world(self))
-            play_layout.addWidget(self.world_retry_button)
+            self.world_creation_screen = WorldCreationScreen()
+            self.screen_stack.addWidget(self.world_creation_screen)
+            self.world_retry_button = self.world_creation_screen.create_button
+            self.world_start_status = self.world_creation_screen.detail
+            self.world_creation_screen.start_requested.connect(lambda: retry_world(self))
+            self.world_creation_screen.cancel_requested.connect(self.cancel_world_creation)
+            self.world_creation_screen.menu_requested.connect(
+                lambda: self.open_section("Главное меню")
+            )
 
         quick = QGridLayout()
         self.quick_buttons: dict[str, QPushButton] = {}
@@ -475,10 +482,34 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self._refresh_slots()
         self.tabs.setCurrentIndex(0)
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
-        if not self._legacy_controls or dialog.generate_world.isChecked():
+        if not self._legacy_controls:
+            self.show_world_creation()
+        elif dialog.generate_world.isChecked():
             from rpg_vkr.ui.adventure_panel import begin_world
 
             begin_world(self)
+
+    def show_world_creation(self):
+        if not hasattr(self, "world_creation_screen"):
+            return
+        self.screen_stack.setCurrentWidget(self.world_creation_screen)
+        self.menuBar().hide()
+        self.statusBar().hide()
+        if self.world_creation_screen.state in {"ready", "error"}:
+            self.world_creation_screen.create_button.setFocus(Qt.FocusReason.OtherFocusReason)
+
+    def show_game_body(self):
+        self.screen_stack.setCurrentWidget(self.game_body)
+        if hasattr(self, "resolution_panel") and not self._legacy_controls:
+            from rpg_vkr.ui.theme import sync_chrome
+
+            sync_chrome(self, self.tabs.currentIndex())
+
+    def cancel_world_creation(self):
+        from rpg_vkr.ui.narrator_panel import cancel_narration
+
+        if self._generating_session is self._session:
+            cancel_narration(self)
 
     def edit_character(self) -> None:
         dialog = CharacterDialog(self._session.character, self)

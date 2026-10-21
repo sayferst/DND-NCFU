@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-21",
+  "tool": "OpenAI image generation tool",
+  "asset": "src/rpg_vkr/ui/assets/world-creation-atlas.png",
+  "source_file": "/workspace/generated_images/exec-c7357ed5-4c3c-4689-bff7-b71aa1589768.png",
+  "sha256": "07bff114dd7bc3477ca5aedfbff6473473c4ef244c206fe659e61a854cdbbe0b",
+  "bytes": 3341575,
+  "width": 1254,
+  "height": 1254,
+  "panels": 3,
+  "request_description": "Original fantasy game background atlas, three equal horizontal panels: mountain kingdom at sunset, enchanted forest city, underground dwarven halls. No text, logos or UI. Painterly blue teal twilight with warm golden lights.",
+  "unchanged_copy": true,
+  "runtime_image_api_requests": 0
+}

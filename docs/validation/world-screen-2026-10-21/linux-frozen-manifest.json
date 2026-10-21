@@ -1,0 +1,1446 @@
+{
+  "version": "0.2.0",
+  "target": "linux-test-only",
+  "files": [
+    {
+      "path": "DND-NCFU",
+      "bytes": 2442024,
+      "sha256": "f08ed3b81ff114f7417d110f7c9b1e33cdbf3fcfffd26790d9eb0eb091647326"
+    },
+    {
+      "path": "_internal/LICENSES_AND_ATTRIBUTIONS.md",
+      "bytes": 39693,
+      "sha256": "4ee1363b76f824da89fb86a54c346b49f8e02e8e21cead537e217ba3c2467eed"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6Core.so.6",
+      "bytes": 7400360,
+      "sha256": "bbbf4d03d2264edf061c579da176c101aca3c4c1c895cb7562c1bb20130f3a46"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6DBus.so.6",
+      "bytes": 890088,
+      "sha256": "6e157a72b73aeb9e34df392362951746e0b16afd6a5ccae818924732682b621b"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6EglFSDeviceIntegration.so.6",
+      "bytes": 303256,
+      "sha256": "34217577d8fabedb71ed3a9dcc2eee2fc5ba09ac7b7ba9fac7887f665966e2b5"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6EglFsKmsSupport.so.6",
+      "bytes": 154096,
+      "sha256": "454be353dd532fb4a89f31b839f4b5dc846663107b20e38a82d9ad57893b9385"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6Gui.so.6",
+      "bytes": 11381640,
+      "sha256": "fe7553f4eff4d24fd31cdfa897ef9f807ebb04caf330e394e47de6fcfc2f8e4c"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6Network.so.6",
+      "bytes": 2137480,
+      "sha256": "0a278b944cab82360db05b4a3bee5c5d8390c00573eb7fc252a90e9207877d18"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6OpenGL.so.6",
+      "bytes": 706664,
+      "sha256": "3b51f743b1642d5324925e5ec4877339082af93679f28542f22690f154be4803"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6Svg.so.6",
+      "bytes": 666600,
+      "sha256": "3ca6f8fc792954586b3ce49b78d3f2598ccf5b4e1792b591b5d6647a4612541e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6WaylandClient.so.6",
+      "bytes": 1210544,
+      "sha256": "b58b1b992d6981815dccf842e1a0243089b6c7dcdd9c37f3f5d1997f351bfc1c"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6Widgets.so.6",
+      "bytes": 8106088,
+      "sha256": "72dacd6bcaed9557d092301f62cdea6d2f51a3fc6aaad0776b2edb850fed6baa"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6WlShellIntegration.so.6",
+      "bytes": 142592,
+      "sha256": "d8876c23bb768d99139c5f151dab99b8747a28c027d122ef6a753cfba517646b"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libQt6XcbQpa.so.6",
+      "bytes": 779720,
+      "sha256": "618be04dc2551af48ac2544bba623cab8e0080aecd2f24fffce8b0b9e66d4823"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libicudata.so.73",
+      "bytes": 32035888,
+      "sha256": "4d24b3a908dd838bea23414e16aa830d05a2a306c475246ab11ef0a00c3037e9"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libicui18n.so.73",
+      "bytes": 4477136,
+      "sha256": "ad5410f3e4eb4f01f91d10ddb3780cdbcbeb902ed04a3bc4d3f562b956578d52"
+    },
+    {
+      "path": "_internal/PySide6/Qt/lib/libicuuc.so.73",
+      "bytes": 2571736,
+      "sha256": "8ce3427af0d2bf566bb422ce80a12014137d12ed452fe2dd9ed481ee46181168"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/egldeviceintegrations/libqeglfs-emu-integration.so",
+      "bytes": 35400,
+      "sha256": "ed2ef4ff6beb7cf430fbf8d192a7abd21c7f7ad5d68d2063dcfc0c10b65f96cb"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/egldeviceintegrations/libqeglfs-kms-egldevice-integration.so",
+      "bytes": 150096,
+      "sha256": "ff396e030a506f1be37a63b154faf37c7d6f6c85f331ab1fc07b22fe8ba6119a"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/egldeviceintegrations/libqeglfs-x11-integration.so",
+      "bytes": 27208,
+      "sha256": "8d959e34e9b29a33c0d34e90c764c88901a0143de2e79fa907c9e5f9575f6c46"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/generic/libqevdevkeyboardplugin.so",
+      "bytes": 68552,
+      "sha256": "f3fe112002977ffe129f00a1932f4b504d6b73b51aeba3bbc24f1db8de575e0f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/generic/libqevdevmouseplugin.so",
+      "bytes": 60864,
+      "sha256": "20c9b59e0e6f715d14448186653dfb5b38445c91a89127ed5be0e5658cc7a272"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/generic/libqevdevtabletplugin.so",
+      "bytes": 56264,
+      "sha256": "a4a773451c4fe78ad5216eb854f80ae61063f2cb89ec431636dbda66782b375a"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/generic/libqevdevtouchplugin.so",
+      "bytes": 126144,
+      "sha256": "27eb4c730cc061c99048c0cc073ebbcc5b6f1d8f71c8c80482e8e67dc44e58f2"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/generic/libqtuiotouchplugin.so",
+      "bytes": 92992,
+      "sha256": "e8746ad15abe194b3f3f57ab457570a7e5535e30d57f06df512d55fe847340d5"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/iconengines/libqsvgicon.so",
+      "bytes": 68152,
+      "sha256": "e8ef5030d8f5729182732e3bbf2954ecd227199673435f84bbba45c9c09bdbdc"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqgif.so",
+      "bytes": 43576,
+      "sha256": "de08fe36ba69d93f2a1b660c93ea4c8ca10d7f441d17b8cd63969fdc3a62daad"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqicns.so",
+      "bytes": 47672,
+      "sha256": "f3bc1db2c23e925ac3156ddd48f4ca77c3a609413f2ed57523a65b358a9452c0"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqico.so",
+      "bytes": 39480,
+      "sha256": "cb2ae8fceafb36b21f5b313d72c6d363a3115d3b470fed5015fe5018d2788499"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqjpeg.so",
+      "bytes": 522808,
+      "sha256": "ba48744f8cc8f25e4a94f7f89cc10e3b928f2318e734577e97e19e12d56db3e4"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqsvg.so",
+      "bytes": 27192,
+      "sha256": "6ccc32dc8d67ef926babb84d00742262a07f4b7fcecffb89f5dbd75354791bf1"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqtga.so",
+      "bytes": 27192,
+      "sha256": "8183d514c29a91cd3bd7ebd25973bb8f7aec105fbd1ca3e6401c0bc9a5a1ed3e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqtiff.so",
+      "bytes": 43576,
+      "sha256": "4b2931817f4aa2f48629b78ad96b573bd977ffa9e8da3d46859a5651ae8f711d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqwbmp.so",
+      "bytes": 27192,
+      "sha256": "b964caa1b9f2aae4ca8af84183b2be58cefa73b09d700eeae78bf72048aafc4d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/imageformats/libqwebp.so",
+      "bytes": 523000,
+      "sha256": "2d0684ecfa9df1ea20cf7e5d42707bc154feda3403d0ffccb62730828feda579"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/networkinformation/libqglib.so",
+      "bytes": 19128,
+      "sha256": "854671c79c7bfa509862ecf0e89e15910964c1e9d6c3f63310effd3323cf5790"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/networkinformation/libqnetworkmanager.so",
+      "bytes": 81600,
+      "sha256": "7dd4cba21c98e6e4d6b729d3759a0be69f2aab2508c42c8de6ecb624ab2c15d7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so",
+      "bytes": 31440,
+      "sha256": "b44266483ceef7a7bb08ad910f5b8381322afdd4982074b99afe6b1f97ca2183"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so",
+      "bytes": 185296,
+      "sha256": "3d96974ee26f7f58ed2e50b78bd3717462742c3499ac38d93249f8174388db46"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqeglfs.so",
+      "bytes": 19000,
+      "sha256": "02a8340262f061610070119b0c5573e3767be3181d0400bb2923f6fb8a09e9c7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqlinuxfb.so",
+      "bytes": 373304,
+      "sha256": "e9ebbd7b389f60084ba1f2df00494ce8e339b32024cef34fe8ddf726ebb3db71"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqminimal.so",
+      "bytes": 39480,
+      "sha256": "62791f26f383f9130e377399113672f4ab9e89a750220a4cbd53e4264bb25535"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqminimalegl.so",
+      "bytes": 43584,
+      "sha256": "c14ffe71ccc6766b70c10e24be8d60a6c7fc592a3a5cf3604a21d296336761a0"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqoffscreen.so",
+      "bytes": 117312,
+      "sha256": "710095ab773ac8f51ae30cdda6513f85dbff8808409fba6000a135afd23e07ca"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqvkkhrdisplay.so",
+      "bytes": 225088,
+      "sha256": "9e906ddc0666c1d84846b134eb41e680a9d837c1168bfb3ec06ac6985acb7c2d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqvnc.so",
+      "bytes": 122296,
+      "sha256": "7035eb100008a5c8730cf1abe4b15607c8153ee9e9da40abedf1996737e3097c"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqwayland.so",
+      "bytes": 19000,
+      "sha256": "3391fded6565a5e92ad397fe321b0c7e179ac4346411a96681e49cde2db726d8"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platforms/libqxcb.so",
+      "bytes": 19000,
+      "sha256": "d248b65a702ebe74b9d717c5ea53db90c73fb06efd1d4e1809f74a668f908c14"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platformthemes/libqgtk3.so",
+      "bytes": 241480,
+      "sha256": "aaa0bc0b788dcc433328cd6f458574747b4035e36f1531efa28dc0f1530704f2"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/platformthemes/libqxdgdesktopportal.so",
+      "bytes": 151616,
+      "sha256": "bb1ef196b0e070d6a8f227adea512e1d3d0603107d5cb8f17692cbeaa831d263"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/tls/libqcertonlybackend.so",
+      "bytes": 96832,
+      "sha256": "b68ac330bb6fc6ffd1fe55e3ce1a2b7ced188258481ad610ad73cbc2f63ce1af"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/tls/libqopensslbackend.so",
+      "bytes": 363104,
+      "sha256": "607a7a7830e9c48b64a726a43f908468d168697f487e9faf9f8f9d5d428db0f7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-decoration-client/libadwaita.so",
+      "bytes": 117944,
+      "sha256": "a7099f03fb23e08a67363e77ce95475d651eba96968f6e72518237f5d0a6cf8b"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-decoration-client/libbradient.so",
+      "bytes": 43576,
+      "sha256": "2f8095d6ca996f74b22d654fb8bd23f36907289f8e9f7984022886bfdacc8f1c"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-graphics-integration-client/libdmabuf-server.so",
+      "bytes": 31376,
+      "sha256": "14f3a3ef3ccb566f7ff458a46eb4a70928e8b4abae431c7c11667deb574bf191"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-graphics-integration-client/libdrm-egl-server.so",
+      "bytes": 31360,
+      "sha256": "e9199f8ea9d8369ae2edc63fa95fdd9791cb0b47fc6e28318d59d6c609c8cf02"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so",
+      "bytes": 72392,
+      "sha256": "a21109db28d676a73af07b3a12a99dea522adb755ae7642ecd23614863bfc6cd"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-graphics-integration-client/libshm-emulation-server.so",
+      "bytes": 31368,
+      "sha256": "9e0b80bb123a25f7f22fcb53f3328c4bb83b1006422fcb3370c7a840da344136"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-graphics-integration-client/libvulkan-server.so",
+      "bytes": 31360,
+      "sha256": "943760176cf29c294a7be7bdd6575c102069f4b7fc8ead1430659c1a1753bdc4"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-shell-integration/libfullscreen-shell-v1.so",
+      "bytes": 35480,
+      "sha256": "c90008ad50de1574f2417182d06640a4587e90ee708692f382103982acac3ddb"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-shell-integration/libivi-shell.so",
+      "bytes": 60184,
+      "sha256": "4daf844b8e7aaa3ae682eb5f8095fcc2d3b78bb5628dc432315aefcc28cc524f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-shell-integration/libqt-shell.so",
+      "bytes": 47736,
+      "sha256": "fbd751d645214af8ebf9f236ee7c15d6610f111d452802c0d9e7befc5c851df9"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-shell-integration/libwl-shell-plugin.so",
+      "bytes": 19008,
+      "sha256": "851071ae3df419d79b25a68197f025dd0e319d67aa388cbd04d8d501ebd5d994"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/wayland-shell-integration/libxdg-shell.so",
+      "bytes": 142712,
+      "sha256": "5b00c5fb9590999b3e78783975a5b65415c45afefd13b8558d12505a608d18a0"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/xcbglintegrations/libqxcb-egl-integration.so",
+      "bytes": 55880,
+      "sha256": "59aa7c879d3a9fd4ff136c61ae0a55397a55fb52c8f11f445b0cb54d7c6040be"
+    },
+    {
+      "path": "_internal/PySide6/Qt/plugins/xcbglintegrations/libqxcb-glx-integration.so",
+      "bytes": 76392,
+      "sha256": "310c91fbf99164431eebc7b52100127a9f5189bfec6cb01bbf6814bf5b87b5b5"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_ar.qm",
+      "bytes": 104,
+      "sha256": "b11333c520ccd8e375cde20985df402d586a1a95e0796313bbeb9f717d4db22e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_bg.qm",
+      "bytes": 91,
+      "sha256": "1e22ee126ec9f76031d880285a907b3a0c4510392319ff700dcdee964abbb1ad"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_ca.qm",
+      "bytes": 91,
+      "sha256": "17ab2623c7f6e8def44b3dbcb517544185817d65f1298ddb10ef71136f232bdc"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_cs.qm",
+      "bytes": 95,
+      "sha256": "c585918fb1d4821a054ea40bdcf279f275ca76c88a5793f433dac6a611ac7e8f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_da.qm",
+      "bytes": 91,
+      "sha256": "f6773c672acb73fdef6e092060d69d1e5dfee840012bac912d1e92de28714386"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_de.qm",
+      "bytes": 91,
+      "sha256": "0401c316aa3b50a172eb44a4ff1ec384924073beec7c928ef888ec48e4612688"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_en.qm",
+      "bytes": 33,
+      "sha256": "494ac9a2b2cb2fdeced353f4a9f898ed8dcf616e9bc667438c62681e3f7f79cf"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_es.qm",
+      "bytes": 91,
+      "sha256": "648ed4519bc45d7a4779479a7626ea16cf9aa23e93a0b178546cc47bea0591ab"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_fa.qm",
+      "bytes": 84,
+      "sha256": "3f4c989c6b2990d80cc6299408214b31698923b52f154483b3371875de91f88e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_fi.qm",
+      "bytes": 91,
+      "sha256": "342d01c7eeb234e431d0506821c4cd03c0433115d8d63fee3357be2331858879"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_fr.qm",
+      "bytes": 91,
+      "sha256": "c896a38892a92346b033793d56440993236b23e47e06f3974afdb0552f628387"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_gd.qm",
+      "bytes": 70,
+      "sha256": "49df855a004a17950338af3146466f6df4d5852410bd0b58ea80e0d0203a9d24"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_gl.qm",
+      "bytes": 323590,
+      "sha256": "204a01ac7deb6b5bae193afecbd1e50d18c73bf7d94badeb2bbfdf6123c4ed93"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_he.qm",
+      "bytes": 57,
+      "sha256": "36f01fff2f25e116d4b7af78097b7e49520fd5b7fb6fb120e40be228c05c045f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_ar.qm",
+      "bytes": 8743,
+      "sha256": "222088c9752d1cc3bab985ef2dc77e5ae78578dce18a61ec15b39f02e588163d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_bg.qm",
+      "bytes": 10599,
+      "sha256": "cbcdd1e0bbae332d80ddb0a286056f17c824fa28d353d7fdf12fc97d9f6fe054"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_ca.qm",
+      "bytes": 7426,
+      "sha256": "8c98b5ee246e18397d0de7bd76b2891773a975553ec5dcdce42f8a696e5b34de"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_cs.qm",
+      "bytes": 15297,
+      "sha256": "4ac56fc63e400943bab13f1d4c418502138908e1d488c24aee6131d3d17552aa"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_da.qm",
+      "bytes": 4795,
+      "sha256": "6bb092552a398687119f6d52145f04bf8373977446d8f00c0dcbd56b96829f0f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_de.qm",
+      "bytes": 7569,
+      "sha256": "037bc99abf98571ae9375c2513536c15b571d66406c36c1de447b547ff539c07"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_en.qm",
+      "bytes": 33,
+      "sha256": "494ac9a2b2cb2fdeced353f4a9f898ed8dcf616e9bc667438c62681e3f7f79cf"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_es.qm",
+      "bytes": 10704,
+      "sha256": "fd16b279f8cf69077f75e94d90c9c07a2afff3948a579e3789f5ffb5e5f4202d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_fr.qm",
+      "bytes": 3573,
+      "sha256": "875ee2dcdc64e3dea888d84048e382d3921a175f12847de2e6b1cb12ad9add50"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_gl.qm",
+      "bytes": 10891,
+      "sha256": "7399a248609974773f60866c87b78ea7dfbc4f750313d692f7886cd763883c9f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_hr.qm",
+      "bytes": 5170,
+      "sha256": "8c8cc3c5b1ab2b074f82937001b896603420ef75592b3b78172177360dd7ea61"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_hu.qm",
+      "bytes": 7255,
+      "sha256": "7be32e015119c969453abb6e8f3fb377963a69fafb10c27b796737b5eb283eaf"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_it.qm",
+      "bytes": 10612,
+      "sha256": "316fe8d0815e2b4b396895beb38ef1a40431915b5e054df80f4c0cd556f26e4b"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_ja.qm",
+      "bytes": 7917,
+      "sha256": "ae603b2c0d434d40cde433ffcba65f9ee27978a9e19316007be7fe782a5b8b47"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_ka.qm",
+      "bytes": 7091,
+      "sha256": "159c74f94b384b5ee6afdf38b6cfc4806bc99ecf73be02d4a7021d4ceba7ec7e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_ko.qm",
+      "bytes": 5708,
+      "sha256": "f11c64694e8e34e1d2c46c1a1d15d6ba9f2db7b61de4fdf54eca5ab977c3e052"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_nl.qm",
+      "bytes": 5087,
+      "sha256": "44a8a0daf775d14352180052d13f623814d7bdf98e2c5c80144b7bf74214e3b0"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_nn.qm",
+      "bytes": 6934,
+      "sha256": "4c8a7213942078e4f72f5babd26c41b77ace70189714a58b5504a7d5ad0193dc"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_pl.qm",
+      "bytes": 9673,
+      "sha256": "cc6cb4d8c54086224672f2e49e623c8cb7c0c1cd65b8d5ecd42fc9ba3a6065bd"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_pt_BR.qm",
+      "bytes": 15776,
+      "sha256": "17a164045c0fc53d0507cfc90c3970fe1afdfa1c4a8e5c881d34fa1f86a821bf"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_ru.qm",
+      "bytes": 7288,
+      "sha256": "557b644e6da5f1ec720ef93965617087e4d1f40b2494cc5aa524cf3796108de7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_sk.qm",
+      "bytes": 10388,
+      "sha256": "f41e33e1d790bd0d3eb180f1f875bc191fe74773628f25c2cad95e1402e66867"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_sl.qm",
+      "bytes": 10363,
+      "sha256": "2ec955e662407ebcd8dcdae5aaa21e4108e0b5b0aee0e9db712c27072943535f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_sv.qm",
+      "bytes": 6941,
+      "sha256": "15185617ba6069a826e1c44d50d07da3477daf9d92931c75f55b53155f4d26c2"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_tr.qm",
+      "bytes": 6723,
+      "sha256": "81da2f88cd624097581f2d29b10311796bcd9ab289e65883346d276110542d28"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_uk.qm",
+      "bytes": 9750,
+      "sha256": "497cfc473684692ee44d7a3795e8fb2270c57069fd9eb98a615dd29ab9be8a7c"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_zh_CN.qm",
+      "bytes": 5115,
+      "sha256": "e256d1f6034a5a5521c62f129f91731216e474f71e1d9caea3d3dcb11b670deb"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_help_zh_TW.qm",
+      "bytes": 5160,
+      "sha256": "40112812abb43853d678cc6d97729f21f21b3a7321c827fc9d18f6c936447d1e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_hr.qm",
+      "bytes": 102,
+      "sha256": "fc9e4146f33be3d09b234be01e56235d3037d8d82d64f0700b4d4a6e253a61a7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_hu.qm",
+      "bytes": 84,
+      "sha256": "c2fa649f167cdb801d1cc0cb69c1d93594fd5bf8c0b7e79b969935da5c3e19aa"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_it.qm",
+      "bytes": 91,
+      "sha256": "9e7a18bc20ebeec54baaaf41c918a74534511271f796dffffd0f9b9ec31c68d3"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_ja.qm",
+      "bytes": 84,
+      "sha256": "0f5fe50452947d1ee9755249d860354bff6977279b4c496a5bc77e5b89dd745e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_ka.qm",
+      "bytes": 94,
+      "sha256": "00b67c6dfc255079b5b98a5640f82519c96b2520a028682fba4078b39d743eaa"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_ko.qm",
+      "bytes": 84,
+      "sha256": "1d254b535e1cb35cbcad8210b15b89f4488159826bf35b4504696263dd102fa3"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_lg.qm",
+      "bytes": 57,
+      "sha256": "6ba668501f4c040c66da1bdc022362da3c8cf663da6aa484cbdb599028da98ed"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_lt.qm",
+      "bytes": 165383,
+      "sha256": "47eb5f97467df769261421d54a5bea1131c9fb9b6388791d38bb6574335b64bf"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_lv.qm",
+      "bytes": 63,
+      "sha256": "addeca285282338294f24ca50d37d08a5f68d3785d0a94af86dd4ec8f2a3b449"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_nl.qm",
+      "bytes": 91,
+      "sha256": "39e870cbd25c0f97fa9b1828d5ea1ed9849857a2e26c5321b3f13c76be8f0548"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_nn.qm",
+      "bytes": 91,
+      "sha256": "4e544e23f75eafe1553dc896973db23b5795cd243786d5c653cc0f36a46ca74f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_pl.qm",
+      "bytes": 99,
+      "sha256": "e6890afa0caf0f6db0248e4c94f6016b8ec8bc266f1e0e9b8f01e8ea912cf968"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_pt_BR.qm",
+      "bytes": 106,
+      "sha256": "0e24c58e35271853f8cdfb3f0f7b0741b5a9a588e43cdec62ae85a3842771e0a"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_pt_PT.qm",
+      "bytes": 70334,
+      "sha256": "2c1e7bbf5168a64b43752dd4c547601c0bde6d610f8671fa3e3af38597e84783"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_ru.qm",
+      "bytes": 102,
+      "sha256": "1b388e2d6d1bd405603e794e498c6d7ec5f5a5ad819243546f6399181da36758"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_sk.qm",
+      "bytes": 95,
+      "sha256": "840c3b01c89df976fc1d2e5bfc6fc84b65666b8a3ceb4cbf5aa0c22af3d2a383"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_sl.qm",
+      "bytes": 228428,
+      "sha256": "c44e0313a9414cc0e490b65b0c036fa11bca959353b228886547bc2c8492034f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_sv.qm",
+      "bytes": 153,
+      "sha256": "030f0cceee2fc81b81a78c9720601b77419beb959c586e7621581727b77ab7b0"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_tr.qm",
+      "bytes": 84,
+      "sha256": "59e8a0c411be3b0802a68561b090f182099d6b75c4fe46f398e55f11528e11b9"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_uk.qm",
+      "bytes": 102,
+      "sha256": "053ec1f677c4dba48c6a97eb28f4fc78c1511324d1843d7f4cec2c7c00a66145"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_zh_CN.qm",
+      "bytes": 99,
+      "sha256": "c0e29d32c9540a7e78643b74214e633c56f6ab11f018e516629f2c11b1fb09fc"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qt_zh_TW.qm",
+      "bytes": 99,
+      "sha256": "24e226954491689549a1a1990db3b8cb78888008d8163b2fd2442b772b6d1b5f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_ar.qm",
+      "bytes": 160017,
+      "sha256": "e03fe68d83201543698fd7fe267dd5dfc5bfd195147e74ff2f19ac3491401263"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_bg.qm",
+      "bytes": 165337,
+      "sha256": "e448ac9e3f16c29eb27af3012efe21052daa78fabfb34cd6dff2f69ee3bd3cdb"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_ca.qm",
+      "bytes": 209899,
+      "sha256": "005b0aa0c9a5b930dfdd870661958a8069bbec862d75f98bce20bf7401bea13d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_cs.qm",
+      "bytes": 174701,
+      "sha256": "03028b42df5479270371e4c3bdc7df2f56cbbe6dda956a2864ac6f6415861fe8"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_da.qm",
+      "bytes": 181387,
+      "sha256": "7d1e5ca3310b54d104c19bf2abd402b38e584e87039a70e153c4a9af74b25c22"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_de.qm",
+      "bytes": 223404,
+      "sha256": "9cb5504dee6ef0d4d4be8ba2e34ba8294018a9e0ec810ceaf5e973d57a283434"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_en.qm",
+      "bytes": 33,
+      "sha256": "494ac9a2b2cb2fdeced353f4a9f898ed8dcf616e9bc667438c62681e3f7f79cf"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_es.qm",
+      "bytes": 165170,
+      "sha256": "4ffda56ba3bb5414ab0482d1dde64a6f226e3488f6b7f3f11a150e01f53fa4c8"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_fa.qm",
+      "bytes": 148156,
+      "sha256": "f78e59b5bdd586181a999034ba418868ed17fe9c05707fb65e523f70e92253d2"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_fi.qm",
+      "bytes": 179941,
+      "sha256": "e47fe13713e184d07fa4495dde0c589b0e8f562e91574a3558a9363443a4fa72"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_fr.qm",
+      "bytes": 159463,
+      "sha256": "314243a55c32679ad473fdfe48dc7d66e973ad0fc8bf2164480c58dddb50c1a7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_gd.qm",
+      "bytes": 189580,
+      "sha256": "63b439dd44139aa3aed54c2ebe03fa9bc77f22c14ed8fba8eff2608445bb233d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_he.qm",
+      "bytes": 138690,
+      "sha256": "e1ebca16afe8994356f81ca007fbdb9ddf865842010fe908923d873b687cad3f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_hr.qm",
+      "bytes": 149711,
+      "sha256": "bb9eec9a9a652c1340dc75eb2e749be50df00f885b3d6900dfc76799c45b244d"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_hu.qm",
+      "bytes": 205885,
+      "sha256": "98463295539d769c8645a0b7fb95ad38454cfd0b14f36af485513f036ddbbbc6"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_it.qm",
+      "bytes": 161166,
+      "sha256": "7808ed542a7833c4bd94ec8bdfbbca00bb4f2fe15979b9121ce3249323687300"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_ja.qm",
+      "bytes": 129913,
+      "sha256": "2b9581c69b975f59be505b127cd3c19d403ef3d12e0e8386fb97238223e9c1df"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_ka.qm",
+      "bytes": 201105,
+      "sha256": "e55e4b72fa620bebee5297ca59dfe2f49894a1e544f2b7485b1cfd8829289d6f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_ko.qm",
+      "bytes": 156799,
+      "sha256": "0179ed1b136e1cb3f583351eaa2c545ba3d83a6ee3f82c32505926a1a5f5f183"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_lg.qm",
+      "bytes": 239242,
+      "sha256": "d25972c3de43449d24d9c9fe629d1b38320290a137234c218103f148b4ef9897"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_lv.qm",
+      "bytes": 153608,
+      "sha256": "846e047573ae40c83671c3ba7f73e27efc24b98c82701da0df9973e574178bb2"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_nl.qm",
+      "bytes": 202861,
+      "sha256": "f61513bcdbb6ad800585f9437a95d018aab17fa12ee414aa31462ff279d8240e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_nn.qm",
+      "bytes": 196424,
+      "sha256": "983734b40aa4d250421ba0d1614416cb8b424d6f140f4a7dbf8b11e65eef63dc"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_pl.qm",
+      "bytes": 162962,
+      "sha256": "3cf6b5c14d5eb0cf81e9af2066e66b3aa579a6b9b3c323ed670761f6254a8c54"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_pt_BR.qm",
+      "bytes": 208516,
+      "sha256": "8344f5bc333c45d37cfd425a09124eb11f12439f33737ec0b8683d04a416746e"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_ru.qm",
+      "bytes": 203767,
+      "sha256": "3da6605668f9178d11a838c4515478084dcfb4f9cf22f99d7a92b492db9c224b"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_sk.qm",
+      "bytes": 125763,
+      "sha256": "d586ae2c314074cf398417fdecb40709d5478dfeb0a67c2fe60d509ee9b59ed7"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_sv.qm",
+      "bytes": 197334,
+      "sha256": "53a7e6141af5bf1a3e97bebdab6578abbbd798c8f17ef7c5ac1623a004d46c1f"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_tr.qm",
+      "bytes": 248720,
+      "sha256": "353fdfd7165659a49212e7a25bf91c0a71588e52c836f7496640f26782414634"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_uk.qm",
+      "bytes": 158274,
+      "sha256": "51b8ff55b37dc5907d637a8ddda12fbe816852b0244c74eb4f0fb84867a786e0"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_zh_CN.qm",
+      "bytes": 147222,
+      "sha256": "0481a9b92a6f0578400e960a7d5ee70217a6a450eaf7f98b7d32b8dbd0d58616"
+    },
+    {
+      "path": "_internal/PySide6/Qt/translations/qtbase_zh_TW.qm",
+      "bytes": 126185,
+      "sha256": "21012b2b427f8d09d31ce9cae582ca27955b478ca3dc2ec18a3068d808638c6a"
+    },
+    {
+      "path": "_internal/PySide6/QtCore.abi3.so",
+      "bytes": 3981480,
+      "sha256": "aaf07dd373857cf05a2c7c2f1bc3d7f152512aa33011f509ed928223977b20cb"
+    },
+    {
+      "path": "_internal/PySide6/QtDBus.abi3.so",
+      "bytes": 323944,
+      "sha256": "98046c2608d56c534aec89f79f32ee95a8ba5fb7c0544d55b07cb0ce0be8d6cf"
+    },
+    {
+      "path": "_internal/PySide6/QtGui.abi3.so",
+      "bytes": 4740104,
+      "sha256": "bf5139a461d28a90942881ec2ef27a67aa3effc9e8f12650751ca7020df45471"
+    },
+    {
+      "path": "_internal/PySide6/QtNetwork.abi3.so",
+      "bytes": 1217080,
+      "sha256": "6909c02db28ad4200e95e12762251c798e93fd752972026ae16a19f6634da684"
+    },
+    {
+      "path": "_internal/PySide6/QtWidgets.abi3.so",
+      "bytes": 6019320,
+      "sha256": "efd6ef7b2e8594490138b3cbb8eed5a56fde1f37771c2370f81eedf54e3ba121"
+    },
+    {
+      "path": "_internal/PySide6/libpyside6.abi3.so.6.10",
+      "bytes": 255184,
+      "sha256": "a7c5a5441e103cdd23f04679ff2ea90648b595153cb4c128c5d197919fc3b0b6"
+    },
+    {
+      "path": "_internal/base_library.zip",
+      "bytes": 1333490,
+      "sha256": "fba10af490f34db9f9653245728a698b5cda806ef3f9d2f24c0b269f9c144562"
+    },
+    {
+      "path": "_internal/data/catalog/public-descriptions-v1.json",
+      "bytes": 15686,
+      "sha256": "93d17b3c3e09f5ac8e49ba1c42979d51d6aab5e65864e7ee21ebd92b188e94f8"
+    },
+    {
+      "path": "_internal/data/catalog/seed-v1.json",
+      "bytes": 19098,
+      "sha256": "cd9e5b2598eb42b50c8ca5907937676f34831d45ebcd3ef894ce19e145d880fb"
+    },
+    {
+      "path": "_internal/data/narrative/genre-cards-v1.json",
+      "bytes": 4828,
+      "sha256": "9186b75a7369cdff4348f357adec9ea27e0b34dbcc32dcf621872d7907e01d64"
+    },
+    {
+      "path": "_internal/libQt6Core.so.6",
+      "bytes": 7400360,
+      "sha256": "bbbf4d03d2264edf061c579da176c101aca3c4c1c895cb7562c1bb20130f3a46"
+    },
+    {
+      "path": "_internal/libQt6DBus.so.6",
+      "bytes": 890088,
+      "sha256": "6e157a72b73aeb9e34df392362951746e0b16afd6a5ccae818924732682b621b"
+    },
+    {
+      "path": "_internal/libQt6EglFSDeviceIntegration.so.6",
+      "bytes": 303256,
+      "sha256": "34217577d8fabedb71ed3a9dcc2eee2fc5ba09ac7b7ba9fac7887f665966e2b5"
+    },
+    {
+      "path": "_internal/libQt6EglFsKmsSupport.so.6",
+      "bytes": 154096,
+      "sha256": "454be353dd532fb4a89f31b839f4b5dc846663107b20e38a82d9ad57893b9385"
+    },
+    {
+      "path": "_internal/libQt6Gui.so.6",
+      "bytes": 11381640,
+      "sha256": "fe7553f4eff4d24fd31cdfa897ef9f807ebb04caf330e394e47de6fcfc2f8e4c"
+    },
+    {
+      "path": "_internal/libQt6Network.so.6",
+      "bytes": 2137480,
+      "sha256": "0a278b944cab82360db05b4a3bee5c5d8390c00573eb7fc252a90e9207877d18"
+    },
+    {
+      "path": "_internal/libQt6OpenGL.so.6",
+      "bytes": 706664,
+      "sha256": "3b51f743b1642d5324925e5ec4877339082af93679f28542f22690f154be4803"
+    },
+    {
+      "path": "_internal/libQt6Svg.so.6",
+      "bytes": 666600,
+      "sha256": "3ca6f8fc792954586b3ce49b78d3f2598ccf5b4e1792b591b5d6647a4612541e"
+    },
+    {
+      "path": "_internal/libQt6WaylandClient.so.6",
+      "bytes": 1210544,
+      "sha256": "b58b1b992d6981815dccf842e1a0243089b6c7dcdd9c37f3f5d1997f351bfc1c"
+    },
+    {
+      "path": "_internal/libQt6Widgets.so.6",
+      "bytes": 8106088,
+      "sha256": "72dacd6bcaed9557d092301f62cdea6d2f51a3fc6aaad0776b2edb850fed6baa"
+    },
+    {
+      "path": "_internal/libQt6WlShellIntegration.so.6",
+      "bytes": 142592,
+      "sha256": "d8876c23bb768d99139c5f151dab99b8747a28c027d122ef6a753cfba517646b"
+    },
+    {
+      "path": "_internal/libQt6XcbQpa.so.6",
+      "bytes": 779720,
+      "sha256": "618be04dc2551af48ac2544bba623cab8e0080aecd2f24fffce8b0b9e66d4823"
+    },
+    {
+      "path": "_internal/libX11-xcb.so.1",
+      "bytes": 13944,
+      "sha256": "c73c2e98ad556a412dd6eef44b857dbd3cc02f191db8af30968084565f60f311"
+    },
+    {
+      "path": "_internal/libX11.so.6",
+      "bytes": 1342984,
+      "sha256": "b03e563b316b8b53c7988f0ee91d6656cc425538e00947a8b14482d179e80099"
+    },
+    {
+      "path": "_internal/libXau.so.6",
+      "bytes": 14472,
+      "sha256": "4275ec5b14bec21770c44447b3a52977e211c7ba08745008f3a1783878e091bb"
+    },
+    {
+      "path": "_internal/libXcomposite.so.1",
+      "bytes": 14320,
+      "sha256": "b80f2a638fc5bb3ed9a400d48e758135687f10ee8e3b236c89bf0687250858db"
+    },
+    {
+      "path": "_internal/libXcursor.so.1",
+      "bytes": 47840,
+      "sha256": "0a860c0162ffa5b37d88d2075d143e4e24295416fe85bb868e2daff07d2732fd"
+    },
+    {
+      "path": "_internal/libXdamage.so.1",
+      "bytes": 14344,
+      "sha256": "e87b12f4208b53769802abfa4052147ffcc5f0f7d76d8bcd677126a593cc70fb"
+    },
+    {
+      "path": "_internal/libXdmcp.so.6",
+      "bytes": 26728,
+      "sha256": "761409b24c818719f8c8a2a64a61c8ac6a3067f3d8882485dca64a98d7500040"
+    },
+    {
+      "path": "_internal/libXext.so.6",
+      "bytes": 81568,
+      "sha256": "74cef58f0855cbbe23fce87566249f717e5c8ebeceee09efee393616a9b17697"
+    },
+    {
+      "path": "_internal/libXfixes.so.3",
+      "bytes": 26664,
+      "sha256": "85e29f4739a349d94d61db7a696f764d21dfe5c8db6ba7444af21416a0339187"
+    },
+    {
+      "path": "_internal/libXi.so.6",
+      "bytes": 76160,
+      "sha256": "8ca60a4e6a90bba494e601e03e792b2d440cced9985deca64431abbd78613adb"
+    },
+    {
+      "path": "_internal/libXinerama.so.1",
+      "bytes": 14496,
+      "sha256": "d09736be08221c8040cab2b0d407a6b8197d3e337f9b81d9b48515e9e02b09b0"
+    },
+    {
+      "path": "_internal/libXrandr.so.2",
+      "bytes": 47384,
+      "sha256": "c99f3f78690b66428f91b5d66fa8531bcce8166e2324d34c911b61206b11ff52"
+    },
+    {
+      "path": "_internal/libXrender.so.1",
+      "bytes": 47608,
+      "sha256": "39fed75f787ac251cba86e30ccd979e3df1f84dd73c63a75eeb86a18fd413e64"
+    },
+    {
+      "path": "_internal/libatk-1.0.so.0",
+      "bytes": 165808,
+      "sha256": "07c8e8031a545009ab45cb317ff4b2ac712d50b5cc4e1fbb6b1fdf19016d321a"
+    },
+    {
+      "path": "_internal/libatk-bridge-2.0.so.0",
+      "bytes": 247728,
+      "sha256": "1cdf8a4540c1c7093de9afa2ad71180d8fe21f2dd049d463239820cc87416a8b"
+    },
+    {
+      "path": "_internal/libatomic.so.1",
+      "bytes": 30848,
+      "sha256": "9558489f171274c220104894258f483055853ed8a23d4ff754c850ce55765aa2"
+    },
+    {
+      "path": "_internal/libatspi.so.0",
+      "bytes": 252152,
+      "sha256": "133c9ad85748ed520c3fb6ffdd3fcdfc3068ad41c0946574b87b509b7c9c7cc0"
+    },
+    {
+      "path": "_internal/libblkid.so.1",
+      "bytes": 396256,
+      "sha256": "116b712c143ac68bb59f6d8e32ed8e05e0772c730a9ba55ec544dd28916af58c"
+    },
+    {
+      "path": "_internal/libbrotlicommon.so.1",
+      "bytes": 141496,
+      "sha256": "7b0b0de90d8d3d4f07b99738c0285c6a0dbb6611d774ca44e7ea53a19a01ea68"
+    },
+    {
+      "path": "_internal/libbrotlidec.so.1",
+      "bytes": 51376,
+      "sha256": "06530583d5927000480f4214d80d0213fec3d34cc448527f932a6eceb50cefef"
+    },
+    {
+      "path": "_internal/libbz2.so.1.0",
+      "bytes": 74688,
+      "sha256": "c630f057efedc12f848710d71f40283895591e5b4608539f387895c64e0553da"
+    },
+    {
+      "path": "_internal/libcairo-gobject.so.2",
+      "bytes": 42768,
+      "sha256": "c29e4900b772b0cbafeafbe3fb4ab7d0bc535f25791a5cdad3e821a2970f4c5f"
+    },
+    {
+      "path": "_internal/libcairo.so.2",
+      "bytes": 1362632,
+      "sha256": "55e6961d9c35923426aca75b85e10d69977428ffb6569719be13a87eb4fcab66"
+    },
+    {
+      "path": "_internal/libcap.so.2",
+      "bytes": 47288,
+      "sha256": "41217b0af128444f66dee8adda52b2ceaf19da00e5b0b155e2b87b857671286b"
+    },
+    {
+      "path": "_internal/libcloudproviders.so.0",
+      "bytes": 96168,
+      "sha256": "0e700324c5afa3f083893b6be9bf6ddbac6aafa91c5d207f9f815e5a882a0fbe"
+    },
+    {
+      "path": "_internal/libcom_err.so.2",
+      "bytes": 18344,
+      "sha256": "dc4828400674492839b630c001db424cd38e5cecfcf46dbf705a637647e04bea"
+    },
+    {
+      "path": "_internal/libcrypto.so.3",
+      "bytes": 6517312,
+      "sha256": "8bb5f3fdffe280d4453eb79a4663c2c47af70b7c247fe2e94e2da703cee1fd3d"
+    },
+    {
+      "path": "_internal/libdatrie.so.1",
+      "bytes": 34736,
+      "sha256": "ce632159af92e1d1ceec68652920c412fb105ea579c97c26896a29d1b876abde"
+    },
+    {
+      "path": "_internal/libdbus-1.so.3",
+      "bytes": 350360,
+      "sha256": "f8c5475204730fa615547b10b642d7e27e5954ed1c12c47507743f2b486ba5a0"
+    },
+    {
+      "path": "_internal/libepoxy.so.0",
+      "bytes": 1246808,
+      "sha256": "508c6214d08b997e0509e74b568f1e66f574951105cb11e59d12ed74a4239f13"
+    },
+    {
+      "path": "_internal/libexpat.so.1",
+      "bytes": 186520,
+      "sha256": "0fd7d092bd0bf5dcc29f31daaba2bad993b0d18a1ab771fb844e0a6dfa8efe18"
+    },
+    {
+      "path": "_internal/libffi.so.8",
+      "bytes": 47576,
+      "sha256": "922024ec5a23f7de1095b1cff2f6cbfb377b5d58cd51fd0ec2e8fe35427653e2"
+    },
+    {
+      "path": "_internal/libfontconfig.so.1",
+      "bytes": 317360,
+      "sha256": "d6344f71a0cfd5fcb154278f0be706021f75f79d1fcc973fc4ddb1dff40ab0ee"
+    },
+    {
+      "path": "_internal/libfreetype.so.6",
+      "bytes": 845736,
+      "sha256": "9e376992a91e92d86809893a3b9eea22a4e27849db1686f6ca58032f79cdafb5"
+    },
+    {
+      "path": "_internal/libfribidi.so.0",
+      "bytes": 121064,
+      "sha256": "bbd962bd1c3ac1c25dc983d2951962caf55acb46a80e33ef93e31392edd5a222"
+    },
+    {
+      "path": "_internal/libgcc_s.so.1",
+      "bytes": 182856,
+      "sha256": "30c61ab012a4241bed033725a09b61f5fdd3bb7df95ee852d0b096520524c7af"
+    },
+    {
+      "path": "_internal/libgdk-3.so.0",
+      "bytes": 1108440,
+      "sha256": "cb75fbb8fbd28c507322a2d318e6a7199c4b7a4e9c60cb984bd3da613a997502"
+    },
+    {
+      "path": "_internal/libgdk_pixbuf-2.0.so.0",
+      "bytes": 186552,
+      "sha256": "e92815ef102d064b64eedf79b5ada7413197cad48432d2b13772724cd2204d30"
+    },
+    {
+      "path": "_internal/libgio-2.0.so.0",
+      "bytes": 2051320,
+      "sha256": "ada55aa768da50c23a114736ac39dd8d8c62f77a5519747f99e8836e86a1fd35"
+    },
+    {
+      "path": "_internal/libglib-2.0.so.0",
+      "bytes": 1404320,
+      "sha256": "980ab64e995225de1543779e3bafafac9d705904d42ca3b5eb76e7a336cc5e1d"
+    },
+    {
+      "path": "_internal/libgmodule-2.0.so.0",
+      "bytes": 22584,
+      "sha256": "cb391dc09732706a0b2b9e2bf44ebe5539708cdeb8e8dd9c4ba910a958b78bb4"
+    },
+    {
+      "path": "_internal/libgobject-2.0.so.0",
+      "bytes": 403680,
+      "sha256": "ea1b3b14267d075022abfb2a8ab1c61d568124ebba97553d7b45a4f6444abebe"
+    },
+    {
+      "path": "_internal/libgraphite2.so.3",
+      "bytes": 166048,
+      "sha256": "5c4b17bdbd121d3c65f28c22d9c2a0504ca493d9e8fa7d7d31383c72237416b4"
+    },
+    {
+      "path": "_internal/libgssapi_krb5.so.2",
+      "bytes": 346904,
+      "sha256": "c290f761873ebeac539911010526e1c5db86218bfcb29672760da46841741de0"
+    },
+    {
+      "path": "_internal/libgthread-2.0.so.0",
+      "bytes": 14336,
+      "sha256": "673907ae4a625ae4185c45c3ba40e363562fe94f533c3c4a1085868dbc492ec7"
+    },
+    {
+      "path": "_internal/libgtk-3.so.0",
+      "bytes": 8358040,
+      "sha256": "a56aed9f46dc47d054555880c6dc543f41846b0732520c7d2e5ef45c5c7f2ddf"
+    },
+    {
+      "path": "_internal/libharfbuzz.so.0",
+      "bytes": 1310560,
+      "sha256": "c0cc41333a8fc0c24428a61ba0af6380aabb1f0d91ac48c13ed743b06c8ccc87"
+    },
+    {
+      "path": "_internal/libicudata.so.73",
+      "bytes": 32035888,
+      "sha256": "4d24b3a908dd838bea23414e16aa830d05a2a306c475246ab11ef0a00c3037e9"
+    },
+    {
+      "path": "_internal/libicui18n.so.73",
+      "bytes": 4477136,
+      "sha256": "ad5410f3e4eb4f01f91d10ddb3780cdbcbeb902ed04a3bc4d3f562b956578d52"
+    },
+    {
+      "path": "_internal/libicuuc.so.73",
+      "bytes": 2571736,
+      "sha256": "8ce3427af0d2bf566bb422ce80a12014137d12ed452fe2dd9ed481ee46181168"
+    },
+    {
+      "path": "_internal/libjpeg.so.62",
+      "bytes": 616512,
+      "sha256": "0928fd49fa79e10f72eb3276f1cf603d928201a628cd78e0118a2e9c01fd2dac"
+    },
+    {
+      "path": "_internal/libk5crypto.so.3",
+      "bytes": 187144,
+      "sha256": "c4c3221d0350f882cee0430b58d5fb289a5776c684d3156964864c8a9719dff1"
+    },
+    {
+      "path": "_internal/libkeyutils.so.1",
+      "bytes": 22448,
+      "sha256": "e5d5a7450d08eff7d4bbcaac75ef2b94d3447c81a1b2ddf3ab85d2de4709a9a8"
+    },
+    {
+      "path": "_internal/libkrb5.so.3",
+      "bytes": 883984,
+      "sha256": "c4ab64e6bc2874a83e649e4439be752465da027a0041e2bb5343f81c80f0882d"
+    },
+    {
+      "path": "_internal/libkrb5support.so.0",
+      "bytes": 52208,
+      "sha256": "f559f051ee5d39f151a57d79f2cde475c484030098b0c73f9f7035b421b187c4"
+    },
+    {
+      "path": "_internal/libmount.so.1",
+      "bytes": 502512,
+      "sha256": "1654d2cf948e3608cc0d38340807d4ddac1114315a3a77f7b274c4c859cb2181"
+    },
+    {
+      "path": "_internal/libpango-1.0.so.0",
+      "bytes": 458368,
+      "sha256": "3aeb194a48f427b907d77986cc8b1d7a2f43f8dab6a91abb3fa0416d5b071132"
+    },
+    {
+      "path": "_internal/libpangocairo-1.0.so.0",
+      "bytes": 63456,
+      "sha256": "cd9ea0195bea8dc358774b5c7d3b4ef345d0bfc34c69a76f4e9e6d6d17bc6a91"
+    },
+    {
+      "path": "_internal/libpangoft2-1.0.so.0",
+      "bytes": 116656,
+      "sha256": "f0a0ac4128a21eaec63b8d9811ab670cdf1763abfcde5d2d6d4693ecc8c7af99"
+    },
+    {
+      "path": "_internal/libpcre2-8.so.0",
+      "bytes": 711216,
+      "sha256": "8dde125b341abfdf4a596d2974cd3048e350cbc8d2d77acd54ea044f7815ca77"
+    },
+    {
+      "path": "_internal/libpixman-1.so.0",
+      "bytes": 706576,
+      "sha256": "806ef6cd6ff8dace4332b8d611afe2f1c5ec0c1b743ea7ed0ebd48ed307618cd"
+    },
+    {
+      "path": "_internal/libpng16.so.16",
+      "bytes": 231416,
+      "sha256": "56485ea502d222fa8b0d99f899470c1bacdca815a958d83c1b349d4e8f605255"
+    },
+    {
+      "path": "_internal/libpyside6.abi3.so.6.10",
+      "bytes": 255184,
+      "sha256": "a7c5a5441e103cdd23f04679ff2ea90648b595153cb4c128c5d197919fc3b0b6"
+    },
+    {
+      "path": "_internal/libpython3.12.so.1.0",
+      "bytes": 32465344,
+      "sha256": "7e177a680eabb11fcb7d3867f7a1b9c4b93a9bd5b18129ce1af51ec07977b024"
+    },
+    {
+      "path": "_internal/libselinux.so.1",
+      "bytes": 202984,
+      "sha256": "5cb5293b4e7590463b94f7b23152d54807a6a2ccaf8cac9e343908c6692c086c"
+    },
+    {
+      "path": "_internal/libshiboken6.abi3.so.6.10",
+      "bytes": 441840,
+      "sha256": "12a424c0953043c5c8a67038f82625d3fb5fdff5acfce5ecbf92fb981a21030c"
+    },
+    {
+      "path": "_internal/libssl.so.3",
+      "bytes": 1101760,
+      "sha256": "4b34859318555bf96d518131bed5fc4d5e35fefa4e1729f49eaa26bd05263850"
+    },
+    {
+      "path": "_internal/libstdc++.so.6",
+      "bytes": 2497768,
+      "sha256": "972bb2a18b71140dab0240f8a1f68ab3fb1d56bcd4c4f824a91b70888faf5a00"
+    },
+    {
+      "path": "_internal/libsystemd.so.0",
+      "bytes": 1131784,
+      "sha256": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0"
+    },
+    {
+      "path": "_internal/libthai.so.0",
+      "bytes": 41000,
+      "sha256": "68da865e0efbc99eedc429f5e0c93a788cff55e85c0ecd37abc0279044a0cc32"
+    },
+    {
+      "path": "_internal/libxcb-cursor.so.0",
+      "bytes": 23624,
+      "sha256": "54a692c826449c001cddb1282820ba22a44e38fb757decd3139f8944b5de787d"
+    },
+    {
+      "path": "_internal/libxcb-glx.so.0",
+      "bytes": 116808,
+      "sha256": "f5e5cc234f82dde4de1d1b604edb70c4ffa2dd41ce7ec9682cd7a6c985c35bca"
+    },
+    {
+      "path": "_internal/libxcb-icccm.so.4",
+      "bytes": 22552,
+      "sha256": "636df1ff99cc0cddade4966cb97044fc6b3e981373096ea93d3dd7577a4a1164"
+    },
+    {
+      "path": "_internal/libxcb-image.so.0",
+      "bytes": 18600,
+      "sha256": "4cbc9f5fcf9f935c1eb83f3e9c2b45843d6b4bdc73081036ff41030397d7458a"
+    },
+    {
+      "path": "_internal/libxcb-keysyms.so.1",
+      "bytes": 14176,
+      "sha256": "697a1afc7ccd64bb1165bd54bf65829c8306d99bd51dfaa27aa94b475f87eeb9"
+    },
+    {
+      "path": "_internal/libxcb-randr.so.0",
+      "bytes": 71960,
+      "sha256": "aa6d39eabd9e5505bfa49e74124878cdc4d3354c816a86277c93952ffc9a1bf7"
+    },
+    {
+      "path": "_internal/libxcb-render-util.so.0",
+      "bytes": 22376,
+      "sha256": "417e351039cd6701d3de6fbe6e48a505cf4e87d71733cfeb31a7cfdae98580c1"
+    },
+    {
+      "path": "_internal/libxcb-render.so.0",
+      "bytes": 59656,
+      "sha256": "6ceffcf824902eb4d9566e2c646511d6914073d355016134f1260d8891e563b5"
+    },
+    {
+      "path": "_internal/libxcb-shape.so.0",
+      "bytes": 14376,
+      "sha256": "bb2c3370968c2a0acdf435f19802aff9e10b1a0b8f06fbc3269ba74252d8e1be"
+    },
+    {
+      "path": "_internal/libxcb-shm.so.0",
+      "bytes": 14392,
+      "sha256": "4a57cf736337398b8dda5fd842da9d8d040ff484ee7b418836f499f875623e9c"
+    },
+    {
+      "path": "_internal/libxcb-sync.so.1",
+      "bytes": 34936,
+      "sha256": "fbb0fe758e9b21d509ebe4270a6c7cba47ce41f069a1d5e3d6744e4d6db3bd9f"
+    },
+    {
+      "path": "_internal/libxcb-util.so.1",
+      "bytes": 30928,
+      "sha256": "7b24e07fe033b8e6362dcb78bd632c29a437194723e9020ca3f9104cf8959e88"
+    },
+    {
+      "path": "_internal/libxcb-xfixes.so.0",
+      "bytes": 34856,
+      "sha256": "6858d9cad712d1bb676e44cd9763d355ab18c0234ee8ecb6d9e2cf3cfda5069f"
+    },
+    {
+      "path": "_internal/libxcb-xkb.so.1",
+      "bytes": 121384,
+      "sha256": "594cc3c2ea1d668f34d01d93c676ce0e42553110a4534eba877dd3eba27a7a0c"
+    },
+    {
+      "path": "_internal/libxkbcommon-x11.so.0",
+      "bytes": 39720,
+      "sha256": "026f10295a4aa9a0a8996c2fa76bc0d4adecb8ef328db48a97ad8d72bc8345fe"
+    },
+    {
+      "path": "_internal/libxkbcommon.so.0",
+      "bytes": 301760,
+      "sha256": "9f26c41577e0e036cbf42352e85b13db6bce953fb730555b4fc7de5362dc93bb"
+    },
+    {
+      "path": "_internal/libz.so.1",
+      "bytes": 125376,
+      "sha256": "85590dd58edf5445e18bc7193e5ebc01ac5841f1ae187e97705a662e90c6421e"
+    },
+    {
+      "path": "_internal/libzstd.so.1",
+      "bytes": 825336,
+      "sha256": "27f07c9a49c2c956bcfb64cd4712976586a66facbf15fc7f09bc37413b5f2b21"
+    },
+    {
+      "path": "_internal/licenses/DEPENDENCIES.json",
+      "bytes": 650,
+      "sha256": "a603f8e0e59299fa77d1caec654ff7715d58ea904f336470089757689bad75e0"
+    },
+    {
+      "path": "_internal/licenses/GPL-3.0-only.txt",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "path": "_internal/licenses/LGPL-3.0-only.txt",
+      "bytes": 7651,
+      "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+    },
+    {
+      "path": "_internal/licenses/OpenSSL-LICENSE.txt",
+      "bytes": 10175,
+      "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    {
+      "path": "_internal/licenses/PYTHON-LICENSE.txt",
+      "bytes": 13936,
+      "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+    },
+    {
+      "path": "_internal/licenses/Qt-GPL-exception-1.0.txt",
+      "bytes": 965,
+      "sha256": "40678d338ce53cd93f8b22b281a2ecbcaa3ee65ce60b25ffb0c462b0530846b2"
+    },
+    {
+      "path": "_internal/licenses/SOURCES.json",
+      "bytes": 890,
+      "sha256": "ca0388685bc55cc1be1c582282e17d6f6fe5f61f0a4fa3bb761a82318f44e9c6"
+    },
+    {
+      "path": "_internal/licenses/pyinstaller/COPYING.txt",
+      "bytes": 32138,
+      "sha256": "dcf75fdb959db1e3b41c0f8505069d2ece781b5ec6b3d0a4d30975cfc6580245"
+    },
+    {
+      "path": "_internal/licenses/pyinstaller-hooks-contrib/LICENSE",
+      "bytes": 27666,
+      "sha256": "91d0baaff00773038e72c0a1fc9d5d2d38706b7a2b9c04f34296608f931b9cd0"
+    },
+    {
+      "path": "_internal/prompts/master_system_prompt.txt",
+      "bytes": 15539,
+      "sha256": "dc869420b1e4dbe64ff23fd02d993e0ce127dfb43ec62b9439e2f1d1714d2584"
+    },
+    {
+      "path": "_internal/rpg_vkr/ui/assets/DND-NCFU.ico",
+      "bytes": 20849,
+      "sha256": "baf1b64e97ab77af0c46dbf91759dafc51472d88935d0619895bf31371d59185"
+    },
+    {
+      "path": "_internal/rpg_vkr/ui/assets/DND-NCFU.png",
+      "bytes": 9429,
+      "sha256": "18b4e8b41a27c2bc1b8ad70fe421d1ea188661b1ffec083a46f5b130e3cc3a06"
+    },
+    {
+      "path": "_internal/rpg_vkr/ui/assets/kingdom.png",
+      "bytes": 2505575,
+      "sha256": "b1c7a6d583c571b7e1476bef4d2a3692e017c31b577d080b0bba958795f13275"
+    },
+    {
+      "path": "_internal/rpg_vkr/ui/assets/world-creation-atlas.png",
+      "bytes": 3341575,
+      "sha256": "07bff114dd7bc3477ca5aedfbff6473473c4ef244c206fe659e61a854cdbbe0b"
+    },
+    {
+      "path": "_internal/shiboken6/Shiboken.abi3.so",
+      "bytes": 23792,
+      "sha256": "e4f26ea8789906924683dbfdb65dc75014280c074fa057d555bb68db723072ce"
+    },
+    {
+      "path": "_internal/shiboken6/libshiboken6.abi3.so.6.10",
+      "bytes": 441840,
+      "sha256": "12a424c0953043c5c8a67038f82625d3fb5fdff5acfce5ecbf92fb981a21030c"
+    }
+  ]
+}

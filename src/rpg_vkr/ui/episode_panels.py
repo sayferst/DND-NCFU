@@ -396,6 +396,7 @@ class EpisodePanels:
         self._refresh_episode_panels()
 
     def open_section(self, name: str) -> None:
+        self.show_game_body()
         if name == "Рассказчик" and not self._legacy_controls:
             name = "Мастер"
         if name == "Каталог мира" and not self._legacy_controls:
@@ -430,6 +431,14 @@ class EpisodePanels:
             sync_chrome(self, index)
 
     def resume_session(self) -> None:
+        if (
+            not self._legacy_controls
+            and self._session.progress.enabled
+            and not self._session.generated_world
+        ):
+            self.show_world_creation()
+            return
+        self.show_game_body()
         self.tabs.setCurrentIndex(0)
         self.action_input.setFocus()
         QTimer.singleShot(0, self.journal, self.journal.ensureCursorVisible)
@@ -512,7 +521,12 @@ class EpisodePanels:
         )
         if not self._legacy_controls:
             self.home_summary.setText(
-                f"{self._session.character.name} · {self._session.current_place_name}"
+                f"{self._session.character.name} · "
+                + (
+                    self._session.current_place_name
+                    if self._session.generated_world
+                    else "Мир ещё не создан"
+                )
                 if progress.enabled or self._session.turns
                 else "Новое приключение ждёт своего героя"
             )

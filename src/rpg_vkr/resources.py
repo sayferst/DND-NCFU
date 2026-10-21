@@ -11,6 +11,7 @@ REQUIRED_RESOURCES = (
     "rpg_vkr/ui/assets/kingdom.png",
     "rpg_vkr/ui/assets/DND-NCFU.png",
     "rpg_vkr/ui/assets/DND-NCFU.ico",
+    "rpg_vkr/ui/assets/world-creation-atlas.png",
     "data/catalog/seed-v1.json",
     "data/catalog/public-descriptions-v1.json",
     "data/narrative/genre-cards-v1.json",

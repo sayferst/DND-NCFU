@@ -326,6 +326,12 @@ def request_world(window, error=""):
     session = window._session
     window._world_seed_attempts += 1
     window.world_generation_status.setText("Мастер создаёт район и сюжетные зацепки…")
+    if hasattr(window, "world_creation_screen"):
+        window.world_creation_screen.stage.setText(
+            "Мастер уточняет детали мира…"
+            if error
+            else "Мастер создаёт мир по вашей анкете. Это может занять несколько минут."
+        )
     try:
         window.ollama.generate_world(
             build_frame(session),
@@ -347,6 +353,8 @@ def request_world(window, error=""):
 def accept_world(window, value):
     if getattr(window, "_generating_session", None) is not window._session:
         return
+    if hasattr(window, "world_creation_screen"):
+        window.world_creation_screen.stage.setText("Проверяем созданный мир и его жителей…")
     try:
         seed = build_world(
             value, window._session, window.ollama.response_model or window.local_model.currentText()
@@ -374,7 +382,20 @@ def finish_world(window, seed, status):
     window.narrator_status.setText(status)
     window._refresh_character()
     window._render_journal()
-    window.resume_session()
+    if not window._legacy_controls:
+        from PySide6.QtCore import QTimer
+
+        session = window._session
+        window.world_creation_screen.complete()
+
+        def open_story():
+            if window._session is session and window.world_creation_screen.state == "success":
+                window.resume_session()
+
+        # A short success transition after real completion, never simulated API progress.
+        QTimer.singleShot(700, window, open_story)
+    else:
+        window.resume_session()
 
 
 def generation_failed(window, message):
@@ -396,6 +417,7 @@ def generation_failed(window, message):
             window.narrator_status.setText("Мир не создан: " + message)
             window._refresh_character()
             window._render_journal()
+            window.show_world_creation()
             return
         finish_world(
             window,
@@ -412,37 +434,38 @@ def world_start_message(window):
         return "Создаётся ваш мир. Дождитесь завершения; сообщение пока не отправлено."
     failure = getattr(window, "_world_generation_error", None)
     if failure and failure[0] is session:
-        return "Мир не создан: " + failure[1] + " Повторите создание мира кнопкой под журналом."
+        return "Мир не создан: " + failure[1] + " Повторите создание нового мира."
     if session.turns:
         return (
             "В этой сессии нет созданного мастером мира. История сохранена; "
-            "создайте новый мир с этим героем кнопкой под журналом или откройте готовую кампанию."
+            "создайте новый мир с этим героем или откройте готовую кампанию."
         )
     if not session.progress.enabled:
         return "Создайте героя через «Новую легенду»: мастер создаст для него мир."
     from rpg_vkr.ui.cloud_gate import cloud_ready
 
     return (
-        "Герой создан. Нажмите «Создать мир для этого героя» под журналом."
+        "Герой создан. Нажмите «Создать новый мир» на экране новой легенды."
         if hasattr(window, "ollama") and cloud_ready(window)
         else "Герой сохранён. Настройте облачного мастера и повторите создание мира."
     )
 
 
 def refresh_world_start(window):
-    if not hasattr(window, "world_retry_button"):
+    if not hasattr(window, "world_creation_screen"):
         return
     session = window._session
+    screen = window.world_creation_screen
     draft = not session.generated_world
-    window.world_start_status.setVisible(draft)
-    window.world_retry_button.setVisible(draft)
-    window.world_start_status.setText(world_start_message(window) if draft else "")
-    window.world_retry_button.setEnabled(
-        draft and session.progress.enabled and window._generating_session is not session
-    )
-    window.world_retry_button.setText(
-        "Создать новый мир с этим героем" if session.turns else "Создать мир для этого героя"
-    )
+    if draft:
+        if window._generating_session is session:
+            screen.begin(session)
+            window.show_world_creation()
+        else:
+            failure = getattr(window, "_world_generation_error", None)
+            screen.prepare(
+                session, world_start_message(window) if failure and failure[0] is session else ""
+            )
     if hasattr(window, "scene_image_button"):
         window.scene_image_button.setEnabled(not draft)
         window.scene_image_button.setToolTip(

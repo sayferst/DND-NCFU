@@ -170,6 +170,9 @@ def world_creation_probe(app, root, seed):
                 raise ValueError("Uncreated world accepted a chat action")
             QTimer.singleShot(0, create)
             window.new_character()
+            if calls or window.world_creation_screen.state != "ready":
+                raise ValueError("Hero form started world generation without the central button")
+            window.world_creation_screen.create_button.click()
             window.action_input.setText("начать")
             window.submit_action()
             wait()

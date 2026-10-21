@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "mode": "self-check",
+  "version": "0.2.0",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "frozen": true,
+  "resources": [
+    "rpg_vkr/ui/assets/kingdom.png",
+    "rpg_vkr/ui/assets/DND-NCFU.png",
+    "rpg_vkr/ui/assets/DND-NCFU.ico",
+    "rpg_vkr/ui/assets/world-creation-atlas.png",
+    "data/catalog/seed-v1.json",
+    "data/catalog/public-descriptions-v1.json",
+    "data/narrative/genre-cards-v1.json",
+    "prompts/master_system_prompt.txt"
+  ],
+  "qt_tls": true,
+  "python_tls": "OpenSSL 3.5.8 25 Aug 2026",
+  "sqlite": "3.53.1",
+  "data_outside_application": "/tmp/dnd-world-screen-relocated-20261021/Новая легенда с пробелами/Отдельные данные",
+  "network_requests": 0
+}

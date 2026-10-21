@@ -95,6 +95,13 @@ def apply_theme(widget, theme="Системная"):
 def sync_chrome(window, index):
     if window._legacy_controls:
         return
+    if (
+        hasattr(window, "world_creation_screen")
+        and window.screen_stack.currentWidget() is window.world_creation_screen
+    ):
+        window.menuBar().hide()
+        window.statusBar().hide()
+        return
     menu = window.tabs.tabText(index) == "Главное меню"
     adventure = window.tabs.tabText(index) == "Приключение"
     compact = window.width() < 900
@@ -115,4 +122,4 @@ def sync_chrome(window, index):
     window.menuBar().setVisible(not menu)
     window.statusBar().setVisible(not menu)
     window._content_layout.setContentsMargins(*((0, 0, 0, 0) if menu else (20, 16, 12, 16)))
-    window.centralWidget().layout().setContentsMargins(0, 0, 0 if menu else 12, 0)
+    window._columns_layout.setContentsMargins(0, 0, 0 if menu else 12, 0)
