@@ -1,0 +1,77 @@
+     ---------------------------------------- 3.5/3.5 MB 6.7 MB/s eta 0:00:00
+Requirement already satisfied: iniconfig==2.3.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 175)) (2.3.1)
+Requirement already satisfied: packaging==26.3 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 185)) (26.3)
+Requirement already satisfied: pefile==2023.2.7 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 193)) (2023.2.7)
+Requirement already satisfied: pluggy==1.7.0 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 197)) (1.7.0)
+Collecting pycparser==3.11 (from -r requirements-build.lock (line 203))
+  Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+Requirement already satisfied: pygments==2.21.0 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 209)) (2.21.0)
+Requirement already satisfied: pyinstaller==6.16.0 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 215)) (6.16.0)
+Requirement already satisfied: pyinstaller-hooks-contrib==2026.8 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 229)) (2026.8)
+Requirement already satisfied: pyside6-essentials==6.10.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 233)) (6.10.1)
+Requirement already satisfied: pytest==8.4.2 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 240)) (8.4.2)
+Requirement already satisfied: pywin32-ctypes==0.2.3 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 244)) (0.2.3)
+Requirement already satisfied: ruff==0.14.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 248)) (0.14.1)
+Requirement already satisfied: setuptools==84.2.0 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 269)) (84.2.0)
+Requirement already satisfied: shiboken6==6.10.1 in d:\projects\dnd-ncfu\.venv\lib\site-packages (from -r requirements-build.lock (line 273)) (6.10.1)
+Installing collected packages: pycparser, cffi, cryptography
+Successfully installed cffi-2.1.1 cryptography-46.0.3 pycparser-3.11
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: D:\Projects\DND-NCFU\.venv\Scripts\python.exe -m pip install --upgrade pip
+PS D:\Projects\DND-NCFU> winget install --id JRSoftware.InnoSetup --exact --source winget
+Найдено Inno Setup 6 [JRSoftware.InnoSetup] Версия 6.7.3
+Лицензия на это приложение предоставлена вам владельцем.
+Корпорация Майкрософт не несет ответственность за сторонние пакеты и не предоставляет для них никакие лицензии.
+Скачивание https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe
+  ██████████████████████████████  10.1 MB / 10.1 MB
+Хэш установщика успешно проверен
+Запуск установки пакета...
+Успешно установлено
+PS D:\Projects\DND-NCFU> .\scripts\tester_host.cmd start
+Введите RouterAI API-ключ (не отображается):
+Проверяю ключ и каталог RouterAI без генерации…
+RouterAI не подтвердил ключ и положительный лимит. Проверьте ключ/баланс/лимит в кабинете; затем tester_host.cmd key.
+PS D:\Projects\DND-NCFU> .\scripts\tester_host.cmd start
+Проверяю ключ и каталог RouterAI без генерации…
+RouterAI не подтвердил ключ и положительный лимит. Проверьте ключ/баланс/лимит в кабинете; затем tester_host.cmd key.
+PS D:\Projects\DND-NCFU> ^C
+PS D:\Projects\DND-NCFU> .\scripts\tester_host.cmd start
+Проверяю ключ и каталог RouterAI без генерации…
+RouterAI не подтвердил ключ и положительный лимит. Проверьте ключ/баланс/лимит в кабинете; затем tester_host.cmd key.
+PS D:\Projects\DND-NCFU> Set-Location D:\Projects\DND-NCFU
+>> git pull --ff-only
+>> if ($LASTEXITCODE -ne 0) { throw 'Обновление остановлено.' }
+>> .\scripts\tester_host.cmd start
+remote: Enumerating objects: 37, done.
+remote: Counting objects: 100% (37/37), done.
+remote: Compressing objects: 100% (7/7), done.
+remote: Total 22 (delta 15), reused 22 (delta 15), pack-reused 0 (from 0)
+Unpacking objects: 100% (22/22), 12.83 KiB | 205.00 KiB/s, done.
+From https://github.com/sayferst/DND-NCFU
+   86f53bb..8c20e05  setup/development-environment -> origin/setup/development-environment
+Updating 86f53bb..8c20e05
+Fast-forward
+ AGENTS.md                                          |  16 +++
+ DECISIONS.md                                       |  15 +++
+ KNOWN_ISSUES.md                                    |   8 ++
+ PROJECT_STATUS.md                                  |  11 ++
+ RESEARCH_LOG.md                                    |  21 ++++
+ TEST_PLAN.md                                       |  10 ++
+ docs/TESTER_WITHOUT_DOMAIN.md                      |  21 ++++
+ .../host-key-diagnostics-2026-10-21/README.md      |  31 +++++
+ .../full-final-01.txt                              | 108 +++++++++++++++++
+ .../key-cases-final-02.txt                         |   2 +
+ .../host-key-diagnostics-2026-10-21/target-01.txt  |   2 +
+ scripts/tester_host.py                             |  68 +++++++++--
+ server/gateway.py                                  |  39 ++++--
+ tests/test_host_metadata_errors.py                 | 132 +++++++++++++++++++++
+ 14 files changed, 469 insertions(+), 15 deletions(-)
+ create mode 100644 docs/validation/host-key-diagnostics-2026-10-21/README.md
+ create mode 100644 docs/validation/host-key-diagnostics-2026-10-21/full-final-01.txt
+ create mode 100644 docs/validation/host-key-diagnostics-2026-10-21/key-cases-final-02.txt
+ create mode 100644 docs/validation/host-key-diagnostics-2026-10-21/target-01.txt
+ create mode 100644 tests/test_host_metadata_errors.py
+Проверяю ключ и каталог RouterAI без генерации…
+Проверка ключа: RouterAI вернул HTTP 400 при проверке метаданных. Повторите запуск позже. Платная генерация не запускалась.
+PS D:\Projects\DND-NCFU>

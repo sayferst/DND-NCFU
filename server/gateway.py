@@ -260,11 +260,16 @@ class Upstream:
             else 180,
         )
         try:
+            headers = {"Accept": "application/json"}
+            if route != "models":
+                headers["Authorization"] = "Bearer " + self.key
+            if body is not None:
+                headers["Content-Type"] = "application/json"
             connection.request(
                 "POST" if body is not None else "GET",
                 "/api/v1/" + route,
                 json.dumps(body).encode() if body is not None else None,
-                {"Authorization": "Bearer " + self.key, "Content-Type": "application/json"},
+                headers,
             )
             reply = connection.getresponse()
             metadata = route in {"key", "models"}

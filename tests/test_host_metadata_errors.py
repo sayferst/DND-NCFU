@@ -68,7 +68,7 @@ def test_documented_key_wrappers_survive_transport_and_owner_validation(
     assert calls[0].timeout == 20 and calls[0].closed
 
 
-@pytest.mark.parametrize("status", [401, 403, 402, 429, 500])
+@pytest.mark.parametrize("status", [400, 401, 403, 402, 429, 500])
 def test_http_status_survives_to_safe_owner_diagnostic(tmp_path, monkeypatch, status):
     provider, calls = upstream(monkeypatch, b"owner-secret-not-for-output", status=status)
     with pytest.raises(ValueError) as captured:

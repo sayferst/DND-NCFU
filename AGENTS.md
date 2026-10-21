@@ -1502,3 +1502,18 @@ Windowsвладелецобновляетисходникииповторяетs
 Итогhostmetadatafix:1329passed/213.93с,0failed/skipped,pip/RuffOK,209Python-файлов.
 21новыйслучай, целевые59passed/10.98с; отдельные21passed/0.18с. Все75защищённых
 хэшей прежние относительно0.3.1. Не повторять успешныйполныйнаборбезновойпричины.
+
+## 21.10.2026 — HTTP400 после обновления диагностики
+
+Владелец прислал лог: зависимости/Inno6.7.3/pull8c20e05успешны, GETkeyвозвращает400.
+Rawпобайтновvalidation/host-http400-2026-10-21. Это неповодпополнятьбаланс/менятьключ.
+UpstreamGETбылсContentTypeJSONбезтела; теперьAccept, ContentTypeтолькоприbody,
+публичныйGETmodelsбезAuth, key/POSTсAuth. Неотключатьallowance/бюджеты/подписи,
+неавтоповторятьPOST.4новыхwireслучаядо4failed/2.10с, послецелевые63passed/13.54с,
+плюсновыйHTTP400случай. РеальныйAPIизсредыагентаDNSgaierror, liveуспехнезаявлять.
+Standalonehost-onlyfix, EXEнепересобирать, Windowsвладелецделаетpull/start.
+
+ИтогHTTP400fix:1334passed/213.88с,0failed/skipped,pip/RuffOK,210Python-файлов,
+5новыхслучаев. Все75защищённыххэшейсоответствуютbaseline0.3.1. Runtimeпослеитога
+неменялся. Полныйrawvalidation/host-http400-2026-10-21/full-final-01.txt. Обычный
+pushпрежнейветки, userWindowsgitpull/start, безSetuprebuild/повторнойустановки.

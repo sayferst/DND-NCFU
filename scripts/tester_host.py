@@ -159,6 +159,10 @@ def private_key(root):
 
 def metadata_failure(error, label):
     messages = {
+        "upstream_http_400": (
+            "RouterAI отклонил запрос метаданных (HTTP400). "
+            "Передайте этот текст владельцу проекта; ключ не присылайте."
+        ),
         "upstream_http_401": (
             "Ключ RouterAI отклонён (HTTP401). Проверьте его командой tester_host.cmd key."
         ),

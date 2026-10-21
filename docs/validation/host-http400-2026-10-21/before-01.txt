@@ -1,0 +1,146 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_metadata_empty_get_survives_strict_json_parser[key] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7effe6d58620>
+route = 'key'
+
+    @pytest.mark.parametrize("route", ["key", "models"])
+    def test_metadata_empty_get_survives_strict_json_parser(monkeypatch, route):
+        with strict_api() as (port, calls):
+            monkeypatch.setattr(
+                "server.gateway.http.client.HTTPSConnection",
+                lambda host, timeout: http.client.HTTPConnection("127.0.0.1", port, timeout=timeout),
+            )
+>           result = Upstream("test-owner-key").request(route)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gateway_request_headers.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <server.gateway.Upstream object at 0x7effe6bdf350>, route = 'key'
+body = None
+
+    def request(self, route, body=None):
+        if route not in {"key", "models", "chat/completions", "images"}:
+            raise Denied(400, "route")
+        connection = http.client.HTTPSConnection(
+            "routerai.ru",
+            timeout=20
+            if route in {"key", "models"}
+            else 900
+            if route == "chat/completions"
+            else 180,
+        )
+        try:
+            connection.request(
+                "POST" if body is not None else "GET",
+                "/api/v1/" + route,
+                json.dumps(body).encode() if body is not None else None,
+                {"Authorization": "Bearer " + self.key, "Content-Type": "application/json"},
+            )
+            reply = connection.getresponse()
+            metadata = route in {"key", "models"}
+            if reply.status != 200:
+                code = f"upstream_http_{reply.status}" if metadata else "upstream_unavailable"
+>               raise Denied(503, code)
+E               server.gateway.Denied: upstream_http_400
+
+server/gateway.py:273: Denied
+_________ test_metadata_empty_get_survives_strict_json_parser[models] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7effe6c65a60>
+route = 'models'
+
+    @pytest.mark.parametrize("route", ["key", "models"])
+    def test_metadata_empty_get_survives_strict_json_parser(monkeypatch, route):
+        with strict_api() as (port, calls):
+            monkeypatch.setattr(
+                "server.gateway.http.client.HTTPSConnection",
+                lambda host, timeout: http.client.HTTPConnection("127.0.0.1", port, timeout=timeout),
+            )
+>           result = Upstream("test-owner-key").request(route)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gateway_request_headers.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <server.gateway.Upstream object at 0x7effe6c652b0>, route = 'models'
+body = None
+
+    def request(self, route, body=None):
+        if route not in {"key", "models", "chat/completions", "images"}:
+            raise Denied(400, "route")
+        connection = http.client.HTTPSConnection(
+            "routerai.ru",
+            timeout=20
+            if route in {"key", "models"}
+            else 900
+            if route == "chat/completions"
+            else 180,
+        )
+        try:
+            connection.request(
+                "POST" if body is not None else "GET",
+                "/api/v1/" + route,
+                json.dumps(body).encode() if body is not None else None,
+                {"Authorization": "Bearer " + self.key, "Content-Type": "application/json"},
+            )
+            reply = connection.getresponse()
+            metadata = route in {"key", "models"}
+            if reply.status != 200:
+                code = f"upstream_http_{reply.status}" if metadata else "upstream_unavailable"
+>               raise Denied(503, code)
+E               server.gateway.Denied: upstream_http_400
+
+server/gateway.py:273: Denied
+___ test_generation_keeps_json_body_and_auth_with_one_post[chat/completions] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7effe6da0890>
+route = 'chat/completions'
+
+    @pytest.mark.parametrize("route", ["chat/completions", "images"])
+    def test_generation_keeps_json_body_and_auth_with_one_post(monkeypatch, route):
+        with strict_api() as (port, calls):
+            monkeypatch.setattr(
+                "server.gateway.http.client.HTTPSConnection",
+                lambda host, timeout: http.client.HTTPConnection("127.0.0.1", port, timeout=timeout),
+            )
+            value = {"model": "local-fixture-only", "prompt": "Только локальная проверка"}
+            assert Upstream("test-owner-key").request(route, value)
+            assert len(calls) == 1 and calls[0]["method"] == "POST"
+            assert json.loads(calls[0]["body"]) == value
+            assert calls[0]["headers"]["Content-Type"] == "application/json"
+>           assert calls[0]["headers"]["Accept"] == "application/json"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'Accept'
+
+tests/test_gateway_request_headers.py:92: KeyError
+________ test_generation_keeps_json_body_and_auth_with_one_post[images] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7effe6c67e90>
+route = 'images'
+
+    @pytest.mark.parametrize("route", ["chat/completions", "images"])
+    def test_generation_keeps_json_body_and_auth_with_one_post(monkeypatch, route):
+        with strict_api() as (port, calls):
+            monkeypatch.setattr(
+                "server.gateway.http.client.HTTPSConnection",
+                lambda host, timeout: http.client.HTTPConnection("127.0.0.1", port, timeout=timeout),
+            )
+            value = {"model": "local-fixture-only", "prompt": "Только локальная проверка"}
+            assert Upstream("test-owner-key").request(route, value)
+            assert len(calls) == 1 and calls[0]["method"] == "POST"
+            assert json.loads(calls[0]["body"]) == value
+            assert calls[0]["headers"]["Content-Type"] == "application/json"
+>           assert calls[0]["headers"]["Accept"] == "application/json"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'Accept'
+
+tests/test_gateway_request_headers.py:92: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_gateway_request_headers.py::test_metadata_empty_get_survives_strict_json_parser[key]
+FAILED tests/test_gateway_request_headers.py::test_metadata_empty_get_survives_strict_json_parser[models]
+FAILED tests/test_gateway_request_headers.py::test_generation_keeps_json_body_and_auth_with_one_post[chat/completions]
+FAILED tests/test_gateway_request_headers.py::test_generation_keeps_json_body_and_auth_with_one_post[images]
+4 failed in 2.10s

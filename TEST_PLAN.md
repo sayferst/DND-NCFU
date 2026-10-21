@@ -982,3 +982,12 @@ disabled/limitNone/limit0/слишкомбольшой/дневной/исчер
 Исключения/ответы сsyntheticsecretнеэхопечатать. Нетреальныхзапросов/paidPOST.
 НаWindows послеpull повторить tester_host.cmd start, затем анализировать новую
 конкретнуюпричину. Не проситьключ, не очищатьDPAPI/SQLite/квоты ради проверки.
+
+## HostHTTP400: формат запросов,21.10.2026
+
+tests/test_gateway_request_headers.py использует настоящий loopbackHTTPserver,
+подменяеттолькоTLSадресUpstreamнаHTTP127.0.0.1. GETkey/models безтела должен иметь
+Accept, неиметьContent-Type; толькоkeyGETсодержитAuth. JSON-POSTchat/images сAuth
+долженостатьсяодиночнымPOSTснеизменнымтелом. Строгийfixtureparser возвращает400
+приJSONContentTypeсотсутствующимтелом. ПлюсдиагностикаHTTP400безsecretbodyecho.
+РеальныйRouterAIнеиспользуется; Windowsпослеpullповторяетstart, непересобираетEXE.
