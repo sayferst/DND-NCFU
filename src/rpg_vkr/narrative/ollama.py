@@ -11,7 +11,12 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkProxy, QNetworkRepl
 
 from rpg_vkr.domain.campaign import PROFILE_FIELDS, NPCProfile
 from rpg_vkr.narrative.intent import intent_schema, parse_interpretation
-from rpg_vkr.narrative.limits import MAX_RESPONSE_BYTES
+from rpg_vkr.narrative.limits import (
+    MAX_RESPONSE_BYTES,
+    MAX_WORLD_RESPONSE_BYTES,
+    WORLD_OUTPUT_TOKENS,
+    WORLD_TIMEOUT_MS,
+)
 from rpg_vkr.narrative.records import Narration
 from rpg_vkr.narrative.segments import split_story
 from rpg_vkr.narrative.speech import explicit_target
@@ -203,6 +208,7 @@ class OllamaClient(QObject):
         self.base_url = base_url
         self.timeout_ms = timeout_ms
         self.story_timeout_ms = 150000
+        self.world_timeout_ms = WORLD_TIMEOUT_MS
         self.models_timeout_ms = models_timeout_ms
         self.manager = QNetworkAccessManager(self)
         self.manager.setProxy(QNetworkProxy(QNetworkProxy.ProxyType.NoProxy))
@@ -359,7 +365,7 @@ class OllamaClient(QObject):
                 "stream": False,
                 "think": False,
                 "format": "json",
-                "options": {"num_predict": 4500, "temperature": 0.8},
+                "options": {"num_predict": WORLD_OUTPUT_TOKENS, "temperature": 0.8},
                 "messages": [
                     {"role": "system", "content": prompt},
                     {
@@ -917,7 +923,14 @@ class OllamaClient(QObject):
             ):
                 self.failed.emit("Облачный API доступен только новому режиму мастера.")
                 return
+            output_limit = payload.get("options", {}).get("num_predict", 650)
             payload = self.cloud.payload(payload)
+            if kind == "world_seed" and not (
+                "max_tokens" in payload or "max_completion_tokens" in payload
+            ):
+                # A restored RouterAI profile can have no catalog metadata yet.
+                # Genesis must still request its limit instead of the API default.
+                payload["max_tokens"] = output_limit
         if payload is not None:
             self.request_count += 1
             self._observing_request = {
@@ -947,8 +960,10 @@ class OllamaClient(QObject):
         limit = (
             self.models_timeout_ms
             if kind == "models"
+            else self.world_timeout_ms
+            if kind == "world_seed"
             else self.story_timeout_ms
-            if kind in {"director", "story_result", "world_seed"}
+            if kind in {"director", "story_result"}
             else self.timeout_ms
         )
         self.timer.start(limit)
@@ -957,7 +972,9 @@ class OllamaClient(QObject):
     def _timeout(self):
         if self._reply is not None:
             self._reason = (
-                "Ollama недоступна: поиск моделей не завершился за отведённое время. "
+                "Создание мира не завершилось вовремя. Герой сохранён; повторите создание мира."
+                if self._kind == "world_seed"
+                else "Ollama недоступна: поиск моделей не завершился за отведённое время. "
                 "Автономная игра продолжает работать."
                 if self._kind == "models"
                 else "Модель не ответила за отведённое время. "
@@ -968,9 +985,16 @@ class OllamaClient(QObject):
     def _read(self, reply):
         if reply is not self._reply:
             return
-        self._buffer.extend(bytes(reply.read(MAX_RESPONSE + 1 - len(self._buffer))))
-        if len(self._buffer) > MAX_RESPONSE:
-            self._reason = "Ответ модели слишком большой. Автономный рассказ остаётся в журнале."
+        maximum = MAX_WORLD_RESPONSE_BYTES if self._kind == "world_seed" else MAX_RESPONSE
+        if len(self._buffer) > maximum:
+            return
+        self._buffer.extend(bytes(reply.read(maximum + 1 - len(self._buffer))))
+        if len(self._buffer) > maximum:
+            self._reason = (
+                "Ответ генератора мира слишком большой. Герой сохранён; мир не создан."
+                if self._kind == "world_seed"
+                else "Ответ модели слишком большой. Автономный рассказ остаётся в журнале."
+            )
             reply.abort()
 
     def _finished(self, reply):

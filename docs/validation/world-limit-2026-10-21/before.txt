@@ -1,0 +1,168 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 6 items
+
+tests/test_world_generation_limits.py FFFFF.                             [100%]
+
+=================================== FAILURES ===================================
+_ test_large_world_limit_reaches_api_without_extra_requests[parameters0-max_tokens] _
+
+creator = <rpg_vkr.ui.main_window.MainWindow(0x20b9d0c0) at 0x7feaf2e20c00>
+qt_app = <PySide6.QtWidgets.QApplication(0x20d96ec0) at 0x7feaf2e04f80>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feaf2ec9700>
+parameters = (), expected = 'max_tokens'
+
+    @pytest.mark.parametrize(
+        "parameters,expected",
+        [
+            ((), "max_tokens"),
+            (("max_tokens",), "max_tokens"),
+            (("max_completion_tokens",), "max_completion_tokens"),
+            (("max_tokens", "max_completion_tokens"), "max_tokens"),
+        ],
+    )
+    def test_large_world_limit_reaches_api_without_extra_requests(
+        creator, qt_app, monkeypatch, parameters, expected
+    ):
+        with router_server(world_seed=world_value()) as (url, records):
+            configure(creator, monkeypatch, url)
+            if parameters:
+                creator._routerai_quotes[MODEL] = ModelQuote(MODEL, None, None, parameters)
+            begin_world(creator)
+            wait_for(qt_app, lambda: not creator.ollama.busy)
+            assert creator._session.generated_world
+            posts = [r for r in records if r["method"] == "POST"]
+            assert len(posts) == 1
+>           assert posts[0]["body"][expected] == 65536
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'max_tokens'
+
+tests/test_world_generation_limits.py:49: KeyError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ test_large_world_limit_reaches_api_without_extra_requests[parameters1-max_tokens] _
+
+creator = <rpg_vkr.ui.main_window.MainWindow(0x21f7f7b0) at 0x7feaf2dc25c0>
+qt_app = <PySide6.QtWidgets.QApplication(0x20d96ec0) at 0x7feaf2e04f80>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feaf24ae330>
+parameters = ('max_tokens',), expected = 'max_tokens'
+
+    @pytest.mark.parametrize(
+        "parameters,expected",
+        [
+            ((), "max_tokens"),
+            (("max_tokens",), "max_tokens"),
+            (("max_completion_tokens",), "max_completion_tokens"),
+            (("max_tokens", "max_completion_tokens"), "max_tokens"),
+        ],
+    )
+    def test_large_world_limit_reaches_api_without_extra_requests(
+        creator, qt_app, monkeypatch, parameters, expected
+    ):
+        with router_server(world_seed=world_value()) as (url, records):
+            configure(creator, monkeypatch, url)
+            if parameters:
+                creator._routerai_quotes[MODEL] = ModelQuote(MODEL, None, None, parameters)
+            begin_world(creator)
+            wait_for(qt_app, lambda: not creator.ollama.busy)
+            assert creator._session.generated_world
+            posts = [r for r in records if r["method"] == "POST"]
+            assert len(posts) == 1
+>           assert posts[0]["body"][expected] == 65536
+E           assert 4500 == 65536
+
+tests/test_world_generation_limits.py:49: AssertionError
+_ test_large_world_limit_reaches_api_without_extra_requests[parameters2-max_completion_tokens] _
+
+creator = <rpg_vkr.ui.main_window.MainWindow(0x208f5ff0) at 0x7feaf2e28180>
+qt_app = <PySide6.QtWidgets.QApplication(0x20d96ec0) at 0x7feaf2e04f80>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feaf1a4e5d0>
+parameters = ('max_completion_tokens',), expected = 'max_completion_tokens'
+
+    @pytest.mark.parametrize(
+        "parameters,expected",
+        [
+            ((), "max_tokens"),
+            (("max_tokens",), "max_tokens"),
+            (("max_completion_tokens",), "max_completion_tokens"),
+            (("max_tokens", "max_completion_tokens"), "max_tokens"),
+        ],
+    )
+    def test_large_world_limit_reaches_api_without_extra_requests(
+        creator, qt_app, monkeypatch, parameters, expected
+    ):
+        with router_server(world_seed=world_value()) as (url, records):
+            configure(creator, monkeypatch, url)
+            if parameters:
+                creator._routerai_quotes[MODEL] = ModelQuote(MODEL, None, None, parameters)
+            begin_world(creator)
+            wait_for(qt_app, lambda: not creator.ollama.busy)
+            assert creator._session.generated_world
+            posts = [r for r in records if r["method"] == "POST"]
+            assert len(posts) == 1
+>           assert posts[0]["body"][expected] == 65536
+E           assert 4500 == 65536
+
+tests/test_world_generation_limits.py:49: AssertionError
+_ test_large_world_limit_reaches_api_without_extra_requests[parameters3-max_tokens] _
+
+creator = <rpg_vkr.ui.main_window.MainWindow(0x227a79d0) at 0x7feaf93f1e00>
+qt_app = <PySide6.QtWidgets.QApplication(0x20d96ec0) at 0x7feaf2e04f80>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feaf1a17c20>
+parameters = ('max_tokens', 'max_completion_tokens'), expected = 'max_tokens'
+
+    @pytest.mark.parametrize(
+        "parameters,expected",
+        [
+            ((), "max_tokens"),
+            (("max_tokens",), "max_tokens"),
+            (("max_completion_tokens",), "max_completion_tokens"),
+            (("max_tokens", "max_completion_tokens"), "max_tokens"),
+        ],
+    )
+    def test_large_world_limit_reaches_api_without_extra_requests(
+        creator, qt_app, monkeypatch, parameters, expected
+    ):
+        with router_server(world_seed=world_value()) as (url, records):
+            configure(creator, monkeypatch, url)
+            if parameters:
+                creator._routerai_quotes[MODEL] = ModelQuote(MODEL, None, None, parameters)
+            begin_world(creator)
+            wait_for(qt_app, lambda: not creator.ollama.busy)
+            assert creator._session.generated_world
+            posts = [r for r in records if r["method"] == "POST"]
+            assert len(posts) == 1
+>           assert posts[0]["body"][expected] == 65536
+E           assert 4500 == 65536
+
+tests/test_world_generation_limits.py:49: AssertionError
+______ test_complete_world_response_over_previous_256kb_limit_is_accepted ______
+
+creator = <rpg_vkr.ui.main_window.MainWindow(0x22243e80) at 0x7feaf01a7f00>
+qt_app = <PySide6.QtWidgets.QApplication(0x20d96ec0) at 0x7feaf2e04f80>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feaf017c350>
+
+    def test_complete_world_response_over_previous_256kb_limit_is_accepted(
+        creator, qt_app, monkeypatch
+    ):
+        with router_server(world_seed=large_world()) as (url, records):
+            configure(creator, monkeypatch, url)
+            begin_world(creator)
+            wait_for(qt_app, lambda: not creator.ollama.busy)
+>           assert creator._session.generated_world
+E           assert False
+E            +  where False = <rpg_vkr.application.Session object at 0x7feaf1a612b0>.generated_world
+E            +    where <rpg_vkr.application.Session object at 0x7feaf1a612b0> = <rpg_vkr.ui.main_window.MainWindow(0x22243e80) at 0x7feaf01a7f00>._session
+
+tests/test_world_generation_limits.py:75: AssertionError
+----------------------------- Captured stderr call -----------------------------
+QIODevice::read (QNetworkReplyHttpImpl): device not open
+=========================== short test summary info ============================
+FAILED tests/test_world_generation_limits.py::test_large_world_limit_reaches_api_without_extra_requests[parameters0-max_tokens]
+FAILED tests/test_world_generation_limits.py::test_large_world_limit_reaches_api_without_extra_requests[parameters1-max_tokens]
+FAILED tests/test_world_generation_limits.py::test_large_world_limit_reaches_api_without_extra_requests[parameters2-max_completion_tokens]
+FAILED tests/test_world_generation_limits.py::test_large_world_limit_reaches_api_without_extra_requests[parameters3-max_tokens]
+FAILED tests/test_world_generation_limits.py::test_complete_world_response_over_previous_256kb_limit_is_accepted
+========================= 5 failed, 1 passed in 4.27s ==========================

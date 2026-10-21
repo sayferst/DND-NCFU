@@ -48,3 +48,4 @@ docs/validation/windows-build-policy-2026-10-20.txt -text whitespace=-blank-at-e
 docs/validation/windows-resource-path-2026-10-20/*.txt -text whitespace=-blank-at-eol
 docs/validation/world-start-2026-10-21/*.txt -text whitespace=-blank-at-eol
 docs/research/USER_WORLD_BRIEF_2026-10-21.txt -text whitespace=-blank-at-eol
+docs/validation/world-limit-2026-10-21/*.txt -text whitespace=-blank-at-eol

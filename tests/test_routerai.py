@@ -47,6 +47,7 @@ def router_server(
     world_plans=None,
     writer_text=None,
     world_seed=None,
+    world_finish_reason="stop",
 ):
     records = []
     keys = [ALLOWANCE] if keys is None else keys
@@ -123,7 +124,13 @@ def router_server(
                 result = {
                     "model": MODEL,
                     "choices": [
-                        {"message": {"role": "assistant", "content": text}, "finish_reason": "stop"}
+                        {
+                            "message": {"role": "assistant", "content": text},
+                            "finish_reason": world_finish_reason
+                            if world_seed is not None
+                            and "Режим: новый мир" in body["messages"][0]["content"]
+                            else "stop",
+                        }
                     ],
                     "usage": {"input_tokens": 320, "output_tokens": 75, "total_tokens": 395},
                 }

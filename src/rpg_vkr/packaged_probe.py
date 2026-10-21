@@ -110,6 +110,7 @@ def world_creation_probe(app, root, seed):
     from PySide6.QtWidgets import QApplication
 
     from rpg_vkr.narrative import cloud, instructions, routerai
+    from rpg_vkr.narrative.limits import WORLD_OUTPUT_TOKENS, WORLD_TIMEOUT_MS
     from rpg_vkr.storage.slots import SaveSlots
     from rpg_vkr.ui.creation_dialog import CreationDialog
     from rpg_vkr.ui.main_window import MainWindow
@@ -176,6 +177,11 @@ def world_creation_probe(app, root, seed):
             if not session.generated_world or session.turns or len(calls) != 1:
                 raise ValueError("World creation did not finish before chat")
             genesis = json.loads(calls[0][1]["messages"][1]["content"])
+            if (
+                calls[0][1].get("max_tokens") != WORLD_OUTPUT_TOKENS
+                or window.ollama.timer.interval() != WORLD_TIMEOUT_MS
+            ):
+                raise ValueError("Packaged world output/time limit missing")
             if genesis["world_brief"] != brief or session.campaign.world_brief != brief:
                 raise ValueError("World brief changed during generation")
             window.submit_action()
