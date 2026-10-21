@@ -66,6 +66,58 @@ def cloudflared_path():
     )
 
 
+def tunnel_command(executable, port):
+    # HTTP/2 uses TCP7844 rather than QUIC/UDP7844. No Windows firewall changes.
+    return [
+        executable,
+        "tunnel",
+        "--protocol",
+        "http2",
+        "--url",
+        f"http://127.0.0.1:{port}",
+        "--no-autoupdate",
+    ]
+
+
+def read_tunnel_output(stream, urls, connections):
+    reported = set()
+    try:
+        for line in stream:
+            match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
+            if match:
+                urls.put(match.group())
+            if "Registered tunnel connection" in line:
+                connections.put(True)
+            lowered = line.lower()
+            categories = (
+                ("failed to dial", "Cloudflare: не удалось установить исходящее соединение."),
+                ("timeout", "Cloudflare: истекло время ожидания исходящего соединения."),
+                ("no such host", "Cloudflare: ошибка DNS при поиске узла туннеля."),
+                ("x509:", "Cloudflare: ошибка проверки TLS-сертификата."),
+                ("unable to reach the origin", "Cloudflare: локальный шлюз недоступен туннелю."),
+            )
+            for marker, message in categories:
+                if marker in lowered and marker not in reported:
+                    print(message, flush=True)
+                    reported.add(marker)
+    finally:
+        urls.put(None)
+        connections.put(False)
+
+
+def wait_for_tunnel_connection(connections):
+    try:
+        connected = connections.get(timeout=90)
+    except queue.Empty:
+        raise ValueError(
+            "cloudflared не подтвердил соединение HTTP/2 за90с. "
+            "Проверьте доступ cloudflared.exe к исходящему TCP7844 в вашей сети. "
+            "Входящий порт открывать не требуется."
+        ) from None
+    if not connected:
+        raise ValueError("cloudflared завершился до подключения к Cloudflare.")
+
+
 def signed_manifest(private, endpoint, sequence, now=None):
     now = int(time.time() if now is None else now)
     value = {
@@ -391,13 +443,7 @@ def host(root, store):
     process = None
     try:
         process = subprocess.Popen(
-            [
-                tunnel,
-                "tunnel",
-                "--url",
-                f"http://127.0.0.1:{server.server_port}",
-                "--no-autoupdate",
-            ],
+            tunnel_command(tunnel, server.server_port),
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -406,14 +452,10 @@ def host(root, store):
         )
         urls = queue.Queue()
 
-        def read():
-            for line in process.stdout:
-                match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
-                if match:
-                    urls.put(match.group())
-            urls.put(None)
-
-        reader = threading.Thread(target=read, daemon=True)
+        connections = queue.Queue()
+        reader = threading.Thread(
+            target=read_tunnel_output, args=(process.stdout, urls, connections), daemon=True
+        )
         reader.start()
         print("Шлюз запущен только на этом ПК. Ожидание HTTPS-туннеля…", flush=True)
         try:
@@ -422,6 +464,8 @@ def host(root, store):
             raise ValueError("Туннель не выдал адрес за 90 секунд.") from None
         if not endpoint:
             raise ValueError("cloudflared завершился до выдачи адреса.")
+        print("Адрес получен. Ожидаю соединение Cloudflare через HTTP/2 (TCP)…", flush=True)
+        wait_for_tunnel_connection(connections)
         sequence_path = root / "sequence.txt"
         previous = int(sequence_path.read_text()) if sequence_path.exists() else 0
         sequence = max(previous + 1, time.time_ns() // 1000000)

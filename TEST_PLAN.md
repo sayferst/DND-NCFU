@@ -1041,3 +1041,11 @@ Windows: git pull --ff-only; .\scripts\tester_host.cmd start. Проверка �
 Ruffcheck/formatOK214файлов. Полный набор повторять для host-only изменения
 не требуется; предыдущий1388passed относится к8913908. Windows/live tunnel
 не проверен. Владельцу gitpull/start; при неуспехе прислать последнюю строку.
+
+## 21.10.2026 — HTTP/2 туннеля
+
+Проверены HTTP/2 argv с loopback, адрес без регистрации, подтверждение соединения,
+тайм-аут90с и5фиксированных категорий логов без raw. 86passed/3.40с,
+raw docs/validation/host-http2-2026-10-21/target-01.txt. Полный игровой набор
+не повторяется для owner-only transport change (1388passed у8913908).
+Ручная проверка: pull/start, дождаться регистрации и успешного публичного health.
