@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1792615096252,
-  "issued": 1792615096,
-  "expires": 1795379896,
-  "endpoint": "https://imperial-forest-training-colony.trycloudflare.com/api/v1",
-  "signature": "XqFHRMAn4ePltfZHI8jYtVhuWfvQTtUE3jyq0oBF3eJzJrNkAzzZS+X95PkfMOXkNgNXDqa0PQ6ByuNyOvfADw=="
+  "sequence": 1792615396316,
+  "issued": 1792615396,
+  "expires": 1795380196,
+  "endpoint": "https://writer-dispatch-operators-showcase.trycloudflare.com/api/v1",
+  "signature": "3FWocQQ1QLVhe+hrUsBbHQhdTzIdO2nqZ20zpvJwMacrz8xsBvGYQH9nrJO1W1Da4rZ1DvKVTOOslsv4GR3oDA=="
 }
