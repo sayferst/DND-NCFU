@@ -2,6 +2,7 @@
 
 import argparse
 import base64
+import ctypes
 import json
 import os
 import queue
@@ -129,6 +130,110 @@ def wait_for_tunnel_connection(connections):
         ) from None
     if not connected:
         raise ValueError("cloudflared завершился до подключения к Cloudflare.")
+
+
+def inno_compiler():
+    """Find machine-wide, per-user and PATH installations without a broad disk scan."""
+    found = shutil.which("ISCC.exe")
+    candidates = [Path(found)] if found else []
+    roots = (
+        (os.environ.get("ProgramFiles(x86)"), "Inno Setup 6/ISCC.exe"),
+        (os.environ.get("ProgramFiles"), "Inno Setup 6/ISCC.exe"),
+        (os.environ.get("LOCALAPPDATA"), "Programs/Inno Setup 6/ISCC.exe"),
+    )
+    candidates.extend(Path(root) / relative for root, relative in roots if root)
+    for candidate in candidates:
+        try:
+            if candidate.is_file():
+                return str(candidate.resolve())
+        except OSError:
+            continue
+    return ""
+
+
+def host_process_alive(pid):
+    if type(pid) is not int or pid < 1:
+        return False
+    if os.name == "nt":
+        from ctypes import wintypes
+
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        kernel.OpenProcess.restype = wintypes.HANDLE
+        kernel.GetExitCodeProcess.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+        kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+        handle = kernel.OpenProcess(0x1000, False, pid)
+        if not handle:
+            return False
+        try:
+            code = wintypes.DWORD()
+            return bool(kernel.GetExitCodeProcess(handle, ctypes.byref(code))) and code.value == 259
+        finally:
+            kernel.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def build_preflight(root):
+    path = root / "host-ready.json"
+    if not path.is_file():
+        raise ValueError("Хост не запущен или не готов. Выполните start в отдельном окне.")
+    try:
+        if path.stat().st_size > 8192:
+            raise ValueError
+        ready = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(ready, dict) or not all(
+            key in ready for key in ("pid", "discovery", "verification_key", "sequence")
+        ):
+            raise ValueError
+    except (OSError, ValueError, TypeError, RecursionError):
+        raise ValueError("Повреждён host-ready.json. Перезапустите start.") from None
+    if not host_process_alive(ready["pid"]):
+        raise ValueError("Хост завершился. Запустите start и оставьте окно открытым.")
+    try:
+        discovery_url(ready["discovery"])
+        verified = fetch(ready["discovery"], ready["verification_key"], previous=ready["sequence"])
+    except (ValueError, OSError, TypeError, KeyError) as error:
+        raise ValueError(
+            "Проверка подписанного адреса GitHub: " + public_check_reason(error)
+        ) from None
+    try:
+        check_health(verified["endpoint"])
+    except (ValueError, OSError, TypeError, KeyError) as error:
+        raise ValueError(
+            "Сборка остановлена: публичный HTTPS-шлюз недоступен: "
+            + public_check_reason(error)
+            + ". Допуск не создавался. Оставьте start открытым и восстановите соединение."
+        ) from None
+    return ready
+
+
+BUILD_STAGES = {
+    "dependencies": "установка зависимостей",
+    "checks": "проверки проекта",
+    "pyinstaller": "создание EXE (PyInstaller)",
+    "bundle": "проверка содержимого EXE",
+    "self-check": "самопроверка EXE",
+    "smoke-test": "проверка запуска EXE",
+    "archive": "создание архива",
+    "inno": "компилятор Inno Setup",
+    "complete": "передача результата сборки",
+}
+
+
+def build_failure(report, code):
+    stage = "сборщик Windows"
+    try:
+        if report.stat().st_size <= 4096:
+            value = json.loads(report.read_text(encoding="utf-8-sig"))
+            if isinstance(value, dict) and isinstance(value.get("stage"), str):
+                stage = BUILD_STAGES.get(value["stage"], stage)
+    except (OSError, ValueError, TypeError, RecursionError):
+        pass
+    return ValueError(f"Сборка не завершена: {stage}, код {int(code)}. Подробности выше в консоли.")
 
 
 def signed_manifest(private, endpoint, sequence, now=None):
@@ -542,18 +647,12 @@ def build(root, store, identity):
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,60}", identity):
         raise ValueError("Имя допуска: латинские буквы, цифры, _ или -; до60знаков.")
     # Fail before issuing a grant if Inno Setup is missing; no hidden installation.
-    compiler = shutil.which("ISCC.exe") or str(
-        Path(os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)"))
-        / "Inno Setup 6/ISCC.exe"
-    )
-    if not Path(compiler).is_file():
+    compiler = inno_compiler()
+    if not compiler:
         raise ValueError(
             "Нужен Inno Setup6. Команда установки приведена в docs/TESTER_WITHOUT_DOMAIN.md."
         )
-    ready = json.loads((root / "host-ready.json").read_text(encoding="utf-8"))
-    discovery_url(ready["discovery"])
-    verified = fetch(ready["discovery"], ready["verification_key"], previous=ready["sequence"])
-    check_health(verified["endpoint"])
+    ready = build_preflight(root)
     path = root / ("activation-" + identity + ".bin")
     code = load_secret(path)
     if not code:
@@ -568,12 +667,17 @@ def build(root, store, identity):
         if not row or row["revoked"] or row["expires"] <= time.time():
             raise ValueError("Допуск отозван или истёк. Создайте нового тестировщика.")
     temporary = None
+    report = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", dir=root, delete=False, encoding="utf-8"
         ) as file:
             temporary = Path(file.name)
             json.dump({"code": code}, file)
+        with tempfile.NamedTemporaryFile(dir=root, suffix=".json", delete=False) as file:
+            report = Path(file.name)
+        setup = ROOT / "dist" / "DND-NCFU-Setup.exe"
+        before = (setup.stat().st_mtime_ns, setup.stat().st_size) if setup.is_file() else None
         command = [
             "powershell.exe",
             "-NoLogo",
@@ -591,19 +695,31 @@ def build(root, store, identity):
             ready["verification_key"],
             "-BootstrapFile",
             str(temporary),
+            "-InnoCompiler",
+            compiler,
+            "-BuildStatusFile",
+            str(report),
         ]
-        subprocess.run(command, cwd=ROOT, check=True)
-        setups = sorted((ROOT / "dist").glob("*Setup*.exe"), key=lambda p: p.stat().st_mtime)
-        if not setups:
-            raise ValueError("Сборщик не создал Setup.")
+        try:
+            subprocess.run(command, cwd=ROOT, check=True)
+        except subprocess.CalledProcessError as error:
+            raise build_failure(report, error.returncode) from None
+        except OSError:
+            raise ValueError("Не удалось запустить PowerShell-сборщик Windows.") from None
+        if not setup.is_file() or (setup.stat().st_mtime_ns, setup.stat().st_size) == before:
+            raise ValueError(
+                "Сборщик не создал новый DND-NCFU-Setup.exe. Старый Setup не передаётся."
+            )
         destination = ROOT / "dist" / ("Tester-" + identity)
         destination.mkdir(exist_ok=True)
-        shutil.copy2(setups[-1], destination / setups[-1].name)
-        print("Персональный Setup: " + str(destination / setups[-1].name))
+        shutil.copy2(setup, destination / setup.name)
+        print("Персональный Setup: " + str(destination / setup.name))
         print("Передавайте только этому человеку. Допуск:100₽/30дней с момента создания.")
     finally:
         if temporary:
             temporary.unlink(missing_ok=True)
+        if report:
+            report.unlink(missing_ok=True)
 
 
 def clipboard_key_text():

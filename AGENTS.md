@@ -1606,3 +1606,23 @@ cloudflared проверяется TCP7844; в argv --edge только пров
 Целевые105passed/3.98с, Ruff217файлов. LiveDoH среды агентаHTTP403; не заявлять
 живой успех наWindows. Это owner-only bootstrap, Setupне пересобирать. Полный
 игровой набор не повторяется; предыдущий1388passed у8913908. Владельцу pull/start.
+
+## 22.10.2026 — сборка персонального Setup после решения туннеля
+
+Последнее уточнение владельца: проблема туннеля решена, заниматься оставшейся
+сборкой. DNS/cloudflared не изменять в этом этапе. Сообщение про исчерпанный
+лимит относится к Codex/ChatGPT, не к RouterAI. Установленный Inno находится
+в LOCALAPPDATA/Programs/Inno Setup 6: оба сборщика теперь находят его там,
+в Program Files и PATH. Owner передаёт найденный абсолютный путь в PowerShell.
+Build preflight проверяет живость PID, подпись и публичный health до допуска.
+Ошибки сборки получают безопасную фиксированную категорию из временного stage
+JSON (dependencies/checks/pyinstaller/bundle/self-check/smoke-test/archive/inno).
+Не выбирать произвольный старый *Setup*.exe: передавать только обновлённый
+dist/DND-NCFU-Setup.exe. Пересборка использует прежний допуск и срок/расходы.
+Целевые81passed/6.45с. Native Windows/Inno здесь недоступны; не заявлять готовый
+Setup или прохождение семи критериев из вложения без фактической Windows-сборки.
+
+Итог testerbuild:1437passed/213.15с,0failed/skipped, scripts/check.py exit0,
+Ruffcheck/format218файлов. Raw validation/tester-build-2026-10-22/full-01.txt.
+16новых случаев,75защищённых хэшей прежние. После результата код не менять без
+новой причины; обычный commit/push и владельцу pull/build во втором окне.

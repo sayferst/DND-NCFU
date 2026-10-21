@@ -6,6 +6,8 @@ param(
     [string]$DiscoveryUrl = '',
     [string]$DiscoveryKey = '',
     [string]$BootstrapFile = '',
+    [string]$InnoCompiler = '',
+    [string]$BuildStatusFile = '',
     [string]$TextModel = '~deepseek/deepseek-v4-flash-latest'
 )
 $ErrorActionPreference = 'Stop'
@@ -15,6 +17,26 @@ if ($Profile -eq 'tester' -and !$DiscoveryUrl -and !$GatewayUrl.StartsWith('http
 if ($env:OS -ne 'Windows_NT' -or ![Environment]::Is64BitOperatingSystem) {
     throw 'Сборка требует Windows x64.'
 }
+function Set-BuildStage([string]$Stage) {
+    if ($BuildStatusFile) {
+        @{ stage = $Stage } | ConvertTo-Json -Compress |
+            Set-Content -LiteralPath $BuildStatusFile -Encoding UTF8
+    }
+}
+if ($Installer) {
+    Set-BuildStage 'inno'
+    $compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+    $candidates = @(
+        $InnoCompiler,
+        $(if ($compiler) { $compiler.Source }),
+        $(if (${env:ProgramFiles(x86)}) { Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe' }),
+        $(if ($env:ProgramFiles) { Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe' }),
+        $(if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe' })
+    ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) }
+    $iscc = $candidates | Select-Object -First 1
+    if (!$iscc) { throw 'Inno Setup 6 не найден в PATH, Program Files или LOCALAPPDATA\Programs.' }
+}
+Set-BuildStage 'dependencies'
 Set-Location (Split-Path $PSScriptRoot -Parent)
 $python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
 if (!(Test-Path $python)) {
@@ -25,6 +47,7 @@ if (!(Test-Path $python)) {
 if ($LASTEXITCODE -ne 0) { throw 'Нужно окружение .venv с Python 3.12 x64.' }
 & $python -m pip install --no-cache-dir --require-hashes -r requirements-build.lock
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось установить проверенные зависимости сборки.' }
+Set-BuildStage 'checks'
 & $python scripts\repair_fixture_checkout.py
 if ($LASTEXITCODE -ne 0) { throw 'Ошибка проверки исходных фикстур.' }
 & $python scripts\check.py
@@ -47,6 +70,7 @@ try {
     $env:DND_BUILD_PROFILE = $Profile
     $env:DND_GATEWAY_URL = $GatewayUrl
     $env:DND_TEXT_MODEL = $TextModel
+    Set-BuildStage 'pyinstaller'
     & $python -m PyInstaller --clean --noconfirm --distpath (Join-Path $stage 'dist') --workpath (Join-Path $stage 'work') DND-NCFU.spec
 } finally {
     $env:DND_DISCOVERY_URL = $oldDiscoveryUrl
@@ -59,6 +83,7 @@ try {
 if ($LASTEXITCODE -ne 0) { throw 'PyInstaller не создал пакет.' }
 $bundle = Join-Path $stage 'dist\DND-NCFU'
 $exe = Join-Path $bundle 'DND-NCFU.exe'
+Set-BuildStage 'bundle'
 & $python scripts\release_tools.py verify --folder $bundle | Out-File (Join-Path $checks 'bundle.json') -Encoding utf8
 if ($LASTEXITCODE -ne 0) { throw 'Состав Windows-пакета не прошёл проверку.' }
 # Launch outside checkout, with no Python/venv on PATH. The smoke test uses temporary data.
@@ -72,6 +97,7 @@ try {
     $env:PYTHONHOME = ''
     $env:RPG_VKR_DATA_DIR = Join-Path $checks 'temporary-user-data'
     foreach ($mode in @('self-check','smoke-test')) {
+        Set-BuildStage $mode
         $report = Join-Path $checks ($mode + '.json')
         $process = Start-Process -FilePath $exe -WorkingDirectory $checks `
             -ArgumentList @("--$mode", '--report', ('"' + $report + '"')) -PassThru
@@ -90,6 +116,7 @@ try {
     $env:PYTHONPATH = $oldPythonPath
     $env:PYTHONHOME = $oldPythonHome
 }
+Set-BuildStage 'archive'
 $archiveName = "DND-NCFU-Windows-x64-v$version.zip"
 $archive = Join-Path $stage $archiveName
 & $python scripts\release_tools.py archive --folder $bundle --output $archive --checks $checks
@@ -108,12 +135,11 @@ Move-Item -LiteralPath $bundle -Destination $dist
 Move-Item -LiteralPath $archive -Destination $dist
 Move-Item -LiteralPath ($archive + '.sha256') -Destination $dist
 if ($Installer) {
-    $compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
-    $iscc = if ($compiler) { $compiler.Source } else { Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe' }
-    if (!(Test-Path $iscc)) { throw 'Portable готова. Для установщика установите Inno Setup 6 и повторите с -Installer.' }
+    Set-BuildStage 'inno'
     & $iscc ("/DAppVersion=" + $version) ("/DBundleDir=" + (Join-Path $dist 'DND-NCFU')) ("/DReleaseDir=" + $dist) installer\DND-NCFU.iss
     if ($LASTEXITCODE -ne 0) { throw 'Portable готова, установщик не собран.' }
 }
+Set-BuildStage 'complete'
 Write-Host "Готово: $(Join-Path $dist 'DND-NCFU\DND-NCFU.exe')"
 Write-Host "ZIP: $(Join-Path $dist $archiveName)"
 Write-Host 'Переносите всю папку. Пользовательские данные не изменялись.'
