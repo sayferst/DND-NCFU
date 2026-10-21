@@ -196,6 +196,8 @@ def fake_bundle(tmp_path):
     [
         ".env",
         "artist-credential.bin",
+        "tester-access.bin",
+        "developer-access.json",
         "master_system_prompt.local.txt",
         "slot-1.json",
         "campaigns.sqlite3",

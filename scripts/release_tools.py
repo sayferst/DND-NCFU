@@ -208,6 +208,7 @@ def verify_bundle(folder, *, windows=True):
             )
             or path.name.startswith(".env")
             or "credential.bin" in path.name
+            or path.name in {"tester-access.bin", "developer-access.json"}
             or path.name.endswith(".local.txt")
             or re.fullmatch(r"slot-[123]\.json", path.name)
             or path.suffix in {".sqlite3", ".sqlite", ".db"}
