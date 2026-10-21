@@ -724,6 +724,15 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             return
         if hasattr(self, "visuals"):
             self.visuals.close()
+        if hasattr(self, "motion"):
+            self.motion.stop()
+            for glow in self.button_glows:
+                glow.animation.stop()
+                glow.button.removeEventFilter(glow)
+            self.notifications.timer.stop()
+            self.notifications.fade.stop()
+        if hasattr(self, "developer_console") and hasattr(self.developer_console, "gateway_client"):
+            self.developer_console.gateway_client.cancel()
         self._closing = True
         self.routerai_catalog.cancel()
         self.routerai_key_client.cancel()

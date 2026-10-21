@@ -38,9 +38,9 @@ class Motion(QObject):
             self.overlay.deleteLater()
             self.overlay = None
 
-    def reveal(self, widget):
+    def reveal(self, widget, previous=None):
         self.stop()
-        previous, self.last_page = self.last_page, widget
+        previous, self.last_page = previous or self.last_page, widget
         mode = getattr(self.window, "animation_mode", None)
         if (mode and mode.currentIndex() == 2) or system_reduced_motion() or not widget.isVisible():
             return
@@ -64,3 +64,52 @@ class Motion(QObject):
         self.animation.setEasingCurve(QEasingCurve.Type.OutCubic)
         self.animation.finished.connect(self.stop)
         self.animation.start()
+
+
+class ButtonGlow(QObject):
+    """One short hover effect per button, idle when hidden or outside the pointer."""
+
+    def __init__(self, button, window):
+        super().__init__(button)
+        self.button, self.window = button, window
+        self.glow = QLabel(button)
+        self.glow.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.glow.setStyleSheet(
+            "background:transparent; border:1px solid #d8b578; border-radius:6px;"
+        )
+        self.effect = QGraphicsOpacityEffect(self.glow)
+        self.glow.setGraphicsEffect(self.effect)
+        self.effect.setOpacity(0)
+        self.animation = QPropertyAnimation(self.effect, b"opacity", self)
+        self.animation.setDuration(120)
+        self.animation.finished.connect(self.finished)
+        self.glow.hide()
+        button.installEventFilter(self)
+
+    def finished(self):
+        if self.effect.opacity() == 0:
+            self.glow.hide()
+
+    def eventFilter(self, watched, event):
+        from PySide6.QtCore import QEvent
+        from shiboken6 import isValid
+
+        if not all(
+            isValid(obj)
+            for obj in (self.window, self.window.animation_mode, self.glow, self.animation)
+        ):
+            return False
+
+        mode = self.window.animation_mode.currentIndex()
+        if event.type() == QEvent.Type.Hide or mode == 2 or system_reduced_motion():
+            self.animation.stop()
+            self.glow.hide()
+            return False
+        if event.type() in (QEvent.Type.Enter, QEvent.Type.Leave) and self.button.isEnabled():
+            self.animation.stop()
+            self.glow.setGeometry(self.button.rect())
+            self.glow.show()
+            self.animation.setStartValue(self.effect.opacity())
+            self.animation.setEndValue(0.6 if event.type() == QEvent.Type.Enter else 0)
+            self.animation.start()
+        return False

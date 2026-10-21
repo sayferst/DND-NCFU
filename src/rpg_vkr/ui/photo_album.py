@@ -50,6 +50,7 @@ class PhotoAlbum(QWidget):
         self.empty.setWordWrap(True)
         layout.addWidget(self.empty)
         self.list = QListWidget()
+        self.list.setObjectName("albumCards")
         self.list.setAccessibleName("Иллюстрации текущего приключения")
         self.list.setViewMode(QListWidget.ViewMode.IconMode)
         self.list.setResizeMode(QListWidget.ResizeMode.Adjust)

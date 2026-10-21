@@ -75,6 +75,12 @@ def apply_theme(widget, theme="Системная"):
             selection-color: $text; }
         QListWidget::item:selected, QTableWidget::item:selected {
             background: $hover; color: $text; }
+        QListWidget#knowledgeCards::item, QListWidget#albumCards::item {
+            background: $panel; border: 1px solid $border; border-radius: 8px; padding: 5px; }
+        QListWidget#knowledgeCards::item:hover, QListWidget#albumCards::item:hover {
+            border-color: $gold; background: $hover; }
+        QListWidget#knowledgeCards::item:selected, QListWidget#albumCards::item:selected {
+            border: 2px solid $gold; background: $hover; }
         QComboBox { padding-right: 26px; }
         QComboBox QAbstractItemView { background: $panel; color: $text; }
         QHeaderView::section { background: $panel; color: $gold; border: none; padding: 8px; }

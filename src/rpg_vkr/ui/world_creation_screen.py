@@ -33,6 +33,7 @@ class WorldCreationScreen(QWidget):
         self.setObjectName("worldCreationScreen")
         self.atlas = QPixmap(str(resource_path("rpg_vkr/ui/assets/world-creation-atlas.png")))
         self.state = "ready"
+        self.motion_enabled = True
         self.session = None
         self._random = random.Random()
         self._phrase_index = -1
@@ -157,7 +158,8 @@ class WorldCreationScreen(QWidget):
         self.update()
 
     def showEvent(self, event):
-        self.timer.start()
+        if self.motion_enabled:
+            self.timer.start()
         super().showEvent(event)
 
     def hideEvent(self, event):
@@ -175,7 +177,7 @@ class WorldCreationScreen(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
-        seconds = self.elapsed.elapsed() / 1000
+        seconds = self.elapsed.elapsed() / 1000 if self.motion_enabled else 0
         painter.fillRect(self.rect(), QColor("#0b1720"))
         if not self.atlas.isNull():
             panel_height = self.atlas.height() / 3

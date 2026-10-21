@@ -63,6 +63,11 @@ class SectionTabs(QTabBar):
 
 
 def install_section_tabs(window):
+    from PySide6.QtWidgets import QPushButton
+
+    from rpg_vkr.ui.motion import ButtonGlow, system_reduced_motion
+    from rpg_vkr.ui.notifications import Notifications
+
     window.section_tabs = SectionTabs(window)
     row = window.navigation_bar.layout()
     # Compatibility picker is retained only for old programmatic navigation, never displayed.
@@ -76,3 +81,10 @@ def install_section_tabs(window):
     window.motion = Motion(window)
     window.tabs.currentChanged.connect(lambda _: window.motion.reveal(window.tabs.currentWidget()))
     window._content_layout.setSpacing(6)
+    window.button_glows = [
+        ButtonGlow(button, window) for button in window.findChildren(QPushButton)
+    ]
+    window.notifications = Notifications(window)
+    window.world_creation_screen.motion_enabled = (
+        window.animation_mode.currentIndex() != 2 and not system_reduced_motion()
+    )

@@ -36,3 +36,24 @@ def test_visible_tabs_keep_draft_rng_and_scroll_with_fast_keyboard_changes(qt_ap
     finally:
         window.action_input.clear()
         window.close()
+
+
+def test_disabled_motion_and_persistent_notice(qt_app, tmp_path):
+    window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+    window.show()
+    try:
+        window.animation_mode.setCurrentIndex(2)
+        window.show_world_creation()
+        qt_app.processEvents()
+        assert not window.world_creation_screen.timer.isActive()
+        window.open_section("Приключение")
+        window.statusBar().showMessage("Ошибка сети: мастер недоступен")
+        notice = window.notifications
+        assert notice.isVisible() and notice.persistent and not notice.timer.isActive()
+        window.statusBar().showMessage("Сохранено")
+        assert "Ошибка" in notice.message.text()
+        notice.dismiss()
+        assert not notice.isVisible()
+        assert all(not glow.animation.state().value for glow in window.button_glows)
+    finally:
+        window.close()

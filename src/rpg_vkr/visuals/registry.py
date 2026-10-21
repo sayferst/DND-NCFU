@@ -274,6 +274,13 @@ class VisualRegistry:
             latest.setdefault(row["subject"], row)
         return list(latest.values())
 
+    def asset_revision(self, campaign):
+        with closing(self.connect()) as db:
+            row = db.execute(
+                "SELECT COUNT(*),MAX(created) FROM assets WHERE campaign=?", (campaign,)
+            ).fetchone()
+        return tuple(row)
+
     def latest_for(self, campaign, entity):
         with closing(self.connect()) as db:
             row = db.execute(

@@ -5,7 +5,7 @@ from html import escape
 from pathlib import Path
 
 from PySide6.QtCore import QEvent, QSize, Qt
-from PySide6.QtGui import QFont, QIcon, QPixmap
+from PySide6.QtGui import QColor, QFont, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QBoxLayout,
     QComboBox,
@@ -77,6 +77,9 @@ class ChroniclesPanel(QWidget):
         self.entries = ()
         self._token = None
         self._session = None
+        self._thumbnails = {}
+        self._image_token = None
+        self._placeholders = {}
         layout = QVBoxLayout(self)
         eyebrow = QLabel("ЗНАНИЯ ВАШЕГО ГЕРОЯ")
         eyebrow.setProperty("eyebrow", True)
@@ -116,6 +119,7 @@ class ChroniclesPanel(QWidget):
         self.sort.addItems(["По названию", "Последние встречи"])
         self.refinements.addWidget(self.sort)
         self.list = EntryList()
+        self.list.setObjectName("knowledgeCards")
         self.list.setAccessibleName("Известные объекты; стрелки — выбор, Enter — карточка")
         self.list.setSpacing(5)
         self.list.setWordWrap(True)
@@ -176,7 +180,7 @@ class ChroniclesPanel(QWidget):
         self.expand_card.hide()
         self.detail.setFocus()
         if hasattr(self.window, "motion"):
-            self.window.motion.reveal(self.detail)
+            self.window.motion.reveal(self.detail, previous=self.list)
 
     def back(self):
         self.stack.setCurrentIndex(0)
@@ -184,7 +188,7 @@ class ChroniclesPanel(QWidget):
         self.expand_card.show()
         self.list.setFocus()
         if hasattr(self.window, "motion"):
-            self.window.motion.reveal(self.list)
+            self.window.motion.reveal(self.list, previous=self.detail)
 
     def describe_object(self):
         item = self.list.currentItem()
@@ -341,9 +345,11 @@ class ChroniclesPanel(QWidget):
                 CampaignRepository.identity(self.window._session), entry.key
             )
             if asset:
+                if asset["id"] in self._thumbnails:
+                    return self._thumbnails[asset["id"]]
                 try:
                     image = QPixmap(str(registry.asset_path(asset)))
-                    return QIcon(
+                    icon = QIcon(
                         image.scaled(
                             180,
                             125,
@@ -351,9 +357,32 @@ class ChroniclesPanel(QWidget):
                             Qt.TransformationMode.SmoothTransformation,
                         )
                     )
+                    if len(self._thumbnails) >= 512:
+                        self._thumbnails.pop(next(iter(self._thumbnails)))
+                    self._thumbnails[asset["id"]] = icon
+                    return icon
                 except (OSError, ValueError):
                     pass
-        return category_icon(entry.category)
+        if entry.category not in self._placeholders:
+            tile = QPixmap(180, 125)
+            tile.fill(QColor("#182d38"))
+            painter = QPainter(tile)
+            painter.drawPixmap(58, 30, category_icon(entry.category).pixmap(64, 64))
+            painter.end()
+            self._placeholders[entry.category] = QIcon(tile)
+        return self._placeholders[entry.category]
+
+    def refresh_images(self):
+        from rpg_vkr.storage.campaigns import CampaignRepository
+
+        campaign = CampaignRepository.identity(self.window._session)
+        token = campaign, self.window.visuals.registry.asset_revision(campaign)
+        if token == self._image_token:
+            return
+        self._image_token = token
+        for row in range(self.list.count()):
+            item = self.list.item(row)
+            item.setIcon(self.thumbnail(item.data(Qt.ItemDataRole.UserRole)))
 
     def select(self, item):
         self.describe_button.setVisible(

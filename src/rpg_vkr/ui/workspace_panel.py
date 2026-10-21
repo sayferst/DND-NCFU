@@ -388,6 +388,20 @@ class WorkspaceActions:
         )
         if hasattr(self, "motion"):
             self.motion.stop()
+            for glow in self.button_glows:
+                glow.animation.stop()
+                glow.glow.hide()
+        if hasattr(self, "world_creation_screen"):
+            from rpg_vkr.ui.motion import system_reduced_motion
+
+            screen = self.world_creation_screen
+            screen.motion_enabled = preferences.animations != 2 and not system_reduced_motion()
+            screen.timer.setInterval(100 if preferences.animations == 1 else 33)
+            if screen.motion_enabled and screen.isVisible():
+                screen.timer.start()
+            else:
+                screen.timer.stop()
+            screen.update()
         self._apply_reading(preferences)
         try:
             save_preferences(self._preferences_path, preferences)
@@ -406,6 +420,9 @@ class WorkspaceActions:
         self.bold_text.setChecked(True)
         self.bold_text.blockSignals(False)
         self.theme_choice.setCurrentText("Системная")
+        self.animation_mode.blockSignals(True)
+        self.animation_mode.setCurrentIndex(0)
+        self.animation_mode.blockSignals(False)
         self.font_size.blockSignals(False)
         self.theme_choice.blockSignals(False)
         self._change_reading()
