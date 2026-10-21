@@ -353,7 +353,15 @@ def smoke_test(app):
                 window.show()
                 app.processEvents()
                 sections = [window.tabs.tabText(i) for i in range(window.tabs.count())]
-                for section in ("Главное меню", "Герой", "Хроники мира", "Мастер", "Художник"):
+                window.developer_console.access.login("995539")
+                for section in (
+                    "Главное меню",
+                    "Герой",
+                    "Хроники мира",
+                    "Фотоальбом",
+                    "Мастер",
+                    "Художник",
+                ):
                     window.open_section(section)
                     app.processEvents()
                     if window.tabs.tabText(window.tabs.currentIndex()) != section:

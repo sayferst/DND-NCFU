@@ -276,6 +276,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             from rpg_vkr.ui.developer_panel import install_developer
 
             install_developer(self)
+            from rpg_vkr.ui.photo_album import PhotoAlbum
+
+            self.photo_album = PhotoAlbum(self)
+            self.tabs.addTab(self.photo_album, "Фотоальбом")
+            if hasattr(self, "visuals"):
+                self.visuals.changed.connect(self.photo_album.refresh)
             from rpg_vkr.ui.section_tabs import install_section_tabs
 
             install_section_tabs(self)
@@ -421,6 +427,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             from rpg_vkr.ui.adventure_panel import refresh_world_start
 
             refresh_world_start(self)
+        if hasattr(self, "photo_album"):
+            self.photo_album.refresh()
         self._persist_campaign()
         if hasattr(self, "diary_list"):
             from rpg_vkr.ui.adventure_panel import refresh_diary
