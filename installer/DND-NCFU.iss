@@ -12,6 +12,7 @@
 AppId={{29C2AC1B-534A-493D-9E35-1F32F05AFB9E}
 AppName=DND-NCFU — Хроники забытых королевств
 AppVersion={#AppVersion}
+AppVerName=DND-NCFU {#AppVersion} — закрытое тестирование
 AppPublisher=Проект DND-NCFU
 DefaultDirName={localappdata}\Programs\DND-NCFU
 DefaultGroupName=DND-NCFU

@@ -11,7 +11,11 @@ from rpg_vkr.resources import REQUIRED_RESOURCES, RESOURCE_ROOT, data_directory,
 
 
 def check_resources(progress=lambda value, label: None):
+    from dataclasses import asdict
+
     from PySide6.QtGui import QImage
+
+    from rpg_vkr.deployment import load_release_profile
 
     checks = []
     for i, relative in enumerate(REQUIRED_RESOURCES):
@@ -49,6 +53,7 @@ def check_resources(progress=lambda value, label: None):
         "ok": True,
         "mode": "self-check",
         "version": VERSION,
+        "release_profile": asdict(load_release_profile()),
         "platform": platform.platform(),
         "python": platform.python_version(),
         "frozen": bool(getattr(sys, "frozen", False)),

@@ -6,6 +6,15 @@ on:
         description: Also build optional installer (requires Inno Setup on runner)
         type: boolean
         default: false
+      profile:
+        description: Release profile
+        type: choice
+        options: [developer, tester]
+        default: developer
+      gateway_url:
+        description: Public HTTPS gateway URL (required for tester; no secrets)
+        type: string
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -22,12 +31,14 @@ jobs:
         shell: powershell
         env:
           BUILD_INSTALLER: ${{ inputs.installer }}
+          BUILD_PROFILE: ${{ inputs.profile }}
+          BUILD_GATEWAY_URL: ${{ inputs.gateway_url }}
         run: |
+          $parameters = @{ Profile = $env:BUILD_PROFILE; GatewayUrl = $env:BUILD_GATEWAY_URL }
           if ($env:BUILD_INSTALLER -eq 'true') {
-            & .\scripts\build_windows.ps1 -Installer
-          } else {
-            & .\scripts\build_windows.ps1
+            $parameters.Installer = $true
           }
+          & .\scripts\build_windows.ps1 @parameters
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Upload checked package and build reports
         if: success()

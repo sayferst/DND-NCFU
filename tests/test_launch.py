@@ -29,7 +29,8 @@ def interact():
         assert window.isVisible()
         assert window.windowTitle() == 'DND-NCFU — Хроники забытых королевств'
         assert not window.windowIcon().isNull()
-        assert app.applicationVersion() == '0.2.0'
+        from rpg_vkr.build_info import VERSION
+        assert app.applicationVersion() == VERSION
         assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
         window.resume_button.click()
         window.resume_session()

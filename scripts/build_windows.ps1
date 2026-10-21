@@ -1,6 +1,14 @@
 ﻿# Reproducible developer build. No model calls, user-data migration or credentials.
-param([switch]$Installer)
+param(
+    [switch]$Installer,
+    [ValidateSet('developer', 'tester')][string]$Profile = 'developer',
+    [string]$GatewayUrl = '',
+    [string]$TextModel = 'deepseek/deepseek-v4-flash-latest'
+)
 $ErrorActionPreference = 'Stop'
+if ($Profile -eq 'tester' -and !$GatewayUrl.StartsWith('https://')) {
+    throw 'Tester Build: укажите реальный HTTPS-адрес игрового сервиса через -GatewayUrl. Ключ API не передавайте.'
+}
 if ($env:OS -ne 'Windows_NT' -or ![Environment]::Is64BitOperatingSystem) {
     throw 'Сборка требует Windows x64.'
 }
@@ -23,7 +31,19 @@ $stamp = (Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + [Guid]::NewGuid().ToSt
 $stage = Join-Path (Get-Location) ('build\windows-' + $stamp)
 $checks = Join-Path $stage 'checks'
 New-Item -ItemType Directory -Path $checks -Force | Out-Null
-& $python -m PyInstaller --clean --noconfirm --distpath (Join-Path $stage 'dist') --workpath (Join-Path $stage 'work') DND-NCFU.spec
+$oldBuildProfile = $env:DND_BUILD_PROFILE
+$oldGatewayUrl = $env:DND_GATEWAY_URL
+$oldTextModel = $env:DND_TEXT_MODEL
+try {
+    $env:DND_BUILD_PROFILE = $Profile
+    $env:DND_GATEWAY_URL = $GatewayUrl
+    $env:DND_TEXT_MODEL = $TextModel
+    & $python -m PyInstaller --clean --noconfirm --distpath (Join-Path $stage 'dist') --workpath (Join-Path $stage 'work') DND-NCFU.spec
+} finally {
+    $env:DND_BUILD_PROFILE = $oldBuildProfile
+    $env:DND_GATEWAY_URL = $oldGatewayUrl
+    $env:DND_TEXT_MODEL = $oldTextModel
+}
 if ($LASTEXITCODE -ne 0) { throw 'PyInstaller не создал пакет.' }
 $bundle = Join-Path $stage 'dist\DND-NCFU'
 $exe = Join-Path $bundle 'DND-NCFU.exe'

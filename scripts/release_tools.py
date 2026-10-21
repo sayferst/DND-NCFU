@@ -3,11 +3,13 @@
 import argparse
 import hashlib
 import json
+import os
 import platform
 import re
 import shutil
 import ssl
 import struct
+import subprocess
 import sys
 import sysconfig
 import zipfile
@@ -22,6 +24,35 @@ def identity():
     from rpg_vkr import build_info
 
     return build_info
+
+
+def prepare_release_profile(output):
+    from dataclasses import asdict
+
+    from rpg_vkr.deployment import ReleaseProfile
+
+    mode = os.environ.get("DND_BUILD_PROFILE", "developer")
+    gateway = os.environ.get("DND_GATEWAY_URL", "")
+    if mode == "tester" and not gateway.startswith("https://"):
+        raise ValueError("Tester Build requires the real HTTPS gateway address, never an API key")
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short=12", "HEAD"], cwd=ROOT, text=True
+        ).strip()
+        if subprocess.check_output(["git", "diff", "--name-only", "HEAD"], cwd=ROOT):
+            commit += "-modified"
+    except (OSError, subprocess.CalledProcessError):
+        commit = "unknown"
+    profile = ReleaseProfile(
+        mode,
+        gateway,
+        os.environ.get("DND_TEXT_MODEL", "deepseek/deepseek-v4-flash-latest"),
+        commit,
+    )
+    output = Path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(asdict(profile), indent=2), encoding="utf-8")
+    return output
 
 
 def prepare_licenses(output):
@@ -140,6 +171,9 @@ def pe_gui_x64(path):
 
 
 def verify_bundle(folder, *, windows=True):
+    from dataclasses import asdict
+
+    from rpg_vkr.deployment import ReleaseProfile
     from rpg_vkr.resources import REQUIRED_RESOURCES
 
     folder = Path(folder).resolve()
@@ -148,6 +182,15 @@ def verify_bundle(folder, *, windows=True):
     exe = folder / ("DND-NCFU.exe" if windows else "DND-NCFU")
     if not exe.is_file() or (windows and not pe_gui_x64(exe)):
         raise ValueError("Missing x64 windowed application")
+    release_profile = None
+    config = folder / "_internal" / "release-profile.json"
+    if config.exists():
+        value = json.loads(config.read_text(encoding="utf-8"))
+        release_profile = asdict(ReleaseProfile(**value))
+        if release_profile["mode"] == "tester" and not release_profile["gateway"].startswith(
+            "https://"
+        ):
+            raise ValueError("Tester package has no HTTPS service")
     for relative in REQUIRED_RESOURCES:
         if not (folder / "_internal" / relative).is_file():
             raise ValueError("Missing bundled resource: " + relative)
@@ -198,6 +241,7 @@ def verify_bundle(folder, *, windows=True):
     return {
         "version": identity().VERSION,
         "target": "windows-x64" if windows else "linux-test-only",
+        "release_profile": release_profile,
         "files": files,
     }
 
