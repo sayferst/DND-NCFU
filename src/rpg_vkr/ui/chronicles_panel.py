@@ -4,12 +4,11 @@ import json
 from html import escape
 from pathlib import Path
 
-from PySide6.QtCore import QEvent, Qt
-from PySide6.QtGui import QFont
+from PySide6.QtCore import QEvent, QSize, Qt
+from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QBoxLayout,
     QComboBox,
-    QDialog,
     QFileDialog,
     QHBoxLayout,
     QLabel,
@@ -17,7 +16,8 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QPushButton,
-    QSplitter,
+    QStackedWidget,
+    QTabBar,
     QTextBrowser,
     QToolTip,
     QVBoxLayout,
@@ -81,29 +81,33 @@ class ChroniclesPanel(QWidget):
         eyebrow = QLabel("ЗНАНИЯ ВАШЕГО ГЕРОЯ")
         eyebrow.setProperty("eyebrow", True)
         layout.addWidget(eyebrow)
-        heading = QLabel("Хроники мира")
+        heading = QLabel("Энциклопедия мира")
         heading.setProperty("heading", True)
         layout.addWidget(heading)
         self.summary = QLabel()
         self.summary.setWordWrap(True)
         layout.addWidget(self.summary)
-        self.splitter = QSplitter()
-        self.splitter.setChildrenCollapsible(False)
-        layout.addWidget(self.splitter, 1)
+        self.category_tabs = QTabBar()
+        self.category_tabs.setObjectName("sectionTabs")
+        self.category_tabs.setExpanding(False)
+        self.category_tabs.setUsesScrollButtons(True)
+        self.category_tabs.setAccessibleName("Категории энциклопедии")
+        layout.addWidget(self.category_tabs)
         self.filters = QWidget()
         left = QVBoxLayout(self.filters)
-        left.setContentsMargins(0, 8, 8, 0)
+        left.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self.filters)
         self.search = QLineEdit()
         self.search.setPlaceholderText("Поиск в известных сведениях")
         self.search.setAccessibleName("Поиск в Хрониках мира")
         left.addWidget(self.search)
         self.categories = QListWidget()
         self.categories.setAccessibleName("Разделы Хроник мира")
-        left.addWidget(self.categories, 1)
+        self.categories.hide()
         self.compact_categories = QComboBox()
         self.compact_categories.setAccessibleName("Разделы Хроник мира в небольшом окне")
-        left.addWidget(self.compact_categories)
-        self.refinements = QBoxLayout(QBoxLayout.Direction.TopToBottom)
+        self.compact_categories.hide()
+        self.refinements = QBoxLayout(QBoxLayout.Direction.LeftToRight)
         left.addLayout(self.refinements)
         self.state = QComboBox()
         self.state.addItems(["Все знания", "Рядом", "Содержит слухи", "Частично известно"])
@@ -111,12 +115,19 @@ class ChroniclesPanel(QWidget):
         self.sort = QComboBox()
         self.sort.addItems(["По названию", "Последние встречи"])
         self.refinements.addWidget(self.sort)
-        self.splitter.addWidget(self.filters)
         self.list = EntryList()
         self.list.setAccessibleName("Известные объекты; стрелки — выбор, Enter — карточка")
         self.list.setSpacing(5)
         self.list.setWordWrap(True)
-        self.splitter.addWidget(self.list)
+        self.list.setViewMode(QListWidget.ViewMode.IconMode)
+        self.list.setResizeMode(QListWidget.ResizeMode.Adjust)
+        self.list.setMovement(QListWidget.Movement.Static)
+        self.list.setGridSize(QSize(205, 205))
+        self.list.setIconSize(QSize(180, 125))
+        self.list.setUniformItemSizes(True)
+        self.stack = QStackedWidget()
+        self.stack.addWidget(self.list)
+        layout.addWidget(self.stack, 1)
         self.detail = QTextBrowser()
         self.detail.setOpenExternalLinks(False)
         self.detail.setAccessibleName("Полная карточка знаний героя")
@@ -127,8 +138,11 @@ class ChroniclesPanel(QWidget):
         )
         for control in (self.list, self.categories, self.search, self.state, self.sort):
             control.setFont(QFont("Segoe UI", 11))
-        self.splitter.addWidget(self.detail)
-        self.splitter.setSizes([200, 290, 560])
+        self.stack.addWidget(self.detail)
+        self.back_button = QPushButton("← Вернуться к записям")
+        self.back_button.clicked.connect(self.back)
+        layout.addWidget(self.back_button)
+        self.back_button.hide()
         row = QHBoxLayout()
         self.status = QLabel()
         self.status.setWordWrap(True)
@@ -145,6 +159,8 @@ class ChroniclesPanel(QWidget):
         row.addWidget(self.export_button)
         layout.addLayout(row)
         self.categories.currentRowChanged.connect(lambda _: self.filter())
+        self.category_tabs.currentChanged.connect(self.categories.setCurrentRow)
+        self.list.itemClicked.connect(lambda _: self.open_card())
         self.compact_categories.currentIndexChanged.connect(self.categories.setCurrentRow)
         self.search.textChanged.connect(lambda _: self.filter())
         self.state.currentIndexChanged.connect(lambda _: self.filter())
@@ -153,24 +169,22 @@ class ChroniclesPanel(QWidget):
         self.list.itemActivated.connect(lambda _: self.open_card())
 
     def open_card(self):
-        if self.width() >= 850:
-            self.detail.setFocus()
-            return
         if not self.list.currentItem():
             return
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Хроники мира · карточка")
-        dialog.resize(560, 530)
-        layout = QVBoxLayout(dialog)
-        detail = QTextBrowser()
-        detail.setFont(self.detail.font())
-        detail.setStyleSheet(self.detail.styleSheet())
-        detail.setHtml(self.detail.toHtml())
-        layout.addWidget(detail)
-        close = QPushButton("Закрыть")
-        close.clicked.connect(dialog.accept)
-        layout.addWidget(close)
-        dialog.exec()
+        self.stack.setCurrentIndex(1)
+        self.back_button.show()
+        self.expand_card.hide()
+        self.detail.setFocus()
+        if hasattr(self.window, "motion"):
+            self.window.motion.reveal(self.detail)
+
+    def back(self):
+        self.stack.setCurrentIndex(0)
+        self.back_button.hide()
+        self.expand_card.show()
+        self.list.setFocus()
+        if hasattr(self.window, "motion"):
+            self.window.motion.reveal(self.list)
 
     def describe_object(self):
         item = self.list.currentItem()
@@ -198,24 +212,9 @@ class ChroniclesPanel(QWidget):
         if hasattr(self, "image_controls"):
             self.image_controls.setVisible(not compact)
             self.image_menu_button.setVisible(compact)
-            self.status.setVisible(not compact)
-        self.expand_card.setVisible(compact)
         self.export_button.setText("Экспорт…" if compact else "Экспорт известных сведений…")
-        self.splitter.setOrientation(
-            Qt.Orientation.Vertical if compact else Qt.Orientation.Horizontal
-        )
-        self.categories.setVisible(not compact)
-        self.compact_categories.setVisible(compact)
-        self.refinements.setDirection(
-            QBoxLayout.Direction.LeftToRight if compact else QBoxLayout.Direction.TopToBottom
-        )
-        self.filters.setMinimumHeight(138 if compact else 0)
-        self.filters.setMaximumHeight(138 if compact else 16777215)
-        self.list.setMinimumHeight(65 if compact else 0)
-        self.list.setMaximumHeight(95 if compact else 16777215)
-        self.detail.setMinimumHeight(100 if compact else 0)
-        if compact:
-            self.splitter.setSizes([138, 75, 260])
+        self.status.setVisible(not compact)
+        self.list.setGridSize(QSize(180 if compact else 220, 205))
         super().resizeEvent(event)
 
     def refresh(self):
@@ -238,6 +237,7 @@ class ChroniclesPanel(QWidget):
             self.search.blockSignals(False)
             self.state.setCurrentIndex(0)
             self.detail.clear()
+            self.back()
         self._session = session
         self.entries = (
             knowledge_entries(session)
@@ -260,6 +260,13 @@ class ChroniclesPanel(QWidget):
         if self.categories.currentRow() < 0:
             self.categories.setCurrentRow(0)
         self.categories.blockSignals(False)
+        self.category_tabs.blockSignals(True)
+        while self.category_tabs.count():
+            self.category_tabs.removeTab(0)
+        for index in range(self.categories.count()):
+            self.category_tabs.addTab(self.categories.item(index).text())
+        self.category_tabs.setCurrentIndex(self.categories.currentRow())
+        self.category_tabs.blockSignals(False)
         self.compact_categories.blockSignals(True)
         self.compact_categories.clear()
         for index in range(self.categories.count()):
@@ -274,6 +281,9 @@ class ChroniclesPanel(QWidget):
         self.filter()
 
     def filter(self):
+        self.category_tabs.blockSignals(True)
+        self.category_tabs.setCurrentIndex(self.categories.currentRow())
+        self.category_tabs.blockSignals(False)
         self.compact_categories.blockSignals(True)
         self.compact_categories.setCurrentIndex(self.categories.currentRow())
         self.compact_categories.blockSignals(False)
@@ -301,13 +311,14 @@ class ChroniclesPanel(QWidget):
         self.list.clear()
         for entry in rows:
             item = QListWidgetItem(
-                category_icon(entry.category),
+                self.thumbnail(entry),
                 entry.title
                 + "\n"
                 + ("Слух · " if entry.rumour else "")
                 + CATEGORIES[entry.category],
             )
             item.setData(Qt.ItemDataRole.UserRole, entry)
+            item.setSizeHint(QSize(200, 195))
             self.list.addItem(item)
             if entry.key == key:
                 self.list.setCurrentItem(item)
@@ -320,6 +331,29 @@ class ChroniclesPanel(QWidget):
             self.detail.setPlainText(
                 "Здесь пока нет известных сведений. Исследуйте мир или измените поиск."
             )
+
+    def thumbnail(self, entry):
+        from rpg_vkr.storage.campaigns import CampaignRepository
+
+        if hasattr(self.window, "visuals"):
+            registry = self.window.visuals.registry
+            asset = registry.latest_for(
+                CampaignRepository.identity(self.window._session), entry.key
+            )
+            if asset:
+                try:
+                    image = QPixmap(str(registry.asset_path(asset)))
+                    return QIcon(
+                        image.scaled(
+                            180,
+                            125,
+                            Qt.AspectRatioMode.KeepAspectRatio,
+                            Qt.TransformationMode.SmoothTransformation,
+                        )
+                    )
+                except (OSError, ValueError):
+                    pass
+        return category_icon(entry.category)
 
     def select(self, item):
         self.describe_button.setVisible(
@@ -344,7 +378,7 @@ class ChroniclesPanel(QWidget):
         for row in range(self.list.count()):
             if self.list.item(row).data(Qt.ItemDataRole.UserRole).key == key:
                 self.list.setCurrentRow(row)
-                self.detail.setFocus()
+                self.open_card()
                 break
 
     def export(self):

@@ -46,6 +46,9 @@ class VisualRegistry:
                     prompt TEXT NOT NULL, refs TEXT NOT NULL, request TEXT NOT NULL UNIQUE,
                     created TEXT NOT NULL, UNIQUE(campaign,subject,version));
                 CREATE INDEX IF NOT EXISTS asset_subject ON assets(campaign,subject,version);
+                CREATE TABLE IF NOT EXISTS captions(
+                    request TEXT PRIMARY KEY, campaign TEXT NOT NULL, entity TEXT NOT NULL,
+                    title TEXT NOT NULL, category TEXT NOT NULL, description TEXT NOT NULL);
             """)
             if recover:
                 db.execute(
@@ -237,6 +240,39 @@ class VisualRegistry:
                 "DO UPDATE SET subject=excluded.subject",
                 (campaign, entity, subject),
             )
+
+    def describe(self, identity, target):
+        """Public snapshot only, saved alongside the existing request, never in game canon."""
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "INSERT INTO captions VALUES(?,?,?,?,?,?)",
+                (
+                    identity,
+                    target.campaign,
+                    target.entity,
+                    target.title[:300],
+                    target.category,
+                    target.brief[:3000],
+                ),
+            )
+
+    def campaign_assets(self, campaign, *, history=False):
+        with closing(self.connect()) as db:
+            rows = [
+                dict(r)
+                for r in db.execute(
+                    "SELECT a.*,c.entity,c.title,c.category,c.description FROM assets a "
+                    "LEFT JOIN captions c ON a.request=c.request AND a.campaign=c.campaign "
+                    "WHERE a.campaign=? ORDER BY a.created DESC,a.version DESC",
+                    (campaign,),
+                )
+            ]
+        if history:
+            return rows
+        latest = {}
+        for row in rows:
+            latest.setdefault(row["subject"], row)
+        return list(latest.values())
 
     def latest_for(self, campaign, entity):
         with closing(self.connect()) as db:

@@ -100,8 +100,6 @@ def test_compact_calculations_reuse_same_widget_without_mutating_state(qt_app, t
 
 
 def test_compact_chronicles_filters_and_expandable_card(qt_app, tmp_path):
-    from PySide6.QtCore import QTimer
-    from PySide6.QtWidgets import QTextBrowser
     from response_cases import new_session
 
     window = MainWindow(session=new_session(), saves=SaveSlots(tmp_path / "saves"))
@@ -110,20 +108,15 @@ def test_compact_chronicles_filters_and_expandable_card(qt_app, tmp_path):
     window.open_section("Хроники мира")
     qt_app.processEvents()
     panel = window.chronicles_panel
-    observed = []
-
-    def close_dialog():
-        dialog = qt_app.activeModalWidget()
-        observed.append(bool(dialog.findChild(QTextBrowser).toPlainText()))
-        dialog.accept()
-
     try:
-        assert panel.compact_categories.isVisible() and not panel.categories.isVisible()
+        assert panel.category_tabs.isVisible() and not panel.categories.isVisible()
         assert panel.search.height() >= 28 and panel.state.height() >= 28
-        panel.compact_categories.setCurrentIndex(1)
+        panel.category_tabs.setCurrentIndex(1)
         assert panel.categories.currentRow() == 1
-        QTimer.singleShot(20, close_dialog)
         panel.expand_card.click()
-        assert observed == [True]
+        assert panel.stack.currentWidget() is panel.detail
+        assert panel.detail.toPlainText() and panel.back_button.isVisible()
+        panel.back_button.click()
+        assert panel.stack.currentWidget() is panel.list
     finally:
         window.close()

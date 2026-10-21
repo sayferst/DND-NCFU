@@ -419,6 +419,7 @@ class VisualController(QObject):
         identity = registry.reserve(
             target.campaign, target.subject, model, quote.total, self.settings.monthly_micros
         )
+        registry.describe(identity, target)
         key = self._key
 
         def generate(transport):
@@ -606,7 +607,7 @@ def install_visuals(window):
 
                 url = QUrl.fromLocalFile(str(window.visuals.registry.asset_path(asset))).toString()
                 panel.detail.setHtml(
-                    card_html(entry) + f'<p><img src="{url}" width="96" height="96"></p>'
+                    f'<p><img src="{url}" width="300"></p>' + card_html(entry)
                 )
             except (ValueError, OSError):
                 panel.visual_preview.setText("Изображение повреждено")

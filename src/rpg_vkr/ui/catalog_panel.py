@@ -27,7 +27,7 @@ def install_catalog_panel(window):
         from rpg_vkr.ui.chronicles_panel import ChroniclesPanel
 
         window.chronicles_panel = ChroniclesPanel(window)
-        window.tabs.addTab(window.chronicles_panel, "Хроники мира")
+        window.tabs.addTab(window.chronicles_panel, "Энциклопедия мира")
         return
     page = QWidget()
     layout = QVBoxLayout(page)

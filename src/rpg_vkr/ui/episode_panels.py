@@ -396,6 +396,8 @@ class EpisodePanels:
         self._refresh_episode_panels()
 
     def open_section(self, name: str) -> None:
+        if not self._legacy_controls and name in {"Хроники мира", "Каталог мира"}:
+            name = "Энциклопедия мира"
         if not self._legacy_controls and hasattr(self, "developer_console"):
             from rpg_vkr.ui.developer_panel import TECHNICAL
 
