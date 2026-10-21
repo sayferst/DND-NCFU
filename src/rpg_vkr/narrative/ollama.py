@@ -61,7 +61,7 @@ def response_diagnostic(kind, model, raw, data, reason):
     resolved_model = (
         f"Фактическая модель API: {response_model}\n"
         if isinstance(response_model, str)
-        and re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", response_model)
+        and re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", response_model)
         else ""
     )
     usage = data.get("usage") if isinstance(data, dict) else None
@@ -1122,7 +1122,9 @@ class OllamaClient(QObject):
 
                 data = normalize_completion(data)
                 resolved = data.get("response_model", "")
-                if isinstance(resolved, str) and re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", resolved):
+                if isinstance(resolved, str) and re.fullmatch(
+                    r"~?[A-Za-z0-9_.:/-]{1,128}", resolved
+                ):
                     self.response_model = resolved
             if isinstance(data, dict) and (
                 data.get("done_reason") == "length" or data.get("done") is False

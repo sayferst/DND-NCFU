@@ -35,7 +35,7 @@ class CloudProfile:
             from rpg_vkr.deployment import gateway_url
 
             gateway_url(self.endpoint_url.removesuffix("/chat/completions"))
-        if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
+        if not re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", self.model):
             raise ValueError("Укажите идентификатор облачной модели.")
         validate_api_key(self.key)
         if type(self.free_only) is not bool:

@@ -230,7 +230,7 @@ def provider_changed(window):
             "Ключи и баланс приложение не изменяет."
         )
         if not window.cloud_model.text().strip():
-            window.cloud_model.setText("deepseek/deepseek-v4-flash-latest")
+            window.cloud_model.setText("~deepseek/deepseek-v4-flash-latest")
     else:
         window.cloud_notice.setText(
             "Подписка ChatGPT Plus не включает API. Возможны отдельные расходы/лимиты. "

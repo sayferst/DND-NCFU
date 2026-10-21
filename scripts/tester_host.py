@@ -33,7 +33,6 @@ from rpg_vkr.storage.connection import load_secret, save_secret  # noqa: E402
 from server.gateway import (  # noqa: E402
     FLUX,
     RECRAFT,
-    TEXT_MODEL,
     Denied,
     Gateway,
     Server,
@@ -289,13 +288,21 @@ def check_provider(gateway):
         ) from None
     try:
         catalog = gateway.catalog()
-        available = {row["id"] for row in catalog["data"]}
-        if not {TEXT_MODEL, RECRAFT, FLUX} <= available:
-            raise ValueError
+    except Denied as error:
+        raise metadata_failure(error, "Проверка каталога") from None
+    available = {row["id"] for row in catalog["data"]}
+    missing = sorted({gateway.text_model, RECRAFT, FLUX} - available)
+    if missing:
+        raise ValueError(
+            "Каталог RouterAI: отсутствуют модели: "
+            + ", ".join(missing)
+            + ". Платная генерация не запускалась."
+        )
+    try:
         gateway.validate(
             "chat/completions",
             {
-                "model": TEXT_MODEL,
+                "model": gateway.text_model,
                 "messages": [{"role": "user", "content": "metadata price check"}],
                 "max_tokens": 65536,
                 "stream": False,

@@ -376,7 +376,7 @@ def test_switching_provider_clears_old_key_and_requires_new_consent(window):
     window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
     assert window.cloud_key.text() == ""
     assert not window.cloud_allowed.isChecked()
-    assert window.cloud_model.text() == "deepseek/deepseek-v4-flash-latest"
+    assert window.cloud_model.text() == "~deepseek/deepseek-v4-flash-latest"
     assert not window.cloud_free_only.isVisible()
 
 
@@ -401,3 +401,19 @@ def test_catalog_error_does_not_claim_an_inflight_model_request_was_not_started(
         window.routerai_catalog.failed.emit("Каталог не получен. Генерация не началась.")
         assert window.narrator_status.text() == previous
         window.cancel_narration_button.click()
+
+
+@pytest.mark.parametrize(
+    "model", ["~deepseek/deepseek-v4-flash-latest", "deepseek/deepseek-v4.1-flash"]
+)
+def test_catalog_alias_survives_cloud_profile_and_preferences(model, tmp_path):
+    from rpg_vkr.storage.connection import ConnectionPreferences
+
+    (quote,) = parse_models({"data": [QUOTE | {"id": model}]})
+    assert quote.id == model
+    profile = CloudProfile("routerai", quote.id, "local-test-key")
+    assert profile.model == model
+    path = tmp_path / "connection.json"
+    preferences = ConnectionPreferences("routerai", model, True, True)
+    preferences.save(path)
+    assert ConnectionPreferences.load(path) == preferences

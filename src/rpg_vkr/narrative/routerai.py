@@ -17,7 +17,7 @@ from rpg_vkr.narrative.cloud import validate_api_key
 CATALOG_URL = "https://routerai.ru/api/v1/models"
 KEY_URL = "https://routerai.ru/api/v1/key"
 MAX_MONTHLY_RUB = Decimal("2000")
-MODEL_ID = r"[A-Za-z0-9_.:/-]{1,128}"
+MODEL_ID = r"~?[A-Za-z0-9_.:/-]{1,128}"
 
 
 def amount(value):

@@ -2,7 +2,7 @@
   "client_release_profile": {
     "mode": "tester",
     "gateway": "https://game.example.org:8443/api/v1",
-    "text_model": "deepseek/deepseek-v4-flash-latest",
+    "text_model": "~deepseek/deepseek-v4-flash-latest",
     "commit": "example"
   },
   "server": {

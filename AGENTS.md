@@ -1553,3 +1553,18 @@ Clipboard/DPAPIвLinuxтестахподменены;необъявлятьWindo
 PowerShellчтениеclipboardнетестировалосьнативно. Все75защищённыххэшейпрежние.
 Секретизчатанепереноситьвотчёт/Git/fixtures. Windowsинструкция:pull/key/start,
 илиkey--clipboard→скопироватьпослеподсказки/Enter. Неутверждатьliveуспехбезприёмки.
+
+## 21.10.2026 — точное имя RouterAI Flash из публичного каталога
+
+Владелец подтвердил публичный ID ~deepseek/deepseek-v4-flash-latest; обе модели
+Художника присутствуют. Старый ID без ~ отсутствует. Исправлены defaults сервера,
+клиента, release profile и Windows builder; строгие regex допускают один начальный ~.
+preflight использует gateway.text_model и перечисляет отсутствующие модели.
+Ключи/цены/квоты/платные POST не менялись. Живой RouterAI и Windows Setup здесь
+не проверены; пользователю pull/start, затем обычная сборка персонального Setup.
+
+Проверка исправления алиаса: 1388 passed / 212.46 с, полный набор без
+пропусков; Ruff check/format (213 файлов), pip check успешны. Raw:
+`docs/validation/catalog-alias-2026-10-21/full-final-02.txt`.
+75 защищённых хэшей и исходный префикс AGENTS сохранены. Windows/live RouterAI
+ещё не проверены; ключ не менять, обновить проект и повторить start.

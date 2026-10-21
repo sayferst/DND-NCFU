@@ -121,7 +121,7 @@ class SceneRecord:
             "scene-director-6",
         }:
             raise ValueError("Invalid scene context")
-        if not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model):
+        if not re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", self.model):
             raise ValueError("Invalid source model")
         if not isinstance(self.proposal, Proposal) or self.proposal.mechanical_command:
             raise ValueError("Scene cannot execute a mechanical request")

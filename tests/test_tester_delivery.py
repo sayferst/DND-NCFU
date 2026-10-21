@@ -305,7 +305,7 @@ def test_async_poll_cancel_does_not_start_another_paid_request(qt_app, tmp_path)
         client.configure_cloud(
             CloudProfile(
                 "gateway",
-                "deepseek/deepseek-v4-flash-latest",
+                "~deepseek/deepseek-v4-flash-latest",
                 token,
                 endpoint_url=base + "/chat/completions",
             )
@@ -360,11 +360,14 @@ def test_owner_preflight_checks_metadata_only_and_refuses_missing_models(tmp_pat
     gateway = Gateway(store, upstream)
     check_provider(gateway)
     assert not upstream.posts and not store.summary()
-    upstream.request = lambda *args: {"data": []}
+    upstream.request = lambda route, value=None: (
+        metadata(route, value) if route == "key" else {"data": []}
+    )
     gateway.cache = None
     # Use fresh Gateway to avoid a still-valid cached model catalog.
-    with pytest.raises(ValueError, match="RouterAI"):
+    with pytest.raises(ValueError, match="отсутствуют модели") as failure:
         check_provider(Gateway(store, upstream))
+    assert "~deepseek/deepseek-v4-flash-latest" in str(failure.value)
     assert not upstream.posts
 
 
@@ -395,3 +398,26 @@ def test_public_build_profile_and_bootstrap_are_separate_and_owner_keys_ignored(
     monkeypatch.setenv("DND_BUILD_PROFILE", "developer")
     with pytest.raises(ValueError):
         prepare_bootstrap(tmp_path / "bad.json")
+
+
+def test_catalog_alias_matches_owner_public_catalog(tmp_path):
+    from rpg_vkr.deployment import ReleaseProfile
+    from server.gateway import TEXT_MODEL, Gateway
+    from tests.test_gateway import FakeUpstream
+
+    canonical = "~deepseek/deepseek-v4-flash-latest"
+    assert TEXT_MODEL == canonical
+    assert ReleaseProfile(mode="tester").text_model == canonical
+    upstream = FakeUpstream()
+    gateway = Gateway(Store(tmp_path / "alias.sqlite3"), upstream)
+    gateway.validate(
+        "chat/completions",
+        {
+            "model": canonical,
+            "messages": [{"role": "user", "content": "test"}],
+            "max_tokens": 65536,
+            "stream": False,
+        },
+        "world_seed",
+    )
+    assert not upstream.posts

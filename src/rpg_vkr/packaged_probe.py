@@ -164,7 +164,7 @@ def world_creation_probe(app, root, seed):
                 base + "/key",
             )
             window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
-            window.cloud_model.setText("deepseek/deepseek-v4-flash-latest")
+            window.cloud_model.setText("~deepseek/deepseek-v4-flash-latest")
             window.cloud_key.setText("probe-key")
             window.cloud_allowed.setChecked(True)
             window.enable_local_narrator.setChecked(True)
@@ -339,7 +339,9 @@ def smoke_test(app):
                 image, cost, _ = ImagesTransport(test_base=base).generate(body, "probe-key")
                 if not image.startswith(b"\x89PNG") or cost != 970000:
                     raise ValueError("Image contract failed")
-                profile = CloudProfile("routerai", "deepseek/deepseek-v4-flash-latest", "probe-key")
+                profile = CloudProfile(
+                    "routerai", "~deepseek/deepseek-v4-flash-latest", "probe-key"
+                )
                 text_body = profile.payload(
                     {"messages": [{"role": "user", "content": "Только локальная проверка"}]}
                 )

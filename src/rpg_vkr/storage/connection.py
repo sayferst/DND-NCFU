@@ -10,7 +10,7 @@ from tempfile import NamedTemporaryFile
 
 from rpg_vkr.ui.workspace_tools import atomic_text
 
-FLASH_MODEL = "deepseek/deepseek-v4-flash-latest"
+FLASH_MODEL = "~deepseek/deepseek-v4-flash-latest"
 
 
 @dataclass(frozen=True)
@@ -26,7 +26,7 @@ class ConnectionPreferences:
         if (
             not isinstance(self.model, str)
             or self.model
-            and not re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", self.model)
+            and not re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", self.model)
         ):
             raise ValueError("Invalid model preference")
         if type(self.enabled) is not bool or type(self.consent) is not bool:

@@ -30,7 +30,7 @@ def gateway_url(value):
 class ReleaseProfile:
     mode: str = "developer"
     gateway: str = ""
-    text_model: str = "deepseek/deepseek-v4-flash-latest"
+    text_model: str = "~deepseek/deepseek-v4-flash-latest"
     commit: str = "source"
     discovery: str = ""
     verification_key: str = ""
@@ -48,7 +48,7 @@ class ReleaseProfile:
                 raise ValueError("Неверный ключ проверки адреса.")
         if self.gateway:
             object.__setattr__(self, "gateway", gateway_url(self.gateway))
-        if not re.fullmatch(r"deepseek/[A-Za-z0-9_.-]*flash[A-Za-z0-9_.-]*", self.text_model):
+        if not re.fullmatch(r"~?deepseek/[A-Za-z0-9_.-]*flash[A-Za-z0-9_.-]*", self.text_model):
             raise ValueError("Неизвестная модель тестовой сборки.")
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", self.commit):
             raise ValueError("Неизвестная версия сборки.")

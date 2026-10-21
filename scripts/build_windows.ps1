@@ -6,7 +6,7 @@ param(
     [string]$DiscoveryUrl = '',
     [string]$DiscoveryKey = '',
     [string]$BootstrapFile = '',
-    [string]$TextModel = 'deepseek/deepseek-v4-flash-latest'
+    [string]$TextModel = '~deepseek/deepseek-v4-flash-latest'
 )
 $ErrorActionPreference = 'Stop'
 if ($Profile -eq 'tester' -and !$DiscoveryUrl -and !$GatewayUrl.StartsWith('https://')) {

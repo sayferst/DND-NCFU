@@ -39,7 +39,7 @@ class Narration:
         if type(self.turn_index) is not int or not 0 <= self.turn_index <= 2000:
             raise ValueError("Invalid narration anchor")
         if not isinstance(self.model, str) or not re.fullmatch(
-            r"[A-Za-z0-9_.:/-]{1,128}", self.model
+            r"~?[A-Za-z0-9_.:/-]{1,128}", self.model
         ):
             raise ValueError("Invalid installed model name")
         if (

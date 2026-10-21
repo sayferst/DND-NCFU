@@ -1,0 +1,338 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+........................................................................ [ 25%]
+...............................F......FFF..F.....F...................... [ 31%]
+........................................................................ [ 36%]
+........................................................................ [ 41%]
+........................................................................ [ 46%]
+........................................................................ [ 51%]
+........................................................................ [ 57%]
+........................................................................ [ 62%]
+........................................................................ [ 67%]
+........................................................................ [ 72%]
+........................................................................ [ 77%]
+........................................................................ [ 83%]
+........................................................................ [ 88%]
+........................................................................ [ 93%]
+...................................................................F.... [ 98%]
+..................                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_flash_verifies_key_then_model_without_generating _____________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x615d0f70) at 0x7f1eda3a0880>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1ed9d836b0>
+
+    def test_flash_verifies_key_then_model_without_generating(flash, monkeypatch):
+        with router_server() as (url, requests):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(QApplication.instance(), lambda: flash._flash_verified)
+
+tests/test_flash_settings.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <PySide6.QtWidgets.QApplication(0x221cf5e0) at 0x7f1f0636da00>
+predicate = <function test_flash_verifies_key_then_model_without_generating.<locals>.<lambda> at 0x7f1eda169120>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+            app.processEvents()
+            QTest.qWait(5)
+>       assert predicate(), "Timed out waiting for the local transport"
+E       AssertionError: Timed out waiting for the local transport
+E       assert False
+E        +  where False = <function test_flash_verifies_key_then_model_without_generating.<locals>.<lambda> at 0x7f1eda169120>()
+
+tests/test_local_narrator.py:28: AssertionError
+______________ test_changing_provider_invalidates_verified_flash _______________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x63670470) at 0x7f1eda251380>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1edaf49460>
+
+    def test_changing_provider_invalidates_verified_flash(flash, monkeypatch):
+        with router_server() as (url, _):
+            configure(flash, monkeypatch, url)
+            flash.flash_enabled.setChecked(True)
+>           wait_for(QApplication.instance(), lambda: flash._flash_verified)
+
+tests/test_flash_settings.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <PySide6.QtWidgets.QApplication(0x221cf5e0) at 0x7f1f0636da00>
+predicate = <function test_changing_provider_invalidates_verified_flash.<locals>.<lambda> at 0x7f1eda2984a0>
+timeout_ms = 2500
+
+    def wait_for(app, predicate, timeout_ms=2500):
+        clock = QElapsedTimer()
+        clock.start()
+        while not predicate() and clock.elapsed() < timeout_ms:
+            app.processEvents()
+            QTest.qWait(5)
+>       assert predicate(), "Timed out waiting for the local transport"
+E       AssertionError: Timed out waiting for the local transport
+E       assert False
+E        +  where False = <function test_changing_provider_invalidates_verified_flash.<locals>.<lambda> at 0x7f1eda2984a0>()
+
+tests/test_local_narrator.py:28: AssertionError
+_______ test_restarting_without_key_preserves_menu_and_does_not_connect ________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x221cf5e0) at 0x7f1f0636da00>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-329/test_restarting_without_key_pr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1edb1dede0>
+
+    def test_restarting_without_key_preserves_menu_and_does_not_connect(qt_app, tmp_path, monkeypatch):
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui.main_window import MainWindow
+    
+        monkeypatch.delenv("RPG_VKR_ROUTERAI_API_KEY", raising=False)
+>       ConnectionPreferences("routerai", FLASH_MODEL, True, True).save(tmp_path / "ai-connection.json")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_flash_settings.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<string>:7: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ConnectionPreferences(provider='routerai', model='~deepseek/deepseek-v4-flash-latest', enabled=True, consent=True)
+
+    def __post_init__(self):
+        if self.provider not in {"local", "routerai", "openrouter", "openai"}:
+            raise ValueError("Unknown provider preference")
+        if (
+            not isinstance(self.model, str)
+            or self.model
+            and not re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", self.model)
+        ):
+>           raise ValueError("Invalid model preference")
+E           ValueError: Invalid model preference
+
+src/rpg_vkr/storage/connection.py:31: ValueError
+________ test_preferences_are_bounded_and_exclude_unknown_secret_fields ________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-329/test_preferences_are_bounded_a0')
+
+    def test_preferences_are_bounded_and_exclude_unknown_secret_fields(tmp_path):
+        path = tmp_path / "preferences.json"
+        for text in ['{"key":"secret"}', "[]", "x" * 4097, '{"enabled":1}']:
+            path.write_text(text, encoding="utf-8")
+            assert ConnectionPreferences.load(path) == ConnectionPreferences()
+>       ConnectionPreferences("routerai", FLASH_MODEL, True, True).save(path)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_flash_settings.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<string>:7: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ConnectionPreferences(provider='routerai', model='~deepseek/deepseek-v4-flash-latest', enabled=True, consent=True)
+
+    def __post_init__(self):
+        if self.provider not in {"local", "routerai", "openrouter", "openai"}:
+            raise ValueError("Unknown provider preference")
+        if (
+            not isinstance(self.model, str)
+            or self.model
+            and not re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", self.model)
+        ):
+>           raise ValueError("Invalid model preference")
+E           ValueError: Invalid model preference
+
+src/rpg_vkr/storage/connection.py:31: ValueError
+_________ test_forgetting_secret_and_saving_connection_stays_nonsecret _________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x5c8a20f0) at 0x7f1eda466600>
+
+    def test_forgetting_secret_and_saving_connection_stays_nonsecret(flash):
+        flash.ai_provider.setCurrentIndex(flash.ai_provider.findData("routerai"))
+        flash.cloud_key.setText("synthetic-test-key")
+        flash._credential_path.write_bytes(b"previous-ciphertext")
+        flash.remember_key.setChecked(False)
+        save_connection(flash)
+>       assert not flash._credential_path.exists()
+E       AssertionError: assert not True
+E        +  where True = exists()
+E        +    where exists = PosixPath('/tmp/pytest-of-agent/pytest-329/test_forgetting_secret_and_sav0/routerai-credential.bin').exists
+E        +      where PosixPath('/tmp/pytest-of-agent/pytest-329/test_forgetting_secret_and_sav0/routerai-credential.bin') = <rpg_vkr.ui.main_window.MainWindow(0x5c8a20f0) at 0x7f1eda466600>._credential_path
+
+tests/test_flash_settings.py:178: AssertionError
+___________ test_restart_with_consented_env_key_checks_metadata_only ___________
+
+flash = <rpg_vkr.ui.main_window.MainWindow(0x65c18f00) at 0x7f1edaf27040>
+qt_app = <PySide6.QtWidgets.QApplication(0x221cf5e0) at 0x7f1f0636da00>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-329/test_restart_with_consented_en0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1eda450530>
+
+    def test_restart_with_consented_env_key_checks_metadata_only(flash, qt_app, tmp_path, monkeypatch):
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui.main_window import MainWindow
+    
+        with router_server() as (url, requests):
+            configure(flash, monkeypatch, url)
+            directory = tmp_path / "restart"
+>           ConnectionPreferences("routerai", FLASH_MODEL, True, True).save(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                directory / "ai-connection.json"
+            )
+
+tests/test_flash_settings.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<string>:7: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ConnectionPreferences(provider='routerai', model='~deepseek/deepseek-v4-flash-latest', enabled=True, consent=True)
+
+    def __post_init__(self):
+        if self.provider not in {"local", "routerai", "openrouter", "openai"}:
+            raise ValueError("Unknown provider preference")
+        if (
+            not isinstance(self.model, str)
+            or self.model
+            and not re.fullmatch(r"~?[A-Za-z0-9_.:/-]{1,128}", self.model)
+        ):
+>           raise ValueError("Invalid model preference")
+E           ValueError: Invalid model preference
+
+src/rpg_vkr/storage/connection.py:31: ValueError
+______ test_packaged_creation_probe_ignores_and_preserves_personal_prompt ______
+
+qt_app = <PySide6.QtWidgets.QApplication(0x221cf5e0) at 0x7f1f0636da00>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-329/test_packaged_creation_probe_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1edb7fda90>
+
+    def test_packaged_creation_probe_ignores_and_preserves_personal_prompt(
+        qt_app, tmp_path, monkeypatch
+    ):
+        from test_adventure import started
+    
+        from rpg_vkr.narrative import instructions
+        from rpg_vkr.packaged_probe import world_creation_probe
+    
+        personal = tmp_path / "personal-master.txt"
+        personal.write_bytes(b"")
+        monkeypatch.setattr(instructions, "LOCAL_PATH", personal)
+>       world_creation_probe(qt_app, tmp_path / "probe", started().chronicle.seed)
+
+tests/test_world_start_gate.py:249: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <PySide6.QtWidgets.QApplication(0x221cf5e0) at 0x7f1f0636da00>
+root = PosixPath('/tmp/pytest-of-agent/pytest-329/test_packaged_creation_probe_i0/probe')
+seed = WorldSeed(title='Карта переправы', opening='Ветер шевелит ленты на мачте. Рен раскладывает дорожные припасы у причала....n='catalog-1'), source='synthetic-model', signature='5e11d3e688b29626e723e985b7581dffcfd085b62816e8404ed2cac3089153b4')
+
+    def world_creation_probe(app, root, seed):
+        """Exercise the real new-hero dialog, world request, chat and scene in the bundle."""
+        import time
+    
+        from PySide6.QtCore import QEventLoop, QTimer
+        from PySide6.QtWidgets import QApplication
+    
+        from rpg_vkr.narrative import cloud, instructions, routerai
+        from rpg_vkr.narrative.limits import WORLD_OUTPUT_TOKENS, WORLD_TIMEOUT_MS
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui.creation_dialog import CreationDialog
+        from rpg_vkr.ui.main_window import MainWindow
+        from rpg_vkr.visuals.context import scene_target
+    
+        value = {
+            "title": seed.title,
+            "opening": seed.opening,
+            "private_plot": seed.private_plot,
+            "hooks": list(seed.hooks),
+            "start": seed.scene.current,
+            "places": [
+                {"id": p.id, "name": p.name, "parent": p.parent, "description": p.description}
+                for p in seed.scene.places
+            ],
+            "definitions": [d.to_dict() for d in seed.catalog.definitions if d.origin == "generated"],
+            "entities": [e.to_dict() for e in seed.catalog.entities],
+        }
+        brief = "Приключенческое фэнтези: речные дороги, свободный выбор героя, память о поступках."
+        window = MainWindow(saves=SaveSlots(root / "world-creation/saves"))
+        from rpg_vkr.deployment import ReleaseProfile
+    
+        # Exercise the transport fixture, never a real endpoint from a tester release profile.
+        window.release_profile = ReleaseProfile()
+        window._confirm = lambda *_: True
+        previous_endpoint, previous_key_url = cloud.ENDPOINTS["routerai"], routerai.KEY_URL
+        previous_prompt = instructions.LOCAL_PATH
+    
+        def create():
+            dialog = QApplication.activeModalWidget()
+            if not isinstance(dialog, CreationDialog):
+                raise ValueError("Hero creation dialog missing")
+            dialog.name_input.setText("Проверка нового мира")
+            dialog.world_brief_input.setPlainText(brief)
+            dialog.accept()
+    
+        def wait():
+            deadline = time.monotonic() + 10
+            while window.ollama.busy and time.monotonic() < deadline:
+                pause = QEventLoop()
+                QTimer.singleShot(10, pause.quit)
+                pause.exec()
+            if window.ollama.busy:
+                raise ValueError("Loopback world creation timed out")
+    
+        try:
+            instructions.LOCAL_PATH = root / ".no-personal-prompt-world-probe"
+            with loopback(value) as (base, calls):
+                cloud.ENDPOINTS["routerai"], routerai.KEY_URL = (
+                    base + "/chat/completions",
+                    base + "/key",
+                )
+                window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
+                window.cloud_model.setText("~deepseek/deepseek-v4-flash-latest")
+                window.cloud_key.setText("probe-key")
+                window.cloud_allowed.setChecked(True)
+                window.enable_local_narrator.setChecked(True)
+                window.action_input.setText("начать")
+                window.submit_action()
+                if calls or window._session.turns or window.ollama.busy:
+                    raise ValueError("Uncreated world accepted a chat action")
+                QTimer.singleShot(0, create)
+                window.new_character()
+                if calls or window.world_creation_screen.state != "ready":
+                    raise ValueError("Hero form started world generation without the central button")
+                window.world_creation_screen.create_button.click()
+                window.action_input.setText("начать")
+                window.submit_action()
+                wait()
+                session = window._session
+                if not session.generated_world or session.turns or len(calls) != 1:
+                    raise ValueError("World creation did not finish before chat")
+                genesis = json.loads(calls[0][1]["messages"][1]["content"])
+                if (
+                    calls[0][1].get("max_tokens") != WORLD_OUTPUT_TOKENS
+                    or window.ollama.timer.interval() != WORLD_TIMEOUT_MS
+                ):
+                    raise ValueError("Packaged world output/time limit missing")
+                if genesis["world_brief"] != brief or session.campaign.world_brief != brief:
+                    raise ValueError("World brief changed during generation")
+                window.submit_action()
+                wait()
+                if (
+                    len(calls) != 2
+                    or len(session.turns) != 1
+                    or "Ворота деревни" in window.journal.toPlainText()
+                ):
+>                   raise ValueError("Generated chat returned to the legacy episode")
+E                   ValueError: Generated chat returned to the legacy episode
+
+src/rpg_vkr/packaged_probe.py:201: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_flash_settings.py::test_flash_verifies_key_then_model_without_generating
+FAILED tests/test_flash_settings.py::test_changing_provider_invalidates_verified_flash
+FAILED tests/test_flash_settings.py::test_restarting_without_key_preserves_menu_and_does_not_connect
+FAILED tests/test_flash_settings.py::test_preferences_are_bounded_and_exclude_unknown_secret_fields
+FAILED tests/test_flash_settings.py::test_forgetting_secret_and_saving_connection_stays_nonsecret
+FAILED tests/test_flash_settings.py::test_restart_with_consented_env_key_checks_metadata_only
+FAILED tests/test_world_start_gate.py::test_packaged_creation_probe_ignores_and_preserves_personal_prompt
+7 failed, 1379 passed in 218.14s (0:03:38)

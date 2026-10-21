@@ -47,7 +47,7 @@ def prepare_release_profile(output):
     profile = ReleaseProfile(
         mode,
         gateway,
-        os.environ.get("DND_TEXT_MODEL", "deepseek/deepseek-v4-flash-latest"),
+        os.environ.get("DND_TEXT_MODEL", "~deepseek/deepseek-v4-flash-latest"),
         commit,
         discovery,
         os.environ.get("DND_DISCOVERY_KEY", ""),

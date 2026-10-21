@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-TEXT_MODEL = "deepseek/deepseek-v4-flash-latest"
+TEXT_MODEL = "~deepseek/deepseek-v4-flash-latest"
 RECRAFT = "recraft/recraft-v4.1-flash"
 FLUX = "black-forest-labs/flux-3-image-klein"
 IMAGE_CAPS = {RECRAFT: 5_000_000, FLUX: 10_000_000}
@@ -355,7 +355,7 @@ class Upstream:
 
 class Gateway:
     def __init__(self, store, upstream, text_model=TEXT_MODEL):
-        if not re.fullmatch(r"deepseek/[A-Za-z0-9_.-]*flash[A-Za-z0-9_.-]*", text_model):
+        if not re.fullmatch(r"~?deepseek/[A-Za-z0-9_.-]*flash[A-Za-z0-9_.-]*", text_model):
             raise ValueError("Only the owner-approved DeepSeek Flash model is allowed")
         self.store, self.upstream, self.text_model = store, upstream, text_model
         self.catalog_lock = threading.Lock()
