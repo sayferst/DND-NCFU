@@ -66,9 +66,9 @@ def cloudflared_path():
     )
 
 
-def tunnel_command(executable, port):
+def tunnel_command(executable, port, edges=()):
     # HTTP/2 uses TCP7844 rather than QUIC/UDP7844. No Windows firewall changes.
-    return [
+    command = [
         executable,
         "tunnel",
         "--protocol",
@@ -77,6 +77,19 @@ def tunnel_command(executable, port):
         f"http://127.0.0.1:{port}",
         "--no-autoupdate",
     ]
+
+    for edge in edges:
+        # Numeric endpoints only: never pass a hostname/option from DNS into argv.
+        import ipaddress
+
+        address, separator, port_text = edge.rpartition(":")
+        if not separator or port_text != "7844":
+            raise ValueError("Invalid tunnel edge")
+        parsed = ipaddress.ip_address(address)
+        if parsed.version != 4 or not parsed.is_global:
+            raise ValueError("Invalid tunnel edge")
+        command.extend(["--edge", str(parsed) + ":7844"])
+    return command
 
 
 def read_tunnel_output(stream, urls, connections):
@@ -438,12 +451,18 @@ def host(root, store):
     gateway = Gateway(store, Upstream(key))
     print("Проверяю ключ и каталог RouterAI без генерации…", flush=True)
     check_provider(gateway)
+    from scripts.tunnel_dns import reachable_edges, resolve_tunnel_edges
+
+    print("Получаю узлы Cloudflare через DNS-over-HTTPS (без изменения Windows)…", flush=True)
+    edges = resolve_tunnel_edges()
+    print("Проверяю исходящий TCP-доступ к узлам Cloudflare…", flush=True)
+    edges = reachable_edges(edges)
     server = Server(("127.0.0.1", 0), gateway)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     process = None
     try:
         process = subprocess.Popen(
-            tunnel_command(tunnel, server.server_port),
+            tunnel_command(tunnel, server.server_port, edges),
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
