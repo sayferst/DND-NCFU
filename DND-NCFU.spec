@@ -12,10 +12,12 @@ from rpg_vkr.resources import REQUIRED_RESOURCES, resource_path
 helper = runpy.run_path(str(root / 'scripts/release_tools.py'))
 license_data = helper['prepare_licenses'](Path(CONF['workpath']) / 'licenses')
 profile = helper['prepare_release_profile'](Path(CONF['workpath']) / 'release-profile.json')
+bootstrap = helper['prepare_bootstrap'](Path(CONF['workpath']) / 'tester-bootstrap.json')
+personal = [(str(bootstrap), '.')] if bootstrap else []
 resources = [(str(resource_path(relative)), str(Path(relative).parent)) for relative in REQUIRED_RESOURCES]
 a = Analysis(
     [str(root / 'scripts/run_game.py')], pathex=[str(root / 'src')], binaries=[],
-    datas=[*resources, (str(profile), '.'),
+    datas=[*resources, *personal, (str(profile), '.'),
            (str(root / 'LICENSES_AND_ATTRIBUTIONS.md'), '.'), *license_data],
     hiddenimports=collect_submodules('rpg_vkr'), hookspath=[], hooksconfig={}, runtime_hooks=[],
     excludes=['tkinter', 'pytest', 'ruff', 'PyInstaller'], noarchive=False,

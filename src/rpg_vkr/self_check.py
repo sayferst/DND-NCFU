@@ -48,6 +48,26 @@ def check_resources(progress=lambda value, label: None):
     ssl.create_default_context()
     if not QSslSocket.supportsSsl():
         raise RuntimeError("Qt TLS backend unavailable")
+    import base64
+    import time
+
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    from rpg_vkr.discovery import canonical, verify
+
+    # Verifies native crypto imports in the actual frozen binary, without network or owner keys.
+    key = Ed25519PrivateKey.generate()
+    now = int(time.time())
+    value = {
+        "version": 1,
+        "sequence": 1,
+        "issued": now,
+        "expires": now + 60,
+        "endpoint": "https://offline.example.org/api/v1",
+    }
+    signature = base64.b64encode(key.sign(canonical(value))).decode()
+    public = base64.b64encode(key.public_key().public_bytes_raw()).decode()
+    verify(json.dumps(value | {"signature": signature}).encode(), public)
     progress(75, "Хранилище и защищённое соединение")
     return {
         "ok": True,
@@ -59,6 +79,7 @@ def check_resources(progress=lambda value, label: None):
         "frozen": bool(getattr(sys, "frozen", False)),
         "resources": checks,
         "qt_tls": True,
+        "discovery_signature": "native-roundtrip-passed",
         "python_tls": ssl.OPENSSL_VERSION,
         "sqlite": sqlite3.sqlite_version,
         "data_outside_application": str(data_directory()),

@@ -216,6 +216,10 @@ class OllamaClient(QObject):
         self.timer.setSingleShot(True)
         self.timer.setTimerType(Qt.TimerType.PreciseTimer)
         self.timer.timeout.connect(self._timeout)
+        self._gateway_job = None
+        self._poll_timer = QTimer(self)
+        self._poll_timer.setSingleShot(True)
+        self._poll_timer.timeout.connect(self._poll_job)
         self._reply = None
         self._buffer = bytearray()
         self._reason = ""
@@ -280,11 +284,17 @@ class OllamaClient(QObject):
 
     @property
     def busy(self):
-        return self._reply is not None or self._pending_routerai is not None
+        return (
+            self._reply is not None
+            or self._pending_routerai is not None
+            or self._gateway_job is not None
+        )
 
     def cancel(self):
         was_busy = self.busy
         self._pending_routerai = None
+        self._gateway_job = None
+        self._poll_timer.stop()
         self._routerai_guard.cancel()
         reply, self._reply = self._reply, None
         self.timer.stop()
@@ -947,6 +957,7 @@ class OllamaClient(QObject):
             if self.cloud.provider == "gateway":
                 from uuid import uuid4
 
+                request.setRawHeader(b"Prefer", b"respond-async")
                 request.setRawHeader(b"X-Request-ID", uuid4().hex.encode())
                 request.setRawHeader(b"X-DND-Stage", kind.encode())
         request.setAttribute(
@@ -974,7 +985,31 @@ class OllamaClient(QObject):
         self.timer.start(limit)
         self.busy_changed.emit(True)
 
+    def _poll_job(self):
+        if self._gateway_job is None:
+            return
+        url, key = self._gateway_job
+        self._buffer = bytearray()
+        request = QNetworkRequest(QUrl(url))
+        request.setRawHeader(b"Authorization", ("Bearer " + key).encode())
+        request.setAttribute(
+            QNetworkRequest.Attribute.RedirectPolicyAttribute,
+            QNetworkRequest.RedirectPolicy.ManualRedirectPolicy,
+        )
+        request.setTransferTimeout(20000)
+        reply = self.manager.get(request)
+        self._reply = reply
+        reply.readyRead.connect(lambda: self._read(reply))
+        reply.finished.connect(lambda: self._finished(reply))
+
     def _timeout(self):
+        if self._gateway_job is not None and self._reply is None:
+            self._gateway_job = None
+            self._poll_timer.stop()
+            self.busy_changed.emit(False)
+            self.failed.emit(
+                "Задача не завершена вовремя. Герой сохранён; генерация не повторялась."
+            )
         if self._reply is not None:
             self._reason = (
                 "Создание мира не завершилось вовремя. Герой сохранён; повторите создание мира."
@@ -1007,11 +1042,27 @@ class OllamaClient(QObject):
             return
         self._read(reply)
         kind, model, raw = self._kind, self._model, bytes(self._buffer)
-        self.timer.stop()
         self._reply = None
         status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         error = reply.error()
         reply.deleteLater()
+        if self.cloud and self.cloud.provider == "gateway" and status == 202 and not self._reason:
+            try:
+                job = json.loads(raw)["job"]
+                if not isinstance(job, str) or not re.fullmatch(r"[a-f0-9]{32}", job):
+                    raise ValueError
+                # Poll URL is constructed from the authenticated endpoint, never a response URL.
+                base = self.cloud.endpoint.removesuffix("/chat/completions")
+                if self._gateway_job and self._gateway_job[0] != base + "/jobs/" + job:
+                    raise ValueError
+                self._gateway_job = (base + "/jobs/" + job, self.cloud.key)
+                self._poll_timer.start(600)
+                return
+            except (ValueError, KeyError, TypeError):
+                self._reason = "Игровой сервис вернул неверное задание. Повтор не выполнен."
+        self._gateway_job = None
+        self._poll_timer.stop()
+        self.timer.stop()
         self.busy_changed.emit(False)
         if self._reason:
             self.last_failure = {"code": "network", "stage": kind, "reason": self._reason}

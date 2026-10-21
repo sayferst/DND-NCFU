@@ -84,6 +84,9 @@ class VisualController(QObject):
         if getattr(getattr(self.window, "release_profile", None), "mode", "") == "tester":
             from rpg_vkr.deployment import tester_token
 
+            profile = self.window.release_profile
+            if profile.discovery and not getattr(self.window, "_tester_endpoint", ""):
+                return ""
             return tester_token(self.window)
         if hasattr(self.window, "artist_panel"):
             return self.window.artist_panel.effective_key()

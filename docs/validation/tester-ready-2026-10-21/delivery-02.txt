@@ -1,0 +1,44 @@
+................F............................................            [100%]
+=================================== FAILURES ===================================
+_____________ test_job_eviction_cannot_make_old_request_pay_again ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-312/test_job_eviction_cannot_make_0')
+
+    def test_job_eviction_cannot_make_old_request_pay_again(tmp_path):
+        with running(tmp_path) as (_, token, store, upstream, gateway):
+            jobs = __import__("server.jobs", fromlist=["Jobs"]).Jobs(gateway, capacity=1)
+            first = jobs.submit("chat/completions", token, body(), "a" * 32, "world_seed")[1]["job"]
+            deadline = time.monotonic() + 2
+            while time.monotonic() < deadline and jobs.get(token, first)[0] == 202:
+                time.sleep(0.01)
+            second = jobs.submit("chat/completions", token, body(), "b" * 32, "world_seed")[1]["job"]
+            with pytest.raises(Denied, match="job_unavailable"):
+                jobs.get(token, first)
+            with pytest.raises(Denied, match="request_already_received"):
+                jobs.submit("chat/completions", token, body(), "a" * 32, "world_seed")
+>           while time.monotonic() < deadline and jobs.get(token, second)[0] == 202:
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tester_delivery.py:282: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <server.jobs.Jobs object at 0x7f2660d886b0>
+token = 'vPRzyo0fYqvKtb-b7Mo-jM9F_Cb9Q28zYupTcLzLm90'
+key = 'debeb04dd8fd4477aeb6cb601f39cac6'
+
+    def get(self, token, key):
+        user = self.gateway.store.identity(token)["id"]
+        with self.lock:
+            row = self.rows.get(key)
+            if (
+                row is None
+                or row["user"] != user
+                or (row["status"] != 202 and self.clock() - row["updated"] >= self.ttl)
+            ):
+>               raise Denied(404, "job_unavailable")
+E               server.gateway.Denied: job_unavailable
+
+server/jobs.py:77: Denied
+=========================== short test summary info ============================
+FAILED tests/test_tester_delivery.py::test_job_eviction_cannot_make_old_request_pay_again
+1 failed, 60 passed in 6.16s

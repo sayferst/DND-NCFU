@@ -14,7 +14,10 @@ def cloud_ready(window):
     if getattr(getattr(window, "release_profile", None), "mode", "") == "tester":
         from rpg_vkr.deployment import tester_token
 
-        return bool(window.release_profile.gateway and tester_token(window))
+        return bool(
+            getattr(window, "_tester_endpoint", window.release_profile.gateway)
+            and tester_token(window)
+        )
     return (
         window.ai_provider.currentData() != "local"
         and window.enable_local_narrator.isChecked()

@@ -1239,3 +1239,30 @@ pip/RuffOK,203Python-файла. Runtime с2dd7292 не менялся, оба L
 предыдущегоэтапа не перезаписаны. Source-check публичногоrawREADME HTTP200;
 официальный Cloudflare Error524 изGitHub описывает125с иstatuspolling.
 Это инженерное уточнение, не научный эксперимент/реальная облачная проверка.
+
+## 21.10.2026 — доставка персональной сборки без домена
+
+По выводу владельца tools_ready=true после нового PowerShell; cloudflared2026.10.3.
+В среде агента отсутствуют PowerShell/Windows/cloudflared, оплачиваемые пробы не
+запускались. Код owner CLI не выполнялся с реальным upstream/GitHub/личными ключами.
+Локальная публикация проверяется настоящим Git в временный bare-репозиторий:
+отдельная ветка содержит только endpoint.json, второе обновление fast-forward.
+
+Новые проверки: подмена подписи/endpoint, чужой ключ, replay/expiry, запрет частных
+адресов; activation/потерянный ответ/другаяinstallation/отзыв/продление; короткие
+HTTPpoll/изоляцияtesters/отсутствие двойногоPOST; Qtbackgroundactivation/отменаpoll;
+раздельныеpublicprofile/bootstrap, preflightметаданныхбезгенерации, путьMSIспробелами.
+Rawdelivery-02 сохраняет1отказ из61: повтор вытесненногоID освобождал cacheместо до
+проверки SQLite. Добавлена проверка уже принятогоID перед вытеснением результатов;
+delivery-03:36passed/11.06с. Первый полный прогон:1302passed/213.62с, pip/RuffOK;
+он предшествует последним6случаям и не объявляется финальным.
+
+Лицензии/версии проверены по установленным metadata: cryptography46.0.3
+Apache-2.0 OR BSD-3-Clause, cffi2.1.1 MIT-0, pycparser3.11 BSD-3-Clause. Обаlock
+сгенерированыuvсхэшами. Ed25519 в настоящем frozenbinary проверен без сети.
+Локальные fakeHTTP не считаются литературным качеством/доступностью платных моделей.
+
+Финальный прогон0.3.1:1308passed/210.41с,0failed/skipped, pipcheck/Ruffcheck/
+RuffformatOK,208Python-файлов. Rawfull-final-02.txt. РеальныйперсональныйLinuxbinary:
+305файлов/272195643байта,перенос/self/crypto/smokeуспешны, externalmodelrequests0.
+Не распространять этичисла наWindows/реальныйAPI. Староесырьё не перезаписывалось.

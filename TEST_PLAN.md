@@ -951,3 +951,24 @@ self/smokeуспешны:8ресурсов,288файлов/258726775байт. Qt
 APIтольколокальный4POST+2GET,платныхмодельныхзапросов0. Windowsнативнонепроверен.
 Итогfull-release:1261passed/179.97с,0failed/skipped,pip/RuffOK,
 187Python-файлов.75защищённыхисходниковпрежние,префиксAGENTSсохранён.
+
+##0.3.1 — доставка тестировщику и приёмка владельцем
+
+Автотесты tests/test_tester_delivery.py: подпись/изменениеадреса/replay/expiry/
+HTTPSpublictarget, bootstrapinstallation/idempotency/DPAPIграница, отзыв/продление/
+сохранение расходов, async202+GET без повторной генерации, изоляцияjobпоtesters,
+TTL/cacheeviction/повторстарогоUUID, Qtbackgroundactivation/cancelpoll, публичная
+веткаGitтолькосendpoint, метаданныебезPOST, MSIпутьспробелами, раздельныйbootstrap.
+Существующий test_tester_connection проходит реальный Qtworld+image через HTTPgateway
+уже с asyncпротоколом. Все внешние провайдеры заменены локальнымификстурами.
+
+НаWindows выполнить TESTER_WITHOUT_DOMAIN.md: start проверяет GETkey/models/health,
+затем buildtester1 — полныйнабор/sourcechecks, реальныйEXEself/smoke иInnoSetup.
+Ручнаяприёмка наотдельномдопуске: чистаяучётнаязаписьWindows безPython/Git/tunnel→
+Setup→автоactivation→герой/пожелания→созданиeмира→чат→картинка→сохранение/перезапуск.
+Проверить2разрешения/DPI, обновление/uninstallбезпотериданных; мастер/художниквконсоли.
+Отзыв/expiry/100₽ должны запретить новые запросы. Extend несбрасывает расходы.
+Перезапускхоста меняетподписанныйадрес безновогоSetup; оборванныйpaidPOST не повторять.
+НативныеWindows/реальныеRouterAIгенерации требуютотдельноговыполнения владельцем:
+Linuxself/smoke иfakeHTTP недоказывают ихуспех. Не активировать productiongrant
+автоматическимsmoke; требуется изоляциядоMainWindow и внешнихсетевыхзапросов0.

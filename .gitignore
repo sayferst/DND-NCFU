@@ -46,3 +46,8 @@ artist-credential.bin
 # Owner-operated gateway state and scoped tester credentials.
 /gateway-data/
 tester-access.bin
+
+# Personalized installers and owner-only tunnel state.
+/host-private/
+tester-installation.bin
+tester-bootstrap.json

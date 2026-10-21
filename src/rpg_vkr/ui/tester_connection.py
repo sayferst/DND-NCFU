@@ -8,9 +8,16 @@ from rpg_vkr.storage.connection import load_secret, save_secret, windows_credent
 from rpg_vkr.visuals.client import ImagesTransport
 from rpg_vkr.visuals.policy import VisualSettings
 
+_probe_offline = False
+
 
 def install_tester_connection(window):
-    window.release_profile = load_release_profile()
+    if _probe_offline:
+        from rpg_vkr.deployment import ReleaseProfile
+
+        window.release_profile = ReleaseProfile()
+    else:
+        window.release_profile = load_release_profile()
     profile = window.release_profile
     console = window.developer_console
     console.testing_info.setText(
@@ -45,13 +52,20 @@ def install_tester_connection(window):
             page.activation_button = QPushButton("Активировать тестовую игру")
             page.activation_button.clicked.connect(lambda: activate(window))
             page.layout().insertWidget(page.layout().count() - 2, page.activation_button)
-    configure(window)
+    if profile.discovery:
+        from rpg_vkr.ui.tester_discovery import ConnectionWorker
+
+        window._tester_endpoint = ""
+        window.tester_connection_worker = ConnectionWorker(window)
+    else:
+        configure(window)
 
 
 def configure(window):
     profile = window.release_profile
     token = tester_token(window)
-    if not profile.gateway or not token:
+    endpoint = getattr(window, "_tester_endpoint", profile.gateway)
+    if not endpoint or not token:
         return False
     window.cloud_model.setText(profile.text_model)
     window.cloud_allowed.setChecked(True)
@@ -60,12 +74,12 @@ def configure(window):
     window.enable_local_narrator.setChecked(True)
     window.ollama.configure_cloud(
         CloudProfile(
-            "gateway", profile.text_model, token, endpoint_url=profile.gateway + "/chat/completions"
+            "gateway", profile.text_model, token, endpoint_url=endpoint + "/chat/completions"
         )
     )
     if hasattr(window, "visuals"):
         visual = window.visuals
-        visual.worker.transport = ImagesTransport(gateway_base=profile.gateway, gateway_key=token)
+        visual.worker.transport = ImagesTransport(gateway_base=endpoint, gateway_key=token)
         # Server owns the true quota; local limits remain conservative as well.
         visual.settings = VisualSettings(
             monthly_micros=2_000_000_000,
@@ -77,6 +91,9 @@ def configure(window):
 
 
 def activate(window):
+    if window.release_profile.discovery:
+        window.tester_connection_worker.start()
+        return False
     if not window.release_profile.gateway:
         window.statusBar().showMessage(
             "В этой сборке игровой сервер ещё не указан. Обратитесь к владельцу."

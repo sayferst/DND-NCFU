@@ -1456,3 +1456,33 @@ PowerShellздесьнет, проверенисходник/BOM/diff. Подп�
 ПубличныйrawREADME HTTP200; CloudflareError524изофициальногоGitHub описывает125с,
 поэтому15минутныйworld_seedнельзяпростообернутьтуннелембезадаптации.
 Обычныйcommit/pushпрежнейветки; инструкцииWindowsкратко, ожидатьвыводхоста.
+
+## 21.10.2026 — персональный QuickTunnel Setup,0.3.1
+
+Текущий владелец подтвердил Windows tools_ready=true и поручил закончить весь
+пакет без этапных остановок. Его установка cloudflared исправна после нового
+PowerShell. Новый scripts/tester_host.cmd: start/build/list/revoke/extend;
+DPAPIхостданные толькоLOCALAPPDATA/DND-NCFU-Host. Никаких ключей в чат/Git.
+Start явнопубликует только подписанныйendpoint.json вtester-host-address,
+обычныйpush безforce, не меняя checkout. В облаке хост не развёртывать за владельца.
+Asyncjobs нужны для15минworld_seed; GETpollнеповторяетpaidPOST. ПовторыUUID
+неоплачивать, неизвестныйрезерв сохранять. Результаты приватные/ограниченныйкэш.
+
+Исключение к75защищённым: cryptography46.0.3 дляEd25519 обоснованно меняеттолько
+requirements.in/dev.lock/build.lock, uvcompileсхэшами; остальные72сохраняются.
+Не писать своюкриптографиюрадистарыхlock. Подпись/expiry/sequence перед credential
+новомуendpoint; privatekeyгенерируетсяDPAPIнаПКвладельца, publickeyвсборке.
+Персональныйbootstrapотдельныйресурс, intentionalодноразовыйlimitedgrant;
+не публиковатьнаGitHub/ActionsкакобщедоступныйSetup.100₽/30дней, rate6/min,
+общийсервер100₽lifetime, extendтолькосрок. DPAPIinstallsecretпишетсядоactivation,
+retryтойжеinstallationвосстанавливаетtoken; другойinstallation409.
+Source/frozenпробытольколокальныеfakeAPI. НеобъявлятьnativeWindows/Setup/RouterAI
+проверенныминаоснованииLinux. Сырыерезультатынеперезаписывать. Инструкция
+TESTER_WITHOUT_DOMAIN.md заменяетподготовительную,называетсяверсия0.3.1.
+
+Итог0.3.1:1308passed/210.41с,0failed/skipped,pip/RuffOK,208Python-файлов,
+20новыхслучаев. ФинальныйперсональныйLinuxbinary перенесён/self/smoke/Ed25519OK,
+305файлов/272195643байта,6loopbackзапросов,external0. Толькосинтетическиеbootstrap/
+publickey; никакогосервера/платныхPOSTвоблаке. Runtimeпослеэтогоитоганеменятьбез
+новойпричины. Windowsинструкция start/build/revoke/extend вTESTER_WITHOUT_DOMAIN.md;
+nativeSetup/DPAPI и реальныйRouterAIтребуютприёмкивладельцем, не обещать100%безнеё.

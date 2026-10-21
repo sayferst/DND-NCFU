@@ -247,6 +247,10 @@ def smoke_test(app):
         for name in names:
             os.environ.pop(name, None)
         os.environ["RPG_VKR_DATA_DIR"] = str(root / "data")
+        from rpg_vkr.ui import tester_connection
+
+        previous_probe = tester_connection._probe_offline
+        tester_connection._probe_offline = True
         try:
             session = Session.create_hero(Character(name="Проверка"), "scholar", seed=137)
             seed = build_world(
@@ -417,6 +421,7 @@ def smoke_test(app):
                 "clean_windows_without_python": "requires separate manual acceptance",
             }
         finally:
+            tester_connection._probe_offline = previous_probe
             for name, value in old.items():
                 if value is None:
                     os.environ.pop(name, None)

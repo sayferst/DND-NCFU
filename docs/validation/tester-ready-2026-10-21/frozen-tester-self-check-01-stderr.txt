@@ -1,0 +1,1 @@
+Fontconfig error: No writable cache directories

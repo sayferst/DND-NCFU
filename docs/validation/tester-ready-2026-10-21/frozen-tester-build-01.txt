@@ -1,0 +1,79 @@
+47 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.8
+47 INFO: Python: 3.12.14
+48 INFO: Platform: Linux-6.18.55-x86_64-with-glibc2.41
+48 INFO: Python environment: /workspace/DND-NCFU/.venv
+49 INFO: Removing temporary files and cleaning cache in /home/agent/.cache/pyinstaller
+299 INFO: Module search paths (PYTHONPATH):
+['/workspace/DND-NCFU/src',
+ '/workspace/DND-NCFU/src',
+ '/workspace/DND-NCFU',
+ '/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python312.zip',
+ '/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12',
+ '/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload',
+ '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages',
+ '/workspace/DND-NCFU/scripts',
+ '/workspace/DND-NCFU/src']
+435 INFO: Appending 'datas' from .spec
+435 INFO: checking Analysis
+435 INFO: Building Analysis because Analysis-00.toc is non existent
+435 INFO: Looking for Python shared library...
+442 INFO: Using Python shared library: /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/libpython3.12.so.1.0
+442 INFO: Running Analysis Analysis-00.toc
+442 INFO: Target bytecode optimization level: 0
+442 INFO: Initializing module dependency graph...
+443 INFO: Initializing module graph hook caches...
+448 INFO: Analyzing modules for base_library.zip ...
+1168 INFO: Processing standard module hook 'hook-encodings.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+2369 INFO: Processing standard module hook 'hook-pickle.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3252 INFO: Processing standard module hook 'hook-heapq.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3523 INFO: Caching module dependency graph...
+3553 INFO: Analyzing /workspace/DND-NCFU/scripts/run_game.py
+3611 INFO: Processing standard module hook 'hook-platform.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3619 INFO: Processing standard module hook 'hook-PySide6.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3731 INFO: Processing standard module hook 'hook-shiboken6.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+3866 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+4630 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+5324 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+6021 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+6579 INFO: Processing standard module hook 'hook-_ctypes.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+6801 INFO: Processing standard module hook 'hook-cryptography.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+7167 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+7622 INFO: Processing standard module hook 'hook-difflib.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+7647 INFO: Processing standard module hook 'hook-sqlite3.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+8273 INFO: Analyzing hidden import 'rpg_vkr.domain.conflict'
+8276 INFO: Processing module hooks (post-graph stage)...
+8306 INFO: Processing standard module hook 'hook-PySide6.QtDBus.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+8441 INFO: Performing binary vs. data reclassification (181 entries)
+8546 INFO: Looking for ctypes DLLs
+8553 INFO: Analyzing run-time hooks ...
+8555 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+8558 INFO: Including run-time hook 'pyi_rth_pyside6.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+8559 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks/pre_find_module_path'
+8560 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/hooks'
+8575 INFO: Including run-time hook 'pyi_rth_cryptography_openssl.py' from '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/_pyinstaller_hooks_contrib/rthooks'
+8581 INFO: Creating base_library.zip...
+8596 INFO: Looking for dynamic libraries
+9686 WARNING: Library not found: could not resolve 'libtiff.so.5', dependency of '/workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PySide6/Qt/plugins/imageformats/libqtiff.so'.
+9698 INFO: Warnings written to /workspace/DND-NCFU/build/tester-ready-personal/work/DND-NCFU/warn-DND-NCFU.txt
+9711 INFO: Graph cross-reference written to /workspace/DND-NCFU/build/tester-ready-personal/work/DND-NCFU/xref-DND-NCFU.html
+9726 INFO: checking PYZ
+9726 INFO: Building PYZ because PYZ-00.toc is non existent
+9726 INFO: Building PYZ (ZlibArchive) /workspace/DND-NCFU/build/tester-ready-personal/work/DND-NCFU/PYZ-00.pyz
+9995 INFO: Building PYZ (ZlibArchive) /workspace/DND-NCFU/build/tester-ready-personal/work/DND-NCFU/PYZ-00.pyz completed successfully.
+9999 WARNING: Ignoring icon; supported only on Windows and macOS!
+10006 INFO: checking PKG
+10006 INFO: Building PKG because PKG-00.toc is non existent
+10006 INFO: Building PKG (CArchive) DND-NCFU.pkg
+10017 INFO: Building PKG (CArchive) DND-NCFU.pkg completed successfully.
+10017 INFO: Bootloader /workspace/DND-NCFU/.venv/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+10017 INFO: checking EXE
+10017 INFO: Building EXE because EXE-00.toc is non existent
+10017 INFO: Building EXE from EXE-00.toc
+10018 INFO: Copying bootloader EXE to /workspace/DND-NCFU/build/tester-ready-personal/work/DND-NCFU/DND-NCFU
+10018 INFO: Appending PKG archive to custom ELF section in EXE
+10024 INFO: Building EXE from EXE-00.toc completed successfully.
+10026 INFO: checking COLLECT
+10026 INFO: Building COLLECT because COLLECT-00.toc is non existent
+10026 INFO: Building COLLECT COLLECT-00.toc
+10119 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+10122 INFO: Build complete! The results are available in: /workspace/DND-NCFU/build/tester-ready-personal/dist

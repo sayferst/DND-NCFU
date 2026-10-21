@@ -63,6 +63,8 @@ class Store:
                     reserve INTEGER NOT NULL, actual INTEGER, kind TEXT NOT NULL,
                     state TEXT NOT NULL DEFAULT 'pending', PRIMARY KEY(tester,id));
                 CREATE INDEX IF NOT EXISTS calls_created ON calls(tester,created);
+                CREATE TABLE IF NOT EXISTS activations(
+                    hash TEXT PRIMARY KEY, tester TEXT UNIQUE NOT NULL, installation TEXT);
                 CREATE TABLE IF NOT EXISTS control(id INTEGER PRIMARY KEY, halted INTEGER NOT NULL);
                 INSERT OR IGNORE INTO control VALUES(1,0);
             """)
@@ -92,6 +94,53 @@ class Store:
                 (identity, digest(token), self.clock() + days * 86400, budget, requests, worlds),
             )
         return token
+
+    def bootstrap(self, identity, **limits):
+        # Unclaimed grants cannot authenticate to generation endpoints.
+        self.issue(identity, **limits)
+        code = secrets.token_urlsafe(32)
+        with closing(self.connect()) as db, db:
+            db.execute("INSERT INTO activations(hash,tester) VALUES(?,?)", (digest(code), identity))
+        return code
+
+    def activate(self, code, installation):
+        if not all(
+            isinstance(v, str) and re.fullmatch(r"[A-Za-z0-9_-]{40,100}", v)
+            for v in (code, installation)
+        ):
+            raise Denied(401, "activation_required")
+        # Same installation can recover a lost activation reply, without storing raw tokens.
+        token = hashlib.sha256(
+            ("DND-activation-v1:" + code + ":" + installation).encode()
+        ).hexdigest()
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT a.*,t.revoked,t.expires FROM activations a JOIN testers t "
+                "ON t.id=a.tester WHERE a.hash=?",
+                (digest(code),),
+            ).fetchone()
+            if row is None or row["revoked"] or row["expires"] <= self.clock():
+                raise Denied(401, "access_expired_or_revoked")
+            if row["installation"] and row["installation"] != digest(installation):
+                raise Denied(409, "already_activated")
+            db.execute(
+                "UPDATE activations SET installation=? WHERE hash=?",
+                (digest(installation), digest(code)),
+            )
+            db.execute("UPDATE testers SET hash=? WHERE id=?", (digest(token), row["tester"]))
+        return {"token": token}
+
+    def extend(self, identity, days):
+        if type(days) is not int or not 1 <= days <= 90:
+            raise ValueError("days must be 1..90")
+        with closing(self.connect()) as db, db:
+            changed = db.execute(
+                "UPDATE testers SET expires=MAX(expires,?)+? WHERE id=? AND revoked=0",
+                (self.clock(), days * 86400, identity),
+            ).rowcount
+            if not changed:
+                raise ValueError("Unknown or revoked grant")
 
     def revoke(self, identity):
         with closing(self.connect()) as db, db:
@@ -200,10 +249,11 @@ class Upstream:
         self.key = key
 
     def request(self, route, body=None):
-        if route not in {"models", "chat/completions", "images"}:
+        if route not in {"key", "models", "chat/completions", "images"}:
             raise Denied(400, "route")
         connection = http.client.HTTPSConnection(
-            "routerai.ru", timeout=900 if route == "chat/completions" else 180
+            "routerai.ru",
+            timeout=20 if route == "models" else 900 if route == "chat/completions" else 180,
         )
         try:
             connection.request(
@@ -443,6 +493,9 @@ class Gateway:
         except (ValueError, TypeError, KeyError, ArithmeticError):
             raise Denied(400, "invalid_or_unpriced_request") from None
         user = self.store.reserve(token, identity, expected, stage)
+        return self.execute(route, body, user, identity)
+
+    def execute(self, route, body, user, identity):
         actual, succeeded = None, False
         try:
             result = self.upstream.request(route, body)
@@ -496,12 +549,37 @@ class Handler(BaseHTTPRequestHandler):
                 "/api/v1/chat/completions": "chat/completions",
                 "/api/v1/images": "images",
             }
+            if self.path == "/api/v1/health" and not post:
+                self.respond(200, {"service": "dnd-gateway", "protocol": 1, "async_jobs": True})
+                return
+            if self.path == "/api/v1/activate" and post:
+                if self.headers.get_content_type() != "application/json" or self.headers.get(
+                    "Transfer-Encoding"
+                ):
+                    raise Denied(400, "content_type")
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= 1024:
+                    raise Denied(413, "request_size")
+                value = json.loads(self.rfile.read(length))
+                self.respond(
+                    200,
+                    self.server.gateway.store.activate(
+                        value.get("code"), value.get("installation")
+                    ),
+                )
+                return
             route = routes.get(self.path)
+            if not post and re.fullmatch(r"/api/v1/jobs/[a-f0-9]{32}", self.path):
+                route = "job"
             if route is None or post != (route in {"chat/completions", "images"}):
                 raise Denied(404, "route_not_found")
             authorization = self.headers.get("Authorization", "")
             token = authorization[7:] if authorization.startswith("Bearer ") else ""
             self.server.gateway.store.identity(token)  # Authenticate before reading a large body.
+            if route == "job":
+                status, value = self.server.jobs.get(token, self.path.rsplit("/", 1)[1])
+                self.respond(status, value)
+                return
             body = None
             if post:
                 if (
@@ -517,6 +595,16 @@ class Handler(BaseHTTPRequestHandler):
                 if len(raw) != length:
                     raise Denied(400, "incomplete_body")
                 body = json.loads(raw)
+            if post and self.headers.get("Prefer") == "respond-async":
+                status, value = self.server.jobs.submit(
+                    route,
+                    token,
+                    body,
+                    self.headers.get("X-Request-ID", ""),
+                    self.headers.get("X-DND-Stage", ""),
+                )
+                self.respond(status, value)
+                return
             value = self.server.gateway.handle(
                 route,
                 token,
@@ -556,6 +644,9 @@ class Server(ThreadingHTTPServer):
     def __init__(self, address, gateway):
         super().__init__(address, Handler)
         self.gateway = gateway
+        from server.jobs import Jobs
+
+        self.jobs = Jobs(gateway)
         self.slots = threading.BoundedSemaphore(16)
 
 
@@ -572,12 +663,16 @@ def main():
     issue.add_argument("--worlds", type=int, default=2)
     revoke = commands.add_parser("revoke")
     revoke.add_argument("id")
+    extend = commands.add_parser("extend")
+    extend.add_argument("id")
+    extend.add_argument("--days", type=int, required=True)
     commands.add_parser("list")
     serve = commands.add_parser("serve")
     serve.add_argument("--bind", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8443)
-    serve.add_argument("--cert", required=True)
-    serve.add_argument("--key", required=True)
+    serve.add_argument("--cert")
+    serve.add_argument("--key")
+    serve.add_argument("--local-http", action="store_true")
     serve.add_argument("--text-model", default=TEXT_MODEL)
     args = parser.parse_args()
     store = Store(args.db, args.global_rub * 1000000)
@@ -593,16 +688,23 @@ def main():
         )
     elif args.command == "revoke":
         store.revoke(args.id)
+    elif args.command == "extend":
+        store.extend(args.id, args.days)
     elif args.command == "list":
         print(json.dumps(store.summary(), indent=2))
     else:
+        if args.local_http and args.bind != "127.0.0.1":
+            parser.error("--local-http requires --bind 127.0.0.1")
+        if not args.local_http and not (args.cert and args.key):
+            parser.error("TLS certificate required (or explicit loopback --local-http)")
         gateway = Gateway(store, Upstream(os.environ.get("DND_ROUTERAI_KEY", "")), args.text_model)
         server = Server((args.bind, args.port), gateway)
-        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        context.minimum_version = ssl.TLSVersion.TLSv1_2
-        context.load_cert_chain(args.cert, args.key)
-        server.socket = context.wrap_socket(server.socket, server_side=True)
-        print("Gateway listening with TLS; no prompt or token logs.")
+        if not args.local_http:
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
+            context.load_cert_chain(args.cert, args.key)
+            server.socket = context.wrap_socket(server.socket, server_side=True)
+        print("Gateway listening; no prompt or token logs.")
         server.serve_forever()
 
 

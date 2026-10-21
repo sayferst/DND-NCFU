@@ -3,10 +3,13 @@ param(
     [switch]$Installer,
     [ValidateSet('developer', 'tester')][string]$Profile = 'developer',
     [string]$GatewayUrl = '',
+    [string]$DiscoveryUrl = '',
+    [string]$DiscoveryKey = '',
+    [string]$BootstrapFile = '',
     [string]$TextModel = 'deepseek/deepseek-v4-flash-latest'
 )
 $ErrorActionPreference = 'Stop'
-if ($Profile -eq 'tester' -and !$GatewayUrl.StartsWith('https://')) {
+if ($Profile -eq 'tester' -and !$DiscoveryUrl -and !$GatewayUrl.StartsWith('https://')) {
     throw 'Tester Build: укажите реальный HTTPS-адрес игрового сервиса через -GatewayUrl. Ключ API не передавайте.'
 }
 if ($env:OS -ne 'Windows_NT' -or ![Environment]::Is64BitOperatingSystem) {
@@ -31,15 +34,24 @@ $stamp = (Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + [Guid]::NewGuid().ToSt
 $stage = Join-Path (Get-Location) ('build\windows-' + $stamp)
 $checks = Join-Path $stage 'checks'
 New-Item -ItemType Directory -Path $checks -Force | Out-Null
+$oldDiscoveryUrl = $env:DND_DISCOVERY_URL
+$oldDiscoveryKey = $env:DND_DISCOVERY_KEY
+$oldBootstrapFile = $env:DND_BOOTSTRAP_FILE
 $oldBuildProfile = $env:DND_BUILD_PROFILE
 $oldGatewayUrl = $env:DND_GATEWAY_URL
 $oldTextModel = $env:DND_TEXT_MODEL
 try {
+    $env:DND_DISCOVERY_URL = $DiscoveryUrl
+    $env:DND_DISCOVERY_KEY = $DiscoveryKey
+    $env:DND_BOOTSTRAP_FILE = $BootstrapFile
     $env:DND_BUILD_PROFILE = $Profile
     $env:DND_GATEWAY_URL = $GatewayUrl
     $env:DND_TEXT_MODEL = $TextModel
     & $python -m PyInstaller --clean --noconfirm --distpath (Join-Path $stage 'dist') --workpath (Join-Path $stage 'work') DND-NCFU.spec
 } finally {
+    $env:DND_DISCOVERY_URL = $oldDiscoveryUrl
+    $env:DND_DISCOVERY_KEY = $oldDiscoveryKey
+    $env:DND_BOOTSTRAP_FILE = $oldBootstrapFile
     $env:DND_BUILD_PROFILE = $oldBuildProfile
     $env:DND_GATEWAY_URL = $oldGatewayUrl
     $env:DND_TEXT_MODEL = $oldTextModel

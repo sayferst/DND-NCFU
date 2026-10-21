@@ -33,7 +33,8 @@ def prepare_release_profile(output):
 
     mode = os.environ.get("DND_BUILD_PROFILE", "developer")
     gateway = os.environ.get("DND_GATEWAY_URL", "")
-    if mode == "tester" and not gateway.startswith("https://"):
+    discovery = os.environ.get("DND_DISCOVERY_URL", "")
+    if mode == "tester" and not discovery and not gateway.startswith("https://"):
         raise ValueError("Tester Build requires the real HTTPS gateway address, never an API key")
     try:
         commit = subprocess.check_output(
@@ -48,10 +49,35 @@ def prepare_release_profile(output):
         gateway,
         os.environ.get("DND_TEXT_MODEL", "deepseek/deepseek-v4-flash-latest"),
         commit,
+        discovery,
+        os.environ.get("DND_DISCOVERY_KEY", ""),
     )
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(asdict(profile), indent=2), encoding="utf-8")
+    value = asdict(profile)
+    if not profile.discovery:
+        value.pop("discovery")
+        value.pop("verification_key")
+    output.write_text(json.dumps(value, indent=2), encoding="utf-8")
+    return output
+
+
+def prepare_bootstrap(output):
+    source = os.environ.get("DND_BOOTSTRAP_FILE", "")
+    if not source:
+        return None
+    if os.environ.get("DND_BUILD_PROFILE") != "tester":
+        raise ValueError("Personal activation is allowed only in Tester Build")
+    path = Path(source)
+    if path.stat().st_size > 512:
+        raise ValueError("Invalid personal activation file")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    import re
+
+    if set(value) != {"code"} or not re.fullmatch(r"[A-Za-z0-9_-]{43}", value["code"]):
+        raise ValueError("Invalid personal activation code")
+    output = Path(output)
+    output.write_text(json.dumps(value), encoding="utf-8")
     return output
 
 
@@ -59,7 +85,15 @@ def prepare_licenses(output):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     packages = []
-    for name in ("PySide6-Essentials", "shiboken6", "pyinstaller", "pyinstaller-hooks-contrib"):
+    for name in (
+        "PySide6-Essentials",
+        "shiboken6",
+        "pyinstaller",
+        "pyinstaller-hooks-contrib",
+        "cryptography",
+        "cffi",
+        "pycparser",
+    ):
         installed = distribution(name)
         packages.append({"name": name, "version": installed.version})
         for item in installed.files or ():
@@ -187,10 +221,26 @@ def verify_bundle(folder, *, windows=True):
     if config.exists():
         value = json.loads(config.read_text(encoding="utf-8"))
         release_profile = asdict(ReleaseProfile(**value))
-        if release_profile["mode"] == "tester" and not release_profile["gateway"].startswith(
-            "https://"
+        if (
+            release_profile["mode"] == "tester"
+            and not release_profile["discovery"]
+            and not release_profile["gateway"].startswith("https://")
         ):
             raise ValueError("Tester package has no HTTPS service")
+    bootstrap = folder / "_internal" / "tester-bootstrap.json"
+    if bootstrap.exists():
+        if (
+            not release_profile
+            or release_profile["mode"] != "tester"
+            or not release_profile["discovery"]
+            or bootstrap.stat().st_size > 512
+        ):
+            raise ValueError("Personal activation requires signed Tester profile")
+        activation = json.loads(bootstrap.read_text(encoding="utf-8"))
+        if set(activation) != {"code"} or not re.fullmatch(
+            r"[A-Za-z0-9_-]{43}", activation["code"]
+        ):
+            raise ValueError("Invalid bundled personal activation")
     for relative in REQUIRED_RESOURCES:
         if not (folder / "_internal" / relative).is_file():
             raise ValueError("Missing bundled resource: " + relative)
@@ -208,7 +258,16 @@ def verify_bundle(folder, *, windows=True):
             )
             or path.name.startswith(".env")
             or "credential.bin" in path.name
-            or path.name in {"tester-access.bin", "developer-access.json"}
+            or path.name
+            in {
+                "tester-access.bin",
+                "developer-access.json",
+                "tester-installation.bin",
+                "routerai-key.bin",
+                "signing-key.bin",
+                "host-ready.json",
+            }
+            or (path.name.startswith("activation-") and path.suffix == ".bin")
             or path.name.endswith(".local.txt")
             or re.fullmatch(r"slot-[123]\.json", path.name)
             or path.suffix in {".sqlite3", ".sqlite", ".db"}

@@ -164,7 +164,7 @@ class DeveloperConsole(QWidget):
         from rpg_vkr.narrative.routerai import RouterAIClient
 
         profile = getattr(self.window, "release_profile", None)
-        if not profile or not profile.gateway:
+        if not profile or not getattr(self.window, "_tester_endpoint", profile.gateway):
             self.connection_info.setText("Игровой шлюз пока не задан в профиле сборки.")
             return
         if not hasattr(self, "gateway_client"):
@@ -179,7 +179,11 @@ class DeveloperConsole(QWidget):
             self.connection_info.setText("Для проверки нужен допуск тестировщика.")
             return
         self.connection_info.setText("Проверяется HTTPS-шлюз. Генерация не запускается.")
-        self.gateway_client._get(profile.gateway + "/key", "key", tester_token(self.window))
+        self.gateway_client._get(
+            getattr(self.window, "_tester_endpoint", profile.gateway) + "/key",
+            "key",
+            tester_token(self.window),
+        )
 
     def refresh(self):
         if not self.access.authorized:

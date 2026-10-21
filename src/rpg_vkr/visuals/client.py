@@ -6,6 +6,7 @@ import json
 import re
 import socket
 import threading
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -87,6 +88,7 @@ class ImagesTransport:
             if self.gateway:
                 from uuid import uuid4
 
+                headers["Prefer"] = "respond-async"
                 headers["X-Request-ID"] = uuid4().hex
                 headers["X-DND-Stage"] = "image"
         request = urllib.request.Request(
@@ -97,6 +99,14 @@ class ImagesTransport:
                 raw = reply.read(maximum + 1)
                 if len(raw) > maximum:
                     raise ImageError("response_size", "Ответ API слишком большой.")
+                if self.gateway and payload is not None and reply.status == 202:
+                    try:
+                        job = json.loads(raw)["job"]
+                        if not isinstance(job, str) or not re.fullmatch(r"[a-f0-9]{32}", job):
+                            raise ValueError
+                    except (ValueError, KeyError, TypeError):
+                        raise ImageError("job", "Неверный номер задачи иллюстрации.") from None
+                    return self.poll(job, key, maximum)
                 return raw
         except urllib.error.HTTPError as error:
             error.close()
@@ -116,6 +126,23 @@ class ImagesTransport:
             raise ImageError(
                 "network", "Images API: ошибка сети или таймаут; повтор не выполнен."
             ) from None
+
+    def poll(self, job, key, maximum):
+        deadline = time.monotonic() + 240
+        while time.monotonic() < deadline:
+            request = urllib.request.Request(
+                self.base + "/jobs/" + job, headers={"Authorization": "Bearer " + key}
+            )
+            with self.opener.open(request, timeout=20) as reply:
+                raw = reply.read(maximum + 1)
+                if len(raw) > maximum:
+                    raise ImageError("response_size", "Ответ иллюстрации слишком большой.")
+                if reply.status == 200:
+                    return raw
+                if reply.status != 202 or json.loads(raw) != {"job": job}:
+                    raise ImageError("job", "Неверный статус иллюстрации.")
+            time.sleep(0.6)
+        raise ImageError("timeout", "Иллюстрация не завершена вовремя; повтор не выполнен.")
 
     def metadata(self, key):
         try:
