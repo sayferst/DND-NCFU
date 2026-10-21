@@ -1517,3 +1517,21 @@ Standalonehost-onlyfix, EXEнепересобирать, Windowsвладелец
 5новыхслучаев. Все75защищённыххэшейсоответствуютbaseline0.3.1. Runtimeпослеитога
 неменялся. Полныйrawvalidation/host-http400-2026-10-21/full-final-01.txt. Обычный
 pushпрежнейветки, userWindowsgitpull/start, безSetuprebuild/повторнойустановки.
+
+## 21.10.2026 — повторHTTP400 и новыйключвладельца
+
+Логпослеdec1109сохраняет400:предыдущаягипотезанеподтвердиласькакрешениеживого
+отказа. Уточнение«обычныйAPIключ»последнее;владелецтакжеперегенерировалключ3раза.
+Сразувыданыkey/start:кабинетнеобновляетDPAPIкопию. Не проситьключвчате.
+Добавленыdiagnose(толькоGETkey,безStore/tunnel/Git/paidPOST),ограниченное8КиБ
+чтение400body,фиксированныекатегориибезraw/секретов/произвольныхполей, inferredфлаг.
+Неизвестный/HTMLответнедодумывать, сбойbodyчтениянескрываетHTTP400. Keyhelper
+пишеттолькоAPIcredential,неключподписи/допуски;неверныйформатнеперезаписываетего.
+Target-01:2failed/48passed, target-02:91passed/12.76с,плюс2новыхrobustnessслучая.
+Финальныйrawvalidation/host-error-reasons-2026-10-21/full-final-01.txt. Необъявлять
+известнойпричину400илиWindowsDPAPI/livemodelуспехнаоснованииmockпроверок.
+
+Итогkey/diagnose:1363passed/212.82с,0failed/skipped,pip/RuffOK,212Python-файлов,
+29новыхслучаев. Финальныйrawhost-error-reasons-2026-10-21/full-final-01.txt,
+runtimeпосленегонеменятьбезпричины. Все75защищённыххэшейпрежние, WindowsDPAPI
+необъявлятьпроверенным. Владелецделаетgitpull/key/start;еслиотказ—diagnoseбезключа.

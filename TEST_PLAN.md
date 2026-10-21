@@ -991,3 +991,15 @@ Accept, неиметьContent-Type; толькоkeyGETсодержитAuth. JSON
 долженостатьсяодиночнымPOSTснеизменнымтелом. Строгийfixtureparser возвращает400
 приJSONContentTypeсотсутствующимтелом. ПлюсдиагностикаHTTP400безsecretbodyecho.
 РеальныйRouterAIнеиспользуется; Windowsпослеpullповторяетstart, непересобираетEXE.
+
+## HTTP400: безопасное пояснение и смена сохранённого ключа,21.10.2026
+
+tests/test_safe_provider_diagnosis.py проверяет фиксированные категории
+master/authorization/key/body/route/quota/access, plaintext/HTML/неверныйJSON,
+смешениеобщегокодаinvalid_requestссообщениемmissingkey, ограничение8КиБ,
+отсутствиесекретов/аккаунта/ID/атрибутовисключениявJSONотчёте, сохранение400при
+таймаутечтенияпояснения, unchangedallowancevalidator. СменаDPAPIключа проверяется
+mockхранилищем:новыйключпишетсявrouterai-key.bin, неверныйвводнесохраняется,
+другиеключи/допускинеменяются. CLIkey/diagnoseникогданеоткрываютбазуквот.
+НаWindows: key→скрытыйновыйAPIключ→start. Принеуспехе diagnose, переслатьтолько
+безопасныйJSONбезключа. ЖивойHTTP400причинаещёнеподтверждена, молчанеобходитьguard.

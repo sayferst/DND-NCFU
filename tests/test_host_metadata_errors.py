@@ -76,7 +76,7 @@ def test_http_status_survives_to_safe_owner_diagnostic(tmp_path, monkeypatch, st
     message = str(captured.value)
     assert str(status) in message
     assert "owner-secret" not in message and "не запускалась" in message
-    assert calls[0].closed and calls[0].reads == 0
+    assert calls[0].closed and calls[0].reads == (1 if status == 400 else 0)
 
 
 @pytest.mark.parametrize(

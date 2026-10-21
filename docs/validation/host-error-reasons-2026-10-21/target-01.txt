@@ -1,0 +1,43 @@
+...............F...........F......................                       [100%]
+=================================== FAILURES ===================================
+________ test_generic_invalid_request_type_does_not_mean_key_is_invalid ________
+
+    def test_generic_invalid_request_type_does_not_mean_key_is_invalid():
+>       assert (
+            classify(
+                json.dumps(
+                    {"error": {"message": "Missing API key", "type": "invalid_request_error"}}
+                ).encode()
+            )[0]
+            == "authorization_missing"
+        )
+E       AssertionError: assert 'key_rejected' == 'authorization_missing'
+E         
+E         - authorization_missing
+E         + key_rejected
+
+tests/test_safe_provider_diagnosis.py:41: AssertionError
+___________ test_http_status_survives_to_safe_owner_diagnostic[400] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-320/test_http_status_survives_to_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd8192e01d0>
+status = 400
+
+    @pytest.mark.parametrize("status", [400, 401, 403, 402, 429, 500])
+    def test_http_status_survives_to_safe_owner_diagnostic(tmp_path, monkeypatch, status):
+        provider, calls = upstream(monkeypatch, b"owner-secret-not-for-output", status=status)
+        with pytest.raises(ValueError) as captured:
+            check_provider(Gateway(Store(tmp_path / "db"), provider))
+        message = str(captured.value)
+        assert str(status) in message
+        assert "owner-secret" not in message and "не запускалась" in message
+>       assert calls[0].closed and calls[0].reads == 0
+E       assert (True and 1 == 0)
+E        +  where True = <test_host_metadata_errors.upstream.<locals>.Connection object at 0x7fd8192e1820>.closed
+E        +  and   1 = <test_host_metadata_errors.upstream.<locals>.Connection object at 0x7fd8192e1820>.reads
+
+tests/test_host_metadata_errors.py:79: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_safe_provider_diagnosis.py::test_generic_invalid_request_type_does_not_mean_key_is_invalid
+FAILED tests/test_host_metadata_errors.py::test_http_status_survives_to_safe_owner_diagnostic[400]
+2 failed, 48 passed in 1.77s

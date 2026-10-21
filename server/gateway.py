@@ -32,6 +32,8 @@ STAGES = {"director", "story_result", "challenge", "world_plan", "world_seed"}
 class Denied(Exception):
     def __init__(self, status, code):
         self.status, self.code = status, code
+        self.provider_reason = ""
+        self.response_format = ""
         super().__init__(code)
 
 
@@ -275,7 +277,17 @@ class Upstream:
             metadata = route in {"key", "models"}
             if reply.status != 200:
                 code = f"upstream_http_{reply.status}" if metadata else "upstream_unavailable"
-                raise Denied(503, code)
+                error = Denied(503, code)
+                if metadata and reply.status == 400:
+                    from server.metadata_errors import classify
+
+                    # Read only the failed metadata response, never a generation response.
+                    # Keep fixed labels only: no raw body, key, account fields or exception text.
+                    try:
+                        error.provider_reason, error.response_format = classify(reply.read(8192))
+                    except (OSError, ValueError, http.client.HTTPException, RecursionError):
+                        pass  # Preserve HTTP400 when its optional explanation cannot be read.
+                raise error
             maximum = 65536 if route == "key" else MAX_REPLY
             raw = reply.read(maximum + 1)
             if len(raw) > maximum:

@@ -157,6 +157,25 @@ def private_key(root):
     return Ed25519PrivateKey.from_private_bytes(base64.b64decode(encoded, validate=True))
 
 
+PROVIDER_REASONS = {
+    "master_key_not_supported": "В ответе RouterAI упомянуто ограничение для мастер-ключа. "
+    "Выполните tester_host.cmd key и введите обычный ключ для запросов к моделям.",
+    "master_key_required": "Для этой операции RouterAI запросил мастер-ключ. "
+    "Шлюз не подменяет обычный ключ административным; требуется сверить API-контракт.",
+    "authorization_format": "RouterAI сообщил о неверном формате авторизации. "
+    "При замене ключа вводите только сам обычный API-ключ, без Bearer, кавычек или JSON.",
+    "authorization_missing": "RouterAI сообщил об отсутствии данных авторизации. "
+    "Шлюз передаёт Bearer; требуется проверить ключ и сетевой путь.",
+    "key_rejected": "Ответ RouterAI указывает на отклонённый формат или значение API-ключа. "
+    "Проверьте, что это обычный ключ именно RouterAI.",
+    "key_inactive": "Ответ RouterAI указывает на выключенный, отозванный или истёкший ключ.",
+    "body_rejected": "Ответ RouterAI указывает на отклонённое тело или JSON запроса метаданных.",
+    "operation_unavailable": "Ответ RouterAI указывает на неподдерживаемую операцию метаданных.",
+    "quota_rejected": "Ответ RouterAI указывает на ограничение квоты или баланса.",
+    "access_denied": "Ответ RouterAI указывает на запрет доступа к операции метаданных.",
+}
+
+
 def metadata_failure(error, label):
     messages = {
         "upstream_http_400": (
@@ -188,6 +207,9 @@ def metadata_failure(error, label):
         "upstream_invalid_json": "RouterAI вернул неподдержанный формат метаданных.",
         "upstream_response_size": "Ответ метаданных RouterAI превысил допустимый размер.",
     }
+    reason = PROVIDER_REASONS.get(getattr(error, "provider_reason", ""))
+    if reason:
+        return ValueError(label + ": " + reason + " Платная генерация не запускалась.")
     reason = messages.get(error.code)
     if reason is None:
         match = re.fullmatch(r"upstream_http_([1-5][0-9]{2})", error.code)
@@ -197,6 +219,56 @@ def metadata_failure(error, label):
             else "RouterAI временно не подтвердил метаданные. Повторите запуск позже."
         )
     return ValueError(label + ": " + reason + " Платная генерация не запускалась.")
+
+
+def diagnose_provider(upstream):
+    from rpg_vkr.narrative.routerai import parse_allowance
+
+    report = {
+        "check": "RouterAI metadata only",
+        "operation": "GET /api/v1/key",
+        "paid_requests": 0,
+        "tunnel_started": False,
+        "address_published": False,
+        "secret_values_printed": False,
+    }
+    try:
+        value = upstream.request("key")
+    except Denied as error:
+        match = re.fullmatch(r"upstream_http_([1-5][0-9]{2})", error.code)
+        report.update(
+            ok=False,
+            http_status=int(match[1]) if match else None,
+            provider_reason=(
+                error.provider_reason
+                if error.provider_reason in PROVIDER_REASONS
+                else "unrecognized"
+            ),
+            reason_is_inferred=error.provider_reason in PROVIDER_REASONS,
+            response_format=(
+                error.response_format
+                if error.response_format in {"json", "html", "text"}
+                else "unavailable"
+            ),
+            message=str(metadata_failure(error, "Проверка ключа")),
+        )
+        return report
+    try:
+        parse_allowance(value)
+        report.update(
+            ok=True,
+            http_status=200,
+            provider_reason="allowance_confirmed",
+            message="Метаданные ключа и положительный лимит подтверждены.",
+        )
+    except (ValueError, TypeError, ArithmeticError) as error:
+        report.update(
+            ok=False,
+            http_status=200,
+            provider_reason="allowance_not_confirmed",
+            message=str(error) if isinstance(error, ValueError) else "Неверный формат лимита.",
+        )
+    return report
 
 
 def check_provider(gateway):
@@ -250,6 +322,8 @@ def host(root, store):
     tunnel = cloudflared_path()
     private = private_key(root)
     key = load_secret(root / "routerai-key.bin")
+    if key:
+        print("Используется сохранённый ключ RouterAI. Замена: tester_host.cmd key.", flush=True)
     if not key:
         key = getpass.getpass("Введите RouterAI API-ключ (не отображается): ").strip()
         Upstream(key)  # Validate before protecting; no request is made.
@@ -427,11 +501,21 @@ def build(root, store, identity):
             temporary.unlink(missing_ok=True)
 
 
+def replace_owner_key(root):
+    from rpg_vkr.narrative.cloud import validate_api_key
+
+    value = getpass.getpass("Новый RouterAI API-ключ (не отображается): ").strip()
+    validate_api_key(value)
+    save_secret(root / "routerai-key.bin", value)
+    print("Новый ключ сохранён для Мастера и Художника. Перезапустите хост для применения.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("start")
-    commands.add_parser("key")
+    commands.add_parser("key", help="Заменить сохранённый RouterAI API-ключ")
+    commands.add_parser("diagnose", help="Проверить метаданные без генерации и туннеля")
     for name in ("build", "revoke", "extend"):
         command = commands.add_parser(name)
         command.add_argument("id")
@@ -444,13 +528,21 @@ def main():
     root = Path(os.environ["LOCALAPPDATA"]) / "DND-NCFU-Host"
     root.mkdir(parents=True, exist_ok=True)
     # Budget is lifetime across all issued grants. A new grant does not reset it.
-    store = Store(root / "access.sqlite3", global_budget=100_000_000)
+    store = (
+        None
+        if args.command in {"key", "diagnose"}
+        else Store(root / "access.sqlite3", global_budget=100_000_000)
+    )
     try:
-        if args.command == "key":
-            value = getpass.getpass("Новый RouterAI API-ключ (не отображается): ").strip()
-            Upstream(value)
-            save_secret(root / "routerai-key.bin", value)
-            print("Ключ защищён DPAPI. Перезапустите хост для применения.")
+        if args.command == "diagnose":
+            key = load_secret(root / "routerai-key.bin")
+            if not key:
+                raise ValueError("Ключ не найден. Сначала выполните tester_host.cmd key.")
+            report = diagnose_provider(Upstream(key))
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 0 if report["ok"] else 2
+        elif args.command == "key":
+            replace_owner_key(root)
         elif args.command == "start":
             with host_lock(root):
                 host(root, store)
