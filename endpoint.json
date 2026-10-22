@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1792628898152,
-  "issued": 1792628898,
-  "expires": 1795393698,
-  "endpoint": "https://madonna-thompson-kent-olive.trycloudflare.com/api/v1",
-  "signature": "PDKItWIx/P/DwtpbjP0n4zCM5TG33nDCMdODjveOT2aR1L1L/tPVdMkr//ivlD1fCcpsuzB+s5NDJ3zrYGsAAw=="
+  "sequence": 1792629225497,
+  "issued": 1792629225,
+  "expires": 1795394025,
+  "endpoint": "https://cia-aims-fantasy-difference.trycloudflare.com/api/v1",
+  "signature": "Y2LpodXF0rOcJAKs4vV8tMbZYsZiLxRuol2PtI6UmthMNAqRuZA908C9l6+SDwJceBGToQDuKEe5IA2ydrwgAQ=="
 }
