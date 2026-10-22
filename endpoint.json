@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1792626949833,
-  "issued": 1792626949,
-  "expires": 1795391749,
-  "endpoint": "https://epinions-designs-yea-simulations.trycloudflare.com/api/v1",
-  "signature": "vgl485LzQDC3ZvrJA5+u1EzKoNa/vGrwtXuQWNTLM3IvH+Pteo2uQ7Nr48ALMFozS7i+nM0ZIYanuJMWxnP7Bw=="
+  "sequence": 1792628521681,
+  "issued": 1792628521,
+  "expires": 1795393321,
+  "endpoint": "https://sail-sponsor-cadillac-may.trycloudflare.com/api/v1",
+  "signature": "R8psLd7sVebQL8FiufXP+bGU2a/AOPOpr+F5r1b9Q54VJOzxv/GvWH6Ucgt3YFgQt+HMMGIjNbzF4tz0PikFDw=="
 }
