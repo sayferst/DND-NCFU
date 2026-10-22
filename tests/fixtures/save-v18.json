@@ -1,0 +1,392 @@
+{
+  "schema_version": 18,
+  "saved_at": "2026-10-19T16:24:16.781254+00:00",
+  "session": {
+    "interactive_world": {
+      "current": "forest",
+      "places": [
+        {
+          "id": "gate",
+          "name": "Ворота деревни",
+          "parent": "",
+          "anchor": "gate",
+          "description": ""
+        },
+        {
+          "id": "road",
+          "name": "Дорога у деревни",
+          "parent": "gate",
+          "anchor": "road",
+          "description": ""
+        },
+        {
+          "id": "market",
+          "name": "Рынок",
+          "parent": "gate",
+          "anchor": "market",
+          "description": ""
+        },
+        {
+          "id": "forest",
+          "name": "Лесная тропа",
+          "parent": "road",
+          "anchor": "road",
+          "description": "Деревья обступают тропу."
+        }
+      ],
+      "things": [
+        {
+          "id": "apples",
+          "name": "Яблоки",
+          "holder": "produce_basket",
+          "owner": "villager",
+          "quantity": 12,
+          "container": false
+        },
+        {
+          "id": "produce_basket",
+          "name": "Плетёная корзина",
+          "holder": "hero",
+          "owner": "villager",
+          "quantity": 1,
+          "container": true
+        }
+      ],
+      "version": "interactive-world-1"
+    },
+    "campaign": {
+      "world_id": "96a8664d-82d4-42a3-aa27-3b878e4c493d",
+      "hero_id": "92b35c17-5e66-4db5-bb3c-6e1766f16261",
+      "raw_player_description": "",
+      "npc_profiles": [],
+      "version": "campaign-2",
+      "world_brief": "Речные города и мастерские."
+    },
+    "memory": {
+      "version": "world-memory-1",
+      "base_turn": 0,
+      "baseline": {
+        "actor.boar.disposition": "neutral",
+        "actor.boar.hp": 12,
+        "actor.guard.disposition": "neutral",
+        "actor.guard.hp": 18,
+        "actor.merchant.disposition": "neutral",
+        "actor.merchant.hp": 12,
+        "actor.villager.disposition": "neutral",
+        "actor.villager.hp": 8,
+        "actor.wolf.disposition": "hostile",
+        "actor.wolf.hp": 10,
+        "combat.active": null,
+        "combat.rounds": 0,
+        "combat.surprise": false,
+        "hero.charisma": 8,
+        "hero.constitution": 13,
+        "hero.dexterity": 12,
+        "hero.intelligence": 10,
+        "hero.name": "Нора",
+        "hero.strength": 14,
+        "hero.wisdom": 15,
+        "progress.class_id": "scout",
+        "progress.level": 1,
+        "progress.xp": 0,
+        "training.charisma": 0,
+        "training.constitution": 0,
+        "training.dexterity": 0,
+        "training.intelligence": 0,
+        "training.strength": 0,
+        "training.wisdom": 0,
+        "world.bandages": 1,
+        "world.basket": 0,
+        "world.explored": false,
+        "world.gold": 10,
+        "world.hp": 12,
+        "world.location": "gate",
+        "world.market_known": false,
+        "world.max_hp": 12,
+        "world.quest": "available",
+        "world.shop_gold": 20,
+        "world.shop_stock": 3,
+        "world.trading": false
+      },
+      "events": [
+        {
+          "turn_index": 1,
+          "location": "road",
+          "changes": [
+            {
+              "field": "actor.guard.disposition",
+              "before": "neutral",
+              "after": "hostile"
+            },
+            {
+              "field": "actor.villager.disposition",
+              "before": "neutral",
+              "after": "hostile"
+            },
+            {
+              "field": "world.location",
+              "before": "gate",
+              "after": "road"
+            }
+          ],
+          "roll_indices": [
+            1
+          ],
+          "before_hash": "8c1e7b49eab4c9822e62cb5a46077fd268c562ba63202fc8d0c52a068c858070",
+          "after_hash": "ef3c170365c47fb39a32d64c6be3ca5276301430c1d163f0f45b605131395326"
+        }
+      ]
+    },
+    "narrations": [],
+    "seed": 5,
+    "character": {
+      "name": "Нора",
+      "strength": 14,
+      "dexterity": 12,
+      "constitution": 13,
+      "intelligence": 10,
+      "wisdom": 15,
+      "charisma": 8
+    },
+    "world": {
+      "location": "road",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 10,
+      "bandages": 1,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "scout",
+      "initial": {
+        "name": "Нора",
+        "strength": 14,
+        "dexterity": 12,
+        "constitution": 13,
+        "intelligence": 10,
+        "wisdom": 15,
+        "charisma": 8
+      },
+      "events": []
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "hostile"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "hostile"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": null,
+      "surprise": false,
+      "rounds": 0
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "беру корзину и убегаю в лес",
+        "speaker": "Мир",
+        "text": "Взято: Плетёная корзина ×1.\nВы переместились: Дорога у деревни.\nВы переместились: Лесная тропа.",
+        "roll": {
+          "index": 1,
+          "value": 20
+        },
+        "check": {
+          "ability": "dexterity",
+          "score": 12,
+          "difficulty": 15,
+          "modifier": 1,
+          "total": 21,
+          "succeeded": true
+        },
+        "actor_id": null,
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": null,
+        "meaning": null,
+        "player_name": "Нора",
+        "inspection": null,
+        "intent_source": "model",
+        "scene": null,
+        "notes": [],
+        "challenge": null,
+        "interaction": {
+          "before": {
+            "current": "gate",
+            "places": [
+              {
+                "id": "gate",
+                "name": "Ворота деревни",
+                "parent": "",
+                "anchor": "gate",
+                "description": ""
+              },
+              {
+                "id": "road",
+                "name": "Дорога у деревни",
+                "parent": "gate",
+                "anchor": "road",
+                "description": ""
+              },
+              {
+                "id": "market",
+                "name": "Рынок",
+                "parent": "gate",
+                "anchor": "market",
+                "description": ""
+              }
+            ],
+            "things": [
+              {
+                "id": "produce_basket",
+                "name": "Плетёная корзина",
+                "holder": "villager",
+                "owner": "villager",
+                "quantity": 1,
+                "container": true
+              },
+              {
+                "id": "apples",
+                "name": "Яблоки",
+                "holder": "produce_basket",
+                "owner": "villager",
+                "quantity": 12,
+                "container": false
+              }
+            ],
+            "version": "interactive-world-1"
+          },
+          "plan": {
+            "steps": [
+              {
+                "op": "take",
+                "target": "produce_basket",
+                "quantity": 1,
+                "destination": ""
+              },
+              {
+                "op": "move",
+                "target": "road",
+                "quantity": 1,
+                "destination": ""
+              },
+              {
+                "op": "move",
+                "target": "forest",
+                "quantity": 1,
+                "destination": ""
+              }
+            ],
+            "places": [
+              {
+                "id": "forest",
+                "name": "Лесная тропа",
+                "parent": "road",
+                "anchor": "road",
+                "description": "Деревья обступают тропу."
+              }
+            ]
+          },
+          "after": {
+            "current": "forest",
+            "places": [
+              {
+                "id": "gate",
+                "name": "Ворота деревни",
+                "parent": "",
+                "anchor": "gate",
+                "description": ""
+              },
+              {
+                "id": "road",
+                "name": "Дорога у деревни",
+                "parent": "gate",
+                "anchor": "road",
+                "description": ""
+              },
+              {
+                "id": "market",
+                "name": "Рынок",
+                "parent": "gate",
+                "anchor": "market",
+                "description": ""
+              },
+              {
+                "id": "forest",
+                "name": "Лесная тропа",
+                "parent": "road",
+                "anchor": "road",
+                "description": "Деревья обступают тропу."
+              }
+            ],
+            "things": [
+              {
+                "id": "apples",
+                "name": "Яблоки",
+                "holder": "produce_basket",
+                "owner": "villager",
+                "quantity": 12,
+                "container": false
+              },
+              {
+                "id": "produce_basket",
+                "name": "Плетёная корзина",
+                "holder": "hero",
+                "owner": "villager",
+                "quantity": 1,
+                "container": true
+              }
+            ],
+            "version": "interactive-world-1"
+          },
+          "witnesses": [
+            "guard",
+            "villager"
+          ],
+          "summary": "Взято: Плетёная корзина ×1.\nВы переместились: Дорога у деревни.\nВы переместились: Лесная тропа.",
+          "roll": {
+            "index": 1,
+            "value": 20
+          },
+          "check": {
+            "ability": "dexterity",
+            "score": 12,
+            "difficulty": 15,
+            "modifier": 1,
+            "total": 21,
+            "succeeded": true
+          },
+          "version": "interaction-homebrew-1"
+        }
+      }
+    ]
+  }
+}

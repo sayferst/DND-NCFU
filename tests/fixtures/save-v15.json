@@ -1,0 +1,229 @@
+{
+  "schema_version": 15,
+  "saved_at": "2026-10-19T04:17:57.394603+00:00",
+  "session": {
+    "campaign": {
+      "world_id": "244089e9-4e47-420e-a518-577650a027ae",
+      "hero_id": "ac01d763-2614-417c-953a-2efc18830507",
+      "raw_player_description": "Путница с дорожным ножом.",
+      "npc_profiles": [],
+      "version": "campaign-1"
+    },
+    "memory": {
+      "version": "world-memory-1",
+      "base_turn": 0,
+      "baseline": {
+        "actor.boar.disposition": "neutral",
+        "actor.boar.hp": 12,
+        "actor.guard.disposition": "neutral",
+        "actor.guard.hp": 18,
+        "actor.merchant.disposition": "neutral",
+        "actor.merchant.hp": 12,
+        "actor.villager.disposition": "neutral",
+        "actor.villager.hp": 8,
+        "actor.wolf.disposition": "hostile",
+        "actor.wolf.hp": 10,
+        "combat.active": null,
+        "combat.rounds": 0,
+        "combat.surprise": false,
+        "hero.charisma": 8,
+        "hero.constitution": 13,
+        "hero.dexterity": 12,
+        "hero.intelligence": 10,
+        "hero.name": "Путана",
+        "hero.strength": 14,
+        "hero.wisdom": 15,
+        "progress.class_id": "scout",
+        "progress.level": 1,
+        "progress.xp": 0,
+        "training.charisma": 0,
+        "training.constitution": 0,
+        "training.dexterity": 0,
+        "training.intelligence": 0,
+        "training.strength": 0,
+        "training.wisdom": 0,
+        "world.bandages": 1,
+        "world.basket": 0,
+        "world.explored": false,
+        "world.gold": 10,
+        "world.hp": 12,
+        "world.location": "gate",
+        "world.market_known": false,
+        "world.max_hp": 12,
+        "world.quest": "available",
+        "world.shop_gold": 20,
+        "world.shop_stock": 3,
+        "world.trading": false
+      },
+      "events": [
+        {
+          "turn_index": 1,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [],
+          "before_hash": "3e178ed6566bf17e1c0a4ac375dec2580aed3c7625d22fba41ce62ae075b04a6",
+          "after_hash": "3e178ed6566bf17e1c0a4ac375dec2580aed3c7625d22fba41ce62ae075b04a6"
+        },
+        {
+          "turn_index": 2,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [
+            1
+          ],
+          "before_hash": "3e178ed6566bf17e1c0a4ac375dec2580aed3c7625d22fba41ce62ae075b04a6",
+          "after_hash": "3e178ed6566bf17e1c0a4ac375dec2580aed3c7625d22fba41ce62ae075b04a6"
+        }
+      ]
+    },
+    "narrations": [
+      {
+        "turn_index": 1,
+        "model": "qwen2.5:7b",
+        "text": "Жительница придерживает корзину. «Здравствуйте. Что вы хотели узнать?»",
+        "context_hash": "e233c9d0c1500251f90f4fd656eec52f818cda0bde9f073c6c043adbd6e700f1",
+        "prompt_version": "narrator-prose-10",
+        "segments": [
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "Жительница придерживает корзину."
+          },
+          {
+            "speaker_id": "villager",
+            "display_name": "Жительница",
+            "text": "«Здравствуйте. Что вы хотели узнать?»"
+          }
+        ]
+      }
+    ],
+    "seed": 42,
+    "character": {
+      "name": "Путана",
+      "strength": 14,
+      "dexterity": 12,
+      "constitution": 13,
+      "intelligence": 10,
+      "wisdom": 15,
+      "charisma": 8
+    },
+    "world": {
+      "location": "gate",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 10,
+      "bandages": 1,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "scout",
+      "initial": {
+        "name": "Путана",
+        "strength": 14,
+        "dexterity": 12,
+        "constitution": 13,
+        "intelligence": 10,
+        "wisdom": 15,
+        "charisma": 8
+      },
+      "events": []
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "neutral"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "neutral"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": null,
+      "surprise": false,
+      "rounds": 0
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "подойду к девушке",
+        "speaker": "Рассказчик",
+        "text": "Жительница придерживает корзину. «Здравствуйте. Что вы хотели узнать?»",
+        "roll": null,
+        "check": null,
+        "actor_id": "villager",
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": {
+          "target": "villager",
+          "act": "contact",
+          "topic": "greeting",
+          "before": 0,
+          "after": 0,
+          "rules_version": "homebrew-social-1"
+        },
+        "meaning": null,
+        "player_name": "Путана",
+        "inspection": null,
+        "intent_source": "model",
+        "scene": {
+          "base_turn": 0,
+          "location": "gate",
+          "model": "qwen2.5:7b",
+          "proposal": {
+            "mechanical_command": "",
+            "focus_id": "villager",
+            "narration": "Жительница придерживает корзину. «Здравствуйте. Что вы хотели узнать?»",
+            "facts": []
+          },
+          "version": "scene-director-4"
+        }
+      },
+      {
+        "action": "бросить кубик",
+        "speaker": "Кубик",
+        "text": "d20 → 4",
+        "roll": {
+          "index": 1,
+          "value": 4
+        },
+        "check": null,
+        "actor_id": null,
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": null,
+        "meaning": null,
+        "player_name": "Путана",
+        "inspection": null,
+        "intent_source": "direct",
+        "scene": null
+      }
+    ]
+  }
+}

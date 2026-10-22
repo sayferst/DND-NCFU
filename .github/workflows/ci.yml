@@ -1,0 +1,67 @@
+name: Public source checks and Windows installers
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: public-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - run: sudo apt-get update && sudo apt-get install -y libegl1 libopengl0 libxkbcommon0
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install --require-hashes -r requirements-dev.lock
+      - run: .venv/bin/python scripts/check.py
+  installers:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [developer, tester]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Build and verify native installer
+        shell: powershell
+        env:
+          PUBLIC_PROFILE: ${{ matrix.profile }}
+        run: |
+          py -3.12 -m venv .venv
+          & .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-build.lock
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & .\.venv\Scripts\python.exe -m pytest -q tests/test_desktop_release.py -k real_source_smoke
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $parameters = @{ Installer = $true; Profile = $env:PUBLIC_PROFILE }
+          if ($env:PUBLIC_PROFILE -eq 'tester') {
+            $parameters.DiscoveryUrl = 'https://raw.githubusercontent.com/sayferst/DND-NCFU/tester-host-address/endpoint.json'
+            $parameters.DiscoveryKey = '5lGcAqnkdVgVF2TlrY7TRuZyRgvdIQZZ733zsORo6eo='
+          }
+          & .\scripts\build_windows.ps1 @parameters
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $name = if ($env:PUBLIC_PROFILE -eq 'tester') { 'setup_api.exe' } else { 'setup.exe' }
+          Copy-Item dist\DND-NCFU-Setup.exe (Join-Path dist $name)
+          $hash = (Get-FileHash (Join-Path dist $name) -Algorithm SHA256).Hash.ToLower()
+          "$hash  $name" | Set-Content (Join-Path dist ($name + '.sha256')) -Encoding ascii
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: installer-${{ matrix.profile }}
+          path: |
+            dist/setup*.exe
+            dist/setup*.exe.sha256
+          if-no-files-found: error
+          retention-days: 14

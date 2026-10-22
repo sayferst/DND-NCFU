@@ -1,0 +1,256 @@
+{
+  "schema_version": 14,
+  "saved_at": "2026-10-19T03:09:03.881213+00:00",
+  "session": {
+    "campaign": {
+      "world_id": "1664cf7f-2373-4a3e-985e-df44d6e51e2f",
+      "hero_id": "3ec9af22-a504-47d7-9eb3-7a6ad4e36d99",
+      "raw_player_description": "",
+      "npc_profiles": [],
+      "version": "campaign-1"
+    },
+    "memory": {
+      "version": "world-memory-1",
+      "base_turn": 0,
+      "baseline": {
+        "actor.boar.disposition": "neutral",
+        "actor.boar.hp": 12,
+        "actor.guard.disposition": "neutral",
+        "actor.guard.hp": 18,
+        "actor.merchant.disposition": "neutral",
+        "actor.merchant.hp": 12,
+        "actor.villager.disposition": "neutral",
+        "actor.villager.hp": 8,
+        "actor.wolf.disposition": "hostile",
+        "actor.wolf.hp": 10,
+        "combat.active": null,
+        "combat.rounds": 0,
+        "combat.surprise": false,
+        "hero.charisma": 8,
+        "hero.constitution": 13,
+        "hero.dexterity": 12,
+        "hero.intelligence": 10,
+        "hero.name": "Путник",
+        "hero.strength": 14,
+        "hero.wisdom": 15,
+        "progress.class_id": "legacy",
+        "progress.level": 1,
+        "progress.xp": 0,
+        "training.charisma": 0,
+        "training.constitution": 0,
+        "training.dexterity": 0,
+        "training.intelligence": 0,
+        "training.strength": 0,
+        "training.wisdom": 0,
+        "world.bandages": 1,
+        "world.basket": 0,
+        "world.explored": false,
+        "world.gold": 10,
+        "world.hp": 12,
+        "world.location": "gate",
+        "world.market_known": false,
+        "world.max_hp": 12,
+        "world.quest": "available",
+        "world.shop_gold": 20,
+        "world.shop_stock": 3,
+        "world.trading": false
+      },
+      "events": [
+        {
+          "turn_index": 1,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [],
+          "before_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726",
+          "after_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726"
+        },
+        {
+          "turn_index": 2,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [],
+          "before_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726",
+          "after_hash": "4011b7a206defcf94ec810bf73b984401d8d2434c011d7ea321c707975a8e726"
+        }
+      ]
+    },
+    "narrations": [
+      {
+        "turn_index": 1,
+        "model": "local-clarification",
+        "text": "К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?",
+        "context_hash": "7c72afc030df3068d3ef57ac456d79b40c92a3c0064328f3fe66ffecda2a580e",
+        "prompt_version": "narrator-prose-9",
+        "segments": [
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?"
+          }
+        ]
+      },
+      {
+        "turn_index": 2,
+        "model": "qwen3:1.7b",
+        "text": "Вы подойдите к ней, и она оторвала палец от яблоки, не замечая вашего присутствия. Она молча смотрит на корзину, затем медленно встает, чтобы убрать остатки.\n\n— Скажите, вы не видели, как яблоко упало?\n…Нет, я не видел.\n\nОна вздохнула, глядя на ягоды.\n— Надеюсь, это не повредит. Я собираю их для рынка.\n\nВы подойдете к ней, и она почувствует вашу присутствие, но продолжит собирать яблоки без изменений.",
+        "context_hash": "003aa39a2ef3de33780ba0f95d38cb569a8097ccba43e3595c6476c0a6edc606",
+        "prompt_version": "narrator-prose-9",
+        "segments": [
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "Вы подойдите к ней, и она оторвала палец от яблоки, не замечая вашего присутствия. Она молча смотрит на корзину, затем медленно встает, чтобы убрать остатки."
+          },
+          {
+            "speaker_id": "villager",
+            "display_name": "Жительница",
+            "text": "Скажите, вы не видели, как яблоко упало?"
+          },
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "…Нет, я не видел.\n\nОна вздохнула, глядя на ягоды."
+          },
+          {
+            "speaker_id": "villager",
+            "display_name": "Жительница",
+            "text": "Надеюсь, это не повредит. Я собираю их для рынка."
+          },
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "Вы подойдете к ней, и она почувствует вашу присутствие, но продолжит собирать яблоки без изменений."
+          }
+        ]
+      }
+    ],
+    "seed": 42,
+    "character": {
+      "name": "Путник",
+      "strength": 14,
+      "dexterity": 12,
+      "constitution": 13,
+      "intelligence": 10,
+      "wisdom": 15,
+      "charisma": 8
+    },
+    "world": {
+      "location": "gate",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 10,
+      "bandages": 1,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "legacy",
+      "initial": null,
+      "events": []
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "neutral"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "neutral"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": null,
+      "surprise": false,
+      "rounds": 0
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "подойду",
+        "speaker": "Рассказчик",
+        "text": "К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?",
+        "roll": null,
+        "check": null,
+        "actor_id": null,
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": null,
+        "meaning": null,
+        "player_name": "Путник",
+        "inspection": null,
+        "intent_source": "model",
+        "scene": {
+          "base_turn": 0,
+          "location": "gate",
+          "model": "local-clarification",
+          "proposal": {
+            "mechanical_command": "",
+            "focus_id": "",
+            "narration": "К кому вы хотите подойти или обратиться: к стражнику или к женщине с яблоками?",
+            "facts": []
+          },
+          "version": "scene-director-3"
+        }
+      },
+      {
+        "action": "подойду к девушке",
+        "speaker": "Рассказчик",
+        "text": "Вы подойдите к ней, и она оторвала палец от яблоки, не замечая вашего присутствия. Она молча смотрит на корзину, затем медленно встает, чтобы убрать остатки.\n\n— Скажите, вы не видели, как яблоко упало?\n…Нет, я не видел.\n\nОна вздохнула, глядя на ягоды.\n— Надеюсь, это не повредит. Я собираю их для рынка.\n\nВы подойдете к ней, и она почувствует вашу присутствие, но продолжит собирать яблоки без изменений.",
+        "roll": null,
+        "check": null,
+        "actor_id": "villager",
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": {
+          "target": "villager",
+          "act": "contact",
+          "topic": "greeting",
+          "before": 0,
+          "after": 0,
+          "rules_version": "homebrew-social-1"
+        },
+        "meaning": null,
+        "player_name": "Путник",
+        "inspection": null,
+        "intent_source": "model",
+        "scene": {
+          "base_turn": 1,
+          "location": "gate",
+          "model": "qwen3:1.7b",
+          "proposal": {
+            "mechanical_command": "",
+            "focus_id": "villager",
+            "narration": "Вы подойдите к ней, и она оторвала палец от яблоки, не замечая вашего присутствия. Она молча смотрит на корзину, затем медленно встает, чтобы убрать остатки.\n\n— Скажите, вы не видели, как яблоко упало?\n…Нет, я не видел.\n\nОна вздохнула, глядя на ягоды.\n— Надеюсь, это не повредит. Я собираю их для рынка.\n\nВы подойдете к ней, и она почувствует вашу присутствие, но продолжит собирать яблоки без изменений.",
+            "facts": []
+          },
+          "version": "scene-director-3"
+        }
+      }
+    ]
+  }
+}

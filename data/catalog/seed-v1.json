@@ -1,0 +1,786 @@
+{
+  "version": "catalog-1",
+  "definitions": [
+    {
+      "id": "mat_granite",
+      "name": "Гранит",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 7,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 2,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_limestone",
+      "name": "Известняк",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 3,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 1,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_obsidian",
+      "name": "Обсидиан",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 8,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 12,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_iron",
+      "name": "Железо",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 5,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 10,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_copper",
+      "name": "Медь",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 3,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 20,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_silver",
+      "name": "Серебро",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 4,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 100,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_gold",
+      "name": "Золото",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 3,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 1000,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_moon_ore",
+      "name": "Лунная руда",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 9,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 250,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_oak",
+      "name": "Дуб",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 4,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 5,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_pine",
+      "name": "Сосна",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 2,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 2,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_ash",
+      "name": "Ясень",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 4,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 6,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_fresh_water",
+      "name": "Пресная вода",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "liquid",
+        "processing_difficulty": 0,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 1,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_salt_water",
+      "name": "Солёная вода",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "liquid",
+        "processing_difficulty": 0,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 1,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_spring_water",
+      "name": "Родниковая вода",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "liquid",
+        "processing_difficulty": 0,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 2,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_weak_acid",
+      "name": "Слабая кислота",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "liquid",
+        "processing_difficulty": 5,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 20,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_air",
+      "name": "Воздух",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "gas",
+        "processing_difficulty": 0,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_smoke",
+      "name": "Дым",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "gas",
+        "processing_difficulty": 0,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_linen",
+      "name": "Льняная ткань",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 2,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 5,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_wool",
+      "name": "Шерстяная ткань",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 3,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 8,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_silk",
+      "name": "Шёлк",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 6,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 40,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_straw",
+      "name": "Солома",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 1,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 1,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_glass",
+      "name": "Обычное стекло",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 6,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 8,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "mat_coloured_glass",
+      "name": "Цветное стекло",
+      "kind": "material",
+      "categories": [
+        "materials"
+      ],
+      "properties": {
+        "phase": "solid",
+        "processing_difficulty": 7,
+        "price_basis": "условная порция материала; не реальный рынок"
+      },
+      "price_cp": 15,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_apple",
+      "name": "Яблоки",
+      "kind": "item",
+      "categories": [
+        "plants"
+      ],
+      "properties": {
+        "mass_g": 150,
+        "volume_ml": 180,
+        "portable": true
+      },
+      "price_cp": 2,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_basket",
+      "name": "Плетёная корзина",
+      "kind": "item",
+      "categories": [
+        "miscellaneous"
+      ],
+      "properties": {
+        "container": true,
+        "open": true,
+        "locked": false,
+        "capacity_ml": 12000,
+        "max_load_g": 12000,
+        "mass_g": 500,
+        "volume_ml": 15000,
+        "portable": true
+      },
+      "price_cp": 30,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_straw",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_bandage",
+      "name": "Бинт",
+      "kind": "item",
+      "categories": [
+        "medicine"
+      ],
+      "properties": {
+        "mass_g": 20,
+        "volume_ml": 40,
+        "portable": true
+      },
+      "price_cp": 300,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_linen",
+          "parts": 1
+        }
+      ],
+      "effects": [
+        {
+          "kind": "healing",
+          "magnitude": 4,
+          "duration_turns": 0,
+          "description": "Авторское лечение до 4 ОЗ; применяется существующей командой бинта."
+        }
+      ]
+    },
+    {
+      "id": "type_quest_cargo",
+      "name": "Корзина поручения",
+      "kind": "item",
+      "categories": [
+        "quest",
+        "miscellaneous"
+      ],
+      "properties": {
+        "container": true,
+        "portable": true,
+        "quest_role": "доставить конкретный груз"
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_training_sword",
+      "name": "Учебный меч",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "penetration": 1,
+        "durability": 40
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_ash",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_knife",
+      "name": "Дорожный нож",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "penetration": 2,
+        "durability": 60
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_iron",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_staff",
+      "name": "Дорожный посох",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "penetration": 0,
+        "durability": 50
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_oak",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_arrow",
+      "name": "Стрела",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "ammunition": true,
+        "penetration": 2
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_ash",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_crossbow_bolt",
+      "name": "Арбалетный болт",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "ammunition": true,
+        "penetration": 3
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_iron",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_catapult_stone",
+      "name": "Камень для катапульты",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "ammunition": true,
+        "mass_g": 30000
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_granite",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_spellbook",
+      "name": "Книга заклинаний",
+      "kind": "item",
+      "categories": [
+        "weapons"
+      ],
+      "properties": {
+        "readable": true,
+        "requires_ability": "магия; эффекты требуют отдельного правила"
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_linen",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_linen_armour",
+      "name": "Стёганая защита",
+      "kind": "item",
+      "categories": [
+        "armour"
+      ],
+      "properties": {
+        "defence": 1,
+        "durability": 40
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_linen",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_iron_armour",
+      "name": "Железная броня",
+      "kind": "item",
+      "categories": [
+        "armour"
+      ],
+      "properties": {
+        "defence": 3,
+        "durability": 80
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_iron",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_horse_armour",
+      "name": "Броня для лошади",
+      "kind": "item",
+      "categories": [
+        "armour"
+      ],
+      "properties": {
+        "defence": 2,
+        "durability": 70,
+        "wearer": "horse"
+      },
+      "price_cp": null,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "mat_iron",
+          "parts": 1
+        }
+      ]
+    },
+    {
+      "id": "type_healing_herb",
+      "name": "Листолечка",
+      "kind": "item",
+      "categories": [
+        "plants"
+      ],
+      "properties": {
+        "plant_role": "healing",
+        "portable": true
+      },
+      "price_cp": 10,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_poison_herb",
+      "name": "Горькая тень",
+      "kind": "item",
+      "categories": [
+        "plants"
+      ],
+      "properties": {
+        "plant_role": "poison",
+        "portable": true
+      },
+      "price_cp": 10,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_decoction",
+      "name": "Травяной отвар",
+      "kind": "item",
+      "categories": [
+        "medicine"
+      ],
+      "properties": {
+        "portable": true
+      },
+      "price_cp": 50,
+      "origin": "project-homebrew",
+      "materials": [
+        {
+          "definition_id": "type_healing_herb",
+          "parts": 1
+        },
+        {
+          "definition_id": "mat_fresh_water",
+          "parts": 2
+        }
+      ],
+      "effects": [
+        {
+          "kind": "healing",
+          "magnitude": 2,
+          "duration_turns": 0,
+          "description": "Описание эффекта; автоматическое применение требует обработчика."
+        }
+      ]
+    },
+    {
+      "id": "type_healing_scroll",
+      "name": "Лечебный свиток",
+      "kind": "item",
+      "categories": [
+        "medicine"
+      ],
+      "properties": {
+        "readable": true,
+        "portable": true
+      },
+      "price_cp": 150,
+      "origin": "project-homebrew",
+      "effects": [
+        {
+          "kind": "healing",
+          "magnitude": 4,
+          "duration_turns": 0,
+          "description": "Магический эффект хранится как данные; не разрешает заклинание автоматически."
+        }
+      ]
+    },
+    {
+      "id": "type_torch",
+      "name": "Факел",
+      "kind": "item",
+      "categories": [
+        "miscellaneous"
+      ],
+      "properties": {
+        "durability": 20,
+        "portable": true
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_blanket",
+      "name": "Одеяло",
+      "kind": "item",
+      "categories": [
+        "miscellaneous"
+      ],
+      "properties": {
+        "portable": true
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_pillow",
+      "name": "Подушка",
+      "kind": "item",
+      "categories": [
+        "miscellaneous"
+      ],
+      "properties": {
+        "portable": true
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_litter",
+      "name": "Бытовой мусор",
+      "kind": "item",
+      "categories": [
+        "miscellaneous"
+      ],
+      "properties": {
+        "portable": true
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    },
+    {
+      "id": "type_book",
+      "name": "Дорожный учебник",
+      "kind": "item",
+      "categories": [
+        "miscellaneous"
+      ],
+      "properties": {
+        "readable": true,
+        "text": "Учебные заметки о счёте и наблюдении."
+      },
+      "price_cp": null,
+      "origin": "project-homebrew"
+    }
+  ],
+  "entities": []
+}

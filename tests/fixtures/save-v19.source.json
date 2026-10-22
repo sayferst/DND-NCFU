@@ -1,0 +1,6 @@
+{
+  "source_commit": "d01dd58e6eab01c10af7973f22e8623acc46abc1",
+  "schema_version": 19,
+  "sha256": "232e1863590c6e5f50a51605fceafd0f35b3c0fbf22b83ff985582bba1a9f923",
+  "description": "Created by unmodified d01dd58 application before resource-ledger implementation. Catalog, NPC help, quest and RNG; no real model call."
+}

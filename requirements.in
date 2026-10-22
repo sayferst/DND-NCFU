@@ -1,0 +1,4 @@
+# Qt Widgets is included in Essentials; Addons is not needed for this prototype.
+PySide6-Essentials==6.10.1
+# Ed25519 endpoint discovery verification; owner private key never enters the game.
+cryptography==46.0.3

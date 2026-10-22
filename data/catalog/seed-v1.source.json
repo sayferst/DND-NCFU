@@ -1,0 +1,7 @@
+{
+  "sha256": "cd9e5b2598eb42b50c8ca5907937676f34831d45ebcd3ef894ce19e145d880fb",
+  "origin": "project-homebrew",
+  "definitions": 46,
+  "license": "Original project data; no SRD tables or third-party book excerpts copied.",
+  "version": "catalog-seed-1; immutable baseline for version 19 migrations"
+}
