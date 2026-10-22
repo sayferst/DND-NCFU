@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1792629225497,
-  "issued": 1792629225,
-  "expires": 1795394025,
-  "endpoint": "https://cia-aims-fantasy-difference.trycloudflare.com/api/v1",
-  "signature": "Y2LpodXF0rOcJAKs4vV8tMbZYsZiLxRuol2PtI6UmthMNAqRuZA908C9l6+SDwJceBGToQDuKEe5IA2ydrwgAQ=="
+  "sequence": 1792631641242,
+  "issued": 1792631641,
+  "expires": 1795396441,
+  "endpoint": "https://identity-ruby-timothy.ngrok-free.dev/api/v1",
+  "signature": "WbygT5mYVJoOC+iVIDnP49OHZ0EmOyeOTkO4/B5DPnS7M2Am3gfN2rY328yuWHKxikdABj4qcsSBO3tyeVZLBQ=="
 }
