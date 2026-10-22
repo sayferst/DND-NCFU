@@ -9,6 +9,7 @@ import urllib.error
 import urllib.request
 
 from rpg_vkr.discovery import NoRedirect, public_endpoint
+from rpg_vkr.gateway_http import gateway_headers
 
 EXPECTED = {"service": "dnd-gateway", "protocol": 1, "async_jobs": True}
 CF_ERRORS = {
@@ -32,7 +33,11 @@ def classify_cloudflare(raw, headers):
 def probe(endpoint, *, direct=False):
     request = urllib.request.Request(
         public_endpoint(endpoint) + "/health",
-        headers={"Accept": "application/json", "Cache-Control": "no-cache"},
+        headers={
+            "Accept": "application/json",
+            "Cache-Control": "no-cache",
+            **gateway_headers(endpoint),
+        },
     )
     handlers = [NoRedirect()]
     if direct:

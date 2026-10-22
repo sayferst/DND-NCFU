@@ -8,6 +8,7 @@ import urllib.request
 from PySide6.QtCore import QObject, QTimer, Signal
 
 from rpg_vkr.discovery import NoRedirect, fetch
+from rpg_vkr.gateway_http import gateway_headers
 from rpg_vkr.resources import resource_path
 from rpg_vkr.storage.connection import load_secret, save_secret
 from rpg_vkr.ui.workspace_tools import atomic_text
@@ -68,7 +69,10 @@ class ConnectionWorker(QObject):
                     request = urllib.request.Request(
                         value["endpoint"] + "/activate",
                         data=body,
-                        headers={"Content-Type": "application/json"},
+                        headers={
+                            "Content-Type": "application/json",
+                            **gateway_headers(value["endpoint"]),
+                        },
                     )
                     with urllib.request.build_opener(NoRedirect).open(request, timeout=20) as reply:
                         access = json.loads(reply.read(2048))["token"]

@@ -75,6 +75,10 @@ class ImagesTransport:
 
     def read(self, url, *, key="", payload=None, maximum=MAX_BYTES * 2, timeout=30):
         headers = {"Accept": "application/json"}
+        if self.gateway:
+            from rpg_vkr.gateway_http import gateway_headers
+
+            headers.update(gateway_headers(url))
         if key:
             if not url.startswith(self.base + "/") or any(c.isspace() for c in key):
                 raise ImageError("key", "Недопустимый адрес или формат ключа.")
@@ -128,10 +132,13 @@ class ImagesTransport:
             ) from None
 
     def poll(self, job, key, maximum):
+        from rpg_vkr.gateway_http import gateway_headers, job_poll_ms
+
         deadline = time.monotonic() + 240
         while time.monotonic() < deadline:
             request = urllib.request.Request(
-                self.base + "/jobs/" + job, headers={"Authorization": "Bearer " + key}
+                self.base + "/jobs/" + job,
+                headers={"Authorization": "Bearer " + key, **gateway_headers(self.base)},
             )
             with self.opener.open(request, timeout=20) as reply:
                 raw = reply.read(maximum + 1)
@@ -141,7 +148,7 @@ class ImagesTransport:
                     return raw
                 if reply.status != 202 or json.loads(raw) != {"job": job}:
                     raise ImageError("job", "Неверный статус иллюстрации.")
-            time.sleep(0.6)
+            time.sleep(job_poll_ms(self.base) / 1000)
         raise ImageError("timeout", "Иллюстрация не завершена вовремя; повтор не выполнен.")
 
     def metadata(self, key):

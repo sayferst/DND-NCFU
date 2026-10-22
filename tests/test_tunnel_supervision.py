@@ -74,7 +74,7 @@ def test_initial_gate_requires_consecutive_success_not_one_registration(monkeypa
 
 def test_dead_child_cannot_pass_initial_public_gate(monkeypatch):
     monkeypatch.setattr(host, "fetch", lambda *a, **k: pytest.fail("Dead child"))
-    with pytest.raises(RestartTunnel, match="cloudflared завершился"):
+    with pytest.raises(RestartTunnel, match="Коннектор завершился"):
         host.wait_for_public_host(ENDPOINT, "public", 7, process=SimpleNamespace(poll=lambda: 1))
 
 

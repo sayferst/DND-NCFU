@@ -957,6 +957,11 @@ class OllamaClient(QObject):
             if self.cloud.provider == "gateway":
                 from uuid import uuid4
 
+                from rpg_vkr.gateway_http import gateway_headers
+
+                for name, value in gateway_headers(self.cloud.endpoint).items():
+                    request.setRawHeader(name.encode(), value.encode())
+
                 request.setRawHeader(b"Prefer", b"respond-async")
                 request.setRawHeader(b"X-Request-ID", uuid4().hex.encode())
                 request.setRawHeader(b"X-DND-Stage", kind.encode())
@@ -992,6 +997,10 @@ class OllamaClient(QObject):
         self._buffer = bytearray()
         request = QNetworkRequest(QUrl(url))
         request.setRawHeader(b"Authorization", ("Bearer " + key).encode())
+        from rpg_vkr.gateway_http import gateway_headers
+
+        for name, value in gateway_headers(url).items():
+            request.setRawHeader(name.encode(), value.encode())
         request.setAttribute(
             QNetworkRequest.Attribute.RedirectPolicyAttribute,
             QNetworkRequest.RedirectPolicy.ManualRedirectPolicy,
@@ -1056,7 +1065,9 @@ class OllamaClient(QObject):
                 if self._gateway_job and self._gateway_job[0] != base + "/jobs/" + job:
                     raise ValueError
                 self._gateway_job = (base + "/jobs/" + job, self.cloud.key)
-                self._poll_timer.start(600)
+                from rpg_vkr.gateway_http import job_poll_ms
+
+                self._poll_timer.start(job_poll_ms(base))
                 return
             except (ValueError, KeyError, TypeError):
                 self._reason = "Игровой сервис вернул неверное задание. Повтор не выполнен."

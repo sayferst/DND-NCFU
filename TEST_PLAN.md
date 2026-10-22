@@ -1096,3 +1096,19 @@ Windows: при открытом start во втором окне diagnose-tunne
 
 Полный итог:1459passed/216.02с,0failed/skipped, Ruffcheck/format222файла,
 scripts/check.py exit0. Нативный Windows/live Cloudflare запуск не проводился.
+
+## 22.10.2026 — ngrok host/client
+
+Новый набор test_ngrok_host/transport:19passed/0.22с. Проверены домены и отказ
+на инъекции/credential/path; DPAPI callback вместо plaintext; child-env без
+токена в argv/config/log; cleanup Ctrl+C; ngrokветка безCloudflare/DNS;
+CLIнастройка безStore; headers уQtchat/jobGET, художника, активации иhealth;
+единственный POST, GETpoll10с и квота idlehealth. Предварительный регрессионный
+затронутый набор91passed/9.96с. Реальный LinuxCLI configcheck пройден безтокена.
+Полный прогон raw: validation/ngrok-host-2026-10-22/full-01.txt.
+НаWindows: остановитьстарыйхост, установитьNgrok.Ngrok, ngrok --domain,
+локальноAuthtoken, start до3HTTPSуспехов, build tester1. Проверить у тестера
+активацию/мир/иллюстрацию и отзывдопуска. Живой туннель иInno не проверены здесь.
+
+Полный итог ngrok:1478passed/223.33с,0failed/skipped, scripts/check.py exit0;
+Ruffcheck/format226файлов. Аудит75хэшей иAGENTSпрефикса пройден.

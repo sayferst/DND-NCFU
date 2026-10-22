@@ -389,19 +389,25 @@ def diagnose_tunnel(root):
 
 
 def wait_for_public_host(endpoint, public_key, sequence, *, timeout=300, samples=3, process=None):
+    from rpg_vkr.gateway_http import is_ngrok
+
     deadline = time.monotonic() + timeout
     next_update = 0
     last_status = None
     successes = 0
     while True:
         if process is not None and process.poll() is not None:
-            raise RestartTunnel("cloudflared завершился до подтверждения устойчивого HTTPS.")
+            raise RestartTunnel("Коннектор завершился до подтверждения устойчивого HTTPS.")
         phase = "подписанный документ GitHub"
         try:
             verified = fetch(DISCOVERY, public_key, previous=sequence)
             if verified["endpoint"] != public_endpoint(endpoint):
                 raise ValueError("Адрес ещё не обновился.")
-            phase = "HTTPS-туннель Cloudflare (/api/v1/health)"
+            phase = (
+                "HTTPS-туннель "
+                + ("ngrok" if is_ngrok(endpoint) else "Cloudflare")
+                + " (/api/v1/health)"
+            )
             check_health(verified["endpoint"])
             successes += 1
             if successes >= samples:
@@ -619,7 +625,13 @@ def check_provider(gateway):
 
 def host(root, store):
     (root / "host-ready.json").unlink(missing_ok=True)
-    tunnel = cloudflared_path()
+    from scripts import ngrok_host
+
+    settings = ngrok_host.load_settings(root)
+    tunnel = ngrok_host.executable() if settings else cloudflared_path()
+    ngrok_token = None
+    if settings:
+        ngrok_token = ngrok_host.validate_token(load_secret(root / "ngrok-token.bin"))
     private = private_key(root)
     key = load_secret(root / "routerai-key.bin")
     if key:
@@ -640,16 +652,24 @@ def host(root, store):
     try:
         while True:
             protocol = "http2" if attempt % 2 == 0 else "quic"
-            print(
-                "Получаю узлы Cloudflare через DNS-over-HTTPS (без изменения Windows)…", flush=True
-            )
-            edges = resolve_tunnel_edges()
-            if protocol == "http2":
-                print("Проверяю исходящий TCP-доступ к узлам Cloudflare…", flush=True)
-                edges = reachable_edges(edges)
-            print("Транспорт Cloudflare: " + protocol, flush=True)
             try:
-                run_tunnel_session(root, server, private, tunnel, edges, protocol)
+                if settings:
+                    print("Запускаю ngrok через HTTPS/443…", flush=True)
+                    with ngrok_host.running(
+                        root, tunnel, server.server_port, settings["domain"], ngrok_token
+                    ) as (process, endpoint):
+                        serve_public_endpoint(root, private, endpoint, process)
+                else:
+                    print(
+                        "Получаю узлы Cloudflare через DNS-over-HTTPS (без изменения Windows)…",
+                        flush=True,
+                    )
+                    edges = resolve_tunnel_edges()
+                    if protocol == "http2":
+                        print("Проверяю исходящий TCP-доступ к узлам Cloudflare…", flush=True)
+                        edges = reachable_edges(edges)
+                    print("Транспорт Cloudflare: " + protocol, flush=True)
+                    run_tunnel_session(root, server, private, tunnel, edges, protocol)
             except RestartTunnel as error:
                 delay = budget.delay(time.monotonic())
                 print(
@@ -696,6 +716,28 @@ def run_tunnel_session(root, server, private, tunnel, edges, protocol):
             wait_for_tunnel_connection(connections, protocol=protocol)
         except ValueError as error:
             raise RestartTunnel(str(error)) from None
+        serve_public_endpoint(root, private, endpoint, process)
+    finally:
+        (root / "host-ready.json").unlink(missing_ok=True)
+        if process:
+            if process.poll() is None:
+                process.terminate()
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait(timeout=5)
+            if reader:
+                reader.join(timeout=2)
+            if process.stdout:
+                process.stdout.close()
+
+
+def serve_public_endpoint(root, private, endpoint, process):
+    from rpg_vkr.gateway_http import health_interval
+
+    interval = health_interval(endpoint)
+    try:
         sequence_path = root / "sequence.txt"
         previous = int(sequence_path.read_text()) if sequence_path.exists() else 0
         sequence = max(previous + 1, time.time_ns() // 1000000)
@@ -727,7 +769,7 @@ def run_tunnel_session(root, server, private, tunnel, edges, protocol):
             "Устойчивость подтверждена тремя HTTPS-проверками. Контроль продолжается.", flush=True
         )
         monitor = PublicMonitor(root, ready)
-        next_probe = time.monotonic() + 15
+        next_probe = time.monotonic() + interval
         last_health = ""
         refresh_at = time.monotonic() + 7 * 86400
         while process.poll() is None:
@@ -744,28 +786,16 @@ def run_tunnel_session(root, server, private, tunnel, edges, protocol):
                         flush=True,
                     )
                     last_health = health
-                next_probe = time.monotonic() + 15
+                next_probe = time.monotonic() + interval
             if time.monotonic() >= refresh_at:
                 sequence += 1
                 sequence_path.write_text(str(sequence), encoding="utf-8")
                 publish(signed_manifest(private, endpoint, sequence))
                 ready["sequence"] = sequence
                 refresh_at = time.monotonic() + 7 * 86400
-        raise RestartTunnel(f"cloudflared завершился, код {int(process.returncode)}")
+        raise RestartTunnel(f"Коннектор завершился, код {int(process.returncode)}")
     finally:
         (root / "host-ready.json").unlink(missing_ok=True)
-        if process:
-            if process.poll() is None:
-                process.terminate()
-                try:
-                    process.wait(timeout=10)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait(timeout=5)
-            if reader:
-                reader.join(timeout=2)
-            if process.stdout:
-                process.stdout.close()
 
 
 def build(root, store, identity):
@@ -916,6 +946,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("start")
+    ngrok_command = commands.add_parser("ngrok", help="Настроить ngrok вместо Cloudflare")
+    ngrok_command.add_argument("--domain", required=True)
+    ngrok_command.add_argument("--replace-token", action="store_true")
     key_command = commands.add_parser("key", help="Заменить сохранённый RouterAI API-ключ")
     key_command.add_argument(
         "--clipboard", action="store_true", help="Прочитать ключ из буфера после Enter"
@@ -938,11 +971,15 @@ def main():
     # Budget is lifetime across all issued grants. A new grant does not reset it.
     store = (
         None
-        if args.command in {"key", "diagnose", "diagnose-tunnel"}
+        if args.command in {"key", "diagnose", "diagnose-tunnel", "ngrok"}
         else Store(root / "access.sqlite3", global_budget=100_000_000)
     )
     try:
-        if args.command == "diagnose-tunnel":
+        if args.command == "ngrok":
+            from scripts.ngrok_host import configure
+
+            configure(root, args.domain, load_secret, save_secret, replace=args.replace_token)
+        elif args.command == "diagnose-tunnel":
             report = diagnose_tunnel(root)
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 0 if report["ok"] else 2

@@ -1433,3 +1433,20 @@ proxyfalse, подписьOK иживойPID. Следовательно, Cloudf
 
 Полный scripts/check.py:1459passed/216.02с, Ruff222файла, exit0. Все75защищённых
 хэшей и исходныйпрефиксAGENTS сохранены. Живойуспех наПКвладельца ещё не проверен.
+
+## 22.10.2026 — проверка альтернативы ngrok
+
+Проверены официальные ngrok free-plan-limits/agent/config-v3: стабильный выданный
+dev-домен, отсутствие session timeout,1ГБ/20000HTTP в месяц, outboundTLS443,
+header ngrok-skip-browser-warning для API-клиента. Winget package Ngrok.Ngrok
+подтверждён в официальном winget-pkgs. Реальный официальный LinuxCLI3.39.12
+прошёл version, config check и http --help; публичный туннель не запускался,
+Authtoken не вводился. Предварительный затронутый набор91passed/9.96с; после
+добавления Qtchat/активации новые19тестовpassed/0.22с. Нет платных запросов,
+новых допусков, публикации discovery и изменения Windows. Пределы подтверждения
+и источники: validation/ngrok-host-2026-10-22/README.md. Это инженерная проверка,
+не исследовательский эксперимент и не подтверждение живой Windows-сети.
+
+Полный итог ngrok:1478passed/223.33с, scripts/check.py exit0, Ruff226файлов.
+Raw full-01.txt, native-cli-01.txt, target-01.txt и audit-01.json сохранены.
+Все75защищённых хэшей совпали, AGENTS только дополнен.

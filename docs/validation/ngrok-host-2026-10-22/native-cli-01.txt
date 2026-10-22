@@ -1,0 +1,16 @@
+Official Linux CLI check; no authentication, tunnel or paid request.
+command: ngrok version
+exit: 0
+ngrok version 3.39.12
+
+
+command: ngrok config check --config /tmp/dnd-ngrok-native-config.yml
+exit: 0
+Valid configuration file at /tmp/dnd-ngrok-native-config.yml
+
+
+http --help confirms: --url
+http --help confirms: --config
+http --help confirms: --inspect
+http --help confirms: --log
+http --help confirms: --log-format
