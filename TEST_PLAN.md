@@ -1124,3 +1124,11 @@ Ruffcheck/format226файлов. Аудит75хэшей иAGENTSпрефикса
 
 Итог:1492passed/238.57с,0failed/skipped, scripts/check.py exit0, Ruff227файлов;
 целевые77passed/4.10с.14новыхслучаев. Аудит75хэшей иAGENTSпрефикса пройден.
+
+## 22.10.2026 — DNSoversized testid наWindows
+
+`pytest -q tests/test_tunnel_dns.py tests/test_windows_test_ids.py`:
+20passed/1.42с. Внутренний collect-only всегонабора проверяет UTF16длинуids,
+DNSoversized и прежниеpromptids. Ruffcheck/format2файла пройден. Полныйнабор
+не повторялся: толькоtestid/collectionизменения. СтарыйLinux1492passed;
+реальныйWindows1491passed/2errors доfix. Owner:pull/build tester1, checksнепропускать.

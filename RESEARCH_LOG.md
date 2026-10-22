@@ -1463,3 +1463,11 @@ versionguard. Токен из пользовательского сообщен�
 Результат:77целевыхpassed/4.10с,1492полныхpassed/238.57с, scripts/check.py exit0,
 Ruff227файлов. NativeLinuxconfigv2/require_supported/update--help проверены без
 запускаобновления.75защищённыххэшей иAGENTSпрефикс сохранены. Rawсохранены.
+
+## 22.10.2026 — реальный Windows pytest overflow
+
+Присланныйbuildлог:1491passed/2errors за297.83с; setup/teardown DNSbytes65537
+падает при записи PYTEST_CURRENT_TEST>32767. AtexitcleanupWinError5 вторичен.
+Короткиеids и общаярегрессияколлекции:20passed/1.42с, Ruff2файла. Runtime,
+payload/asserts не менялись; полныйнабор повторноне запускался. Владелец уже
+подтвердил3HTTPSуспехаngrok. Windowsbuild послеfix ещё не подтверждён.

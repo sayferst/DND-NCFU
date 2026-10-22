@@ -1699,3 +1699,14 @@ update и туннель здесь не проверены. Новый validati
 Итогversionguard:1492passed/238.57с, scripts/check.py exit0, Ruff227файлов;
 целевые77passed/4.10с,14новыхтестовыхслучаев.75хэшей иAGENTSпрефикс сохранены.
 Обычный commit/push. Владельцу pull/update-ngrok/start безповторноговводаключей.
+
+## 22.10.2026 — Windows build: слишком длинный pytest ID
+
+Владелец подтвердил ngrok3.39.12/start с3HTTPSуспехами. Новый buildлог:
+1491passed/2errors; setup/teardown DNSbytes65537 превышает Windowsлимит
+PYTEST_CURRENT_TEST32767. Это дефект testid, не сети. Короткиеids сохраняют
+payload/asserts; существующийtest_windows_test_ids проверяет теперь весьнабор
+наUTF16длину сteardownсуффиксом.20целевыхpassed/1.42с, Ruff2файла.
+Полныйнабор не повторялся: runtimeне менялся. Не отключатьchecks, не удалятьTemp
+и не менятьACL из-за сопутствующегоatexitWinError5. Владельцу pull/build во
+второмокне, оставивstart. Обычныйcommit/push. Setupещё не подтверждён.

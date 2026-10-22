@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 
-def test_large_prompt_parameter_has_a_short_collected_id():
+def test_all_collected_ids_fit_windows_current_test_environment():
     result = subprocess.run(
         [
             sys.executable,
@@ -15,7 +15,6 @@ def test_large_prompt_parameter_has_a_short_collected_id():
             "-q",
             "-p",
             "no:cacheprovider",
-            "tests/test_master_configuration.py",
         ],
         cwd=Path(__file__).resolve().parents[1],
         capture_output=True,
@@ -24,6 +23,10 @@ def test_large_prompt_parameter_has_a_short_collected_id():
         timeout=30,
         check=True,
     )
+    all_ids = [line for line in result.stdout.splitlines() if "::" in line]
+    assert all_ids
+    assert all(len((id + " (teardown)").encode("utf-16-le")) // 2 < 32767 for id in all_ids)
+    assert any("test_invalid_dns_reply_is_not_used[oversized]" in id for id in all_ids)
     ids = [
         line
         for line in result.stdout.splitlines()

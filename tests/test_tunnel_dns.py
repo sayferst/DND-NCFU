@@ -64,6 +64,7 @@ def test_dns_rejects_nonpublic_or_non_address_answers(monkeypatch, data):
 @pytest.mark.parametrize(
     "value",
     [{"Status": 3}, {"Status": 0, "Answer": []}, [], b"x" * 65537, answer(name="attacker.example")],
+    ids=["dns-error", "empty-answer", "wrong-type", "oversized", "wrong-name"],
 )
 def test_invalid_dns_reply_is_not_used(monkeypatch, value):
     opener(monkeypatch, value)

@@ -1214,3 +1214,11 @@ HTTPS443 — информационнаястрока; сбойVPN по этом
 
 Итог:1492passed/238.57с, scripts/check.py exit0, Ruff227файлов;75защищённыххэшей
 совпали. Raw:validation/ngrok-agent-version-2026-10-22/full-01.txt.
+
+## 22.10.2026 — ngrok работает; исправлено имя Windows-теста
+
+Владелец подтвердилживойstart. Build:1491passed/2errors одного DNSoversized
+testid, Windowsне принимает PYTEST_CURRENT_TEST>32767. Добавленыкороткиеids;
+65537байтовыйpayload/asserts сохранены. Регрессия собирает весьнабор и проверяет
+UTF16длинуids.20целевыхpassed/1.42с, Ruff2файла. Runtimeне менялся, полныйнабор
+не повторялся. Следующее:pull/build во второмокне; Setupпока не подтверждён.
