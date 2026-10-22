@@ -1,0 +1,6 @@
+{
+  "fixture": "tests/fixtures/save-v12.json",
+  "source_commit": "a222766",
+  "sha256": "37cb323e8f6c06a6f59714c25d185b807b069825cac10c64b701f91312a17621",
+  "note": "Actual previous code, scene-director-1, narrator-prose-7, historical chatgpt-manual provenance retained; saved_at fixed for fixture."
+}
