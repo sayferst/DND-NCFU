@@ -278,6 +278,22 @@ def test_archive_checks_every_file_and_keeps_verification_reports(fake_bundle, t
     )
 
 
+def test_report_stdout_supports_western_windows_codepage(tmp_path, monkeypatch):
+    import io
+
+    from rpg_vkr import self_check
+
+    report = {"ok": True, "sections": ["Приключение", "Герой"]}
+    destination = tmp_path / "report.json"
+    with io.TextIOWrapper(io.BytesIO(), encoding="cp1252") as console:
+        with monkeypatch.context() as context:
+            context.setattr(self_check.sys, "stdout", console)
+            write_report(destination, report)
+            console.flush()
+        assert json.loads(console.buffer.getvalue()) == report
+    assert json.loads(destination.read_text(encoding="utf-8")) == report
+
+
 def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp_path):
     import os
     import subprocess
