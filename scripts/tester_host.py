@@ -25,7 +25,6 @@ sys.path.insert(0, str(ROOT))
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey  # noqa: E402
 
 from rpg_vkr.discovery import (  # noqa: E402
-    NoRedirect,
     canonical,
     discovery_url,
     fetch,
@@ -304,23 +303,77 @@ def host_lock(root):
 
 
 def check_health(endpoint):
-    request = urllib.request.Request(public_endpoint(endpoint) + "/health")
-    with urllib.request.build_opener(NoRedirect).open(request, timeout=20) as reply:
-        if reply.status != 200 or json.loads(reply.read(2048)) != {
-            "service": "dnd-gateway",
-            "protocol": 1,
-            "async_jobs": True,
-        }:
-            raise ValueError("Шлюз не прошёл проверку доступности.")
+    from scripts.tunnel_health import probe
+
+    probe(endpoint)
 
 
 def public_check_reason(error):
     """Only controlled categories: never echo exception URLs or response bodies."""
     if isinstance(error, urllib.error.HTTPError):
-        return f"HTTP {error.code}"
+        from scripts.tunnel_health import CF_ERRORS
+
+        code = getattr(error, "gateway_details", {}).get("cloudflare_code", "")
+        detail = f", Cloudflare {code}: {CF_ERRORS[code]}" if code in CF_ERRORS else ""
+        return f"HTTP {error.code}" + detail
     if isinstance(error, (TimeoutError, urllib.error.URLError, OSError)):
         return "сетевая ошибка, DNS, TLS или тайм-аут"
     return "подпись, версия, адрес или формат ответа не прошли проверку"
+
+
+def diagnose_tunnel(root):
+    """Read a verified public endpoint and compare OS proxy versus direct HTTPS GETs."""
+    from scripts.tunnel_health import result
+
+    report = {
+        "check": "signed tunnel health and proxy routes",
+        "paid_requests": 0,
+        "grant_created": False,
+        "secrets_read": False,
+        "system_settings_changed": False,
+        "proxy_configured": any(k in urllib.request.getproxies() for k in ("http", "https", "all")),
+    }
+    try:
+        path = root / "host-ready.json"
+        if path.stat().st_size > 8192:
+            raise ValueError
+        ready = json.loads(path.read_text(encoding="utf-8"))
+        verified = fetch(ready["discovery"], ready["verification_key"], previous=ready["sequence"])
+    except (OSError, ValueError, TypeError, KeyError, RecursionError) as error:
+        report.update(ok=False, discovery_ok=False, reason=public_check_reason(error))
+        return report
+    report.update(discovery_ok=True, host_process_alive=host_process_alive(ready.get("pid")))
+    samples = []
+    for index in range(3):
+        for direct in (False, True):
+            samples.append(
+                {
+                    "route": "direct" if direct else "system",
+                    **result(verified["endpoint"], direct=direct),
+                }
+            )
+        if index < 2:
+            time.sleep(2)
+    system_ok = all(s["ok"] for s in samples if s["route"] == "system")
+    direct_ok = all(s["ok"] for s in samples if s["route"] == "direct")
+    codes = {s.get("cloudflare_code") for s in samples}
+    diagnosis = (
+        "system_proxy_route"
+        if direct_ok and not system_ok and report["proxy_configured"]
+        else "route_difference"
+        if direct_ok and not system_ok
+        else "connector_lost_1033"
+        if "1033" in codes
+        else "origin_dns_1016"
+        if "1016" in codes
+        else "ready"
+        if system_ok and report["host_process_alive"]
+        else "unstable_or_unreachable"
+    )
+    report.update(
+        ok=system_ok and report["host_process_alive"], samples=samples, diagnosis=diagnosis
+    )
+    return report
 
 
 def wait_for_public_host(endpoint, public_key, sequence, *, timeout=300):
@@ -796,6 +849,9 @@ def main():
         "--clipboard", action="store_true", help="Прочитать ключ из буфера после Enter"
     )
     commands.add_parser("diagnose", help="Проверить метаданные без генерации и туннеля")
+    commands.add_parser(
+        "diagnose-tunnel", help="Проверить HTTPS туннеля и влияние системного прокси"
+    )
     for name in ("build", "revoke", "extend"):
         command = commands.add_parser(name)
         command.add_argument("id")
@@ -810,11 +866,15 @@ def main():
     # Budget is lifetime across all issued grants. A new grant does not reset it.
     store = (
         None
-        if args.command in {"key", "diagnose"}
+        if args.command in {"key", "diagnose", "diagnose-tunnel"}
         else Store(root / "access.sqlite3", global_budget=100_000_000)
     )
     try:
-        if args.command == "diagnose":
+        if args.command == "diagnose-tunnel":
+            report = diagnose_tunnel(root)
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 0 if report["ok"] else 2
+        elif args.command == "diagnose":
             key = load_secret(root / "routerai-key.bin")
             if not key:
                 raise ValueError("Ключ не найден. Сначала выполните tester_host.cmd key.")

@@ -1076,3 +1076,11 @@ cloudflared проверяется TCP7844; в argv --edge только пров
 
 Итог полного Linux-прогона:1437passed/213.15с,0failed/skipped; Ruffcheck/format
 218файлов, scripts/check.py exit0. Native Windows сборка остаётся ручной проверкой.
+
+## 22.10.2026 — различение530 и proxy
+
+Проверены CF1033/1016/1000, отсечение произвольных чисел/большого тела, отсутствие
+Auth, отдельный ProxyHandler({}), сохранение причины для build, DNS/TLS categories,
+3сэмпла каждого маршрута и запрет health при неверной подписи. CLI не открывает
+Store и не читает ownerkey.108passed/3.50с,Ruffcheck/format220файлов.
+Windows: при открытом start во втором окне diagnose-tunnel, без пересборки Setup.
