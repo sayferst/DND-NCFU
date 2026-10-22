@@ -41,6 +41,11 @@ jobs:
         env:
           PUBLIC_PROFILE: ${{ matrix.profile }}
         run: |
+          py -3.12 -m venv .venv
+          & .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-build.lock
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & .\.venv\Scripts\python.exe -m pytest -q tests/test_desktop_release.py -k real_source_smoke
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $parameters = @{ Installer = $true; Profile = $env:PUBLIC_PROFILE }
           if ($env:PUBLIC_PROFILE -eq 'tester') {
             $parameters.DiscoveryUrl = 'https://raw.githubusercontent.com/sayferst/DND-NCFU/tester-host-address/endpoint.json'

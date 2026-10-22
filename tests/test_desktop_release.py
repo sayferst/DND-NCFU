@@ -294,7 +294,12 @@ def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp
         capture_output=True,
         timeout=30,
     )
-    assert result.returncode == 0, result.stderr
+    if result.returncode:
+        failures = []
+        for path in (tmp_path / "untouched-real-data/logs").glob("error-*.json"):
+            value = json.loads(path.read_text(encoding="utf-8"))
+            failures.append({"error_type": value.get("error_type"), "frames": value.get("frames")})
+        pytest.fail(f"Source probe exit {result.returncode}; safe diagnostics: {failures}")
     actual = json.loads(report.read_text(encoding="utf-8"))
     assert actual["ok"] and actual["references"] and actual["save_sqlite"] and actual["rng"]
     assert actual["loopback_posts"] == 4 and actual["network_requests"] == 6
