@@ -1471,3 +1471,9 @@ Ruff227файлов. NativeLinuxconfigv2/require_supported/update--help пров
 Короткиеids и общаярегрессияколлекции:20passed/1.42с, Ruff2файла. Runtime,
 payload/asserts не менялись; полныйнабор повторноне запускался. Владелец уже
 подтвердил3HTTPSуспехаngrok. Windowsbuild послеfix ещё не подтверждён.
+
+## 22.10.2026 — BAT и памятка владельца
+
+Добавлены START_HOST.bat/HOST_COMMANDS.txt. Проверены относительныйкорень через
+%~dp0, quoting, вызовсуществующегоcmd, сохранениеexitcode и CRLFатрибут.
+gitdiffcheck пройден; livecmd/Windows здесьнедоступен. Платныхзапросов не было.

@@ -1132,3 +1132,10 @@ Ruffcheck/format226файлов. Аудит75хэшей иAGENTSпрефикса
 DNSoversized и прежниеpromptids. Ruffcheck/format2файла пройден. Полныйнабор
 не повторялся: толькоtestid/collectionизменения. СтарыйLinux1492passed;
 реальныйWindows1491passed/2errors доfix. Owner:pull/build tester1, checksнепропускать.
+
+## 22.10.2026 — START_HOST.bat
+
+Статическаяпроверка wrapper/памятки, gitdiffcheck и checkattr: BATtext/eolcrlf.
+Runtimeне менялся, игровыетесты не повторялись, тестовзеркалwrapper не добавлено.
+НаWindows:двойнойщелчок изExplorer, дождаться3HTTPSуспехов; Ctrl+C/Y дляостановки.
+Приошибке обычногозавершения окноостаётсядо нажатияклавиши. Livecmd не проверен.
