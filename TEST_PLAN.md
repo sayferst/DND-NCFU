@@ -1084,3 +1084,15 @@ Auth, отдельный ProxyHandler({}), сохранение причины �
 3сэмпла каждого маршрута и запрет health при неверной подписи. CLI не открывает
 Store и не читает ownerkey.108passed/3.50с,Ruffcheck/format220файлов.
 Windows: при открытом start во втором окне diagnose-tunnel, без пересборки Setup.
+
+## 22.10.2026 — супервизор публичного соединения
+
+Проверить:3начальных успеха подряд, сброс серии при530, запретготовности после
+завершенияпроцесса, снятиеready при1033,3ошибки→RestartTunnel,3успеха→восстановление,
+тайм-ауты/backoff3вчас, очисткуметки/дочернегопроцесса приошибке/Ctrl+C и переиспользование
+того же Gateway/Store при сменеконнектора.73passed/3.45с вцелевомнаборе.
+Полный scripts/check.py — validation/connector-recovery-2026-10-22/full-01.txt.
+НаWindows перезапуститьstart, дождаться3HTTPSуспехов и выполнитьbuild tester1.
+
+Полный итог:1459passed/216.02с,0failed/skipped, Ruffcheck/format222файла,
+scripts/check.py exit0. Нативный Windows/live Cloudflare запуск не проводился.

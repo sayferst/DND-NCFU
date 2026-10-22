@@ -35,7 +35,7 @@ def test_github_delay_and_tunnel_delay_retry_independently(monkeypatch, clock, c
 
     monkeypatch.setattr(host, "fetch", fetch)
     monkeypatch.setattr(host, "check_health", health)
-    assert host.wait_for_public_host(ENDPOINT, "public-key", 7, timeout=10) == {
+    assert host.wait_for_public_host(ENDPOINT, "public-key", 7, timeout=10, samples=1) == {
         "endpoint": ENDPOINT
     }
     assert fetched == [(host.DISCOVERY, "public-key", 7)] * 3

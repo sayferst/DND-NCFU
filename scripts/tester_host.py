@@ -31,6 +31,12 @@ from rpg_vkr.discovery import (  # noqa: E402
     public_endpoint,
 )
 from rpg_vkr.storage.connection import load_secret, save_secret  # noqa: E402
+from scripts.tunnel_supervision import (  # noqa: E402
+    PublicMonitor,
+    RestartBudget,
+    RestartTunnel,
+    write_ready,
+)
 from server.gateway import (  # noqa: E402
     FLUX,
     RECRAFT,
@@ -66,13 +72,15 @@ def cloudflared_path():
     )
 
 
-def tunnel_command(executable, port, edges=()):
+def tunnel_command(executable, port, edges=(), *, protocol="http2"):
+    if protocol not in {"http2", "quic"}:
+        raise ValueError("Неподдерживаемый транспорт Cloudflare.")
     # HTTP/2 uses TCP7844 rather than QUIC/UDP7844. No Windows firewall changes.
     command = [
         executable,
         "tunnel",
         "--protocol",
-        "http2",
+        protocol,
         "--url",
         f"http://127.0.0.1:{port}",
         "--no-autoupdate",
@@ -108,6 +116,9 @@ def read_tunnel_output(stream, urls, connections):
                 ("no such host", "Cloudflare: ошибка DNS при поиске узла туннеля."),
                 ("x509:", "Cloudflare: ошибка проверки TLS-сертификата."),
                 ("unable to reach the origin", "Cloudflare: локальный шлюз недоступен туннелю."),
+                ("connection terminated", "Cloudflare: соединение коннектора завершено."),
+                ("connection reset", "Cloudflare: сетевое соединение сброшено."),
+                ("failed to serve tunnel", "Cloudflare: обслуживание соединения туннеля прервано."),
             )
             for marker, message in categories:
                 if marker in lowered and marker not in reported:
@@ -118,13 +129,14 @@ def read_tunnel_output(stream, urls, connections):
         connections.put(False)
 
 
-def wait_for_tunnel_connection(connections):
+def wait_for_tunnel_connection(connections, *, protocol="http2"):
     try:
         connected = connections.get(timeout=90)
     except queue.Empty:
+        transport = "TCP7844" if protocol == "http2" else "UDP7844"
         raise ValueError(
-            "cloudflared не подтвердил соединение HTTP/2 за90с. "
-            "Проверьте доступ cloudflared.exe к исходящему TCP7844 в вашей сети. "
+            "cloudflared не подтвердил соединение за90с. "
+            "Проверьте доступ cloudflared.exe к исходящему " + transport + " в вашей сети. "
             "Входящий порт открывать не требуется."
         ) from None
     if not connected:
@@ -376,11 +388,14 @@ def diagnose_tunnel(root):
     return report
 
 
-def wait_for_public_host(endpoint, public_key, sequence, *, timeout=300):
+def wait_for_public_host(endpoint, public_key, sequence, *, timeout=300, samples=3, process=None):
     deadline = time.monotonic() + timeout
     next_update = 0
     last_status = None
+    successes = 0
     while True:
+        if process is not None and process.poll() is not None:
+            raise RestartTunnel("cloudflared завершился до подтверждения устойчивого HTTPS.")
         phase = "подписанный документ GitHub"
         try:
             verified = fetch(DISCOVERY, public_key, previous=sequence)
@@ -388,8 +403,14 @@ def wait_for_public_host(endpoint, public_key, sequence, *, timeout=300):
                 raise ValueError("Адрес ещё не обновился.")
             phase = "HTTPS-туннель Cloudflare (/api/v1/health)"
             check_health(verified["endpoint"])
-            return verified
+            successes += 1
+            if successes >= samples:
+                return verified
+            if time.monotonic() >= deadline:
+                raise RestartTunnel("Не подтверждена устойчивость HTTPS-туннеля.")
+            time.sleep(5)
         except (ValueError, OSError) as error:
+            successes = 0
             reason = public_check_reason(error)
             now = time.monotonic()
             if now >= deadline:
@@ -597,6 +618,7 @@ def check_provider(gateway):
 
 
 def host(root, store):
+    (root / "host-ready.json").unlink(missing_ok=True)
     tunnel = cloudflared_path()
     private = private_key(root)
     key = load_secret(root / "routerai-key.bin")
@@ -611,16 +633,44 @@ def host(root, store):
     check_provider(gateway)
     from scripts.tunnel_dns import reachable_edges, resolve_tunnel_edges
 
-    print("Получаю узлы Cloudflare через DNS-over-HTTPS (без изменения Windows)…", flush=True)
-    edges = resolve_tunnel_edges()
-    print("Проверяю исходящий TCP-доступ к узлам Cloudflare…", flush=True)
-    edges = reachable_edges(edges)
     server = Server(("127.0.0.1", 0), gateway)
     threading.Thread(target=server.serve_forever, daemon=True).start()
+    budget = RestartBudget()
+    attempt = 0
+    try:
+        while True:
+            protocol = "http2" if attempt % 2 == 0 else "quic"
+            print(
+                "Получаю узлы Cloudflare через DNS-over-HTTPS (без изменения Windows)…", flush=True
+            )
+            edges = resolve_tunnel_edges()
+            if protocol == "http2":
+                print("Проверяю исходящий TCP-доступ к узлам Cloudflare…", flush=True)
+                edges = reachable_edges(edges)
+            print("Транспорт Cloudflare: " + protocol, flush=True)
+            try:
+                run_tunnel_session(root, server, private, tunnel, edges, protocol)
+            except RestartTunnel as error:
+                delay = budget.delay(time.monotonic())
+                print(
+                    str(error) + f". Пересоздаю коннектор через {delay}с; "
+                    "шлюз, допуски и расходы сохраняются.",
+                    flush=True,
+                )
+                attempt += 1
+                time.sleep(delay)
+    finally:
+        (root / "host-ready.json").unlink(missing_ok=True)
+        server.shutdown()
+        server.server_close()
+
+
+def run_tunnel_session(root, server, private, tunnel, edges, protocol):
     process = None
+    reader = None
     try:
         process = subprocess.Popen(
-            tunnel_command(tunnel, server.server_port, edges),
+            tunnel_command(tunnel, server.server_port, edges, protocol=protocol),
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -638,11 +688,14 @@ def host(root, store):
         try:
             endpoint = urls.get(timeout=90)
         except queue.Empty:
-            raise ValueError("Туннель не выдал адрес за 90 секунд.") from None
+            raise RestartTunnel("Туннель не выдал адрес за 90 секунд.") from None
         if not endpoint:
-            raise ValueError("cloudflared завершился до выдачи адреса.")
-        print("Адрес получен. Ожидаю соединение Cloudflare через HTTP/2 (TCP)…", flush=True)
-        wait_for_tunnel_connection(connections)
+            raise RestartTunnel("cloudflared завершился до выдачи адреса.")
+        print("Адрес получен. Ожидаю регистрацию соединения Cloudflare…", flush=True)
+        try:
+            wait_for_tunnel_connection(connections, protocol=protocol)
+        except ValueError as error:
+            raise RestartTunnel(str(error)) from None
         sequence_path = root / "sequence.txt"
         previous = int(sequence_path.read_text()) if sequence_path.exists() else 0
         sequence = max(previous + 1, time.time_ns() // 1000000)
@@ -653,37 +706,54 @@ def host(root, store):
         publish(manifest)
         # HTTP GET key is local-only/authenticated and never calls the paid upstream.
         public_key = base64.b64encode(private.public_key().public_bytes_raw()).decode()
-        wait_for_public_host(endpoint, public_key, sequence)
-        (root / "host-ready.json").write_text(
-            json.dumps(
-                {
-                    "pid": os.getpid(),
-                    "discovery": DISCOVERY,
-                    "verification_key": public_key,
-                    "sequence": sequence,
-                }
-            ),
-            encoding="utf-8",
-        )
+        try:
+            wait_for_public_host(endpoint, public_key, sequence, process=process)
+        except ValueError as error:
+            raise RestartTunnel(str(error)) from None
+        ready = {
+            "pid": os.getpid(),
+            "discovery": DISCOVERY,
+            "verification_key": public_key,
+            "sequence": sequence,
+        }
+        write_ready(root, ready)
         print(
             "Адрес опубликован и подпись проверена. Платных проверок не было.\n"
             "Оставьте это окно открытым. Во втором окне: scripts\\tester_host.cmd build tester1\n"
             "Остановка: Ctrl+C. После перезапуска адрес обновится без нового Setup.",
             flush=True,
         )
+        print(
+            "Устойчивость подтверждена тремя HTTPS-проверками. Контроль продолжается.", flush=True
+        )
+        monitor = PublicMonitor(root, ready)
+        next_probe = time.monotonic() + 15
+        last_health = ""
         refresh_at = time.monotonic() + 7 * 86400
         while process.poll() is None:
             time.sleep(1)
+            if time.monotonic() >= next_probe:
+                health = monitor.check(
+                    lambda: check_health(public_endpoint(endpoint)), public_check_reason
+                )
+                if health != last_health:
+                    print(
+                        "Туннель временно не готов: " + health
+                        if health
+                        else "Публичный HTTPS снова устойчив. Сборка разрешена.",
+                        flush=True,
+                    )
+                    last_health = health
+                next_probe = time.monotonic() + 15
             if time.monotonic() >= refresh_at:
                 sequence += 1
                 sequence_path.write_text(str(sequence), encoding="utf-8")
                 publish(signed_manifest(private, endpoint, sequence))
+                ready["sequence"] = sequence
                 refresh_at = time.monotonic() + 7 * 86400
-        raise ValueError("Туннель остановился. Запустите start заново.")
+        raise RestartTunnel(f"cloudflared завершился, код {int(process.returncode)}")
     finally:
         (root / "host-ready.json").unlink(missing_ok=True)
-        server.shutdown()
-        server.server_close()
         if process:
             if process.poll() is None:
                 process.terminate()
@@ -692,6 +762,8 @@ def host(root, store):
                 except subprocess.TimeoutExpired:
                     process.kill()
                     process.wait(timeout=5)
+            if reader:
+                reader.join(timeout=2)
             if process.stdout:
                 process.stdout.close()
 
