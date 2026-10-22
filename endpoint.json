@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1792628521681,
-  "issued": 1792628521,
-  "expires": 1795393321,
-  "endpoint": "https://sail-sponsor-cadillac-may.trycloudflare.com/api/v1",
-  "signature": "R8psLd7sVebQL8FiufXP+bGU2a/AOPOpr+F5r1b9Q54VJOzxv/GvWH6Ucgt3YFgQt+HMMGIjNbzF4tz0PikFDw=="
+  "sequence": 1792628898152,
+  "issued": 1792628898,
+  "expires": 1795393698,
+  "endpoint": "https://madonna-thompson-kent-olive.trycloudflare.com/api/v1",
+  "signature": "PDKItWIx/P/DwtpbjP0n4zCM5TG33nDCMdODjveOT2aR1L1L/tPVdMkr//ivlD1fCcpsuzB+s5NDJ3zrYGsAAw=="
 }
