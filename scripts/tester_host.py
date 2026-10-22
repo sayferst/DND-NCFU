@@ -946,6 +946,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("start")
+    commands.add_parser("update-ngrok", help="Обновить отдельную копию агента ngrok")
     ngrok_command = commands.add_parser("ngrok", help="Настроить ngrok вместо Cloudflare")
     ngrok_command.add_argument("--domain", required=True)
     ngrok_command.add_argument("--replace-token", action="store_true")
@@ -971,11 +972,16 @@ def main():
     # Budget is lifetime across all issued grants. A new grant does not reset it.
     store = (
         None
-        if args.command in {"key", "diagnose", "diagnose-tunnel", "ngrok"}
+        if args.command in {"key", "diagnose", "diagnose-tunnel", "ngrok", "update-ngrok"}
         else Store(root / "access.sqlite3", global_budget=100_000_000)
     )
     try:
-        if args.command == "ngrok":
+        if args.command == "update-ngrok":
+            from scripts.ngrok_host import update_agent
+
+            with host_lock(root):
+                update_agent(root)
+        elif args.command == "ngrok":
             from scripts.ngrok_host import configure
 
             configure(root, args.domain, load_secret, save_secret, replace=args.replace_token)

@@ -1450,3 +1450,16 @@ Authtoken не вводился. Предварительный затронут
 Полный итог ngrok:1478passed/223.33с, scripts/check.py exit0, Ruff226файлов.
 Raw full-01.txt, native-cli-01.txt, target-01.txt и audit-01.json сохранены.
 Все75защищённых хэшей совпали, AGENTS только дополнен.
+
+## 22.10.2026 — диагностика несовместимого ngrok
+
+Получен реальныйWindowsлог: winget3.3.1, быстрыйEOF безкодаERR. Поддержанная
+Linuxверсия3.39.12, поэтому точнаяпричинаEOF была скрыта старымкодом.
+Проверен реальный update--help: подписанное selfupdate, writableкаталог,
+не применять к package-manager файлам. Реализованы ownerportableupdate и
+versionguard. Токен из пользовательского сообщения не использовался.
+Локальные проверкивременныхфайлов/fakeпроцессов не заменяют Windowsupdate.
+
+Результат:77целевыхpassed/4.10с,1492полныхpassed/238.57с, scripts/check.py exit0,
+Ruff227файлов. NativeLinuxconfigv2/require_supported/update--help проверены без
+запускаобновления.75защищённыххэшей иAGENTSпрефикс сохранены. Rawсохранены.

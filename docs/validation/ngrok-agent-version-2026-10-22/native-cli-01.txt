@@ -1,0 +1,39 @@
+Native Linux agent checks only; no token, no update download, no tunnel.
+require_supported accepts official CLI 3.39.12
+command: ngrok config check --config /tmp/dnd-ngrok-v2-bootstrap.yml
+exit: 0
+Valid configuration file at /tmp/dnd-ngrok-v2-bootstrap.yml
+
+
+command: ngrok update --help
+exit: 0
+NAME:
+  update - update ngrok to the latest version
+
+USAGE:
+  ngrok update [flags]
+
+DESCRIPTION: 
+   This command checks the ngrok cloud service for a newer version of the ngrok
+  agent. If a newer version is available, it will download it and replace the
+  ngrok binary with the new version after cryptographically verifying the update
+  is signed by ngrok.
+
+  In order to update successfully, the ngrok binary must be in a directory
+  that is writable by your current user. If you placed ngrok in a system
+  path, you may need to run this with root or Administrator privileges.
+
+  Do not run this command if you installed ngrok with a package manager (i.e.
+  homebrew, chocolatey, apt, snap, etc). Instead, update ngrok by using your
+  package manager's update command.
+
+EXAMPLES: 
+  ngrok update                     # update ngrok to the latest stable version
+  ngrok update --channel=beta      # update ngrok to the latest beta version
+
+OPTIONS:
+      --channel string   update channel (stable, beta, unstable)
+      --config strings   path to config files; they are merged if multiple
+  -h, --help             help for update
+
+

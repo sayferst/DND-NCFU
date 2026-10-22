@@ -89,6 +89,7 @@ def test_bad_token_replacement_preserves_existing_configuration(tmp_path, monkey
 
 def test_agent_gets_token_only_in_environment_and_cleans_up_on_ctrl_c(tmp_path, monkeypatch):
     seen = {}
+    monkeypatch.setattr(ngrok, "require_supported", lambda agent: ngrok.MIN_VERSION)
     monkeypatch.delenv("NGROK_AUTHTOKEN", raising=False)
 
     class Process:

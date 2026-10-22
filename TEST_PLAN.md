@@ -1112,3 +1112,15 @@ CLIнастройка безStore; headers уQtchat/jobGET, художника, 
 
 Полный итог ngrok:1478passed/223.33с,0failed/skipped, scripts/check.py exit0;
 Ruffcheck/format226файлов. Аудит75хэшей иAGENTSпрефикса пройден.
+
+## 22.10.2026 — versionguard/update-ngrok
+
+Новые случаи:3.3.1/3.39.11 отвергаются доPopen безRestartTunnel; поддержанные
+версии, неизвестныйответ безraw, приоритетportable надPATH, updaterбезсекретов
+иStore, неизменностьwinget/DPAPI, очисткаconfig науспехе/ошибке/таймауте,
+классификацияCLI/config/ERR. Windows: остановитьstart, pull, update-ngrok до
+подтверждения3.39.12+ иstart. Домен/токен повторно не вводить. Не менятьVPN
+по информационнойстрокеHTTPS443. Raw:validation/ngrok-agent-version-2026-10-22.
+
+Итог:1492passed/238.57с,0failed/skipped, scripts/check.py exit0, Ruff227файлов;
+целевые77passed/4.10с.14новыхслучаев. Аудит75хэшей иAGENTSпрефикса пройден.

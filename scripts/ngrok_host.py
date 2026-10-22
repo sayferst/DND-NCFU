@@ -13,6 +13,78 @@ from pathlib import Path
 
 from scripts.tunnel_supervision import RestartTunnel
 
+MIN_VERSION = (3, 39, 12)  # Config/flags verified on this official agent release.
+
+
+def version(agent):
+    try:
+        result = subprocess.run(
+            [agent, "version"], capture_output=True, text=True, timeout=15, check=False
+        )
+        match = re.fullmatch(r"ngrok version (\d+)\.(\d+)\.(\d+)(?:[^\r\n]*)\s*", result.stdout)
+        if result.returncode == 0 and match:
+            return tuple(int(part) for part in match.groups())
+    except (OSError, subprocess.TimeoutExpired, ValueError):
+        pass
+    raise ValueError("Не удалось определить версию ngrok. Выполните tester_host.cmd update-ngrok.")
+
+
+def require_supported(agent):
+    found = version(agent)
+    if found < MIN_VERSION:
+        raise ValueError(
+            "Установлен старый ngrok "
+            + ".".join(map(str, found))
+            + ". Нужен 3.39.12 или новее. Выполните tester_host.cmd update-ngrok, затем start. "
+            "Это несовместимость агента; настройки VPN и ключи менять не требуется."
+        )
+    return found
+
+
+def update_agent(root):
+    # A private portable copy: never modify a package-manager-owned executable.
+    target = root / "ngrok-agent" / "ngrok.exe"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if not target.is_file():
+        shutil.copy2(executable(), target)
+    print(
+        "Обновляю отдельную копию ngrok; обновление проверяет цифровую подпись ngrok…", flush=True
+    )
+    environment = os.environ.copy()
+    for name in ("NGROK_AUTHTOKEN", "NGROK_API_KEY"):
+        environment.pop(name, None)
+    config = None
+    try:
+        # v2 is understood by the old bootstrap agent as well as the latest one.
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", suffix=".yml", dir=root, delete=False
+        ) as file:
+            config = Path(file.name)
+            json.dump({"version": "2", "web_addr": False, "update_check": False}, file)
+        try:
+            result = subprocess.run(
+                [str(target), "update", "--config", str(config)],
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=180,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            raise ValueError(
+                "Обновление ngrok не завершилось. Повторите update-ngrok; ключи сохранены."
+            ) from None
+        if result.returncode:
+            raise ValueError(
+                "Обновление ngrok не выполнено. Проверьте доступ к сервису обновления "
+                "и повторите update-ngrok. Ключи сохранены."
+            )
+        found = require_supported(str(target))
+        print("ngrok обновлён: " + ".".join(map(str, found)) + ". Выполните tester_host.cmd start.")
+    finally:
+        if config:
+            config.unlink(missing_ok=True)
+
 
 def domain_name(value):
     value = value.strip().lower().removeprefix("https://").rstrip("/")
@@ -24,6 +96,9 @@ def domain_name(value):
 def executable():
     found = shutil.which("ngrok.exe") or shutil.which("ngrok")
     candidates = [Path(found)] if found else []
+    local = os.environ.get("LOCALAPPDATA")
+    if local:
+        candidates.insert(0, Path(local) / "DND-NCFU-Host/ngrok-agent/ngrok.exe")
     for variable in ("LOCALAPPDATA", "ProgramFiles", "ProgramFiles(x86)"):
         root = os.environ.get(variable)
         if root:
@@ -112,7 +187,7 @@ def command(agent, port, domain, config):
     ]
 
 
-def read_output(stream, connected, endpoint):
+def read_output(stream, connected, endpoint, failures=None):
     reported = set()
     try:
         for line in stream:
@@ -136,6 +211,22 @@ def read_output(stream, connected, endpoint):
                     flush=True,
                 )
                 reported.add(match[0])
+                if failures is not None:
+                    failures.append(
+                        "ngrok отклонил запуск: "
+                        + match[0]
+                        + ". Проверьте причину в кабинете ngrok."
+                    )
+            lower = line.lower()
+            if failures is not None and (
+                "unknown flag" in lower
+                or "unknown shorthand flag" in lower
+                or "error reading configuration" in lower
+                or "unrecognized configuration version" in lower
+            ):
+                failures.append(
+                    "ngrok не принял параметры или config. Выполните tester_host.cmd update-ngrok."
+                )
     finally:
         connected.put(False)
 
@@ -143,6 +234,7 @@ def read_output(stream, connected, endpoint):
 @contextmanager
 def running(root, agent, port, domain, token):
     domain = domain_name(domain)
+    require_supported(agent)  # Fatal incompatibility must not enter the reconnect loop.
     validate_token(token)
     config = None
     process = None
@@ -165,9 +257,10 @@ def running(root, agent, port, domain, token):
             errors="replace",
         )
         connected = queue.Queue()
+        failures = []
         endpoint = "https://" + domain
         reader = threading.Thread(
-            target=read_output, args=(process.stdout, connected, endpoint), daemon=True
+            target=read_output, args=(process.stdout, connected, endpoint, failures), daemon=True
         )
         reader.start()
         try:
@@ -175,6 +268,8 @@ def running(root, agent, port, domain, token):
         except queue.Empty:
             raise RestartTunnel("ngrok не подтвердил запуск HTTPS endpoint за90с.") from None
         if not ready or process.poll() is not None:
+            if failures:
+                raise ValueError(failures[-1])
             raise RestartTunnel(
                 "ngrok завершился до запуска HTTPS endpoint; смотрите код ERR_NGROK выше."
             )

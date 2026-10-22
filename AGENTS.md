@@ -1683,3 +1683,19 @@ validation/ngrok-host-2026-10-22. Не выдавать это за реальн
 Итогngrok:1478passed/223.33с, scripts/check.py exit0, Ruffcheck/format226файлов.
 Все75защищённых хэшей неизменны, исходныйпрефиксAGENTS сохранён. Код после этого
 не менять безновойпричины. Обычный commit/push, затем владельцу pull/ngrok/start/build.
+
+## 22.10.2026 — winget выдал ngrok3.3.1
+
+Новая причина: владелец установил3.3.1, агент завершился доendpoint безERRкода.
+Не объявлять HTTPS443 доказательством сбояVPN: это информационная строка.
+Хост обязан проверять поддержанную версию3.39.12+; несовместимость терминальная,
+безавторетраев. update-ngrok обновляет отдельную portable-копию через штатный
+подписанный updater, не файлwinget. Configv2 дляbootstrap безтокенов; updaterenv
+безNGROK_AUTHTOKEN/API_KEY, Store/DPAPI не открываются. Общийlock соstart.
+Portableагент предпочитаетсяPATH. Сохранять ключи, домен, расходы, допуски.
+ERRкоды иCLI/configошибки выводить только фиксированными сообщениями. LiveWindows
+update и туннель здесь не проверены. Новый validation/ngrok-agent-version-2026-10-22.
+
+Итогversionguard:1492passed/238.57с, scripts/check.py exit0, Ruff227файлов;
+целевые77passed/4.10с,14новыхтестовыхслучаев.75хэшей иAGENTSпрефикс сохранены.
+Обычный commit/push. Владельцу pull/update-ngrok/start безповторноговводаключей.

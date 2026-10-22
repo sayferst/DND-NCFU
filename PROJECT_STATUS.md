@@ -1203,3 +1203,14 @@ Owner должен установить ngrok, настроить домен/т�
 
 Полный итог:1478passed/223.33с, scripts/check.py exit0, Ruffcheck/format226файлов.
 Аудит75защищённых файлов безизменений. Это подтверждает код, не живойWindowsтуннель.
+
+## 22.10.2026 — исправление bootstrap ngrok
+
+Winget у владельца установил3.3.1. Добавлены проверкаверсии3.39.12+ безретрая
+на несовместимости и командаupdate-ngrok: штатный signedupdater отдельнойкопии
+вLOCALAPPDATA. Ключи/домен/допуски сохранены, wingetфайл не изменяется.
+HTTPS443 — информационнаястрока; сбойVPN по этому логу не установлен.
+Нужны pull, update-ngrok иstart. NativeWindowsupdate иживойendpoint не проверены.
+
+Итог:1492passed/238.57с, scripts/check.py exit0, Ruff227файлов;75защищённыххэшей
+совпали. Raw:validation/ngrok-agent-version-2026-10-22/full-01.txt.
