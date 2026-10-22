@@ -23,6 +23,7 @@ def install_tester_connection(window):
     if profile.mode != "tester":
         return
     window._tester_token = load_secret(window._saves.directory.parent / "tester-access.bin")
+    window._tester_bootstrap = load_secret(window._saves.directory.parent / "tester-pending.bin")
     # Drop owner settings applied during initialization, even if this PC has an owner key.
     window.cloud_key.clear()
     window.ollama.use_local()
@@ -84,6 +85,28 @@ def configure(window):
 
 def activate(window):
     if window.release_profile.discovery:
+        if not window._tester_token:
+            code, ok = QInputDialog.getText(
+                window,
+                "Доступ через хост",
+                "Введите код доступа, полученный лично от владельца",
+                QLineEdit.EchoMode.Password,
+            )
+            if not ok:
+                return False
+            import re
+
+            if not re.fullmatch(r"[A-Za-z0-9_-]{43}", code.strip()):
+                window.statusBar().showMessage("Нужен код доступа владельца, не API-ключ.")
+                return False
+            window._tester_bootstrap = code.strip()
+            if windows_credentials_available():
+                try:
+                    save_secret(window._saves.directory.parent / "tester-pending.bin", code.strip())
+                except (OSError, ValueError):
+                    window.statusBar().showMessage(
+                        "Код действует в этом сеансе; сохранить его не удалось."
+                    )
         window.tester_connection_worker.start()
         return False
     if not window.release_profile.gateway:

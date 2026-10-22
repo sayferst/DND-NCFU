@@ -9,7 +9,6 @@ from PySide6.QtCore import QObject, QTimer, Signal
 
 from rpg_vkr.discovery import NoRedirect, fetch
 from rpg_vkr.gateway_http import gateway_headers
-from rpg_vkr.resources import resource_path
 from rpg_vkr.storage.connection import load_secret, save_secret
 from rpg_vkr.ui.workspace_tools import atomic_text
 
@@ -36,6 +35,12 @@ class ConnectionWorker(QObject):
         profile = window.release_profile
         root = window._saves.directory.parent
         token = window._tester_token
+        if not token and not getattr(window, "_tester_bootstrap", ""):
+            self.busy = False
+            window.statusBar().showMessage(
+                "Нажмите «Активировать тестовую игру» и введите код владельца."
+            )
+            return
 
         def run():
             try:
@@ -52,12 +57,7 @@ class ConnectionWorker(QObject):
                 )
                 access = token
                 if not access:
-                    path = resource_path("tester-bootstrap.json")
-                    if not path.is_file() or path.stat().st_size > 512:
-                        raise ValueError(
-                            "В сборке нет персональной активации. Обратитесь к владельцу."
-                        )
-                    code = json.loads(path.read_text(encoding="utf-8"))["code"]
+                    code = window._tester_bootstrap
                     # Persist the installation secret BEFORE contacting the server. A lost reply
                     # is recoverable with the same secret; another installation cannot claim it.
                     secret_path = root / "tester-installation.bin"

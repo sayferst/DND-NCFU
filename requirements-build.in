@@ -1,0 +1,3 @@
+# Optional free Windows packaging tools; runtime/dev pins stay unchanged.
+-r requirements-dev.lock
+pyinstaller==6.16.0
