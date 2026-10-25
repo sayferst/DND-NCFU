@@ -1294,3 +1294,9 @@ BUILD_EXE.bat вызывает developer portable без Inno; BUILD_SETUP.bat �
 START_HOST из той же папки. Старые корневые BAT удалены именно переносом.
 Проверены ссылки и diff, сохранён CRLF checkout через *.bat; native cmd
 в Linux недоступен. Runtime игры и сборщиков не менялся, тесты не повторялись.
+## 25.10.2026 — отдельный UPDATE_NGROK.bat
+
+Добавлена обёртка Команды/UPDATE_NGROK.bat для существующего update-ngrok.
+Код завершения сохраняется, окно остаётся открытым; перед запуском остановить
+хост, после успеха START_HOST. Проверены путь, diff и CRLF attribute.
+Native cmd не запускался; runtime не менялся, игровые тесты не повторялись.
