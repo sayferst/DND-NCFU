@@ -1,0 +1,207 @@
+{
+  "method": "Exact enumeration of all 20 equally likely D20 faces; not empirical playtesting or combat balance",
+  "assumptions": "Athletics at level-gated rank cap; STR16 at every level; no equipment/situational bonuses; natural1/20 are not automatic outcomes on ability checks",
+  "paid_requests": 0,
+  "rows": [
+    {
+      "level": 1,
+      "ability_score": 16,
+      "rank": 2,
+      "difficulty": 10,
+      "successes_out_of_20": 18,
+      "exact_probability": 0.9
+    },
+    {
+      "level": 1,
+      "ability_score": 16,
+      "rank": 2,
+      "difficulty": 15,
+      "successes_out_of_20": 13,
+      "exact_probability": 0.65
+    },
+    {
+      "level": 1,
+      "ability_score": 16,
+      "rank": 2,
+      "difficulty": 20,
+      "successes_out_of_20": 8,
+      "exact_probability": 0.4
+    },
+    {
+      "level": 1,
+      "ability_score": 16,
+      "rank": 2,
+      "difficulty": 25,
+      "successes_out_of_20": 3,
+      "exact_probability": 0.15
+    },
+    {
+      "level": 1,
+      "ability_score": 16,
+      "rank": 2,
+      "difficulty": 30,
+      "successes_out_of_20": 0,
+      "exact_probability": 0.0
+    },
+    {
+      "level": 5,
+      "ability_score": 16,
+      "rank": 3,
+      "difficulty": 10,
+      "successes_out_of_20": 20,
+      "exact_probability": 1.0
+    },
+    {
+      "level": 5,
+      "ability_score": 16,
+      "rank": 3,
+      "difficulty": 15,
+      "successes_out_of_20": 15,
+      "exact_probability": 0.75
+    },
+    {
+      "level": 5,
+      "ability_score": 16,
+      "rank": 3,
+      "difficulty": 20,
+      "successes_out_of_20": 10,
+      "exact_probability": 0.5
+    },
+    {
+      "level": 5,
+      "ability_score": 16,
+      "rank": 3,
+      "difficulty": 25,
+      "successes_out_of_20": 5,
+      "exact_probability": 0.25
+    },
+    {
+      "level": 5,
+      "ability_score": 16,
+      "rank": 3,
+      "difficulty": 30,
+      "successes_out_of_20": 0,
+      "exact_probability": 0.0
+    },
+    {
+      "level": 10,
+      "ability_score": 16,
+      "rank": 4,
+      "difficulty": 10,
+      "successes_out_of_20": 20,
+      "exact_probability": 1.0
+    },
+    {
+      "level": 10,
+      "ability_score": 16,
+      "rank": 4,
+      "difficulty": 15,
+      "successes_out_of_20": 17,
+      "exact_probability": 0.85
+    },
+    {
+      "level": 10,
+      "ability_score": 16,
+      "rank": 4,
+      "difficulty": 20,
+      "successes_out_of_20": 12,
+      "exact_probability": 0.6
+    },
+    {
+      "level": 10,
+      "ability_score": 16,
+      "rank": 4,
+      "difficulty": 25,
+      "successes_out_of_20": 7,
+      "exact_probability": 0.35
+    },
+    {
+      "level": 10,
+      "ability_score": 16,
+      "rank": 4,
+      "difficulty": 30,
+      "successes_out_of_20": 2,
+      "exact_probability": 0.1
+    },
+    {
+      "level": 15,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 10,
+      "successes_out_of_20": 20,
+      "exact_probability": 1.0
+    },
+    {
+      "level": 15,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 15,
+      "successes_out_of_20": 19,
+      "exact_probability": 0.95
+    },
+    {
+      "level": 15,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 20,
+      "successes_out_of_20": 14,
+      "exact_probability": 0.7
+    },
+    {
+      "level": 15,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 25,
+      "successes_out_of_20": 9,
+      "exact_probability": 0.45
+    },
+    {
+      "level": 15,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 30,
+      "successes_out_of_20": 4,
+      "exact_probability": 0.2
+    },
+    {
+      "level": 20,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 10,
+      "successes_out_of_20": 20,
+      "exact_probability": 1.0
+    },
+    {
+      "level": 20,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 15,
+      "successes_out_of_20": 19,
+      "exact_probability": 0.95
+    },
+    {
+      "level": 20,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 20,
+      "successes_out_of_20": 14,
+      "exact_probability": 0.7
+    },
+    {
+      "level": 20,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 25,
+      "successes_out_of_20": 9,
+      "exact_probability": 0.45
+    },
+    {
+      "level": 20,
+      "ability_score": 16,
+      "rank": 5,
+      "difficulty": 30,
+      "successes_out_of_20": 4,
+      "exact_probability": 0.2
+    }
+  ]
+}

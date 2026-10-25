@@ -81,6 +81,11 @@ def writing_profile(model, text=""):
 def render_context(context):
     facts, brief = context["current_scene"], context["turn_brief"]
     lines = ["Место: " + facts["location"], "Герой: " + facts["hero"]]
+    if context.get("d20_skills"):
+        lines.append(
+            "Подтверждённые навыки D20 (ранг даёт +2; исход считает движок): "
+            + json.dumps(context["d20_skills"], ensure_ascii=False)
+        )
     lines.append("Режим: продолжение подтверждённой сцены, не генерация нового мира.")
     if context.get("obstacle"):
         lines.append(

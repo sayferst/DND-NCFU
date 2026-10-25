@@ -296,7 +296,7 @@ class EpisodePanels:
         self.study_button.setVisible(self._legacy_controls)
         self.study_button.clicked.connect(lambda: self._run_command("изучить учебник"))
         inventory_layout.insertWidget(2, self.study_button)
-        hero_layout = self.tabs.widget(1).layout()
+        hero_layout = self.character_group.parentWidget().layout()
         self.cart_button = QPushButton("Помочь разгрузить телегу у ворот")
         self.cart_button.setProperty("game_action", True)
         self.cart_button.setVisible(self._legacy_controls)

@@ -51,6 +51,11 @@ class CreationDialog(QDialog):
         for key, archetype in ARCHETYPES.items():
             self.class_choice.addItem(archetype.name, key)
         layout.addRow("Класс / авторский профиль", self.class_choice)
+        self.use_d20_skills = QCheckBox("Навыки D20: 13 очков, бонус +2 за ранг")
+        self.use_d20_skills.setToolTip(
+            "Отдельное развитие навыков; включается только для нового героя."
+        )
+        layout.addRow(self.use_d20_skills)
         self.description_input = QPlainTextEdit()
         self.description_input.setAccessibleName("Свободное описание героя")
         self.description_input.setPlaceholderText(
@@ -165,12 +170,15 @@ class CreationDialog(QDialog):
 
     def create_session(self) -> Session:
         description = plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
-        return Session.create_hero(
+        session = Session.create_hero(
             self.character(),
             self.class_choice.currentData(),
             description=description,
             world_brief=plain(self.world_brief_input.toPlainText(), WORLD_BRIEF_LIMIT, empty=True),
         )
+        if self.use_d20_skills.isChecked():
+            session.enable_d20_progress()
+        return session
 
     def accept(self) -> None:
         try:
