@@ -254,7 +254,7 @@ def interact():
             assert not window.ollama.busy
             colour = window.journal.actor_colour('wolf')
             assert colour == window.journal.highlighter.colour('hostile')
-            assert colour.name() in {'#ff737d', '#b00020'}  # Modern default theme is dark.
+            assert colour.name() == '#e7a1a1'  # Default dark fantasy danger colour.
             window.open_section('Схватка')
             window.combat_attack.click()
             assert window._session.combat.actor('wolf').hp == 0

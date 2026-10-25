@@ -113,6 +113,33 @@ class WorkspaceActions:
         self.theme_choice = QComboBox()
         self.theme_choice.addItems(["Системная", "Светлая", "Тёмная"])
         self.theme_choice.setCurrentText(preferences.theme)
+        from rpg_vkr.ui.journal_colors import LABELS, PRESETS
+
+        self.journal_theme_choice = QComboBox()
+        self.journal_theme_choice.addItems(list(PRESETS))
+        self.journal_theme_choice.setCurrentText(preferences.journal_theme)
+        self._journal_color_overrides = dict(preferences.journal_colors)
+        settings_layout.addRow("Тема игрового журнала:", self.journal_theme_choice)
+        self.journal_color_buttons = {}
+        for key, label in LABELS.items():
+            button = QPushButton(label)
+            button.clicked.connect(lambda checked=False, role=key: self._choose_journal_color(role))
+            settings_layout.addRow(button)
+            self.journal_color_buttons[key] = button
+        self.journal_theme_choice.currentTextChanged.connect(self._change_journal_theme)
+        from rpg_vkr.ui.journal_colors import journal_palette
+        from rpg_vkr.ui.role_journal import RoleJournal
+
+        self.journal_preview = RoleJournal()
+        self.journal_preview.setReadOnly(True)
+        self.journal_preview.setMinimumHeight(220)
+        self.journal_preview.set_journal_palette(
+            journal_palette(preferences.journal_theme, preferences.journal_colors)
+        )
+        for role, label in LABELS.items():
+            if role != "background":
+                self.journal_preview.append_message(role, label, "Пример оформления")
+        settings_layout.addRow("Предпросмотр:", self.journal_preview)
         settings_layout.addRow("Размер текста журнала:", self.font_size)
         settings_layout.addRow("Тема окна:", self.theme_choice)
         self.bold_text = QCheckBox("Жирный текст сообщений")
@@ -380,6 +407,14 @@ class WorkspaceActions:
 
                 style_connection_link(self)
         self.journal.set_role_theme(palette.color(QPalette.ColorRole.Base).lightness() < 128)
+        from rpg_vkr.ui.journal_colors import journal_palette
+
+        colors = journal_palette(preferences.journal_theme, preferences.journal_colors)
+        self.journal.set_journal_palette(colors)
+        self.journal_preview.set_journal_palette(colors)
+        self.journal_preview.setFont(font)
+        for role, button in self.journal_color_buttons.items():
+            button.setText(button.text().split(" · ")[0] + " · " + colors[role])
         if hasattr(self, "combat_targets"):
             self._refresh_episode_panels()
 
@@ -389,6 +424,8 @@ class WorkspaceActions:
             self.theme_choice.currentText(),
             self.bold_text.isChecked(),
             self.animation_mode.currentIndex(),
+            self.journal_theme_choice.currentText(),
+            dict(self._journal_color_overrides),
         )
         if hasattr(self, "motion"):
             self.motion.stop()
@@ -417,6 +454,10 @@ class WorkspaceActions:
             self.preferences_status.setText("Настройки чтения сохранены отдельно от сессии.")
 
     def _reset_reading(self) -> None:
+        self.journal_theme_choice.blockSignals(True)
+        self.journal_theme_choice.setCurrentText("Тёмное фэнтези")
+        self.journal_theme_choice.blockSignals(False)
+        self._journal_color_overrides = {}
         self.font_size.blockSignals(True)
         self.theme_choice.blockSignals(True)
         self.font_size.setValue(13)
@@ -430,3 +471,20 @@ class WorkspaceActions:
         self.font_size.blockSignals(False)
         self.theme_choice.blockSignals(False)
         self._change_reading()
+
+    def _change_journal_theme(self):
+        self._journal_color_overrides = {}
+        self._change_reading()
+
+    def _choose_journal_color(self, role):
+        from PySide6.QtWidgets import QColorDialog
+
+        from rpg_vkr.ui.journal_colors import journal_palette
+
+        current = journal_palette(
+            self.journal_theme_choice.currentText(), self._journal_color_overrides
+        )[role]
+        color = QColorDialog.getColor(QColor(current), self, "Цвет игрового журнала")
+        if color.isValid():
+            self._journal_color_overrides[role] = color.name()
+            self._change_reading()

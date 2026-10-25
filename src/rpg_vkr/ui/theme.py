@@ -5,13 +5,13 @@ from string import Template
 from PySide6.QtGui import QColor, QFont, QPalette
 
 DARK = {
-    "bg": "#101b24",
-    "panel": "#182832",
-    "field": "#10212a",
-    "text": "#e6dfcf",
-    "muted": "#a9b7bb",
+    "bg": "#171a21",
+    "panel": "#20252f",
+    "field": "#171a21",
+    "text": "#e8dfc9",
+    "muted": "#b8b1a5",
     "border": "#3d5056",
-    "gold": "#d8b578",
+    "gold": "#e8be77",
     "hover": "#30464c",
 }
 LIGHT = {

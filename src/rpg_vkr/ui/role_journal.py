@@ -32,6 +32,7 @@ class RoleHighlighter(QSyntaxHighlighter):
         super().__init__(document)
         self.dark = False
         self.hostile_ids = set()
+        self.colors = None
 
     def highlightBlock(self, text: str) -> None:
         metadata = self.currentBlock().userData()
@@ -47,6 +48,19 @@ class RoleHighlighter(QSyntaxHighlighter):
         if hostile:
             format.setFontWeight(QFont.Weight.Bold)
         self.setFormat(0, len(text), format)
+        if self.colors and role == "narrator" and text.startswith("Мастер:"):
+            caption = QTextCharFormat()
+            caption.setForeground(self.colour("secondary"))
+            self.setFormat(0, len("Мастер:"), caption)
+        if (
+            self.colors
+            and role == "narrator"
+            and (text.startswith("// ") or " | " in text and len(text) < 160)
+        ):
+            heading = QTextCharFormat()
+            heading.setForeground(self.colour("important"))
+            heading.setFontWeight(QFont.Weight.Bold)
+            self.setFormat(0, len(text), heading)
         if speech_only and metadata.actor_id:
             speech_format = QTextCharFormat()
             is_hostile = metadata.actor_id in self.hostile_ids
@@ -57,6 +71,8 @@ class RoleHighlighter(QSyntaxHighlighter):
                 self.setFormat(match.start(), len(match[0]), speech_format)
 
     def colour(self, role):
+        if self.colors is not None:
+            return QColor(self.colors[role])
         colors = (
             {
                 "player": "#8dbbff",
@@ -85,6 +101,17 @@ class RoleJournal(QPlainTextEdit):
 
     def set_role_theme(self, dark: bool) -> None:
         self.highlighter.dark = dark
+        self.highlighter.rehighlight()
+
+    def set_journal_palette(self, colors):
+        self.highlighter.colors = dict(colors)
+        self.setStyleSheet(
+            "QPlainTextEdit { background: "
+            + colors["background"]
+            + "; color: "
+            + colors["narrator"]
+            + "; }"
+        )
         self.highlighter.rehighlight()
 
     def append_message(

@@ -299,7 +299,7 @@ def test_new_master_label_is_not_repeated_between_quote_and_attribution(window):
     window.journal.highlighter.rehighlight()
     block = window.journal.document().firstBlock()
     assert block.userData().speech_only
-    assert any(f.format.foreground().color().name() == "#b00020" for f in block.layout().formats())
+    assert any(f.format.foreground().color().name() == "#e7a1a1" for f in block.layout().formats())
 
 
 def test_actual_user_attempts_remain_rejected_with_their_original_diagnostics():
