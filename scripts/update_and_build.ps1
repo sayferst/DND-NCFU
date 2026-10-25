@@ -17,9 +17,13 @@ try {
         & $python scripts\repair_fixture_checkout.py
         if ($LASTEXITCODE -ne 0) { throw 'Fixture repair refused changes. Update stopped.' }
     }
-    $changes = & git status --porcelain
-    if ($LASTEXITCODE -ne 0) { throw 'Cannot check the Git working tree.' }
-    if ($changes) { throw 'Local changes found. Save them before updating; nothing was discarded.' }
+    if (Test-Path -LiteralPath $python) {
+        & $python -m scripts.check_update_tree
+        if ($LASTEXITCODE -ne 0) { throw 'Local changes found. Save them before updating; nothing was discarded.' }
+    } else {
+        $changes = & git status --porcelain
+        if ($LASTEXITCODE -ne 0 -or $changes) { throw 'Working tree is not clean. Update stopped.' }
+    }
     & git pull --ff-only
     if ($LASTEXITCODE -ne 0) { throw 'Git update failed. Build stopped.' }
     & (Join-Path $PSScriptRoot 'build_windows.ps1') -Installer -Profile developer
