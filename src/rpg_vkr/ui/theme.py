@@ -84,6 +84,7 @@ def apply_theme(widget, theme="Системная"):
         QAbstractItemView { background: $field; color:$text; border: 1px solid $border;
             border-radius: 6px; padding: 6px; selection-background-color: $hover;
             selection-color: $text; }
+        QLineEdit, QTextEdit, QPlainTextEdit { placeholder-text-color: $muted; }
         QLabel:disabled, QLineEdit:disabled, QAbstractSpinBox:disabled, QComboBox:disabled,
         QToolButton:disabled {color:$muted;}
         QProgressBar { background:$field; color:$text; border:1px solid $border;

@@ -50,6 +50,10 @@ def test_controls_and_menu_notice_have_readable_contrast(qt_app, tmp_path, theme
             if background.alpha() == 0:
                 background = window.palette().color(QPalette.ColorRole.Window)
             assert contrast(widget.palette().color(front), background) >= 4.5
+            if cls is QLineEdit:
+                placeholder = widget.palette().color(QPalette.ColorRole.PlaceholderText)
+                assert placeholder.alpha() == 255
+                assert contrast(placeholder, background) >= 4.5
             widget.setEnabled(False)
             widget.ensurePolished()
             palette = widget.palette()
