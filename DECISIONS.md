@@ -1607,3 +1607,13 @@ Windows build: 1499 passed / 1 failed из-за отсутствия mode в Sim
 или отключения проверок. Полный scripts/check.py: 1500 passed / 237.41 с,
 pip check, Ruff check и format (229 файлов) успешны, exit 0 на Linux.
 Windows EXE/Inno нужно повторно собрать на ПК владельца через BAT.
+## 25.10.2026 — раздельная сборка EXE и Setup
+
+BUILD_EXE.bat вызывает developer portable без Inno; BUILD_SETUP.bat вызывает
+персональный tester1 builder с обязательным host preflight. START_HOST прежний.
+Общий wrapper обновляет Git только при чистом дереве и остановленном хосте;
+иначе явно собирает текущие локальные правки без pull. Проверки не обходятся.
+Личный portable сохраняется отдельно, ключи не вшиваются. HOST_COMMANDS
+объясняет сервер, собственные API и ручную переустановку нового Setup.
+Проверка только статическая: diff, CRLF attributes и маршруты существующих
+сборщиков. PowerShell/cmd/Inno в Linux недоступны, native сборка не заявляется.

@@ -54,3 +54,5 @@ START_HOST.bat text eol=crlf
 CHANGE_HOST_KEY.bat text eol=crlf
 UPDATE_AND_BUILD_SETUP.bat text eol=crlf
 BUILD_TESTER_SETUP.bat text eol=crlf
+BUILD_EXE.bat text eol=crlf
+BUILD_SETUP.bat text eol=crlf
