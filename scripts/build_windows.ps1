@@ -2,7 +2,7 @@
 param(
     [switch]$Installer,
     [switch]$AccountLogin,
-    [ValidateSet('developer', 'tester')][string]$Profile = 'developer',
+    [ValidateSet('developer', 'tester', 'owner')][string]$Profile = 'developer',
     [string]$GatewayUrl = '',
     [string]$DiscoveryUrl = '',
     [string]$DiscoveryKey = '',

@@ -35,12 +35,26 @@ class ReleaseProfile:
     discovery: str = ""
     verification_key: str = ""
     account_login: bool = False
+    owner_binding: str = ""
 
     def __post_init__(self):
         if type(self.account_login) is not bool:
             raise ValueError("Неверный режим входа.")
-        if self.mode not in {"developer", "tester"}:
+        if self.mode not in {"developer", "tester", "owner"}:
             raise ValueError("Неизвестный профиль сборки.")
+        if self.mode == "owner":
+            import base64
+
+            if (
+                not isinstance(self.owner_binding, str)
+                or not 1 <= len(base64.b64decode(self.owner_binding, validate=True)) <= 2048
+                or self.account_login
+                or self.gateway
+                or self.discovery
+            ):
+                raise ValueError("Неверная привязка личной сборки.")
+        elif self.owner_binding:
+            raise ValueError("Привязка допустима только для личной сборки.")
         if self.discovery or self.verification_key:
             import base64
 
@@ -73,6 +87,7 @@ def load_release_profile():
         "discovery",
         "verification_key",
         "account_login",
+        "owner_binding",
     }:
         raise ValueError("Повреждён профиль сборки.")
     return ReleaseProfile(**value)

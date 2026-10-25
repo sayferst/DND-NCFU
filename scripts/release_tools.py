@@ -44,6 +44,11 @@ def prepare_release_profile(output):
             commit += "-modified"
     except (OSError, subprocess.CalledProcessError):
         commit = "unknown"
+    owner_binding = ""
+    if mode == "owner":
+        from rpg_vkr.owner_local import create_binding
+
+        owner_binding = create_binding()
     profile = ReleaseProfile(
         mode,
         gateway,
@@ -52,10 +57,13 @@ def prepare_release_profile(output):
         discovery,
         os.environ.get("DND_DISCOVERY_KEY", ""),
         os.environ.get("DND_ACCOUNT_LOGIN", "") == "1",
+        owner_binding,
     )
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     value = asdict(profile)
+    if not profile.owner_binding:
+        value.pop("owner_binding")
     if not profile.account_login:
         value.pop("account_login")
     if not profile.discovery:

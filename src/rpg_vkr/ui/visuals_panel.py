@@ -334,6 +334,8 @@ class VisualController(QObject):
         self.worker.start(lambda transport: transport.metadata(key))
 
     def cancel(self):
+        if not self.active and not self.queue and not self.worker.busy:
+            return
         self.queue.clear()
         self.cancelled = True
         self.status(

@@ -49,7 +49,10 @@ def test_disabled_motion_and_persistent_notice(qt_app, tmp_path):
         window.open_section("Приключение")
         window.statusBar().showMessage("Ошибка сети: мастер недоступен")
         notice = window.notifications
-        assert notice.isVisible() and notice.persistent and not notice.timer.isActive()
+        assert not notice.isVisible() and notice.persistent and not notice.timer.isActive()
+        assert window.statusBar().currentMessage() == "Ошибка сети: мастер недоступен"
+        window.open_section("Главное меню")
+        assert notice.isVisible()
         window.statusBar().showMessage("Сохранено")
         assert "Ошибка" in notice.message.text()
         notice.dismiss()

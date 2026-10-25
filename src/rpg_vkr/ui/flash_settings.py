@@ -127,7 +127,7 @@ def snapshot(window):
 
 
 def restore_enabled(window):
-    if getattr(getattr(window, "release_profile", None), "mode", "") == "tester":
+    if getattr(getattr(window, "release_profile", None), "mode", "") in {"tester", "owner"}:
         return
     if getattr(window, "_closing", False):
         return

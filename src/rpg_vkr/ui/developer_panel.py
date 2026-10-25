@@ -124,6 +124,11 @@ class DeveloperConsole(QWidget):
                 "Консоль разработчика доступна учётной записи admin."
             )
             return False
+        if (
+            getattr(getattr(self.window, "release_profile", None), "account_login", False)
+            and getattr(self.window, "_account_name", "") == "admin"
+        ) or getattr(getattr(self.window, "release_profile", None), "mode", "") == "owner":
+            self.access.authorized = True
         if not self.access.authorized:
             dialog = QDialog(self.window)
             dialog.setWindowTitle("Доступ разработчика")

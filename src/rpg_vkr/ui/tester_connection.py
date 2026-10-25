@@ -19,6 +19,11 @@ def install_tester_connection(window):
     else:
         window.release_profile = load_release_profile()
     profile = window.release_profile
+    if profile.mode == "owner":
+        from rpg_vkr.owner_local import install_owner
+
+        install_owner(window)
+        return
     console = window.developer_console
     if hasattr(console, "testing_info"):
         console.testing_info.setText(
@@ -67,7 +72,7 @@ def install_tester_connection(window):
                 page.activation_button.clicked.connect(lambda: check_connection(window))
             else:
                 page.activation_button.clicked.connect(lambda: activate(window))
-            page.layout().insertWidget(page.layout().count() - 2, page.activation_button)
+            page.add_menu_action(page.activation_button)
     if profile.discovery:
         from rpg_vkr.ui.tester_discovery import ConnectionWorker
 

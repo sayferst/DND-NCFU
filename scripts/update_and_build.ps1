@@ -46,16 +46,16 @@ try {
     if (!$clean) {
         Write-Host 'Including your additional local edits in this build.'
     }
-    if (!(Test-Path (Join-Path $env:LOCALAPPDATA 'DND-NCFU-Host\account-mode.json'))) {
-        throw 'First run Commands/SETUP_ACCOUNTS.bat to configure admin/tester on the host.'
-    }
     if ($Target -eq 'exe') {
         & $python scripts\tester_host.py build-exe
-        if ($LASTEXITCODE -ne 0) { throw 'Account EXE build failed. Check that the host is ready.' }
+        if ($LASTEXITCODE -ne 0) { throw 'Owner EXE build failed. Check the saved admin key.' }
         Start-Process explorer.exe -ArgumentList ('"' + (Join-Path (Get-Location) 'dist') + '"')
         exit 0
     }
     if ($Target -eq 'tester') {
+        if (!(Test-Path (Join-Path $env:LOCALAPPDATA 'DND-NCFU-Host\account-mode.json'))) {
+            throw 'First run SETUP_ACCOUNTS.bat from the launcher folder.'
+        }
         if (!(Test-Path -LiteralPath $python)) { throw 'Python environment missing. Build a personal EXE first.' }
         & $python scripts\tester_host.py build tester1
         if ($LASTEXITCODE -ne 0) { throw 'Tester build failed. Start START_HOST.bat and wait for readiness.' }

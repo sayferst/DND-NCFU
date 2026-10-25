@@ -21,7 +21,7 @@ LIGHT = {
     "text": "#252c2e",
     "muted": "#566366",
     "border": "#b7ab94",
-    "gold": "#795b2b",
+    "gold": "#705221",
     "hover": "#e2d5ba",
 }
 
@@ -46,6 +46,13 @@ def apply_theme(widget, theme="Системная"):
     palette.setColor(QPalette.ColorRole.HighlightedText, QColor(colors["text"]))
     palette.setColor(QPalette.ColorRole.Link, QColor(colors["gold"]))
     palette.setColor(QPalette.ColorRole.LinkVisited, QColor(colors["muted"]))
+    for role in (
+        QPalette.ColorRole.WindowText,
+        QPalette.ColorRole.Text,
+        QPalette.ColorRole.ButtonText,
+        QPalette.ColorRole.PlaceholderText,
+    ):
+        palette.setColor(QPalette.ColorGroup.Disabled, role, QColor(colors["muted"]))
     widget.setPalette(palette)
     widget.setFont(QFont("Segoe UI", 11))
     widget.setStyleSheet(
@@ -54,6 +61,9 @@ def apply_theme(widget, theme="Системная"):
         QMainWindow, QDialog, QScrollArea, QTabWidget::pane { background: $bg; }
         QLabel { background: transparent; }
         QTabWidget::pane { border: none; }
+        QTabBar::tab { background: $panel; color: $text; border:1px solid $border;
+            padding: 7px 10px; }
+        QTabBar::tab:selected { background:$hover; color:$gold; }
         QTabBar#sectionTabs::tab { background: $panel; color: $text; border: 1px solid $border;
             border-radius: 5px; padding: 9px 12px; margin: 0 3px 0 0; }
         QTabBar#sectionTabs::tab:selected { background: $hover; border-color: $gold; color: $gold; }
@@ -62,17 +72,24 @@ def apply_theme(widget, theme="Системная"):
         QGroupBox, QFrame[card="true"] { background: $panel; border: 1px solid $border;
             border-radius: 10px; padding: 14px; margin-top: 10px; }
         QGroupBox::title { color: $gold; subcontrol-origin: margin; left: 16px; padding: 0 6px; }
-        QPushButton { background: $panel; border: 1px solid $border; border-radius: 6px;
+        QPushButton, QToolButton { background: $panel; border: 1px solid $border;
+            border-radius: 6px;
             padding: 8px 14px; color: $text; }
-        QPushButton:hover { background: $hover; border-color: $gold; }
+        QPushButton:hover, QToolButton:hover { background: $hover; border-color: $gold; }
         QPushButton:pressed { background: $field; }
         QPushButton:focus, QLineEdit:focus, QComboBox:focus, QListWidget:focus {
             border: 2px solid $gold; }
         QPushButton:disabled { color: $muted; border-color: $border; }
-        QLineEdit, QSpinBox, QComboBox, QPlainTextEdit, QTextBrowser, QListWidget,
-        QTableWidget, QTreeWidget { background: $field; border: 1px solid $border;
+        QLineEdit, QAbstractSpinBox, QComboBox, QTextEdit, QPlainTextEdit, QTextBrowser,
+        QAbstractItemView { background: $field; color:$text; border: 1px solid $border;
             border-radius: 6px; padding: 6px; selection-background-color: $hover;
             selection-color: $text; }
+        QLineEdit, QTextEdit, QPlainTextEdit { placeholder-text-color: $muted; }
+        QLabel:disabled, QLineEdit:disabled, QAbstractSpinBox:disabled, QComboBox:disabled,
+        QToolButton:disabled {color:$muted;}
+        QProgressBar { background:$field; color:$text; border:1px solid $border;
+            border-radius:5px; text-align:center; }
+        QProgressBar::chunk { background:$hover; }
         QListWidget::item:selected, QTableWidget::item:selected {
             background: $hover; color: $text; }
         QListWidget#knowledgeCards::item, QListWidget#albumCards::item {
@@ -114,6 +131,20 @@ def sync_chrome(window, index):
         window.statusBar().hide()
         return
     menu = window.tabs.tabText(index) == "Главное меню"
+    from rpg_vkr.ui.navigation_policy import GAME
+
+    playing = window.tabs.tabText(index) in GAME and bool(window._session.generated_world)
+    if hasattr(window, "api_settings_button"):
+        console = getattr(window, "developer_console", None)
+        account_profile = getattr(getattr(window, "release_profile", None), "account_login", False)
+        window.api_settings_button.setVisible(
+            getattr(window, "_account_name", "") == "admin"
+            or bool(console and console.access.authorized and not account_profile)
+        )
+        if hasattr(window, "notifications"):
+            window.notifications.menu.developer_button.setVisible(
+                not account_profile or getattr(window, "_account_name", "") == "admin"
+            )
     adventure = window.tabs.tabText(index) == "Приключение"
     compact = window.width() < 900
     for widget in (
@@ -123,16 +154,16 @@ def sync_chrome(window, index):
         window.navigation_bar,
     ):
         widget.setVisible(
-            not menu and (widget is window.navigation_bar or not compact or adventure)
+            not menu and (widget is window.navigation_bar or playing and (not compact or adventure))
         )
-    window.mode_label.setVisible(not menu and not compact)
+    window.mode_label.setVisible(playing and not compact)
     if not getattr(window, "_roll_dialog_open", False):
-        window.resolution_panel.setVisible(not menu and adventure and not compact)
-    window.compact_rolls.setVisible(not menu and adventure and compact)
+        window.resolution_panel.setVisible(playing and adventure and not compact)
+    window.compact_rolls.setVisible(playing and adventure and compact)
     window.chronicles_shortcut.setVisible(
         not hasattr(window, "section_tabs") and not menu and not compact
     )
-    window.menuBar().setVisible(not menu)
+    window.menuBar().setVisible(playing)
     window.statusBar().setVisible(not menu)
     window._content_layout.setContentsMargins(*((0, 0, 0, 0) if menu else (20, 16, 12, 16)))
     window._columns_layout.setContentsMargins(0, 0, 0 if menu else 12, 0)

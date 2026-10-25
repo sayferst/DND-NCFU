@@ -368,7 +368,8 @@ def smoke_test(app):
                 window.show()
                 app.processEvents()
                 sections = [window.tabs.tabText(i) for i in range(window.tabs.count())]
-                window.developer_console.access.login("995539")
+                # The isolated GUI probe must not carry a real/default password in the bundle.
+                window.developer_console.access.authorized = True
                 for section in (
                     "Главное меню",
                     "Герой",
@@ -377,6 +378,7 @@ def smoke_test(app):
                     "Мастер",
                     "Художник",
                 ):
+                    window.open_section("Главное меню")
                     window.open_section(section)
                     app.processEvents()
                     expected = "Разработчик" if section in {"Мастер", "Художник"} else section

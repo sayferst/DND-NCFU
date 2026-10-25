@@ -63,8 +63,8 @@ class PhotoAlbum(QWidget):
         self.open_button = QPushButton("Открыть фотографию")
         self.open_button.clicked.connect(self.open_photo)
         layout.addWidget(self.open_button)
-        back = QPushButton("В энциклопедию мира")
-        back.clicked.connect(lambda: window.open_section("Энциклопедия мира"))
+        back = QPushButton("В главное меню")
+        back.clicked.connect(lambda: window.open_section("Главное меню"))
         layout.addWidget(back)
         self.categories.currentChanged.connect(lambda _: self.refresh())
         self.history.toggled.connect(lambda _: self.refresh())
@@ -155,7 +155,7 @@ class PhotoAlbum(QWidget):
         layout.addWidget(description)
         actions = QHBoxLayout()
         previous, following = QPushButton("← Назад"), QPushButton("Вперёд →")
-        source = QPushButton("Открыть запись")
+        source = QPushButton("В главное меню")
         close = QPushButton("Закрыть")
         for button in (previous, following, source, close):
             actions.addWidget(button)
@@ -189,13 +189,8 @@ class PhotoAlbum(QWidget):
             if CampaignRepository.identity(self.window._session) != campaign:
                 dialog.reject()
                 return
-            row = rows[index]
             dialog.accept()
-            if row["entry"]:
-                self.window.open_section("Энциклопедия мира")
-                self.window.chronicles_panel.open_entry(row["entry"])
-            else:
-                self.window.open_section("Приключение")
+            self.window.open_section("Главное меню")
 
         previous.clicked.connect(lambda: show(-1))
         following.clicked.connect(lambda: show(1))

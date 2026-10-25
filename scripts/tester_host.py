@@ -921,6 +921,27 @@ def build_accounts(root, *, installer=True):
     print("Setup с входом admin/tester: " + str(destination))
 
 
+def build_owner():
+    from rpg_vkr.owner_local import admin_key
+
+    Upstream(admin_key())  # Local DPAPI read and format validation only, no network.
+    command = [
+        "powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(ROOT / "scripts/build_windows.ps1"),
+        "-Profile",
+        "owner",
+    ]
+    subprocess.run(command, cwd=ROOT, check=True)
+    destination = ROOT / "dist" / ("Owner-" + str(time.time_ns()))
+    shutil.move(str(ROOT / "dist" / "DND-NCFU"), str(destination))
+    print("Личный EXE без хоста: " + str(destination / "DND-NCFU.exe"))
+
+
 def setup_accounts(root, store):
     import getpass
 
@@ -1034,7 +1055,7 @@ def main():
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("start")
     commands.add_parser("accounts", help="Настроить пароли и отдельные ключи admin/tester")
-    commands.add_parser("build-exe", help="Собрать EXE с входом по учётной записи")
+    commands.add_parser("build-exe", help="Собрать личный admin EXE без хоста и входа")
     commands.add_parser("update-ngrok", help="Обновить отдельную копию агента ngrok")
     ngrok_command = commands.add_parser("ngrok", help="Настроить ngrok вместо Cloudflare")
     ngrok_command.add_argument("--domain", required=True)
@@ -1062,7 +1083,8 @@ def main():
     # Budget is lifetime across all issued grants. A new grant does not reset it.
     store = (
         None
-        if args.command in {"key", "diagnose", "diagnose-tunnel", "ngrok", "update-ngrok"}
+        if args.command
+        in {"key", "diagnose", "diagnose-tunnel", "ngrok", "update-ngrok", "build-exe"}
         else (AccountStore if (root / "account-mode.json").exists() else Store)(
             root / "access.sqlite3",
             global_budget=600_000_000
@@ -1114,7 +1136,7 @@ def main():
             with host_lock(root):
                 host(root, store)
         elif args.command == "build-exe":
-            build_accounts(root, installer=False)
+            build_owner()
         elif args.command == "build":
             build(root, store, args.id)
         elif args.command == "revoke":
