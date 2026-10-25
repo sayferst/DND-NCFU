@@ -762,6 +762,17 @@ def catalog_context(window, text):
     from rpg_vkr.storage.catalog import CatalogIndex
 
     state = window._session.interaction_state().context()
+    progress = window._session.d20_progress
+    if progress is not None:
+        from rpg_vkr.domain.d20_progression import SKILLS
+
+        state["skill_rules"] = {
+            "bonus_per_rank": 2,
+            "skills": {
+                key: {"name": name, "ability": ability, "rank": progress.rank(key)}
+                for key, (name, ability) in SKILLS.items()
+            },
+        }
     from rpg_vkr.ui.knowledge import knowledge_entries
 
     public_objects = []

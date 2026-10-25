@@ -134,6 +134,7 @@ class CampaignRepository:
             id(session.catalog),
             id(session.interactive_world),
             id(session.chronicle),
+            session._d20_progress,
         )
         if token == self._last_token:
             return
@@ -177,7 +178,7 @@ class CampaignRepository:
                     digest,
                     payload,
                     datetime.now(UTC).isoformat(),
-                    22,
+                    session.schema_version,
                 ),
             )
             db.execute("DELETE FROM current_events WHERE campaign=?", (campaign,))

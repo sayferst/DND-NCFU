@@ -26,6 +26,9 @@ def master_reply(session, meaning):
 
 
 def campaign_context(session, target=""):
+    from rpg_vkr.domain.d20_progression import SKILLS
+
+    d20 = session.d20_progress
     profile = session.campaign.profile(target)
     from rpg_vkr.narrative.actions import NOTES
     from rpg_vkr.narrative.presentation import present_turn
@@ -129,6 +132,15 @@ def campaign_context(session, target=""):
             }
         )
     return {
+        "d20_skills": (
+            {
+                "level": d20.level,
+                "xp": d20.xp,
+                "skills": {skill: d20.rank(skill) for skill in SKILLS if d20.rank(skill)},
+            }
+            if d20 is not None
+            else None
+        ),
         "receipt": receipt(session),
         "resource_balances": {
             "world.gold": session.world.gold,

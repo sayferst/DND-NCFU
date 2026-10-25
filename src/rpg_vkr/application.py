@@ -140,6 +140,38 @@ class Session:
         self.interactive_world: InteractiveWorld | None = None
         self.catalog: Catalog | None = None
         self.chronicle: Chronicle | None = None
+        self._d20_progress = None
+
+    @property
+    def d20_progress(self):
+        from rpg_vkr.domain.campaign_progress import synchronized
+
+        return synchronized(self._d20_progress, self.turns)
+
+    @property
+    def schema_version(self):
+        return 23 if self._d20_progress is not None else 22
+
+    def enable_d20_progress(self):
+        from rpg_vkr.domain.d20_progression import D20Progress
+
+        if self.turns or self._d20_progress is not None or not self.progress.enabled:
+            raise ValueError("Новые навыки выбираются при создании героя.")
+        self._d20_progress = D20Progress()
+
+    def train_skill(self, skill):
+        progress = self.d20_progress
+        if progress is None or self.combat.active or self.world.hp <= 0:
+            raise ValueError("Обучение сейчас недоступно.")
+        self._d20_progress = progress.train(skill, f"training:{len(progress.events)}")
+
+    def commit_skill_allocation(self, increments, command_id, expected):
+        from rpg_vkr.domain.skill_allocation import commit
+
+        progress = self.d20_progress
+        if progress is None or self.combat.active or self.world.hp <= 0:
+            raise ValueError("Обучение сейчас недоступно.")
+        self._d20_progress = commit(progress, increments, command_id, expected)
 
     @property
     def generated_world(self):
@@ -600,15 +632,50 @@ class Session:
         checkpoint = self.dice.checkpoint()
         try:
             roll = self.dice.roll_d20()
+            from rpg_vkr.domain.challenge import CHALLENGE_SKILLS
+
+            skill = CHALLENGE_SKILLS.get(kind)
+            d20 = self.d20_progress
+            if assessment and "skill" in assessment and d20 is None:
+                raise ValueError("Навыки D20 не включены для этой кампании.")
+            if assessment and d20 is not None:
+                skill = assessment.get("skill") or {
+                    "strength": "athletics",
+                    "dexterity": "acrobatics",
+                    "intelligence": "knowledge",
+                    "wisdom": "perception",
+                    "charisma": "persuasion",
+                }.get(ability)
+            spec = assessment
+            check = resolve_ability_check(
+                ability, self.character.score(ability), roll.value, difficulty
+            )
+            record_version = "challenge-homebrew-2" if assessment else "challenge-homebrew-1"
+            if d20 is not None and skill:
+                rank = d20.rank(skill)
+                bonus = 2 * rank
+                spec = {
+                    "ability": ability,
+                    "dc": difficulty,
+                    "purpose": assessment["purpose"] if assessment else CHALLENGES[kind][2],
+                    "skill": skill,
+                    "rank": rank,
+                    "revision": len(d20.events),
+                }
+                check = replace(
+                    check,
+                    modifier=check.modifier + bonus,
+                    total=check.total + bonus,
+                    succeeded=check.total + bonus >= difficulty,
+                )
+                record_version = "challenge-homebrew-3"
             record = Challenge(
                 kind,
                 self.world.location,
                 roll,
-                resolve_ability_check(
-                    ability, self.character.score(ability), roll.value, difficulty
-                ),
-                version="challenge-homebrew-2" if assessment else "challenge-homebrew-1",
-                assessment=assessment,
+                check,
+                version=record_version,
+                assessment=spec,
             )
             turn = Turn(
                 action,
@@ -1211,7 +1278,7 @@ class Session:
                 raise ValueError("Narration speaker identity differs from the scene")
 
     def to_dict(self) -> dict:
-        return {
+        value = {
             "chronicle": self.chronicle.to_dict() if self.chronicle else None,
             "catalog": self.catalog.to_dict() if self.catalog else None,
             "interactive_world": self.interactive_world.to_dict()
@@ -1239,8 +1306,14 @@ class Session:
             ],
         }
 
+        if self._d20_progress is not None:
+            value["d20_progress"] = self.d20_progress.to_dict()
+        return value
+
     @classmethod
-    def from_dict(cls, data: object, version: int = 22) -> "Session":
+    def from_dict(cls, data: object, version: int | None = None) -> "Session":
+        if version is None:
+            version = 23 if isinstance(data, dict) and "d20_progress" in data else 22
         if type(version) is not int or version not in (
             1,
             2,
@@ -1264,9 +1337,12 @@ class Session:
             20,
             21,
             22,
+            23,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 23:
+            keys.add("d20_progress")
         if version >= 21:
             keys.add("chronicle")
         if version >= 19:
@@ -1303,6 +1379,10 @@ class Session:
         else:
             world = WorldState.from_dict(data["world"])
         session = cls(seed=data["seed"], character=character, world=world)
+        if version >= 23:
+            from rpg_vkr.domain.d20_progression import D20Progress
+
+            session._d20_progress = D20Progress.from_dict(data["d20_progress"])
         session.campaign = (
             Campaign.from_dict(data["campaign"]) if version >= 10 else Campaign.migrate(data)
         )
@@ -1624,6 +1704,8 @@ class Session:
                 ):
                     raise ValueError("Challenge mixed with another action")
                 record = Challenge.restore(item["challenge"], session.dice)
+                if record.version == "challenge-homebrew-3" and version < 23:
+                    raise ValueError("Проверка навыка требует схему 23.")
                 if version < 22 and record.assessment is not None:
                     raise ValueError("General assessment requires schema 22")
                 if (
@@ -2259,4 +2341,7 @@ class Session:
                 session._validate_segments(note)
                 session._narrations.append(note)
                 previous = note.turn_index
+        from rpg_vkr.domain.campaign_progress import validate_progress
+
+        validate_progress(session._d20_progress, session.turns)
         return session

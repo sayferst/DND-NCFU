@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QStackedWidget,
     QTableWidgetItem,
     QTabWidget,
@@ -109,7 +110,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.tabs.addTab(adventure, "Приключение")
         profile = QWidget()
         profile_layout = QVBoxLayout(profile)
-        self.tabs.addTab(profile, "Герой")
+        profile_scroll = QScrollArea()
+        profile_scroll.setWidgetResizable(True)
+        profile_scroll.setWidget(profile)
+        self.tabs.addTab(profile_scroll, "Герой")
         layout.addWidget(self.tabs, stretch=1)
 
         self.character_group = QGroupBox()
@@ -147,6 +151,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.progress_label = QLabel()
         self.progress_label.setWordWrap(True)
         profile_layout.insertWidget(1, self.progress_label)
+        from rpg_vkr.ui.skill_panel import install as install_skills
+
+        install_skills(self, profile_layout)
         self._refresh_character()
 
         self.journal = RoleJournal()
@@ -340,6 +347,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             sync_chrome(self, self.tabs.currentIndex())
 
     def _refresh_character(self) -> None:
+        from rpg_vkr.ui.skill_panel import refresh as refresh_skills
+
+        refresh_skills(self)
         self._refresh_workspace()
         self._refresh_episode_panels()
         character = self._session.character

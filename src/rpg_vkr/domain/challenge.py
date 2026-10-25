@@ -1,7 +1,7 @@
 """Confirmed checks for bounded free-form attempts; no implicit resource effects."""
 
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 
 from rpg_vkr.domain.character import AbilityCheck, resolve_ability_check
 from rpg_vkr.domain.dice import D20Roll
@@ -18,12 +18,25 @@ CHALLENGES = {
     "persuade": ("charisma", 15, "ясно и убедительно изложить доводы"),
 }
 
+CHALLENGE_SKILLS = {
+    "effort": "athletics",
+    "climb": "athletics",
+    "acrobatics": "acrobatics",
+    "decipher": "knowledge",
+    "recall": "knowledge",
+    "listen": "perception",
+    "persuade": "persuasion",
+}
+
 
 def validate_assessment(value):
     from rpg_vkr.domain.campaign import plain
     from rpg_vkr.domain.character import ABILITY_NAMES
 
-    if not isinstance(value, dict) or set(value) != {"ability", "dc", "purpose"}:
+    if not isinstance(value, dict) or set(value) not in (
+        {"ability", "dc", "purpose"},
+        {"ability", "dc", "purpose", "skill"},
+    ):
         raise ValueError("Неверное предложение общей проверки.")
     if (
         value["ability"] not in ABILITY_NAMES
@@ -32,6 +45,15 @@ def validate_assessment(value):
     ):
         raise ValueError("Неизвестная характеристика или сложность вне 5–25.")
     plain(value["purpose"], 400)
+    if "skill" in value:
+        from rpg_vkr.domain.d20_progression import SKILLS
+
+        if (
+            not isinstance(value["skill"], str)
+            or value["skill"] not in SKILLS
+            or SKILLS[value["skill"]][1] != value["ability"]
+        ):
+            raise ValueError("Навык не соответствует характеристике.")
     return value
 
 
@@ -51,10 +73,45 @@ class Challenge:
             self.kind not in CHALLENGES and self.kind != "general"
         ) or self.location not in LOCATIONS:
             raise ValueError("Unknown challenge")
-        if self.version not in {"challenge-homebrew-1", "challenge-homebrew-2"}:
+        if self.version not in {
+            "challenge-homebrew-1",
+            "challenge-homebrew-2",
+            "challenge-homebrew-3",
+        }:
             raise ValueError("Unknown challenge version")
-        if self.version == "challenge-homebrew-2":
+        skill_bonus = 0
+        if self.version == "challenge-homebrew-3":
+            from rpg_vkr.domain.d20_progression import SKILLS
+
+            spec = self.assessment
+            if not isinstance(spec, dict) or set(spec) != {
+                "ability",
+                "dc",
+                "purpose",
+                "skill",
+                "rank",
+                "revision",
+            }:
+                raise ValueError("Неверная запись проверки навыка.")
+            validate_assessment({k: spec[k] for k in ("ability", "dc", "purpose")})
+            if (
+                not isinstance(spec["skill"], str)
+                or spec["skill"] not in SKILLS
+                or type(spec["rank"]) is not int
+                or not 0 <= spec["rank"] <= 5
+                or type(spec["revision"]) is not int
+                or not 0 <= spec["revision"] <= 4096
+                or SKILLS[spec["skill"]][1] != spec["ability"]
+                or self.kind != "general"
+                and CHALLENGE_SKILLS.get(self.kind) != spec["skill"]
+            ):
+                raise ValueError("Навык не подходит к проверке.")
+            ability, difficulty = spec["ability"], spec["dc"]
+            skill_bonus = 2 * spec["rank"]
+        elif self.version == "challenge-homebrew-2":
             spec = validate_assessment(self.assessment)
+            if "skill" in spec:
+                raise ValueError("Навык требует новую версию проверки.")
             if self.kind != "general":
                 raise ValueError("Неверная категория общей проверки.")
             ability, difficulty = spec["ability"], spec["dc"]
@@ -78,13 +135,28 @@ class Challenge:
         ):
             raise ValueError("Invalid challenge roll")
         expected = resolve_ability_check(ability, self.check.score, self.roll.value, difficulty)
+        if skill_bonus:
+            expected = replace(
+                expected,
+                modifier=expected.modifier + skill_bonus,
+                total=expected.total + skill_bonus,
+                succeeded=expected.total + skill_bonus >= difficulty,
+            )
         if asdict(self.check) != asdict(expected):
             raise ValueError("Challenge calculation mismatch")
 
     def story(self):
         purpose = self.assessment["purpose"] if self.assessment else CHALLENGES[self.kind][2]
         result = "Проверка удалась" if self.check.succeeded else "Проверка не удалась"
-        return f"{result}: {purpose}."
+        text = f"{result}: {purpose}."
+        if self.version == "challenge-homebrew-3":
+            from rpg_vkr.domain.d20_progression import SKILLS
+
+            text += (
+                f" {SKILLS[self.assessment['skill']][0]}: ранг {self.assessment['rank']}, "
+                f"бонус +{2 * self.assessment['rank']}."
+            )
+        return text
 
     def to_dict(self):
         value = asdict(self)
@@ -96,7 +168,7 @@ class Challenge:
     def restore(cls, data, dice):
         if not isinstance(data, dict) or set(data) != (
             set(cls.__dataclass_fields__)
-            if data.get("version") == "challenge-homebrew-2"
+            if data.get("version") in {"challenge-homebrew-2", "challenge-homebrew-3"}
             else set(cls.__dataclass_fields__) - {"assessment"}
         ):
             raise ValueError("Invalid challenge record")
