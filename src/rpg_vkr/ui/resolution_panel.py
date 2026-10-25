@@ -2,7 +2,15 @@
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette
-from PySide6.QtWidgets import QComboBox, QGroupBox, QLabel, QPlainTextEdit, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import (
+    QComboBox,
+    QGroupBox,
+    QInputDialog,
+    QLabel,
+    QPlainTextEdit,
+    QPushButton,
+    QVBoxLayout,
+)
 
 from rpg_vkr.commands import normalise_action
 from rpg_vkr.domain.challenge import CHALLENGES, proposed_challenge
@@ -46,10 +54,36 @@ def install_resolution_panel(window, layout):
     window.export_rolls_button = QPushButton("Экспорт всех расчётов…")
     window.export_rolls_button.clicked.connect(window.export_calculations)
     panel.addWidget(window.export_rolls_button)
+    window.preview_dice_button = QPushButton("Пробный бросок NdM±K…")
+    window.preview_dice_button.clicked.connect(lambda: preview_dice(window))
+    panel.addWidget(window.preview_dice_button)
+    window.preview_dice_result = label()
+    panel.addWidget(window.preview_dice_result)
     layout.addWidget(window.resolution_panel)
     window.breakdown_selector.currentIndexChanged.connect(lambda index: show_breakdown(window))
     window.action_input.textChanged.connect(lambda text: refresh_guidance(window))
     refresh_resolution_panel(window)
+
+
+def preview_dice(window):
+    from rpg_vkr.domain.dice import DiceRoller
+
+    expression, accepted = QInputDialog.getText(
+        window, "Пробные кубики", "Например, 2d6+3. Не меняет исходы действий в игре."
+    )
+    if not accepted:
+        return
+    if not hasattr(window, "_preview_dice"):
+        window._preview_dice = DiceRoller()
+    try:
+        result = window._preview_dice.roll(expression)
+    except ValueError as error:
+        window.preview_dice_result.setText(str(error))
+        return
+    window.preview_dice_result.setText(
+        f"{result.expression}: {', '.join(map(str, result.individual_rolls))}; "
+        f"поправка {result.modifier:+d}; итог {result.total}. Пробный бросок."
+    )
 
 
 def refresh_guidance(window):
@@ -125,10 +159,24 @@ def refresh_resolution_panel(window):
                 QPalette.ColorRole.WindowText, window.journal.actor_colour(last.actor_id)
             )
         window.action_result.setPalette(palette)
+        colors = window.journal.highlighter.colors
+        if colors:
+            role = "system"
+            check = last.check or (last.challenge.check if last.challenge else None)
+            if check:
+                role = "success" if check.succeeded else "hostile"
+            if last.combat:
+                outcome = last.combat.outcome
+                if outcome.world.hp < last.combat.world_before.hp:
+                    role = "hostile"
+                elif outcome.victory:
+                    role = "important"
+            window.action_result.setStyleSheet("color: " + colors[role] + ";")
     else:
         window.action_result.setText("Пока нет действий.")
         window.action_result.setToolTip("")
         window.action_result.setPalette(window.palette())
+        window.action_result.setStyleSheet("")
     key = (window._session, len(turns))
     if getattr(window, "_breakdown_key", None) != key:
         previous = window.breakdown_selector.currentData()

@@ -62,8 +62,8 @@ def test_merchant_turns_red_and_trade_closes_and_colour_survives_load(window, mo
     qt_app.processEvents()
     assert window.journal.actor_colour("merchant").name() == hostile_colour
     window.theme_choice.setCurrentText("Тёмная")
-    assert window.journal.actor_colour("merchant").name() == "#ff737d"
-    assert window.journal.actor_colour("villager").name() != "#ff737d"
+    assert window.journal.actor_colour("merchant").name() == "#e7a1a1"
+    assert window.journal.actor_colour("villager").name() != "#e7a1a1"
 
 
 def test_default_text_is_larger_bold_and_user_can_change_it_without_game_mutation(window):
@@ -99,4 +99,4 @@ def test_observation_shows_local_actors_with_colour_and_qualitative_health(windo
     assert blocks
     for block in blocks:
         formats = block.layout().formats()
-        assert formats[0].format.foreground().color().name() == "#b00020"
+        assert formats[0].format.foreground().color().name() == "#e7a1a1"

@@ -153,7 +153,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.journal.setReadOnly(True)
         self.journal.setAccessibleName("Журнал событий")
         self._render_journal()
-        legend = QLabel("Герой — синий · мастер — зелёный · NPC — фиолетовый · враг — красный")
+        legend = QLabel("Цвета Мастера, героя и NPC настраиваются в настройках игрового журнала")
         legend.setWordWrap(True)
         play_layout.addWidget(legend)
         play_layout.addWidget(self.journal, stretch=1)

@@ -2,7 +2,7 @@
 
 import json
 import os
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -16,8 +16,13 @@ class ReadingPreferences:
     theme: str = "Системная"
     bold_text: bool = True
     animations: int = 0
+    journal_theme: str = "Тёмное фэнтези"
+    journal_colors: dict = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        from rpg_vkr.ui.journal_colors import journal_palette
+
+        journal_palette(self.journal_theme, self.journal_colors)
         if type(self.animations) is not int or self.animations not in (0, 1, 2):
             raise ValueError("Неизвестный режим анимаций.")
         if type(self.font_size) is not int or not 9 <= self.font_size <= 20:
@@ -56,6 +61,7 @@ def load_preferences(path: Path) -> tuple[ReadingPreferences, str]:
             {"font_size", "theme"},
             {"font_size", "theme", "bold_text"},
             {"font_size", "theme", "bold_text", "animations"},
+            {"font_size", "theme", "bold_text", "animations", "journal_theme", "journal_colors"},
         ):
             raise ValueError("Неверный формат настроек.")
         preferences = ReadingPreferences(**data)
