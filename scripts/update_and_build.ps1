@@ -10,6 +10,13 @@ try {
     if ($LASTEXITCODE -ne 0 -or $branch.Trim() -ne 'setup/development-environment') {
         throw 'Expected branch: setup/development-environment. No branch was changed.'
     }
+    # Repair only the known, hash-verified LF -> CRLF fixture conversion before
+    # checking cleanliness. The builder otherwise repairs it too late for this check.
+    $python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
+    if (Test-Path -LiteralPath $python) {
+        & $python scripts\repair_fixture_checkout.py
+        if ($LASTEXITCODE -ne 0) { throw 'Fixture repair refused changes. Update stopped.' }
+    }
     $changes = & git status --porcelain
     if ($LASTEXITCODE -ne 0) { throw 'Cannot check the Git working tree.' }
     if ($changes) { throw 'Local changes found. Save them before updating; nothing was discarded.' }
