@@ -11,7 +11,7 @@ from rpg_vkr.ui import tester_connection as connection
 def test_signed_shared_profile_requires_explicit_bootstrap_code(monkeypatch, code, accepted):
     calls, messages = [], []
     window = SimpleNamespace(
-        release_profile=SimpleNamespace(discovery="signed-discovery"),
+        release_profile=SimpleNamespace(discovery="signed-discovery", account_login=False),
         _tester_token="",
         tester_connection_worker=SimpleNamespace(start=lambda: calls.append(True)),
         statusBar=lambda: SimpleNamespace(showMessage=messages.append),

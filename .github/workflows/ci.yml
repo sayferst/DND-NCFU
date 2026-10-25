@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        profile: [developer, tester]
+        profile: [tester]
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -48,12 +48,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $parameters = @{ Installer = $true; Profile = $env:PUBLIC_PROFILE }
           if ($env:PUBLIC_PROFILE -eq 'tester') {
+            $parameters.AccountLogin = $true
             $parameters.DiscoveryUrl = 'https://raw.githubusercontent.com/sayferst/DND-NCFU/tester-host-address/endpoint.json'
             $parameters.DiscoveryKey = '5lGcAqnkdVgVF2TlrY7TRuZyRgvdIQZZ733zsORo6eo='
           }
           & .\scripts\build_windows.ps1 @parameters
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $name = if ($env:PUBLIC_PROFILE -eq 'tester') { 'setup_api.exe' } else { 'setup.exe' }
+          $name = 'setup.exe'
           Copy-Item dist\DND-NCFU-Setup.exe (Join-Path dist $name)
           $hash = (Get-FileHash (Join-Path dist $name) -Algorithm SHA256).Hash.ToLower()
           "$hash  $name" | Set-Content (Join-Path dist ($name + '.sha256')) -Encoding ascii

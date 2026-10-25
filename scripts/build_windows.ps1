@@ -1,6 +1,7 @@
 ﻿# Reproducible developer build. No model calls, user-data migration or credentials.
 param(
     [switch]$Installer,
+    [switch]$AccountLogin,
     [ValidateSet('developer', 'tester')][string]$Profile = 'developer',
     [string]$GatewayUrl = '',
     [string]$DiscoveryUrl = '',
@@ -66,11 +67,13 @@ $oldBootstrapFile = $env:DND_BOOTSTRAP_FILE
 $oldBuildProfile = $env:DND_BUILD_PROFILE
 $oldGatewayUrl = $env:DND_GATEWAY_URL
 $oldTextModel = $env:DND_TEXT_MODEL
+$oldAccountLogin = $env:DND_ACCOUNT_LOGIN
 try {
     $env:DND_DISCOVERY_URL = $DiscoveryUrl
     $env:DND_DISCOVERY_KEY = $DiscoveryKey
     $env:DND_BOOTSTRAP_FILE = $BootstrapFile
     $env:DND_BUILD_PROFILE = $Profile
+    $env:DND_ACCOUNT_LOGIN = $(if ($AccountLogin) { '1' } else { '' })
     $env:DND_GATEWAY_URL = $GatewayUrl
     $env:DND_TEXT_MODEL = $TextModel
     Set-BuildStage 'pyinstaller'
@@ -82,6 +85,7 @@ try {
     $env:DND_BUILD_PROFILE = $oldBuildProfile
     $env:DND_GATEWAY_URL = $oldGatewayUrl
     $env:DND_TEXT_MODEL = $oldTextModel
+    $env:DND_ACCOUNT_LOGIN = $oldAccountLogin
 }
 if ($LASTEXITCODE -ne 0) { throw 'PyInstaller не создал пакет.' }
 $bundle = Join-Path $stage 'dist\DND-NCFU'

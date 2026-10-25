@@ -22,7 +22,11 @@ def install_tester_connection(window):
     console = window.developer_console
     if profile.mode != "tester":
         return
-    window._tester_token = load_secret(window._saves.directory.parent / "tester-access.bin")
+    window._tester_token = (
+        ""
+        if profile.account_login
+        else load_secret(window._saves.directory.parent / "tester-access.bin")
+    )
     window._tester_bootstrap = load_secret(window._saves.directory.parent / "tester-pending.bin")
     # Drop owner settings applied during initialization, even if this PC has an owner key.
     window.cloud_key.clear()
@@ -36,14 +40,25 @@ def install_tester_connection(window):
     window.local_model.addItem(profile.text_model)
     for widget in console.originals.values():
         widget.setEnabled(False)
-    activate_button = QPushButton("Активировать допуск тестировщика…")
+    activate_button = QPushButton(
+        "Войти / сменить учётную запись…"
+        if profile.account_login
+        else "Активировать допуск тестировщика…"
+    )
     activate_button.clicked.connect(lambda: activate(window))
     window.settings_form.addRow(activate_button)
     for index in range(window.tabs.count()):
         page = window.tabs.widget(index)
         if window.tabs.tabText(index) == "Главное меню":
-            page.activation_button = QPushButton("Активировать тестовую игру")
-            page.activation_button.clicked.connect(lambda: activate(window))
+            page.activation_button = QPushButton(
+                "Проверить сопряжение" if profile.account_login else "Активировать тестовую игру"
+            )
+            if profile.account_login:
+                from rpg_vkr.ui.account_login import check_connection
+
+                page.activation_button.clicked.connect(lambda: check_connection(window))
+            else:
+                page.activation_button.clicked.connect(lambda: activate(window))
             page.layout().insertWidget(page.layout().count() - 2, page.activation_button)
     if profile.discovery:
         from rpg_vkr.ui.tester_discovery import ConnectionWorker
@@ -52,6 +67,10 @@ def install_tester_connection(window):
         window.tester_connection_worker = ConnectionWorker(window)
     else:
         configure(window)
+    if profile.account_login:
+        from PySide6.QtCore import QTimer
+
+        QTimer.singleShot(0, lambda: activate(window))
 
 
 def configure(window):
@@ -84,6 +103,11 @@ def configure(window):
 
 
 def activate(window):
+    if window.release_profile.account_login:
+        from rpg_vkr.ui.account_login import show_login
+
+        show_login(window)
+        return False
     if window.release_profile.discovery:
         if not window._tester_token:
             code, ok = QInputDialog.getText(

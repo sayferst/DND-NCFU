@@ -1,30 +1,25 @@
 # Windows-сборки
 
-Нужны Windows x64, Python 3.12, Git и Inno Setup 6 для установщика.
-Зависимости устанавливаются из `requirements-build.lock` с проверкой хэшей.
-Сборщик проверяет fixtures, выполняет тесты, создаёт PyInstaller onedir, проверяет
-содержимое пакета и лицензии, запускает EXE self-check и smoke-test без платных API.
-Только после этого запускается Inno Setup. При отказе старый Setup не считается новым.
+Нужны Windows x64, Python 3.12, Git и Inno Setup 6.
+Сборщик устанавливает зависимости по хэшам, выполняет тесты, упаковывает PyInstaller,
+проверяет состав, self-check и smoke-test EXE, затем запускает Inno Setup.
+Ошибка любого этапа останавливает сборку.
 
-Обычная сборка:
+Единый установщик с входом admin/tester:
 
 ```powershell
-.\scripts\build_windows.cmd -Installer
+.\scripts\build_windows.cmd -Installer -AccountLogin -Profile tester -DiscoveryUrl 'https://raw.githubusercontent.com/sayferst/DND-NCFU/tester-host-address/endpoint.json' -DiscoveryKey '5lGcAqnkdVgVF2TlrY7TRuZyRgvdIQZZ733zsORo6eo='
 Copy-Item dist\DND-NCFU-Setup.exe dist\setup.exe
 ```
 
-Вариант через подписанный discovery владельца:
+DiscoveryKey — открытый ключ проверки подписи. Пароли, API-ключи, bootstrap,
+DPAPI-файлы и пользовательские базы не должны попадать в установщик.
 
-```powershell
-.\scripts\build_windows.cmd -Installer -Profile tester -DiscoveryUrl 'https://raw.githubusercontent.com/sayferst/DND-NCFU/tester-host-address/endpoint.json' -DiscoveryKey '5lGcAqnkdVgVF2TlrY7TRuZyRgvdIQZZ733zsORo6eo='
-Copy-Item dist\DND-NCFU-Setup.exe dist\setup_api.exe
-```
+CI создаёт один артефакт installer-tester с setup.exe и SHA256. Публикация
+выпуска выполняется после успешных проверок; CI сам не сливает PR в main.
+Серверный код в server — исходники шлюза, не часть клиентского EXE.
+Рабочие BAT владельца и инструменты запуска хоста находятся в ветке разработки.
 
-DiscoveryKey — открытый ключ проверки, не секрет. В обе сборки запрещено включать
-активационный bootstrap, API-ключи, DPAPI-файлы и пользовательские базы.
-Общий клиент требует отдельно выданного кода после установки.
-
-CI создаёт два раздельных артефакта с EXE и SHA256. Скачайте их из успешного запуска
-Actions, проверьте результаты и прикрепите только EXE/хэши к prerelease. CI сам
-не публикует релиз и не сливает PR. Релизные файлы не коммитятся в исходники.
-До зелёной нативной проверки Windows готовность установщика не заявляется.
+Без параметра -AccountLogin исходная инфраструктура legacy-профилей сохранена
+для совместимости тестов и разработки. Публичный установщик всегда собирается
+с -AccountLogin; отдельной личной версии в этом выпуске нет.
