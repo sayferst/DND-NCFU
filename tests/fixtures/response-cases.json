@@ -1,0 +1,326 @@
+[
+  {
+    "id": "ordinary_observation",
+    "category": "question",
+    "message": "Что видно над дорогой?",
+    "text": "Над дорогой плывут низкие облака. В просветах между ними виднеется бледное небо.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "brief_yes",
+    "category": "short",
+    "message": "Жительница, здесь можно постоять?",
+    "text": "«Да, можно».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "brief_refusal",
+    "category": "short",
+    "message": "Жительница, дадите мне яблоко?",
+    "text": "«Нет, простите».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "long_scene",
+    "category": "length",
+    "message": "Мастер, подробно опиши погоду над рекой",
+    "text": "Над рекой поднимается туман, сквозь него пробивается вечерний свет. Облака движутся к дальним холмам, открывая узкую полосу бледного неба. Ветер сначала касается верхушек травы, затем пробегает по самой дороге. Между колеями ещё держится пыль, но у обочины она уже потемнела от влаги. На деревянных створках ворот выступили мелкие капли. Из щелей тянет прохладой, и скрип петель слышен отчётливее обычного. Дальше по дороге воздух кажется плотнее: там дымка смешалась с низкой тучей. Она не закрывает холмы целиком, только сглаживает их очертания. Временами ветер стихает, и тогда доносится ровный шум воды. Река скрыта за поворотом, но её близость выдаёт сырой запах. Сухой лист кружится у колеи и ненадолго застревает между камнями. Трава уходит волнами к подножию холма. На тёмном фоне неба особенно заметны светлые края облаков. Дождя пока нет, хотя воздух уже тяжёлый, прохладный. Дорога блестит только в низинах, где сохранилась утренняя влага. За воротами голоса звучат глуше, словно их прикрыли тканью. Последний луч скользит по верхнему бревну и гаснет. Склон напротив медленно теряет цвет, оставляя лишь тёмные полосы травы. Над ним виден просвет, в котором облака на мгновение стали серебристыми. По дороге ещё можно различить направление старых следов, но в сумерках они сливаются с неровностями земли. Воздух пахнет мокрой древесиной, речной водой и холодным камнем. Под аркой ветер поворачивает и поднимает с земли несколько пылинок. Они видны в последней светлой полосе, затем исчезают в тени. Вдалеке перекликаются птицы; их короткие голоса затихают раньше, чем успевает вернуться эхо. Небо над холмами темнеет ровно, без резкого порыва и без близкой грозы. Только на востоке остаётся узкая щель света, похожая на отражение в воде.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": "Distinct authored sentences; complete long scene, no repeated scaffold."
+  },
+  {
+    "id": "received_answer",
+    "category": "figurative",
+    "message": "Мастер, где мельница?",
+    "text": "Вы получили ответ на свой вопрос: мельница стоит ниже по течению, за каменным мостом.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "take_pause",
+    "category": "figurative",
+    "message": "Я делаю паузу и жду ответа.",
+    "text": "Вы берёте паузу. Шум ветра заполняет тишину, пока собеседник подбирает слова.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "avoid_answer",
+    "category": "figurative",
+    "message": "Я отвечаю уклончиво.",
+    "text": "Вы уходите от прямого ответа. Жительница замечает это и больше не настаивает.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "dead_silence",
+    "category": "figurative",
+    "message": "Что слышно в галерее?",
+    "text": "В галерее царит мертвая тишина. Даже шум воды сюда почти не доносится.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "dead_leaves",
+    "category": "figurative",
+    "message": "Мастер, что за шорох под ногами?",
+    "text": "Под ногами шуршат мертвые листья. Порыв ветра подхватывает один и несёт к дороге.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "sensory_cold",
+    "category": "observation",
+    "message": "Я касаюсь камня у дороги.",
+    "text": "Вы чувствуете холод камня под ладонью. На его поверхности блестит влага.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "wellbeing_synonym",
+    "category": "dialogue",
+    "message": "Жительница, как у вас дела?",
+    "text": "Жительница морщится. «С рассвета ломит спину, будто всю ночь таскала жернова».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "help_synonym",
+    "category": "dialogue",
+    "message": "Жительница, нужна ли вам помощь?",
+    "text": "Жительница щурится от ветра. «Станьте рядом и заслоните меня от порывов».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "npc_refuses_name",
+    "category": "dialogue",
+    "message": "Жительница, как вас зовут?",
+    "text": "Жительница отворачивается. «Я незнакомцам не представляюсь. Не обижайтесь».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "declines_quest",
+    "category": "refusal",
+    "message": "Жительница, не буду брать поручение.",
+    "text": "Вы отказываетесь от поручения. «Что ж, поищу другого помощника», — отвечает жительница.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "new_npc_name_direct",
+    "category": "new_npc",
+    "message": "Веста, как у тебя дела?",
+    "text": "Веста поправляет карту. «Весь день ищу, где река подмыла опоры; к вечеру стало яснее».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "new_npc_name_inflected",
+    "category": "new_npc",
+    "message": "Спрашиваю у Весты, как у неё дела.",
+    "text": "Веста поправляет карту. «Река подмыла опоры, придётся менять маршрут».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "new_npc_name_question",
+    "category": "new_npc",
+    "message": "Как тебя зовут?",
+    "text": "Веста поднимает глаза. «Я Веста, картограф этой переправы».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "new_npc_insult",
+    "category": "insult",
+    "message": "Веста, твой план никуда не годится.",
+    "text": "Веста сжимает край карты. «Тогда предложите путь лучше, только сперва посмотрите на опоры».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "negotiation",
+    "category": "negotiation",
+    "message": "Веста, давай обсудим другой маршрут.",
+    "text": "Веста разглаживает карту. «Можно обойти через верховья, но на это уйдёт лишний день».",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "exploration",
+    "category": "exploration",
+    "message": "Осматриваю стену, ищу следы ремонта.",
+    "text": "На старой кладке различим более светлый раствор. Вдоль шва ещё держатся влажные песчинки.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "unknown_place_explanation",
+    "category": "unknown_place",
+    "message": "Хочу попасть в город за перевалом.",
+    "text": "От моста видна лишь ближняя дорога. Чтобы найти путь за перевал, сначала понадобится карта или проводник.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "unsupported_magic_obstacle",
+    "category": "magic",
+    "message": "Хочу телепортироваться за реку.",
+    "text": "У героя пока нет подтверждённого способа телепортации. Можно поискать переправу или узнать, кто владеет такой магией.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "simple_physical_attempt",
+    "category": "unexpected_action",
+    "message": "Я пробую свистнуть, чтобы привлечь внимание.",
+    "text": "На резкий свист оборачивается дозорный. «Кого ищете?» — спрашивает он, оставаясь у моста.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "repeated_true_instruction",
+    "category": "repeat",
+    "message": "Ещё подскажи, что здесь важно?",
+    "text": "У северной опоры моста под светлым камнем проходит узкая трещина, и от неё тянет сыростью. Дозорный ждёт у перил.",
+    "valid": true,
+    "confirmed": false,
+    "annotation": "Previously established spatial fact can legitimately be mentioned again."
+  },
+  {
+    "id": "committed_attack_literal",
+    "category": "confirmed_attack",
+    "message": "атакую дозорного",
+    "text": "Вы наносите удар дозорному. Он отступает на шаг и снова поднимает оружие.",
+    "valid": true,
+    "confirmed": true,
+    "annotation": ""
+  },
+  {
+    "id": "committed_attack_paraphrase",
+    "category": "confirmed_attack",
+    "message": "атакую дозорного",
+    "text": "Удар достигает дозорного. Он отступает на шаг и снова поднимает оружие.",
+    "valid": true,
+    "confirmed": true,
+    "annotation": ""
+  },
+  {
+    "id": "partial_failure_prefix",
+    "category": "failed_check",
+    "message": "иду к мосту и забираю жетон",
+    "text": "Вы уходите из галереи к мосту, но завладеть жетоном не удаётся. Веста замечает протянутую руку.",
+    "valid": true,
+    "confirmed": true,
+    "annotation": ""
+  },
+  {
+    "id": "failed_attempt_honest",
+    "category": "failed_check",
+    "message": "иду к мосту и забираю жетон",
+    "text": "У моста Веста прикрывает жетон ладонью. Предмет остаётся у неё.",
+    "valid": true,
+    "confirmed": true,
+    "annotation": ""
+  },
+  {
+    "id": "fake_reward",
+    "category": "negative_control",
+    "message": "осматриваю окрестности",
+    "text": "Вы получили сто золотых монет и новый меч за осмотр дороги.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "fake_reward_indirect",
+    "category": "negative_control",
+    "message": "осматриваю окрестности",
+    "text": "Теперь в вашем кошельке лежат семьдесят золотых монет, хотя прежде их было восемь.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "invented_hero_reply",
+    "category": "negative_control",
+    "message": "осматриваю окрестности",
+    "text": "«Я согласен на любые условия», — говорите вы, решив помочь незнакомцу.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "invented_feeling",
+    "category": "negative_control",
+    "message": "осматриваю окрестности",
+    "text": "Вы чувствуете необъяснимую любовь к встречному и решаете остаться навсегда.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "renamed_hero",
+    "category": "negative_control",
+    "message": "осматриваю окрестности",
+    "text": "Теперь вас зовут Альмар: прежнее имя забыто, а семья всегда жила в степи.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "malformed_response_language",
+    "category": "negative_control",
+    "message": "осматриваю окрестности",
+    "text": "走近门口 поговорить с ним.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "unsolicited_kill",
+    "category": "negative_control",
+    "message": "поговорить со стражником",
+    "text": "Вы убили стражника одним ударом. Он падает, и схватка завершается.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": ""
+  },
+  {
+    "id": "npc_action_not_registered",
+    "category": "canon_gap",
+    "message": "Что дальше?",
+    "text": "Из-за опоры выходит человек по имени Северин и кладёт вам в ладонь серебряный ключ.",
+    "valid": false,
+    "confirmed": false,
+    "annotation": "New actor and transfer were not registered; a good writer is not an executor."
+  }
+]

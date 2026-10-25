@@ -1,0 +1,255 @@
+{
+  "schema_version": 6,
+  "saved_at": "2026-10-16T20:20:01.242545+00:00",
+  "session": {
+    "seed": 5,
+    "character": {
+      "name": "Мира",
+      "strength": 16,
+      "dexterity": 12,
+      "constitution": 14,
+      "intelligence": 9,
+      "wisdom": 12,
+      "charisma": 10
+    },
+    "world": {
+      "location": "road",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 8,
+      "bandages": 2,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "fighter",
+      "initial": {
+        "name": "Мира",
+        "strength": 16,
+        "dexterity": 12,
+        "constitution": 14,
+        "intelligence": 8,
+        "wisdom": 12,
+        "charisma": 10
+      },
+      "events": [
+        {
+          "activity": "book",
+          "turn_index": 1,
+          "ability": "intelligence",
+          "points": 2,
+          "reason": "Первое изучение дорожного учебника",
+          "roll_index": null,
+          "before_score": 8,
+          "after_score": 9,
+          "before_level": 1,
+          "after_level": 1,
+          "max_hp_delta": 0,
+          "rules_version": "homebrew-progression-2"
+        }
+      ]
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "neutral"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "neutral"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": "wolf",
+      "surprise": true,
+      "rounds": 1
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "изучить учебник",
+        "speaker": "Мир",
+        "text": "Вы изучили учебник. Учебный раздел об арифметике разобран.\nРазвитие: Первое изучение дорожного учебника — +2 опыта и обучения (Интеллект). Характеристика: 8 → 9.",
+        "roll": null,
+        "check": null,
+        "actor_id": null,
+        "combat": null
+      },
+      {
+        "action": "идти на дорогу",
+        "speaker": "Мир",
+        "text": "Вы пришли: Дорога у деревни.",
+        "roll": null,
+        "check": null,
+        "actor_id": null,
+        "combat": null
+      },
+      {
+        "action": "подкрасться к волку",
+        "speaker": "Серый волк",
+        "text": "Подход: d20 (20) +1 = 21; очень удачно — цель вас не заметила; следующая попытка атаки получает ×2 к урону при попадании.",
+        "roll": {
+          "index": 1,
+          "value": 20
+        },
+        "check": {
+          "ability": "dexterity",
+          "score": 12,
+          "difficulty": 15,
+          "modifier": 1,
+          "total": 21,
+          "succeeded": true
+        },
+        "actor_id": "wolf",
+        "combat": {
+          "before": {
+            "actors": [
+              {
+                "id": "guard",
+                "hp": 18,
+                "disposition": "neutral"
+              },
+              {
+                "id": "villager",
+                "hp": 8,
+                "disposition": "neutral"
+              },
+              {
+                "id": "merchant",
+                "hp": 12,
+                "disposition": "neutral"
+              },
+              {
+                "id": "wolf",
+                "hp": 10,
+                "disposition": "hostile"
+              },
+              {
+                "id": "boar",
+                "hp": 12,
+                "disposition": "neutral"
+              }
+            ],
+            "active": null,
+            "surprise": false,
+            "rounds": 0
+          },
+          "world_before": {
+            "location": "road",
+            "hp": 12,
+            "max_hp": 12,
+            "gold": 8,
+            "bandages": 2,
+            "basket": 0,
+            "quest": "available",
+            "explored": false,
+            "shop_stock": 3,
+            "shop_gold": 20,
+            "market_known": false,
+            "trading": false
+          },
+          "character": {
+            "name": "Мира",
+            "strength": 16,
+            "dexterity": 12,
+            "constitution": 14,
+            "intelligence": 9,
+            "wisdom": 12,
+            "charisma": 10
+          },
+          "class_id": "fighter",
+          "command": "подкрасться к волку",
+          "outcome": {
+            "state": {
+              "actors": [
+                {
+                  "id": "guard",
+                  "hp": 18,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "villager",
+                  "hp": 8,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "merchant",
+                  "hp": 12,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "wolf",
+                  "hp": 10,
+                  "disposition": "hostile"
+                },
+                {
+                  "id": "boar",
+                  "hp": 12,
+                  "disposition": "neutral"
+                }
+              ],
+              "active": "wolf",
+              "surprise": true,
+              "rounds": 1
+            },
+            "world": {
+              "location": "road",
+              "hp": 12,
+              "max_hp": 12,
+              "gold": 8,
+              "bandages": 2,
+              "basket": 0,
+              "quest": "available",
+              "explored": false,
+              "shop_stock": 3,
+              "shop_gold": 20,
+              "market_known": false,
+              "trading": false
+            },
+            "text": "Подход: d20 (20) +1 = 21; очень удачно — цель вас не заметила; следующая попытка атаки получает ×2 к урону при попадании.",
+            "actor_id": "wolf",
+            "rolls": [
+              {
+                "index": 1,
+                "value": 20
+              }
+            ],
+            "check": {
+              "ability": "dexterity",
+              "score": 12,
+              "difficulty": 15,
+              "modifier": 1,
+              "total": 21,
+              "succeeded": true
+            },
+            "victory": false
+          },
+          "rules_version": "homebrew-combat-1"
+        }
+      }
+    ]
+  }
+}

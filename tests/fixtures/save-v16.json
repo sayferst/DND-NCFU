@@ -1,0 +1,564 @@
+{
+  "schema_version": 16,
+  "saved_at": "2026-10-19T14:11:31.752122+00:00",
+  "session": {
+    "campaign": {
+      "world_id": "45afa08a-c75b-460d-a712-8045875fa034",
+      "hero_id": "423c742b-9a6f-4986-b534-7d429ea61ec1",
+      "raw_player_description": "Разведчица из речного края. Ищет пропавшего брата.",
+      "npc_profiles": [],
+      "version": "campaign-1"
+    },
+    "memory": {
+      "version": "world-memory-1",
+      "base_turn": 0,
+      "baseline": {
+        "actor.boar.disposition": "neutral",
+        "actor.boar.hp": 12,
+        "actor.guard.disposition": "neutral",
+        "actor.guard.hp": 18,
+        "actor.merchant.disposition": "neutral",
+        "actor.merchant.hp": 12,
+        "actor.villager.disposition": "neutral",
+        "actor.villager.hp": 8,
+        "actor.wolf.disposition": "hostile",
+        "actor.wolf.hp": 10,
+        "combat.active": null,
+        "combat.rounds": 0,
+        "combat.surprise": false,
+        "hero.charisma": 10,
+        "hero.constitution": 12,
+        "hero.dexterity": 16,
+        "hero.intelligence": 10,
+        "hero.name": "Мира",
+        "hero.strength": 12,
+        "hero.wisdom": 12,
+        "progress.class_id": "scout",
+        "progress.level": 1,
+        "progress.xp": 0,
+        "training.charisma": 0,
+        "training.constitution": 0,
+        "training.dexterity": 0,
+        "training.intelligence": 0,
+        "training.strength": 0,
+        "training.wisdom": 0,
+        "world.bandages": 1,
+        "world.basket": 0,
+        "world.explored": false,
+        "world.gold": 10,
+        "world.hp": 12,
+        "world.location": "gate",
+        "world.market_known": false,
+        "world.max_hp": 12,
+        "world.quest": "available",
+        "world.shop_gold": 20,
+        "world.shop_stock": 3,
+        "world.trading": false
+      },
+      "events": [
+        {
+          "turn_index": 1,
+          "location": "gate",
+          "changes": [],
+          "roll_indices": [],
+          "before_hash": "8f0830e92e4cd9fc66084745e11e5536cd84d20d3ce700408d16050939672244",
+          "after_hash": "8f0830e92e4cd9fc66084745e11e5536cd84d20d3ce700408d16050939672244"
+        },
+        {
+          "turn_index": 2,
+          "location": "gate",
+          "changes": [
+            {
+              "field": "actor.guard.disposition",
+              "before": "neutral",
+              "after": "hostile"
+            },
+            {
+              "field": "combat.active",
+              "before": null,
+              "after": "guard"
+            },
+            {
+              "field": "combat.rounds",
+              "before": 0,
+              "after": 1
+            }
+          ],
+          "roll_indices": [
+            1,
+            2
+          ],
+          "before_hash": "8f0830e92e4cd9fc66084745e11e5536cd84d20d3ce700408d16050939672244",
+          "after_hash": "dc26fe10ef203c3dbf2bec9c0b321103a25e67de9c5335a8a18c8f17d157cd62"
+        },
+        {
+          "turn_index": 3,
+          "location": "gate",
+          "changes": [
+            {
+              "field": "combat.rounds",
+              "before": 1,
+              "after": 2
+            }
+          ],
+          "roll_indices": [
+            3,
+            4
+          ],
+          "before_hash": "dc26fe10ef203c3dbf2bec9c0b321103a25e67de9c5335a8a18c8f17d157cd62",
+          "after_hash": "8be4c4eeb0135641fae2897e8f38158c46f399f1a3c0f93269cd489ef5f1de64"
+        }
+      ]
+    },
+    "narrations": [
+      {
+        "turn_index": 1,
+        "model": "fixture-offline",
+        "text": "Стражник поворачивается к вам. «Что привело вас к воротам?»",
+        "context_hash": "84cffd5309d00fd3c9fced7d4f475af95e4ee9b454d390b36422cef7aa2c8f3e",
+        "prompt_version": "narrator-prose-11",
+        "segments": [
+          {
+            "speaker_id": "master",
+            "display_name": "Мастер",
+            "text": "Стражник поворачивается к вам."
+          },
+          {
+            "speaker_id": "guard",
+            "display_name": "Стражник",
+            "text": "«Что привело вас к воротам?»"
+          }
+        ]
+      },
+      {
+        "turn_index": 3,
+        "model": "fixture-offline",
+        "text": "Схватка у ворот продолжается.",
+        "context_hash": "b66bc3a33ff677741d9cf42a2b249cb66019f53177fb3d5668a1c27be2bca94d",
+        "prompt_version": "narrator-prose-11",
+        "segments": []
+      }
+    ],
+    "seed": 42,
+    "character": {
+      "name": "Мира",
+      "strength": 12,
+      "dexterity": 16,
+      "constitution": 12,
+      "intelligence": 10,
+      "wisdom": 12,
+      "charisma": 10
+    },
+    "world": {
+      "location": "gate",
+      "hp": 12,
+      "max_hp": 12,
+      "gold": 10,
+      "bandages": 1,
+      "basket": 0,
+      "quest": "available",
+      "explored": false,
+      "shop_stock": 3,
+      "shop_gold": 20,
+      "market_known": false,
+      "trading": false
+    },
+    "progress": {
+      "rules_version": "homebrew-progression-2",
+      "class_id": "scout",
+      "initial": {
+        "name": "Мира",
+        "strength": 12,
+        "dexterity": 16,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 12,
+        "charisma": 10
+      },
+      "events": []
+    },
+    "combat": {
+      "actors": [
+        {
+          "id": "guard",
+          "hp": 18,
+          "disposition": "hostile"
+        },
+        {
+          "id": "villager",
+          "hp": 8,
+          "disposition": "neutral"
+        },
+        {
+          "id": "merchant",
+          "hp": 12,
+          "disposition": "neutral"
+        },
+        {
+          "id": "wolf",
+          "hp": 10,
+          "disposition": "hostile"
+        },
+        {
+          "id": "boar",
+          "hp": 12,
+          "disposition": "neutral"
+        }
+      ],
+      "active": "guard",
+      "surprise": false,
+      "rounds": 2
+    },
+    "introduction": "Вы подходите к воротам небольшой деревни. Стражник наблюдает за дорогой, а рядом жительница собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?",
+    "turns": [
+      {
+        "action": "подойду к стражнику",
+        "speaker": "Рассказчик",
+        "text": "Стражник поворачивается к вам. «Что привело вас к воротам?»",
+        "roll": null,
+        "check": null,
+        "actor_id": "guard",
+        "combat": null,
+        "intent": null,
+        "origin": "typed",
+        "dialogue": {
+          "target": "guard",
+          "act": "contact",
+          "topic": "greeting",
+          "before": 0,
+          "after": 0,
+          "rules_version": "homebrew-social-1"
+        },
+        "meaning": null,
+        "player_name": "Мира",
+        "inspection": null,
+        "intent_source": "model",
+        "scene": {
+          "base_turn": 0,
+          "location": "gate",
+          "model": "fixture-offline",
+          "proposal": {
+            "mechanical_command": "",
+            "focus_id": "guard",
+            "narration": "Стражник поворачивается к вам. «Что привело вас к воротам?»",
+            "facts": []
+          },
+          "version": "scene-director-5"
+        },
+        "notes": []
+      },
+      {
+        "action": "Незаметно ударить стражника ножом",
+        "speaker": "Стражник",
+        "text": "Подход: d20 (4) +3 = 7; малоудачно — вас заметили в середине подхода.\nСтражник отвечает: d20 (1) +2 — промах.",
+        "roll": {
+          "index": 1,
+          "value": 4
+        },
+        "check": {
+          "ability": "dexterity",
+          "score": 16,
+          "difficulty": 15,
+          "modifier": 3,
+          "total": 7,
+          "succeeded": false
+        },
+        "actor_id": "guard",
+        "combat": {
+          "before": {
+            "actors": [
+              {
+                "id": "guard",
+                "hp": 18,
+                "disposition": "neutral"
+              },
+              {
+                "id": "villager",
+                "hp": 8,
+                "disposition": "neutral"
+              },
+              {
+                "id": "merchant",
+                "hp": 12,
+                "disposition": "neutral"
+              },
+              {
+                "id": "wolf",
+                "hp": 10,
+                "disposition": "hostile"
+              },
+              {
+                "id": "boar",
+                "hp": 12,
+                "disposition": "neutral"
+              }
+            ],
+            "active": null,
+            "surprise": false,
+            "rounds": 0
+          },
+          "world_before": {
+            "location": "gate",
+            "hp": 12,
+            "max_hp": 12,
+            "gold": 10,
+            "bandages": 1,
+            "basket": 0,
+            "quest": "available",
+            "explored": false,
+            "shop_stock": 3,
+            "shop_gold": 20,
+            "market_known": false,
+            "trading": false
+          },
+          "character": {
+            "name": "Мира",
+            "strength": 12,
+            "dexterity": 16,
+            "constitution": 12,
+            "intelligence": 10,
+            "wisdom": 12,
+            "charisma": 10
+          },
+          "class_id": "scout",
+          "command": "подкрасться к стражнику",
+          "outcome": {
+            "state": {
+              "actors": [
+                {
+                  "id": "guard",
+                  "hp": 18,
+                  "disposition": "hostile"
+                },
+                {
+                  "id": "villager",
+                  "hp": 8,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "merchant",
+                  "hp": 12,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "wolf",
+                  "hp": 10,
+                  "disposition": "hostile"
+                },
+                {
+                  "id": "boar",
+                  "hp": 12,
+                  "disposition": "neutral"
+                }
+              ],
+              "active": "guard",
+              "surprise": false,
+              "rounds": 1
+            },
+            "world": {
+              "location": "gate",
+              "hp": 12,
+              "max_hp": 12,
+              "gold": 10,
+              "bandages": 1,
+              "basket": 0,
+              "quest": "available",
+              "explored": false,
+              "shop_stock": 3,
+              "shop_gold": 20,
+              "market_known": false,
+              "trading": false
+            },
+            "text": "Подход: d20 (4) +3 = 7; малоудачно — вас заметили в середине подхода.\nСтражник отвечает: d20 (1) +2 — промах.",
+            "actor_id": "guard",
+            "rolls": [
+              {
+                "index": 1,
+                "value": 4
+              },
+              {
+                "index": 2,
+                "value": 1
+              }
+            ],
+            "check": {
+              "ability": "dexterity",
+              "score": 16,
+              "difficulty": 15,
+              "modifier": 3,
+              "total": 7,
+              "succeeded": false
+            },
+            "victory": false
+          },
+          "rules_version": "homebrew-combat-1"
+        },
+        "intent": "подкрасться к стражнику",
+        "origin": "typed",
+        "dialogue": null,
+        "meaning": null,
+        "player_name": "Мира",
+        "inspection": null,
+        "intent_source": "local-fallback",
+        "scene": null,
+        "notes": []
+      },
+      {
+        "action": "атаковать стражника",
+        "speaker": "Стражник",
+        "text": "Попадание: d20 (9) +1 = 10 — промах.\nСтражник отвечает: d20 (8) +2 — промах.",
+        "roll": {
+          "index": 3,
+          "value": 9
+        },
+        "check": {
+          "ability": "strength",
+          "score": 12,
+          "difficulty": 12,
+          "modifier": 1,
+          "total": 10,
+          "succeeded": false
+        },
+        "actor_id": "guard",
+        "combat": {
+          "before": {
+            "actors": [
+              {
+                "id": "guard",
+                "hp": 18,
+                "disposition": "hostile"
+              },
+              {
+                "id": "villager",
+                "hp": 8,
+                "disposition": "neutral"
+              },
+              {
+                "id": "merchant",
+                "hp": 12,
+                "disposition": "neutral"
+              },
+              {
+                "id": "wolf",
+                "hp": 10,
+                "disposition": "hostile"
+              },
+              {
+                "id": "boar",
+                "hp": 12,
+                "disposition": "neutral"
+              }
+            ],
+            "active": "guard",
+            "surprise": false,
+            "rounds": 1
+          },
+          "world_before": {
+            "location": "gate",
+            "hp": 12,
+            "max_hp": 12,
+            "gold": 10,
+            "bandages": 1,
+            "basket": 0,
+            "quest": "available",
+            "explored": false,
+            "shop_stock": 3,
+            "shop_gold": 20,
+            "market_known": false,
+            "trading": false
+          },
+          "character": {
+            "name": "Мира",
+            "strength": 12,
+            "dexterity": 16,
+            "constitution": 12,
+            "intelligence": 10,
+            "wisdom": 12,
+            "charisma": 10
+          },
+          "class_id": "scout",
+          "command": "атаковать стражника",
+          "outcome": {
+            "state": {
+              "actors": [
+                {
+                  "id": "guard",
+                  "hp": 18,
+                  "disposition": "hostile"
+                },
+                {
+                  "id": "villager",
+                  "hp": 8,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "merchant",
+                  "hp": 12,
+                  "disposition": "neutral"
+                },
+                {
+                  "id": "wolf",
+                  "hp": 10,
+                  "disposition": "hostile"
+                },
+                {
+                  "id": "boar",
+                  "hp": 12,
+                  "disposition": "neutral"
+                }
+              ],
+              "active": "guard",
+              "surprise": false,
+              "rounds": 2
+            },
+            "world": {
+              "location": "gate",
+              "hp": 12,
+              "max_hp": 12,
+              "gold": 10,
+              "bandages": 1,
+              "basket": 0,
+              "quest": "available",
+              "explored": false,
+              "shop_stock": 3,
+              "shop_gold": 20,
+              "market_known": false,
+              "trading": false
+            },
+            "text": "Попадание: d20 (9) +1 = 10 — промах.\nСтражник отвечает: d20 (8) +2 — промах.",
+            "actor_id": "guard",
+            "rolls": [
+              {
+                "index": 3,
+                "value": 9
+              },
+              {
+                "index": 4,
+                "value": 8
+              }
+            ],
+            "check": {
+              "ability": "strength",
+              "score": 12,
+              "difficulty": 12,
+              "modifier": 1,
+              "total": 10,
+              "succeeded": false
+            },
+            "victory": false
+          },
+          "rules_version": "homebrew-combat-1"
+        },
+        "intent": "атаковать стражника",
+        "origin": "system",
+        "dialogue": null,
+        "meaning": null,
+        "player_name": "Мира",
+        "inspection": null,
+        "intent_source": "local-fallback",
+        "scene": null,
+        "notes": []
+      }
+    ]
+  }
+}

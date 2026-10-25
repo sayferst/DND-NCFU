@@ -1,0 +1,8 @@
+{
+  "fixture": "tests/fixtures/save-v10.json",
+  "source_commit": "bb1ba4c",
+  "schema_version": 10,
+  "seed": 42,
+  "sha256": "762c2672afba8b1ce33422e2763fc44a6cf3e6b0b4c9b431930d8f78234b5087",
+  "note": "Created with previous code before schema edits; saved_at is a fixed fixture marker, not an experimental timestamp."
+}
