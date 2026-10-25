@@ -16,6 +16,7 @@ LABELS = {
     "Сохранения": "Сохранения",
     "Настройки": "Настройки",
     "Главное меню": "Меню",
+    "Разработчик": "API · admin",
 }
 
 
@@ -34,10 +35,15 @@ class SectionTabs(QTabBar):
         window.tabs.currentChanged.connect(self.sync)
 
     def rebuild(self):
+        from rpg_vkr.ui.navigation_policy import visible_sections
+
+        visible = visible_sections(self.window)
         self.blockSignals(True)
         while self.count():
             self.removeTab(0)
         for name, label in LABELS.items():
+            if name not in visible:
+                continue
             for index in range(self.window.tabs.count()):
                 if self.window.tabs.tabText(index) == name:
                     tab = self.addTab(label)
@@ -54,6 +60,14 @@ class SectionTabs(QTabBar):
         self.window.open_section(name)
 
     def sync(self, index):
+        from rpg_vkr.ui.navigation_policy import visible_sections
+
+        index = self.window.tabs.currentIndex()
+        expected = {name for name in visible_sections(self.window) if name in LABELS}
+        current = {self.tabToolTip(i) for i in range(self.count())}
+        if current != expected:
+            self.rebuild()
+            return
         self.blockSignals(True)
         for tab in range(self.count()):
             if self.tabData(tab) is self.window.tabs.widget(index):

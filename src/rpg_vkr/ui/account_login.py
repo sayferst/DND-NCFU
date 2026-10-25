@@ -99,6 +99,7 @@ class LoginDialog(QDialog):
             self.window.developer_console.logout()
         self.window._tester_endpoint = result["endpoint"]
         configure(self.window)
+        self.window._sync_navigation(self.window.tabs.currentIndex())
         self.window.statusBar().showMessage(
             f"Вход: {result['account']} · бюджет {result['budget_rub']} ₽."
         )

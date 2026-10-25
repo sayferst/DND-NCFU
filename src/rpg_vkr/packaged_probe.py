@@ -377,6 +377,7 @@ def smoke_test(app):
                     "Мастер",
                     "Художник",
                 ):
+                    window.open_section("Главное меню")
                     window.open_section(section)
                     app.processEvents()
                     expected = "Разработчик" if section in {"Мастер", "Художник"} else section

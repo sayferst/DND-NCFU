@@ -517,6 +517,14 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self.world_creation_screen.create_button.setFocus(Qt.FocusReason.OtherFocusReason)
 
     def show_game_body(self):
+        if not self._legacy_controls and not self._session.generated_world:
+            from rpg_vkr.ui.navigation_policy import GAME
+
+            if self.tabs.tabText(self.tabs.currentIndex()) in GAME:
+                menu = next(
+                    i for i in range(self.tabs.count()) if self.tabs.tabText(i) == "Главное меню"
+                )
+                self.tabs.setCurrentIndex(menu)
         self.screen_stack.setCurrentWidget(self.game_body)
         if hasattr(self, "resolution_panel") and not self._legacy_controls:
             from rpg_vkr.ui.theme import sync_chrome

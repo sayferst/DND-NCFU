@@ -2,21 +2,46 @@
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QLinearGradient, QPainter, QPixmap
-from PySide6.QtWidgets import QFrame, QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QLabel, QPushButton, QScrollArea, QVBoxLayout, QWidget
 
 BACKGROUND = Path(__file__).with_name("assets") / "kingdom.png"
+BUTTON_STYLE = """
+    QPushButton { background: #223038; color: #f0dfbc; border: 1px solid #86714d;
+        border-radius: 5px; font-size: 16px; padding: 8px 20px; }
+    QPushButton:hover { background: #36464b; border-color: #efd29b; }
+    QPushButton:pressed { background: #14222b; }
+    QPushButton:focus { border: 2px solid #ffe3ab; }
+"""
 
 
 class MainMenu(QWidget):
     def __init__(self, window):
         super().__init__()
+        self.window = window
         self.setObjectName("legendMenu")
         self.art = QPixmap(str(BACKGROUND))
         self._scaled = QPixmap()
         self._scaled_size = None
-        layout = QVBoxLayout(self)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        self.scroll = QScrollArea()
+        self.scroll.setObjectName("menuScroll")
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.scroll.viewport().setObjectName("menuScrollViewport")
+        content = QWidget()
+        content.setObjectName("legendMenuContent")
+        self.scroll.setWidget(content)
+        self.scroll.setStyleSheet(
+            "QScrollArea#menuScroll, QWidget#menuScrollViewport, QWidget#legendMenuContent "
+            "{ background: transparent; border: none; }"
+        )
+        self.scroll.viewport().setAutoFillBackground(False)
+        content.setAutoFillBackground(False)
+        outer.addWidget(self.scroll)
+        layout = QVBoxLayout(content)
         layout.setContentsMargins(24, 18, 24, 18)
         layout.setSpacing(10)
         layout.addStretch(2)
@@ -40,6 +65,7 @@ class MainMenu(QWidget):
             "border: 1px solid #6c5e45; border-radius: 12px; }"
         )
         buttons = QVBoxLayout(panel)
+        self.actions = buttons
         buttons.setContentsMargins(24, 22, 24, 22)
         buttons.setSpacing(12)
         self.buttons = []
@@ -51,17 +77,17 @@ class MainMenu(QWidget):
         ):
             button = QPushButton(text)
             button.setMinimumHeight(42)
-            button.setStyleSheet("""
-                QPushButton { background: #223038; color: #f0dfbc; border: 1px solid #86714d;
-                    border-radius: 5px; font-size: 16px; padding: 8px 20px; }
-                QPushButton:hover { background: #36464b; border-color: #efd29b; }
-                QPushButton:pressed { background: #14222b; }
-                QPushButton:focus { border: 2px solid #ffe3ab; }
-            """)
+            button.setStyleSheet(BUTTON_STYLE)
             button.clicked.connect(callback)
             buttons.addWidget(button)
             self.buttons.append(button)
         window.resume_button = self.buttons[1]
+        self.menu_actions = {}
+        for name in ("Сохранения", "Фотоальбом"):
+            action = QPushButton(name)
+            action.clicked.connect(lambda checked=False, section=name: window.open_section(section))
+            self.add_menu_action(action)
+            self.menu_actions[name] = action
         layout.addWidget(panel, 0, Qt.AlignmentFlag.AlignHCenter)
         window.home_summary = QLabel()
         window.home_summary.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -73,6 +99,8 @@ class MainMenu(QWidget):
             "color: #b8c2c4; font-size: 11px; background: transparent;"
         )
         layout.addWidget(window.home_summary, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.notice_layout = QVBoxLayout()
+        layout.addLayout(self.notice_layout)
         exit_button = QPushButton("Покинуть игру")
         exit_button.setStyleSheet(
             "QPushButton { background: transparent; border: none; color: #c6b69a; padding: 6px; } "
@@ -83,8 +111,7 @@ class MainMenu(QWidget):
         self.developer_button = QPushButton("⚙ Разработчик")
         self.developer_button.setToolTip("Локальный доступ к техническим настройкам")
         self.developer_button.clicked.connect(lambda: window.open_section("Разработчик"))
-        self.developer_button.setMaximumWidth(200)
-        layout.addWidget(self.developer_button, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.add_menu_action(self.developer_button)
         layout.addStretch(3)
         footer = QLabel("ОДИН ГЕРОЙ. ТЫСЯЧА ПУТЕЙ. ВАША ИСТОРИЯ.")
         footer.setStyleSheet(
@@ -95,8 +122,15 @@ class MainMenu(QWidget):
         window.home_title = self.title
         self.resizeEvent(None)
 
+    def add_menu_action(self, button):
+        button.setStyleSheet(BUTTON_STYLE)
+        button.setMinimumHeight(36)
+        self.actions.addWidget(button)
+
     def resizeEvent(self, event):
         self.title.setFont(QFont("Georgia", 32 if self.width() < 800 else 48))
+        if hasattr(self.window, "notifications"):
+            QTimer.singleShot(0, self.window.notifications.fit)
         if event:
             super().resizeEvent(event)
 

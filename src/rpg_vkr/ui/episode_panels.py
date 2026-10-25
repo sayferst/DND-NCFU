@@ -398,6 +398,15 @@ class EpisodePanels:
     def open_section(self, name: str) -> None:
         if not self._legacy_controls and name in {"Хроники мира", "Каталог мира"}:
             name = "Энциклопедия мира"
+        if not self._legacy_controls:
+            from rpg_vkr.ui.navigation_policy import allowed
+
+            if not allowed(self, name):
+                self.statusBar().showMessage(
+                    "Этот раздел сейчас закрыт. Вернитесь в главное меню; "
+                    "для игры создайте или загрузите мир."
+                )
+                return
         if not self._legacy_controls and hasattr(self, "developer_console"):
             from rpg_vkr.ui.developer_panel import TECHNICAL
 
@@ -431,13 +440,34 @@ class EpisodePanels:
         raise ValueError(f"Unknown UI section: {name}")
 
     def _sync_navigation(self, index: int) -> None:
+        if not self._legacy_controls:
+            from rpg_vkr.ui.navigation_policy import allowed
+
+            target = self.tabs.tabText(index)
+            if not allowed(self, target):
+                previous = getattr(self, "_navigation_context", "Главное меню")
+                from rpg_vkr.ui.navigation_policy import GAME
+
+                if previous in GAME and not self._session.generated_world:
+                    previous = "Главное меню"
+                fallback = next(
+                    (i for i in range(self.tabs.count()) if self.tabs.tabText(i) == previous),
+                    next(
+                        i
+                        for i in range(self.tabs.count())
+                        if self.tabs.tabText(i) == "Главное меню"
+                    ),
+                )
+                self.tabs.setCurrentIndex(fallback)
+                return
         if (
             hasattr(self, "developer_console")
             and self.tabs.widget(index) is self.developer_console
             and not self.developer_console.access.authorized
         ):
-            self.tabs.setCurrentIndex(0)
+            self.open_section("Главное меню")
             return
+        self._navigation_context = self.tabs.tabText(index)
         self.navigation.blockSignals(True)
         self.navigation.setCurrentIndex(self.navigation.findData(index))
         self.navigation.blockSignals(False)
@@ -454,8 +484,15 @@ class EpisodePanels:
         ):
             self.show_world_creation()
             return
+        if not self._legacy_controls and not self._session.generated_world:
+            self.open_section("Главное меню")
+            return
         self.show_game_body()
-        self.tabs.setCurrentIndex(0)
+        self._entering_adventure = True
+        try:
+            self.tabs.setCurrentIndex(0)
+        finally:
+            self._entering_adventure = False
         self.action_input.setFocus()
         QTimer.singleShot(0, self.journal, self.journal.ensureCursorVisible)
 

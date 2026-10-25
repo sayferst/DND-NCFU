@@ -33,8 +33,9 @@ def interact():
         assert app.applicationVersion() == VERSION
         assert window.tabs.tabText(window.tabs.currentIndex()) == "Главное меню"
         window.resume_button.click()
+        window._legacy_controls = True  # Explicit historical replay, not modern admission.
         window.resume_session()
-        window._legacy_controls = True  # Replay historical rules after opening the modern layout.
+        window.resolution_panel.show()
         if phase == 'save':
             window.font_size.setValue(16)
             window.theme_choice.setCurrentText('Тёмная')
@@ -134,8 +135,9 @@ def interact():
         return
     try:
         window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+        window._legacy_controls = True  # Explicit historical replay, not modern admission.
         window.resume_session()
-        window._legacy_controls = True  # Replay historical rules after opening the modern layout.
+        window.resolution_panel.show()
         if phase == 'create':
             QTimer.singleShot(0, fill_creator)
             window.new_character()
@@ -217,8 +219,9 @@ def interact():
         from rpg_vkr.domain.character import ABILITY_NAMES, Character
         from rpg_vkr.domain.progression import ARCHETYPES
         window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+        window._legacy_controls = True  # Explicit historical replay, not modern admission.
         window.resume_session()
-        window._legacy_controls = True  # Replay historical rules after opening the modern layout.
+        window.resolution_panel.show()
         if phase == 'fight':
             character = Character(name='Мира', **dict(zip(ABILITY_NAMES,
                                   ARCHETYPES['fighter'].scores, strict=True)))
