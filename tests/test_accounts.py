@@ -16,6 +16,19 @@ def accounts(tmp_path):
     return store
 
 
+def test_account_host_rejects_legacy_tokens_without_erasing_history(tmp_path):
+    from scripts.tester_host import AccountStore
+
+    store = accounts(tmp_path)
+    old = store.issue("legacy", budget=100_000_000)
+    strict = AccountStore(store.path, 600_000_000)
+    with pytest.raises(Denied, match="account_login_required"):
+        strict.identity(old)
+    token = login(strict, "tester", "synthetic-tester-password")["token"]
+    assert strict.identity(token)["id"] == "account_tester"
+    assert "legacy" in {row["id"] for row in strict.summary()}
+
+
 def test_login_budget_persistence_revocation_and_secrets(tmp_path):
     store = accounts(tmp_path)
     admin = login(store, "admin", "synthetic-admin-password")

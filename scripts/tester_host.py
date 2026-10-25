@@ -1019,6 +1019,16 @@ def replace_owner_key(root, *, from_clipboard=False, account=None):
     )
 
 
+class AccountStore(Store):
+    """Account-mode hosts cannot keep authorizing old bootstrap installations."""
+
+    def identity(self, token):
+        user = super().identity(token)
+        if user["id"] not in {"account_admin", "account_tester"}:
+            raise Denied(401, "account_login_required")
+        return user
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -1053,7 +1063,7 @@ def main():
     store = (
         None
         if args.command in {"key", "diagnose", "diagnose-tunnel", "ngrok", "update-ngrok"}
-        else Store(
+        else (AccountStore if (root / "account-mode.json").exists() else Store)(
             root / "access.sqlite3",
             global_budget=600_000_000
             if args.command == "accounts" or (root / "account-mode.json").exists()
