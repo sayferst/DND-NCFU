@@ -104,6 +104,7 @@ class ConnectionWorker(QObject):
         self.busy = False
         if (
             getattr(self.window.release_profile, "account_login", False)
+            and "token" in result
             and result.get("token") != self.window._tester_token
         ):
             return  # A refresh for an earlier login cannot replace the current account.
