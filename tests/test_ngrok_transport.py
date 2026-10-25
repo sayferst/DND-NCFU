@@ -92,7 +92,9 @@ def test_first_install_activation_uses_ngrok_header_without_owner_key(tmp_path, 
     worker = SimpleNamespace(
         busy=False,
         window=SimpleNamespace(
-            release_profile=SimpleNamespace(discovery="fake", verification_key="fake"),
+            release_profile=SimpleNamespace(
+                mode="tester", discovery="fake", verification_key="fake"
+            ),
             _saves=SimpleNamespace(directory=tmp_path / "saves"),
             _tester_token="",
         ),
