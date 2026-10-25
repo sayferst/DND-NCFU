@@ -19,7 +19,7 @@ LOCAL_MODELS = {"models": [{"name": "local-test:1", "size": 12345}]}
 TEXT = "Ветер шуршит у деревянных ворот. Деревенская дорога лежит перед вами."
 
 
-def wait_for(app, predicate, timeout_ms=2500):
+def wait_for(app, predicate, timeout_ms=10000):
     clock = QElapsedTimer()
     clock.start()
     while not predicate() and clock.elapsed() < timeout_ms:

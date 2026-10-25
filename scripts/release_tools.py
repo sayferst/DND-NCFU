@@ -51,10 +51,13 @@ def prepare_release_profile(output):
         commit,
         discovery,
         os.environ.get("DND_DISCOVERY_KEY", ""),
+        os.environ.get("DND_ACCOUNT_LOGIN", "") == "1",
     )
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     value = asdict(profile)
+    if not profile.account_login:
+        value.pop("account_login")
     if not profile.discovery:
         value.pop("discovery")
         value.pop("verification_key")

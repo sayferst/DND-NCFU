@@ -153,6 +153,17 @@ class Store:
             raise Denied(401, "activation_required")
         with closing(self.connect()) as db:
             row = db.execute("SELECT * FROM testers WHERE hash=?", (digest(token),)).fetchone()
+            if (
+                row is None
+                and db.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='sessions'"
+                ).fetchone()
+            ):
+                row = db.execute(
+                    "SELECT t.* FROM testers t JOIN sessions s ON s.tester=t.id "
+                    "WHERE s.hash=? AND s.expires>?",
+                    (digest(token), self.clock()),
+                ).fetchone()
         if row is None or row["revoked"] or row["expires"] <= self.clock():
             raise Denied(401, "access_expired_or_revoked")
         return dict(row)
@@ -543,7 +554,12 @@ class Gateway:
     def execute(self, route, body, user, identity):
         actual, succeeded = None, False
         try:
-            result = self.upstream.request(route, body)
+            upstream = self.upstream
+            if user.startswith("account_"):
+                upstream = getattr(self, "account_upstreams", {}).get(user)
+                if upstream is None:
+                    raise Denied(503, "account_provider_unavailable")
+            result = upstream.request(route, body)
             usage = result.get("usage") or {}
             cost = result.get("cost_rub", usage.get("cost_rub"))
             if cost is None and route == "images" and usage.get("currency", "RUB") == "RUB":
@@ -555,7 +571,7 @@ class Gateway:
                 if not isinstance(data, list) or len(data) != 1 or not isinstance(data[0], dict):
                     raise Denied(503, "image_unavailable")
                 if "url" in data[0]:
-                    raw = self.upstream.image_bytes(data[0]["url"])
+                    raw = upstream.image_bytes(data[0]["url"])
                     data = [{"b64_json": base64.b64encode(raw).decode()}]
                 result = {
                     "data": data,
@@ -597,7 +613,7 @@ class Handler(BaseHTTPRequestHandler):
             if self.path == "/api/v1/health" and not post:
                 self.respond(200, {"service": "dnd-gateway", "protocol": 1, "async_jobs": True})
                 return
-            if self.path == "/api/v1/activate" and post:
+            if self.path in {"/api/v1/activate", "/api/v1/login"} and post:
                 if self.headers.get_content_type() != "application/json" or self.headers.get(
                     "Transfer-Encoding"
                 ):
@@ -606,6 +622,16 @@ class Handler(BaseHTTPRequestHandler):
                 if not 0 < length <= 1024:
                     raise Denied(413, "request_size")
                 value = json.loads(self.rfile.read(length))
+                if not isinstance(value, dict):
+                    raise Denied(400, "invalid_body")
+                if self.path == "/api/v1/login":
+                    from server.accounts import login
+
+                    self.respond(
+                        200,
+                        login(self.server.gateway.store, value.get("login"), value.get("password")),
+                    )
+                    return
                 self.respond(
                     200,
                     self.server.gateway.store.activate(

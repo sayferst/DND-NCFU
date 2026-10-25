@@ -34,8 +34,11 @@ class ReleaseProfile:
     commit: str = "source"
     discovery: str = ""
     verification_key: str = ""
+    account_login: bool = False
 
     def __post_init__(self):
+        if type(self.account_login) is not bool:
+            raise ValueError("Неверный режим входа.")
         if self.mode not in {"developer", "tester"}:
             raise ValueError("Неизвестный профиль сборки.")
         if self.discovery or self.verification_key:
@@ -69,6 +72,7 @@ def load_release_profile():
         "commit",
         "discovery",
         "verification_key",
+        "account_login",
     }:
         raise ValueError("Повреждён профиль сборки.")
     return ReleaseProfile(**value)

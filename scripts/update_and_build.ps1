@@ -1,5 +1,5 @@
 # Owner workflow: always check GitHub before building the latest available sources.
-param([ValidateSet('personal', 'exe', 'tester')][string]$Target = 'personal')
+param([ValidateSet('exe', 'tester')][string]$Target = 'tester')
 $ErrorActionPreference = 'Stop'
 try {
     Set-Location (Split-Path $PSScriptRoot -Parent)
@@ -46,33 +46,24 @@ try {
     if (!$clean) {
         Write-Host 'Including your additional local edits in this build.'
     }
+    if (!(Test-Path (Join-Path $env:LOCALAPPDATA 'DND-NCFU-Host\account-mode.json'))) {
+        throw 'First run Commands/SETUP_ACCOUNTS.bat to configure admin/tester on the host.'
+    }
+    if ($Target -eq 'exe') {
+        & $python scripts\tester_host.py build-exe
+        if ($LASTEXITCODE -ne 0) { throw 'Account EXE build failed. Check that the host is ready.' }
+        Start-Process explorer.exe -ArgumentList ('"' + (Join-Path (Get-Location) 'dist') + '"')
+        exit 0
+    }
     if ($Target -eq 'tester') {
         if (!(Test-Path -LiteralPath $python)) { throw 'Python environment missing. Build a personal EXE first.' }
         & $python scripts\tester_host.py build tester1
         if ($LASTEXITCODE -ne 0) { throw 'Tester build failed. Start START_HOST.bat and wait for readiness.' }
-        $output = Join-Path (Get-Location) 'dist\Tester-tester1'
+        $output = Join-Path (Get-Location) 'dist\Release'
         Write-Host "Tester Setup: $output"
         Start-Process explorer.exe -ArgumentList ('"' + $output + '"')
         exit 0
     }
-    $installer = $Target -eq 'personal'
-    & (Join-Path $PSScriptRoot 'build_windows.ps1') -Installer:$installer -Profile developer
-    if ($LASTEXITCODE -ne 0) { throw 'Windows build failed.' }
-    $dist = Join-Path (Get-Location) 'dist'
-    # Preserve the personal build before a later tester build replaces dist outputs.
-    $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
-    $personal = Join-Path $dist ('Personal-' + $stamp)
-    New-Item -ItemType Directory -Path $personal | Out-Null
-    if ($installer) {
-        Copy-Item -LiteralPath (Join-Path $dist 'DND-NCFU-Setup.exe') -Destination $personal
-    }
-    Copy-Item -LiteralPath (Join-Path $dist 'DND-NCFU') -Destination $personal -Recurse
-    Write-Host "Personal build: $personal"
-    Write-Host "Launch: $(Join-Path $personal 'DND-NCFU\DND-NCFU.exe')"
-    Write-Host 'Enter personal API keys in the developer console. No API key is embedded.'
-    Write-Host 'Next: START_HOST.bat, then BUILD_TESTER_SETUP.bat for tester1.'
-    Start-Process explorer.exe -ArgumentList ('"' + $personal + '"')
-    exit 0
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1

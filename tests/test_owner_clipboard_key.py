@@ -8,6 +8,19 @@ import pytest
 from scripts import tester_host
 
 
+@pytest.mark.parametrize("account", ["admin", "tester"])
+def test_account_key_replacement_does_not_touch_other_role(tmp_path, monkeypatch, capsys, account):
+    calls = []
+    monkeypatch.setattr("builtins.input", lambda _: "sk-fixture-only-key")
+    monkeypatch.setattr(tester_host, "save_secret", lambda path, value: calls.append(path.name))
+    tester_host.replace_owner_key(tmp_path, account=account)
+    assert "account-" + account + "-key.bin" in calls
+    other = "tester" if account == "admin" else "admin"
+    assert "account-" + other + "-key.bin" not in calls
+    assert ("routerai-key.bin" in calls) == (account == "admin")
+    assert "sk-fixture" not in capsys.readouterr().out
+
+
 @pytest.mark.parametrize(
     "value",
     ["sk-fixture-only-key", "\ufeffsk-fixture-only-key\u200b", "\n sk-fixture-only-key\r\n"],

@@ -31,6 +31,11 @@ class ConnectionWorker(QObject):
     def start(self):
         if self.busy or self.window.release_profile.mode != "tester":
             return
+        if (
+            getattr(self.window.release_profile, "account_login", False)
+            and not self.window._tester_token
+        ):
+            return
         self.busy = True
         window = self.window
         profile = window.release_profile
@@ -97,6 +102,12 @@ class ConnectionWorker(QObject):
 
     def apply(self, result):
         self.busy = False
+        if (
+            getattr(self.window.release_profile, "account_login", False)
+            and "token" in result
+            and result.get("token") != self.window._tester_token
+        ):
+            return  # A refresh for an earlier login cannot replace the current account.
         if self.window.release_profile.mode != "tester":
             return
         if "error" in result:

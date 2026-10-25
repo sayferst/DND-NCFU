@@ -641,8 +641,15 @@ def host(root, store):
         Upstream(key)  # Validate before protecting; no request is made.
         save_secret(root / "routerai-key.bin", key)
     gateway = Gateway(store, Upstream(key))
+    if (root / "account-mode.json").exists():
+        gateway.account_upstreams = {}
+        for account in ("admin", "tester"):
+            credential = load_secret(root / ("account-" + account + "-key.bin"))
+            gateway.account_upstreams["account_" + account] = Upstream(credential)
     print("Проверяю ключ и каталог RouterAI без генерации…", flush=True)
     check_provider(gateway)
+    for upstream in getattr(gateway, "account_upstreams", {}).values():
+        check_provider(Gateway(store, upstream))
     from scripts.tunnel_dns import reachable_edges, resolve_tunnel_edges
 
     server = Server(("127.0.0.1", 0), gateway)
@@ -799,6 +806,8 @@ def serve_public_endpoint(root, private, endpoint, process):
 
 
 def build(root, store, identity):
+    if (root / "account-mode.json").exists():
+        return build_accounts(root)
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,60}", identity):
         raise ValueError("Имя допуска: латинские буквы, цифры, _ или -; до60знаков.")
     # Fail before issuing a grant if Inno Setup is missing; no hidden installation.
@@ -877,6 +886,65 @@ def build(root, store, identity):
             report.unlink(missing_ok=True)
 
 
+def build_accounts(root, *, installer=True):
+    compiler = inno_compiler()
+    if installer and not compiler:
+        raise ValueError("Нужен Inno Setup 6.")
+    ready = build_preflight(root)
+    command = [
+        "powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(ROOT / "scripts/build_windows.ps1"),
+        "-AccountLogin",
+        "-Profile",
+        "tester",
+        "-DiscoveryUrl",
+        ready["discovery"],
+        "-DiscoveryKey",
+        ready["verification_key"],
+    ]
+    if installer:
+        command += ["-Installer", "-InnoCompiler", compiler]
+    subprocess.run(command, cwd=ROOT, check=True)
+    portable = ROOT / "dist" / ("Accounts-" + str(time.time_ns()))
+    shutil.move(str(ROOT / "dist" / "DND-NCFU"), str(portable))
+    print("EXE с входом по учётной записи: " + str(portable / "DND-NCFU.exe"))
+    if not installer:
+        return
+    destination = ROOT / "dist" / "Release"
+    destination.mkdir(exist_ok=True)
+    (ROOT / "dist" / "DND-NCFU-Setup.exe").replace(destination / "setup.exe")
+    print("Setup с входом admin/tester: " + str(destination))
+
+
+def setup_accounts(root, store):
+    import getpass
+
+    from server.accounts import configure
+
+    # Both roles are configured locally. No key or password is an argument or build input.
+    for name in ("admin", "tester"):
+        password = getpass.getpass("Пароль учётной записи " + name + ": ")
+        confirmation = getpass.getpass("Повторите пароль: ")
+        if password != confirmation:
+            raise ValueError("Пароли не совпадают.")
+        key = load_secret(root / ("account-" + name + "-key.bin"))
+        if not key:
+            raise ValueError("Сначала сохраните ключ через CHANGE_" + name.upper() + "_API.bat.")
+        Upstream(key)
+        save_secret(root / ("account-" + name + "-key.bin"), key)
+        if name == "admin":
+            save_secret(root / "routerai-key.bin", key)
+        configure(store, name, password)
+    (root / "account-mode.json").write_text('{"enabled":true}', encoding="utf-8")
+    print("Учётные записи настроены: admin 500 ₽, tester 100 ₽; срок 30 дней.")
+    print("Повторная настройка не сбрасывает расходы/срок. Перезапустите хост.")
+
+
 def clipboard_key_text():
     # Fixed PowerShell code: clipboard text is DATA, never a command or process argument.
     command = (
@@ -910,7 +978,7 @@ def clipboard_key_text():
         ) from None
 
 
-def replace_owner_key(root, *, from_clipboard=False):
+def replace_owner_key(root, *, from_clipboard=False, account=None):
     from rpg_vkr.narrative.cloud import validate_api_key
 
     if from_clipboard:
@@ -938,14 +1006,25 @@ def replace_owner_key(root, *, from_clipboard=False):
         raise ValueError(
             "Ключ не сохранён: скопируйте его без кавычек и повторите key --clipboard."
         )
-    save_secret(root / "routerai-key.bin", value)
-    print("Новый ключ сохранён для Мастера и Художника. Перезапустите хост для применения.")
+    if account not in {None, "admin", "tester"}:
+        raise ValueError("Выберите admin или tester.")
+    if account:
+        save_secret(root / ("account-" + account + "-key.bin"), value)
+    if account != "tester":
+        save_secret(root / "routerai-key.bin", value)
+    print(
+        "Новый ключ сохранён для Мастера и Художника"
+        + (" учётной записи " + account if account else "")
+        + ". Перезапустите хост для применения."
+    )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("start")
+    commands.add_parser("accounts", help="Настроить пароли и отдельные ключи admin/tester")
+    commands.add_parser("build-exe", help="Собрать EXE с входом по учётной записи")
     commands.add_parser("update-ngrok", help="Обновить отдельную копию агента ngrok")
     ngrok_command = commands.add_parser("ngrok", help="Настроить ngrok вместо Cloudflare")
     ngrok_command.add_argument("--domain", required=True)
@@ -954,6 +1033,7 @@ def main():
     key_command.add_argument(
         "--clipboard", action="store_true", help="Прочитать ключ из буфера после Enter"
     )
+    key_command.add_argument("--account", choices=("admin", "tester"))
     commands.add_parser("diagnose", help="Проверить метаданные без генерации и туннеля")
     commands.add_parser(
         "diagnose-tunnel", help="Проверить HTTPS туннеля и влияние системного прокси"
@@ -973,10 +1053,18 @@ def main():
     store = (
         None
         if args.command in {"key", "diagnose", "diagnose-tunnel", "ngrok", "update-ngrok"}
-        else Store(root / "access.sqlite3", global_budget=100_000_000)
+        else Store(
+            root / "access.sqlite3",
+            global_budget=600_000_000
+            if args.command == "accounts" or (root / "account-mode.json").exists()
+            else 100_000_000,
+        )
     )
     try:
-        if args.command == "update-ngrok":
+        if args.command == "accounts":
+            with host_lock(root):
+                setup_accounts(root, store)
+        elif args.command == "update-ngrok":
             from scripts.ngrok_host import update_agent
 
             with host_lock(root):
@@ -997,13 +1085,26 @@ def main():
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 0 if report["ok"] else 2
         elif args.command == "key":
+            account = args.account
+            if not account and (root / "account-mode.json").exists():
+                account = input("Для какой учётной записи меняем ключ (admin/tester): ").strip()
+                if account not in {"admin", "tester"}:
+                    raise ValueError("Укажите admin или tester.")
             if args.clipboard:
-                replace_owner_key(root, from_clipboard=True)
+                if account:
+                    replace_owner_key(root, from_clipboard=True, account=account)
+                else:
+                    replace_owner_key(root, from_clipboard=True)
             else:
-                replace_owner_key(root)
+                if account:
+                    replace_owner_key(root, account=account)
+                else:
+                    replace_owner_key(root)
         elif args.command == "start":
             with host_lock(root):
                 host(root, store)
+        elif args.command == "build-exe":
+            build_accounts(root, installer=False)
         elif args.command == "build":
             build(root, store, args.id)
         elif args.command == "revoke":

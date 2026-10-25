@@ -116,6 +116,14 @@ class DeveloperConsole(QWidget):
         self._safe_report = {}
 
     def enter(self, name="Разработчик"):
+        if (
+            getattr(getattr(self.window, "release_profile", None), "account_login", False)
+            and getattr(self.window, "_account_name", "") != "admin"
+        ):
+            self.window.statusBar().showMessage(
+                "Консоль разработчика доступна учётной записи admin."
+            )
+            return False
         if not self.access.authorized:
             dialog = QDialog(self.window)
             dialog.setWindowTitle("Доступ разработчика")
@@ -162,6 +170,11 @@ class DeveloperConsole(QWidget):
 
     def use_personal_api(self):
         if not self.access.authorized:
+            return
+        if getattr(getattr(self.window, "release_profile", None), "account_login", False):
+            self.connection_info.setText(
+                "Ключи учётных записей настраиваются на хосте через SETUP_ACCOUNTS.bat."
+            )
             return
         from rpg_vkr.deployment import ReleaseProfile
         from rpg_vkr.ui.flash_settings import disconnect
