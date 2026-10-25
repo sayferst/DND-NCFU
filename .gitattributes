@@ -51,3 +51,6 @@ docs/research/USER_WORLD_BRIEF_2026-10-21.txt -text whitespace=-blank-at-eol
 docs/validation/world-limit-2026-10-21/*.txt -text whitespace=-blank-at-eol
 docs/validation/world-screen-2026-10-21/*.txt -text whitespace=-blank-at-eol
 START_HOST.bat text eol=crlf
+CHANGE_HOST_KEY.bat text eol=crlf
+UPDATE_AND_BUILD_SETUP.bat text eol=crlf
+BUILD_TESTER_SETUP.bat text eol=crlf
