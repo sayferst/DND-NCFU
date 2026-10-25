@@ -1,4 +1,4 @@
-# Owner workflow: build local edits, or update a clean checkout before building.
+# Owner workflow: always check GitHub before building the latest available sources.
 param([ValidateSet('personal', 'exe', 'tester')][string]$Target = 'personal')
 $ErrorActionPreference = 'Stop'
 try {
@@ -10,6 +10,16 @@ try {
     if ($LASTEXITCODE -ne 0 -or $branch.Trim() -ne 'setup/development-environment') {
         throw 'Expected branch: setup/development-environment. No branch was changed.'
     }
+    # Fetch changes references only: safe with local edits and a running host.
+    # A failed network check must never silently produce an allegedly current build.
+    Write-Host 'Checking GitHub for the latest game sources...'
+    & git fetch origin 'refs/heads/setup/development-environment:refs/remotes/origin/setup/development-environment'
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot check GitHub. Build stopped; previous artifacts were not updated.' }
+    $remote = (& git rev-parse refs/remotes/origin/setup/development-environment).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot resolve the checked remote version.' }
+    & git merge-base --is-ancestor $remote HEAD
+    $containsLatest = $LASTEXITCODE -eq 0
+    if ($LASTEXITCODE -gt 1) { throw 'Cannot compare local and remote versions.' }
     # Repair only the known, hash-verified LF -> CRLF fixture conversion before
     # checking cleanliness. The builder otherwise repairs it too late for this check.
     $python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
@@ -26,12 +36,15 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Cannot check working tree.' }
         $clean = !$changes
     }
-    if ($clean -and !$hosts) {
-        & git pull --ff-only
-        if ($LASTEXITCODE -ne 0) { throw 'Git update failed. Build stopped.' }
-    } else {
-        Write-Host 'Building current local files. Git pull skipped: local edits or a running host.'
-        Write-Host 'To download remote updates: stop the host and save/commit local edits first.'
+    if (!$containsLatest) {
+        if (!$clean) { throw 'GitHub has new changes. Save/commit local edits, update, then rebuild. No outdated build was made.' }
+        if ($hosts) { throw 'GitHub has new changes. Stop START_HOST.bat with Ctrl+C, then rebuild. No outdated build was made.' }
+        & git merge --ff-only $remote
+        if ($LASTEXITCODE -ne 0) { throw 'Update failed or branches diverged. Build stopped; local changes were preserved.' }
+    }
+    Write-Host "Latest checked GitHub version: $remote"
+    if (!$clean) {
+        Write-Host 'Including your additional local edits in this build.'
     }
     if ($Target -eq 'tester') {
         if (!(Test-Path -LiteralPath $python)) { throw 'Python environment missing. Build a personal EXE first.' }
