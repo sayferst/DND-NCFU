@@ -58,7 +58,7 @@ def live_records(session):
         {"quest": session.world.quest},
         binding="world.basket",
     )
-    if session.progress.enabled:
+    if session.progress.enabled and not session.gameplay:
         type_id = {
             "fighter": "type_training_sword",
             "scout": "type_knife",
@@ -66,6 +66,71 @@ def live_records(session):
         }[session.progress.class_id]
         put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
         put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
+    if session.gameplay:
+        from rpg_vkr.domain.d20_combat import ARMOUR, WEAPONS
+        from rpg_vkr.domain.gameplay import ITEM_NAMES, PRICES
+
+        state = session.gameplay
+        types["type_copper"] = Definition(
+            "type_copper",
+            "Медные монеты",
+            "item",
+            ("miscellaneous",),
+            {"currency": "copper", "copper_units_per_coin": 1},
+            origin="project-homebrew",
+        ).to_dict()
+        put(
+            "gameplay_copper",
+            "type_copper",
+            "hero",
+            "hero",
+            state["copper"],
+            binding="gameplay.copper",
+        )
+        for value in state["items"]:
+            kind = value["kind"]
+            type_id = "v3_type_" + kind
+            category = (
+                "weapons"
+                if kind in WEAPONS
+                else "armour"
+                if kind in ARMOUR or kind == "shield"
+                else "materials"
+                if kind in {"iron", "cloth", "herb"}
+                else "miscellaneous"
+            )
+            props = {"durability": 20, "rules": state["version"]}
+            if kind in WEAPONS:
+                props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
+            types[type_id] = Definition(
+                type_id,
+                ITEM_NAMES[kind],
+                "item",
+                (category,),
+                props,
+                price_cp=PRICES[kind],
+                origin="project-homebrew",
+            ).to_dict()
+            put(
+                value["id"],
+                type_id,
+                value["owner"],
+                value["owner"],
+                1,
+                {
+                    "durability": value["durability"],
+                    "quality": value["quality"],
+                    "equipped": next(
+                        (
+                            slot
+                            for slot in ("weapon", "armour", "shield")
+                            if state[slot] == value["id"]
+                        ),
+                        "",
+                    ),
+                },
+                "gameplay.items",
+            )
     for key, spec in ACTORS.items():
         if session.generated_world and not any(
             a.id == key for a in session.interaction_state().actor_refs
@@ -77,13 +142,21 @@ def live_records(session):
             spec[0],
             "actor",
             (category,),
-            {"hp_max": spec[2], "class": "legacy", "rules": "homebrew-combat-1"},
+            {
+                "hp_max": spec[2],
+                "class": "legacy",
+                "rules": (session.gameplay or {}).get("version", "homebrew-combat-1"),
+            },
             origin="legacy-adapter",
         ).to_dict()
         state = {
             "hp": session.combat.actor(key).hp,
             "disposition": session.combat.actor(key).disposition,
-            "gold_cp": session.world.shop_gold * 100 if key == "merchant" else None,
+            "gold_cp": (
+                session.world.shop_gold * 100 + (session.gameplay or {}).get("shop_copper", 0)
+            )
+            if key == "merchant"
+            else None,
         }
         if session.legacy_catalog_actor(key).state.get("life") == "dead":
             state["life"] = "dead"

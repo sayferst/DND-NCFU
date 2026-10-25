@@ -41,6 +41,8 @@ def present_turn(turn) -> TurnPresentation:
 
 
 def _present_turn(turn) -> TurnPresentation:
+    if turn.gameplay and turn.gameplay["command"] != "advance":
+        return TurnPresentation("Итог правил приключения", turn.text, turn.text)
     from rpg_vkr.domain.catalog_actions import ActorAttempt
 
     if isinstance(turn.catalog, ActorAttempt):

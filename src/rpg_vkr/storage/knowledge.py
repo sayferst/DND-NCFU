@@ -226,7 +226,7 @@ def restore_session(path):
         values = db.execute("SELECT version,payload FROM snapshot LIMIT 2").fetchall()
         if (
             len(values) != 1
-            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23)
+            or values[0][0] not in (12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)
             or len(values[0][1]) > 32 * 1024 * 1024
         ):
             raise ValueError("Invalid campaign snapshot")

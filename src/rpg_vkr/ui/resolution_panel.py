@@ -185,7 +185,10 @@ def refresh_resolution_panel(window):
         entries = [
             (i, turn)
             for i, turn in enumerate(turns)
-            if turn.inspection or turn.roll or (turn.combat and turn.combat.outcome.rolls)
+            if turn.inspection
+            or turn.roll
+            or (turn.combat and turn.combat.outcome.rolls)
+            or (turn.gameplay and turn.gameplay["result"]["rolls"])
         ][-100:]
         window.breakdown_selector.blockSignals(True)
         window.breakdown_selector.clear()
@@ -193,7 +196,8 @@ def refresh_resolution_panel(window):
             window.breakdown_selector.addItem(f"Ход {i + 1}: {turn.action[:35]}", i)
         index = window.breakdown_selector.findData(previous) if same_session else -1
         if turns and (
-            turns[-1].inspection
+            (turns[-1].gameplay and turns[-1].gameplay["result"]["rolls"])
+            or turns[-1].inspection
             or turns[-1].roll
             or (turns[-1].combat and turns[-1].combat.outcome.rolls)
         ):

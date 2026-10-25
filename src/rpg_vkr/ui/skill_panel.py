@@ -44,6 +44,9 @@ def install(window, layout):
     ):
         form.addRow(button)
     layout.addWidget(window.skills_group)
+    from rpg_vkr.ui.gameplay_panel import install as install_gameplay
+
+    install_gameplay(window, layout)
 
 
 def refresh(window):
@@ -76,7 +79,7 @@ def refresh(window):
         f"следующее повышение стоит {rank + 1} очк.\n"
         f"Доступный ранг на этом уровне: {rank_limit(progress.level)}."
     )
-    available = not window._session.combat.active and window._session.world.hp > 0
+    available = not window._session.in_combat and window._session.world.hp > 0
     window.train_skill_button.setEnabled(
         available
         and not stale

@@ -64,6 +64,7 @@ from rpg_vkr.domain.world import (
     WorldState,
     perform_action,
 )
+from rpg_vkr.gameplay_session import atomic
 from rpg_vkr.narrative.dialogue import dialogue_intent, last_interlocutor, resolve_conversation
 from rpg_vkr.narrative.offline import INTRODUCTION, respond
 from rpg_vkr.narrative.records import Narration
@@ -105,6 +106,7 @@ class Turn:
     interaction: Interaction | None = None
     catalog: Registration | ActorAttempt | None = None
     trade: TradeRecord | None = None
+    gameplay: dict | None = None
 
 
 def _text(value: object, limit: int) -> str:
@@ -141,6 +143,7 @@ class Session:
         self.catalog: Catalog | None = None
         self.chronicle: Chronicle | None = None
         self._d20_progress = None
+        self._gameplay = None
 
     @property
     def d20_progress(self):
@@ -150,7 +153,40 @@ class Session:
 
     @property
     def schema_version(self):
-        return 23 if self._d20_progress is not None else 22
+        return 24 if self._gameplay is not None else 23 if self._d20_progress is not None else 22
+
+    @property
+    def gameplay(self):
+        from copy import deepcopy
+
+        return deepcopy(self._gameplay["state"]) if self._gameplay else None
+
+    @property
+    def in_combat(self):
+        return bool(self.combat.active or self._gameplay and self._gameplay["state"]["active"])
+
+    @property
+    def effective_character(self):
+        if self._gameplay:
+            from rpg_vkr.domain.gameplay import effective_character
+
+            return effective_character(self._gameplay["state"], self.character)
+        return self.character
+
+    def enable_gameplay(self, identity):
+        from rpg_vkr.gameplay_session import enable
+
+        enable(self, identity)
+
+    def _finish_turn(self, turn):
+        from rpg_vkr.gameplay_session import finish_turn
+
+        return finish_turn(self, turn)
+
+    def perform_gameplay(self, command, args, request_id, *, action=None):
+        from rpg_vkr.gameplay_session import perform
+
+        return perform(self, command, args, request_id, action=action)
 
     def enable_d20_progress(self):
         from rpg_vkr.domain.d20_progression import D20Progress
@@ -161,7 +197,7 @@ class Session:
 
     def train_skill(self, skill):
         progress = self.d20_progress
-        if progress is None or self.combat.active or self.world.hp <= 0:
+        if progress is None or self.in_combat or self.world.hp <= 0:
             raise ValueError("Обучение сейчас недоступно.")
         self._d20_progress = progress.train(skill, f"training:{len(progress.events)}")
 
@@ -169,7 +205,7 @@ class Session:
         from rpg_vkr.domain.skill_allocation import commit
 
         progress = self.d20_progress
-        if progress is None or self.combat.active or self.world.hp <= 0:
+        if progress is None or self.in_combat or self.world.hp <= 0:
             raise ValueError("Обучение сейчас недоступно.")
         self._d20_progress = commit(progress, increments, command_id, expected)
 
@@ -184,6 +220,10 @@ class Session:
             self.campaign, self.progress.class_id
         ):
             raise ValueError("Этот мир создан для другого героя.")
+        if self._gameplay:
+            from rpg_vkr.domain.gameplay import ensure_names
+
+            ensure_names(self._gameplay["state"], seed.catalog)
         world = project(seed.scene, replace(self.world, quest="completed", basket=0, trading=False))
         self.chronicle = Chronicle(seed)
         self.catalog, self.interactive_world = seed.catalog, seed.scene
@@ -266,6 +306,14 @@ class Session:
 
     @property
     def extra_items(self) -> tuple[tuple[str, str], ...]:
+        if self._gameplay:
+            from rpg_vkr.domain.gameplay import ITEM_NAMES
+
+            return tuple(
+                (ITEM_NAMES[i["kind"]], f"{i['id']}; состояние {i['durability']}/20")
+                for i in self._gameplay["state"]["items"]
+                if i["owner"] == "hero"
+            )
         kit = ARCHETYPES[self.progress.class_id] if self.progress.enabled else None
         base = (
             (
@@ -304,6 +352,12 @@ class Session:
 
     @property
     def extra_inventory_rows(self):
+        if self._gameplay:
+            return tuple((name, 1, detail) for name, detail in self.extra_items) + tuple(
+                (t.name, t.quantity, "Переносимый предмет мира")
+                for t in (self.interactive_world.carried() if self.interactive_world else ())
+                if not t.resource
+            )
         base = self.extra_items[:2] if self.progress.enabled else ()
         return tuple((name, 1, purpose) for name, purpose in base) + tuple(
             (t.name, t.quantity, "Переносимый предмет мира")
@@ -312,10 +366,35 @@ class Session:
         )
 
     def actor_is_here(self, actor_id):
-        return any(
+        if not any(
             a.id == actor_id and a.place == self.current_place_id
             for a in self.interaction_state().actor_refs
-        )
+        ):
+            return False
+        if self._gameplay:
+            from rpg_vkr.domain.gameplay import available
+
+            if self._gameplay["state"]["active"] == actor_id:
+                return True
+            entity = (
+                next((e for e in self.catalog.entities if e.id == actor_id), None)
+                if self.catalog
+                else None
+            )
+            definition = (
+                next(
+                    (
+                        d
+                        for d in self.catalog.definitions
+                        if entity and d.id == entity.definition_id
+                    ),
+                    None,
+                )
+                if self.catalog
+                else None
+            )
+            return available(self._gameplay["state"], actor_id, definition)
+        return True
 
     def interaction_state(self):
         return self.interactive_world or InteractiveWorld.initial(self.world.location)
@@ -339,14 +418,10 @@ class Session:
         )
         return values
 
+    @atomic
     def submit_trade(self, action, merchant_id, item_id, operation, quantity, source="player-ui"):
         action = _text(action, 500)
-        if (
-            not self.catalog
-            or self.combat.active
-            or self.world.hp <= 0
-            or len(self.turns) >= MAX_TURNS
-        ):
+        if not self.catalog or self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Сделка сейчас недоступна.")
         catalog, world, record = transact(
             self.catalog,
@@ -380,11 +455,12 @@ class Session:
             memory,
         )
         self._turns.append(turn)
-        return turn
+        return self._finish_turn(turn)
 
+    @atomic
     def register_catalog(self, action, definitions, entities, reason, model):
         action = _text(action, 500).strip()
-        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Создание сцены недоступно в схватке или после выбытия.")
         record = Registration(
             tuple(definitions),
@@ -395,6 +471,10 @@ class Session:
             self.interaction_state(),
         )
         catalog, expanded = register(self.catalog or seed_catalog(), record.before, record)
+        if self._gameplay:
+            from rpg_vkr.domain.gameplay import ensure_names
+
+            ensure_names(self._gameplay["state"], catalog)
         names = {d.id: d.name for d in catalog.definitions}
         text = (
             "Вы замечаете: " + "; ".join(names[e.definition_id] for e in entities) + "."
@@ -413,7 +493,7 @@ class Session:
         memory = self.memory.append(turn, before, before)
         self.catalog, self.interactive_world, self.memory = catalog, expanded, memory
         self._turns.append(turn)
-        return turn
+        return self._finish_turn(turn)
 
     def legacy_catalog_actor(self, target_id):
         from rpg_vkr.domain.catalog import Entity
@@ -432,8 +512,22 @@ class Session:
         )
         if last and last.entity_after.state.get("life") == "dead" and actor.hp == 0:
             state["life"] = "dead"
+        if actor.hp == 0 and self._gameplay:
+            outcome = next(
+                (
+                    a
+                    for t in reversed(self.turns)
+                    if t.gameplay
+                    for a in reversed(t.gameplay["result"]["attacks"])
+                    if a["target_id"] == target_id and a["defeated"]
+                ),
+                None,
+            )
+            if outcome:
+                state["life"] = "dead" if outcome["killed"] else "unconscious"
         return Entity(target_id, "type_actor_" + target_id, ACTORS[target_id][1], state=state)
 
+    @atomic
     def submit_actor_attempt(
         self, action, target_id, operation, lethal, reason, model, *, confirmed_intent=False
     ):
@@ -441,7 +535,16 @@ class Session:
 
         action = _text(action, 500)
         bind_attempt(action, operation, lethal, confirmed=confirmed_intent)
-        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self._gameplay is not None and operation == "attack":
+            import uuid
+
+            return self.perform_gameplay(
+                "attack",
+                {"target": target_id, "lethal": int(lethal)},
+                "cmd_" + uuid.uuid4().hex,
+                action=action,
+            )
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Сначала завершите текущую схватку или загрузите живого героя.")
         catalog = self.catalog or seed_catalog()
         scene = self.interaction_state()
@@ -505,8 +608,9 @@ class Session:
         if physical(scene):
             self.interactive_world = resource_scene
         self._turns.append(turn)
-        return turn
+        return self._finish_turn(turn)
 
+    @atomic
     def submit_interaction(self, action, plan, *, confirmed_plan=False, origin="typed"):
         action = _text(action, 500).strip()
         if origin not in {"typed", "system"}:
@@ -514,7 +618,7 @@ class Session:
         if not isinstance(plan, WorldPlan) or not plan.steps:
             raise ValueError("Нет плана изменения мира.")
         bind_plan(action, plan, confirmed=confirmed_plan)
-        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Эта цепочка недоступна в бою или после выбытия.")
         before = self.plan_state(plan)
         index = len(self.turns) + 1
@@ -596,8 +700,9 @@ class Session:
         self.interactive_world = after
         self.catalog = catalog
         self._turns.append(turn)
-        return turn
+        return self._finish_turn(turn)
 
+    @atomic
     def submit_challenge(self, action: str, *, suggested_kind=None, assessment=None) -> Turn:
         action = _text(action, 500).strip()
         if assessment:
@@ -624,7 +729,7 @@ class Session:
                 kind = suggested_kind
             if kind is None:
                 raise ValueError("Для этой попытки пока нет проверяемой проверки.")
-        if self.combat.active or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Эта проверка недоступна во время схватки или после выбытия.")
         ability, difficulty = (
             (assessment["ability"], assessment["dc"]) if assessment else CHALLENGES[kind][:2]
@@ -648,7 +753,7 @@ class Session:
                 }.get(ability)
             spec = assessment
             check = resolve_ability_check(
-                ability, self.character.score(ability), roll.value, difficulty
+                ability, self.effective_character.score(ability), roll.value, difficulty
             )
             record_version = "challenge-homebrew-2" if assessment else "challenge-homebrew-1"
             if d20 is not None and skill:
@@ -694,12 +799,13 @@ class Session:
             raise
         self._turns.append(turn)
         self.memory = memory
-        return turn
+        return self._finish_turn(turn)
 
     @property
     def turns(self) -> tuple[Turn, ...]:
         return tuple(self._turns)
 
+    @atomic
     def submit(
         self,
         action: str,
@@ -712,6 +818,14 @@ class Session:
         _verified_step=False,
     ) -> Turn:
         action = _text(action, 500).strip()
+        if self._gameplay is not None and intent is None and meaning is None:
+            import uuid
+
+            from rpg_vkr.domain.gameplay_commands import parse
+
+            parsed = parse(action)
+            if parsed:
+                return self.perform_gameplay(*parsed, "text_" + uuid.uuid4().hex, action=action)
         if len(self._turns) >= MAX_TURNS:
             raise ValueError("Достигнут предел в 2000 действий. Сохраните сессию.")
         if intent is not None and (not isinstance(intent, str) or intent not in allowed_intents()):
@@ -738,6 +852,40 @@ class Session:
         if intent_source not in {"direct", "model", "local-fallback", "local-correction"}:
             raise ValueError("Invalid interpretation source")
         command = intent or normalise_action(action)
+        if self._gameplay is not None:
+            import uuid
+
+            from rpg_vkr.domain.combat import ATTACK_COMMANDS
+
+            target = ATTACK_COMMANDS.get(command) or self._gameplay["state"]["active"]
+            if command in ATTACK_COMMANDS or command == "атаковать":
+                return self.perform_gameplay(
+                    "attack",
+                    {"target": target, "lethal": 0},
+                    "cmd_" + uuid.uuid4().hex,
+                    action=action,
+                )
+            modes = {"уклониться": "dodge", "отступить": "retreat", "использовать бинт": "bandage"}
+            if command in modes and self._gameplay["state"]["active"]:
+                return self.perform_gameplay(
+                    modes[command], {}, "cmd_" + uuid.uuid4().hex, action=action
+                )
+            if self._gameplay["state"]["active"] and command not in {
+                "состояние",
+                "инвентарь",
+                "помощь",
+                "осмотреться",
+                "спросить мастера",
+            }:
+                raise ValueError("Идёт бой по новым правилам: используйте боевые действия.")
+            if command in {
+                "подкрасться к волку",
+                "подкрасться к кабану",
+                "подкрасться к стражнику",
+                "подкрасться к жительнице",
+                "подкрасться к торговцу",
+            }:
+                raise ValueError("Скрытный подход прежней системы недоступен в новых правилах.")
         if not isinstance(origin, str) or origin not in {"typed", "quick", "system"}:
             raise ValueError("Invalid input origin")
         binding_error = (
@@ -846,7 +994,7 @@ class Session:
         self.progress = progress
         self.character = character
         self._turns.append(turn)
-        return turn
+        return self._finish_turn(turn)
 
     def submit_actions(self, action):
         """Validate explicit local evidence and commit at most two steps atomically.
@@ -1218,7 +1366,7 @@ class Session:
         return Turn(action, "Мир", text, roll, check), self.world
 
     def edit_character(self, character: Character) -> bool:
-        if self.combat.active is not None or self.world.hp == 0:
+        if self.in_combat or self.world.hp == 0:
             raise ValueError("Редактирование недоступно во время схватки или после поражения.")
         if self.progress.enabled:
             raise ValueError(
@@ -1306,6 +1454,13 @@ class Session:
             ],
         }
 
+        if self._gameplay is None:
+            for item in value["turns"]:
+                item.pop("gameplay")
+        else:
+            from copy import deepcopy
+
+            value["gameplay"] = deepcopy(self._gameplay)
         if self._d20_progress is not None:
             value["d20_progress"] = self.d20_progress.to_dict()
         return value
@@ -1313,7 +1468,13 @@ class Session:
     @classmethod
     def from_dict(cls, data: object, version: int | None = None) -> "Session":
         if version is None:
-            version = 23 if isinstance(data, dict) and "d20_progress" in data else 22
+            version = (
+                24
+                if isinstance(data, dict) and "gameplay" in data
+                else 23
+                if isinstance(data, dict) and "d20_progress" in data
+                else 22
+            )
         if type(version) is not int or version not in (
             1,
             2,
@@ -1338,9 +1499,12 @@ class Session:
             21,
             22,
             23,
+            24,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
+        if version >= 24:
+            keys.add("gameplay")
         if version >= 23:
             keys.add("d20_progress")
         if version >= 21:
@@ -1383,6 +1547,17 @@ class Session:
             from rpg_vkr.domain.d20_progression import D20Progress
 
             session._d20_progress = D20Progress.from_dict(data["d20_progress"])
+        if version >= 24:
+            from rpg_vkr.domain.gameplay import initial
+
+            raw = data["gameplay"]
+            if not isinstance(raw, dict) or set(raw) != {"identity", "state"}:
+                raise ValueError("Неверный формат новых игровых правил.")
+            initial_hero = Character.from_dict(data["progress"]["initial"])
+            session._gameplay = {
+                "identity": raw["identity"],
+                "state": initial(raw["identity"], initial_hero),
+            }
         session.campaign = (
             Campaign.from_dict(data["campaign"]) if version >= 10 else Campaign.migrate(data)
         )
@@ -1404,8 +1579,16 @@ class Session:
         turns = data["turns"]
         if not isinstance(turns, list) or len(turns) > MAX_TURNS:
             raise ValueError("Invalid turn history")
+        previous_item = None
         for item in turns:
+            if version >= 24 and previous_item:
+                from rpg_vkr.gameplay_session import restore_clock
+
+                restore_clock(session, previous_item)
+            previous_item = item
             turn_keys = {"action", "speaker", "text", "roll"}
+            if version >= 24:
+                turn_keys.add("gameplay")
             if version >= 21:
                 turn_keys.add("trade")
             if version >= 19:
@@ -1432,6 +1615,12 @@ class Session:
                 turn_keys.update({"actor_id", "combat"})
             if not isinstance(item, dict) or set(item) != turn_keys:
                 raise ValueError("Invalid turn")
+            if (
+                version >= 24
+                and item["gameplay"] is not None
+                and not isinstance(item["gameplay"], dict)
+            ):
+                raise ValueError("Неверный формат записи игровых правил.")
             action = _text(item["action"], 500)
             intent = item.get("intent")
             if intent is not None and (
@@ -1498,6 +1687,15 @@ class Session:
             roll = None
             check = None
             stored_check = item.get("check")
+            if (
+                version >= 24
+                and item["gameplay"] is not None
+                and item["gameplay"].get("command") != "advance"
+            ):
+                from rpg_vkr.gameplay_session import restore_turn
+
+                restore_turn(session, item)
+                continue
             if version >= 21 and item["trade"] is not None:
                 if item["speaker"] != "Мир" or any(
                     item[k] is not None
@@ -1939,6 +2137,10 @@ class Session:
                     intent_source=intent_source,
                 )
             )
+        if version >= 24 and previous_item:
+            from rpg_vkr.gameplay_session import restore_clock
+
+            restore_clock(session, previous_item)
         if version >= 16:
             from rpg_vkr.narrative.actions import NOTES
 
@@ -2039,9 +2241,25 @@ class Session:
         interactive = session.chronicle.seed.scene if session.generated_world else None
         historical_catalog = session.chronicle.seed.catalog if session.generated_world else None
         legacy_lives = {}
+        historical_gameplay = None
+        if version >= 24:
+            from rpg_vkr.domain.gameplay import initial
+
+            historical_gameplay = initial(data["gameplay"]["identity"], session.progress.initial)
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
-            if turn.trade:
+            if turn.gameplay and turn.gameplay["command"] != "advance":
+                from rpg_vkr.gameplay_session import validate_history
+
+                expected_fields, interactive, historical_catalog = validate_history(
+                    turn.gameplay, fields, interactive, historical_catalog, event.turn_index
+                )
+                historical_gameplay = turn.gameplay["result"]["state"]
+                if {c.field: (c.before, c.after) for c in event.changes} != {
+                    k: (fields[k], v) for k, v in expected_fields.items() if fields[k] != v
+                }:
+                    raise ValueError("Новые правила изменили неподтверждённые поля.")
+            elif turn.trade:
                 record = turn.trade
                 expected_before = interactive or InteractiveWorld.initial(fields["world.location"])
                 world = WorldState.from_dict(
@@ -2231,11 +2449,21 @@ class Session:
                         interactive = replace(interactive, current=change.after)
             if turn.challenge:
                 record = turn.challenge
+                expected_score = fields["hero." + record.check.ability]
+                if historical_gameplay:
+                    from rpg_vkr.domain.gameplay import effective_character
+
+                    hero = Character.from_dict(
+                        {k: fields["hero." + k] for k in asdict(Character())}
+                    )
+                    expected_score = effective_character(historical_gameplay, hero).score(
+                        record.check.ability
+                    )
                 if (
                     fields["world.hp"] <= 0
                     or fields["combat.active"] is not None
                     or record.location != fields["world.location"]
-                    or record.check.score != fields["hero." + record.check.ability]
+                    or record.check.score != expected_score
                     or event.changes
                 ):
                     raise ValueError("Challenge does not match historical state")
@@ -2295,6 +2523,20 @@ class Session:
                     raise ValueError("Inspection attempted unapproved world changes")
             for change in event.changes:
                 fields[change.field] = change.after
+            if turn.gameplay and turn.gameplay["command"] == "advance":
+                from rpg_vkr.gameplay_session import validate_history
+
+                if (turn.intent or turn.action).casefold().strip().startswith("идти ") and not any(
+                    c.field == "world.location" for c in event.changes
+                ):
+                    raise ValueError("Заблокированное перемещение не расходует время.")
+
+                next_fields, interactive, historical_catalog = validate_history(
+                    turn.gameplay, fields, interactive, historical_catalog, event.turn_index
+                )
+                if next_fields != fields:
+                    raise ValueError("Часы изменили неподтверждённые ресурсы.")
+                historical_gameplay = turn.gameplay["result"]["state"]
         stored_interactive = data.get("interactive_world")
         if (
             version < 20
@@ -2344,4 +2586,10 @@ class Session:
         from rpg_vkr.domain.campaign_progress import validate_progress
 
         validate_progress(session._d20_progress, session.turns)
+        if version >= 24:
+            from rpg_vkr.domain.gameplay import ensure_names
+
+            ensure_names(session._gameplay["state"], session.catalog)
+        if version >= 24 and canonical(session._gameplay) != canonical(data["gameplay"]):
+            raise ValueError("Итог новых игровых правил не совпадает с журналом.")
         return session

@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSpinBox,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -35,7 +36,16 @@ class CreationDialog(QDialog):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         content = QWidget()
-        layout = QFormLayout(content)
+        container = QVBoxLayout(content)
+        self.creation_steps = QTabWidget()
+        container.addWidget(self.creation_steps)
+
+        def step(title):
+            page = QWidget()
+            self.creation_steps.addTab(page, title)
+            return QFormLayout(page)
+
+        layout = step("Личность")
         scroll.setWidget(content)
         outer.addWidget(scroll, 1)
         note = QLabel(
@@ -56,6 +66,55 @@ class CreationDialog(QDialog):
             "Отдельное развитие навыков; включается только для нового героя."
         )
         layout.addRow(self.use_d20_skills)
+        from rpg_vkr.domain.gameplay import PROFILES, SPECIES
+
+        self.use_gameplay = QCheckBox("Приключение v3: экипировка, бой, магия, мастерская, время")
+        layout.addRow(self.use_gameplay)
+        self.species_choice = QComboBox()
+        for key, name in SPECIES.items():
+            self.species_choice.addItem(name, key)
+        layout.addRow("Вид (v3)", self.species_choice)
+        self.profile_choice = QComboBox()
+        for key, name in PROFILES.items():
+            self.profile_choice.addItem(name, key)
+        layout.addRow("Специализация (v3)", self.profile_choice)
+        self.age_input = QSpinBox()
+        self.age_input.setRange(18, 1000)
+        self.age_input.setValue(20)
+        layout.addRow("Возраст (v3)", self.age_input)
+        self.background_input = QLineEdit("Путешественник")
+        self.background_input.setMaxLength(400)
+        layout.addRow("Происхождение (v3)", self.background_input)
+        self.appearance_input = QLineEdit("Дорожная одежда")
+        self.appearance_input.setMaxLength(400)
+        layout.addRow("Внешность (v3)", self.appearance_input)
+        note_v3 = QLabel(
+            "v3 включается только для новой кампании. Виды описательные; "
+            "старые профили выше задают характеристики. Магия требует обучения "
+            "Теории магии. Все действия нового набора доступны на странице героя."
+        )
+        note_v3.setWordWrap(True)
+        layout.addRow(note_v3)
+        from rpg_vkr.domain.d20_progression import SKILLS
+
+        layout = step("Навыки и талант")
+        from rpg_vkr.domain.gameplay import TALENTS
+
+        self.initial_talent = QComboBox()
+        self.initial_talent.addItem("Выбрать позже", "")
+        for key, name in TALENTS.items():
+            self.initial_talent.addItem(name, key)
+        layout.addRow("Начальный талант (v3)", self.initial_talent)
+        self.initial_skills = {}
+        self.initial_skill_budget = QLabel("Начальные навыки: 0 / 13 очков")
+        layout.addRow(self.initial_skill_budget)
+        for key, (name, _) in SKILLS.items():
+            spin = QSpinBox()
+            spin.setRange(0, 2)
+            spin.valueChanged.connect(self._update_creation_skills)
+            self.initial_skills[key] = spin
+            layout.addRow(name + " (v3)", spin)
+        layout = step("История и мир")
         self.description_input = QPlainTextEdit()
         self.description_input.setAccessibleName("Свободное описание героя")
         self.description_input.setPlaceholderText(
@@ -91,6 +150,7 @@ class CreationDialog(QDialog):
         )
         generation_note.setWordWrap(True)
         layout.addRow(generation_note)
+        layout = step("Характеристики")
         self.kit_label = QLabel()
         self.kit_label.setWordWrap(True)
         layout.addRow(self.kit_label)
@@ -107,6 +167,10 @@ class CreationDialog(QDialog):
         self.budget_label = QLabel()
         self.budget_label.setWordWrap(True)
         layout.addRow(self.budget_label)
+        layout = step("Подтверждение")
+        self.creation_summary = QLabel()
+        self.creation_summary.setWordWrap(True)
+        layout.addRow(self.creation_summary)
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
@@ -119,6 +183,12 @@ class CreationDialog(QDialog):
         self.name_input.textChanged.connect(self._update_budget)
         self.apply_recommended()
         self._update_kit()
+        self.use_gameplay.toggled.connect(self._update_budget)
+        self.initial_talent.currentIndexChanged.connect(self._update_budget)
+        self.profile_choice.currentIndexChanged.connect(self._update_budget)
+        self.species_choice.currentIndexChanged.connect(self._update_budget)
+        self.background_input.textChanged.connect(self._update_budget)
+        self.appearance_input.textChanged.connect(self._update_budget)
 
     def apply_recommended(self) -> None:
         for ability, score in zip(
@@ -153,8 +223,29 @@ class CreationDialog(QDialog):
                 else "Исходный текст сохраняется без переписывания."
             )
         )
+        valid_identity = True
+        if self.use_gameplay.isChecked():
+            from rpg_vkr.domain.gameplay import initial
+
+            try:
+                initial(self.gameplay_identity(), Character())
+            except ValueError:
+                valid_identity = False
+        self.creation_summary.setText(
+            f"{self.name_input.text().strip()} · {self.class_choice.currentText()}\n"
+            f"Характеристики: {', '.join(str(v.value()) for v in self.scores.values())}.\n"
+            + (
+                f"Приключение v3: {self.species_choice.currentText()}, "
+                f"{self.profile_choice.currentText()}; {self.initial_skill_budget.text()}; "
+                f"талант: {self.initial_talent.currentText()}.\n"
+                "Проверьте выбор. До создания героя можно вернуться в любой раздел."
+                if self.use_gameplay.isChecked()
+                else "Прежний совместимый набор правил."
+            )
+        )
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(
-            remaining == 0
+            valid_identity
+            and remaining == 0
             and bool(self.name_input.text().strip())
             and len(self.description_input.toPlainText()) <= DESCRIPTION_LIMIT
             and world_used <= WORLD_BRIEF_LIMIT
@@ -168,6 +259,25 @@ class CreationDialog(QDialog):
         validate_creation(character, self.class_choice.currentData())
         return character
 
+    def _update_creation_skills(self):
+        cost = sum(spin.value() * (spin.value() + 1) // 2 for spin in self.initial_skills.values())
+        self.initial_skill_budget.setText(
+            f"Начальные навыки: {cost} / 13 очков; остаток {13 - cost}"
+        )
+        if hasattr(self, "buttons"):
+            self._update_budget()
+
+    def gameplay_identity(self):
+        return {
+            "species": self.species_choice.currentData(),
+            "profile": self.profile_choice.currentData(),
+            "age": self.age_input.value(),
+            "background": self.background_input.text().strip(),
+            "appearance": self.appearance_input.text().strip(),
+            "talent": self.initial_talent.currentData(),
+            "skills": {k: v.value() for k, v in self.initial_skills.items() if v.value()},
+        }
+
     def create_session(self) -> Session:
         description = plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
         session = Session.create_hero(
@@ -178,11 +288,17 @@ class CreationDialog(QDialog):
         )
         if self.use_d20_skills.isChecked():
             session.enable_d20_progress()
+        if self.use_gameplay.isChecked():
+            session.enable_gameplay(self.gameplay_identity())
         return session
 
     def accept(self) -> None:
         try:
-            self.character()
+            character = self.character()
+            if self.use_gameplay.isChecked():
+                from rpg_vkr.domain.gameplay import initial
+
+                initial(self.gameplay_identity(), character)
             plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
             plain(self.world_brief_input.toPlainText(), WORLD_BRIEF_LIMIT, empty=True)
         except ValueError as error:

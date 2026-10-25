@@ -5,6 +5,7 @@ from rpg_vkr.domain.d20_progression import D20Progress
 
 def achievements(turns):
     result = {}
+    victories = set()
     for index, turn in enumerate(turns, 1):
         if turn.combat and turn.combat.outcome.victory:
             key = "victory:" + turn.combat.outcome.actor_id
@@ -17,6 +18,13 @@ def achievements(turns):
         ):
             key = "victory:" + turn.catalog.target_id
             result.setdefault(key, (50, "Первая победа над противником", index))
+        if turn.gameplay:
+            record = turn.gameplay
+            for actor_id in set(record["result"]["state"]["victories"]) - victories:
+                result.setdefault(
+                    "victory:" + actor_id, (50, "Первая победа над противником", index)
+                )
+            victories.update(record["result"]["state"]["victories"])
         if turn.challenge and turn.challenge.check.succeeded:
             key = "challenge:" + turn.challenge.location + ":" + turn.challenge.kind
             result.setdefault(key, (10, "Первая успешная проверка задачи", index))

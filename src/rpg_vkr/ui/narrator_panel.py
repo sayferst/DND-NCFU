@@ -529,7 +529,14 @@ def request_narration(window):
         window.local_model.currentText(),
         player_message=turn.action
         if turn
-        and (turn.intent or turn.challenge or turn.interaction or turn.catalog or turn.trade)
+        and (
+            turn.gameplay
+            or turn.intent
+            or turn.challenge
+            or turn.interaction
+            or turn.catalog
+            or turn.trade
+        )
         else "",
         dialogue_actor=actor,
         history=recent_dialogue(window._session),
@@ -1452,7 +1459,12 @@ def after_action(window, turn):
     if (
         window.enable_local_narrator.isChecked()
         and window.auto_narration.isChecked()
-        and (turn.combat or turn.speaker in {"Мир", "Рассказчик"} or turn.actor_id is not None)
+        and (
+            turn.gameplay
+            or turn.combat
+            or turn.speaker in {"Мир", "Рассказчик"}
+            or turn.actor_id is not None
+        )
         and not turn.text.startswith("Я пока не понимаю")
         and turn.action.casefold() != "помощь"
     ):
@@ -1473,7 +1485,13 @@ def record_model_event(window, event):
     event = {
         **event,
         "world_committed": any(
-            t.interaction or t.catalog or t.trade or t.combat or t.challenge or t.intent
+            t.gameplay
+            or t.interaction
+            or t.catalog
+            or t.trade
+            or t.combat
+            or t.challenge
+            or t.intent
             for t in session.turns[base:]
         ),
     }

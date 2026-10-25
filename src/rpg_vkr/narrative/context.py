@@ -128,7 +128,7 @@ def build_frame(session):
                 else "рядом"
             )
             for a in session.interactive_world.actor_refs
-            if a.id not in ACTORS and a.place == session.current_place_id
+            if a.id not in ACTORS and session.actor_is_here(a.id)
         )
     memories = []
     remembered_place = session.chronicle.seed.scene.place().name if session.generated_world else ""
@@ -170,6 +170,23 @@ def build_frame(session):
             or "нет зарегистрированных предметов"
         )
         scene += "\nПри вас: " + state.inventory() + "."
+    if session.gameplay:
+        from rpg_vkr.domain.gameplay import SPELLS
+
+        state = session.gameplay
+        from rpg_vkr.domain.gameplay import PROFILES
+
+        hero = (
+            f"{session.character.name}, {PROFILES[state['identity']['profile']]}, "
+            f"уровень {session.d20_progress.level}, опыт {session.d20_progress.xp}"
+        )
+        scene += (
+            f"\nПравила приключения: MP {state['mp']}/{state['mp_cap']}; "
+            f"прошло игровых минут {state['minute']}; "
+            f"активная схватка {state['active'] or 'нет'}; дистанция {state['distance']} м."
+        )
+        scene += "\nИзученная магия: " + ", ".join(SPELLS[k][0] for k in state["spells"])
+        scene += "\nАктивные эффекты: " + ", ".join(e["kind"] for e in state["effects"])
     return NarrativeFrame(
         len(session.turns),
         hero,

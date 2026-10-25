@@ -103,6 +103,8 @@ def event_dict(event):
 
 
 def roll_indices(turn):
+    if turn.gameplay and turn.gameplay["command"] != "advance":
+        return tuple(r["index"] for r in turn.gameplay["result"]["rolls"])
     rolls = (
         turn.inspection.rolls
         if turn.inspection

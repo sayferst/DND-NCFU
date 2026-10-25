@@ -350,9 +350,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         from rpg_vkr.ui.skill_panel import refresh as refresh_skills
 
         refresh_skills(self)
+        from rpg_vkr.ui.gameplay_panel import refresh as refresh_gameplay
+
+        refresh_gameplay(self)
         self._refresh_workspace()
         self._refresh_episode_panels()
-        character = self._session.character
+        character = self._session.effective_character
         world = self._session.world
         if (
             self.hero_description_view.toPlainText()
@@ -365,6 +368,11 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             + ("герой" if self._session.progress.enabled else "песочница")
         )
         self.progress_label.setText(describe_progress(self._session.progress))
+        if self._session.gameplay:
+            progress = self._session.d20_progress
+            self.progress_label.setText(
+                f"Приключение D20 · уровень {progress.level} · XP {progress.xp}"
+            )
         self.edit_character_button.setEnabled(
             not self._session.progress.enabled
             and self._session.combat.active is None
@@ -382,6 +390,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             f"{character.name} · здоровье {world.hp}/{world.max_hp} · золото {world.gold} · "
             f"бинты {world.bandages} · {self._session.current_place_name}"
         )
+        if self._session.gameplay:
+            self.resource_label.setText(
+                f"{character.name} · HP {world.hp}/{world.max_hp} · "
+                f"{world.gold * 100 + self._session.gameplay['copper']} медных · "
+                f"бинты {world.bandages} · {self._session.current_place_name}"
+            )
         if draft:
             from rpg_vkr.ui.adventure_panel import world_start_message
 
@@ -779,6 +793,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 "отправьте после проверки."
             )
             return
+        if self._session.gameplay:
+            from rpg_vkr.domain.gameplay_commands import parse
+
+            if parse(action):
+                use_ai = False
+                origin = "quick"
         if origin == "typed" and request_local_actions(self, action):
             return
         if use_ai and request_chat(self, action):
