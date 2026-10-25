@@ -58,6 +58,9 @@ class DeveloperConsole(QWidget):
             "Подключение владельца: настройки в «ИИ-мастер» и «ИИ-художник»."
         )
         form.addRow(self.connection_info)
+        self.personal_api_button = QPushButton("Перейти на собственные API-ключи")
+        self.personal_api_button.clicked.connect(self.use_personal_api)
+        form.addRow(self.personal_api_button)
         gateway_check = QPushButton("Проверить игровой шлюз · без генерации")
         gateway_check.clicked.connect(self.check_gateway)
         form.addRow(gateway_check)
@@ -156,6 +159,33 @@ class DeveloperConsole(QWidget):
         self.access.logout()
         self.window.open_section("Главное меню")
         self.window.tabs.setTabVisible(self.window.tabs.indexOf(self), False)
+
+    def use_personal_api(self):
+        if not self.access.authorized:
+            return
+        from rpg_vkr.deployment import ReleaseProfile
+        from rpg_vkr.ui.flash_settings import disconnect
+        from rpg_vkr.visuals.client import ImagesTransport
+
+        window = self.window
+        worker = getattr(window, "tester_connection_worker", None)
+        if worker:
+            worker.timer.stop()
+        window.release_profile = ReleaseProfile()
+        window._tester_endpoint = ""
+        window._tester_token = ""
+        disconnect(window)
+        window.visuals.cancel()
+        window.visuals.worker.transport = ImagesTransport()
+        for page in self.originals.values():
+            page.setEnabled(True)
+        window.artist_panel.sync_key()
+        self.connection_info.setText(
+            "Собственные API включены для этого сеанса. Укажите ключ в «ИИ-мастер». "
+            "Для отдельного ключа Художника снимите «Использовать ключ Мастера». "
+            "Запросы оплачиваются по вашим ключам."
+        )
+        self.pages.setCurrentWidget(self.originals["Мастер"])
 
     def check_gateway(self):
         if not self.access.authorized:

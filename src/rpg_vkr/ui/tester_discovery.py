@@ -29,7 +29,7 @@ class ConnectionWorker(QObject):
         QTimer.singleShot(0, self.start)
 
     def start(self):
-        if self.busy:
+        if self.busy or self.window.release_profile.mode != "tester":
             return
         self.busy = True
         window = self.window
@@ -97,6 +97,8 @@ class ConnectionWorker(QObject):
 
     def apply(self, result):
         self.busy = False
+        if self.window.release_profile.mode != "tester":
+            return
         if "error" in result:
             # An expired/unverifiable manifest cannot keep authorizing future requests.
             self.window._tester_endpoint = ""

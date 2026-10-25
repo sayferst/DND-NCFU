@@ -8,6 +8,37 @@ from rpg_vkr.ui.developer_access import DeveloperAccess
 from rpg_vkr.ui.main_window import MainWindow
 
 
+def test_personal_keys_unlock_tester_panels_and_ignore_late_discovery(qt_app, tmp_path):
+    from rpg_vkr.deployment import ReleaseProfile
+    from rpg_vkr.ui.tester_discovery import ConnectionWorker
+
+    window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+    try:
+        console = window.developer_console
+        window.release_profile = ReleaseProfile(mode="tester")
+        for page in console.originals.values():
+            page.setEnabled(False)
+        console.use_personal_api()
+        assert not window.cloud_key.isEnabled()  # Authentication remains required.
+        enter_developer(qt_app, window)
+        console.personal_api_button.click()
+        assert window.release_profile.mode == "developer"
+        window.cloud_key.setText("synthetic-master")
+        assert window.cloud_key.isEnabled() and not window.cloud_key.isReadOnly()
+        window.artist_panel.shared_key.setChecked(False)
+        assert window.artist_panel.key_input.isEnabled()
+        window.artist_panel.key_input.setText("synthetic-artist")
+        assert window.cloud_key.text() == "synthetic-master"
+        worker = ConnectionWorker(window)
+        worker.timer.stop()
+        worker.apply({"endpoint": "https://example.org/api/v1", "token": "unused"})
+        assert window._tester_endpoint == "" and window._tester_token == ""
+        assert not window.visuals.worker.transport.gateway
+        assert window.cloud_key.text() == "synthetic-master"
+    finally:
+        window.close()
+
+
 def enter_developer(qt_app, window, password="995539", name="Разработчик"):
     def fill():
         dialog = qt_app.activeModalWidget()

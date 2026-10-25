@@ -63,6 +63,8 @@ def install_tester_connection(window):
 
 def configure(window):
     profile = window.release_profile
+    if profile.mode != "tester":
+        return False
     token = tester_token(window)
     endpoint = getattr(window, "_tester_endpoint", profile.gateway)
     if not endpoint or not token:
