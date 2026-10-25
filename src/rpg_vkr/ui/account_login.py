@@ -95,6 +95,8 @@ class LoginDialog(QDialog):
         self.window._tester_token = result["token"]
         self.window._account_name = result["account"]
         self.window.developer_console.access.authorized = result["account"] == "admin"
+        if result["account"] != "admin":
+            self.window.developer_console.logout()
         self.window._tester_endpoint = result["endpoint"]
         configure(self.window)
         self.window.statusBar().showMessage(
@@ -106,6 +108,8 @@ class LoginDialog(QDialog):
 def show_login(window):
     dialog = LoginDialog(window)
     dialog.exec()
+    if not getattr(window, "_tester_token", ""):
+        window.close()
 
 
 class ConnectionCheck(QObject):
