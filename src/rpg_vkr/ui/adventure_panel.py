@@ -332,6 +332,8 @@ def request_world(window, error=""):
             if error
             else "Мастер создаёт мир по вашей анкете. Это может занять несколько минут."
         )
+    from rpg_vkr.narrative.gameplay_prompt import equipment_rules
+
     try:
         window.ollama.generate_world(
             build_frame(session),
@@ -342,6 +344,11 @@ def request_world(window, error=""):
                 "hero_description": session.campaign.raw_player_description,
                 "world_brief": session.campaign.world_brief,
                 "variation": session.campaign.world_id,
+                **(
+                    {"gameplay_revision": 2, "equipment_rules": equipment_rules()}
+                    if session.schema_version >= 25
+                    else {}
+                ),
             },
             error,
         )

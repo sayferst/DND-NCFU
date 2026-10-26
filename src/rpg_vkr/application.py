@@ -153,7 +153,11 @@ class Session:
 
     @property
     def schema_version(self):
-        return 24 if self._gameplay is not None else 23 if self._d20_progress is not None else 22
+        if self._gameplay is not None:
+            from rpg_vkr.domain.gameplay_rules import revision
+
+            return 23 + revision(self._gameplay["state"])
+        return 23 if self._d20_progress is not None else 22
 
     @property
     def gameplay(self):
@@ -173,10 +177,10 @@ class Session:
             return effective_character(self._gameplay["state"], self.character)
         return self.character
 
-    def enable_gameplay(self, identity):
+    def enable_gameplay(self, identity, *, revision=1):
         from rpg_vkr.gameplay_session import enable
 
-        enable(self, identity)
+        enable(self, identity, revision=revision)
 
     def _finish_turn(self, turn):
         from rpg_vkr.gameplay_session import finish_turn
@@ -187,6 +191,16 @@ class Session:
         from rpg_vkr.gameplay_session import perform
 
         return perform(self, command, args, request_id, action=action)
+
+    def preview_gameplay(self, command, args):
+        from rpg_vkr.domain.gameplay_rules import execute
+        from rpg_vkr.gameplay_session import context
+
+        if self._gameplay is None:
+            raise ValueError("Новый набор правил не включён.")
+        preview_dice = DiceRoller(self.dice.seed)
+        preview_dice.restore(self.dice.checkpoint())
+        return execute(self._gameplay["state"], command, args, context(self), preview_dice)
 
     def enable_d20_progress(self):
         from rpg_vkr.domain.d20_progression import D20Progress
@@ -307,10 +321,10 @@ class Session:
     @property
     def extra_items(self) -> tuple[tuple[str, str], ...]:
         if self._gameplay:
-            from rpg_vkr.domain.gameplay import ITEM_NAMES
+            from rpg_vkr.domain.gameplay_v2 import name
 
             return tuple(
-                (ITEM_NAMES[i["kind"]], f"{i['id']}; состояние {i['durability']}/20")
+                (name(i), f"{i['id']}; состояние {i['durability']}/20")
                 for i in self._gameplay["state"]["items"]
                 if i["owner"] == "hero"
             )
@@ -407,20 +421,36 @@ class Session:
 
     @property
     def catalog_aliases(self):
-        values = {
-            f"split_{i}_{j}": step.target
-            for i, t in enumerate(self.turns, 1)
-            if t.interaction
-            for j, step in enumerate(t.interaction.plan.steps)
-        }
-        values.update(
-            {f"split_{i}_0": t.trade.item_id for i, t in enumerate(self.turns, 1) if t.trade}
-        )
-        return values
+        from rpg_vkr.domain.gameplay_v2 import aliases
+
+        return aliases(self.turns)
 
     @atomic
     def submit_trade(self, action, merchant_id, item_id, operation, quantity, source="player-ui"):
         action = _text(action, 500)
+        if self.schema_version >= 25:
+            import uuid
+
+            if any(i["id"] == item_id for i in self._gameplay["state"]["items"]):
+                if quantity != 1:
+                    raise ValueError("Экземпляр снаряжения продаётся по одному.")
+                return self.perform_gameplay(
+                    operation,
+                    {"merchant": merchant_id, "item": item_id},
+                    "trade_" + uuid.uuid4().hex,
+                    action=action,
+                )
+            return self.perform_gameplay(
+                "trade_world",
+                {
+                    "merchant": merchant_id,
+                    "item": item_id,
+                    "operation": operation,
+                    "quantity": quantity,
+                },
+                "trade_" + uuid.uuid4().hex,
+                action=action,
+            )
         if not self.catalog or self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
             raise ValueError("Сделка сейчас недоступна.")
         catalog, world, record = transact(
@@ -904,6 +934,36 @@ class Session:
         if binding_error:
             command = intent = "уточнить намерение"
             meaning = None
+        if self.schema_version >= 25 and command in {
+            "помочь разгрузить телегу",
+            "исследовать дорогу",
+            "изучить учебник",
+        }:
+            if command == "изучить учебник":
+                raise ValueError(
+                    "В новых правилах обучение идёт через навыки и подтверждённые проверки."
+                )
+            if self.generated_world or self.world.location != (
+                "gate" if command == "помочь разгрузить телегу" else "road"
+            ):
+                raise ValueError("Это занятие относится к прежнему учебному эпизоду.")
+            return self.submit_challenge(
+                action,
+                assessment={
+                    "ability": "strength" if command == "помочь разгрузить телегу" else "wisdom",
+                    "dc": 10 if command == "помочь разгрузить телегу" else 12,
+                    "purpose": "Помощь с телегой"
+                    if command == "помочь разгрузить телегу"
+                    else "Исследование дороги",
+                    "skill": "athletics" if command == "помочь разгрузить телегу" else "survival",
+                },
+            )
+        if (
+            self.schema_version >= 25
+            and command in {"купить бинт", "продать бинт", "торговля"}
+            and not self.actor_is_here("merchant")
+        ):
+            raise ValueError("Торговый контакт закрыт: торговец отсутствует или отдыхает.")
         campaign_before = self.campaign
         if profile is not None:
             if (
@@ -947,7 +1007,7 @@ class Session:
             progress = self.progress
             character = self.character
             activity = None
-            if progress.enabled:
+            if progress.enabled and self.schema_version < 25:
                 if (
                     turn.combat is not None
                     and turn.combat.outcome.victory
@@ -1468,8 +1528,10 @@ class Session:
     @classmethod
     def from_dict(cls, data: object, version: int | None = None) -> "Session":
         if version is None:
+            from rpg_vkr.domain.gameplay_rules import revision as saved_revision
+
             version = (
-                24
+                23 + saved_revision(data["gameplay"]["state"])
                 if isinstance(data, dict) and "gameplay" in data
                 else 23
                 if isinstance(data, dict) and "d20_progress" in data
@@ -1500,6 +1562,7 @@ class Session:
             22,
             23,
             24,
+            25,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -1548,7 +1611,7 @@ class Session:
 
             session._d20_progress = D20Progress.from_dict(data["d20_progress"])
         if version >= 24:
-            from rpg_vkr.domain.gameplay import initial
+            from rpg_vkr.domain.gameplay_rules import restore_initial
 
             raw = data["gameplay"]
             if not isinstance(raw, dict) or set(raw) != {"identity", "state"}:
@@ -1556,7 +1619,7 @@ class Session:
             initial_hero = Character.from_dict(data["progress"]["initial"])
             session._gameplay = {
                 "identity": raw["identity"],
-                "state": initial(raw["identity"], initial_hero),
+                "state": restore_initial(raw["identity"], initial_hero, raw["state"], version),
             }
         session.campaign = (
             Campaign.from_dict(data["campaign"]) if version >= 10 else Campaign.migrate(data)
@@ -2159,29 +2222,38 @@ class Session:
             if session.progress.enabled:
                 if session.progress.character() != session.character:
                     raise ValueError("Character growth does not match recorded events")
-                expected_max = 12 + (2 if session.progress.level == 2 else 0)
-                if session.world.max_hp != expected_max:
-                    raise ValueError("Health maximum does not match level")
-                eligible = {
-                    index
-                    for index, turn in enumerate(session.turns, 1)
-                    if (
-                        normalise_action(turn.intent or turn.action)
-                        in {"исследовать дорогу", "помочь разгрузить телегу"}
-                        and turn.check is not None
+                if version >= 25:
+                    from rpg_vkr.domain.hero_resources import limits
+
+                    caps = limits(
+                        session._gameplay["state"], session.character, session.d20_progress.level
                     )
-                    or (
-                        normalise_action(turn.intent or turn.action) == "изучить учебник"
-                        and turn.text.startswith("Вы изучили учебник.")
+                    if session.progress.events or session.world.max_hp != caps["hp"]:
+                        raise ValueError("Новые ресурсы не соответствуют развитию D20.")
+                else:
+                    expected_max = 12 + (2 if session.progress.level == 2 else 0)
+                    if session.world.max_hp != expected_max:
+                        raise ValueError("Health maximum does not match level")
+                    eligible = {
+                        index
+                        for index, turn in enumerate(session.turns, 1)
+                        if (
+                            normalise_action(turn.intent or turn.action)
+                            in {"исследовать дорогу", "помочь разгрузить телегу"}
+                            and turn.check is not None
+                        )
+                        or (
+                            normalise_action(turn.intent or turn.action) == "изучить учебник"
+                            and turn.text.startswith("Вы изучили учебник.")
+                        )
+                    }
+                    eligible.update(
+                        index
+                        for index, turn in enumerate(session.turns, 1)
+                        if turn.combat and turn.combat.outcome.victory and turn.actor_id == "wolf"
                     )
-                }
-                eligible.update(
-                    index
-                    for index, turn in enumerate(session.turns, 1)
-                    if turn.combat and turn.combat.outcome.victory and turn.actor_id == "wolf"
-                )
-                if eligible != {event.turn_index for event in session.progress.events}:
-                    raise ValueError("Missing or extra development events")
+                    if eligible != {event.turn_index for event in session.progress.events}:
+                        raise ValueError("Missing or extra development events")
         if version >= 6:
             if CombatState.from_dict(data["combat"]) != session.combat:
                 raise ValueError("Final combat state mismatch")
@@ -2243,16 +2315,43 @@ class Session:
         legacy_lives = {}
         historical_gameplay = None
         if version >= 24:
-            from rpg_vkr.domain.gameplay import initial
+            from rpg_vkr.domain.gameplay_rules import restore_initial
 
-            historical_gameplay = initial(data["gameplay"]["identity"], session.progress.initial)
+            historical_gameplay = restore_initial(
+                data["gameplay"]["identity"],
+                session.progress.initial,
+                data["gameplay"]["state"],
+                version,
+            )
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]
+            original_event = event
+            before_fields = dict(fields)
+            if version >= 25 and turn.gameplay and turn.gameplay["command"] == "advance":
+                from rpg_vkr.domain.memory import Change
+
+                primary_after = fields | {c.field: c.after for c in event.changes}
+                primary_after.update(
+                    {"world." + k: v for k, v in turn.gameplay["context"]["world"].items()}
+                )
+                event = replace(
+                    event,
+                    changes=tuple(
+                        Change(k, fields[k], v)
+                        for k, v in sorted(primary_after.items())
+                        if fields[k] != v
+                    ),
+                )
             if turn.gameplay and turn.gameplay["command"] != "advance":
                 from rpg_vkr.gameplay_session import validate_history
 
                 expected_fields, interactive, historical_catalog = validate_history(
-                    turn.gameplay, fields, interactive, historical_catalog, event.turn_index
+                    turn.gameplay,
+                    fields,
+                    interactive,
+                    historical_catalog,
+                    event.turn_index,
+                    session.turns,
                 )
                 historical_gameplay = turn.gameplay["result"]["state"]
                 if {c.field: (c.before, c.after) for c in event.changes} != {
@@ -2532,10 +2631,26 @@ class Session:
                     raise ValueError("Заблокированное перемещение не расходует время.")
 
                 next_fields, interactive, historical_catalog = validate_history(
-                    turn.gameplay, fields, interactive, historical_catalog, event.turn_index
+                    turn.gameplay,
+                    fields,
+                    interactive,
+                    historical_catalog,
+                    event.turn_index,
+                    session.turns,
                 )
-                if next_fields != fields:
+                if version < 25 and next_fields != fields:
                     raise ValueError("Часы изменили неподтверждённые ресурсы.")
+                if version >= 25:
+                    expected = {
+                        k: (before_fields[k], v)
+                        for k, v in next_fields.items()
+                        if before_fields[k] != v
+                    }
+                    if {c.field: (c.before, c.after) for c in original_event.changes} != expected:
+                        raise ValueError(
+                            "Ресурсы уровня не соответствуют подтверждённому действию."
+                        )
+                    fields = next_fields
                 historical_gameplay = turn.gameplay["result"]["state"]
         stored_interactive = data.get("interactive_world")
         if (

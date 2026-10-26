@@ -769,6 +769,14 @@ def catalog_context(window, text):
     from rpg_vkr.storage.catalog import CatalogIndex
 
     state = window._session.interaction_state().context()
+    if window._session.schema_version >= 25:
+        from rpg_vkr.narrative.gameplay_prompt import equipment_rules
+
+        state["gameplay_revision"] = 2
+        state["equipment_rules"] = equipment_rules()
+        state["actors_here"] = [
+            id for id in state["actors_here"] if window._session.actor_is_here(id)
+        ]
     progress = window._session.d20_progress
     if progress is not None:
         from rpg_vkr.domain.d20_progression import SKILLS

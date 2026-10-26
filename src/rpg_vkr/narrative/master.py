@@ -108,11 +108,17 @@ def campaign_context(session, target=""):
             {
                 "id": actor.id,
                 "name": actor.name,
-                "here": actor.place == scene.current,
+                "here": session.actor_is_here(actor.id)
+                if session.schema_version >= 25
+                else actor.place == scene.current,
                 "alive": alive,
             }
         )
-        if actor.place != scene.current:
+        if (
+            actor.place != scene.current
+            or session.schema_version >= 25
+            and not session.actor_is_here(actor.id)
+        ):
             continue
         from rpg_vkr.domain.social import grievance
 
@@ -145,7 +151,7 @@ def campaign_context(session, target=""):
         "resource_balances": {
             "world.gold": session.world.gold,
             "world.hp": session.world.hp,
-            "progress.xp": session.progress.xp,
+            "progress.xp": d20.xp if session.schema_version >= 25 else session.progress.xp,
         },
         "objects": [
             {"id": t.id, "name": t.name, "holder": t.holder} for t in scene.things if scene.here(t)

@@ -68,7 +68,12 @@ def show_trade(window, actor_id):
     if old:
         old.close()
         old.deleteLater()
-    dialog = TradeDialog(window, actor_id)
+    if window._session.schema_version >= 25 and window._session.generated_world:
+        from rpg_vkr.ui.copper_shop import CopperTradeDialog
+
+        dialog = CopperTradeDialog(window, actor_id)
+    else:
+        dialog = TradeDialog(window, actor_id)
     window._trade_dialog = dialog
     window._context_target_id = actor_id
     dialog.show()

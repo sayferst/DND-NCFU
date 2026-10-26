@@ -1,0 +1,10 @@
+{
+  "source_commit": "899782f",
+  "schema_version": 24,
+  "fixture_sha256": "53242cafe6f3265c8ea820c0e5176af373991443620b3ac44527ad5f924a930e",
+  "next_roll": {
+    "index": 5,
+    "value": 5
+  },
+  "turns": 6
+}

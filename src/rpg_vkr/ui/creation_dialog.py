@@ -98,7 +98,7 @@ class CreationDialog(QDialog):
         from rpg_vkr.domain.d20_progression import SKILLS
 
         layout = step("Навыки и талант")
-        from rpg_vkr.domain.gameplay import TALENTS
+        from rpg_vkr.domain.gameplay_v2 import TALENTS
 
         self.initial_talent = QComboBox()
         self.initial_talent.addItem("Выбрать позже", "")
@@ -198,6 +198,31 @@ class CreationDialog(QDialog):
         self._update_budget()
 
     def _update_kit(self) -> None:
+        if self.use_gameplay.isChecked():
+            from collections import Counter
+
+            from rpg_vkr.domain.gameplay import ITEM_NAMES
+            from rpg_vkr.domain.gameplay_v2 import initial
+            from rpg_vkr.domain.hero_resources import limits
+
+            try:
+                character = Character(
+                    name=self.name_input.text().strip() or "Путник",
+                    **{k: v.value() for k, v in self.scores.items()},
+                )
+                state = initial(self.gameplay_identity(), character)
+                caps = limits(state, character, 1)
+                inventory = ", ".join(
+                    f"{ITEM_NAMES[k]} ×{n}"
+                    for k, n in Counter(i["kind"] for i in state["items"]).items()
+                )
+                self.kit_label.setText(
+                    f"Предпросмотр: HP {caps['hp']}, ST {caps['st']}, MP {caps['mp']}. "
+                    f"Стартовый набор: {inventory}."
+                )
+            except ValueError as error:
+                self.kit_label.setText(str(error))
+            return
         kit = ARCHETYPES[self.class_choice.currentData()]
         self.kit_label.setText(
             f"{kit.description}\nСтарт: {kit.gold} золотых, бинты ×{kit.bandages}, "
@@ -225,12 +250,13 @@ class CreationDialog(QDialog):
         )
         valid_identity = True
         if self.use_gameplay.isChecked():
-            from rpg_vkr.domain.gameplay import initial
+            from rpg_vkr.domain.gameplay_v2 import initial
 
             try:
                 initial(self.gameplay_identity(), Character())
             except ValueError:
                 valid_identity = False
+        self._update_kit()
         self.creation_summary.setText(
             f"{self.name_input.text().strip()} · {self.class_choice.currentText()}\n"
             f"Характеристики: {', '.join(str(v.value()) for v in self.scores.values())}.\n"
@@ -238,7 +264,9 @@ class CreationDialog(QDialog):
                 f"Приключение v3: {self.species_choice.currentText()}, "
                 f"{self.profile_choice.currentText()}; {self.initial_skill_budget.text()}; "
                 f"талант: {self.initial_talent.currentText()}.\n"
-                "Проверьте выбор. До создания героя можно вернуться в любой раздел."
+                + self.kit_label.text()
+                + "\n"
+                + "Проверьте выбор. До создания героя можно вернуться в любой раздел."
                 if self.use_gameplay.isChecked()
                 else "Прежний совместимый набор правил."
             )
@@ -289,14 +317,14 @@ class CreationDialog(QDialog):
         if self.use_d20_skills.isChecked():
             session.enable_d20_progress()
         if self.use_gameplay.isChecked():
-            session.enable_gameplay(self.gameplay_identity())
+            session.enable_gameplay(self.gameplay_identity(), revision=2)
         return session
 
     def accept(self) -> None:
         try:
             character = self.character()
             if self.use_gameplay.isChecked():
-                from rpg_vkr.domain.gameplay import initial
+                from rpg_vkr.domain.gameplay_v2 import initial
 
                 initial(self.gameplay_identity(), character)
             plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)

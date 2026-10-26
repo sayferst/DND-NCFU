@@ -23,10 +23,10 @@ from rpg_vkr.domain.gameplay import (
     RECIPES,
     SPECIES,
     SPELLS,
-    TALENTS,
     available,
     hero_combatant,
 )
+from rpg_vkr.domain.gameplay_v2 import TALENTS
 
 
 def install(window, layout):
@@ -66,6 +66,13 @@ def install(window, layout):
 
     tab = page("Экипировка")
     window.gear_choice = choice(tab, "Ваши предметы")
+    window.world_gear_choice = choice(tab, "Предмет из инвентаря мира")
+    window.adopt_world_button = button(
+        tab,
+        "Подключить физический предмет к снаряжению",
+        "adopt",
+        lambda: {"item": window.world_gear_choice.currentData()},
+    )
     button(
         tab, "Экипировать выбранное", "equip", lambda: {"item": window.gear_choice.currentData()}
     )
@@ -206,6 +213,12 @@ def refresh(window):
         session.world.hp > 0 and not getattr(getattr(window, "ollama", None), "busy", False)
     )
     progress = session.d20_progress
+    from rpg_vkr.domain.gameplay import TALENTS as LEGACY_TALENTS
+
+    refill(
+        window.talent_choice,
+        list((TALENTS if session.schema_version >= 25 else LEGACY_TALENTS).items()),
+    )
     hero = hero_combatant(state, session.world, session.character, progress)
     ac = armour_class(hero.dexterity, hero.armour, hero.shield)
     day, minute = divmod(state["minute"], 1440)
@@ -217,12 +230,23 @@ def refresh(window):
         f"{session.world.gold * 100 + state['copper']} медных · "
         f"Бой: {state['active'] or 'нет'} · раунд {state['round']} · {state['distance']} м"
     )
+    if session.schema_version >= 25:
+        window.gameplay_status.setText(
+            window.gameplay_status.text() + f"\nST {state['st']}/{state['st_cap']}"
+        )
+    from rpg_vkr.domain.gameplay_v2 import name
+
     own = [
-        (i["id"], f"{ITEM_NAMES[i['kind']]} · износ {i['durability']}/20 · {i['id']}")
+        (i["id"], f"{name(i)} · износ {i['durability']}/20 · {i['id']}")
         for i in state["items"]
         if i["owner"] == "hero"
     ]
     refill(window.gear_choice, own)
+    window.adopt_world_button.setEnabled(session.schema_version >= 25)
+    refill(
+        window.world_gear_choice,
+        [(t.id, t.name) for t in session.interaction_state().carried() if not t.resource],
+    )
     refill(
         window.material_choice,
         [(t.id, t.name) for t in session.interaction_state().carried() if not t.resource],
@@ -328,6 +352,29 @@ def run(window, command, args):
         if neutral and not window._confirm(
             "Напасть на нейтрального персонажа? Он станет враждебным."
         ):
+            return
+    if command == "adopt":
+        session, index = window._session, len(window._session.turns)
+        try:
+            candidate = session.preview_gameplay(command, args)["state"]["items"][-1]
+        except ValueError as error:
+            QMessageBox.information(window, "Предмет не подключён", str(error))
+            return
+        from rpg_vkr.domain.d20_combat import WEAPONS
+        from rpg_vkr.domain.gameplay_v2 import name
+
+        detail = (
+            WEAPONS[candidate["kind"]][0] if candidate["kind"] in WEAPONS else candidate["kind"]
+        )
+        if not window._confirm(
+            f"Подключить {name(candidate)} к снаряжению? "
+            f"Карточка: {detail}, прочность {candidate['durability']}/20. "
+            "Одна исходная единица исчезнет из обычного инвентаря; "
+            "имя, цена и происхождение сохранятся."
+        ):
+            return
+        if window._session is not session or len(session.turns) != index:
+            QMessageBox.information(window, "Состояние изменилось", "Проверьте предмет заново.")
             return
     try:
         turn = window._session.perform_gameplay(command, args, "ui_" + uuid.uuid4().hex)

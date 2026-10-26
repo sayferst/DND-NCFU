@@ -187,6 +187,8 @@ def build_frame(session):
         )
         scene += "\nИзученная магия: " + ", ".join(SPELLS[k][0] for k in state["spells"])
         scene += "\nАктивные эффекты: " + ", ".join(e["kind"] for e in state["effects"])
+        if session.schema_version >= 25:
+            scene += f"\nВыносливость ST: {state['st']}/{state['st_cap']}."
     return NarrativeFrame(
         len(session.turns),
         hero,

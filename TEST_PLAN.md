@@ -1344,3 +1344,15 @@ scripts/check.py; сырой результат docs/validation/gameplay-v3-play
 Полный результат вписывается только после завершения команды.
 
 Итог проверки 26.10.2026 (Москва): scripts/check.py exit0, 1652 passed / 211.99с; pip/Ruff check/format успешны (255 файлов). Целевые52passed/3.73с. Raw: docs/validation/gameplay-v3-playable-2026-10-25/full-03.txt. Qt-снимки просмотрены, Windows/Setup/live API не проверены.
+
+## 26.10.2026 — физические товары25 и сохранения24
+
+Набор tests/test_physical_gameplay.py: реальные стопки и split, точные медные,
+кошелёк/партии/нулевая цена, предпросмотр без RNG, карточки/износ/source/антиарбитраж,
+предмет в новом бою, JSON/SQLite, источник fixture24/следующий RNG, UI-отмена,
+новые ресурсы/истощение/отход/отдых, рост HP от настоящего XP, дополнительные
+таланты, корректный preview конструктора и публичный контекст закрытого NPC.
+Ручная инструкция и ограничения — docs/GAMEPLAY_V3_PHYSICAL.md.
+Сырые полные запуски — docs/validation/gameplay-v3-physical-2026-10-26.
+
+Итог схемы25: scripts/check.py exit0, 1687passed/217.22с, pip/Ruff успешны (262файла). После правки колонок UI/усиления actual-hit теста:87passed/8.02с, Ruff check/format успешны. Домен после полного прогона не менялся. Raw: docs/validation/gameplay-v3-physical-2026-10-26. Windows/Setup/liveAPI не проверялись.

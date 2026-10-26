@@ -10,28 +10,41 @@ from rpg_vkr.domain.character import Character
 from rpg_vkr.domain.combat import ACTORS, CombatState
 from rpg_vkr.domain.combat_record import canonical
 from rpg_vkr.domain.d20_progression import D20Progress
-from rpg_vkr.domain.gameplay import ensure_names, execute, initial
+from rpg_vkr.domain.gameplay import ensure_names
+from rpg_vkr.domain.gameplay_rules import execute, initial, revision
 from rpg_vkr.domain.interactions import InteractiveWorld
 from rpg_vkr.domain.memory import snapshot
 from rpg_vkr.domain.progression import HeroProgress
 from rpg_vkr.domain.world import WorldState
 
 
-def enable(session, identity):
+def enable(session, identity, *, revision=1):
     if session.turns or session._gameplay is not None or not session.progress.enabled:
         raise ValueError("Новые правила выбираются только при создании героя.")
     progress = session.d20_progress or D20Progress()
-    state = initial(identity, session.character)
+    state = initial(identity, session.character, revision=revision)
     ensure_names(state, session.catalog)
     for skill, rank in identity.get("skills", {}).items():
         for n in range(rank):
             progress = progress.train(skill, f"creation:{skill}:{n}")
+    world, memory = session.world, session.memory
+    if revision == 2:
+        from rpg_vkr.domain.hero_resources import refresh
+        from rpg_vkr.domain.memory import WorldMemory
+
+        if session.world.hp <= 0 or session.combat.active:
+            raise ValueError("Новые правила выбираются живым героем вне боя.")
+        state, world = refresh(state, session.world, session.character, 1, initial=True)
+        memory = WorldMemory(
+            0, snapshot(world, session.character, session.combat, session.progress)
+        )
     session._d20_progress = progress
+    session.world, session.memory = world, memory
     session._gameplay = {"identity": deepcopy(identity), "state": state}
 
 
 def context(session):
-    return {
+    value = {
         "world": asdict(session.world),
         "character": asdict(session.character),
         "combat": session.combat.to_dict(),
@@ -40,6 +53,9 @@ def context(session):
         "progress": session.d20_progress.to_dict(),
         "turn": len(session.turns) + 1,
     }
+    if revision(session._gameplay["state"]) == 2:
+        value["aliases"] = session.catalog_aliases
+    return value
 
 
 def request_identifier(value):
@@ -142,7 +158,11 @@ def restore_turn(session, item):
     ctx = record["context"]
     if (
         not isinstance(ctx, dict)
-        or set(ctx) != {"world", "character", "combat", "scene", "catalog", "progress", "turn"}
+        or set(ctx)
+        != (
+            {"world", "character", "combat", "scene", "catalog", "progress", "turn"}
+            | ({"aliases"} if revision(session._gameplay["state"]) == 2 else set())
+        )
         or type(ctx["turn"]) is not int
         or ctx["turn"] != len(session.turns) + 1
     ):
@@ -184,9 +204,15 @@ def restore_turn(session, item):
     )
 
 
-def validate_history(record, fields, interactive, catalog, index):
+def validate_history(record, fields, interactive, catalog, index, turns=()):
     """Bind replay input to actual historical world, not caller-supplied snapshots."""
     ctx, result = record["context"], record["result"]
+    if revision(result["state"]) == 2:
+        from rpg_vkr.domain.gameplay_v2 import aliases
+
+        prefix = turns[: index if record["command"] == "advance" else index - 1]
+        if canonical(ctx.get("aliases")) != canonical(aliases(prefix)):
+            raise ValueError("Подменена история физических экземпляров.")
     world = {k: fields["world." + k] for k in asdict(WorldState())}
     hero = {k: fields["hero." + k] for k in asdict(Character())}
     expected_scene = interactive or InteractiveWorld.initial(world["location"])
@@ -271,7 +297,7 @@ def finish_turn(session, turn):
     result = execute(session._gameplay["state"], "advance", {"minutes": minutes}, ctx, session.dice)
     if (
         session.dice.checkpoint() != checkpoint
-        or result["world"] != ctx["world"]
+        or (session.schema_version < 25 and result["world"] != ctx["world"])
         or result["combat"] != ctx["combat"]
     ):
         raise ValueError("Тик времени изменил неподдержанные ресурсы.")
@@ -288,6 +314,23 @@ def finish_turn(session, turn):
     )
     turn = replace(turn, gameplay=record)
     session._turns[-1] = turn
+    if session.schema_version >= 25:
+        from rpg_vkr.domain.memory import WorldMemory
+
+        after_world = WorldState.from_dict(result["world"])
+        current = dict(snapshot(session.world, session.character, session.combat, session.progress))
+        event = session.memory.events[-1]
+        for change in event.changes:
+            current[change.field] = change.before
+        base = WorldMemory(
+            session.memory.base_turn, session.memory.baseline, session.memory.events[:-1]
+        )
+        session.memory = base.append(
+            turn,
+            tuple(sorted(current.items())),
+            snapshot(after_world, session.character, session.combat, session.progress),
+        )
+        session.world = after_world
     session._gameplay = {"identity": session._gameplay["identity"], "state": result["state"]}
     session.interactive_world = InteractiveWorld.from_dict(result["scene"])
     return turn

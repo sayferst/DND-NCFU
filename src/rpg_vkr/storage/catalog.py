@@ -90,6 +90,8 @@ def live_records(session):
         for value in state["items"]:
             kind = value["kind"]
             type_id = "v3_type_" + kind
+            if "source" in value:
+                type_id = "v3_source_" + value["id"]
             category = (
                 "weapons"
                 if kind in WEAPONS
@@ -104,11 +106,11 @@ def live_records(session):
                 props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
             types[type_id] = Definition(
                 type_id,
-                ITEM_NAMES[kind],
+                value.get("name") or ITEM_NAMES[kind],
                 "item",
                 (category,),
                 props,
-                price_cp=PRICES[kind],
+                price_cp=value.get("price_cp", PRICES[kind]),
                 origin="project-homebrew",
             ).to_dict()
             put(
@@ -166,6 +168,10 @@ def live_records(session):
         put(key, "type_actor_" + key, spec[1], "", 1, state, "combat." + key)
     mapping = {"apples": "type_apple", "produce_basket": "type_basket"}
     mapping.update({e.id: e.definition_id for e in catalog.entities})
+    if session.schema_version >= 25:
+        from rpg_vkr.domain.resources import type_mapping
+
+        mapping.update(type_mapping(catalog, session.catalog_aliases))
     for i, turn in enumerate(session.turns, 1):
         if turn.trade and turn.trade.item_id in mapping:
             mapping[f"split_{i}_0"] = mapping[turn.trade.item_id]
