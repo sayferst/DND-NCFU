@@ -1423,3 +1423,5 @@ docs/validation/windows-corpus-2026-10-26/target-01.txt. Нативный Window
 после исправления ещё не выполнен в этой среде.
 
 Итог исправления Windows-переносимости: scripts/check.py exit0; **1815passed/265.58с**; pip/Ruff check/format280файлов успешны. Целевые106passed/17.79с, под системной cp1251 —106passed/17.64с. Полный исходный Windows-лог подтвердил5failed/1807passed до исправления; нативный повтор ещё ожидается. Raw: docs/validation/windows-corpus-2026-10-26.86защищённыхфайлов неизменны.
+
+26.10.2026: владелец подтвердил полный нативный Windows-прогон коммитаb96f330: **1815passed/319.49с**, Python3.12.10/SQLite3.49.1, pip check/Ruff check/format280файлов успешны, scripts/check.py сообщает успех. Все пять прежних падений устранены. Неисправленное предупреждение pytest atexit: WinError5 при очистке pytest-current, проверку не прерывает. Ручная игра/Setup этим логом не подтверждены. Обезличенное свидетельство: docs/validation/windows-corpus-2026-10-26/windows-success-01.json; исходный лог с личными путями остаётся вне Git.

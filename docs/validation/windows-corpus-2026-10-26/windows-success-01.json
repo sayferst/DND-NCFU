@@ -1,0 +1,23 @@
+{
+  "source": "user-supplied Windows console log",
+  "source_sha256": "26e5d23a94cd50f964ad9a1f20671035069d628e12d486c02b4c81c0a96ff197",
+  "personal_paths_published": false,
+  "commit": "b96f33062318a6d76e5f95ea87ae644b5ab441a4",
+  "platform": "Windows AMD64",
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "git": "2.56.0.windows.2",
+  "pytest": "8.4.2",
+  "tests_passed": 1815,
+  "tests_failed": 0,
+  "pytest_seconds": 319.49,
+  "pip_check": "passed",
+  "ruff_check": "passed",
+  "ruff_format": {
+    "status": "passed",
+    "files": 280
+  },
+  "check_script": "reported success",
+  "remaining_warning": "pytest atexit cleanup: WinError 5 on pytest-current; nonfatal, not repaired",
+  "manual_gameplay_and_setup": "not_verified_by_this_log"
+}
