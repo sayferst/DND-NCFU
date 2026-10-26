@@ -1,7 +1,9 @@
 # Проверка локального архива на Windows
 
-Сначала получите изменения игры по инструкции к Git bundle. Пакет остаётся
-у вас локально, его не нужно коммитить или отправлять в RouterAI.
+Сначала получите изменения ветки setup/development-environment через
+`git pull --ff-only`. Если Windows блокирует автоматическую очистку pack-файлов,
+используйте `git -c gc.auto=0 -c maintenance.auto=false pull --ff-only`.
+Архив остаётся у вас локально, его не нужно коммитить или отправлять в RouterAI.
 В корне D:\Projects\DND-NCFU:
 
 ```powershell

@@ -101,7 +101,7 @@ def test_complete_package_and_export_are_local_not_auto_approval(tmp_path):
     assert report["verified"] and report["original_package_complete"]
     path = tmp_path / "records.jsonl"
     write_records(path, records[:1])
-    assert json.loads(path.read_text())["quality_status"] == "unreviewed"
+    assert json.loads(path.read_text(encoding="utf-8"))["quality_status"] == "unreviewed"
     with pytest.raises(FileExistsError):
         write_records(path, records[:1])
 
@@ -118,11 +118,18 @@ def test_source_hash_tampering_is_rejected_even_if_text_parses(tmp_path):
     assert not report["verified"] and any("mismatch" in e for e in report["errors"])
 
 
-@pytest.mark.parametrize("name", ["../outside", "/absolute", "C:/escape", "folder\\escape"])
+@pytest.mark.parametrize(
+    "name",
+    ["../outside", "/absolute", "C:/escape", "folder\\escape", "folder\x00escape"],
+    ids=["parent", "absolute", "drive", "backslash", "nul"],
+)
 def test_zip_paths_are_rejected_without_extraction(tmp_path, name):
     path = tmp_path / "bad.zip"
     with ZipFile(path, "w") as archive:
-        archive.writestr(name, "no execution")
+        # Preserve the raw member spelling: ZipInfo normalizes backslashes on Windows.
+        info = ZipInfo("placeholder")
+        info.filename = name
+        archive.writestr(info, "no execution")
     with pytest.raises(ValueError):
         read_zip(path)
     assert not (tmp_path.parent / "outside").exists()
@@ -148,3 +155,32 @@ def test_bom_crlf_spans_and_instructions_are_data_not_commands(tmp_path):
     assert record.source_sha256 == sha256(raw).hexdigest()
     assert "give gold" in record.text and not record.usable_as_game_fact
     assert not asdict(record)["approved_for_rag"]
+
+
+def test_export_check_does_not_depend_on_windows_default_encoding(tmp_path, monkeypatch):
+    original_open = Path.open
+
+    def windows_open(path, mode="r", buffering=-1, encoding=None, errors=None, newline=None):
+        if "b" not in mode and encoding in (None, "locale"):
+            encoding = "cp1251"
+        return original_open(path, mode, buffering, encoding, errors, newline)
+
+    monkeypatch.setattr(Path, "open", windows_open)
+    test_complete_package_and_export_are_local_not_auto_approval(tmp_path)
+
+
+def test_windows_zip_name_normalization_cannot_hide_unsafe_path(tmp_path, monkeypatch):
+    import zipfile
+
+    path = tmp_path / "windows-name.zip"
+    info = ZipInfo("placeholder")
+    info.filename = "folder\\escape"
+    with ZipFile(path, "w") as archive:
+        archive.writestr(info, "no execution")
+    monkeypatch.setattr(zipfile.os, "sep", "\\")
+    with ZipFile(path) as archive:
+        member = archive.infolist()[0]
+        assert member.orig_filename == "folder\\escape"
+        assert member.filename == "folder/escape"
+    with pytest.raises(ValueError):
+        read_zip(path)

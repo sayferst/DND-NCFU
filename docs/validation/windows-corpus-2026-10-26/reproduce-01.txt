@@ -1,0 +1,65 @@
+.........FF                                                              [100%]
+=================================== FAILURES ===================================
+________ test_export_check_does_not_depend_on_windows_default_encoding _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-14/test_export_check_does_not_dep0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7327678aa0>
+
+    def test_export_check_does_not_depend_on_windows_default_encoding(tmp_path, monkeypatch):
+        original_open = Path.open
+    
+        def windows_open(path, mode="r", buffering=-1, encoding=None, errors=None, newline=None):
+            if "b" not in mode and encoding in (None, "locale"):
+                encoding = "cp1251"
+            return original_open(path, mode, buffering, encoding, errors, newline)
+    
+        monkeypatch.setattr(Path, "open", windows_open)
+>       test_complete_package_and_export_are_local_not_auto_approval(tmp_path)
+
+tests/learning/test_package.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/learning/test_package.py:104: in test_complete_package_and_export_are_local_not_auto_approval
+    assert json.loads(path.read_text())["quality_status"] == "unreviewed"
+                      ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1028: in read_text
+    return f.read()
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <encodings.cp1251.IncrementalDecoder object at 0x7f732849ffb0>
+input = b'{"record_id": "USER-SYN-1000:0001", "record_type": "session", "source_id": "USER-SYN-1000", "source_path": "corpora/...ved_for_rag": false, "approved_for_sft": false, "third_party_transfer_allowed": false, "usable_as_game_fact": false}\n'
+final = True
+
+    def decode(self, input, final=False):
+>       return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       UnicodeDecodeError: 'charmap' codec can't decode byte 0x98 in position 274: character maps to <undefined>
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/cp1251.py:23: UnicodeDecodeError
+_________ test_windows_zip_name_normalization_cannot_hide_unsafe_path __________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-14/test_windows_zip_name_normaliz0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f732849f1a0>
+
+    def test_windows_zip_name_normalization_cannot_hide_unsafe_path(tmp_path, monkeypatch):
+        import zipfile
+    
+        path = tmp_path / "windows-name.zip"
+        info = ZipInfo("placeholder")
+        info.filename = "folder\\escape"
+        with ZipFile(path, "w") as archive:
+            archive.writestr(info, "no execution")
+        monkeypatch.setattr(zipfile.os, "sep", "\\")
+        with ZipFile(path) as archive:
+            member = archive.infolist()[0]
+            assert member.orig_filename == "folder\\escape"
+            assert member.filename == "folder/escape"
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/learning/test_package.py:179: Failed
+=========================== short test summary info ============================
+FAILED tests/learning/test_package.py::test_export_check_does_not_depend_on_windows_default_encoding
+FAILED tests/learning/test_package.py::test_windows_zip_name_normalization_cannot_hide_unsafe_path
+2 failed, 9 passed in 1.07s

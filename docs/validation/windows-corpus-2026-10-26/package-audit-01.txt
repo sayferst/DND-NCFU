@@ -1,0 +1,1 @@
+VERIFIED_DERIVED {'raw_structural_count': 19200, 'parsed_count': 19200, 'legacy_alias_count': 200, 'unique_canonical_count': 19000, 'quality_approved_count': 0, 'indexed_count': 0, 'heldout_count': 0, 'sft_ready_count': 0}

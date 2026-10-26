@@ -123,12 +123,14 @@ def read_zip(path):
             raise ValueError("Пакет превышает предел100файлов/128МиБ.")
         result = {}
         for row in rows:
-            name = PurePosixPath(row.filename)
+            original_name = row.orig_filename
+            name = PurePosixPath(original_name)
             if (
-                name.is_absolute()
+                original_name != row.filename
+                or name.is_absolute()
                 or ".." in name.parts
-                or "\\" in row.filename
-                or ":" in row.filename
+                or "\\" in original_name
+                or ":" in original_name
                 or stat.S_ISLNK(row.external_attr >> 16)
             ):
                 raise ValueError("Недопустимый путь или ссылка внутри ZIP.")

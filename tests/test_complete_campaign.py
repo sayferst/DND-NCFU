@@ -141,7 +141,7 @@ def test_migration_keeps_source_and_replays_real_continuation_and_rollback(tmp_p
     restored = Session.from_dict(deepcopy(raw), version=29)
     assert restored.to_dict() == raw
     assert original.to_dict() == source
-    backup = json.loads((tmp_path / "copy.json.original.json").read_text())
+    backup = json.loads((tmp_path / "copy.json.original.json").read_text(encoding="utf-8"))
     rollback = Session.from_dict(backup["session"], version=backup["schema_version"])
     assert rollback.to_dict() == source
     slots = SaveSlots(tmp_path / "slots")
@@ -335,7 +335,7 @@ def test_rag_external_rights_shadow_and_fallback():
 def test_fork_from_oldest_fixture_survives_sqlite_and_preserves_source(tmp_path):
     from rpg_vkr.storage.knowledge import export_session, restore_session
 
-    raw = json.loads((Path(__file__).parent / "fixtures/save-v1.json").read_text())
+    raw = json.loads((Path(__file__).parent / "fixtures/save-v1.json").read_text(encoding="utf-8"))
     session = Session.from_dict(raw["session"], version=1)
     copy = create(session)
     merchant = next(e for e in copy.catalog.entities if e.id == "merchant")
@@ -391,9 +391,9 @@ def test_real_27_fixture_keeps_original_rules_and_next_rng():
     root = Path(__file__).parents[1]
     raw = (root / "tests/fixtures/session-v27-teams.json").read_bytes()
     meta = json.loads(
-        (
-            root / "docs/validation/campaign-completion-2026-10-26/fixture-v27-source.json"
-        ).read_text()
+        (root / "docs/validation/campaign-completion-2026-10-26/fixture-v27-source.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert hashlib.sha256(raw).hexdigest() == meta["fixture_sha256"]
     value = json.loads(raw)
@@ -435,7 +435,7 @@ def test_world_controls_show_readable_public_data_and_allow_allied_spell_target(
 
 
 def test_migrated_tutorial_hunger_keeps_legacy_hp_binding_and_memory_consistent():
-    raw = json.loads((Path(__file__).parent / "fixtures/save-v1.json").read_text())
+    raw = json.loads((Path(__file__).parent / "fixtures/save-v1.json").read_text(encoding="utf-8"))
     original = Session.from_dict(raw["session"], version=1)
     session = create(original)
     for _ in range(30):

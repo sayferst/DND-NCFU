@@ -1792,3 +1792,17 @@ writer318284c, не вручную; старые82защищённыхфайла
 обязан включать изменение в WorldMemory и replay; запрет старых<28 не снимать.
 
 Итоговый full-04: scripts/check.py exit0; **1812 passed / 243.36с**; pip check, Ruff check/format280файлов успешны. После прогона исходники не менялись.79новых сценариев; native Windows/Setup/liveModel не проверены. Raw: docs/validation/campaign-completion-2026-10-26/full-04.txt.
+
+## 26.10.2026 — переносимость архива Windows
+
+Не читать новый UTF-8 JSONL/backup/fixture/настройки через системную кодировку.
+ZipInfo.filename на Windows нормализует backslash: проверять orig_filename и
+отклонять несовпадение/NUL; тесты пишут исходное имя в ZIP-заголовок явно.
+Не менять оригиналы/правила и не пропускать Windows ради зелёной проверки.
+Документация и raw: docs/validation/windows-corpus-2026-10-26. Нативный Windows
+до исправления: HEAD9671509/1812items, два ранних F без traceback. Не выдавать
+Linux-регрессии cp1251/ZIP за прошедшую пользовательскую Windows-приёмку.
+Владелец явно разрешил push в setup/development-environment; разрешение
+действует для текущего исправления. Сохранить обычную fast-forward историю.
+
+Итог исправления Windows-переносимости: scripts/check.py exit0; **1815passed/265.58с**; pip/Ruff check/format280файлов успешны. Целевые106passed/17.79с, под системной cp1251 —106passed/17.64с. Полный исходный Windows-лог подтвердил5failed/1807passed до исправления; нативный повтор ещё ожидается. Raw: docs/validation/windows-corpus-2026-10-26.86защищённыхфайлов неизменны.

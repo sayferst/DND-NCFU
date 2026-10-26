@@ -102,7 +102,9 @@ def install(window, page):
         ["RAG выключен", "Только поиск, без влияния на ответ", "Подсказки рассказчику"]
     )
     try:
-        mode = json.loads((data_directory() / "learning.json").read_text()).get("mode", 0)
+        mode = json.loads((data_directory() / "learning.json").read_text(encoding="utf-8")).get(
+            "mode", 0
+        )
         if type(mode) is not int or mode not in (0, 1, 2):
             mode = 0
     except (OSError, ValueError):

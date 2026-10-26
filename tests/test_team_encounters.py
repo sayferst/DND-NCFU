@@ -173,7 +173,7 @@ def test_actual_revision26_fixture_preserves_canonical_data_and_next_rng():
     meta = json.loads(
         (
             root / "docs/validation/training-and-encounters-2026-10-26/fixture-v26-source.json"
-        ).read_text()
+        ).read_text(encoding="utf-8")
     )
     raw = (root / "tests/fixtures/session-v26-factions.json").read_bytes()
     assert hashlib.sha256(raw).hexdigest() == meta["fixture_sha256"]

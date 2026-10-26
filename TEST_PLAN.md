@@ -1411,3 +1411,15 @@ RAG-тесты проверяют настоящий prompt с отдельны�
 Это проверка конечного сценария, не снятие ограничений2000ходов/32МиБ.
 
 Итоговый full-04: scripts/check.py exit0; **1812 passed / 243.36с**; pip check, Ruff check/format280файлов успешны. После прогона исходники не менялись.79новых сценариев; native Windows/Setup/liveModel не проверены. Raw: docs/validation/campaign-completion-2026-10-26/full-04.txt.
+
+## 26.10.2026 — регрессии Windows при чтении пакета
+
+tests/learning/test_package.py теперь12случаев: настоящий UTF-8 экспорт под
+моделируемой системной cp1251, исходный ZIP backslash при Windows-нормализации,
+дополнительный NUL-заголовок и прежние обходы/ссылки/хеши/алиасы. Не пропускать
+Windows-тест и не разрешать небезопасное имя. Новые чтения fixtures/backup
+явно UTF-8; сами fixtures не менять. Целевые106passed/17.79с, raw:
+docs/validation/windows-corpus-2026-10-26/target-01.txt. Нативный Windows-повтор
+после исправления ещё не выполнен в этой среде.
+
+Итог исправления Windows-переносимости: scripts/check.py exit0; **1815passed/265.58с**; pip/Ruff check/format280файлов успешны. Целевые106passed/17.79с, под системной cp1251 —106passed/17.64с. Полный исходный Windows-лог подтвердил5failed/1807passed до исправления; нативный повтор ещё ожидается. Raw: docs/validation/windows-corpus-2026-10-26.86защищённыхфайлов неизменны.
