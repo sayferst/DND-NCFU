@@ -51,3 +51,7 @@ tester-access.bin
 /host-private/
 tester-installation.bin
 tester-bootstrap.json
+
+# User training corpora and quarantined derived records remain local.
+/data/learning-local/
+/data/external/

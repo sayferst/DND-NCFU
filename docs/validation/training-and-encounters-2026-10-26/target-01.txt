@@ -1,0 +1,286 @@
+........................................................................ [ 40%]
+............................................................FFFFFF...... [ 80%]
+..................................                                       [100%]
+=================================== FAILURES ===================================
+______ test_response_events_are_persisted_once_with_usage_and_no_prompts _______
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x18032910) at 0x7f14e3e7d000>
+qt_app = <PySide6.QtWidgets.QApplication(0x115aeb80) at 0x7f14e6ae3040>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f14e6c4d220>
+
+    def test_response_events_are_persisted_once_with_usage_and_no_prompts(window, qt_app, monkeypatch):
+        window._session = new_session()
+        message = "Веста, привет"
+        plan = {
+            "steps": [],
+            "places": [],
+            "check": "none",
+            "dialogue_target": "vesta",
+            "reply": "«Здравствуй», — отвечает Веста.",
+        }
+>       with router_server(world_plans={message: plan}) as (url, calls):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_model_metrics.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_routerai.py:152: in router_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+__ test_budget_is_shared_by_search_plan_and_writer_and_never_replays_creation __
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x14bd7810) at 0x7f14e5062e40>
+qt_app = <PySide6.QtWidgets.QApplication(0x115aeb80) at 0x7f14e6ae3040>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f14e4dd50a0>
+
+    def test_budget_is_shared_by_search_plan_and_writer_and_never_replays_creation(
+        window, qt_app, monkeypatch
+    ):
+        query = {"steps": [], "places": [], "check": "none", "queries": ["mat_copper"]}
+>       with router_server(world_plans={LOOK: [query, creation()]}, writer_text="走近") as (url, calls):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_model_metrics.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_routerai.py:152: in router_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+_________ test_inline_false_reward_is_rejected_without_becoming_state __________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x18bfed90) at 0x7f14e4d109c0>
+qt_app = <PySide6.QtWidgets.QApplication(0x115aeb80) at 0x7f14e6ae3040>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f14e44d3590>
+
+    def test_inline_false_reward_is_rejected_without_becoming_state(window, qt_app, monkeypatch):
+        window._session = new_session()
+        before = window._session.world, window._session.dice.checkpoint()
+        text = "Веста, привет"
+        bad = {"steps": [], "places": [], "check": "none", "reply": "Вы получили 100 золотых."}
+>       with router_server(world_plans={text: bad}, writer_text="«Здравствуй», — отвечает Веста.") as (
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            url,
+            calls,
+        ):
+
+tests/test_model_metrics.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_routerai.py:152: in router_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+___________ test_new_npc_and_reply_register_then_persist_in_one_post ___________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x18e293d0) at 0x7f14e313c5c0>
+qt_app = <PySide6.QtWidgets.QApplication(0x115aeb80) at 0x7f14e6ae3040>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f14e500fda0>
+
+    def test_new_npc_and_reply_register_then_persist_in_one_post(window, qt_app, monkeypatch):
+        window._session = Session(seed=5)
+        plan = creation() | {
+            "reply": "Мира откладывает инструменты. «Здравствуйте».",
+            "dialogue_target": "mira",
+        }
+>       with router_server(world_plans={LOOK: plan}) as (url, calls):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_model_metrics.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_routerai.py:152: in router_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+______ test_network_failure_is_not_retried_and_unknown_usage_is_not_zero _______
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x19357f00) at 0x7f14e45fc040>
+qt_app = <PySide6.QtWidgets.QApplication(0x115aeb80) at 0x7f14e6ae3040>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f14e4394560>
+
+    def test_network_failure_is_not_retried_and_unknown_usage_is_not_zero(window, qt_app, monkeypatch):
+>       with router_server(chat_status=503) as (url, calls):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_model_metrics.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_routerai.py:152: in router_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+______ test_cancel_and_direct_budget_enforcement_count_actual_posts_only _______
+
+qt_app = <PySide6.QtWidgets.QApplication(0x115aeb80) at 0x7f14e6ae3040>
+
+    def test_cancel_and_direct_budget_enforcement_count_actual_posts_only(qt_app):
+>       with local_server(mode="plain_always_bad", delay=0.05) as (url, calls):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_model_metrics.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_local_narrator.py:262: in local_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+=========================== short test summary info ============================
+FAILED tests/test_model_metrics.py::test_response_events_are_persisted_once_with_usage_and_no_prompts
+FAILED tests/test_model_metrics.py::test_budget_is_shared_by_search_plan_and_writer_and_never_replays_creation
+FAILED tests/test_model_metrics.py::test_inline_false_reward_is_rejected_without_becoming_state
+FAILED tests/test_model_metrics.py::test_new_npc_and_reply_register_then_persist_in_one_post
+FAILED tests/test_model_metrics.py::test_network_failure_is_not_retried_and_unknown_usage_is_not_zero
+FAILED tests/test_model_metrics.py::test_cancel_and_direct_budget_enforcement_count_actual_posts_only
+6 failed, 172 passed in 15.69s

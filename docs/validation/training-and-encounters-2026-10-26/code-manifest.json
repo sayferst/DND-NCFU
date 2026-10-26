@@ -1,0 +1,572 @@
+{
+  "files": [
+    {
+      "path": "scripts/learning/import_training_package.py",
+      "sha256": "d1ca18e6973c58a7da382d5a2d5c742c24d20273b310cba1da8626a8c3a9c9d6"
+    },
+    {
+      "path": "src/rpg_vkr/__init__.py",
+      "sha256": "7b087d029fb2fd69f9dceaa204e52c7b185e1ca8006b1366982a613e58435d61"
+    },
+    {
+      "path": "src/rpg_vkr/app.py",
+      "sha256": "db5e03c36cab01db63c3cf40a7abea682ef06035a7e8b79200eccb48f77af5f4"
+    },
+    {
+      "path": "src/rpg_vkr/application.py",
+      "sha256": "b4e8f284de81432d66797cdff0c8f87df97993fd2f8c8f0cc5b40ce9197df8e2"
+    },
+    {
+      "path": "src/rpg_vkr/attribution.py",
+      "sha256": "af89df044113f1554311dbd021eb01a7cb20fe5dac828325c5a701ae62741e69"
+    },
+    {
+      "path": "src/rpg_vkr/bootstrap.py",
+      "sha256": "3782cadbf337226478bba1f9457d5638d7630fe47d538309278609ef7628e641"
+    },
+    {
+      "path": "src/rpg_vkr/build_info.py",
+      "sha256": "cf066829636074e5041c0fd75c22e1647806165fc357c895bbcad90834ff5c53"
+    },
+    {
+      "path": "src/rpg_vkr/commands.py",
+      "sha256": "2fef9da7431361c6b457653a03ee10a95ffde40973d40744a2535c1b9da8d554"
+    },
+    {
+      "path": "src/rpg_vkr/deployment.py",
+      "sha256": "8332efadc314bf4a6e626496570158d97caecf88a727df498c17f6a5d47f0c34"
+    },
+    {
+      "path": "src/rpg_vkr/diagnostics.py",
+      "sha256": "dda207c738297ee2380ebc740ed0e5d9667657fab6a9df81413d199bceb2adb5"
+    },
+    {
+      "path": "src/rpg_vkr/discovery.py",
+      "sha256": "8dd5f9cea8f89f93534dfcbf630504bd417f04b09cb28cca72d36ad15081222d"
+    },
+    {
+      "path": "src/rpg_vkr/domain/__init__.py",
+      "sha256": "e4dcd6afa1bd94f72f67c9727c1d8d981f4583a1b95a90ccdfaabb4e9e8e6971"
+    },
+    {
+      "path": "src/rpg_vkr/domain/adventure.py",
+      "sha256": "7b3054a3c4be48030c0ad217cabbe7e27302db00c76cfddecafb5e5c6ca22d17"
+    },
+    {
+      "path": "src/rpg_vkr/domain/campaign.py",
+      "sha256": "039ef9fd70e4f8f873aa25cc3fadc4a0171d91c42645359c7ef26b86ecca3e1b"
+    },
+    {
+      "path": "src/rpg_vkr/domain/campaign_progress.py",
+      "sha256": "119138c33f07089851e5addc4b329e65f8502fdd73c5846a583bebc14619b889"
+    },
+    {
+      "path": "src/rpg_vkr/domain/catalog.py",
+      "sha256": "a0100c162d7711198b767383f3b1d8d91eccf65eb14ecf3b562cc355c80bf1f3"
+    },
+    {
+      "path": "src/rpg_vkr/domain/catalog_actions.py",
+      "sha256": "1958f081b9e9450a4b03e1103798f903bdfc40fabfad5aa07a8136c9ce774375"
+    },
+    {
+      "path": "src/rpg_vkr/domain/challenge.py",
+      "sha256": "ce955c6c27e52e36db51da4b1e989a4f67651f52eb8ab687bb456f1a50fec0ba"
+    },
+    {
+      "path": "src/rpg_vkr/domain/character.py",
+      "sha256": "7210bf6738461e2afaa0805008538aef99fb969e93ca570da971f18ec01bc6bd"
+    },
+    {
+      "path": "src/rpg_vkr/domain/combat.py",
+      "sha256": "d944aae78122ab232034bc9afa905fd46f7e73354f4f0fe5b353b3ef480aeb85"
+    },
+    {
+      "path": "src/rpg_vkr/domain/combat_math.py",
+      "sha256": "0ff0e51998cbea269cb7501746221aa8ec73486a141012ef1b9e8b60e210d453"
+    },
+    {
+      "path": "src/rpg_vkr/domain/combat_record.py",
+      "sha256": "2e70b2b1938635e5529d8dda22089291e641acd98fad7fccb777a868b8df359e"
+    },
+    {
+      "path": "src/rpg_vkr/domain/conflict.py",
+      "sha256": "67ba99a180a5441d940766130acfec4e1c25b508ddb19fc7c7021e578dc2256e"
+    },
+    {
+      "path": "src/rpg_vkr/domain/copper_trade.py",
+      "sha256": "563a158dba911043f39cdf08ad3534193091b3ac47a553b5ea9c233f2af95413"
+    },
+    {
+      "path": "src/rpg_vkr/domain/d20_combat.py",
+      "sha256": "c80e2c3cf160c3b4a5c7a755a0b2c01712b5abd62ba4d4e028b8e2d9ac9906eb"
+    },
+    {
+      "path": "src/rpg_vkr/domain/d20_progression.py",
+      "sha256": "d760f7b6d442d07803b81a9b9b81ca69289ddbc44ca4ff174ac405b421de10ea"
+    },
+    {
+      "path": "src/rpg_vkr/domain/dice.py",
+      "sha256": "ad9e1fabb2ee19397914cc04d640a63e5a28375f6eadc84e65f12c614519ef03"
+    },
+    {
+      "path": "src/rpg_vkr/domain/director.py",
+      "sha256": "d6e4314fcb814e3b795c3103e49dac993e2036bb6a02b8ada47042a0b5ee53ca"
+    },
+    {
+      "path": "src/rpg_vkr/domain/factions.py",
+      "sha256": "a9572711eebeb2ed8de64eae7b960bac842cfa916d5fcca7c2602cab796835ed"
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay.py",
+      "sha256": "55d56cf0cd6f3ec8cf23bc8caa67d8e34cf7c5989bc7f094b9bada162d5ebd4b"
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_commands.py",
+      "sha256": "e18964e33a16f3612e2909d1385a2835c49d54ab2b4b69a4eb91e889a6b94dec"
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_rules.py",
+      "sha256": "471ae3d799ebc58e41073b34c8e191afff123435aeb43aedf0d90988ad477c4c"
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v2.py",
+      "sha256": "73b5eeb48c212aa9d93f4cb9f7b829af075729069853bd0e0faae07c0da3b515"
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v3.py",
+      "sha256": "b8356a7f815920d52ca93e7b4afd55482c43e414be55c0d8fa072c061b03f684"
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v4.py",
+      "sha256": "dc2cd60b622fa6e2be6cf332da5e13152fdaafabf7e629bf4daf9bab154d2ad9"
+    },
+    {
+      "path": "src/rpg_vkr/domain/hero_resources.py",
+      "sha256": "194f783127cc9bd0a58909144b93899b463d8f3fc4357b65150eb5fb09923daf"
+    },
+    {
+      "path": "src/rpg_vkr/domain/inspection.py",
+      "sha256": "6ce333c208f73be00e17a47f71a1f4da059348b6233aef61a543574fabcfaa85"
+    },
+    {
+      "path": "src/rpg_vkr/domain/interactions.py",
+      "sha256": "fdec57aed060746f33ea18d47829e1263c69b8893f2e5cff1222ab833313dafe"
+    },
+    {
+      "path": "src/rpg_vkr/domain/meaning.py",
+      "sha256": "4216064afe09dc34db9b6f890e6b5fd9caab67162388e642d8aab1f0d67315a0"
+    },
+    {
+      "path": "src/rpg_vkr/domain/memory.py",
+      "sha256": "d9d55b29169b2f6c1d4ab11f97520e90eb923cd0ef563bea84dde558cf74d61f"
+    },
+    {
+      "path": "src/rpg_vkr/domain/npc_reactions.py",
+      "sha256": "b7282917a515a496363d1154ea1dbc9288e52fe18fab34ad77de9ac131c16dd0"
+    },
+    {
+      "path": "src/rpg_vkr/domain/object_descriptions.py",
+      "sha256": "2a3bdaa528cdd3079361fd5bc4911f6ad167dc7377cd81a535717712f90abccf"
+    },
+    {
+      "path": "src/rpg_vkr/domain/progression.py",
+      "sha256": "f9a440e54e5b8dd69f710032e049f52c62116b64bebef090c5403ad4ef4dea23"
+    },
+    {
+      "path": "src/rpg_vkr/domain/receipts.py",
+      "sha256": "408cb85b9f5e508ccda2ee694217764d5f19fec7512229afe32fbc41bcaac53f"
+    },
+    {
+      "path": "src/rpg_vkr/domain/resources.py",
+      "sha256": "cad5067df3ad3c9dafb114a3eeb69aa7bb143bc9783284962922c4bed02aa3b3"
+    },
+    {
+      "path": "src/rpg_vkr/domain/skill_allocation.py",
+      "sha256": "f1deb1d335e06dd5b1d07d96a100defb0ef7288f599d915e34139fbd8a9e97ab"
+    },
+    {
+      "path": "src/rpg_vkr/domain/social.py",
+      "sha256": "2e731385506d47ea9d75f413438883e601f6cb295880d14267a988b1a077856d"
+    },
+    {
+      "path": "src/rpg_vkr/domain/trade.py",
+      "sha256": "264c9127cad998aff1bd4d2aa58ff29abdd00727c1d5fb9b153090fd3a2d7841"
+    },
+    {
+      "path": "src/rpg_vkr/domain/world.py",
+      "sha256": "5c9a07c63b0095d7d75dab1492eb5e7f3d544e8542daf58847af3d0378dc16be"
+    },
+    {
+      "path": "src/rpg_vkr/gameplay_session.py",
+      "sha256": "f022979410d4e29a3b53ea828a16db8ff26a6bc00dedcfd67eae396e3032f6d5"
+    },
+    {
+      "path": "src/rpg_vkr/gateway_http.py",
+      "sha256": "0747d42fc3c738eced37a32c252673396625f93f6dc0bcbb6d4845af6f8ce3df"
+    },
+    {
+      "path": "src/rpg_vkr/learning/__init__.py",
+      "sha256": "57806b2b8c60d7fe96a10a5103506ef8c2c6a5c65acba8de4ea8faffe1ded453"
+    },
+    {
+      "path": "src/rpg_vkr/learning/package.py",
+      "sha256": "3a6cde89622ea0a7b230cd6b30954ea22d41116b131cb0ffe654b2c2476660ba"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/__init__.py",
+      "sha256": "09c05ba656c4f4d18821527b5cf76c8bb6b23727e26dbfdd461689709c9b079c"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/actions.py",
+      "sha256": "f2ddbdcd747979bf2f931421171c1773ece62270a86697a0a4d84a2a7600ed0b"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/cloud.py",
+      "sha256": "96ed49a33c8c911eee314ec008996196969e1799365eca768fe32c289fcb14fa"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/context.py",
+      "sha256": "777130f7f62d1439fe7e1ca88cd64f2879bd014bf431e5366761d8bddcdc5887"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/dialogue.py",
+      "sha256": "ad65c7ed412c612b3cdfbae317cbcf3cc689769c1ba0cefaa6594c38a329de3c"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/examples.py",
+      "sha256": "318908ebc6a2f1b8cd97032ec7e94b26f38eff61259b96e8bf3378b57fb8cb0f"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/failures.py",
+      "sha256": "30dc938281e7f65a908076ff559e6f06b060e2e1b1316432d79716691a6d7b33"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/gameplay_prompt.py",
+      "sha256": "db6f55f91194cba9d8d197eca50d0bdc50230f7fc965865c728c556a2d9032e3"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/genres.py",
+      "sha256": "bc8a0c230e35425dd408ea57bc6b4f54ecc6dd179bd9179ec6abbe9687928419"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/instructions.py",
+      "sha256": "35b8191f5fb5a5cbeefb2913cbfb103c86bae2b7b4a5ae1d3963d9592627a358"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/intent.py",
+      "sha256": "c05b3b89875c49287fe08e92ecbda06f2b3fca3dc7d6a8bc3d5a18c132203f7c"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/limits.py",
+      "sha256": "2e419a30f2400e582ec81d4ec859adf14467bb27d9eec3557adca548fde2c3ce"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/master.py",
+      "sha256": "1a4982ffc31a3baec5863b2f2f68760b43064dd309c8139eb71e146b0d261ae8"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/object_prompt.py",
+      "sha256": "108f60f7e62cfe56e3e89e2880d233169b0b9aaa35fafc628768d18eea1e37f3"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/offline.py",
+      "sha256": "fb189a9b0516338e144536eb76a0ca12b89cde4e6b6231966d43798c3b73a2e6"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/ollama.py",
+      "sha256": "3378937c1e8670200ca31975ef731b093eff8365f5c84ab30c21583cd1f4c2e4"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/presentation.py",
+      "sha256": "34475f8381030127839b8ded9595ba46d0dd0f81756f3c7b3ff1f335d515f67c"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/records.py",
+      "sha256": "ad60ed8722d293c0c41b21e9d30298dfbb0ef0fc940fe8eb65c7d35d25ac3896"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/routerai.py",
+      "sha256": "82d80ac9efc2639addd591b5f83629a9189a7a9b070605f3b0fd7815aeac2f7b"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/routing.py",
+      "sha256": "ab325eb5b66112b7bc90188cb8fc3aff25bb4f6123ea95d70e7c2d172da8b377"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/scenes.py",
+      "sha256": "72aa9f5725cf938a67708651b0862777eeda84aaf70c65b513f94f084f1bb320"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/segments.py",
+      "sha256": "fbae43fa7392b26c5676cd86ae020a5bcacca454d0c75445b3baa6c028e19088"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/speech.py",
+      "sha256": "70d9b7d89e5b00de91fd737396c5ff5aa6565f35ca047fdd8b1b0fd2b3c85f46"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story.py",
+      "sha256": "bbef3ea11c060449cb0ccaf716239d36daf1228ab618866ed7ec4f15b078e175"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story_prompt.py",
+      "sha256": "d433b327dea3ac6532872920ca2b245f6839d2caf829611daa150e4b09f2bae6"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story_quality.py",
+      "sha256": "6eaab9d53c3a28a06397daab1d9ca8465fb8355fea463e1ed15b0f5230ecb21a"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/turn_brief.py",
+      "sha256": "2cd2cc08c419315bfaba468cee2be68784d7c3bf8ad58253377208ab43665b4b"
+    },
+    {
+      "path": "src/rpg_vkr/owner_local.py",
+      "sha256": "983b9f6964bba262d4a8684d9f1aa1228db3650f73031ab0a3c00b6af31a3ffb"
+    },
+    {
+      "path": "src/rpg_vkr/packaged_probe.py",
+      "sha256": "8ec9217f617d01b306b16506d43d90bdcf3cf9ae967c41740ff4506f3148ee80"
+    },
+    {
+      "path": "src/rpg_vkr/resources.py",
+      "sha256": "7ddc51bcbfac38fc8e2f9ab89cb86ede223735f84b1f3674e22537c5841386ad"
+    },
+    {
+      "path": "src/rpg_vkr/self_check.py",
+      "sha256": "3b3ce6e6f2677ba7e00e49299ba9b6f5a31fbc6bfaeebddc813af8b2c33a420a"
+    },
+    {
+      "path": "src/rpg_vkr/storage/__init__.py",
+      "sha256": "b447ff213bfe6bfceebb4e0fc95a0d00d22f9edbad7f56205e7fdec49a8f302b"
+    },
+    {
+      "path": "src/rpg_vkr/storage/artist_connection.py",
+      "sha256": "24e9f93124468879fe7a8ff0a0361a3e69bc62b5ecf213d28410724bfaf4cb52"
+    },
+    {
+      "path": "src/rpg_vkr/storage/campaigns.py",
+      "sha256": "cef8701c2d040438b5bcb748cd7508fcbe45ce7bb71d4244a2800bfaabec11d4"
+    },
+    {
+      "path": "src/rpg_vkr/storage/catalog.py",
+      "sha256": "54e958592f3c4610b31cbf5fc5cae4a4ea87f02ab038e12d6a39ac6a7e1bfc7f"
+    },
+    {
+      "path": "src/rpg_vkr/storage/connection.py",
+      "sha256": "f44b5f4d84285f9b3d1beca21840efcc241245da9a0c3f305bb8a42928f5802e"
+    },
+    {
+      "path": "src/rpg_vkr/storage/knowledge.py",
+      "sha256": "680f7b15eca34de47deff1a1ba4521784b9edb58f42be532e42b28c0100b748f"
+    },
+    {
+      "path": "src/rpg_vkr/storage/slots.py",
+      "sha256": "1ced2c35ea489bcfd19eed6ac99449fd43764d5ceeb771a2412751c9720af2cc"
+    },
+    {
+      "path": "src/rpg_vkr/ui/__init__.py",
+      "sha256": "7444cb9541c32f7be780636e61db78f771f305a031d83b547ee28d5f4c2983a4"
+    },
+    {
+      "path": "src/rpg_vkr/ui/account_login.py",
+      "sha256": "6ae795502728ec1cf7a99872cbd7463e909861fa24d280da32b4dbdc2f2f4888"
+    },
+    {
+      "path": "src/rpg_vkr/ui/adventure_panel.py",
+      "sha256": "0cff6c470f277a5bfb2cb901dbd5fd415094cfcc895a2fdcf3df29ef2999f040"
+    },
+    {
+      "path": "src/rpg_vkr/ui/artist_panel.py",
+      "sha256": "1b693b394b429c77b3aa159dcb3e08de110d7a4ab03bf08dda59b1ade7c2482a"
+    },
+    {
+      "path": "src/rpg_vkr/ui/catalog_panel.py",
+      "sha256": "37bd62b121ff390bf68351c125da580d30eab30bdf06ba39766882e10cf388e4"
+    },
+    {
+      "path": "src/rpg_vkr/ui/character_dialog.py",
+      "sha256": "72e60c4f80502952cde18d78af9a5be110582bfdcecfafaa20b1023e45615370"
+    },
+    {
+      "path": "src/rpg_vkr/ui/chronicles_panel.py",
+      "sha256": "f0b7cd5bd64c5a0da78d98efee9f819d5112cf2dc286a7565f25054be72e77d4"
+    },
+    {
+      "path": "src/rpg_vkr/ui/cloud_gate.py",
+      "sha256": "2365a3f2a48326611745dbe7d0d871b52a9f36aa2bfe13aa74f2d7bc347fdbcc"
+    },
+    {
+      "path": "src/rpg_vkr/ui/codex_icons.py",
+      "sha256": "e531641aaa2e71b6c1c621e97e269be55a06e8583d5ebe36d9337edc26b5bc3c"
+    },
+    {
+      "path": "src/rpg_vkr/ui/combat_panel.py",
+      "sha256": "4e0f80cbade07ccaf368c87042b6ede498152133018a87c7766208d7c5b60fbf"
+    },
+    {
+      "path": "src/rpg_vkr/ui/command_catalog.py",
+      "sha256": "e24f57f530d12a677f25f1e1fccbfdf9b9ca0e6848d1912aa7c878546815d7a9"
+    },
+    {
+      "path": "src/rpg_vkr/ui/connection_panel.py",
+      "sha256": "7cf84d4e0992c8cb966f068ecf14d35f14b23685313b13a2cb4cdbd0316215c5"
+    },
+    {
+      "path": "src/rpg_vkr/ui/context_actions.py",
+      "sha256": "bd26f611b2c9a7b3e17c63785d700c5c0f32ece73df83a1ef6647dafcaa00dcf"
+    },
+    {
+      "path": "src/rpg_vkr/ui/copper_shop.py",
+      "sha256": "891693aa768b977a641c8f986630d85b00972d4e4e0ec1ec41668110ef2f4150"
+    },
+    {
+      "path": "src/rpg_vkr/ui/creation_dialog.py",
+      "sha256": "340ba092a6bf32d0740ffe5b05ddf4d21511f60594d1616ae37ac965a6633dd0"
+    },
+    {
+      "path": "src/rpg_vkr/ui/developer_access.py",
+      "sha256": "d24916e056f7776e24cf817f704a9e69141e53c0a805f524327d1e170f049379"
+    },
+    {
+      "path": "src/rpg_vkr/ui/developer_panel.py",
+      "sha256": "7e2618d3f260d1ae9e7051f1bb143d12a8fedb9b36b62b8073b459cc918fc1b3"
+    },
+    {
+      "path": "src/rpg_vkr/ui/episode_panels.py",
+      "sha256": "a2c4fdac26bee55c14706096c6e039bb0af4190a5a67369ee089f517bcf6d2bb"
+    },
+    {
+      "path": "src/rpg_vkr/ui/flash_settings.py",
+      "sha256": "5f523d20631b639a841c984a3f0786687f7a9b56c76f6db1db3554c85be52ad9"
+    },
+    {
+      "path": "src/rpg_vkr/ui/gameplay_panel.py",
+      "sha256": "c5fc30b52a619044708c3ef7b5f9bb2cf0d752c86c9e5689d9924a8c9bf2a3fa"
+    },
+    {
+      "path": "src/rpg_vkr/ui/journal_colors.py",
+      "sha256": "913293afa0933a3ca89e7f86be6132fd40b9084b1799b12abfbc5ea8f23d5901"
+    },
+    {
+      "path": "src/rpg_vkr/ui/knowledge.py",
+      "sha256": "853f163c00a106f642bfd33057aca930d86d5267427f01b2435e44b22d6debd7"
+    },
+    {
+      "path": "src/rpg_vkr/ui/loading_screen.py",
+      "sha256": "090dbb48300d173a376d2af267b32f2286fcdeadd43c4ce5701de8584249a3d6"
+    },
+    {
+      "path": "src/rpg_vkr/ui/main_menu.py",
+      "sha256": "c2263365366af4282d93069e9de92ff9cdffc69530888e10df20e44f41b407db"
+    },
+    {
+      "path": "src/rpg_vkr/ui/main_window.py",
+      "sha256": "fa2c058dbf0578639f7191f6867ccafa8ed515c4282eb083bdc59be5630a52e1"
+    },
+    {
+      "path": "src/rpg_vkr/ui/motion.py",
+      "sha256": "b88d8c067259ee6289b93d32833f609020af860380357c2fd94d1220b92e2cf4"
+    },
+    {
+      "path": "src/rpg_vkr/ui/narrator_panel.py",
+      "sha256": "6873573cd0aba8abfc2b6ea324c67f25abea46f2deb9f10f6d9781499b0bcaed"
+    },
+    {
+      "path": "src/rpg_vkr/ui/navigation_policy.py",
+      "sha256": "cb809e7e46f78e500013d4420a88ee63ae9a3dd912ae7106be60703c26edb07c"
+    },
+    {
+      "path": "src/rpg_vkr/ui/notifications.py",
+      "sha256": "425cfe85a0897b1938d47b547daf246d88abfaa3c292106fdb4097263a331c0d"
+    },
+    {
+      "path": "src/rpg_vkr/ui/photo_album.py",
+      "sha256": "412d4c6bd921c501b39e6f19ac9cb26572595f58e17ad06e1e9ba9bc0f0af778"
+    },
+    {
+      "path": "src/rpg_vkr/ui/resolution_panel.py",
+      "sha256": "2e38df5d87b229335990e856c1ef478b490c9a65eddb1b00533338422ef32451"
+    },
+    {
+      "path": "src/rpg_vkr/ui/role_journal.py",
+      "sha256": "5b1638741edf2b6258f25f1ea44d0cd7c9c8704052877aeded3e5a0a7afa887c"
+    },
+    {
+      "path": "src/rpg_vkr/ui/section_tabs.py",
+      "sha256": "ed178d2babd0876bf3611d9957481eb300bec81128e1f9019f91bb5c198994af"
+    },
+    {
+      "path": "src/rpg_vkr/ui/skill_panel.py",
+      "sha256": "a0c170b8ca02240f6c2e0f7ad27209151f60152954c519bff94f86a9b24ea024"
+    },
+    {
+      "path": "src/rpg_vkr/ui/tester_connection.py",
+      "sha256": "d55aa83a1190e751de6ed956603ed82b0c1d87ff3792b287366e61e6e4918458"
+    },
+    {
+      "path": "src/rpg_vkr/ui/tester_discovery.py",
+      "sha256": "8cd784c74b8d7fddd471e59d26a26a9e3ff5bb6beb6e0317971c99f9c2f9e6cb"
+    },
+    {
+      "path": "src/rpg_vkr/ui/theme.py",
+      "sha256": "708be63de64002b2974cac25bb1b0964a18d570fc1e5d62ca4f55e7fae5ead22"
+    },
+    {
+      "path": "src/rpg_vkr/ui/visual_commands.py",
+      "sha256": "b2903f47bdc8f808f0b9b515803078998f87ca3a01b8d554261cd20314f4d05b"
+    },
+    {
+      "path": "src/rpg_vkr/ui/visuals_panel.py",
+      "sha256": "35e172c47d5971e0f59834c32bfbe79542f9bff276a494d46fa881a3e641a04c"
+    },
+    {
+      "path": "src/rpg_vkr/ui/workspace_panel.py",
+      "sha256": "a72f993da60410387c05fa7c3c8fb984ab6f63f6d97442a11b760c067124fd2f"
+    },
+    {
+      "path": "src/rpg_vkr/ui/workspace_tools.py",
+      "sha256": "63b4c88c2eeba4691b522060912952a7215c73085bd028347ae26bbf7feeb2a9"
+    },
+    {
+      "path": "src/rpg_vkr/ui/world_creation_screen.py",
+      "sha256": "0b29fd323811839cc8c7ea3751661c2123a3c88193802dccba8c6edb72106bbe"
+    },
+    {
+      "path": "src/rpg_vkr/visuals/__init__.py",
+      "sha256": "077413289e77a88f409bdd68cef39aa2afdd4a03d575472093aefe783728d14a"
+    },
+    {
+      "path": "src/rpg_vkr/visuals/client.py",
+      "sha256": "649dbb710de1a524eda1398f99888401923ad0a4b0d252bb73d01a8440e07976"
+    },
+    {
+      "path": "src/rpg_vkr/visuals/commands.py",
+      "sha256": "75fae9d11e7ccb07da94b50847eeeae80f0353c1bb1a6618d57625777fbfdf08"
+    },
+    {
+      "path": "src/rpg_vkr/visuals/context.py",
+      "sha256": "2b5aea900c178a2933fcc2ad541caa4fafaae241b2cf30b65fb27a4ea6603a37"
+    },
+    {
+      "path": "src/rpg_vkr/visuals/policy.py",
+      "sha256": "84b9f190a8c47e39041ff1fff7a18dcfadf13e3b1caec500bc74d3d3b56c1062"
+    },
+    {
+      "path": "src/rpg_vkr/visuals/registry.py",
+      "sha256": "d9cd7bb1285ef20d3b373fdc8746b4d87d1a259b9bde943f51977a2b633cb8e5"
+    },
+    {
+      "path": "tests/learning/test_package.py",
+      "sha256": "7ddf6fdd0fa779551448bb610a912c971b5ce40bfc3a0c44476d4e1cfe592c5c"
+    },
+    {
+      "path": "tests/test_team_encounters.py",
+      "sha256": "b7e3045fb9e09cee08db211e4e94337cead310e3e9029e4411e00df7728600d0"
+    },
+    {
+      "path": "tests/test_training_story_contract.py",
+      "sha256": "149acaa919d2d95d3622dfff8624590784c59170cbc1a56cb2ffedc8ace2265f"
+    }
+  ]
+}

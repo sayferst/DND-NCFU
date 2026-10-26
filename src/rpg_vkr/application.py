@@ -397,6 +397,9 @@ class Session:
 
             if self._gameplay["state"]["active"] == actor_id:
                 return True
+            battle = self._gameplay["state"].get("battle")
+            if battle and actor_id in battle["order"]:
+                return True  # A defeated participant's body is still physically present.
             entity = (
                 next((e for e in self.catalog.entities if e.id == actor_id), None)
                 if self.catalog
@@ -1571,6 +1574,7 @@ class Session:
             24,
             25,
             26,
+            27,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}

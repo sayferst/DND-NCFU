@@ -1,0 +1,663 @@
+{
+  "format_version": 1,
+  "archive_sha256": "dbdf147d3ee001a4f2034a87efc11c88a755b5b63a3649cc3a115af3772ba068",
+  "verified": true,
+  "original_package_complete": false,
+  "errors": [],
+  "resolved_aliases": [
+    {
+      "missing": "DND_Training_Prompt.md",
+      "identical_source": "DND_NCFU_CODEX_DEEPSEEK_DATA_TRAINING_MASTER_SPEC.md",
+      "virtual_only": true
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "USER-SYN-0200",
+      "path": "corpora/parties_200.md",
+      "sha256": "9e0a5391ccb67c800982a328b4471a7be58698ce3dcb298cd0e881285c5b8b94",
+      "records": 200,
+      "categories": {
+        "session": 200
+      },
+      "long_lines": 18736,
+      "repeated_long_lines": 12551,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-1000",
+      "path": "corpora/parties_1000.md",
+      "sha256": "73a8a2c54b51c7e336f1cd29e2ca04d23d3b2bcfd9dc5f08b820782f364535ad",
+      "records": 1000,
+      "categories": {
+        "session": 1000
+      },
+      "long_lines": 82703,
+      "repeated_long_lines": 64563,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-DEATH-1000",
+      "path": "corpora/death_and_npc_1000.md",
+      "sha256": "bb0c8fe41f4a119a0cc773aaaa1597928f29394f8e0eca15f6360bc3fb1d342a",
+      "records": 1000,
+      "categories": {
+        "death_session": 1000
+      },
+      "long_lines": 39736,
+      "repeated_long_lines": 26835,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-EVENTS-1000",
+      "path": "corpora/events_1000.md",
+      "sha256": "641b2f622d1174cf40d9e01d81a9307d489532a95172c450a7b83746d07c3e7b",
+      "records": 1000,
+      "categories": {
+        "EV": 250,
+        "FI": 250,
+        "LO": 250,
+        "BA": 250
+      },
+      "long_lines": 8026,
+      "repeated_long_lines": 6459,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-BEHAVIOR-5000",
+      "path": "corpora/npc_behavior_5000.md",
+      "sha256": "62a2fcc6cac62e15493cf61911ea8d1d5a637b753ae0024e39973b52a1dfd049",
+      "records": 5000,
+      "categories": {
+        "NPCM": 950,
+        "MOBM": 800,
+        "BOSSM": 400,
+        "CSK": 750,
+        "NSK": 650,
+        "BOOK": 500,
+        "SBOOK": 450,
+        "MAG": 500
+      },
+      "long_lines": 25019,
+      "repeated_long_lines": 17622,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-ENTITIES-5000",
+      "path": "corpora/entities_5000.md",
+      "sha256": "69cef2adceaae7cf0d495b06480ebbc6d71f269c5504d3e56da161ca56dbcc8a",
+      "records": 5000,
+      "categories": {
+        "MON": 1000,
+        "WPN": 650,
+        "ARM": 450,
+        "GEAR": 450,
+        "PROF": 350,
+        "NPC": 600,
+        "BOSS": 300,
+        "PLANT": 1000,
+        "KIN": 200
+      },
+      "long_lines": 22855,
+      "repeated_long_lines": 14858,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-EVERYDAY-1000",
+      "path": "corpora/everyday_1000.md",
+      "sha256": "13a5a900ec4f7b5a2d760cbcb1789c87c84c20f4b5c583f0ea2febf19ef994ee",
+      "records": 1000,
+      "categories": {
+        "everyday_example": 1000
+      },
+      "long_lines": 12260,
+      "repeated_long_lines": 11538,
+      "rights": "local_only_provenance_unverified"
+    },
+    {
+      "source_id": "USER-SYN-CRAFT-5000",
+      "path": "corpora/crafting_5000.md",
+      "sha256": "76a0ffb686256c699ef50e29e9950583473b3dc401871b0ebd1c9b811789d853",
+      "records": 5000,
+      "categories": {
+        "ORE": 600,
+        "MAT": 450,
+        "GEM": 450,
+        "MCR": 450,
+        "DROP": 700,
+        "COMP": 350,
+        "WPNC": 400,
+        "EQPC": 350,
+        "ENCH": 400,
+        "POT": 350,
+        "FOOD": 500
+      },
+      "long_lines": 25362,
+      "repeated_long_lines": 17048,
+      "rights": "local_only_provenance_unverified"
+    }
+  ],
+  "counts": {
+    "raw_structural_count": 19200,
+    "parsed_count": 19200,
+    "legacy_alias_count": 200,
+    "unique_canonical_count": 19000,
+    "quality_approved_count": 0,
+    "indexed_count": 0,
+    "heldout_count": 0,
+    "sft_ready_count": 0
+  },
+  "aliases": {
+    "USER-SYN-0200:0001": "USER-SYN-1000:0001",
+    "USER-SYN-0200:0002": "USER-SYN-1000:0002",
+    "USER-SYN-0200:0003": "USER-SYN-1000:0003",
+    "USER-SYN-0200:0004": "USER-SYN-1000:0004",
+    "USER-SYN-0200:0005": "USER-SYN-1000:0005",
+    "USER-SYN-0200:0006": "USER-SYN-1000:0006",
+    "USER-SYN-0200:0007": "USER-SYN-1000:0007",
+    "USER-SYN-0200:0008": "USER-SYN-1000:0008",
+    "USER-SYN-0200:0009": "USER-SYN-1000:0009",
+    "USER-SYN-0200:0010": "USER-SYN-1000:0010",
+    "USER-SYN-0200:0011": "USER-SYN-1000:0011",
+    "USER-SYN-0200:0012": "USER-SYN-1000:0012",
+    "USER-SYN-0200:0013": "USER-SYN-1000:0013",
+    "USER-SYN-0200:0014": "USER-SYN-1000:0014",
+    "USER-SYN-0200:0015": "USER-SYN-1000:0015",
+    "USER-SYN-0200:0016": "USER-SYN-1000:0016",
+    "USER-SYN-0200:0017": "USER-SYN-1000:0017",
+    "USER-SYN-0200:0018": "USER-SYN-1000:0018",
+    "USER-SYN-0200:0019": "USER-SYN-1000:0019",
+    "USER-SYN-0200:0020": "USER-SYN-1000:0020",
+    "USER-SYN-0200:0021": "USER-SYN-1000:0021",
+    "USER-SYN-0200:0022": "USER-SYN-1000:0022",
+    "USER-SYN-0200:0023": "USER-SYN-1000:0023",
+    "USER-SYN-0200:0024": "USER-SYN-1000:0024",
+    "USER-SYN-0200:0025": "USER-SYN-1000:0025",
+    "USER-SYN-0200:0026": "USER-SYN-1000:0026",
+    "USER-SYN-0200:0027": "USER-SYN-1000:0027",
+    "USER-SYN-0200:0028": "USER-SYN-1000:0028",
+    "USER-SYN-0200:0029": "USER-SYN-1000:0029",
+    "USER-SYN-0200:0030": "USER-SYN-1000:0030",
+    "USER-SYN-0200:0031": "USER-SYN-1000:0031",
+    "USER-SYN-0200:0032": "USER-SYN-1000:0032",
+    "USER-SYN-0200:0033": "USER-SYN-1000:0033",
+    "USER-SYN-0200:0034": "USER-SYN-1000:0034",
+    "USER-SYN-0200:0035": "USER-SYN-1000:0035",
+    "USER-SYN-0200:0036": "USER-SYN-1000:0036",
+    "USER-SYN-0200:0037": "USER-SYN-1000:0037",
+    "USER-SYN-0200:0038": "USER-SYN-1000:0038",
+    "USER-SYN-0200:0039": "USER-SYN-1000:0039",
+    "USER-SYN-0200:0040": "USER-SYN-1000:0040",
+    "USER-SYN-0200:0041": "USER-SYN-1000:0041",
+    "USER-SYN-0200:0042": "USER-SYN-1000:0042",
+    "USER-SYN-0200:0043": "USER-SYN-1000:0043",
+    "USER-SYN-0200:0044": "USER-SYN-1000:0044",
+    "USER-SYN-0200:0045": "USER-SYN-1000:0045",
+    "USER-SYN-0200:0046": "USER-SYN-1000:0046",
+    "USER-SYN-0200:0047": "USER-SYN-1000:0047",
+    "USER-SYN-0200:0048": "USER-SYN-1000:0048",
+    "USER-SYN-0200:0049": "USER-SYN-1000:0049",
+    "USER-SYN-0200:0050": "USER-SYN-1000:0050",
+    "USER-SYN-0200:0051": "USER-SYN-1000:0051",
+    "USER-SYN-0200:0052": "USER-SYN-1000:0052",
+    "USER-SYN-0200:0053": "USER-SYN-1000:0053",
+    "USER-SYN-0200:0054": "USER-SYN-1000:0054",
+    "USER-SYN-0200:0055": "USER-SYN-1000:0055",
+    "USER-SYN-0200:0056": "USER-SYN-1000:0056",
+    "USER-SYN-0200:0057": "USER-SYN-1000:0057",
+    "USER-SYN-0200:0058": "USER-SYN-1000:0058",
+    "USER-SYN-0200:0059": "USER-SYN-1000:0059",
+    "USER-SYN-0200:0060": "USER-SYN-1000:0060",
+    "USER-SYN-0200:0061": "USER-SYN-1000:0061",
+    "USER-SYN-0200:0062": "USER-SYN-1000:0062",
+    "USER-SYN-0200:0063": "USER-SYN-1000:0063",
+    "USER-SYN-0200:0064": "USER-SYN-1000:0064",
+    "USER-SYN-0200:0065": "USER-SYN-1000:0065",
+    "USER-SYN-0200:0066": "USER-SYN-1000:0066",
+    "USER-SYN-0200:0067": "USER-SYN-1000:0067",
+    "USER-SYN-0200:0068": "USER-SYN-1000:0068",
+    "USER-SYN-0200:0069": "USER-SYN-1000:0069",
+    "USER-SYN-0200:0070": "USER-SYN-1000:0070",
+    "USER-SYN-0200:0071": "USER-SYN-1000:0071",
+    "USER-SYN-0200:0072": "USER-SYN-1000:0072",
+    "USER-SYN-0200:0073": "USER-SYN-1000:0073",
+    "USER-SYN-0200:0074": "USER-SYN-1000:0074",
+    "USER-SYN-0200:0075": "USER-SYN-1000:0075",
+    "USER-SYN-0200:0076": "USER-SYN-1000:0076",
+    "USER-SYN-0200:0077": "USER-SYN-1000:0077",
+    "USER-SYN-0200:0078": "USER-SYN-1000:0078",
+    "USER-SYN-0200:0079": "USER-SYN-1000:0079",
+    "USER-SYN-0200:0080": "USER-SYN-1000:0080",
+    "USER-SYN-0200:0081": "USER-SYN-1000:0081",
+    "USER-SYN-0200:0082": "USER-SYN-1000:0082",
+    "USER-SYN-0200:0083": "USER-SYN-1000:0083",
+    "USER-SYN-0200:0084": "USER-SYN-1000:0084",
+    "USER-SYN-0200:0085": "USER-SYN-1000:0085",
+    "USER-SYN-0200:0086": "USER-SYN-1000:0086",
+    "USER-SYN-0200:0087": "USER-SYN-1000:0087",
+    "USER-SYN-0200:0088": "USER-SYN-1000:0088",
+    "USER-SYN-0200:0089": "USER-SYN-1000:0089",
+    "USER-SYN-0200:0090": "USER-SYN-1000:0090",
+    "USER-SYN-0200:0091": "USER-SYN-1000:0091",
+    "USER-SYN-0200:0092": "USER-SYN-1000:0092",
+    "USER-SYN-0200:0093": "USER-SYN-1000:0093",
+    "USER-SYN-0200:0094": "USER-SYN-1000:0094",
+    "USER-SYN-0200:0095": "USER-SYN-1000:0095",
+    "USER-SYN-0200:0096": "USER-SYN-1000:0096",
+    "USER-SYN-0200:0097": "USER-SYN-1000:0097",
+    "USER-SYN-0200:0098": "USER-SYN-1000:0098",
+    "USER-SYN-0200:0099": "USER-SYN-1000:0099",
+    "USER-SYN-0200:0100": "USER-SYN-1000:0100",
+    "USER-SYN-0200:0101": "USER-SYN-1000:0101",
+    "USER-SYN-0200:0102": "USER-SYN-1000:0102",
+    "USER-SYN-0200:0103": "USER-SYN-1000:0103",
+    "USER-SYN-0200:0104": "USER-SYN-1000:0104",
+    "USER-SYN-0200:0105": "USER-SYN-1000:0105",
+    "USER-SYN-0200:0106": "USER-SYN-1000:0106",
+    "USER-SYN-0200:0107": "USER-SYN-1000:0107",
+    "USER-SYN-0200:0108": "USER-SYN-1000:0108",
+    "USER-SYN-0200:0109": "USER-SYN-1000:0109",
+    "USER-SYN-0200:0110": "USER-SYN-1000:0110",
+    "USER-SYN-0200:0111": "USER-SYN-1000:0111",
+    "USER-SYN-0200:0112": "USER-SYN-1000:0112",
+    "USER-SYN-0200:0113": "USER-SYN-1000:0113",
+    "USER-SYN-0200:0114": "USER-SYN-1000:0114",
+    "USER-SYN-0200:0115": "USER-SYN-1000:0115",
+    "USER-SYN-0200:0116": "USER-SYN-1000:0116",
+    "USER-SYN-0200:0117": "USER-SYN-1000:0117",
+    "USER-SYN-0200:0118": "USER-SYN-1000:0118",
+    "USER-SYN-0200:0119": "USER-SYN-1000:0119",
+    "USER-SYN-0200:0120": "USER-SYN-1000:0120",
+    "USER-SYN-0200:0121": "USER-SYN-1000:0121",
+    "USER-SYN-0200:0122": "USER-SYN-1000:0122",
+    "USER-SYN-0200:0123": "USER-SYN-1000:0123",
+    "USER-SYN-0200:0124": "USER-SYN-1000:0124",
+    "USER-SYN-0200:0125": "USER-SYN-1000:0125",
+    "USER-SYN-0200:0126": "USER-SYN-1000:0126",
+    "USER-SYN-0200:0127": "USER-SYN-1000:0127",
+    "USER-SYN-0200:0128": "USER-SYN-1000:0128",
+    "USER-SYN-0200:0129": "USER-SYN-1000:0129",
+    "USER-SYN-0200:0130": "USER-SYN-1000:0130",
+    "USER-SYN-0200:0131": "USER-SYN-1000:0131",
+    "USER-SYN-0200:0132": "USER-SYN-1000:0132",
+    "USER-SYN-0200:0133": "USER-SYN-1000:0133",
+    "USER-SYN-0200:0134": "USER-SYN-1000:0134",
+    "USER-SYN-0200:0135": "USER-SYN-1000:0135",
+    "USER-SYN-0200:0136": "USER-SYN-1000:0136",
+    "USER-SYN-0200:0137": "USER-SYN-1000:0137",
+    "USER-SYN-0200:0138": "USER-SYN-1000:0138",
+    "USER-SYN-0200:0139": "USER-SYN-1000:0139",
+    "USER-SYN-0200:0140": "USER-SYN-1000:0140",
+    "USER-SYN-0200:0141": "USER-SYN-1000:0141",
+    "USER-SYN-0200:0142": "USER-SYN-1000:0142",
+    "USER-SYN-0200:0143": "USER-SYN-1000:0143",
+    "USER-SYN-0200:0144": "USER-SYN-1000:0144",
+    "USER-SYN-0200:0145": "USER-SYN-1000:0145",
+    "USER-SYN-0200:0146": "USER-SYN-1000:0146",
+    "USER-SYN-0200:0147": "USER-SYN-1000:0147",
+    "USER-SYN-0200:0148": "USER-SYN-1000:0148",
+    "USER-SYN-0200:0149": "USER-SYN-1000:0149",
+    "USER-SYN-0200:0150": "USER-SYN-1000:0150",
+    "USER-SYN-0200:0151": "USER-SYN-1000:0151",
+    "USER-SYN-0200:0152": "USER-SYN-1000:0152",
+    "USER-SYN-0200:0153": "USER-SYN-1000:0153",
+    "USER-SYN-0200:0154": "USER-SYN-1000:0154",
+    "USER-SYN-0200:0155": "USER-SYN-1000:0155",
+    "USER-SYN-0200:0156": "USER-SYN-1000:0156",
+    "USER-SYN-0200:0157": "USER-SYN-1000:0157",
+    "USER-SYN-0200:0158": "USER-SYN-1000:0158",
+    "USER-SYN-0200:0159": "USER-SYN-1000:0159",
+    "USER-SYN-0200:0160": "USER-SYN-1000:0160",
+    "USER-SYN-0200:0161": "USER-SYN-1000:0161",
+    "USER-SYN-0200:0162": "USER-SYN-1000:0162",
+    "USER-SYN-0200:0163": "USER-SYN-1000:0163",
+    "USER-SYN-0200:0164": "USER-SYN-1000:0164",
+    "USER-SYN-0200:0165": "USER-SYN-1000:0165",
+    "USER-SYN-0200:0166": "USER-SYN-1000:0166",
+    "USER-SYN-0200:0167": "USER-SYN-1000:0167",
+    "USER-SYN-0200:0168": "USER-SYN-1000:0168",
+    "USER-SYN-0200:0169": "USER-SYN-1000:0169",
+    "USER-SYN-0200:0170": "USER-SYN-1000:0170",
+    "USER-SYN-0200:0171": "USER-SYN-1000:0171",
+    "USER-SYN-0200:0172": "USER-SYN-1000:0172",
+    "USER-SYN-0200:0173": "USER-SYN-1000:0173",
+    "USER-SYN-0200:0174": "USER-SYN-1000:0174",
+    "USER-SYN-0200:0175": "USER-SYN-1000:0175",
+    "USER-SYN-0200:0176": "USER-SYN-1000:0176",
+    "USER-SYN-0200:0177": "USER-SYN-1000:0177",
+    "USER-SYN-0200:0178": "USER-SYN-1000:0178",
+    "USER-SYN-0200:0179": "USER-SYN-1000:0179",
+    "USER-SYN-0200:0180": "USER-SYN-1000:0180",
+    "USER-SYN-0200:0181": "USER-SYN-1000:0181",
+    "USER-SYN-0200:0182": "USER-SYN-1000:0182",
+    "USER-SYN-0200:0183": "USER-SYN-1000:0183",
+    "USER-SYN-0200:0184": "USER-SYN-1000:0184",
+    "USER-SYN-0200:0185": "USER-SYN-1000:0185",
+    "USER-SYN-0200:0186": "USER-SYN-1000:0186",
+    "USER-SYN-0200:0187": "USER-SYN-1000:0187",
+    "USER-SYN-0200:0188": "USER-SYN-1000:0188",
+    "USER-SYN-0200:0189": "USER-SYN-1000:0189",
+    "USER-SYN-0200:0190": "USER-SYN-1000:0190",
+    "USER-SYN-0200:0191": "USER-SYN-1000:0191",
+    "USER-SYN-0200:0192": "USER-SYN-1000:0192",
+    "USER-SYN-0200:0193": "USER-SYN-1000:0193",
+    "USER-SYN-0200:0194": "USER-SYN-1000:0194",
+    "USER-SYN-0200:0195": "USER-SYN-1000:0195",
+    "USER-SYN-0200:0196": "USER-SYN-1000:0196",
+    "USER-SYN-0200:0197": "USER-SYN-1000:0197",
+    "USER-SYN-0200:0198": "USER-SYN-1000:0198",
+    "USER-SYN-0200:0199": "USER-SYN-1000:0199",
+    "USER-SYN-0200:0200": "USER-SYN-1000:0200"
+  },
+  "enabled": false,
+  "raw_external_transfer": false,
+  "artistic_quality": "not_assessed",
+  "split_status": "quarantined_no_split",
+  "rules_status": "unchecked_not_applied_to_game",
+  "spec_sections": [
+    [
+      "1",
+      "КРИТИЧЕСКОЕ РАЗЛИЧИЕ: ТРИ МЕХАНИЗМА"
+    ],
+    [
+      "2",
+      "ПЕРВОИСТОЧНИКИ — ВСЕ ССЫЛКИ И ДОКУМЕНТЫ"
+    ],
+    [
+      "3",
+      "ПРАВОВОЙ GATE / DEFAULT 0 ₽"
+    ],
+    [
+      "4",
+      "ПЕРВЫЙ ШАГ — АУДИТ РЕАЛЬНОГО DND-NCFU"
+    ],
+    [
+      "5",
+      "ЗАГРУЗКА И ИНВЕНТАРИЗАЦИЯ ИСХОДНИКОВ"
+    ],
+    [
+      "6",
+      "ОБЩАЯ СХЕМА ДАННЫХ: НЕ СМЕШИВАТЬ РЕПЛИКУ И СОБЫТИЕ"
+    ],
+    [
+      "7",
+      "ETL ПО КАЖДОМУ ИСТОЧНИКУ: НАСТОЯЩАЯ ПЕРЕРАБОТКА ПАРТИЙ"
+    ],
+    [
+      "8",
+      "ЧТО ИМЕННО «УЧИТЬ» НА ПАРТИЯХ"
+    ],
+    [
+      "9",
+      "ЦЕЛЕВАЯ АРХИТЕКТУРА В РАБОТАЮЩЕЙ ИГРЕ"
+    ],
+    [
+      "10",
+      "ЛОКАЛЬНЫЙ RAG БЕЗ ОБЯЗАТЕЛЬНОГО GPU"
+    ],
+    [
+      "11",
+      "ДОЛГОВРЕМЕННАЯ ПАМЯТЬ И КАНОНИЧЕСКИЙ STATE"
+    ],
+    [
+      "12",
+      "РАЗДЕЛЕНИЕ AI-МОДЕЛЕЙ И РЕЗУЛЬТАТОВ"
+    ],
+    [
+      "13",
+      "ОТДЕЛЬНО ПРОВЕРИТЬ ВОЗМОЖНОСТЬ FINE-TUNING DEEPSEEK"
+    ],
+    [
+      "14",
+      "НАСТОЯЩИЙ SFT/LoRA — ОПЦИОНАЛЬНЫЙ ВТОРОЙ ЭТАП"
+    ],
+    [
+      "15",
+      "ПРОВЕРЯЕМАЯ СИСТЕМА ОЦЕНКИ КАЧЕСТВА (EVALUATION-FIRST)"
+    ],
+    [
+      "16",
+      "САМООБУЧЕНИЕ И ОБРАТНАЯ СВЯЗЬ БЕЗ ПОРЧИ КОРПУСА"
+    ],
+    [
+      "17",
+      "ЗАЩИТА ОТ PROMPT INJECTION И УТЕЧКИ ДАННЫХ"
+    ],
+    [
+      "18",
+      "ИНТЕГРАЦИЯ В ИНТЕРФЕЙС DND-NCFU"
+    ],
+    [
+      "19",
+      "ПРЕДЛАГАЕМАЯ СТРУКТУРА ФАЙЛОВ И ТЕСТОВ"
+    ],
+    [
+      "20",
+      "ПРОГРАММНЫЕ ИНТЕРФЕЙСЫ (API CONTRACTS)"
+    ],
+    [
+      "21",
+      "ПОЛНЫЙ ПОРЯДОК РАБОТ: ЭТАПЫ A–J"
+    ],
+    [
+      "22",
+      "ПРОВЕРКА КОМАНД НА WINDOWS"
+    ],
+    [
+      "23",
+      "БЮДЖЕТ, РЕСУРСЫ И АЛЬТЕРНАТИВЫ"
+    ],
+    [
+      "24",
+      "ЧТО НЕОБХОДИМО ОТ ВЛАДЕЛЬЦА ПРОЕКТА"
+    ],
+    [
+      "25",
+      "ТИПОВЫЕ СЛОЖНОСТИ И ОБЯЗАТЕЛЬНЫЕ РЕШЕНИЯ"
+    ],
+    [
+      "26",
+      "ТРЕБОВАНИЯ К ОТЧЁТУ CODEX И КРИТЕРИИ ПРИЁМКИ"
+    ],
+    [
+      "27",
+      "ПОЛНЫЙ УКАЗАТЕЛЬ ИСТОЧНИКОВ И ССЫЛОК"
+    ],
+    [
+      "28",
+      "ГРАНИЦА ЭТОГО ЗАДАНИЯ: ЧТО CODEX ДОЛЖЕН СДЕЛАТЬ ПРЯМО СЕЙЧАС"
+    ],
+    [
+      "29",
+      "ДОПОЛНЕНИЕ v1.1: ДВА СОБСТВЕННЫХ СИНТЕТИЧЕСКИХ КОРПУСА DND-NCFU — ОБЯЗАТЕЛЬНО К ИСПОЛНЕНИЮ"
+    ],
+    [
+      "30",
+      "ЧЕМ КОРПУСА ПОМОГУТ КОНКРЕТНО: ПРИОРИТЕТНЫЕ НАПРАВЛЕНИЯ"
+    ],
+    [
+      "31",
+      "ВОСПРОИЗВОДИМЫЙ ИМПОРТ И ПРОВЕРКА ПЕРВЫХ 200: ZERO-DUPLICATE"
+    ],
+    [
+      "32",
+      "КЛЮЧЕВОЕ: ПРОТИВОРЕЧИЯ С ТЕКУЩИМИ ПРАВИЛАМИ ИГРЫ"
+    ],
+    [
+      "33",
+      "ЦЕЛЕВАЯ СХЕМА: ДВА СЛОЯ ДАННЫХ, ДВЕ ОТДЕЛЬНЫЕ ЗАДАЧИ"
+    ],
+    [
+      "34",
+      "КАК ГОТОВИТЬ ДАННЫЕ ДЛЯ RAG, НЕ ИСПОРТИВ ПОВЕДЕНИЕ МАСТЕРА"
+    ],
+    [
+      "35",
+      "SFT/FINE-TUNING: ОЧИСТКА, ОЦЕНКА, РЕАЛЬНОЕ ОБУЧЕНИЕ — ТОЛЬКО ПРИ ДОКАЗАННОЙ ВОЗМОЖНОСТИ"
+    ],
+    [
+      "36",
+      "ОБЯЗАТЕЛЬНАЯ ПРОВЕРКА КАЧЕСТВА — А/В И КОНТРОЛЬ МЕХАНИКИ"
+    ],
+    [
+      "37",
+      "ЭТАПНОСТЬ ДЛЯ CODEX — РАЗРЕШЕНО ДЕЛАТЬ СРАЗУ"
+    ],
+    [
+      "38",
+      "ЧТО ОТ ПОЛЬЗОВАТЕЛЯ И ЧТО НЕ НУЖНО СПРАШИВАТЬ"
+    ],
+    [
+      "39",
+      "ФИНАЛЬНЫЙ ОТЧЁТ И КРИТЕРИИ ПРИЁМКИ ДОПОЛНЕНИЯ"
+    ],
+    [
+      "40",
+      "ДОПОЛНЕНИЕ v2.0 ОТ 26.10.2026: ПОЛНЫЙ ПАКЕТ ИЗ ВОСЬМИ СИНТЕТИЧЕСКИХ КОРПУСОВ"
+    ],
+    [
+      "41",
+      "НАБОРЫ ДАННЫХ: НАЗНАЧЕНИЕ, ПАРСИНГ, ДОПУСК И ТЕСТЫ"
+    ],
+    [
+      "42",
+      "НЕ СВАЛИВАТЬ 19 000 ЗАПИСЕЙ В ОДИН RAG И В ОДНО «ОБУЧЕНИЕ»"
+    ],
+    [
+      "43",
+      "ЕДИНЫЙ КОНТРАКТ ВХОДНОЙ ЗАПИСИ И СТАДИИ ДОВЕРИЯ"
+    ],
+    [
+      "44",
+      "НЕЛЬЗЯ ИЗУЧАТЬ МЕХАНИКУ ТОЛЬКО ПО «КВИТАНЦИЯМ» ИЗ СИНТЕТИКИ"
+    ],
+    [
+      "45",
+      "КОНКРЕТНЫЕ ИСПРАВЛЕНИЯ ОТКАЗОВ ИИ В ТЕКУЩЕМ DND-NCFU"
+    ],
+    [
+      "46",
+      "ЖАНР, ИММЕРСИЯ И ДОЛГОСРОЧНАЯ ПАМЯТЬ: КРИТЕРИИ ДЛЯ РАССКАЗЧИКА"
+    ],
+    [
+      "47",
+      "МЕТОДИКА КАЧЕСТВА И РАЗДЕЛЕНИЕ НА СПЛИТЫ ДЛЯ ВСЕХ ВОСЬМИ КОРПУСОВ"
+    ],
+    [
+      "48",
+      "ИНТЕГРАЦИЯ ПО ЭТАПАМ, ЧТОБЫ НЕ СЛОМАТЬ РАБОЧУЮ ИГРУ"
+    ],
+    [
+      "49",
+      "КОНТРАКТ ФАЙЛОВ, ФУНКЦИЙ И ПРИЕМОЧНЫХ ПРОВЕРОК"
+    ],
+    [
+      "50",
+      "МИНИМАЛЬНАЯ ЭТАЛОННАЯ СТРУКТУРА ХОДА ДЛЯ ТЕСТОВ И ВОЗМОЖНОГО SFT"
+    ],
+    [
+      "51",
+      "ДВА КОРОТКИХ ВНУТРИИГРОВЫХ ПРОМПТА — ТОЛЬКО ПОСЛЕ СВЕРКИ С КОДОМ"
+    ],
+    [
+      "52",
+      "ПРОВЕРЕННЫЕ ВНЕШНИЕ ИССЛЕДОВАНИЯ И ОГРАНИЧЕНИЯ ПРОВАЙДЕРА"
+    ],
+    [
+      "53",
+      "ФИНАЛЬНЫЙ ЧЕКЛИСТ CODEX ПО ВСЕМ МАТЕРИАЛАМ"
+    ]
+  ],
+  "member_inventory": [
+    {
+      "path": "AUDIT_REPORT.md",
+      "bytes": 5934,
+      "sha256": "e8e061a02df78083ec28f43f9b46f81b3e55b8239e247dfe5590dc8fba1c090b"
+    },
+    {
+      "path": "DND_NCFU_CODEX_DEEPSEEK_DATA_TRAINING_MASTER_SPEC.md",
+      "bytes": 217283,
+      "sha256": "f9077208e471da0e6d160d9fa474c5988f168f20f5bddec3b08268c92daa4f19"
+    },
+    {
+      "path": "DND_RUNTIME_PROMPTS_OPTIONAL.md",
+      "bytes": 6581,
+      "sha256": "4b968c98e5608479d705b628f81e4ca93e0dc4825b9c3e47ec946062a51f552a"
+    },
+    {
+      "path": "MANIFEST_Codex_Training_Sources.json",
+      "bytes": 4981,
+      "sha256": "d15c840b776c376ee070411cbbb75c8811c939ffe18d21a9bb0107bcbc6cd87c"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3163,
+      "sha256": "c54e4aea1632203fee6da5e8066033d91ab040619b2673cc2e60607e19d8bd7c"
+    },
+    {
+      "path": "START_HERE_CODEX.md",
+      "bytes": 4692,
+      "sha256": "695995c0aa9bd729faf237c9297a1cb40fbb14d73850f89458280657c41a56d2"
+    },
+    {
+      "path": "STRUCTURAL_AUDIT.json",
+      "bytes": 5878,
+      "sha256": "b1c55e08e806f539466676493b4f96a87bc77b6a791e0c394d29f4a4c7468a04"
+    },
+    {
+      "path": "corpora/crafting_5000.md",
+      "bytes": 7068488,
+      "sha256": "76a0ffb686256c699ef50e29e9950583473b3dc401871b0ebd1c9b811789d853"
+    },
+    {
+      "path": "corpora/death_and_npc_1000.md",
+      "bytes": 11030424,
+      "sha256": "bb0c8fe41f4a119a0cc773aaaa1597928f29394f8e0eca15f6360bc3fb1d342a"
+    },
+    {
+      "path": "corpora/entities_5000.md",
+      "bytes": 7941379,
+      "sha256": "69cef2adceaae7cf0d495b06480ebbc6d71f269c5504d3e56da161ca56dbcc8a"
+    },
+    {
+      "path": "corpora/events_1000.md",
+      "bytes": 2706113,
+      "sha256": "641b2f622d1174cf40d9e01d81a9307d489532a95172c450a7b83746d07c3e7b"
+    },
+    {
+      "path": "corpora/everyday_1000.md",
+      "bytes": 4436822,
+      "sha256": "13a5a900ec4f7b5a2d760cbcb1789c87c84c20f4b5c583f0ea2febf19ef994ee"
+    },
+    {
+      "path": "corpora/npc_behavior_5000.md",
+      "bytes": 9018627,
+      "sha256": "62a2fcc6cac62e15493cf61911ea8d1d5a637b753ae0024e39973b52a1dfd049"
+    },
+    {
+      "path": "corpora/parties_1000.md",
+      "bytes": 19320323,
+      "sha256": "73a8a2c54b51c7e336f1cd29e2ca04d23d3b2bcfd9dc5f08b820782f364535ad"
+    },
+    {
+      "path": "corpora/parties_200.md",
+      "bytes": 4618464,
+      "sha256": "9e0a5391ccb67c800982a328b4471a7be58698ce3dcb298cd0e881285c5b8b94"
+    },
+    {
+      "path": "research/2022.emnlp-main.637.pdf",
+      "bytes": 764192,
+      "sha256": "b987079c8c29fa6f05e47d6136a5e7c7e09e5414f41976b0a583416910207d52"
+    },
+    {
+      "path": "research/github.txt",
+      "bytes": 115,
+      "sha256": "d8eaed9b336a69aeafe545b9dfd6e516a472d5dfe4ea42b48045ecfb7851bb8e"
+    },
+    {
+      "path": "verify_package.py",
+      "bytes": 7376,
+      "sha256": "f1357b84a0b4132605380e7312e7d19a123d7831657ef209057fc20022dd712d"
+    }
+  ]
+}

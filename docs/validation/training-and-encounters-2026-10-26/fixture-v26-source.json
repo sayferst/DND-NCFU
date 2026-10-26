@@ -1,0 +1,11 @@
+{
+  "source_commit": "b88df8b",
+  "fixture_sha256": "f55bbd0ee71b6f21dc7bf15fdf9180d8e117de095cfce60b6a1aec2b3fbcbf25",
+  "next_roll": {
+    "index": 1,
+    "value": 9
+  },
+  "turns": 3,
+  "schema_version": 26,
+  "method": "git archive b88df8b src/data, actual unchanged SaveSlots writer"
+}

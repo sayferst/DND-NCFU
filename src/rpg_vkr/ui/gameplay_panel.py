@@ -2,11 +2,14 @@
 
 import uuid
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QComboBox,
     QFormLayout,
     QGroupBox,
     QLabel,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
@@ -79,6 +82,32 @@ def install(window, layout):
     window.slot_choice = choice(tab, "Снять", {"shield": "Щит", "armour": "Доспех"})
     button(tab, "Снять выбранное", "unequip", lambda: {"slot": window.slot_choice.currentData()})
     tab = page("Бой")
+    window.encounter_controls = QWidget()
+    team_form = QFormLayout(window.encounter_controls)
+    window.group_enemies, window.group_allies = QListWidget(), QListWidget()
+    for box in (window.group_enemies, window.group_allies):
+        box.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        box.setMaximumHeight(90)
+    team_form.addRow("Противники рядом", window.group_enemies)
+    team_form.addRow("Согласившиеся союзники", window.group_allies)
+    window.encounter_start = button(
+        team_form,
+        "Начать бой выбранных участников",
+        "encounter",
+        lambda: {
+            "enemies": [
+                i.data(Qt.ItemDataRole.UserRole) for i in window.group_enemies.selectedItems()
+            ],
+            "allies": [
+                i.data(Qt.ItemDataRole.UserRole) for i in window.group_allies.selectedItems()
+            ],
+        },
+    )
+    window.battle_info = QLabel()
+    window.battle_info.setWordWrap(True)
+    team_form.addRow(window.battle_info)
+    window.recover_st = button(team_form, "Перевести дух: до 3 ST, один ход", "recover", dict)
+    tab.addRow(window.encounter_controls)
     window.gameplay_target = choice(tab, "Цель рядом")
     button(
         tab,
@@ -286,11 +315,57 @@ def refresh(window):
         [(t.id, t.name) for t in session.interaction_state().carried() if not t.resource],
     )
     refill(window.repair_choice, own)
+    window.encounter_controls.setVisible(session.schema_version >= 27)
+    if session.schema_version >= 27:
+        battle = state["battle"]
+        window.encounter_start.setEnabled(battle is None)
+        window.recover_st.setEnabled(battle is not None)
+        names = {r.id: r.name for r in session.interaction_state().actor_refs}
+        names["hero"] = session.character.name
+        window.battle_info.setText(
+            "Раунд "
+            + str(battle["round"])
+            + ". Очередь: "
+            + " → ".join(names.get(id, id) for id in battle["order"])
+            + ". Сейчас ход героя."
+            if battle
+            else "Выберите несколько противников и доступных союзников."
+        )
+        for box, allies_only in [(window.group_enemies, False), (window.group_allies, True)]:
+            selected = {i.data(Qt.ItemDataRole.UserRole) for i in box.selectedItems()}
+            if battle:
+                selected = {
+                    id
+                    for id, side in battle["sides"].items()
+                    if (side == "party") == allies_only and id != "hero"
+                }
+            box.setEnabled(battle is None)
+            box.clear()
+            if session.catalog:
+                for ref in session.interaction_state().actor_refs:
+                    if not session.actor_is_here(ref.id):
+                        continue
+                    entity = next(e for e in session.catalog.entities if e.id == ref.id)
+                    definition = next(
+                        d for d in session.catalog.definitions if d.id == entity.definition_id
+                    )
+                    if (entity.state or {}).get("hp", definition.properties["hp_max"]) <= 0:
+                        continue
+                    ally = (
+                        definition.properties.get("party_ally") is True
+                        and (entity.state or {}).get("disposition") == "friendly"
+                    )
+                    if ally != allies_only:
+                        continue
+                    row = QListWidgetItem(ref.name)
+                    row.setData(Qt.ItemDataRole.UserRole, ref.id)
+                    box.addItem(row)
+                    row.setSelected(ref.id in selected)
     targets, merchants = [], []
     for ref in session.interaction_state().actor_refs:
         if not session.actor_is_here(ref.id):
             continue
-        targets.append((ref.id, ref.name))
+        battle = state.get("battle")
         entity = (
             next((e for e in session.catalog.entities if e.id == ref.id), None)
             if session.catalog
@@ -304,6 +379,13 @@ def refresh(window):
             if session.catalog
             else None
         )
+        living = not entity or (entity.state or {}).get("hp", 1) > 0
+        if (
+            session.schema_version < 27
+            or living
+            and (not battle or battle["sides"].get(ref.id) == "enemy")
+        ):
+            targets.append((ref.id, ref.name))
         if available(state, ref.id, definition) and (
             ref.id == "merchant"
             or definition
@@ -370,6 +452,11 @@ def run(window, command, args):
         QMessageBox.information(
             window, "Действие недоступно", "Сначала выберите доступный предмет или цель."
         )
+        return
+    if command == "encounter" and not window._confirm(
+        "Начать бой с выбранными противниками? Участники действуют по инициативе; "
+        "союзники и противники получают самостоятельные ходы."
+    ):
         return
     if command == "attack" or command == "cast" and SPELLS[args["spell"]][3] == "attack":
         id = args["target"]

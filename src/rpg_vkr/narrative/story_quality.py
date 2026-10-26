@@ -242,7 +242,28 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
         re.I,
     ):
         issues.append("Сначала нужен расчёт атаки движком.")
-    if resolution:
+    team = campaign.get("team_combat")
+    if team:
+        if team["active"] and re.search(r"\bсхватка завершена\b", prose, re.I):
+            issues.append("В групповой схватке ещё есть действующие противники.")
+        for actor in team["actors"]:
+            root = re.escape(actor["name"])
+            if actor["hp"] > 0 and re.search(
+                r"\b" + root + r"\s+(?:повержен\w*|падает без сознания|погиб\w*)", prose, re.I
+            ):
+                issues.append("Выбытие названного участника не подтверждено движком.")
+        hero_hits = [a for a in team["attacks"] if a["actor_id"] == "hero"]
+        if (
+            hero_hits
+            and not any(a["hit"] for a in hero_hits)
+            and re.search(
+                r"\b(?:ваш удар (?:достигает|попадает)|вы (?:попали|вонзаете|наносите рану))\b",
+                prose,
+                re.I,
+            )
+        ):
+            issues.append("По расчёту герой промахнулся; попадание не подтверждено.")
+    if resolution and not team:
         last = resolution[-1]
         if not last.get("rolled") and re.search(
             r"\b(?:вонзаете|вонзили|удар достигает|попали|наносите удар)\b", prose, re.I

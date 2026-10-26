@@ -1,0 +1,10 @@
+{
+  "schema_version": 27,
+  "new_npc_id": "vesta",
+  "definition_id": "vesta_type",
+  "ordinary_clock_turns": 10,
+  "cold_replay": "PASS",
+  "different_world_isolation": "PASS",
+  "model_calls": 0,
+  "artistic_quality": "not_assessed"
+}

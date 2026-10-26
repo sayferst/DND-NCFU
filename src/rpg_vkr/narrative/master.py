@@ -156,6 +156,55 @@ def campaign_context(session, target=""):
                 and can_speak(session.catalog, actor["id"])
             },
         }
+    if session.schema_version >= 27 and session.turns and session.turns[-1].gameplay:
+        result = session.turns[-1].gameplay["result"]
+        if "battle_events" in result:
+            names = {a.id: a.name for a in scene.actor_refs}
+            encounter = result["state"]["battle"] or result["state"]["last_battle"]
+            participants = set(encounter["order"]) if encounter else set()
+            public_simulation["team_combat"] = {
+                "active": session.in_combat,
+                "attacks": result["attacks"],
+                "events": result["battle_events"],
+                "actors": [
+                    {
+                        "id": a.id,
+                        "name": names[a.id],
+                        "hp": (a.state or {}).get("hp", 1),
+                        "life": (a.state or {}).get("life", "alive"),
+                    }
+                    for a in session.catalog.entities
+                    if a.id in participants and a.id in names
+                ],
+            }
+            for attack in result["attacks"]:
+                if attack["actor_id"] == "hero":
+                    resolution.append(
+                        {
+                            "target_id": attack["target_id"],
+                            "target": names.get(attack["target_id"], attack["target_id"]),
+                            "command": "атака",
+                            "hit": attack["hit"],
+                            "defeated": attack["defeated"],
+                            "rolled": True,
+                            "summary": session.turns[-1].text,
+                            "notes": [],
+                        }
+                    )
+            for event in result["battle_events"]:
+                if event["kind"] == "spell":
+                    resolution.append(
+                        {
+                            "target_id": event["target"],
+                            "target": names.get(event["target"], event["target"]),
+                            "command": "магия",
+                            "hit": event["damage"] > 0,
+                            "defeated": event.get("hp_after") == 0,
+                            "rolled": True,
+                            "summary": session.turns[-1].text,
+                            "notes": [],
+                        }
+                    )
     return {
         **public_simulation,
         "d20_skills": (

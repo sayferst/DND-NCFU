@@ -1367,3 +1367,19 @@ JSON/SQLite/архив/replay и порча результата. Fixture25 из
 Нативная ручная проверка Windows — по docs/GAMEPLAY_V3_FACTIONS.md, пока не выполнена.
 
 Итог финального full-02: scripts/check.py exit0; **1705 passed / 224.15с**; pip check, Ruff check и format (265файлов) успешны. Исходники после этого прогона не менялись. Windows/Setup/live API не проверялись. Raw: docs/validation/gameplay-v3-factions-2026-10-26/full-02.txt.
+
+## 26.10.2026 — learning P0 и групповой бой27
+
+tests/learning/test_package.py использует собственные маленькие данные:
+все8форматов/19000канонических единиц, смешанные заголовки,200алиасов,
+SHA-тамперинг, ZIP traversal/симлинки, BOM/CRLF/span, инертные инструкции,
+без автоматического approval и перезаписи экспорта. Настоящий архив проверен
+отдельными CLI-запусками; raw не входит в fixtures.
+tests/test_team_encounters.py проверяет реальную очередь/команды/NPС-действия,
+ST/манёвр/магия/награды/повторы/отказы, Qt-кнопку/цели/состав и холодное чтение.
+Максимальный состав с длинными именами сохраняется/загружается. Fixture26 выпущен
+неизменённым b88df8b и фиксирует SHA/следующий RNG. Story-contract регрессии
+проверяют метафоры, ответ вместо награды и правдивость квитанции группового боя.
+Нативная Windows-инструкция: docs/GAMEPLAY_V3_TEAMS.md, пока не выполнена.
+
+Финальный full-02: scripts/check.py exit0; **1733 passed / 230.85с**. pip check, Ruff check/format272файла успешны. После прогона исходники не менялись. Native Windows/Setup/live API не проверены. Raw: docs/validation/training-and-encounters-2026-10-26/full-02.txt.

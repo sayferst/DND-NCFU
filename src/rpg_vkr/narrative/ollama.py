@@ -371,6 +371,10 @@ class OllamaClient(QObject):
             from rpg_vkr.narrative.gameplay_prompt import GUIDE
 
             prompt += GUIDE
+        if campaign.get("gameplay_revision", 0) >= 4:
+            from rpg_vkr.narrative.gameplay_prompt import TEAM_GUIDE
+
+            prompt += TEAM_GUIDE
         if campaign.get("gameplay_revision", 0) >= 3:
             from rpg_vkr.narrative.gameplay_prompt import FACTION_GUIDE
 
@@ -521,6 +525,10 @@ class OllamaClient(QObject):
             from rpg_vkr.narrative.gameplay_prompt import GUIDE
 
             prompt += GUIDE
+        if state.get("gameplay_revision", 0) >= 4:
+            from rpg_vkr.narrative.gameplay_prompt import TEAM_GUIDE
+
+            prompt += TEAM_GUIDE
         if state.get("gameplay_revision", 0) >= 3:
             from rpg_vkr.narrative.gameplay_prompt import FACTION_GUIDE
 

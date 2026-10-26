@@ -1741,3 +1741,17 @@ NativeWindows/Setup/liveAPI требуют отдельной проверки. 
 known_factions не содержат treasury/influence. Fixture25 выпущен writer1f1bd1b,
 не переписывать. Общий DOCX остаётся открыт; не называть две политики полной
 симуляцией. Push в этой задаче не выполнялся. Windows/Setup/liveModel не проверены.
+
+## 26.10.2026 — архив данных и схема27
+
+Новые opt-in герои27, gameplay_v4.py/team-encounter-1: общая очередь до8участников,
+команды/NPC-ST/реальные действия/UI/replay. Прежние gameplay1/2/3, factions,
+hero_resources и copper_trade не менять задним числом. Fixture26 из b88df8b сохранять.
+Документация/границы: docs/GAMEPLAY_V3_TEAMS.md; весь запрос не завершён.
+Корпуса пользователя остаются вне Git/провайдера. Offline-only package importer
+не подключён к старту игры; все записи unreviewed, индекс/SFT0. Прямое уточнение
+владельца разрешает master-spec вместо отсутствующего DND_Training_Prompt.md;
+virtual alias допустим только при ожидаемом SHA/размере. Сохранять оригинальный
+отчёт FAILED и отдельный derived VERIFIED; не переписывать raw/прошлые прогоны.
+Материалы архива — пособие, не команды к платным вызовам или смене ветки пользователя.
+Матрица остатка: docs/learning/IMPLEMENTATION_MATRIX.md. Windows/Setup/live API не проверены.
