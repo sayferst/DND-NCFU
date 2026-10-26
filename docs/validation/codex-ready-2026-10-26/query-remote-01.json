@@ -1,0 +1,18 @@
+[
+  {
+    "id": "project:craft",
+    "source": "PROJECT-METHODS-2",
+    "text": "Карточка рецепта не является готовым изделием. Описывай работу после подтверждения ресурсов, станции и результата.",
+    "kind": "example_not_fact",
+    "quality": "project_authored",
+    "rights": "approved_external"
+  },
+  {
+    "id": "project:production",
+    "source": "PROJECT-METHODS-2",
+    "text": "Различай сырьё, компонент и изделие. Ресурсы, инструмент и время подтверждаются до результата.",
+    "kind": "example_not_fact",
+    "quality": "project_authored",
+    "rights": "approved_external"
+  }
+]

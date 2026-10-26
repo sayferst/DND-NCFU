@@ -1,0 +1,29 @@
+..................F.                                                     [100%]
+=================================== FAILURES ===================================
+_______ test_heldout_reviews_never_enter_index_and_methods_are_original ________
+
+small_package = (PosixPath('/tmp/pytest-of-agent/pytest-18/test_heldout_reviews_never_ent0/input.zip'), [LearningRecord(record_id='S:0..., approved_for_rag=False, approved_for_sft=False, third_party_transfer_allowed=False, usable_as_game_fact=False), ...])
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-18/test_heldout_reviews_never_ent0')
+
+    def test_heldout_reviews_never_enter_index_and_methods_are_original(small_package, tmp_path):
+        path, _ = small_package
+        directory = tmp_path / "library"
+        library.build(path, directory)
+        with library.Library(library.active_path(directory), writable=True) as store:
+            held = next(v for v in store.candidates() if v["split"] != "train")
+            store.review(
+                held["id"], "Уникальныйотложенный: наблюдать.", reviewer="owner", approved=True
+            )
+            assert not store.search("уникальныйотложенный")
+            hints = store.search("переправа путешествие", remote=True)
+            assert hints and all(v["quality"] == "project_authored" for v in hints)
+            store.metadata["fts"] = False
+>           assert store.search("переправа путешествие", remote=True)
+E           AssertionError: assert []
+E            +  where [] = search('переправа путешествие', remote=True)
+E            +    where search = <rpg_vkr.learning.library.Library object at 0x7f3517c2d9a0>.search
+
+tests/learning/test_pipeline.py:164: AssertionError
+=========================== short test summary info ============================
+FAILED tests/learning/test_pipeline.py::test_heldout_reviews_never_enter_index_and_methods_are_original
+1 failed, 19 passed in 1.19s

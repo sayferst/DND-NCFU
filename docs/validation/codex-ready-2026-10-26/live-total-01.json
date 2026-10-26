@@ -1,0 +1,19 @@
+{
+  "live_calls": 72,
+  "request_models": {
+    "deepseek/deepseek-v4.1-flash": 72
+  },
+  "response_models": {
+    "deepseek/deepseek-v4.1-flash": 72
+  },
+  "original_statuses": {
+    "ACCEPTED": 69,
+    "REJECTED_BY_GAME_VALIDATOR": 3
+  },
+  "reserved_upper_rub_sum": "38.28388748213601",
+  "api_usage_cost_sum": "3.710362716526752072",
+  "owner_limit_rub": "150",
+  "all_state_rng_unchanged": true,
+  "raw_corpus_sent": false,
+  "weights_access": "UNAVAILABLE_INFERENCE_ONLY"
+}

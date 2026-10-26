@@ -1,0 +1,181 @@
+{
+  "archive_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "build_seconds": 28.58493006899971,
+  "counts": {
+    "heldout_count": 0,
+    "indexed_count": 0,
+    "legacy_alias_count": 200,
+    "parsed_count": 19200,
+    "quality_approved_count": 0,
+    "raw_structural_count": 19200,
+    "sft_ready_count": 0,
+    "unique_canonical_count": 19000
+  },
+  "fts": true,
+  "groups": {
+    "candidate_comparisons": 548841,
+    "groups": 2069,
+    "near_duplicate_links": 834,
+    "near_duplicate_threshold": 0.88,
+    "normalized_exact_links": 3972,
+    "semantic_independence": "not_proven",
+    "split_counts": {
+      "dev": 1439,
+      "test": 1910,
+      "train": 15651
+    },
+    "split_group_overlap": 0
+  },
+  "human_approved": 0,
+  "namespace_counts": {
+    "adjudication": 1000,
+    "behavior": 5000,
+    "consequences": 1000,
+    "crafting": 5000,
+    "entities": 5000,
+    "events": 1000,
+    "narrative": 1000
+  },
+  "pipeline": "corpus-qc-1",
+  "quality_counts": {
+    "machine_validated": 5610,
+    "needs_review": 13390
+  },
+  "raw_external_transfer": false,
+  "source_files": [
+    {
+      "categories": {
+        "session": 200
+      },
+      "long_lines": 18736,
+      "path": "corpora/parties_200.md",
+      "records": 200,
+      "repeated_long_lines": 12551,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "9e0a5391ccb67c800982a328b4471a7be58698ce3dcb298cd0e881285c5b8b94",
+      "source_id": "USER-SYN-0200"
+    },
+    {
+      "categories": {
+        "session": 1000
+      },
+      "long_lines": 82703,
+      "path": "corpora/parties_1000.md",
+      "records": 1000,
+      "repeated_long_lines": 64563,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "73a8a2c54b51c7e336f1cd29e2ca04d23d3b2bcfd9dc5f08b820782f364535ad",
+      "source_id": "USER-SYN-1000"
+    },
+    {
+      "categories": {
+        "death_session": 1000
+      },
+      "long_lines": 39736,
+      "path": "corpora/death_and_npc_1000.md",
+      "records": 1000,
+      "repeated_long_lines": 26835,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "bb0c8fe41f4a119a0cc773aaaa1597928f29394f8e0eca15f6360bc3fb1d342a",
+      "source_id": "USER-SYN-DEATH-1000"
+    },
+    {
+      "categories": {
+        "BA": 250,
+        "EV": 250,
+        "FI": 250,
+        "LO": 250
+      },
+      "long_lines": 8026,
+      "path": "corpora/events_1000.md",
+      "records": 1000,
+      "repeated_long_lines": 6459,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "641b2f622d1174cf40d9e01d81a9307d489532a95172c450a7b83746d07c3e7b",
+      "source_id": "USER-SYN-EVENTS-1000"
+    },
+    {
+      "categories": {
+        "BOOK": 500,
+        "BOSSM": 400,
+        "CSK": 750,
+        "MAG": 500,
+        "MOBM": 800,
+        "NPCM": 950,
+        "NSK": 650,
+        "SBOOK": 450
+      },
+      "long_lines": 25019,
+      "path": "corpora/npc_behavior_5000.md",
+      "records": 5000,
+      "repeated_long_lines": 17622,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "62a2fcc6cac62e15493cf61911ea8d1d5a637b753ae0024e39973b52a1dfd049",
+      "source_id": "USER-SYN-BEHAVIOR-5000"
+    },
+    {
+      "categories": {
+        "ARM": 450,
+        "BOSS": 300,
+        "GEAR": 450,
+        "KIN": 200,
+        "MON": 1000,
+        "NPC": 600,
+        "PLANT": 1000,
+        "PROF": 350,
+        "WPN": 650
+      },
+      "long_lines": 22855,
+      "path": "corpora/entities_5000.md",
+      "records": 5000,
+      "repeated_long_lines": 14858,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "69cef2adceaae7cf0d495b06480ebbc6d71f269c5504d3e56da161ca56dbcc8a",
+      "source_id": "USER-SYN-ENTITIES-5000"
+    },
+    {
+      "categories": {
+        "everyday_example": 1000
+      },
+      "long_lines": 12260,
+      "path": "corpora/everyday_1000.md",
+      "records": 1000,
+      "repeated_long_lines": 11538,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "13a5a900ec4f7b5a2d760cbcb1789c87c84c20f4b5c583f0ea2febf19ef994ee",
+      "source_id": "USER-SYN-EVERYDAY-1000"
+    },
+    {
+      "categories": {
+        "COMP": 350,
+        "DROP": 700,
+        "ENCH": 400,
+        "EQPC": 350,
+        "FOOD": 500,
+        "GEM": 450,
+        "MAT": 450,
+        "MCR": 450,
+        "ORE": 600,
+        "POT": 350,
+        "WPNC": 400
+      },
+      "long_lines": 25362,
+      "path": "corpora/crafting_5000.md",
+      "records": 5000,
+      "repeated_long_lines": 17048,
+      "rights": "local_only_provenance_unverified",
+      "sha256": "76a0ffb686256c699ef50e29e9950583473b3dc401871b0ebd1c9b811789d853",
+      "source_id": "USER-SYN-CRAFT-5000"
+    }
+  ],
+  "unresolved_references": 0,
+  "records": 19000,
+  "reviewed": 0,
+  "indexed": 24,
+  "indexed_corpus": 0,
+  "bytes": 149471232,
+  "cached": false,
+  "elapsed_seconds": 28.655302883999866,
+  "peak_rss_mib": 335.22265625,
+  "hardware": "managed Linux executor, not owner laptop"
+}

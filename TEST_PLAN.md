@@ -1425,3 +1425,17 @@ docs/validation/windows-corpus-2026-10-26/target-01.txt. Нативный Window
 Итог исправления Windows-переносимости: scripts/check.py exit0; **1815passed/265.58с**; pip/Ruff check/format280файлов успешны. Целевые106passed/17.79с, под системной cp1251 —106passed/17.64с. Полный исходный Windows-лог подтвердил5failed/1807passed до исправления; нативный повтор ещё ожидается. Raw: docs/validation/windows-corpus-2026-10-26.86защищённыхфайлов неизменны.
 
 26.10.2026: владелец подтвердил полный нативный Windows-прогон коммитаb96f330: **1815passed/319.49с**, Python3.12.10/SQLite3.49.1, pip check/Ruff check/format280файлов успешны, scripts/check.py сообщает успех. Все пять прежних падений устранены. Неисправленное предупреждение pytest atexit: WinError5 при очистке pytest-current, проверку не прерывает. Ручная игра/Setup этим логом не подтверждены. Обезличенное свидетельство: docs/validation/windows-corpus-2026-10-26/windows-success-01.json; исходный лог с личными путями остаётся вне Git.
+
+
+## CODEX READY P0–P3
+
+pytest tests/learning проверяет полный формат пакета, SHA/alias/ID, QC/groups,
+реальную локальную SQLite, review/revoke/rights/heldout, отмену/lock/версии,
+память100ходов и два пути сохранения, закрытую UI-вкладку и stale callback,
+исходящие бюджеты/единственную модель/отсутствие сети в offline evaluation.
+Существующие gameplay/replay/receipt/многопартийные тесты сохранены.
+Полные фактические команды/ошибки/повторы: docs/validation/codex-ready-2026-10-26.
+72платных live-запроса выполнены отдельно после разрешения, не частью pytest.
+Для ручной Windows-проверки и отката: docs/learning/OPERATIONS.md.
+
+Итог CODEX READY: scripts/check.py exit0, **1851passed/308.36с**, pip/Ruff check/format305файлов успешны; full-check-03.txt. Новые нативные Windows/Setup ещё не проверены.

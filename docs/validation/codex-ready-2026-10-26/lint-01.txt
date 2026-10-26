@@ -1,0 +1,15 @@
+I001 [*] Import block is un-sorted or un-formatted
+   --> src/rpg_vkr/ui/campaign_v5_panel.py:123:13
+    |
+121 |           values = retrieve(window.rag_query.text())
+122 |           if load()["library"]:
+123 | /             import sqlite3
+124 | |             from rpg_vkr.learning.library import Library, active_path
+    | |_____________________________________________________________________^
+125 |
+126 |               try:
+    |
+help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

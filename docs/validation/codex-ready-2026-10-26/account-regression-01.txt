@@ -1,0 +1,35 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_account_build_greets_with_login_and_replaces_activation _________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x910a930) at 0x7f90239d67c0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-30/test_account_build_greets_with0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f90239d9580>
+
+    def test_account_build_greets_with_login_and_replaces_activation(qt_app, tmp_path, monkeypatch):
+        from PySide6.QtWidgets import QPushButton
+    
+        from rpg_vkr.deployment import ReleaseProfile
+        from rpg_vkr.storage.slots import SaveSlots
+        from rpg_vkr.ui import account_login, tester_connection
+        from rpg_vkr.ui.main_window import MainWindow
+    
+        calls = []
+        profile = ReleaseProfile(mode="tester", gateway="https://example.org", account_login=True)
+        monkeypatch.setattr(tester_connection, "load_release_profile", lambda: profile)
+        monkeypatch.setattr(tester_connection, "load_secret", lambda path: "old-installation-token")
+        monkeypatch.setattr(account_login, "show_login", lambda window: calls.append(window))
+        window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+        try:
+            qt_app.processEvents()
+            assert calls == [window] and window._tester_token == ""
+            labels = [button.text() for button in window.findChildren(QPushButton)]
+            assert "Проверить сопряжение" in labels
+>           assert not any(label.startswith("Активировать") for label in labels)
+E           assert not True
+E            +  where True = any(<generator object test_account_build_greets_with_login_and_replaces_activation.<locals>.<genexpr> at 0x7f901b205150>)
+
+tests/test_accounts.py:144: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_accounts.py::test_account_build_greets_with_login_and_replaces_activation
+1 failed in 0.80s

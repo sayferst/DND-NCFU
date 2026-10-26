@@ -144,7 +144,9 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
     # Preserve player agency. Requested conduct and faithful quotation are allowed.
     evidence = {
         r"\bвы\s+(?:вдруг\s+)?(?:замолч\w*|молч\w*)": r"молч|тишин|не говоря",
-        r"\bвы\s+(?:вдруг\s+)?(?:реш\w*|соглас\w*|отказ\w*)": r"реш|соглас|отказ|не буду|не хочу",
+        r"\bвы\s+(?:вдруг\s+)?(?:реш\w*|соглас\w*|соглаш\w*|отказ\w*)": (
+            r"реш|соглас|соглаш|отказ|не буду|не хочу"
+        ),
         r"\bвы\s+(?:вдруг\s+)?(?:влюб\w*|боите\w*)": r"люб|бою|страх",
         r"\bвы\s+чувству\w*[^.!?\n]{0,60}(?:любов\w*|нежност\w*|страх\w*|вину)": (
             r"чувств|люб|бою|страх|вин"
@@ -155,6 +157,22 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
             issues.append(
                 "Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку."
             )
+    # Mentioning consent (including a question or refusal) is not affirmative consent.
+    # Check each asserted commitment separately; permission from an item owner is not
+    # a promise made by the hero. This never applies any game effect.
+    commitments = (
+        (
+            r"\bвы\s+(?:реш\w*\s+)?(?:соглас|соглаш)\w*",
+            r"\b(?:я\s+)?(?:соглашаюсь|согласен|согласна)\b",
+        ),
+        (r"\bвы\s+[^.!?\n]{0,90}\bобеща(?:ли|ете)\b", r"\b(?:я\s+)?обещаю\b"),
+    )
+    for asserted, affirmation in commitments:
+        claim = re.search(asserted, prose, re.I)
+        if claim and not re.search(r"\bне\s+обеща(?:ли|ете)\b", claim[0], re.I):
+            explicit = re.search(affirmation, normal)
+            if not explicit or re.search(r"\bне\s*$", normal[: explicit.start()]) or "?" in normal:
+                issues.append("Утверждение о согласии или обещании героя не подтверждено игроком.")
     invented_speech = re.search(
         r"«([^»]+)»[\s,—–-]*(?:произносите|отвечаете|говорите|спрашиваете|предлагаете)\s+вы\b",
         text,

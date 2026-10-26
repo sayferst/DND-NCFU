@@ -1,0 +1,151 @@
+{
+  "baseline_commit": "7c217fc",
+  "python": "3.12.14",
+  "sqlite": "3.53.1",
+  "files": [
+    {
+      "path": "scripts/learning/evaluate.py",
+      "sha256": "8a5cddbdccf4254a5768b0c35d67a6f06d34dfb9fd720c3836e4e7652ec882f5"
+    },
+    {
+      "path": "scripts/learning/live_probe.py",
+      "sha256": "ef4e8a52787785b6b3c484c32822d7fdf6b5d3ee4a657e4295e32c0e3e1722bd"
+    },
+    {
+      "path": "scripts/learning/live_suite.py",
+      "sha256": "8fe802ec21921af334d64a7319c32f296d75b97e0a2d4b57b04c38eaf37edd2f"
+    },
+    {
+      "path": "scripts/learning/manage_library.py",
+      "sha256": "18b400ed7b224f5bbcc6bac13119d2e7675e473e64911deb4c5ac58b29718d9c"
+    },
+    {
+      "path": "src/rpg_vkr/learning/evaluation.py",
+      "sha256": "f0da397bd1c3904d8df605379d215702e385958a48d9ec90cfee86e45a9d2523"
+    },
+    {
+      "path": "src/rpg_vkr/learning/library.py",
+      "sha256": "f172b405f28215dd63ce7c713ae2819a95236bdf149ca7df95f78ff97614a471"
+    },
+    {
+      "path": "src/rpg_vkr/learning/live_probe.py",
+      "sha256": "b95fe4e904bfdad8fb09fd03503043dc12f1cc2988fb036aabc880283c2d8d80"
+    },
+    {
+      "path": "src/rpg_vkr/learning/live_suite.py",
+      "sha256": "13f7bce7ac003c656b53cd580d3bd9e7ae913bd9ea577d58800ce5786cfdf778"
+    },
+    {
+      "path": "src/rpg_vkr/learning/memory.py",
+      "sha256": "f6f849782a8547d7863327b493f566c915ad1ffa9ffc744a25b5e9b543ed6c26"
+    },
+    {
+      "path": "src/rpg_vkr/learning/methods.py",
+      "sha256": "a4c80f069a85cc28e958dd71bcd25c86d81f8aa5fe7a6586c54d67e51457ff30"
+    },
+    {
+      "path": "src/rpg_vkr/learning/package.py",
+      "sha256": "5c0c939a179b088f97aeb390db27f383d6a37873688fc6af95e90f8d9f968ffc"
+    },
+    {
+      "path": "src/rpg_vkr/learning/probe_cases.py",
+      "sha256": "f872a3dd74005c86ef82a3aeea2b256509ab65e186273c96344522cd7eaeee9a"
+    },
+    {
+      "path": "src/rpg_vkr/learning/quality.py",
+      "sha256": "fb67291bcead002494d2344182f3f9cdf060477f9f584b88db687e81a5eafab9"
+    },
+    {
+      "path": "src/rpg_vkr/learning/query.py",
+      "sha256": "6e41cca050345b358d9655834a10b4dbcf592d685acca80443ac8001da5852b1"
+    },
+    {
+      "path": "src/rpg_vkr/learning/runtime.py",
+      "sha256": "a3575bcf50e80e9e84b37c427096cec4fc1f6fc38f03ac90e1af007073d9813a"
+    },
+    {
+      "path": "src/rpg_vkr/learning/scenarios.py",
+      "sha256": "5d51ee15958684edbd2dc6d429eb128851e60ce31e6e8bcc93e61a20caf161e4"
+    },
+    {
+      "path": "src/rpg_vkr/learning/settings.py",
+      "sha256": "70f6f7c76eee26ca2661d19b1918cde3d54f54d721e0508d0f4147e1bf32bd6d"
+    },
+    {
+      "path": "src/rpg_vkr/learning/templates.py",
+      "sha256": "96ab2b39c9d4a7aa20ab80ebc359137d748085dece753c3ac32635e4b213ce19"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/master.py",
+      "sha256": "631a63188a3d33ceb7ddc3310a5f906b1a5e69ab3d8ac9a463b43f860586ed96"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/ollama.py",
+      "sha256": "5a3beaa94b1e30bffb785482c99b4c3159351570d1c36f4debda8c9fdcdbed4e"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story.py",
+      "sha256": "35570564eab3aa922642e55fed9a381b5adafeb1b52047658c195bfb48500b7e"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story_prompt.py",
+      "sha256": "17d911107b7b37b6bdb07d2ec394f6565630efee1c4a39459851ea130024b2c2"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story_quality.py",
+      "sha256": "8ef433ce60e46a18ea935413506205454f5d9947cddc3efdd1f236305328e53d"
+    },
+    {
+      "path": "src/rpg_vkr/ui/campaign_v5_panel.py",
+      "sha256": "ec5bca48fbac108703c8974057f7ccc2627f0124320d5672b75a088372be4612"
+    },
+    {
+      "path": "src/rpg_vkr/ui/developer_panel.py",
+      "sha256": "5b8b07371bed205165ae7062d2cb8534906df2a294c39fd741d666d71ae06d3b"
+    },
+    {
+      "path": "src/rpg_vkr/ui/learning_panel.py",
+      "sha256": "c13644ba4a96d5ab698043b76f8e3a25541b153bfbd119621abc205a36cc6e73"
+    },
+    {
+      "path": "src/rpg_vkr/ui/main_window.py",
+      "sha256": "a4398a9e2a103682efb96b0f74d7c34cdbc30b36f06d4116cb53c42c9c49def5"
+    },
+    {
+      "path": "src/rpg_vkr/ui/narrator_panel.py",
+      "sha256": "79dd29b5616803df47e4232e7556b42089d2565a9589920818464626525f2901"
+    },
+    {
+      "path": "tests/learning/conftest.py",
+      "sha256": "3a7ace2ed3a12b365e122b4608e346e795a78a23e21ce8896748ef02d65a5dd2"
+    },
+    {
+      "path": "tests/learning/test_evaluation.py",
+      "sha256": "04a30d4e121a7495f2c3aaef770603d674c5abb955b30220eba9fb8afaea59bb"
+    },
+    {
+      "path": "tests/learning/test_live_probe.py",
+      "sha256": "8d792befd908553fb7fa0b67208199fc62b47067798a795707059f7f33ada889"
+    },
+    {
+      "path": "tests/learning/test_live_suite.py",
+      "sha256": "f85a556dcb40b27ae853e0bd9751eff66991b419d8018b23769bebbc8723a78d"
+    },
+    {
+      "path": "tests/learning/test_memory_runtime.py",
+      "sha256": "3cd581d771caa401ba0cf0a1372f939816281d1b85ea798f9f0e819fcb090cc1"
+    },
+    {
+      "path": "tests/learning/test_pipeline.py",
+      "sha256": "8d87d00fe4f3f82259a4997e36a3d033bf0d4b3a75d2fd05d3fe65041915ddbb"
+    },
+    {
+      "path": "tests/learning/test_review_and_ui.py",
+      "sha256": "1355a87b75d6aeac617f85069cb5d60e65971db60417f4362b04193376aa9211"
+    }
+  ],
+  "full_check": "full-check-03.txt",
+  "passed": 1851,
+  "seconds": 308.36,
+  "manual_windows_gui": "NOT_RUN"
+}

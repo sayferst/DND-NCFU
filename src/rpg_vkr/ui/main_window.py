@@ -768,6 +768,8 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self.notifications.fade.stop()
         if hasattr(self, "developer_console") and hasattr(self.developer_console, "gateway_client"):
             self.developer_console.gateway_client.cancel()
+        if hasattr(self, "developer_console"):
+            self.developer_console.learning.shutdown()
         self._closing = True
         self.routerai_catalog.cancel()
         self.routerai_key_client.cancel()

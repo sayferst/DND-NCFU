@@ -59,14 +59,17 @@ def writing_profile(model, text=""):
     # Known failing model, not a claim about every unknown 1B model or custom alias.
     small = model.casefold().split("/")[-1].startswith("qwen3:1.7b")
     if model.casefold().removeprefix("~").startswith("deepseek/"):
+        # V4.1 Flash may spend the entire former900-token cap on reasoning.
+        # Keep the prose target short while reserving room for a complete answer.
+        flash41 = model.casefold().removeprefix("~").startswith("deepseek/deepseek-v4.1-flash")
         return {
             "name": "deepseek-ru-1",
             "length": (
                 "простое действие — 1–3 предложения; важную ситуацию раскрой полнее, "
                 "обычно до 1800 символов, без обязательного минимума"
             ),
-            "num_predict": 900,
-            "repair_predict": 1200,
+            "num_predict": 2048 if flash41 else 900,
+            "repair_predict": 3072 if flash41 else 1200,
         }
     return {
         "name": "short-ru-1" if small else "standard-ru-1",
@@ -122,6 +125,12 @@ def render_context(context):
             + json.dumps(context["public_objects"], ensure_ascii=False)
         )
     lines.append("Известные вещи героя: " + facts["inventory"])
+    if context.get("learning_memory"):
+        lines.append(
+            "Прошлые подтверждённые события выбранного мира и героя "
+            "(не заменяют текущее состояние; scope ограничивает сведения NPC): "
+            + json.dumps(context["learning_memory"], ensure_ascii=False)
+        )
     if context.get("persistent_memory"):
         lines.append(
             "Отобранная память кампании (источники и слухи сохраняют свой статус): "

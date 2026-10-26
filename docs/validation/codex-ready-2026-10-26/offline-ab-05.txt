@@ -1,0 +1,46 @@
+{
+  "B0": {
+    "cases": 100,
+    "validator_mismatches": 0,
+    "unsafe_accepts": 0,
+    "expected_method_hits_proxy": 0,
+    "memory_available": 0,
+    "max_context_bytes": 41144,
+    "max_extra_bytes": 0,
+    "median_ms": 2.229710500614601,
+    "p95_ms": 3.323396002087975
+  },
+  "B1": {
+    "cases": 100,
+    "validator_mismatches": 0,
+    "unsafe_accepts": 0,
+    "expected_method_hits_proxy": 62,
+    "memory_available": 0,
+    "max_context_bytes": 42276,
+    "max_extra_bytes": 1066,
+    "median_ms": 3.460498501226539,
+    "p95_ms": 5.500773000676418
+  },
+  "B2": {
+    "cases": 100,
+    "validator_mismatches": 0,
+    "unsafe_accepts": 0,
+    "expected_method_hits_proxy": 0,
+    "memory_available": 4,
+    "max_context_bytes": 41542,
+    "max_extra_bytes": 342,
+    "median_ms": 2.273225500175613,
+    "p95_ms": 3.296524999313988
+  },
+  "B3": {
+    "cases": 100,
+    "validator_mismatches": 0,
+    "unsafe_accepts": 0,
+    "expected_method_hits_proxy": 62,
+    "memory_available": 4,
+    "max_context_bytes": 42276,
+    "max_extra_bytes": 1066,
+    "median_ms": 3.2489840014022775,
+    "p95_ms": 4.64334799835342
+  }
+}

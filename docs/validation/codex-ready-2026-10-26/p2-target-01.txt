@@ -1,0 +1,77 @@
+..........................F.                                             [100%]
+=================================== FAILURES ===================================
+__ test_templates_require_review_flags_confirmation_and_persist_idempotently ___
+
+small_package = (PosixPath('/tmp/pytest-of-agent/pytest-25/test_templates_require_review_0/input.zip'), [LearningRecord(record_id='S:0..., approved_for_rag=False, approved_for_sft=False, third_party_transfer_allowed=False, usable_as_game_fact=False), ...])
+learning_session = <rpg_vkr.application.Session object at 0x7fee7b500740>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-25/test_templates_require_review_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fee7b500860>
+
+    def test_templates_require_review_flags_confirmation_and_persist_idempotently(
+        small_package, learning_session, tmp_path, monkeypatch
+    ):
+        path, rows = small_package
+        # Own fixture: an entity template rather than an invented live NPC.
+        rows[0] = replace(rows[0], record_type="entity")
+>       library.build(path, tmp_path / "lib")
+
+tests/learning/test_review_and_ui.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/learning/library.py:370: in build
+    return _build_locked(package, directory, cancelled=cancelled, progress=progress)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/learning/library.py:455: in _build_locked
+    annotation = annotate(record)
+                 ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+record = LearningRecord(record_id='S:0001', record_type='entity', source_id='S', source_path='local.md', source_sha256='aaaaaaa...hecked', approved_for_rag=False, approved_for_sft=False, third_party_transfer_allowed=False, usable_as_game_fact=False)
+
+    def annotate(record):
+        reasons = []
+        claims = tuple(dict.fromkeys(m.group() for m in CLAIM.finditer(record.text)))[:50]
+        if not safe_excerpt(record.text):
+            reasons.append("unsafe_instruction_or_personal_data")
+        if claims:
+            reasons.append("mechanics_require_engine_mapping")
+        if re.search(
+            r"\b(?:герой|вы)\s+(?:обязан|обязаны|неизбежно соглаш|автоматически получ)",
+            record.text,
+            re.I,
+        ):
+            reasons.append("possible_forced_agency_or_reward")
+        ordered = roles(record.text)
+        if record.record_type in {"session", "death_session"} and not ordered:
+            reasons.append("unrecognized_turn_roles")
+        lines = [line.strip() for line in record.text.splitlines() if len(line.strip()) > 80]
+        if lines and len(set(lines)) < len(lines):
+            reasons.append("repeated_long_line_in_record")
+        status = (
+            "rejected"
+            if "unsafe_instruction_or_personal_data" in reasons
+            else ("needs_review" if reasons else "machine_validated")
+        )
+        return {
+            "record_id": record.record_id,
+>           "namespace": NAMESPACES[record.record_type],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            "template_or_instance": "example"
+            if record.record_type in {"session", "death_session"}
+            else "template",
+            "quality_status": status,
+            "annotation_source": "heuristic",
+            "artistic_quality": "not_assessed",
+            "mechanics_compatible": False,
+            "mechanics_claims": claims,
+            "reasons": reasons,
+            "fields": fields(record.text),
+            "roles": [asdict(v) for v in ordered],
+            "references": sorted(set(REF.findall(record.text))),
+            "family_id": family(record),
+        }
+E       KeyError: 'entity'
+
+src/rpg_vkr/learning/quality.py:149: KeyError
+=========================== short test summary info ============================
+FAILED tests/learning/test_review_and_ui.py::test_templates_require_review_flags_confirmation_and_persist_idempotently
+1 failed, 27 passed in 22.20s

@@ -1,0 +1,224 @@
+{
+  "status": "COMPLETED",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "pipeline": "corpus-qc-1",
+  "max_reserved_rub": "5",
+  "reserved_upper_rub": "3.86244586153998",
+  "max_output_tokens": 1024,
+  "prompt_rub_per_million": "10.36525347000000",
+  "completion_rub_per_million": "20.73050694000000",
+  "canonical_state_and_rng_unchanged": true,
+  "raw_corpus_sent": false,
+  "weights_access": "UNAVAILABLE_INFERENCE_ONLY",
+  "training_started": false,
+  "rows": [
+    {
+      "case": "inspection",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.47843936966826",
+      "selected_ids": [],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7532,
+        "prompt_tokens": 7343,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens": 189,
+        "completion_tokens_details": {
+          "reasoning_tokens": 76
+        },
+        "cost": 0.13991364642255
+      },
+      "finish_reason": "stop",
+      "response": "Дорожная доска — кусок старого дерева, потемневшего от дождя и солнца, закреплённый на двух вбитых в землю колышках у самых ворот. Вдоль верхнего края прорезан знак: двугорбый мост с текущей под ним водой.\n\nДерево местами растрескалось, но сам знак ещё читается отчётливо. Следов других надписей или меток рядом с рисунком не видно.",
+      "status": "ACCEPTED",
+      "latency_ms": 7.838394998543663
+    },
+    {
+      "case": "inspection",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.49694134711221",
+      "selected_ids": [
+        "project:inspect",
+        "project:agency",
+        "project:reputation"
+      ],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8013,
+        "prompt_tokens": 7788,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 225,
+        "completion_tokens_details": {
+          "reasoning_tokens": 22
+        },
+        "cost": 0.046071478623456
+      },
+      "finish_reason": "stop",
+      "response": "Доска лежит у основания ворот, присыпанная пылью по краям.\n\nЭто короткий плоский обрубок дерева, обструганный и отполированный до гладкости, какие вешают у перекрёстков для указания пути. В центре вырезан знак моста — дуга с двумя опорами, обведённая по контуру ножом. Поверхность сухая, без свежих сколов; ниже выреза вдоль нижнего края темнеют потёртости от пальцев. Ни надписи, ни стрелки, ни иных пометок на видимой стороне нет. Обратную сторону с этой точки не видно, и назначение доски в одиночном знаке не прочитывается.\n\nБрать или покупать её вам не требуется — она остаётся лежать на прежнем месте.",
+      "status": "ACCEPTED",
+      "latency_ms": 1.059209000231931
+    },
+    {
+      "case": "voice",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.47634558846732",
+      "selected_ids": [],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7455,
+        "prompt_tokens": 7308,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "completion_tokens": 147,
+        "completion_tokens_details": {
+          "reasoning_tokens": 38
+        },
+        "cost": 0.017220141098160002
+      },
+      "finish_reason": "stop",
+      "response": "— Меня зовут Ливна. — Женщина откладывает перо и прижимает край дощечки, чтобы ветер не сдвинул лист.\n\n— Сижу при воротах: записываю, кто въезжает и выезжает, и слежу, чтобы на дорогу не выходили без дела. Дальше моста сегодня никого не пускают, так что если вы к переправе — придётся подождать.",
+      "status": "ACCEPTED",
+      "latency_ms": 0.29539599927375093
+    },
+    {
+      "case": "voice",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.48197392110153",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7629,
+        "prompt_tokens": 7416,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 213,
+        "completion_tokens_details": {
+          "reasoning_tokens": 51
+        },
+        "cost": 0.036648772202328005
+      },
+      "finish_reason": "stop",
+      "response": "— Ливна, — отвечает женщина у столба с доской, не отрываясь от ножа, которым подчищает зарубки на дереве. — Имя моё вы уже назвали, так что вопрос, выходит, лишний.\n\nОна смахивает щепки с ладони и кивает на доску.\n\n— А занята я тем, что слежу за этой доской да за порядком у ворот. Кто прошёл, откуда и куда — всё здесь отмечается, чтобы после не гадать, куда девался человек. Так что если вы в деревню, говорите, кто и откуда. Если мимо — тоже скажите, и идите себе.",
+      "status": "ACCEPTED",
+      "latency_ms": 0.3340340008435305
+    },
+    {
+      "case": "agency",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.47852229169602",
+      "selected_ids": [],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7614,
+        "prompt_tokens": 7339,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 275,
+        "completion_tokens_details": {
+          "reasoning_tokens": 143
+        },
+        "cost": 0.041769898433406
+      },
+      "finish_reason": "stop",
+      "response": "// Состояние сцены\n\nРасспросы об условиях ничего не обязывают: пока герой не дал согласия, поручение не принято, никакой договорённости и никаких обещаний не возникло. Ливна стоит у ворот, доска со знаком моста по-прежнему лежит на земле, и ждать ответа её никто не заставляет — уйти от разговора герой волен в любой момент. Со стороны NPC прозвучит только то, что скажет сама Ливна в ответ на очередную реплику.",
+      "status": "ACCEPTED",
+      "latency_ms": 0.6425100000342354
+    },
+    {
+      "case": "agency",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.47852229169602",
+      "selected_ids": [],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7822,
+        "prompt_tokens": 7339,
+        "prompt_tokens_details": {
+          "cached_tokens": 7296
+        },
+        "completion_tokens": 483,
+        "completion_tokens_details": {
+          "reasoning_tokens": 398
+        },
+        "cost": 0.036639788982654
+      },
+      "finish_reason": "stop",
+      "response": "Пока это только разговор об условиях: вы ничего не обещали, не получили и ничем не связаны — никакого поручения ещё не принято.\n\nЛивна стоит у ворот и ждёт вашего ответа; доска с вырезанным знаком моста по-прежнему лежит на месте, из её рук к вам ничего не перешло.",
+      "status": "ACCEPTED",
+      "latency_ms": 0.6942079999134876
+    },
+    {
+      "case": "memory",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.47823206459886",
+      "selected_ids": [],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7576,
+        "prompt_tokens": 7339,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens": 237,
+        "completion_tokens_details": {
+          "reasoning_tokens": 95
+        },
+        "cost": 0.021807802283982
+      },
+      "finish_reason": "stop",
+      "response": "В записях этой сцены нет ни прежней встречи с Ливной, ни того, что вы уже осматривали дорожную доску — только то, что сейчас: Ливна стоит у ворот вместе со стражником и жительницей, а на дороге лежит доска со знаком моста.\n\nЗначит, помнить о разговоре с Ливной или об осмотре доски пока нечего — это ещё не происходило. Всё, что у вас есть о Ливне, — её присутствие здесь; всё, что известно о доске, — вырезанный на ней знак моста.",
+      "status": "ACCEPTED",
+      "latency_ms": 0.7709040000918321
+    },
+    {
+      "case": "memory",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "reserved_rub": "0.49346898719976",
+      "selected_ids": [
+        "project:inspect",
+        "project:continuity"
+      ],
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 7893,
+        "prompt_tokens": 7703,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 63
+        },
+        "cost": 0.042184508572206
+      },
+      "finish_reason": "stop",
+      "response": "Из той встречи у ворот вы помните немногое. Ливна была среди тех, кто стоял у дороги, — её имя вы тогда же и услышали, но о чём вы говорили и говорили ли вообще, в памяти не отложилось ничего сверх самого факта встречи.\n\nДорожная доска запомнилась отчётливо: вы её осматривали и видели вырезанный на дереве знак моста. Что доска означает и куда указывает, вы так и не выяснили — назначение осталось неясным.",
+      "status": "ACCEPTED",
+      "latency_ms": 0.616790999629302
+    }
+  ],
+  "transport": "OFFLINE_PLAYBACK_OF_LIVE_PILOT_01",
+  "paid_calls_this_revalidation": 0,
+  "actual_network_calls_this_revalidation": 0,
+  "original_live_status_counts": {
+    "ACCEPTED": 7,
+    "REJECTED_BY_GAME_VALIDATOR": 1
+  }
+}

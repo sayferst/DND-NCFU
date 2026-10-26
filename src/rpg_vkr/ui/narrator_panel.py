@@ -544,7 +544,9 @@ def request_narration(window):
         dialogue=dialogue_context(window._session),
         plain=window.director_mode.isChecked(),
         campaign=campaign_context(
-            window._session, turn.meaning.target if turn and turn.meaning else actor
+            window._session,
+            turn.meaning.target if turn and turn.meaning else actor,
+            query=turn.action if turn else "",
         ),
     )
 
@@ -591,7 +593,7 @@ def request_chat(window, text):
 
         frame = build_frame(window._session)
         memory = retrieve(window._session, text)
-        campaign = campaign_context(window._session, last_interlocutor(window._session))
+        campaign = campaign_context(window._session, last_interlocutor(window._session), query=text)
         brief = turn_brief(
             frame, text, memory=memory, campaign=campaign, master=master_question(text)
         )
@@ -624,7 +626,7 @@ def request_chat(window, text):
         window.local_model.currentText(),
         text,
         history=recent_dialogue(window._session),
-        campaign=campaign_context(window._session, last_interlocutor(window._session)),
+        campaign=campaign_context(window._session, last_interlocutor(window._session), query=text),
         conversation={"interlocutor_id": last_interlocutor(window._session)},
     )
     return True
@@ -633,7 +635,7 @@ def request_chat(window, text):
 def continue_story(window, text):
     from rpg_vkr.storage.knowledge import retrieve
 
-    campaign = campaign_context(window._session, last_interlocutor(window._session))
+    campaign = campaign_context(window._session, last_interlocutor(window._session), query=text)
     campaign["requested_target"] = getattr(window, "_chat_target_id", "")
     campaign["obstacle"] = getattr(window, "_story_obstacle", "")
     campaign["proposed_memories"] = [
@@ -663,7 +665,7 @@ def accept_inline_reply(window, text, reply):
     from rpg_vkr.storage.knowledge import retrieve
 
     frame = build_frame(window._session)
-    campaign = campaign_context(window._session, last_interlocutor(window._session))
+    campaign = campaign_context(window._session, last_interlocutor(window._session), query=text)
     campaign["requested_target"] = getattr(window, "_chat_target_id", "")
     campaign["obstacle"] = getattr(window, "_story_obstacle", "")
     context = story_context(

@@ -1,0 +1,186 @@
+{
+  "verified": true,
+  "errors": [],
+  "warnings": [
+    "USER-SYN-0200: high repeated-long-line fraction (12551/18736); not percentage of duplicate records",
+    "USER-SYN-1000: high repeated-long-line fraction (64563/82703); not percentage of duplicate records",
+    "USER-SYN-DEATH-1000: high repeated-long-line fraction (26835/39736); not percentage of duplicate records",
+    "USER-SYN-EVENTS-1000: high repeated-long-line fraction (6459/8026); not percentage of duplicate records",
+    "USER-SYN-BEHAVIOR-5000: high repeated-long-line fraction (17622/25019); not percentage of duplicate records",
+    "USER-SYN-ENTITIES-5000: high repeated-long-line fraction (14858/22855); not percentage of duplicate records",
+    "USER-SYN-EVERYDAY-1000: high repeated-long-line fraction (11538/12260); not percentage of duplicate records",
+    "USER-SYN-CRAFT-5000: high repeated-long-line fraction (17048/25362); not percentage of duplicate records"
+  ],
+  "files": {
+    "corpora/parties_200.md": {
+      "bytes": 4618464,
+      "sha256": "9e0a5391ccb67c800982a328b4471a7be58698ce3dcb298cd0e881285c5b8b94",
+      "sha256_pass": true
+    },
+    "corpora/parties_1000.md": {
+      "bytes": 19320323,
+      "sha256": "73a8a2c54b51c7e336f1cd29e2ca04d23d3b2bcfd9dc5f08b820782f364535ad",
+      "sha256_pass": true
+    },
+    "corpora/death_and_npc_1000.md": {
+      "bytes": 11030424,
+      "sha256": "bb0c8fe41f4a119a0cc773aaaa1597928f29394f8e0eca15f6360bc3fb1d342a",
+      "sha256_pass": true
+    },
+    "corpora/events_1000.md": {
+      "bytes": 2706113,
+      "sha256": "641b2f622d1174cf40d9e01d81a9307d489532a95172c450a7b83746d07c3e7b",
+      "sha256_pass": true
+    },
+    "corpora/npc_behavior_5000.md": {
+      "bytes": 9018627,
+      "sha256": "62a2fcc6cac62e15493cf61911ea8d1d5a637b753ae0024e39973b52a1dfd049",
+      "sha256_pass": true
+    },
+    "corpora/entities_5000.md": {
+      "bytes": 7941379,
+      "sha256": "69cef2adceaae7cf0d495b06480ebbc6d71f269c5504d3e56da161ca56dbcc8a",
+      "sha256_pass": true
+    },
+    "corpora/everyday_1000.md": {
+      "bytes": 4436822,
+      "sha256": "13a5a900ec4f7b5a2d760cbcb1789c87c84c20f4b5c583f0ea2febf19ef994ee",
+      "sha256_pass": true
+    },
+    "corpora/crafting_5000.md": {
+      "bytes": 7068488,
+      "sha256": "76a0ffb686256c699ef50e29e9950583473b3dc401871b0ebd1c9b811789d853",
+      "sha256_pass": true
+    },
+    "research/2022.emnlp-main.637.pdf": {
+      "bytes": 764192,
+      "sha256": "b987079c8c29fa6f05e47d6136a5e7c7e09e5414f41976b0a583416910207d52",
+      "sha256_pass": true
+    },
+    "DND_NCFU_CODEX_DEEPSEEK_DATA_TRAINING_MASTER_SPEC.md": {
+      "bytes": 217283,
+      "sha256": "f9077208e471da0e6d160d9fa474c5988f168f20f5bddec3b08268c92daa4f19",
+      "sha256_pass": true
+    },
+    "START_HERE_CODEX.md": {
+      "bytes": 944,
+      "sha256": "bbb2d50a2b7cb02f0534867aaf5ac02f87930d91c2b72721d5d24b9e16e7ccf8",
+      "sha256_pass": true
+    },
+    "DND_RUNTIME_PROMPTS_OPTIONAL.md": {
+      "bytes": 6581,
+      "sha256": "4b968c98e5608479d705b628f81e4ca93e0dc4825b9c3e47ec946062a51f552a",
+      "sha256_pass": true
+    },
+    "verify_package.py": {
+      "bytes": 7376,
+      "sha256": "f1357b84a0b4132605380e7312e7d19a123d7831657ef209057fc20022dd712d",
+      "sha256_pass": true
+    }
+  },
+  "counts": {
+    "USER-SYN-0200": {
+      "records": 200,
+      "unique_ids": 200,
+      "categories": {},
+      "long_lines": 18736,
+      "repeated_long_lines": 12551
+    },
+    "USER-SYN-1000": {
+      "records": 1000,
+      "unique_ids": 1000,
+      "categories": {},
+      "long_lines": 82703,
+      "repeated_long_lines": 64563
+    },
+    "USER-SYN-DEATH-1000": {
+      "records": 1000,
+      "unique_ids": 1000,
+      "categories": {},
+      "long_lines": 39736,
+      "repeated_long_lines": 26835
+    },
+    "USER-SYN-EVENTS-1000": {
+      "records": 1000,
+      "unique_ids": 1000,
+      "categories": {
+        "BA": 250,
+        "EV": 250,
+        "FI": 250,
+        "LO": 250
+      },
+      "long_lines": 8026,
+      "repeated_long_lines": 6459
+    },
+    "USER-SYN-BEHAVIOR-5000": {
+      "records": 5000,
+      "unique_ids": 5000,
+      "categories": {
+        "BOOK": 500,
+        "BOSSM": 400,
+        "CSK": 750,
+        "MAG": 500,
+        "MOBM": 800,
+        "NPCM": 950,
+        "NSK": 650,
+        "SBOOK": 450
+      },
+      "long_lines": 25019,
+      "repeated_long_lines": 17622
+    },
+    "USER-SYN-ENTITIES-5000": {
+      "records": 5000,
+      "unique_ids": 5000,
+      "categories": {
+        "ARM": 450,
+        "BOSS": 300,
+        "GEAR": 450,
+        "KIN": 200,
+        "MON": 1000,
+        "NPC": 600,
+        "PLANT": 1000,
+        "PROF": 350,
+        "WPN": 650
+      },
+      "long_lines": 22855,
+      "repeated_long_lines": 14858
+    },
+    "USER-SYN-EVERYDAY-1000": {
+      "records": 1000,
+      "unique_ids": 1000,
+      "categories": {},
+      "long_lines": 12260,
+      "repeated_long_lines": 11538
+    },
+    "USER-SYN-CRAFT-5000": {
+      "records": 5000,
+      "unique_ids": 5000,
+      "categories": {
+        "COMP": 350,
+        "DROP": 700,
+        "ENCH": 400,
+        "EQPC": 350,
+        "FOOD": 500,
+        "GEM": 450,
+        "MAT": 450,
+        "MCR": 450,
+        "ORE": 600,
+        "POT": 350,
+        "WPNC": 400
+      },
+      "long_lines": 25362,
+      "repeated_long_lines": 17048
+    },
+    "legacy_duplicate_audit": {
+      "compared": 200,
+      "same_transcripts": 200,
+      "extra_independent_sessions": 0
+    },
+    "total_unique_structural_records_excluding_legacy": 19000
+  },
+  "limits": [
+    "Structural tests only: no manual QA of all records",
+    "No proof of trainability or ownership rights",
+    "No calls to live game, repositories, or paid API"
+  ]
+}

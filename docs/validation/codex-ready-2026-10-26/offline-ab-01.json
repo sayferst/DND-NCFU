@@ -1,0 +1,6394 @@
+{
+  "protocol": "original-offline-context-ab-1",
+  "seed": 37,
+  "pipeline": "corpus-qc-1",
+  "archive_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "scenario_sha256": "46fc69f04914ed622da733ae4e6385536703c53fe6634b3e850594237d7bbc9b",
+  "scenarios": 100,
+  "conditions": 4,
+  "paid_calls": 0,
+  "model_calls": 0,
+  "same_mock_responses": true,
+  "canonical_state_and_rng_unchanged": true,
+  "quality_gain": "NOT_MEASURED_MOCK_RESPONSES",
+  "training": "BLOCKED_PROVIDER_TRAINING",
+  "metrics_not_measured": [
+    "literary_coherence",
+    "live_repetition",
+    "live_npc_voice"
+  ],
+  "summary": {
+    "B0": {
+      "cases": 100,
+      "validator_mismatches": 100,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 0,
+      "memory_available": 0,
+      "max_context_bytes": 41144,
+      "max_extra_bytes": 0,
+      "median_ms": 2.150741499463038,
+      "p95_ms": 2.2737319995940197
+    },
+    "B1": {
+      "cases": 100,
+      "validator_mismatches": 100,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 45,
+      "memory_available": 0,
+      "max_context_bytes": 42301,
+      "max_extra_bytes": 1110,
+      "median_ms": 3.214562500033935,
+      "p95_ms": 3.5936650001531234
+    },
+    "B2": {
+      "cases": 100,
+      "validator_mismatches": 100,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 0,
+      "memory_available": 100,
+      "max_context_bytes": 41708,
+      "max_extra_bytes": 342,
+      "median_ms": 2.1994600001562503,
+      "p95_ms": 2.2756850012228824
+    },
+    "B3": {
+      "cases": 100,
+      "validator_mismatches": 100,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 45,
+      "memory_available": 100,
+      "max_context_bytes": 42865,
+      "max_extra_bytes": 1425,
+      "median_ms": 3.150796499539865,
+      "p95_ms": 3.522096998494817
+    }
+  },
+  "rows": [
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41085,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.212158999100211
+    },
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41085,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 4.162322999036405
+    },
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41649,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1311569998943014
+    },
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41649,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.9142790008336306
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40965,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.458521999666118
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41508,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.6359499988757307
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41529,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.7507029988337308
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42072,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 2.4082350009848597
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40978,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.273661999424803
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40978,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.174942999976338
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41542,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2228460002224892
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41542,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.16282499989029
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40953,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.3659409998799674
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41826,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 3.4173889998783125
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41517,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.5194939987850375
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42390,
+      "extra_bytes": 975,
+      "memory_events": 1,
+      "latency_ms": 3.716600000188919
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.7582349992153468
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41549,
+      "extra_bytes": 405,
+      "memory_events": 0,
+      "latency_ms": 2.931054999862681
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.5008459995442536
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42113,
+      "extra_bytes": 720,
+      "memory_events": 1,
+      "latency_ms": 3.6209159989084583
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40981,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.4322409990418237
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.957584000090719
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41545,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.180582001528819
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42088,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.403808001166908
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1731409997300943
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:travel",
+        "project:stakes",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42301,
+      "extra_bytes": 1110,
+      "memory_events": 0,
+      "latency_ms": 3.6996749986428767
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2091650007496355
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:travel",
+        "project:stakes",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42865,
+      "extra_bytes": 1425,
+      "memory_events": 1,
+      "latency_ms": 3.593053999793483
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40963,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.156865999495494
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41506,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.28084300053888
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41527,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2928420003154315
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42070,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.3015040007740026
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40945,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.147891998902196
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41488,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.3853099994303193
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41509,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.192298999943887
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42052,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.1204900005832314
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40972,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1771659994556103
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41515,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.3860709991131444
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41536,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1862810008315137
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42079,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.353812999193906
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41097,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.107420999891474
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41619,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.189754999766592
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41661,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.282454999658512
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42183,
+      "extra_bytes": 648,
+      "memory_events": 1,
+      "latency_ms": 3.240711999751511
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2225659995456226
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.220081000108621
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.256665999084362
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.089343999818084
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.197797999542672
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:agency",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42196,
+      "extra_bytes": 999,
+      "memory_events": 0,
+      "latency_ms": 3.6035690009157406
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2431659999710973
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:agency",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42760,
+      "extra_bytes": 1314,
+      "memory_events": 1,
+      "latency_ms": 3.442297000219696
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2544929997820873
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41900,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 3.5286559996166034
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2347930007526884
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42464,
+      "extra_bytes": 1046,
+      "memory_events": 1,
+      "latency_ms": 3.414695000174106
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40965,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1731409997300943
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41846,
+      "extra_bytes": 668,
+      "memory_events": 0,
+      "latency_ms": 3.5936650001531234
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41529,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.229656000054092
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42410,
+      "extra_bytes": 983,
+      "memory_events": 1,
+      "latency_ms": 3.3463210002082633
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40943,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.184777998991194
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40943,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.2093049994728062
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41507,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1693250000680564
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41507,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.942052000435069
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40969,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8939189994853223
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41829,
+      "extra_bytes": 647,
+      "memory_events": 0,
+      "latency_ms": 3.0171449998306343
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41533,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.7866769994725473
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42393,
+      "extra_bytes": 962,
+      "memory_events": 1,
+      "latency_ms": 2.9850759983673925
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41104,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8612399999256013
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41988,
+      "extra_bytes": 671,
+      "memory_events": 0,
+      "latency_ms": 2.912305999416276
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41668,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.7988649997278117
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42552,
+      "extra_bytes": 986,
+      "memory_events": 1,
+      "latency_ms": 2.701117999095004
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8098420005117077
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41503,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.7852650000568246
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.8473390009603463
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42067,
+      "extra_bytes": 661,
+      "memory_events": 1,
+      "latency_ms": 2.9772639991278993
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40966,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.7239219996554311
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41501,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.7965320005023386
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41530,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.704402999166632
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42065,
+      "extra_bytes": 661,
+      "memory_events": 1,
+      "latency_ms": 3.059849001147086
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40957,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2501170005853055
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41492,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 3.3007019992510322
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41521,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.231518999906257
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42056,
+      "extra_bytes": 661,
+      "memory_events": 1,
+      "latency_ms": 3.316657001050771
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40952,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.106749998347368
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41487,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 3.1469099994865246
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41516,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2037569997337414
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42051,
+      "extra_bytes": 661,
+      "memory_events": 1,
+      "latency_ms": 3.2750740010669688
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40964,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2144029990158742
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41500,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.3156850004161242
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41528,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1880329986743163
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42064,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 3.4279049996257527
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40943,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.130505999957677
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41479,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.295926000646432
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41507,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 4.517800000030547
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42043,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 3.515025999149657
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40975,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1665909989678767
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.330476998598897
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41539,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.115192999553983
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42075,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 3.309104999061674
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41120,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1753629989689216
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41656,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.2255389996862505
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41684,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2416339998017065
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42220,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 3.3959360007429495
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.24298600005568
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41492,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.3798820004449226
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2244680003495887
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42056,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 3.2961449996946612
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40959,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.243496999653871
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40959,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.3360559991706396
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41523,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.268424999783747
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41523,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.0415219989663456
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41111,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.564981999763404
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41647,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.115203000357724
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41675,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.5804849990672665
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42211,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 2.84367300082522
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40948,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.3730419996136334
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41484,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.807278000545921
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41512,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.9327170011820272
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42048,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 2.267141999254818
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40939,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9328680009493837
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency",
+        "project:opening",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42232,
+      "extra_bytes": 1056,
+      "memory_events": 0,
+      "latency_ms": 3.2137210000655614
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41503,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.8844750011339784
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency",
+        "project:opening",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42796,
+      "extra_bytes": 1371,
+      "memory_events": 1,
+      "latency_ms": 2.9777549989375984
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40966,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.600556000994402
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40966,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.5632790002418915
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41530,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.427846000296995
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41530,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.12780199944973
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40947,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.261474000988528
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41498,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 3.390308000234654
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.273852000143961
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42062,
+      "extra_bytes": 677,
+      "memory_events": 1,
+      "latency_ms": 3.2976680013234727
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.181522999308072
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 3.255203000662732
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2693849987263093
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42075,
+      "extra_bytes": 677,
+      "memory_events": 1,
+      "latency_ms": 3.287502999228309
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41084,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.184056998885353
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42039,
+      "extra_bytes": 742,
+      "memory_events": 0,
+      "latency_ms": 3.4160970008088043
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41648,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1913979999226285
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42603,
+      "extra_bytes": 1057,
+      "memory_events": 1,
+      "latency_ms": 3.4733829998003785
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40959,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2062299995013746
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:travel",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41859,
+      "extra_bytes": 687,
+      "memory_events": 0,
+      "latency_ms": 3.525402000377653
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41523,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.251398998851073
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:travel",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42423,
+      "extra_bytes": 1002,
+      "memory_events": 1,
+      "latency_ms": 3.338550000989926
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40957,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1971770001982804
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41866,
+      "extra_bytes": 696,
+      "memory_events": 0,
+      "latency_ms": 3.4204229996248614
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41521,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.285730999574298
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42430,
+      "extra_bytes": 1011,
+      "memory_events": 1,
+      "latency_ms": 3.522096998494817
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40950,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2252400012803264
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41884,
+      "extra_bytes": 721,
+      "memory_events": 0,
+      "latency_ms": 3.4588109992910177
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41514,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.201814000727609
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42448,
+      "extra_bytes": 1036,
+      "memory_events": 1,
+      "latency_ms": 3.5130529995512916
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40953,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.240231000541826
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:continuity",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42242,
+      "extra_bytes": 1052,
+      "memory_events": 0,
+      "latency_ms": 3.5800639998342376
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41517,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2509379996336065
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:continuity",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42806,
+      "extra_bytes": 1367,
+      "memory_events": 1,
+      "latency_ms": 3.5463540007185657
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41114,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2620039999310393
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41650,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.1687829996371875
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41678,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2030350010027178
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42214,
+      "extra_bytes": 662,
+      "memory_events": 1,
+      "latency_ms": 3.2697560000087833
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40974,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.079047999359318
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41857,
+      "extra_bytes": 670,
+      "memory_events": 0,
+      "latency_ms": 3.349485999933677
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41538,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.216556000348646
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42421,
+      "extra_bytes": 985,
+      "memory_events": 1,
+      "latency_ms": 3.2966569997370243
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40944,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.207522000389872
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40944,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.140430000712513
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41508,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1943320007267175
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41508,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1456479991902597
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40976,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8667379990802146
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40976,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.7957700003753416
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41540,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.197105999584892
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41540,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.059609000047203
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1496850004041335
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 3.2970070005831076
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.219609999883687
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42075,
+      "extra_bytes": 677,
+      "memory_events": 1,
+      "latency_ms": 3.24180399911711
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40933,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.3484060002374463
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41506,
+      "extra_bytes": 384,
+      "memory_events": 0,
+      "latency_ms": 3.0899049997969996
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41497,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1409609998954693
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42070,
+      "extra_bytes": 699,
+      "memory_events": 1,
+      "latency_ms": 3.210896999007673
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40951,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1356540000851965
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:trade",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42202,
+      "extra_bytes": 1014,
+      "memory_events": 0,
+      "latency_ms": 3.528186000039568
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41515,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2216029992705444
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:trade",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42766,
+      "extra_bytes": 1329,
+      "memory_events": 1,
+      "latency_ms": 3.3900069993251236
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1620839997922303
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41887,
+      "extra_bytes": 718,
+      "memory_events": 0,
+      "latency_ms": 3.460604000792955
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.134501999535132
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42451,
+      "extra_bytes": 1033,
+      "memory_events": 1,
+      "latency_ms": 2.4714599985600216
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40945,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.2317700002313359
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41864,
+      "extra_bytes": 706,
+      "memory_events": 0,
+      "latency_ms": 2.032508000411326
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41509,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.302175998716848
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42428,
+      "extra_bytes": 1021,
+      "memory_events": 1,
+      "latency_ms": 1.9539400000212481
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40970,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.2870030004705768
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41543,
+      "extra_bytes": 384,
+      "memory_events": 0,
+      "latency_ms": 2.4594429996795952
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41534,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.530129999082419
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42107,
+      "extra_bytes": 699,
+      "memory_events": 1,
+      "latency_ms": 2.3955969991220627
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40963,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.2655499995162245
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40963,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.3321209991991054
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41527,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.4156770012050401
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41527,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1665000003849855
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40971,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.5859039995120838
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42248,
+      "extra_bytes": 1040,
+      "memory_events": 0,
+      "latency_ms": 2.2659000005660346
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41535,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.3817460003338056
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42812,
+      "extra_bytes": 1355,
+      "memory_events": 1,
+      "latency_ms": 2.2755150002922164
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41112,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.301315000091563
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42031,
+      "extra_bytes": 706,
+      "memory_events": 0,
+      "latency_ms": 2.4971800012281165
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41676,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.546604000395746
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42595,
+      "extra_bytes": 1021,
+      "memory_events": 1,
+      "latency_ms": 2.145509000911261
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.5091879995452473
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.2025650014256826
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.4464930009125965
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.241524000055506
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40948,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.3870229995518457
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:investigation",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41871,
+      "extra_bytes": 710,
+      "memory_events": 0,
+      "latency_ms": 2.4443299989798106
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41512,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.3021960003243294
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:investigation",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42435,
+      "extra_bytes": 1025,
+      "memory_events": 1,
+      "latency_ms": 2.4871440000424627
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40979,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.103204999002628
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41522,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.291428000011365
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41543,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1790589999000076
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42086,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.251628000725759
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40962,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2265410007094033
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40962,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.2154040000023087
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41526,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.248064000013983
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41526,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1331099999079015
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40976,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.114912000251934
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41902,
+      "extra_bytes": 713,
+      "memory_events": 0,
+      "latency_ms": 3.6459839993767673
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41540,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2436170002038125
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42466,
+      "extra_bytes": 1028,
+      "memory_events": 1,
+      "latency_ms": 3.35538500075927
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40967,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.304268000443699
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40967,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.1216920015140204
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41531,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1800909999001306
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41531,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.128682999886223
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2256700012803776
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.25880899981712
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.228503999504028
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.0138889997033402
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.051956998911919
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.174211999066756
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2193299992068205
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.0303439998533577
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40951,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1652779996657046
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40951,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0593179999414133
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41515,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.232730999821797
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41515,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.174923000187846
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1577269999397686
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.005456999744638
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1735110003646696
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1860090002737707
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40972,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1792990009998903
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40972,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.099878998909844
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41536,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.0576670012815157
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41536,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1255880003300263
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40948,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1463199991558213
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40948,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0014210005901987
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41512,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.0953230014129076
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41512,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.0727789999218658
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40953,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1471110012498684
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40953,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.061532001083833
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41517,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2164760011946782
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41517,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.059638000195264
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40962,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0365139989735326
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41505,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.257917998780613
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41526,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1801109996886225
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42069,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.1951119999575894
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40948,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.308324999830802
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40948,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.134070999294636
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41512,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2174370005814126
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41512,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.086058999542729
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40969,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0078409997950075
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41491,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.2309880007233005
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41533,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1947630011709407
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42055,
+      "extra_bytes": 648,
+      "memory_events": 1,
+      "latency_ms": 3.218698999262415
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.210287000707467
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41477,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.3257300001423573
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2756850012228824
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42041,
+      "extra_bytes": 648,
+      "memory_events": 1,
+      "latency_ms": 3.210336999472929
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.155903999664588
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.227240998967318
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.250636998724076
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1338999997387873
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40947,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1283930000208784
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41820,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 3.4799639997800114
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2041669999453006
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42384,
+      "extra_bytes": 975,
+      "memory_events": 1,
+      "latency_ms": 3.1863000003795605
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40959,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1602609995170496
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41481,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.2932109988905722
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41523,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2215329991013277
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42045,
+      "extra_bytes": 648,
+      "memory_events": 1,
+      "latency_ms": 3.3930110002984293
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40962,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1549829998548375
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40962,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0903250008122995
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41526,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.270528000735794
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41526,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1256279999070102
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40933,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1472110001923284
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40933,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.121091000139131
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41497,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2283939997578273
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41497,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.932096000222373
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40959,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0848570002272027
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41481,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.4301880004932173
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41523,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.318310000191559
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42045,
+      "extra_bytes": 648,
+      "memory_events": 1,
+      "latency_ms": 2.9335879989957903
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9102429996564751
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect",
+        "project:trade"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41802,
+      "extra_bytes": 634,
+      "memory_events": 0,
+      "latency_ms": 2.2731810004188446
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.52225800047745
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect",
+        "project:trade"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42366,
+      "extra_bytes": 949,
+      "memory_events": 1,
+      "latency_ms": 2.15025600118679
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40639,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.185179000662174
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40639,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.4424360001139576
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41203,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.241603999209474
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41203,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.129794999040314
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41125,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2737319995940197
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41125,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.336326000862755
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41689,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.17784799860965
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41689,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.9891230005887337
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.118827998856432
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40954,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.106338999714353
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1613619992422173
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41518,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.115452998827095
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41144,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2014229998603696
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41144,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0572350005968474
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41708,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.128443000401603
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41708,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1783180002094014
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.150325999537017
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.1795600007171743
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.222433999122586
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1448480003746226
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41116,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0802999988518422
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41116,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.2027249999373453
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41680,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2551639995072037
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41680,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.191959000105271
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.116064000801998
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40956,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.168712999467971
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.205969998613
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41520,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.0968050014053006
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40951,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0502749994193437
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40951,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.1504359994869446
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41515,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.250968000225839
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41515,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.007659999639145
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.157656999770552
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0882619994372362
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1222339983069105
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.1559449998894706
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40950,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.151156999389059
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40950,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0020809990674024
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41514,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.090705998853082
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41514,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.118357000857941
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40966,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1389889989222866
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40966,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.2528299998375587
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41530,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.244538000013563
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41530,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.381896000064444
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40947,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.145147998817265
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40947,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.1091640012164135
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2368570007529343
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41511,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.098647999649984
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1369759997469373
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.0381060005311156
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.22245499935525
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 3.0876609998813365
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40965,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.761830000759801
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40965,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.6991539998562075
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41529,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.8087400003423681
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41529,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.590169999166392
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.7544189995533088
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40968,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.7201160010008607
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.9067680004809517
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41532,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.7389139995648293
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8199070000264328
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40955,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.7963920001639053
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.8449449999025092
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41519,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.850813998520607
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40971,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.6429499992227647
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42266,
+      "extra_bytes": 1058,
+      "memory_events": 0,
+      "latency_ms": 2.8147889988758834
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41535,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.739155000905157
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42830,
+      "extra_bytes": 1373,
+      "memory_events": 1,
+      "latency_ms": 2.887299000576604
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2216440011106897
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42255,
+      "extra_bytes": 1058,
+      "memory_events": 0,
+      "latency_ms": 3.4689470012381207
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41524,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2372670009644935
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42819,
+      "extra_bytes": 1373,
+      "memory_events": 1,
+      "latency_ms": 3.588566998587339
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40973,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.160381000066991
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42276,
+      "extra_bytes": 1066,
+      "memory_events": 0,
+      "latency_ms": 3.527154998664628
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41537,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.154062000045087
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42840,
+      "extra_bytes": 1381,
+      "memory_events": 1,
+      "latency_ms": 3.34760300029302
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40933,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1404809995146934
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41877,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 3.4571680007502437
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41497,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1650980015692767
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42441,
+      "extra_bytes": 1046,
+      "memory_events": 1,
+      "latency_ms": 3.391358999579097
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40969,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.141253000445431
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:investigation",
+        "project:production",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42222,
+      "extra_bytes": 1016,
+      "memory_events": 0,
+      "latency_ms": 3.446442999120336
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41533,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.213581999967573
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:investigation",
+        "project:production",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42786,
+      "extra_bytes": 1331,
+      "memory_events": 1,
+      "latency_ms": 3.413644000829663
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40944,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1575070004473673
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41888,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 3.4258920004504034
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41508,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.256005000162986
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42452,
+      "extra_bytes": 1046,
+      "memory_events": 1,
+      "latency_ms": 3.409957000258146
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40953,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.190455999880214
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41897,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 3.4614750002219807
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41517,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.1909869992668973
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42461,
+      "extra_bytes": 1046,
+      "memory_events": 1,
+      "latency_ms": 3.291738999905647
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 40972,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2166760008985875
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41916,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 3.4708999992290046
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 41536,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.2077430003264453
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 1,
+      "errors": [
+        "false_reject"
+      ],
+      "context_bytes": 42480,
+      "extra_bytes": 1046,
+      "memory_events": 1,
+      "latency_ms": 3.386862999832374
+    }
+  ]
+}

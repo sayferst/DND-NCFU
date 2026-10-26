@@ -1,0 +1,31 @@
+F.........                                                               [100%]
+=================================== FAILURES ===================================
+_ test_real_probe_states_are_private_atomic_and_replayable_with_paired_budget __
+
+small_package = (PosixPath('/tmp/pytest-of-agent/pytest-34/test_real_probe_states_are_pri0/input.zip'), [LearningRecord(record_id='S:0..., approved_for_rag=False, approved_for_sft=False, third_party_transfer_allowed=False, usable_as_game_fact=False), ...])
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-34/test_real_probe_states_are_pri0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1dbf8ae000>
+
+    def test_real_probe_states_are_private_atomic_and_replayable_with_paired_budget(
+        small_package, tmp_path, monkeypatch
+    ):
+        package, _ = small_package
+        directory = tmp_path / "library"
+        build(package, directory)
+        jobs = suite.prepare(directory)
+        assert len(jobs) == 48 and len({j["case"] for j in jobs}) == 24
+        assert {j["mode"] for j in jobs} == {"B0", "B3"}
+        for job in jobs:
+            payload = json.dumps(job["local"], ensure_ascii=False)
+            assert PRIVATE_DIARY not in payload and PRIVATE_PLOT not in payload
+            assert suite.fingerprint(job["session"]) == job["before"]
+            if job["case"] in ("craft_no_material", "craft_unknown", "spell_unknown"):
+                assert job["context"]["obstacle"]
+        memory = next(j for j in jobs if j["case"] == "memory_100" and j["mode"] == "B3")
+>       assert memory["context"]["learning_memory"]
+E       assert []
+
+tests/learning/test_live_suite.py:29: AssertionError
+=========================== short test summary info ============================
+FAILED tests/learning/test_live_suite.py::test_real_probe_states_are_private_atomic_and_replayable_with_paired_budget
+1 failed, 9 passed in 20.46s

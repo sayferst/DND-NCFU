@@ -25,7 +25,7 @@ def master_reply(session, meaning):
     return build_frame(session).scene
 
 
-def campaign_context(session, target=""):
+def campaign_context(session, target="", *, query=""):
     from rpg_vkr.domain.d20_progression import SKILLS
 
     d20 = session.d20_progress
@@ -213,6 +213,33 @@ def campaign_context(session, target=""):
         }
     if getattr(session, "_rag_mode", 0) == 2:
         public_simulation["rag_enabled"] = True
+    features = getattr(session, "_learning_flags", {})
+    if features.get("library") or features.get("memory"):
+        mode = getattr(session, "_rag_mode", 0)
+        public_simulation["learning_features"] = {
+            "library": bool(features.get("library")),
+            "memory": bool(features.get("memory")),
+            "mode": mode,
+        }
+        if features.get("memory") and mode:
+            from rpg_vkr.learning.memory import recall
+            from rpg_vkr.narrative.context import build_frame
+            from rpg_vkr.narrative.story import master_question
+            from rpg_vkr.narrative.turn_brief import turn_brief
+
+            brief = turn_brief(
+                build_frame(session),
+                query,
+                campaign={"actors": actors, "interlocutor_id": target},
+                master=master_question(query),
+            )
+            memory_target = brief.get("target_id", "") if brief["mode"] == "dialogue" else ""
+            public_simulation["learning_memory"] = recall(
+                session,
+                query or (session.turns[-1].action if session.turns else ""),
+                npc_id=memory_target,
+                budget=1200,
+            )
     return {
         **public_simulation,
         "d20_skills": (

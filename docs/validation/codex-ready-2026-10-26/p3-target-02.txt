@@ -1,0 +1,308 @@
+......F............................................FF.......             [100%]
+=================================== FAILURES ===================================
+_________ test_explicit_consent_and_promise_can_be_faithfully_restated _________
+
+    def test_explicit_consent_and_promise_can_be_faithfully_restated():
+        session = Session(seed=37)
+        frame = build_frame(session)
+        query = "Я соглашаюсь на поручение и обещаю вернуться к рассвету."
+>       assert story_proposal(
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": "Вы согласились на поручение и обещали вернуться к рассвету.",
+                }
+            },
+            frame,
+            query,
+        )
+
+tests/learning/test_evaluation.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/narrative/story.py:246: in story_proposal
+    check_story_quality(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'Вы согласились на поручение и обещали вернуться к рассвету.'
+frame = NarrativeFrame(turn_index=0, hero='Путник, учебная песочница без развития', location='Ворота деревни', scene='Деревянн...собирает яблоки из опрокинувшейся корзины. Впереди виднеются площадь и вывеска таверны. Что вы сделаете?', memories=())
+player_text = 'Я соглашаюсь на поручение и обещаю вернуться к рассвету.'
+
+    def check_story_quality(text, frame, player_text, *, brief=None, previous=(), campaign=None):
+        """Reject grounded false outcomes, not synonyms, metaphors or an NPC's refusal."""
+        brief, campaign = brief or {}, campaign or {}
+        prose, normal = prose_only(text), player_text.casefold().replace("ё", "е")
+        issues = []
+        resolution = campaign.get("resolution") or []
+        receipt = campaign.get("receipt") or {}
+        interaction = campaign.get("interaction_result", "")
+        if unsupported_numeric_claim(prose) and not numeric_claim_matches_receipt(
+            prose, receipt, campaign.get("resource_balances")
+        ):
+            issues.append("Рассказ назначил неподтверждённое изменение ресурсов или характеристик.")
+        hero_name = frame.hero.split(",", 1)[0]
+        rename = re.search(
+            r"\b(?:теперь вас зовут|ваше (?:новое )?имя)\s*[:—-]?\s*([А-ЯЁ][а-яё]+)", prose, re.I
+        )
+        if rename and rename[1].casefold() != hero_name.casefold():
+            issues.append("Имя героя нельзя изменить художественным ответом.")
+        # A transfer must have an engine receipt, independently of the writer's wording.
+        if not receipt.get("committed") and re.search(
+            r"(?:вам|герою)\s+(?:вруча\w*|переда\w*|отда\w*)[^.!?\n]{0,60}(?:ключ\w*|монет\w*|меч\w*|предмет\w*)|"
+            r"клад\w*\s+вам\s+в\s+ладон\w*",
+            prose,
+            re.I,
+        ):
+            issues.append("Передача предмета не подтверждена движком.")
+        # Preserve player agency. Requested conduct and faithful quotation are allowed.
+        evidence = {
+            r"\bвы\s+(?:вдруг\s+)?(?:замолч\w*|молч\w*)": r"молч|тишин|не говоря",
+            r"\bвы\s+(?:вдруг\s+)?(?:реш\w*|соглас\w*|отказ\w*)": r"реш|соглас|отказ|не буду|не хочу",
+            r"\bвы\s+(?:вдруг\s+)?(?:влюб\w*|боите\w*)": r"люб|бою|страх",
+            r"\bвы\s+чувству\w*[^.!?\n]{0,60}(?:любов\w*|нежност\w*|страх\w*|вину)": (
+                r"чувств|люб|бою|страх|вин"
+            ),
+        }
+        for pattern, requested in evidence.items():
+            if re.search(pattern, prose, re.I) and not re.search(requested, normal):
+                issues.append(
+                    "Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку."
+                )
+        # Mentioning consent (including a question or refusal) is not affirmative consent.
+        # Check each asserted commitment separately; permission from an item owner is not
+        # a promise made by the hero. This never applies any game effect.
+        commitments = (
+            (r"\bвы\s+(?:реш\w*\s+)?соглас\w*", r"\b(?:я\s+)?(?:соглашаюсь|согласен|согласна)\b"),
+            (r"\bвы\s+[^.!?\n]{0,90}\bобеща(?:ли|ете)\b", r"\b(?:я\s+)?обещаю\b"),
+        )
+        for asserted, affirmation in commitments:
+            if re.search(asserted, prose, re.I):
+                explicit = re.search(affirmation, normal)
+                if not explicit or re.search(r"\bне\s*$", normal[: explicit.start()]) or "?" in normal:
+                    issues.append("Утверждение о согласии или обещании героя не подтверждено игроком.")
+        invented_speech = re.search(
+            r"«([^»]+)»[\s,—–-]*(?:произносите|отвечаете|говорите|спрашиваете|предлагаете)\s+вы\b",
+            text,
+            re.I,
+        )
+        if invented_speech and " ".join(words(invented_speech[1])) not in " ".join(words(player_text)):
+            issues.append("Модель сочинила реплику за игрока.")
+        if re.search(r"\bвы\s+(?:произносите|отвечаете|говорите|спрашиваете)\s*[:,—]\s*«", text, re.I):
+            quote = spoken(text)
+            if " ".join(words(quote)) not in " ".join(words(player_text)):
+                issues.append("Модель сочинила реплику за игрока.")
+        owned = frame.inventory.casefold()
+        for item in ("нож", "кинжал", "меч", "топор", "лук", "арбалет", "посох"):
+            if not re.search(r"\b" + item, owned) and re.search(
+                r"(?:ваш\w* (?:пояс\w*|рук\w*|сумк\w*)|при вас|у вас)[^.!?\n]{0,70}\b" + item + r"\w*",
+                prose,
+                re.I,
+            ):
+                issues.append("Неподтверждённое снаряжение героя: " + item)
+        if re.search(r"(?mi)^\s*(?:…|\.{3})?\s*(?:(?:нет|да)[,:]\s*)?я\b|^\s*(?:вы|игрок)\s*:", prose):
+            issues.append("Модель сочинила неатрибутированную реплику за игрока.")
+        if re.search(r"\bвы не можете.{0,50}(?:убить|напасть).{0,25}без причин", prose, re.I):
+            issues.append("Не запрещай намерение по моральным причинам; исход определяет движок.")
+        if not receipt.get("committed"):
+            from rpg_vkr.narrative.turn_brief import mentioned_actors
+    
+            objects = campaign.get("objects", [])
+            if (
+                objects
+                and mentioned_actors(prose, objects)
+                and re.search(
+                    r"\bвы\s+(?:бер[её]те|забираете|взяли|забрали|выбросили|передали)\b", prose, re.I
+                )
+            ):
+                issues.append("Неподтверждённый перенос зарегистрированного предмета.")
+        # A known actor cannot reappear after the hero leaves their place.
+        from rpg_vkr.domain.combat import ACTORS
+    
+        roster = campaign.get("validation_roster") or [
+            {
+                "name": actor[0],
+                "here": any(a.startswith(actor[0] + ":") for a in frame.visible_actors),
+                "alive": True,
+            }
+            for actor in ACTORS.values()
+        ]
+        for actor in roster:
+            if actor["here"] and actor["alive"]:
+                continue
+            name = actor["name"]
+            if re.search(
+                r"\b" + re.escape(name) + r"\s+(?:говорит|отвечает|поднимает голову|смотрит на вас)\b",
+                prose,
+                re.I,
+            ):
+                issues.append("Собеседника нет рядом либо он выбыл; прямой разговор не подтверждён.")
+        # Counts are compared to the actual roster instead of always assuming one guard.
+        for name in {a.split(":", 1)[0].split()[0] for a in frame.visible_actors}:
+            count = sum(a.split(":", 1)[0].split()[0] == name for a in frame.visible_actors)
+            match = re.search(
+                r"\b(два|двое|три|трое|четыре)\s+" + re.escape(name.rstrip("ая")) + r"\w*", prose, re.I
+            )
+            if (
+                match
+                and {"два": 2, "двое": 2, "три": 3, "трое": 3, "четыре": 4}[match[1].casefold()] > count
+            ):
+                issues.append(
+                    f"Количество существ ({name}) не совпадает с реестром: подтверждено {count}."
+                )
+        # Death checks bind a named actor, so 'dead leaves/silence' are not casualties.
+        alive_names = [a.split(":", 1)[0] for a in frame.visible_actors if ": погиб" not in a]
+        dead_names = [a.split(":", 1)[0] for a in frame.visible_actors if ": погиб" in a]
+        for name in dead_names:
+            root = re.escape(name[:-1] if name[-1:] in "аяйь" else name)
+            if re.search(r"\b" + root + r"\w*\s+(?:говорит|отвечает|встаёт|встает|бежит)", prose, re.I):
+                issues.append("Погибший персонаж не может действовать без подтверждённого эффекта.")
+        if not campaign.get("death_confirmed"):
+            for name in alive_names:
+                root = re.escape(name[:-1] if name[-1:] in "аяйь" else name)
+                if re.search(r"\b" + root + r"\w*\s+(?:погиб\w*|умер\w*|мертв\w*)", prose, re.I):
+                    issues.append("Смерть этого персонажа не подтверждена движком.")
+        if not resolution and re.search(
+            r"\bвы\s+(?:убили|убиваете|зарезали|вонзили|вонзаете|нанесли удар|наносите удар)\b",
+            prose,
+            re.I,
+        ):
+            issues.append("Сначала нужен расчёт атаки движком.")
+        team = campaign.get("team_combat")
+        if team:
+            if team["active"] and re.search(r"\bсхватка завершена\b", prose, re.I):
+                issues.append("В групповой схватке ещё есть действующие противники.")
+            for actor in team["actors"]:
+                root = re.escape(actor["name"])
+                if actor["hp"] > 0 and re.search(
+                    r"\b" + root + r"\s+(?:повержен\w*|падает без сознания|погиб\w*)", prose, re.I
+                ):
+                    issues.append("Выбытие названного участника не подтверждено движком.")
+            hero_hits = [a for a in team["attacks"] if a["actor_id"] == "hero"]
+            if (
+                hero_hits
+                and not any(a["hit"] for a in hero_hits)
+                and re.search(
+                    r"\b(?:ваш удар (?:достигает|попадает)|вы (?:попали|вонзаете|наносите рану))\b",
+                    prose,
+                    re.I,
+                )
+            ):
+                issues.append("По расчёту герой промахнулся; попадание не подтверждено.")
+        if resolution and not team:
+            last = resolution[-1]
+            if not last.get("rolled") and re.search(
+                r"\b(?:вонзаете|вонзили|удар достигает|попали|наносите удар)\b", prose, re.I
+            ):
+                issues.append("Действие заблокировано до броска; атака не выполнена.")
+            if last.get("hit") is False and re.search(
+                r"\b(?:удар (?:достигает|попадает)|вонзаете|наносите ран\w*|попали)\b", prose, re.I
+            ):
+                issues.append("По расчёту промах; попадание не подтверждено.")
+            if not last.get("defeated") and re.search(
+                r"\b(?:повержен\w*|падает без сознания|схватка завершена)\b", prose, re.I
+            ):
+                issues.append("Противник ещё не повержен.")
+        if "не удалось" in interaction:
+            if re.search(r"\bвы\s+(?:взяли|забрали|бер[её]те|забираете)\b", prose, re.I):
+                issues.append("Попытка не удалась: передача не могла дать предмет герою.")
+            # Travel is governed by per-step receipts; old atomic failures still have no prefix.
+            moves = [step for step in receipt.get("steps", []) if step["operation"] == "move"]
+            if (
+                moves
+                and not any(step["status"] == "completed" for step in moves)
+                and re.search(r"\bвы\s+(?:убежали|ушли|уходите|убегаете)\b", prose, re.I)
+            ):
+                issues.append("Неудачная цепочка не подтвердила переход.")
+        if issues:
+>           raise NarrativeConflict("; ".join(dict.fromkeys(issues)))
+E           rpg_vkr.narrative.failures.NarrativeConflict: Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку.
+
+src/rpg_vkr/narrative/story_quality.py:304: NarrativeConflict
+__________ test_real_http_semantic_rejection_gets_one_targeted_repair __________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x7260090) at 0x7f16b037fdc0>
+qt_app = <PySide6.QtWidgets.QApplication(0x63a4f20) at 0x7f16b02c6f40>
+
+    def test_real_http_semantic_rejection_gets_one_targeted_repair(window, qt_app):
+        window.director_mode.setChecked(True)
+>       with local_server(mode="plain_semantic_first") as (url, requests):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_story_conversation_quality.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_local_narrator.py:262: in local_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+____________ test_two_semantically_bad_answers_do_not_enter_memory _____________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x7a4c4f0) at 0x7f16aed97300>
+qt_app = <PySide6.QtWidgets.QApplication(0x63a4f20) at 0x7f16b02c6f40>
+
+    def test_two_semantically_bad_answers_do_not_enter_memory(window, qt_app):
+        window.director_mode.setChecked(True)
+>       with local_server(mode="plain_semantic_bad") as (url, requests):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_story_conversation_quality.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_local_narrator.py:262: in local_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+=========================== short test summary info ============================
+FAILED tests/learning/test_evaluation.py::test_explicit_consent_and_promise_can_be_faithfully_restated
+FAILED tests/test_story_conversation_quality.py::test_real_http_semantic_rejection_gets_one_targeted_repair
+FAILED tests/test_story_conversation_quality.py::test_two_semantically_bad_answers_do_not_enter_memory
+3 failed, 57 passed in 28.24s

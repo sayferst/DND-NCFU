@@ -1,0 +1,18 @@
+VERIFIED | structural records excluding legacy 200: 19000
+USER-SYN-0200 200 {} 
+USER-SYN-1000 1000 {} 
+USER-SYN-DEATH-1000 1000 {} 
+USER-SYN-EVENTS-1000 1000 {'BA': 250, 'EV': 250, 'FI': 250, 'LO': 250} 
+USER-SYN-BEHAVIOR-5000 5000 {'BOOK': 500, 'BOSSM': 400, 'CSK': 750, 'MAG': 500, 'MOBM': 800, 'NPCM': 950, 'NSK': 650, 'SBOOK': 450} 
+USER-SYN-ENTITIES-5000 5000 {'ARM': 450, 'BOSS': 300, 'GEAR': 450, 'KIN': 200, 'MON': 1000, 'NPC': 600, 'PLANT': 1000, 'PROF': 350, 'WPN': 650} 
+USER-SYN-EVERYDAY-1000 1000 {} 
+USER-SYN-CRAFT-5000 5000 {'COMP': 350, 'DROP': 700, 'ENCH': 400, 'EQPC': 350, 'FOOD': 500, 'GEM': 450, 'MAT': 450, 'MCR': 450, 'ORE': 600, 'POT': 350, 'WPNC': 400} 
+legacy_duplicate_audit None  {'compared': 200, 'same_transcripts': 200, 'extra_independent_sessions': 0}
+WARN: USER-SYN-0200: high repeated-long-line fraction (12551/18736); not percentage of duplicate records
+WARN: USER-SYN-1000: high repeated-long-line fraction (64563/82703); not percentage of duplicate records
+WARN: USER-SYN-DEATH-1000: high repeated-long-line fraction (26835/39736); not percentage of duplicate records
+WARN: USER-SYN-EVENTS-1000: high repeated-long-line fraction (6459/8026); not percentage of duplicate records
+WARN: USER-SYN-BEHAVIOR-5000: high repeated-long-line fraction (17622/25019); not percentage of duplicate records
+WARN: USER-SYN-ENTITIES-5000: high repeated-long-line fraction (14858/22855); not percentage of duplicate records
+WARN: USER-SYN-EVERYDAY-1000: high repeated-long-line fraction (11538/12260); not percentage of duplicate records
+WARN: USER-SYN-CRAFT-5000: high repeated-long-line fraction (17048/25362); not percentage of duplicate records

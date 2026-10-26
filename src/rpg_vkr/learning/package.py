@@ -244,7 +244,7 @@ def inspect(path, *, resolve_spec_alias=False):
         "format_version": 1,
         "archive_sha256": sha256(path.read_bytes()).hexdigest(),
         "verified": not errors,
-        "original_package_complete": ALIAS in members,
+        "original_package_complete": all(row["path"] in members for row in manifest["sources"]),
         "errors": errors,
         "resolved_aliases": resolved,
         "sources": sources,

@@ -1,5 +1,9 @@
 # Проверка локального архива на Windows
 
+Для нового CODEX READY и работающей библиотеки используйте
+[OPERATIONS.md](OPERATIONS.md). Команда ниже сохраняется как историческая
+проверка FIXED(12), а не инструкция включения нового runtime.
+
 Сначала получите изменения ветки setup/development-environment через
 `git pull --ff-only`. Если Windows блокирует автоматическую очистку pack-файлов,
 используйте `git -c gc.auto=0 -c maintenance.auto=false pull --ff-only`.

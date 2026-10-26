@@ -631,6 +631,7 @@ class OllamaClient(QObject):
             campaign=campaign,
             history=history,
             confirmed=confirmed,
+            remote=bool(self.cloud),
         )
         try:
             payload = story_payload(frame, model, text, context=context)

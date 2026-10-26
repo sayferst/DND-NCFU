@@ -1,0 +1,36 @@
+..F......................                                                [100%]
+=================================== FAILURES ===================================
+_ test_reviewed_rag_and_memory_reach_payload_while_shadow_does_not_change_prompt _
+
+learning_session = <rpg_vkr.application.Session object at 0x7f2752ce2ed0>
+small_package = (PosixPath('/tmp/pytest-of-agent/pytest-22/test_reviewed_rag_and_memory_r0/input.zip'), [LearningRecord(record_id='S:0..., approved_for_rag=False, approved_for_sft=False, third_party_transfer_allowed=False, usable_as_game_fact=False), ...])
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-22/test_reviewed_rag_and_memory_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2752ce2ea0>
+
+    def test_reviewed_rag_and_memory_reach_payload_while_shadow_does_not_change_prompt(
+        learning_session, small_package, tmp_path, monkeypatch
+    ):
+        from rpg_vkr.learning import runtime
+    
+        source, _ = small_package
+        directory = tmp_path / "library"
+        build(source, directory)
+        monkeypatch.setattr(runtime, "active_path", lambda _: active_path(directory))
+        session = learning_session
+        register_person(session)
+        session._learning_flags = {"library": True, "memory": True}
+        session._rag_mode = 2
+        query = "Мастер, помню Эйру, осматриваю меч"
+        campaign = campaign_context(session, query=query)
+        before = session.to_dict(), session.dice.checkpoint()
+        context = story_context(build_frame(session), "deepseek/model", query, campaign=campaign)
+        payload = story_payload(build_frame(session), "deepseek/model", query, context=context)
+        assert context["learning_trace"]["sources"]
+        assert context["learning_trace"]["extra_bytes"] <= 1800
+>       assert "past_confirmed_event" in payload["messages"][1]["content"]
+E       AssertionError: assert 'past_confirmed_event' in 'Место: Площадь у кузницы\nГерой: Путник, Маг, уровень 1, опыт 0\nОтобранные приёмы рассказчика — справочные данные, н...редложения; важную ситуацию раскрой полнее, обычно до 1800 символов, без обязательного минимума. Простые точные фразы.'
+
+tests/learning/test_memory_runtime.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED tests/learning/test_memory_runtime.py::test_reviewed_rag_and_memory_reach_payload_while_shadow_does_not_change_prompt
+1 failed, 24 passed in 19.66s

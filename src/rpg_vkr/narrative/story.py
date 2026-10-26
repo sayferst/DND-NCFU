@@ -32,7 +32,9 @@ def master_question(text):
     )
 
 
-def story_context(frame, model, text, *, memory=None, campaign=None, history=(), confirmed=False):
+def story_context(
+    frame, model, text, *, memory=None, campaign=None, history=(), confirmed=False, remote=True
+):
     memory = deepcopy(memory or {})
     memory.pop("examples", None)
     # Raw model prose stays in the journal, never in authoritative world facts.
@@ -94,6 +96,7 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "resolution": (campaign or {}).get("resolution", []) if confirmed else [],
         "known_observations": (campaign or {}).get("known_observations", []),
         "living_world": (campaign or {}).get("living_world"),
+        "learning_memory": (campaign or {}).get("learning_memory", []),
         "narrative_techniques": (campaign or {}).get("narrative_techniques", []),
         "team_combat": (campaign or {}).get("team_combat") if confirmed else None,
         "memory": memory,
@@ -111,6 +114,17 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         from rpg_vkr.learning.rag import retrieve
 
         context["narrative_techniques"] = retrieve(text)
+    context["learning_memory"] = [
+        row
+        for row in context["learning_memory"]
+        if row.get("world_id") == (campaign or {}).get("world_id")
+        and row.get("scope")
+        == ("npc:" + brief["target_id"] if brief.get("mode") == "dialogue" else "player")
+    ]
+    if (campaign or {}).get("learning_features"):
+        from rpg_vkr.learning.runtime import enrich
+
+        context = enrich(context, text, campaign["learning_features"], remote=remote)
     if master_question(text):
         context["task"] += " Это вопрос ведущему о наблюдаемом: ответь описанием, не от лица NPC."
     return context

@@ -1,6 +1,5 @@
 """Connected controls for the completed catalog, world and opt-in retrieval."""
 
-import json
 from pathlib import Path
 
 from PySide6.QtWidgets import (
@@ -16,8 +15,6 @@ from PySide6.QtWidgets import (
 
 from rpg_vkr.domain.content_v5 import ABILITIES, ITEMS, RECIPES
 from rpg_vkr.learning.rag import retrieve
-from rpg_vkr.resources import data_directory
-from rpg_vkr.ui.workspace_tools import atomic_text
 
 
 def install(window, page):
@@ -101,20 +98,15 @@ def install(window, page):
     window.rag_mode.addItems(
         ["RAG выключен", "Только поиск, без влияния на ответ", "Подсказки рассказчику"]
     )
-    try:
-        mode = json.loads((data_directory() / "learning.json").read_text(encoding="utf-8")).get(
-            "mode", 0
-        )
-        if type(mode) is not int or mode not in (0, 1, 2):
-            mode = 0
-    except (OSError, ValueError):
-        mode = 0
+    from rpg_vkr.learning.settings import load, update
+
+    mode = load()["mode"]
     window.rag_mode.setCurrentIndex(mode)
     form.addRow("Библиотека приёмов", window.rag_mode)
 
     def changed(index):
         window._session._rag_mode = index
-        atomic_text(data_directory() / "learning.json", json.dumps({"mode": index}))
+        update({"mode": index})
 
     window.rag_mode.currentIndexChanged.connect(changed)
     window.rag_query = QLineEdit()
@@ -124,12 +116,25 @@ def install(window, page):
     window.rag_results.setMaximumHeight(150)
     form.addRow(window.rag_results)
     search = QPushButton("Найти приёмы (локально)")
-    search.clicked.connect(
-        lambda: window.rag_results.setPlainText(
-            "\n\n".join(r["id"] + ": " + r["text"] for r in retrieve(window.rag_query.text()))
+
+    def lookup():
+        values = retrieve(window.rag_query.text())
+        if load()["library"]:
+            import sqlite3
+
+            from rpg_vkr.learning.library import Library, active_path
+
+            try:
+                with Library(active_path()) as library:
+                    values = library.search(window.rag_query.text())
+            except (OSError, ValueError, KeyError, sqlite3.Error):
+                pass
+        window.rag_results.setPlainText(
+            "\n\n".join(r["id"] + ": " + r["text"] for r in values)
             or "Подходящих приёмов нет; рассказчик работает обычным способом."
         )
-    )
+
+    search.clicked.connect(lookup)
     form.addRow(search)
     note = QLabel(
         "Библиотека содержит собственные приёмы проекта. Они не создают факты мира. "
@@ -144,6 +149,9 @@ def refresh(window):
         return
     session, state = window._session, window._session.gameplay
     window._session._rag_mode = window.rag_mode.currentIndex()
+    from rpg_vkr.learning.settings import load
+
+    window._session._learning_flags = load()
     enabled = state is not None and session.schema_version >= 28
     window.gameplay_tabs.setTabVisible(window.gameplay_tabs.indexOf(window.expanded_page), enabled)
     if not enabled:

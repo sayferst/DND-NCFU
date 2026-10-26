@@ -1,0 +1,1365 @@
+{
+  "status": "COMPLETED",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "pipeline": "corpus-qc-1",
+  "scenarios": 24,
+  "planned_generations": 48,
+  "sent_generations": 48,
+  "workers": 2,
+  "cap_rub": "40",
+  "reserved_upper_rub": "25.42865136255873",
+  "canonical_state_and_rng_unchanged": true,
+  "raw_corpus_sent": false,
+  "private_plot_or_diary_in_requests": false,
+  "weights_access": "INFERENCE_ONLY",
+  "quality_gain": "NOT_ESTABLISHED_SMALL_LIVE_SAMPLE",
+  "rows": [
+    {
+      "case": "absent_npc",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46518,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8602,
+        "prompt_tokens": 8464,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 138,
+        "completion_tokens_details": {
+          "reasoning_tokens": 51
+        },
+        "cost": 0.014898324320880002
+      },
+      "finish_reason": "stop",
+      "response": "Орна здесь нет. На площади сейчас находятся только Ливна, двое налётчиков и дозорная — никого из дальней башни среди них не видно, и говорить с Орном отсюда нельзя.\n\nЕсли Орн вообще существует в этом месте мира, о нём герою пока ничего подтверждённого не известно: ни где он, ни как до него добраться.",
+      "status": "ACCEPTED",
+      "latency_ms": 3056.0075030007283,
+      "reserved_rub": "0.52462693913058"
+    },
+    {
+      "case": "absent_npc",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46518,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8678,
+        "prompt_tokens": 8464,
+        "prompt_tokens_details": {
+          "cached_tokens": 8448
+        },
+        "completion_tokens": 214,
+        "completion_tokens_details": {
+          "reasoning_tokens": 82
+        },
+        "cost": 0.017983023753552
+      },
+      "finish_reason": "stop",
+      "response": "Нет, сейчас это невозможно: ни Орна, ни дальней башни среди известных вам мест и людей нет. Вокруг площади вы видите лишь Ливну у ворот, двоих налётчиков и дозорную; никакого знакомого вам Орна здесь не появлялось и о нём вам ничего не сообщали.\n\nЕсли Орн — имя из прошлых событий или слухов, их в текущей сцене нет; если это догадка, я не могу её подтвердить. Можете спросить присутствующих — но они ответят только тем, что знают сами.",
+      "status": "ACCEPTED",
+      "latency_ms": 3586.6590729983727,
+      "reserved_rub": "0.52462693913058"
+    },
+    {
+      "case": "consent",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46509,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9486,
+        "prompt_tokens": 8462,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 1024,
+        "completion_tokens_details": {
+          "reasoning_tokens": 831
+        },
+        "cost": 0.07608787063878
+      },
+      "finish_reason": "length",
+      "response": "Условия поручения видны прямо здесь, у ворот. Доска со знаком моста — это и есть суть дела: мост на западной дороге, отмеченный вырезанным знаком, давно не подавал о себе вестей, и дозорной у ворот нужно, чтобы кто-то сходил и посмотрел своими глазами.\n\nПоручение простое и не боевое по замыслу: дойти до моста, оценить, цел ли он, кто там держится, нет ли помехи движению, и вернуться с честным рассказом о том, что увидел. Точный срок и полная награда здесь открыто не названы; дозорная готова обсуждать их отдельно, прежде чем кто-то свяжет себя словом.\n\nУ самой до",
+      "status": "REJECTED_BY_GAME_VALIDATOR",
+      "reason": "Рассказ обрезан лимитом генерации",
+      "latency_ms": 10174.281855999652,
+      "reserved_rub": "0.52453365184935"
+    },
+    {
+      "case": "consent",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46509,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9486,
+        "prompt_tokens": 8462,
+        "prompt_tokens_details": {
+          "cached_tokens": 8448
+        },
+        "completion_tokens": 1024,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1024
+        },
+        "cost": 0.073920841646652
+      },
+      "finish_reason": "length",
+      "response": "",
+      "status": "REJECTED_BY_GAME_VALIDATOR",
+      "reason": "Рассказ обрезан лимитом генерации",
+      "latency_ms": 9974.402686999383,
+      "reserved_rub": "0.52453365184935"
+    },
+    {
+      "case": "craft_no_material",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46816,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8779,
+        "prompt_tokens": 8518,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 261,
+        "completion_tokens_details": {
+          "reasoning_tokens": 137
+        },
+        "cost": 0.05900316885262799
+      },
+      "finish_reason": "stop",
+      "response": "На площади нет действующей кузницы: ни горна с раздутым жаром, ни наковальни, ни мехов — только выставленный у стены чужой клинок, к которому вас не подпускают. Железо у вас лежит сырыми кусками, а не слитками, и без исправной переносной кузницы его не раскалить до ковкой мягкости. Даже начни вы сейчас стучать, металл остался бы холодным и неподатливым.",
+      "status": "ACCEPTED",
+      "latency_ms": 3906.0307380004815,
+      "reserved_rub": "0.52771578466464"
+    },
+    {
+      "case": "craft_no_material",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46816,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8808,
+        "prompt_tokens": 8518,
+        "prompt_tokens_details": {
+          "cached_tokens": 8448
+        },
+        "completion_tokens": 290,
+        "completion_tokens_details": {
+          "reasoning_tokens": 108
+        },
+        "cost": 0.024167624990652004
+      },
+      "finish_reason": "stop",
+      "response": "Для ковки меча нужен не просто верстак и молот, а сама кузница: горн с раздувом, наковальня и устойчивое место, где металл можно довести до нужного жара. У вас с собой только полевой верстак — на нём удобно править, подгонять и собирать мелкие части, но не разогревать железо до ковочной температуры.\n\nГотовых слитков или полос под клинок тоже нет: два куска железа — это ещё сырьё, а не заготовка. Без переносной кузницы или другой исправной станции с горном попытка сварить и вытянуть клинок обречена — металл останется холодным, и вы лишь зря истратите время.",
+      "status": "ACCEPTED",
+      "latency_ms": 4012.2009280003113,
+      "reserved_rub": "0.52771578466464"
+    },
+    {
+      "case": "craft_unknown",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46749,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8668,
+        "prompt_tokens": 8508,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 160,
+        "completion_tokens_details": {
+          "reasoning_tokens": 37
+        },
+        "cost": 0.05185114395832801
+      },
+      "finish_reason": "stop",
+      "response": "Объяснение нужно простое: рецепт — это не предмет, который можно осмотреть у ворот, а выбор того, что именно вы хотите получить. Без выбранного рецепта и желаемого качества движок не знает, какой предмет изготавливать, поэтому работа ещё не начата.\n\nЗаготовки при вас: железо, ткань и лечебная трава. Решите, что изготавливаете и какого качества — после этого движок определит расход материалов, время и проверку ремесла.",
+      "status": "ACCEPTED",
+      "latency_ms": 3558.2671370011667,
+      "reserved_rub": "0.52702131268215"
+    },
+    {
+      "case": "craft_unknown",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 48025,
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:inspect"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9006,
+        "prompt_tokens": 8776,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 230,
+        "completion_tokens_details": {
+          "reasoning_tokens": 66
+        },
+        "cost": 0.06131807546092801
+      },
+      "finish_reason": "stop",
+      "response": "Изделие не создано, потому что у вас нет ни выбранного рецепта, ни указанного качества, а кузнечный горн сам по себе ничего не выковывает. Полевой верстак и железо — это только возможность; чтобы движок рассчитал работу, сначала нужно назвать, что именно вы делаете и с каким качеством, а материала, инструмента и станции для выбранной вещи должно хватить.\n\nСейчас для расчёта не хватает одного: вашего выбора. Скажите, какой рецепт вы берёте и какое качество хотите получить, — после этого можно будет определить, достаточны ли железо, верстак, инструмент и время.",
+      "status": "ACCEPTED",
+      "latency_ms": 4341.436022999915,
+      "reserved_rub": "0.54024737610987"
+    },
+    {
+      "case": "free_action",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46385,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8620,
+        "prompt_tokens": 8445,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 175,
+        "completion_tokens_details": {
+          "reasoning_tokens": 70
+        },
+        "cost": 0.017126853816929997
+      },
+      "finish_reason": "stop",
+      "response": "Плащ тянет влево и чуть назад — к приземистой постройке с трубой, откуда в утренний воздух поднимается серая струя. Пахнет не только углём, но и чем-то смолистым, будто в горн подкинули сырых веток.\n\nС той же стороны слышен негромкий перестук молотка — размеренный, без спешки.",
+      "status": "ACCEPTED",
+      "latency_ms": 3173.7117930006207,
+      "reserved_rub": "0.52324836041907"
+    },
+    {
+      "case": "free_action",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46385,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8621,
+        "prompt_tokens": 8445,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 176,
+        "completion_tokens_details": {
+          "reasoning_tokens": 37
+        },
+        "cost": 0.01719595550673
+      },
+      "finish_reason": "stop",
+      "response": "Вы приподнимаете полу плаща над рукой. Ветер слабый, но тянет от ворот — со стороны дороги за площадью, а не от кузницы, где из-под навеса поднимается свой дымок. Тот, что вы почуяли, идёт снаружи, с востока: тянет гарью и прелой соломой, будто где-то за стеной горит не очаг, а что-то сырое.\n\nДозорная у ворот чуть поворачивает голову в ту же сторону, но молчит.",
+      "status": "ACCEPTED",
+      "latency_ms": 3371.7725119986426,
+      "reserved_rub": "0.52324836041907"
+    },
+    {
+      "case": "hero_privacy",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 45894,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8432,
+        "prompt_tokens": 8329,
+        "prompt_tokens_details": {
+          "cached_tokens": 8192
+        },
+        "completion_tokens": 103,
+        "completion_tokens_details": {
+          "reasoning_tokens": 39
+        },
+        "cost": 0.012314612139258
+      },
+      "finish_reason": "stop",
+      "response": "— Ливна вскидывает взгляд от доски, лежащей перед ней.\n\n— Нет. Я не читала ваш дневник и не знаю, что в нём. Держите его при себе, если не хотите, чтобы кто-то заглянул.",
+      "status": "ACCEPTED",
+      "latency_ms": 3631.6827119990194,
+      "reserved_rub": "0.51815902096530"
+    },
+    {
+      "case": "hero_privacy",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46822,
+      "selected_ids": [
+        "project:knowledge",
+        "project:continuity"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8698,
+        "prompt_tokens": 8517,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 181,
+        "completion_tokens_details": {
+          "reasoning_tokens": 39
+        },
+        "cost": 0.053457758246178
+      },
+      "finish_reason": "stop",
+      "response": "Ливна отрывается от доски, которую протирала ветошью, и смотрит на вас без улыбки.\n\n— Нет. Чужой дневник я не читала и не открывала. Если он у вас при себе, я его в руках не держала; если где-то здесь лежал — скажите где, тогда и посмотрю.\n\nОна кладёт ветошь на край скамьи и вытирает ладони.\n\n— Я переписываю то, что мне диктуют или дают переписать. В закрытые книги не заглядываю.",
+      "status": "ACCEPTED",
+      "latency_ms": 3452.7054729987867,
+      "reserved_rub": "0.52777797618546"
+    },
+    {
+      "case": "inspect",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "e7ee140d2ad7a2d0c158d693222c7e35edfe5640b855e66fefa7d243eb39e3a5",
+      "input_bytes": 47150,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8865,
+        "prompt_tokens": 8655,
+        "prompt_tokens_details": {
+          "cached_tokens": 6400
+        },
+        "completion_tokens": 210,
+        "completion_tokens_details": {
+          "reasoning_tokens": 91
+        },
+        "cost": 0.055678686556350006
+      },
+      "finish_reason": "stop",
+      "response": "Дорожная доска — это широкий, слегка потемневший от непогоды кусок дерева, укреплённый у ворот на двух коротких столбиках. По центру глубоко вырезан знак моста: две опоры и перекинутый между ними настил, а под ним — короткая волнистая линия, обозначающая воду. Никаких слов, чисел или стрелок на доске нет; скол на правом углу говорит лишь о том, что доска здесь давно.",
+      "status": "ACCEPTED",
+      "latency_ms": 3843.6997829994652,
+      "reserved_rub": "0.53117777932362"
+    },
+    {
+      "case": "inspect",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "e7ee140d2ad7a2d0c158d693222c7e35edfe5640b855e66fefa7d243eb39e3a5",
+      "input_bytes": 47672,
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8918,
+        "prompt_tokens": 8761,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 157,
+        "completion_tokens_details": {
+          "reasoning_tokens": 25
+        },
+        "cost": 0.058181549760906
+      },
+      "finish_reason": "stop",
+      "response": "На доске вырезан один знак — мост: две опоры и перекинутая между ними дуга. Ни надписи, ни стрелки, ни второго изображения на ней нет.\n\nДерево сухое, светлое, с задирами по краям — резали недавно, но аккуратно, одним инструментом. Погано, что рядом нет ни столба, ни развилки, к которой такую доску обычно крепят: она лежит у ворот сама по себе, и куда именно указывает мост, отсюда не видно.",
+      "status": "ACCEPTED",
+      "latency_ms": 3329.776870999922,
+      "reserved_rub": "0.53658844163496"
+    },
+    {
+      "case": "memory_10",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "34f0b67cef8fd63cf8a39d1e4ff84afdfd8d8076f3e177de01ead1a540dc2922",
+      "input_bytes": 47139,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8885,
+        "prompt_tokens": 8656,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 229,
+        "completion_tokens_details": {
+          "reasoning_tokens": 105
+        },
+        "cost": 0.05917592307712801
+      },
+      "finish_reason": "stop",
+      "response": "В записанной памяти об осмотре клинка Ливны не осталось отдельных подтверждённых подробностей. Сохранилось лишь то, что среди предметов на площади был выставочный клинок, а в руках Ливны вы видели работу, которую она показывала у кузницы.\n\nЕсли вы тогда разглядывали металл, клеймо, баланс или иные детали, они не закрепились как известный факт — значит, опираться на них нельзя. При необходимости клинок можно осмотреть заново.",
+      "status": "ACCEPTED",
+      "latency_ms": 4346.9518090005295,
+      "reserved_rub": "0.53106376153545"
+    },
+    {
+      "case": "memory_10",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "34f0b67cef8fd63cf8a39d1e4ff84afdfd8d8076f3e177de01ead1a540dc2922",
+      "input_bytes": 48016,
+      "selected_ids": [
+        "project:inspect",
+        "project:continuity"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9151,
+        "prompt_tokens": 8839,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 312,
+        "completion_tokens_details": {
+          "reasoning_tokens": 181
+        },
+        "cost": 0.068072765638878
+      },
+      "finish_reason": "stop",
+      "response": "Отдельной подтверждённой записи об осмотре клинка у вас нет — в памяти осталось только то, что видно и сейчас.\n\nКлинок лежит на выкладке у кузницы: прямой, с узким долом по всей длине, рукоять обмотана тёмной кожей, гарда простая, без насечек. Лезвие чистое, следов заточки почти нет — вещь выставочная, а не рабочая. Чьей работы и из какого металла — по одному взгляду не определить.",
+      "status": "ACCEPTED",
+      "latency_ms": 4726.054527000088,
+      "reserved_rub": "0.54015408882864"
+    },
+    {
+      "case": "memory_100",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "f8be8707eb1866b477e4c978199a978f1a673ee702eb9cdf948282ab71f2d309",
+      "input_bytes": 47139,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9178,
+        "prompt_tokens": 8656,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 522,
+        "completion_tokens_details": {
+          "reasoning_tokens": 407
+        },
+        "cost": 0.079422718188528
+      },
+      "finish_reason": "stop",
+      "response": "В подтверждённых записях нет вашего осмотра клинка Ливны — ни описания лезвия, ни материала, ни отметок на нём, ни слов, которые при этом звучали. В памяти сохранилось только то, что на площади, у ворот, находится доска со знаком моста.\n\nСтоящий здесь клинок виден вам как выставленный предмет, но его подробные свойства не установлены, пока вы не осмотрите его сами и движок не подтвердит результат.",
+      "status": "ACCEPTED",
+      "latency_ms": 6451.536541999303,
+      "reserved_rub": "0.53106376153545"
+    },
+    {
+      "case": "memory_100",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "f8be8707eb1866b477e4c978199a978f1a673ee702eb9cdf948282ab71f2d309",
+      "input_bytes": 48016,
+      "selected_ids": [
+        "project:inspect",
+        "project:continuity"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9253,
+        "prompt_tokens": 8839,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 414,
+        "completion_tokens_details": {
+          "reasoning_tokens": 279
+        },
+        "cost": 0.075121137998478
+      },
+      "finish_reason": "stop",
+      "response": "Среди подтверждённых воспоминаний нет ни одной записи об осмотре клинка — вы ещё не рассматривали его вблизи, так что ни материала, ни отделки, ни назначения лезвия вы не знаете. Отдельно уточню: Ливна — писарь, а не кузнец, и в текущей сцене клинок числится выставленным здесь, на площади; связать его именно с ней у вас оснований нет.\n\nЕсли хотите, можете осмотреть клинок — тогда движок опишет то, что удаётся заметить.",
+      "status": "ACCEPTED",
+      "latency_ms": 5837.308681999275,
+      "reserved_rub": "0.54015408882864"
+    },
+    {
+      "case": "memory_50",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "3e8f690925d86c50ac933eb68317b2b281eb8ef7b4f3bc2de7930b8422ea4cc2",
+      "input_bytes": 47139,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9018,
+        "prompt_tokens": 8656,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 362,
+        "completion_tokens_details": {
+          "reasoning_tokens": 257
+        },
+        "cost": 0.070533476812656
+      },
+      "finish_reason": "stop",
+      "response": "В вашей памяти осмотр клинка Ливны не сохранился — подтверждённой записи об этом нет. Известно лишь, что выставочный клинок находится здесь, у кузницы, рядом с доской со знаком моста; что за клинок, из чего он и как выглядит вблизи, вы пока не знаете.\n\nЕсли хотите, осмотрите его сейчас — тогда увиденное и станет тем, что герой запомнит.",
+      "status": "ACCEPTED",
+      "latency_ms": 4705.045126998812,
+      "reserved_rub": "0.53106376153545"
+    },
+    {
+      "case": "memory_50",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "3e8f690925d86c50ac933eb68317b2b281eb8ef7b4f3bc2de7930b8422ea4cc2",
+      "input_bytes": 48016,
+      "selected_ids": [
+        "project:inspect",
+        "project:continuity"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9203,
+        "prompt_tokens": 8839,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 364,
+        "completion_tokens_details": {
+          "reasoning_tokens": 230
+        },
+        "cost": 0.071666053508478
+      },
+      "finish_reason": "stop",
+      "response": "Сведений об осмотре клинка у вас нет: в подтверждённой памяти героя такой записи не сохранилось — вы его ещё не рассматривали. На площади у ворот стоит «Выставочный клинок», но ни его материал, ни отделка, ни какие-либо свойства пока не установлены, и приписывать их нельзя. Ливна к этому клинку не приставлена: она писарь, а не владелица оружия.\n\nЕсли хотите, подойдите к клинку и осмотрите его — тогда появятся наблюдаемые детали.",
+      "status": "ACCEPTED",
+      "latency_ms": 4790.448791000017,
+      "reserved_rub": "0.54015408882864"
+    },
+    {
+      "case": "metaphor",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46498,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8903,
+        "prompt_tokens": 8465,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 438,
+        "completion_tokens_details": {
+          "reasoning_tokens": 182
+        },
+        "cost": 0.03564610668333001
+      },
+      "finish_reason": "stop",
+      "response": "Площадь не молчит, и тишина тут не мёртвая. Со стороны кузни доносится редкое постукивание — не работа молота, а будто кто-то перебирает инструмент на верстаке. У ворот, где стоит доска со знаком моста, скрипит на ветру плохо закреплённая створка, и по камням мостовой шаркает обувь — кто-то ходит вдоль стены.\n\nСо стороны Ливны слышна только шелестящая бумага: она перебирает листы и изредка останавливается, чтобы что-то записать. Иной раз доносится её негромкое бормотание — слова не разобрать, но ритм у них размеренный, будто она проговаривает про себя строку. Больше ничего явного не слыхать: ни крика, ни боя, ни шагов за спиной.\n\nЕсли вас интересует именно башня — её отсюда не видно, и о том, что там происходит, по этим звукам не скажешь.",
+      "status": "ACCEPTED",
+      "latency_ms": 5546.388135000598,
+      "reserved_rub": "0.52441963406118"
+    },
+    {
+      "case": "metaphor",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 47049,
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8961,
+        "prompt_tokens": 8579,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 382,
+        "completion_tokens_details": {
+          "reasoning_tokens": 199
+        },
+        "cost": 0.068418274087878
+      },
+      "finish_reason": "stop",
+      "response": "Башни здесь нет: вы стоите на площади у кузницы, и «мёртвой тишины» вокруг не держится. Из-под навеса слышен глухой стук молота о наковальню и шипение остывающего железа в лохани; ближе, у ворот, ветер чуть поскрипывает доской со знаком моста.\n\nЗа спиной и в стороне — короткие переговоры: Ливна перекладывает что-то на своём лотке, дозорная у выхода меряет шагами площадь. Налётчики замерли, но не молчат — один сплёвывает и тихо перебрасывается словами со вторым. Если где-то и есть тишина, то не тут.",
+      "status": "ACCEPTED",
+      "latency_ms": 5121.357457999693,
+      "reserved_rub": "0.53013088872315"
+    },
+    {
+      "case": "no_invented_roll",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46520,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8606,
+        "prompt_tokens": 8464,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 142,
+        "completion_tokens_details": {
+          "reasoning_tokens": 25
+        },
+        "cost": 0.01517473108008
+      },
+      "finish_reason": "stop",
+      "response": "Вы поднимаете взгляд.\n\nНебо над площадью светлое и высокое, с редкими полосами облаков, растянутыми к западу, — ни дождя, ни клубящейся хмари. Свет мягкий, ближе к середине дня; солнечные пятна лежат на стенах кузницы и на дорожной доске у ворот.\n\nВетер слабый, тянет тёплым — ни дымом, ни гарью не пахнет.",
+      "status": "ACCEPTED",
+      "latency_ms": 3094.8669249992236,
+      "reserved_rub": "0.52464766963752"
+    },
+    {
+      "case": "no_invented_roll",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 47047,
+      "selected_ids": [
+        "stakes"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8736,
+        "prompt_tokens": 8555,
+        "prompt_tokens_details": {
+          "cached_tokens": 8192
+        },
+        "completion_tokens": 181,
+        "completion_tokens_details": {
+          "reasoning_tokens": 70
+        },
+        "cost": 0.021608789417358
+      },
+      "finish_reason": "stop",
+      "response": "Небо над площадью ясное и бледное — ближе к вечеру оно теряет синеву и на востоке уже тронуто тёплой серостью, но солнце пока не село. Ветер высокий и слабый; ни одной дождевой тучи не видно. Со стороны кузницы тянет дымком, и он ложится тонкой полосой, не расходясь.\n\nНочь ещё не наступила.",
+      "status": "ACCEPTED",
+      "latency_ms": 2990.705706999506,
+      "reserved_rub": "0.53011015821621"
+    },
+    {
+      "case": "no_purchase",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46503,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8780,
+        "prompt_tokens": 8462,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 318,
+        "completion_tokens_details": {
+          "reasoning_tokens": 171
+        },
+        "cost": 0.06414157050615599
+      },
+      "finish_reason": "stop",
+      "response": "На выставочном клинке нет ни ценника, ни бирки — его лезвие лишь чуть заметно отражает свет, а рядом, на краю подставки, лежит стёртая дощечка без надписи. Цену здесь никто не объявлял вслух, и в окружении её тоже не видно: ни кузнеца, ни хозяина у клинка сейчас нет — рядом только Ливна, двое налётчиков поодаль и дозорная у ворот.\n\nЧтобы узнать стоимость, вам придётся спросить того, кто здесь торгует, — пока его нет на площади.",
+      "status": "ACCEPTED",
+      "latency_ms": 4665.474376999555,
+      "reserved_rub": "0.52447146032853"
+    },
+    {
+      "case": "no_purchase",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 47350,
+      "selected_ids": [
+        "project:inspect",
+        "project:trade"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8941,
+        "prompt_tokens": 8646,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 295,
+        "completion_tokens_details": {
+          "reasoning_tokens": 203
+        },
+        "cost": 0.065730909371556
+      },
+      "finish_reason": "stop",
+      "response": "У ворот, рядом с доской, лежит выставочный клинок — на этой точке обзора вы не видите ни ценника, ни надписи с ценой, только сам предмет. Чтобы узнать стоимость, нужно спросить у того, кто им распоряжается — Ливны или хозяина кузницы. Пока цена нигде не обозначена, вы можете только продолжать рассматривать клинок.",
+      "status": "ACCEPTED",
+      "latency_ms": 4265.639572000509,
+      "reserved_rub": "0.53325083001762"
+    },
+    {
+      "case": "no_reward",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "edfc136b6af5326dfbca89ab851d941c6c839d85b978e679dc832d28e5d1eee1",
+      "input_bytes": 47189,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9004,
+        "prompt_tokens": 8662,
+        "prompt_tokens_details": {
+          "cached_tokens": 8448
+        },
+        "completion_tokens": 342,
+        "completion_tokens_details": {
+          "reasoning_tokens": 73
+        },
+        "cost": 0.030248573693052002
+      },
+      "finish_reason": "stop",
+      "response": "Доска у ворот — только доска: вырезанный знак моста, ничего больше на ней не спрятано: ни монет, ни тайника, ни отметин. Осмотр — это способ понять обстановку, а не источник награды; деньги и опыт приходят от действий с последствиями: сделки, работы, помощи, схватки, решения задачи.\n\nОсмотритесь: у кузницы стоит выставочный клинок, которым, судя по виду, хозяин гордится. Ливна у наковальни занята делом. Дозорная неподалёку наблюдает за площадью — с ней стоит поговорить о том, что здесь происходит. Двое налётчиков держатся поодаль и ведут себя враждебно: их появление не решено. Можно осмотреть клинок, заговорить с любой из присутствующих, пройти дальше по улице или применить изученное — «Путеводный свет» и «Живительную силу».\n\nСкажите, что именно вы делаете, и я опишу последствия; технические изменения — деньги, опыт, урон — отдаст движок.",
+      "status": "ACCEPTED",
+      "latency_ms": 5264.564230999895,
+      "reserved_rub": "0.53158202420895"
+    },
+    {
+      "case": "no_reward",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "edfc136b6af5326dfbca89ab851d941c6c839d85b978e679dc832d28e5d1eee1",
+      "input_bytes": 48422,
+      "selected_ids": [
+        "project:inspect",
+        "project:opening",
+        "project:reputation"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9457,
+        "prompt_tokens": 8928,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 529,
+        "completion_tokens_details": {
+          "reasoning_tokens": 163
+        },
+        "cost": 0.08460534492352802
+      },
+      "finish_reason": "stop",
+      "response": "Осмотр доски и правда ничего не даёт сверх того, что вы уже видите: это кусок дерева со знаком моста, а не тайник и не награда. Деньги и опыт здесь появляются не от взгляда на вещь, а от поступков, за которые кто-то платит или которые чему-то вас учат.\n\nОглядитесь — площадь сейчас неспокойна. У ворот, неподалёку от доски, стоят двое с оружием, и держатся они так, будто пришли не на рынок. Чуть в стороне — дозорная в доспехе, она смотрит в их сторону и явно ждёт повода. У стены сидит писарь Ливна со своей дощечкой: она ведёт учёт, и не исключено, что ей нужны свидетели или вестник.\n\nОтсюда можно пойти несколькими путями. Поговорить с дозорной — она здесь по службе и знает, что происходит. Подойти к налётчикам — рискованно, но разговор иногда дешевле драки. Спросить у Ливны, чем она занята, или найти заказчика иной работы в самой кузнице: ремесленнику всегда нужны руки, а ваши навыки в кузнечном деле и починке здесь не бесполезны.\n\nДорожная доска, кстати, указывает мост — если он рядом, по этой стороне обычно ходят обозы, и там бывает работа для провожатого.",
+      "status": "ACCEPTED",
+      "latency_ms": 6550.268439999854,
+      "reserved_rub": "0.54436238173746"
+    },
+    {
+      "case": "npc_knowledge",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 45912,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8627,
+        "prompt_tokens": 8333,
+        "prompt_tokens_details": {
+          "cached_tokens": 8192
+        },
+        "completion_tokens": 294,
+        "completion_tokens_details": {
+          "reasoning_tokens": 107
+        },
+        "cost": 0.025582136580858002
+      },
+      "finish_reason": "stop",
+      "response": "Ливна отрывается от доски, которую держала на коленях, и смотрит на вас с явным недоумением.\n\n— Об отшельнике? — Она хмурится, будто взвешивая, не шутка ли это. — Я не знаю никакого отшельника. Ни здешнего, ни заезжего. И о чьих замыслах вы спрашиваете — тоже не возьму в толк.\n\nОна поправляет край лежащего перед ней листа, будто проверяя, всё ли записано верно.\n\n— Если кто-то и живёт отшельником поблизости, мне о нём не сообщали. Такие вести до меня доходят редко, а выдумывать чужие дела я не стану.",
+      "status": "ACCEPTED",
+      "latency_ms": 4116.5433269998175,
+      "reserved_rub": "0.51834559552776"
+    },
+    {
+      "case": "npc_knowledge",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 45912,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8529,
+        "prompt_tokens": 8333,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 196,
+        "completion_tokens_details": {
+          "reasoning_tokens": 105
+        },
+        "cost": 0.01664314198833
+      },
+      "finish_reason": "stop",
+      "response": "Ливна отрывается от разложенных на коленях листов — узкая кисть замирает над начатой строкой.\n\n— Об отшельниках я знаю не больше вашего. В наших краях по лесам кто только не живёт, а записей о них я не веду. Если вам нужен человек, назовите имя или хотя бы место — тогда и спрошу.",
+      "status": "ACCEPTED",
+      "latency_ms": 3566.692297999907,
+      "reserved_rub": "0.51834559552776"
+    },
+    {
+      "case": "npc_name",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46053,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8469,
+        "prompt_tokens": 8363,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 106,
+        "completion_tokens_details": {
+          "reasoning_tokens": 61
+        },
+        "cost": 0.047781745446006
+      },
+      "finish_reason": "stop",
+      "response": "— Ливна я. Вы это имя только что назвали сами.\n\nОна смотрит на вас с лёгким прищуром, ожидая, чего вы на самом деле хотели.",
+      "status": "ACCEPTED",
+      "latency_ms": 2459.246889999122,
+      "reserved_rub": "0.51980709626703"
+    },
+    {
+      "case": "npc_name",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46053,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8634,
+        "prompt_tokens": 8363,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 271,
+        "completion_tokens_details": {
+          "reasoning_tokens": 193
+        },
+        "cost": 0.02234403139683
+      },
+      "finish_reason": "stop",
+      "response": "Женщина откладывает перо и смотрит на вас поверх низкого столика, за которым сидит.\n\n— Ливна. Так меня и зовут. — Она чуть склоняет голову. — А вы, я вижу, уже слышали это имя. От кого, позвольте спросить?",
+      "status": "ACCEPTED",
+      "latency_ms": 4439.385613000923,
+      "reserved_rub": "0.51980709626703"
+    },
+    {
+      "case": "npc_occupation",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 45960,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8542,
+        "prompt_tokens": 8342,
+        "prompt_tokens_details": {
+          "cached_tokens": 8192
+        },
+        "completion_tokens": 200,
+        "completion_tokens_details": {
+          "reasoning_tokens": 55
+        },
+        "cost": 0.019242056541708002
+      },
+      "finish_reason": "stop",
+      "response": "— Переписываю. Заказы, расписки, письма — кто сам не может или не хочет, — Ливна не поднимает глаз от листа, перо ходит ровно. — Сегодня вот список для кузнеца: кому сколько железа привезли, чтобы потом не спорили.\n\nОна смахивает крошку воска с края доски и наконец смотрит на вас, коротко, оценивающе.\n\n— А что, у вас дело какое или так, зеваете? Если письмо написать — говорите сразу, у меня очередь до полудня.",
+      "status": "ACCEPTED",
+      "latency_ms": 3917.828098999962,
+      "reserved_rub": "0.51884312769432"
+    },
+    {
+      "case": "npc_occupation",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46503,
+      "selected_ids": [
+        "project:opening"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8797,
+        "prompt_tokens": 8450,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 347,
+        "completion_tokens_details": {
+          "reasoning_tokens": 212
+        },
+        "cost": 0.065938214440956
+      },
+      "finish_reason": "stop",
+      "response": "— Сижу с грамотами, — Ливна придерживает пальцем край листа, чтобы ветер не сдёрнул его со стола. — Кузнец просил перебелить счёт за железо, а дозорной надо дописать донесение в управу. Письмо — медяк, грамота — три, если с печатью.\n\nОна кивком указывает на раскрытую сумку у ног: в ней видны сложенные трубкой листы, рожок с чернилами и запас очиненного тростника.",
+      "status": "ACCEPTED",
+      "latency_ms": 4858.756583000286,
+      "reserved_rub": "0.52447146032853"
+    },
+    {
+      "case": "ownership",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "edfc136b6af5326dfbca89ab851d941c6c839d85b978e679dc832d28e5d1eee1",
+      "input_bytes": 47145,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8794,
+        "prompt_tokens": 8657,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 137,
+        "completion_tokens_details": {
+          "reasoning_tokens": 62
+        },
+        "cost": 0.052835843037978
+      },
+      "finish_reason": "stop",
+      "response": "Клинок по-прежнему лежит там, где стоял, — на подставке у Ливны, и с места не сдвигался. В вашей руке или за поясом его нет, к своим вещам он не перешёл. Пока это её выставленный товар, а не ваша собственность.",
+      "status": "ACCEPTED",
+      "latency_ms": 2872.5451409991365,
+      "reserved_rub": "0.53112595305627"
+    },
+    {
+      "case": "ownership",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "edfc136b6af5326dfbca89ab851d941c6c839d85b978e679dc832d28e5d1eee1",
+      "input_bytes": 48945,
+      "selected_ids": [
+        "project:inspect",
+        "project:reputation",
+        "project:ownership"
+      ],
+      "memory_events": 1,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9296,
+        "prompt_tokens": 9100,
+        "prompt_tokens_details": {
+          "cached_tokens": 6400
+        },
+        "completion_tokens": 196,
+        "completion_tokens_details": {
+          "reasoning_tokens": 90
+        },
+        "cost": 0.0623988258894
+      },
+      "finish_reason": "stop",
+      "response": "Клинок лежит там же, где и был: у Ливны, под её рукой или на её подставке. Вы осмотрели его — увидели форму, металл и то, как он держится в оправе, — но осмотр не меняет владельца.\n\nОн по-прежнему чужой и остаётся при ней, пока она сама не передаст его или не продаст. Перехода к вам не произошло.",
+      "status": "ACCEPTED",
+      "latency_ms": 3131.897700000991,
+      "reserved_rub": "0.54978340930227"
+    },
+    {
+      "case": "promise",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46507,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8835,
+        "prompt_tokens": 8465,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "completion_tokens": 370,
+        "completion_tokens_details": {
+          "reasoning_tokens": 171
+        },
+        "cost": 0.03094719177693
+      },
+      "finish_reason": "stop",
+      "response": "Путник, вы правы: никто ничего от вас не требует, и обещаний за вами нет.\n\nУ ворот по-прежнему стоит доска со знаком моста. Рядом, у стены кузницы, замерли двое налётчиков — они держатся в шаге друг от друга и не двигаются в вашу сторону; их hostile-состояние не превратилось ни в бросок, ни в удар. Чуть дальше Дозорная наблюдает за площадью, а Ливна у своего стола ждёт, что вы скажете или сделаете, — но ни та, ни другая ни о чём вас не спрашивают. Ваши восемь золотых монет и два бинта остаются при вас.\n\nВыбор за вами: заговорить, осмотреть, уйти или остаться в стороне.",
+      "status": "ACCEPTED",
+      "latency_ms": 4830.178607000562,
+      "reserved_rub": "0.52451292134241"
+    },
+    {
+      "case": "promise",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 47034,
+      "selected_ids": [
+        "stakes"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8795,
+        "prompt_tokens": 8556,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 239,
+        "completion_tokens_details": {
+          "reasoning_tokens": 113
+        },
+        "cost": 0.060306426722256
+      },
+      "finish_reason": "stop",
+      "response": "Понял. Никаких обещаний с вашей стороны не зафиксировано: вы никому не давали слова, не заключали сделки и не брали на себя обязательств. Всё, что было сказано рядом, остаётся предложением или чужим разговором, а не вашим решением.\n\nВы по-прежнему стоите на площади у кузницы. Поблизости — Ливна, дозорная, двое налётчиков; у ворот закреплена доска со знаком моста.",
+      "status": "ACCEPTED",
+      "latency_ms": 3420.2180160009448,
+      "reserved_rub": "0.52997540992110"
+    },
+    {
+      "case": "spell_unknown",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 46750,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8636,
+        "prompt_tokens": 8507,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 129,
+        "completion_tokens_details": {
+          "reasoning_tokens": 42
+        },
+        "cost": 0.049691716152078
+      },
+      "finish_reason": "stop",
+      "response": "Путник пробует потянуться к заклинанию, которого ещё не изучал, — и ничего не происходит. Ни искры, ни шёпота силы, ни отклика в фокусе; знание, к которому он мысленно тянется, попросту отсутствует. Чтобы это заклинание сработало, его сначала нужно изучить.",
+      "status": "ACCEPTED",
+      "latency_ms": 3203.6642789989855,
+      "reserved_rub": "0.52703167793562"
+    },
+    {
+      "case": "spell_unknown",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "06cc69e94c81e4b1e625c56cb6d029b592d9965a871766eb5fa4920b910b44ea",
+      "input_bytes": 47631,
+      "selected_ids": [
+        "project:magic",
+        "project:partial"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8889,
+        "prompt_tokens": 8698,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 191,
+        "completion_tokens_details": {
+          "reasoning_tokens": 72
+        },
+        "cost": 0.057275626607628
+      },
+      "finish_reason": "stop",
+      "response": "Путеводный свет и Живительная сила — вот всё, что вам доступно. Попытка сплести иное заклинание обрывается на полпути: в ладони лишь впустую собирается и рассеивается магический фокус, и в воздухе не остаётся ни следа чара. Заклинание, которого герой не изучал, не срабатывает — магия требует MP, компонентов и знания, а ни одного из них для такого эффекта у вас нет.",
+      "status": "ACCEPTED",
+      "latency_ms": 3795.0058299993543,
+      "reserved_rub": "0.53616346624269"
+    },
+    {
+      "case": "spell_utility",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "db6b32c8aba0c435705d0cd7b5e2e7936be1d340935cf5fc04f52f6253f999e0",
+      "input_bytes": 47197,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8884,
+        "prompt_tokens": 8661,
+        "prompt_tokens_details": {
+          "cached_tokens": 8448
+        },
+        "completion_tokens": 223,
+        "completion_tokens_details": {
+          "reasoning_tokens": 97
+        },
+        "cost": 0.022008197184402
+      },
+      "finish_reason": "stop",
+      "response": "Магия только что проявилась как мягкое свечение: у вашей руки или на выбранном предмете держится ровный тёплый свет без пламени и дыма. Он не слепит и не греет — просто разгоняет тени вокруг вас на пару шагов, а MP убавилось на единицу.\n\nЭффект уже активен и пока держится сам; длительность и то, можно ли перенести свет на другой предмет, определит движок, если вы захотите что-то с ним сделать.",
+      "status": "ACCEPTED",
+      "latency_ms": 3977.234951000355,
+      "reserved_rub": "0.53166494623671"
+    },
+    {
+      "case": "spell_utility",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "db6b32c8aba0c435705d0cd7b5e2e7936be1d340935cf5fc04f52f6253f999e0",
+      "input_bytes": 48078,
+      "selected_ids": [
+        "project:magic",
+        "project:partial"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9033,
+        "prompt_tokens": 8852,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 181,
+        "completion_tokens_details": {
+          "reasoning_tokens": 42
+        },
+        "cost": 0.06141205375905599
+      },
+      "finish_reason": "stop",
+      "response": "Активный эффект «Путеводный свет» держится на вашем магическом фокусе: вокруг него висит ровное, чуть голубоватое свечение размером с кулак. Оно не обжигает и не отбрасывает резких теней, просто делает видимым то, что рядом, — доску у ворот, край выставочного клинка, лица стоящих на площади. Свет ровный и не мигает; пока заклинание держится, он следует за фокусом, куда бы вы его ни направили.",
+      "status": "ACCEPTED",
+      "latency_ms": 3445.0944740001432,
+      "reserved_rub": "0.54079673454378"
+    },
+    {
+      "case": "team_begin",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "2996ac8fe814b7fe00777840e0e1cb3fb60ee740aa9cd8f98491d761c0402f28",
+      "input_bytes": 46813,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8756,
+        "prompt_tokens": 8556,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 200,
+        "completion_tokens_details": {
+          "reasoning_tokens": 69
+        },
+        "cost": 0.055444431827928
+      },
+      "finish_reason": "stop",
+      "response": "В схватке участвуют трое. Первый и Второй налётчик — двое незнакомцев, что стоят против вас на расстоянии удара; оба держатся настороженно и не выглядят мирными прохожими. На вашей стороне — Дозорная: женщина в дорожной накидке с оружием наготове, готовая вмешаться.\n\nЛивна держится в стороне у доски со знаком моста — она не вступает в бой, а лишь наблюдает за происходящим.",
+      "status": "ACCEPTED",
+      "latency_ms": 3542.8126189999603,
+      "reserved_rub": "0.52768468890423"
+    },
+    {
+      "case": "team_begin",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "2996ac8fe814b7fe00777840e0e1cb3fb60ee740aa9cd8f98491d761c0402f28",
+      "input_bytes": 46813,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 8798,
+        "prompt_tokens": 8556,
+        "prompt_tokens_details": {
+          "cached_tokens": 8448
+        },
+        "completion_tokens": 242,
+        "completion_tokens_details": {
+          "reasoning_tokens": 99
+        },
+        "cost": 0.021507209933352
+      },
+      "finish_reason": "stop",
+      "response": "Схватка идёт между вами и двумя налётчиками. Ближе всех — Второй налётчик, он в шаге от вас и уже замахнулся. Первый держится чуть поодаль, обходит сбоку, отрезая путь к воротам.\n\nДозорная у доски со знаком моста — она на вашей стороне, но пока только разворачивается в вашу сторону, оружие у неё в руке. Ливна стоит у самого выхода с площади, прижав к груди связку листов, и в драку не лезет.",
+      "status": "ACCEPTED",
+      "latency_ms": 4045.077995999236,
+      "reserved_rub": "0.52768468890423"
+    },
+    {
+      "case": "team_receipt",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "73fb0ff11321a509bc07017c83b184309c8949e8bf23c5d257f74c9507033e50",
+      "input_bytes": 46856,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9128,
+        "prompt_tokens": 8565,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 563,
+        "completion_tokens_details": {
+          "reasoning_tokens": 427
+        },
+        "cost": 0.080683824027378
+      },
+      "finish_reason": "stop",
+      "response": "Бой с Вторым налётчиком ещё идёт: он ближе всех, на расстоянии около метра, в стойке, лицом к вам. Первый налётчик и Дозорная остаются на площади, Ливна держится в стороне.\n\nНикакой квитанции о вашем последнем ударе в этот ход не пришло, поэтому я не могу сказать, попали вы или промахнулись, ранили или уложили его. Исход удара подтвердит движок — тогда я опишу и сам удар, и его последствия.",
+      "status": "ACCEPTED",
+      "latency_ms": 5883.157051001035,
+      "reserved_rub": "0.52813039480344"
+    },
+    {
+      "case": "team_receipt",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "73fb0ff11321a509bc07017c83b184309c8949e8bf23c5d257f74c9507033e50",
+      "input_bytes": 48454,
+      "selected_ids": [
+        "project:combat",
+        "project:trade"
+      ],
+      "memory_events": 1,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9260,
+        "prompt_tokens": 8952,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 308,
+        "completion_tokens_details": {
+          "reasoning_tokens": 90
+        },
+        "cost": 0.069748481616528
+      },
+      "finish_reason": "stop",
+      "response": "// Пояснение\n\nПодтверждённой квитанции о последнем ударе в переданных данных нет. Есть только прошлый зафиксированный факт: бой начат, очередь ходов — Путник, Дозорная, Второй налётчик, Первый налётчик. Конкретного броска, попадания, урона или промаха по этому удару движок не сообщал.\n\nПоэтому я не описываю ни попадание, ни промах: назвать исход вслух значило бы выдумать то, чего квитанция не подтверждает.\n\nНаблюдаемое сейчас: схватка продолжается (второй налётчик активен), дистанция около метра, все четверо рядом. Как только движок вернёт бросок и результат — я передам его точно: кто замахнулся, был ли удар нанесён или парирован, и что изменилось от этого.",
+      "status": "ACCEPTED",
+      "latency_ms": 4713.559085999805,
+      "reserved_rub": "0.54469406984850"
+    },
+    {
+      "case": "time",
+      "mode": "B0",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "90a5594a81b6fbde0d9dc873f76a1ae79e8c804874b94dd165445399ca28db08",
+      "input_bytes": 47185,
+      "selected_ids": [],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9093,
+        "prompt_tokens": 8656,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens": 437,
+        "completion_tokens_details": {
+          "reasoning_tokens": 179
+        },
+        "cost": 0.075716103547656
+      },
+      "finish_reason": "stop",
+      "response": "Площадь у кузницы лежит в утреннем свете — день только начался, тени от строений ещё тянутся длинно. У ворот на столбе висит дорожная доска со знаком моста; рядом на подставке выставлен клинок, начищенный до блеска и покачивающийся на цепочке.\n\nУ одной из стен устроилась женщина-писарь — перед ней низкий столик с бумагами и пером. Ближе к кузне стоят двое мужчин, по всему виду из тех, кто пришёл не за товаром: они держатся настороженно, поглядывают в стороны, и в их стойке нет ничего мирного. У края площади, отдельно от них, встала дозорная — спокойно, не вмешиваясь, но явно следя за обоими.\n\nНичего не изменилось от того, что вы стояли и наблюдали: писарь всё так же скрипит пером, налётчики не сдвинулись с места, дозорная ждёт.",
+      "status": "ACCEPTED",
+      "latency_ms": 5921.966207999503,
+      "reserved_rub": "0.53154056319507"
+    },
+    {
+      "case": "time",
+      "mode": "B3",
+      "request_model": "deepseek/deepseek-v4.1-flash",
+      "state_fingerprint": "90a5594a81b6fbde0d9dc873f76a1ae79e8c804874b94dd165445399ca28db08",
+      "input_bytes": 48039,
+      "selected_ids": [
+        "stakes",
+        "craft"
+      ],
+      "memory_events": 0,
+      "response_model": "deepseek/deepseek-v4.1-flash",
+      "usage": {
+        "total_tokens": 9283,
+        "prompt_tokens": 8810,
+        "prompt_tokens_details": {
+          "cached_tokens": 6272
+        },
+        "completion_tokens": 473,
+        "completion_tokens_details": {
+          "reasoning_tokens": 219
+        },
+        "cost": 0.07869715044562801
+      },
+      "finish_reason": "stop",
+      "response": "Прошло время: солнце поднялось выше, тени от кузницы стали короче, и площадь живёт своим утренним порядком. У ворот по-прежнему стоит дорожная доска со знаком моста; рядом на подставке — выставочный клинок, к которому никто не подходит.\n\nЛивна сидит у своего столика с письменными принадлежностями и что-то размеренно переписывает, изредка поглядывая на прохожих. Двое налётчиков держатся поодаль, у края площади — они не нападают, но и не уходят, поглядывая в сторону ворот и доски. У стены, не спуская с них глаз, стоит дозорная; между ней и налётчиками сохраняется настороженное расстояние.\n\nКузница работает: слышен ровный стук молота, из горна тянет дымком. Обычная площадь небольшого поселения — ничего не изменилось само по себе, кроме движения тени и того, что обе стороны продолжают следить друг за другом.",
+      "status": "ACCEPTED",
+      "latency_ms": 5806.573552001282,
+      "reserved_rub": "0.54039248965845"
+    }
+  ]
+}
