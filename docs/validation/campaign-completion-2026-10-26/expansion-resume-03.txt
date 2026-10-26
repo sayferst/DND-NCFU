@@ -1,0 +1,1823 @@
+..........................FFFFFFF.FFFFF.FFF.FFFF........FFFFFFFFFFFFFFF. [100%]
+=================================== FAILURES ===================================
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v1.json] _
+
+name = 'save-v1.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v10.json] _
+
+name = 'save-v10.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v11.json] _
+
+name = 'save-v11.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v12.json] _
+
+name = 'save-v12.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v13.json] _
+
+name = 'save-v13.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v14.json] _
+
+name = 'save-v14.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v15.json] _
+
+name = 'save-v15.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v17.json] _
+
+name = 'save-v17.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v18.json] _
+
+name = 'save-v18.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'hostile'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v19.json] _
+
+name = 'save-v19.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v2.json] _
+
+name = 'save-v2.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v20.json] _
+
+name = 'save-v20.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v3.json] _
+
+name = 'save-v3.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v4.json] _
+
+name = 'save-v4.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v5.json] _
+
+name = 'save-v5.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v7.json] _
+
+name = 'save-v7.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v8.json] _
+
+name = 'save-v8.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v9.json] _
+
+name = 'save-v9.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_real_legacy_fixtures_migrate_without_reinterpreting_history[session-v24-playable.json] _
+
+name = 'session-v24-playable.json'
+
+    @pytest.mark.parametrize(
+        "name",
+        [
+            p.name
+            for p in (Path(__file__).parent / "fixtures").glob("*.json")
+            if ".source." not in p.name
+        ],
+    )
+    def test_real_legacy_fixtures_migrate_without_reinterpreting_history(name):
+        path = Path(__file__).parent / "fixtures" / name
+        raw = path.read_bytes()
+        value = json.loads(raw)
+        original = Session.from_dict(value["session"], version=value["schema_version"])
+        source = deepcopy(original.to_dict())
+        if original.in_combat or original.world.hp <= 0:
+            with pytest.raises(ValueError):
+                create(original)
+        else:
+>           copy = create(original)
+                   ^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/migration.py:267: in create
+    result = upgrade(
+src/rpg_vkr/storage/migration.py:156: in upgrade
+    Entity(ref.id, type_id, ref.place, {"hp": actor.hp, "disposition": actor.disposition})
+<string>:9: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Entity(id='guard', definition_id='migrated_actor_type_guard', parent_id='gate', owner_id={'hp': 18, 'disposition': 'neutral'}, quantity=1, state=None)
+
+    def __post_init__(self):
+        for value in (self.id, self.definition_id, self.parent_id):
+            identifier(value)
+        if not isinstance(self.owner_id, str):
+>           raise ValueError("Неверный ID владельца.")
+E           ValueError: Неверный ID владельца.
+
+src/rpg_vkr/domain/catalog.py:193: ValueError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_1] _
+
+spell = 'restoration_1'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 4)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_2] _
+
+spell = 'restoration_2'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 8)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_3] _
+
+spell = 'restoration_3'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 12)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_4] _
+
+spell = 'restoration_4'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 16)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_5] _
+
+spell = 'restoration_5'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 20)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[protection_1] _
+
+spell = 'protection_1'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 3)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[protection_2] _
+
+spell = 'protection_2'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 7)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[protection_3] _
+
+spell = 'protection_3'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 11)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[protection_4] _
+
+spell = 'protection_4'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 15)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[protection_5] _
+
+spell = 'protection_5'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 19)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[utility_1] _
+
+spell = 'utility_1'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 1)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[utility_2] _
+
+spell = 'utility_2'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 5)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[utility_3] _
+
+spell = 'utility_3'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 9)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[utility_4] _
+
+spell = 'utility_4'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 13)
+
+tests/test_complete_campaign.py:305: AssertionError
+_ test_all_school_circles_execute_with_real_costs_components_and_replay[utility_5] _
+
+spell = 'utility_5'
+
+    @pytest.mark.parametrize(
+        "spell",
+        [
+            f"{s}_{c}"
+            for s in ("elemental", "restoration", "protection", "utility")
+            for c in range(1, 6)
+        ],
+    )
+    def test_all_school_circles_execute_with_real_costs_components_and_replay(spell):
+        from rpg_vkr.domain.content_v5 import SPELLS, make_item
+        from rpg_vkr.domain.d20_progression import D20Progress, required_xp
+        from rpg_vkr.domain.dice import DiceRoller
+        from rpg_vkr.domain.gameplay_v5 import execute
+        from rpg_vkr.gameplay_session import context
+    
+        session = hero()
+        data = SPELLS[spell]
+        progress = D20Progress().grant_xp("test_level", required_xp(20), "synthetic high level")
+        for _ in range(5):
+            progress = progress.train("arcana", "rank_" + str(progress.rank("arcana")))
+        ctx = context(session)
+        ctx["progress"] = progress.to_dict()
+        ctx["world"]["hp"] -= 1
+        state = deepcopy(session.gameplay)
+        state["mp"] = state["mp_cap"] = 200
+        state["items"].extend(make_item("component_" + str(i), "herb") for i in range(4))
+        state["spells"] = [spell]
+        if data["effect"] == "attack":
+            battle = execute(
+                state, "encounter", {"enemies": ["warden"], "allies": []}, ctx, DiceRoller(13)
+            )
+            state = battle["state"]
+            for key in ("world", "catalog", "combat", "scene"):
+                ctx[key] = battle[key]
+        rng = DiceRoller(18)
+        checkpoint = rng.checkpoint()
+        result = execute(
+            state,
+            "cast",
+            {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+            ctx,
+            rng,
+        )
+        rng.restore(checkpoint)
+        assert (
+            execute(
+                state,
+                "cast",
+                {"spell": spell, "target": "warden" if data["effect"] == "attack" else "hero"},
+                ctx,
+                rng,
+            )
+            == result
+        )
+>       assert result["state"]["mp"] == state["mp"] - data["mp"]
+E       assert 84 == (200 - 17)
+
+tests/test_complete_campaign.py:305: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v1.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v10.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v11.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v12.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v13.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v14.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v15.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v17.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v18.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v19.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v2.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v20.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v3.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v4.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v5.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v7.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v8.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[save-v9.json]
+FAILED tests/test_complete_campaign.py::test_real_legacy_fixtures_migrate_without_reinterpreting_history[session-v24-playable.json]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_1]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_2]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_3]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_4]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[restoration_5]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[protection_1]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[protection_2]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[protection_3]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[protection_4]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[protection_5]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[utility_1]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[utility_2]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[utility_3]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[utility_4]
+FAILED tests/test_complete_campaign.py::test_all_school_circles_execute_with_real_costs_components_and_replay[utility_5]
+34 failed, 38 passed in 8.03s

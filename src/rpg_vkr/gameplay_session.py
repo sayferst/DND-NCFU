@@ -34,7 +34,12 @@ def enable(session, identity, *, revision=1):
 
         if session.world.hp <= 0 or session.combat.active:
             raise ValueError("Новые правила выбираются живым героем вне боя.")
-        state, world = refresh(state, session.world, session.character, 1, initial=True)
+        character = session.character
+        if revision >= 5:
+            from rpg_vkr.domain.content_v5 import inherited
+
+            character = inherited(character, state)
+        state, world = refresh(state, session.world, character, 1, initial=True)
         memory = WorldMemory(
             0, snapshot(world, session.character, session.combat, session.progress)
         )
@@ -298,7 +303,7 @@ def finish_turn(session, turn):
     if (
         session.dice.checkpoint() != checkpoint
         or (session.schema_version < 25 and result["world"] != ctx["world"])
-        or result["combat"] != ctx["combat"]
+        or (session.schema_version < 28 and result["combat"] != ctx["combat"])
     ):
         raise ValueError("Тик времени изменил неподдержанные ресурсы.")
     record = json.loads(
@@ -318,6 +323,11 @@ def finish_turn(session, turn):
         from rpg_vkr.domain.memory import WorldMemory
 
         after_world = WorldState.from_dict(result["world"])
+        after_combat = (
+            CombatState.from_dict(result["combat"])
+            if session.schema_version >= 28
+            else session.combat
+        )
         current = dict(snapshot(session.world, session.character, session.combat, session.progress))
         event = session.memory.events[-1]
         for change in event.changes:
@@ -328,11 +338,13 @@ def finish_turn(session, turn):
         session.memory = base.append(
             turn,
             tuple(sorted(current.items())),
-            snapshot(after_world, session.character, session.combat, session.progress),
+            snapshot(after_world, session.character, after_combat, session.progress),
         )
-        session.world = after_world
+        session.world, session.combat = after_world, after_combat
     session._gameplay = {"identity": session._gameplay["identity"], "state": result["state"]}
     session.interactive_world = InteractiveWorld.from_dict(result["scene"])
+    if session.schema_version >= 28:
+        session.catalog = Catalog.from_dict(result["catalog"]) if result["catalog"] else None
     return turn
 
 
@@ -368,6 +380,9 @@ def restore_clock(session, raw):
     if any(e.kind == "xp" and e.event_id not in earned for e in prefix.events):
         raise ValueError("Часы используют будущую награду.")
     session._gameplay["state"] = deepcopy(result["state"])
+    if session.schema_version >= 28:
+        session.catalog = Catalog.from_dict(result["catalog"]) if result["catalog"] else None
+        session.combat = CombatState.from_dict(result["combat"])
     session._turns[-1] = replace(turn, gameplay=deepcopy(record))
 
 

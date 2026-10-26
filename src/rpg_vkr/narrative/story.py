@@ -93,6 +93,9 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
         "interaction_result": (campaign or {}).get("interaction_result", "") if confirmed else "",
         "resolution": (campaign or {}).get("resolution", []) if confirmed else [],
         "known_observations": (campaign or {}).get("known_observations", []),
+        "living_world": (campaign or {}).get("living_world"),
+        "narrative_techniques": (campaign or {}).get("narrative_techniques", []),
+        "team_combat": (campaign or {}).get("team_combat") if confirmed else None,
         "memory": memory,
         "recent_events": recent,
         "turn_brief": brief,
@@ -104,6 +107,10 @@ def story_context(frame, model, text, *, memory=None, campaign=None, history=(),
             "Не копируй прошлый ответ."
         ),
     }
+    if (campaign or {}).get("rag_enabled"):
+        from rpg_vkr.learning.rag import retrieve
+
+        context["narrative_techniques"] = retrieve(text)
     if master_question(text):
         context["task"] += " Это вопрос ведущему о наблюдаемом: ответь описанием, не от лица NPC."
     return context

@@ -1,0 +1,107 @@
+........................................................................ [ 92%]
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_world_controls_show_readable_public_data_and_allow_allied_spell_target __
+
+qt_app = <PySide6.QtWidgets.QApplication(0x19669560) at 0x7f377fd2c200>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-8/test_world_controls_show_reada0')
+
+    def test_world_controls_show_readable_public_data_and_allow_allied_spell_target(qt_app, tmp_path):
+        from test_team_encounters import hero as team_hero
+    
+        from rpg_vkr.ui.main_window import MainWindow
+    
+        session = create(team_hero(profile="mage"))
+        perform(session, "wait", minutes=1)
+        perform(session, "encounter", enemies=["first", "second"], allies=["friend"])
+>       window = MainWindow(session=session, saves=SaveSlots(tmp_path / "saves"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_complete_campaign.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/ui/main_window.py:157: in __init__
+    self._refresh_character()
+src/rpg_vkr/ui/main_window.py:459: in _refresh_character
+    self._persist_campaign()
+src/rpg_vkr/ui/main_window.py:472: in _persist_campaign
+    self._campaign_repository.sync(self._session)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rpg_vkr.storage.campaigns.CampaignRepository object at 0x7f377807a540>
+session = <rpg_vkr.application.Session object at 0x7f3778099fd0>
+
+    def sync(self, session):
+        token = (
+            id(session),
+            len(session.turns),
+            len(session.narrations),
+            id(session.world),
+            id(session.character),
+            id(session.catalog),
+            id(session.interactive_world),
+            id(session.chronicle),
+            session._d20_progress,
+        )
+        if token == self._last_token:
+            return
+        payload = dump(session.to_dict())
+        if len(payload.encode()) > 32 * 1024 * 1024:
+            raise ValueError("Снимок кампании превысил 32 МБ; сохраните отдельный архив.")
+        digest = hashlib.sha256(payload.encode()).hexdigest()
+        campaign = self.identity(session)
+        title = (
+            session.chronicle.seed.title
+            if session.generated_world
+            else "Мир ещё не создан"
+            if session.progress.enabled
+            else "Учебная кампания"
+        )
+        types, entities = live_records(session)
+        with closing(sqlite3.connect(self.path)) as db, db:
+            previous = db.execute(
+                "SELECT revision,digest FROM campaigns WHERE id=?", (campaign,)
+            ).fetchone()
+            if previous and previous[1] == digest:
+                db.execute("UPDATE campaigns SET title=? WHERE id=?", (title, campaign))
+                self._last_token = token
+                self._retained = (
+                    session,
+                    session.world,
+                    session.character,
+                    session.catalog,
+                    session.interactive_world,
+                    session.chronicle,
+                )
+                return
+            revision = previous[0] + 1 if previous else 1
+            db.execute(
+                "INSERT OR REPLACE INTO campaigns VALUES (?,?,?,?,?,?,?,?)",
+                (
+                    campaign,
+                    session.character.name,
+                    title,
+                    revision,
+                    digest,
+                    payload,
+                    datetime.now(UTC).isoformat(),
+                    session.schema_version,
+                ),
+            )
+            db.execute("DELETE FROM current_events WHERE campaign=?", (campaign,))
+            db.execute("DELETE FROM transcripts WHERE campaign=?", (campaign,))
+            db.executemany(
+                "INSERT INTO transcripts VALUES (?,?,?,?,?)",
+                [
+                    (campaign, i, n.turn_index, n.text, n.text.casefold())
+                    for i, n in enumerate(session.narrations)
+                ],
+            )
+            chain = campaign
+>           for i, turn in enumerate(session.to_dict()["turns"], 1):
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'turns'
+
+src/rpg_vkr/storage/campaigns.py:194: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_complete_campaign.py::test_world_controls_show_readable_public_data_and_allow_allied_spell_target
+1 failed, 77 passed in 10.27s

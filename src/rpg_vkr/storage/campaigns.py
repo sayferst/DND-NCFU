@@ -191,7 +191,7 @@ class CampaignRepository:
                 ],
             )
             chain = campaign
-            for i, turn in enumerate(session.to_dict()["turns"], 1):
+            for i, turn in enumerate(session._plain_dict()["turns"], 1):
                 raw = dump(turn)
                 chain = hashlib.sha256((chain + raw).encode()).hexdigest()
                 db.execute(

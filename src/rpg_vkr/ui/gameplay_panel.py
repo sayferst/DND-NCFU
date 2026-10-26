@@ -237,6 +237,9 @@ def install(window, layout):
     window.faction_info.setReadOnly(True)
     window.faction_info.setMaximumHeight(180)
     tab.addRow(window.faction_info)
+    from rpg_vkr.ui.campaign_v5_panel import install as install_expanded
+
+    install_expanded(window, page)
     layout.addWidget(group)
 
 
@@ -275,6 +278,17 @@ def refresh(window):
             )
             or "Объединения пока не известны. Сведения появляются при встрече с представителем."
         )
+    from rpg_vkr.ui.campaign_v5_panel import refresh as refresh_expanded
+
+    refresh_expanded(window)
+    spells = SPELLS
+    if session.schema_version >= 28:
+        from rpg_vkr.domain.content_v5 import spell_rows
+
+        spells = spell_rows()
+    refill(
+        window.spell_choice, [(k, f"{v[0]} · круг {v[1]} · {v[2]} MP") for k, v in spells.items()]
+    )
     progress = session.d20_progress
     from rpg_vkr.domain.gameplay import TALENTS as LEGACY_TALENTS
 
@@ -361,7 +375,7 @@ def refresh(window):
                     row.setData(Qt.ItemDataRole.UserRole, ref.id)
                     box.addItem(row)
                     row.setSelected(ref.id in selected)
-    targets, merchants = [], []
+    targets, merchants, spell_targets = [], [], []
     for ref in session.interaction_state().actor_refs:
         if not session.actor_is_here(ref.id):
             continue
@@ -380,6 +394,8 @@ def refresh(window):
             else None
         )
         living = not entity or (entity.state or {}).get("hp", 1) > 0
+        if living:
+            spell_targets.append((ref.id, ref.name))
         if (
             session.schema_version < 27
             or living
@@ -397,13 +413,16 @@ def refresh(window):
         ):
             merchants.append((ref.id, ref.name))
     refill(window.gameplay_target, targets)
-    refill(window.spell_target, [("hero", "Сам герой"), *targets])
+    refill(
+        window.spell_target,
+        [("hero", "Сам герой"), *(spell_targets if session.schema_version >= 28 else targets)],
+    )
     refill(window.merchant_choice, merchants)
     refill(window.news_choice, [(id, id) for id in state["victories"]])
     refresh_market(window)
     window.gameplay_info.setPlainText(
         "Изучено: "
-        + (", ".join(SPELLS[k][0] for k in state["spells"]) or "нет")
+        + (", ".join(spells[k][0] for k in state["spells"]) or "нет")
         + "\nЭффекты: "
         + str(state["effects"])
         + "\nТаланты: "
@@ -432,8 +451,14 @@ def refresh_market(window):
     id = window.merchant_choice.currentData()
     from rpg_vkr.domain.gameplay import PRICES, SHOP_STOCK, stock_id
 
+    names = ITEM_NAMES
+    if window._session.schema_version >= 28:
+        from rpg_vkr.domain.content_v5 import ITEMS, PRICES
+
+        names = ITEMS
+
     values = [
-        (i["id"], f"{ITEM_NAMES[i['kind']]} · базовая цена {PRICES[i['kind']]} медных")
+        (i["id"], f"{names[i['kind']]} · базовая цена {PRICES[i['kind']]} медных")
         for i in state["items"]
         if i["owner"] == id
     ]
@@ -458,7 +483,12 @@ def run(window, command, args):
         "союзники и противники получают самостоятельные ходы."
     ):
         return
-    if command == "attack" or command == "cast" and SPELLS[args["spell"]][3] == "attack":
+    spells = SPELLS
+    if window._session.schema_version >= 28:
+        from rpg_vkr.domain.content_v5 import spell_rows
+
+        spells = spell_rows()
+    if command == "attack" or command == "cast" and spells[args["spell"]][3] == "attack":
         id = args["target"]
         from rpg_vkr.domain.combat import ACTORS
 

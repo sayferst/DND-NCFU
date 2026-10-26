@@ -1,0 +1,230 @@
+........................................................................ [ 63%]
+.............................EEE.........                                [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_full_local_pipeline_creates_then_narrates_canon_and_reuses_it _
+
+    @pytest.fixture
+    def master_server():
+        calls, mode = [], {"invalid": False, "delay_profile": False}
+        release, started = threading.Event(), threading.Event()
+    
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+    
+            def send(self, data):
+                payload = json.dumps(data).encode()
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                try:
+                    self.wfile.write(payload)
+                except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                    pass
+    
+            def do_GET(self):
+                self.send({"models": [{"name": "local-test:1", "size": 100}]})
+    
+            def do_POST(self):
+                request = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                calls.append(request)
+                properties = request["format"]["properties"]
+                if "command" in properties or "intent" in properties:
+                    result = {
+                        "kind": "master",
+                        "command": "",
+                        "target": "villager",
+                        "speech_act": "question",
+                        "topic": "appearance",
+                    }
+                elif "appearance" in properties:
+                    started.set()
+                    if mode["delay_profile"]:
+                        release.wait(2)
+                    result = PUBLIC | ({"gold": 100} if mode["invalid"] else {})
+                else:
+                    result = {"narration": PUBLIC["appearance"]}
+                self.send({"message": {"role": "assistant", "content": json.dumps(result)}})
+    
+>       server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_master_campaign.py:325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+_ ERROR at setup of test_invalid_generated_profile_preserves_session_and_returns_input _
+
+    @pytest.fixture
+    def master_server():
+        calls, mode = [], {"invalid": False, "delay_profile": False}
+        release, started = threading.Event(), threading.Event()
+    
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+    
+            def send(self, data):
+                payload = json.dumps(data).encode()
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                try:
+                    self.wfile.write(payload)
+                except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                    pass
+    
+            def do_GET(self):
+                self.send({"models": [{"name": "local-test:1", "size": 100}]})
+    
+            def do_POST(self):
+                request = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                calls.append(request)
+                properties = request["format"]["properties"]
+                if "command" in properties or "intent" in properties:
+                    result = {
+                        "kind": "master",
+                        "command": "",
+                        "target": "villager",
+                        "speech_act": "question",
+                        "topic": "appearance",
+                    }
+                elif "appearance" in properties:
+                    started.set()
+                    if mode["delay_profile"]:
+                        release.wait(2)
+                    result = PUBLIC | ({"gold": 100} if mode["invalid"] else {})
+                else:
+                    result = {"narration": PUBLIC["appearance"]}
+                self.send({"message": {"role": "assistant", "content": json.dumps(result)}})
+    
+>       server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_master_campaign.py:325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+_______ ERROR at setup of test_cancelled_profile_cannot_change_the_world _______
+
+    @pytest.fixture
+    def master_server():
+        calls, mode = [], {"invalid": False, "delay_profile": False}
+        release, started = threading.Event(), threading.Event()
+    
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+    
+            def send(self, data):
+                payload = json.dumps(data).encode()
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                try:
+                    self.wfile.write(payload)
+                except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                    pass
+    
+            def do_GET(self):
+                self.send({"models": [{"name": "local-test:1", "size": 100}]})
+    
+            def do_POST(self):
+                request = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                calls.append(request)
+                properties = request["format"]["properties"]
+                if "command" in properties or "intent" in properties:
+                    result = {
+                        "kind": "master",
+                        "command": "",
+                        "target": "villager",
+                        "speech_act": "question",
+                        "topic": "appearance",
+                    }
+                elif "appearance" in properties:
+                    started.set()
+                    if mode["delay_profile"]:
+                        release.wait(2)
+                    result = PUBLIC | ({"gold": 100} if mode["invalid"] else {})
+                else:
+                    result = {"narration": PUBLIC["appearance"]}
+                self.send({"message": {"role": "assistant", "content": json.dumps(result)}})
+    
+>       server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_master_campaign.py:325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+=========================== short test summary info ============================
+ERROR tests/test_master_campaign.py::test_full_local_pipeline_creates_then_narrates_canon_and_reuses_it
+ERROR tests/test_master_campaign.py::test_invalid_generated_profile_preserves_session_and_returns_input
+ERROR tests/test_master_campaign.py::test_cancelled_profile_cannot_change_the_world
+110 passed, 3 errors in 12.74s

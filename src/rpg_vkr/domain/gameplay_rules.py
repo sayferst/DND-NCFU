@@ -7,8 +7,9 @@ def revision(state):
     from rpg_vkr.domain import gameplay_v2 as v2
     from rpg_vkr.domain import gameplay_v3 as v3
     from rpg_vkr.domain import gameplay_v4 as v4
+    from rpg_vkr.domain import gameplay_v5 as v5
 
-    versions = {v1.VERSION: 1, v2.VERSION: 2, v3.VERSION: 3, v4.VERSION: 4}
+    versions = {v5.VERSION: 5, v1.VERSION: 1, v2.VERSION: 2, v3.VERSION: 3, v4.VERSION: 4}
     if not isinstance(state, dict) or state.get("version") not in versions:
         raise ValueError("Неизвестная версия игрового обработчика.")
     return versions[state["version"]]
@@ -31,6 +32,10 @@ def initial(identity, character, *, revision=1):
         from rpg_vkr.domain import gameplay_v4 as v4
 
         return v4.initial(identity, character)
+    if revision == 5:
+        from rpg_vkr.domain import gameplay_v5 as v5
+
+        return v5.initial(identity, character)
     raise ValueError("Неизвестная версия новых правил.")
 
 
@@ -52,6 +57,10 @@ def execute(state, command, args, context, dice):
         from rpg_vkr.domain import gameplay_v3 as v3
 
         return v3.execute(state, command, args, context, dice)
-    from rpg_vkr.domain import gameplay_v4 as v4
+    if revision(state) == 4:
+        from rpg_vkr.domain import gameplay_v4 as v4
 
-    return v4.execute(state, command, args, context, dice)
+        return v4.execute(state, command, args, context, dice)
+    from rpg_vkr.domain import gameplay_v5 as v5
+
+    return v5.execute(state, command, args, context, dice)

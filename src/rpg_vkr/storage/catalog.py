@@ -87,6 +87,9 @@ def live_records(session):
             state["copper"],
             binding="gameplay.copper",
         )
+        if session.schema_version >= 28:
+            from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+            from rpg_vkr.domain.content_v5 import PRICES
         for value in state["items"]:
             kind = value["kind"]
             type_id = "v3_type_" + kind

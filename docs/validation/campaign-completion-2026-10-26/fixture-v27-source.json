@@ -1,0 +1,11 @@
+{
+  "source_commit": "318284c",
+  "fixture_sha256": "a1a25307b2a6130950d93063bf92a669d7746453bdc36be023712e4455828573",
+  "next_roll": {
+    "index": 10,
+    "value": 18
+  },
+  "turns": 4,
+  "schema_version": 27,
+  "method": "git archive 318284c src/data, actual unchanged SaveSlots writer"
+}

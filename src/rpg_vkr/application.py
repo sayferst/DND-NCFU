@@ -153,6 +153,8 @@ class Session:
 
     @property
     def schema_version(self):
+        if hasattr(self, "_fork"):
+            return 29
         if self._gameplay is not None:
             from rpg_vkr.domain.gameplay_rules import revision
 
@@ -174,8 +176,24 @@ class Session:
         if self._gameplay:
             from rpg_vkr.domain.gameplay import effective_character
 
-            return effective_character(self._gameplay["state"], self.character)
+            character = self.character
+            if self.schema_version >= 28:
+                from rpg_vkr.domain.content_v5 import inherited
+
+                character = inherited(character, self._gameplay["state"])
+            return effective_character(self._gameplay["state"], character)
         return self.character
+
+    def _request_token(self):
+        import uuid
+
+        fork = getattr(self, "_fork", None)
+        if fork:
+            index = getattr(self, "_fork_replay_index", len(fork["operations"]))
+            return uuid.uuid5(
+                uuid.UUID(fork["world_id"]), f"operation:{index}:turn:{len(self.turns)}"
+            ).hex
+        return uuid.uuid4().hex
 
     def enable_gameplay(self, identity, *, revision=1):
         from rpg_vkr.gameplay_session import enable
@@ -252,6 +270,24 @@ class Session:
         self.memory = WorldMemory(0, snapshot(world, self.character, self.combat, self.progress))
 
     def write_diary(self, title, text, *, id=None, pinned=False, delete=False, place=None):
+        if hasattr(self, "_fork") and id is None:
+            import uuid
+
+            from rpg_vkr.domain.adventure import DiaryRevision
+
+            id = str(uuid.UUID(self._request_token()))
+            chronicle = self.chronicle or Chronicle()
+            entry = DiaryRevision(
+                id,
+                title,
+                text,
+                self.current_place_name if place is None else place,
+                len(self.turns),
+                pinned,
+                delete,
+            )
+            self.chronicle = replace(chronicle, diary=chronicle.diary + (entry,))
+            return
         self.chronicle = (self.chronicle or Chronicle()).revise(
             title,
             text,
@@ -439,15 +475,13 @@ class Session:
     def submit_trade(self, action, merchant_id, item_id, operation, quantity, source="player-ui"):
         action = _text(action, 500)
         if self.schema_version >= 25:
-            import uuid
-
             if any(i["id"] == item_id for i in self._gameplay["state"]["items"]):
                 if quantity != 1:
                     raise ValueError("Экземпляр снаряжения продаётся по одному.")
                 return self.perform_gameplay(
                     operation,
                     {"merchant": merchant_id, "item": item_id},
-                    "trade_" + uuid.uuid4().hex,
+                    "trade_" + self._request_token(),
                     action=action,
                 )
             return self.perform_gameplay(
@@ -458,7 +492,7 @@ class Session:
                     "operation": operation,
                     "quantity": quantity,
                 },
-                "trade_" + uuid.uuid4().hex,
+                "trade_" + self._request_token(),
                 action=action,
             )
         if not self.catalog or self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
@@ -576,12 +610,10 @@ class Session:
         action = _text(action, 500)
         bind_attempt(action, operation, lethal, confirmed=confirmed_intent)
         if self._gameplay is not None and operation == "attack":
-            import uuid
-
             return self.perform_gameplay(
                 "attack",
                 {"target": target_id, "lethal": int(lethal)},
-                "cmd_" + uuid.uuid4().hex,
+                "cmd_" + self._request_token(),
                 action=action,
             )
         if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
@@ -859,13 +891,13 @@ class Session:
     ) -> Turn:
         action = _text(action, 500).strip()
         if self._gameplay is not None and intent is None and meaning is None:
-            import uuid
-
             from rpg_vkr.domain.gameplay_commands import parse
 
             parsed = parse(action)
             if parsed:
-                return self.perform_gameplay(*parsed, "text_" + uuid.uuid4().hex, action=action)
+                return self.perform_gameplay(
+                    *parsed, "text_" + self._request_token(), action=action
+                )
         if len(self._turns) >= MAX_TURNS:
             raise ValueError("Достигнут предел в 2000 действий. Сохраните сессию.")
         if intent is not None and (not isinstance(intent, str) or intent not in allowed_intents()):
@@ -893,8 +925,6 @@ class Session:
             raise ValueError("Invalid interpretation source")
         command = intent or normalise_action(action)
         if self._gameplay is not None:
-            import uuid
-
             from rpg_vkr.domain.combat import ATTACK_COMMANDS
 
             target = ATTACK_COMMANDS.get(command) or self._gameplay["state"]["active"]
@@ -902,13 +932,13 @@ class Session:
                 return self.perform_gameplay(
                     "attack",
                     {"target": target, "lethal": 0},
-                    "cmd_" + uuid.uuid4().hex,
+                    "cmd_" + self._request_token(),
                     action=action,
                 )
             modes = {"уклониться": "dodge", "отступить": "retreat", "использовать бинт": "bandage"}
             if command in modes and self._gameplay["state"]["active"]:
                 return self.perform_gameplay(
-                    modes[command], {}, "cmd_" + uuid.uuid4().hex, action=action
+                    modes[command], {}, "cmd_" + self._request_token(), action=action
                 )
             if self._gameplay["state"]["active"] and command not in {
                 "состояние",
@@ -1496,6 +1526,13 @@ class Session:
                 raise ValueError("Narration speaker identity differs from the scene")
 
     def to_dict(self) -> dict:
+        if hasattr(self, "_fork"):
+            from rpg_vkr.storage.migration import serialize
+
+            return serialize(self)
+        return self._plain_dict()
+
+    def _plain_dict(self) -> dict:
         value = {
             "chronicle": self.chronicle.to_dict() if self.chronicle else None,
             "catalog": self.catalog.to_dict() if self.catalog else None,
@@ -1537,6 +1574,12 @@ class Session:
 
     @classmethod
     def from_dict(cls, data: object, version: int | None = None) -> "Session":
+        if isinstance(data, dict) and "fork" in data:
+            if version not in (None, 29):
+                raise ValueError("Копия требует схему29.")
+            from rpg_vkr.storage.migration import restore
+
+            return restore(data)
         if version is None:
             from rpg_vkr.domain.gameplay_rules import revision as saved_revision
 
@@ -1575,6 +1618,7 @@ class Session:
             25,
             26,
             27,
+            28,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -2579,6 +2623,10 @@ class Session:
                     hero = Character.from_dict(
                         {k: fields["hero." + k] for k in asdict(Character())}
                     )
+                    if version >= 28:
+                        from rpg_vkr.domain.content_v5 import inherited
+
+                        hero = inherited(hero, historical_gameplay)
                     expected_score = effective_character(historical_gameplay, hero).score(
                         record.check.ability
                     )
@@ -2732,3 +2780,8 @@ class Session:
         if version >= 24 and canonical(session._gameplay) != canonical(data["gameplay"]):
             raise ValueError("Итог новых игровых правил не совпадает с журналом.")
         return session
+
+
+from rpg_vkr.storage.migration import instrument as _instrument_copies  # noqa: E402
+
+_instrument_copies(Session)

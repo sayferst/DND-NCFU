@@ -1,0 +1,17 @@
+{
+  "format": "campaign-copy-1",
+  "source_schema": 27,
+  "target_schema": 29,
+  "source_sha256": "d6d2a0e735701c1d40b1e3acf64437918928921ce82a41c15f3aa9530f782a03",
+  "original_bytes_sha256": "a1a25307b2a6130950d93063bf92a669d7746453bdc36be023712e4455828573",
+  "backup": "campaign-copy.json.original.json",
+  "world_id": "c7ab6ec8-da99-4590-9de4-6fc4d050f626",
+  "hp_before": 20,
+  "hp_after": 20,
+  "gold_before": 8,
+  "gold_after": 8,
+  "legacy_shop_gold_before": 20,
+  "legacy_shop_gold_after": 20,
+  "turns_preserved": 4,
+  "rng_preserved": true
+}

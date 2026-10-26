@@ -1,0 +1,138 @@
+........................................................................ [ 93%]
+.F...                                                                    [100%]
+=================================== FAILURES ===================================
+______ test_fork_from_oldest_fixture_survives_sqlite_and_preserves_source ______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-5/test_fork_from_oldest_fixture_0')
+
+    def test_fork_from_oldest_fixture_survives_sqlite_and_preserves_source(tmp_path):
+        from rpg_vkr.storage.knowledge import export_session, restore_session
+    
+        raw = json.loads((Path(__file__).parent / "fixtures/save-v1.json").read_text())
+        session = Session.from_dict(raw["session"], version=1)
+        copy = create(session)
+        perform(copy, "rest")
+>       perform(copy, "gather", material="wood", quantity=1)
+
+tests/test_complete_campaign.py:342: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_complete_campaign.py:54: in perform
+    return session.perform_gameplay(command, args, "complete_" + str(len(session.turns)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/storage/migration.py:104: in called
+    result = method(session, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/application.py:211: in perform_gameplay
+    return perform(self, command, args, request_id, action=action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/gameplay_session.py:92: in perform
+    result = execute(session._gameplay["state"], command, args, before, session.dice)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/gameplay_rules.py:66: in execute
+    return v5.execute(state, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+original = {'ability_uses': {}, 'active': '', 'armour': '', 'attributes': [], ...}
+command = 'gather', args = {'material': 'wood', 'quantity': 1}
+context = {'aliases': {}, 'catalog': {'definitions': [{'categories': ['materials'], 'effects': [], 'id': 'mat_granite', 'kind': ...e', 'hp': 10, 'id': 'wolf'}, {'disposition': 'neutral', 'hp': 12, 'id': 'boar'}], 'rounds': 0, 'surprise': False}, ...}
+dice = <rpg_vkr.domain.dice.DiceRoller object at 0x7f82f58b7620>
+
+    def execute(original, command, args, context, dice):
+        if original.get("version") != VERSION or original.get("catalog_version") != CATALOG_VERSION:
+            raise ValueError("Неизвестный каталог новых правил.")
+        if not isinstance(command, str) or not isinstance(args, dict):
+            raise ValueError("Неверная команда.")
+        state = deepcopy(original)
+        character = inherited(Character.from_dict(context["character"]), state)
+        internal = context | {"character": asdict(character)}
+        world = WorldState.from_dict(context["world"])
+        before = world
+        scene = InteractiveWorld.from_dict(context["scene"])
+        catalog = Catalog.from_dict(context["catalog"]) if context["catalog"] else None
+        combat = CombatState.from_dict(context["combat"])
+        progress = D20Progress.from_dict(context["progress"])
+        initialize(state, catalog, scene)
+        own = command in {"ability", "manufacture", "gather", "consume", "supply", "diplomacy"}
+        own |= (
+            command in {"learn", "cast"}
+            and isinstance(args.get("spell"), str)
+            and args["spell"] in SPELLS
+        )
+        value = next((i for i in state["items"] if i["id"] == args.get("item")), None)
+        own |= command in {"buy", "sell"} and value is not None
+        if own:
+            if world.hp <= 0 or combat.active:
+                raise ValueError("Действие недоступно после выбытия.")
+            if state.get("battle") and command not in {"consume", "cast", "ability"}:
+                raise ValueError("Сначала завершите бой.")
+            duration, cost, message, event = 5, 1, "", None
+    
+            def consume_materials(requirements):
+                selected = []
+                for kind, amount in requirements.items():
+                    found = [
+                        i
+                        for i in state["items"]
+                        if i["owner"] == "hero"
+                        and i["kind"] == kind
+                        and i["id"] not in selected
+                        and i["id"] not in {state["weapon"], state["armour"], state["shield"]}
+                    ]
+                    if len(found) < amount:
+                        raise ValueError("Не хватает материала: " + ITEMS[kind])
+                    selected.extend(i["id"] for i in found[:amount])
+                state["items"] = [i for i in state["items"] if i["id"] not in selected]
+    
+            def add(kind, quality=1):
+                state["content_sequence"] += 1
+                state["items"].append(
+                    make_item(
+                        f"content_{context['turn']}_{state['content_sequence']}", kind, quality=quality
+                    )
+                )
+    
+            if command == "ability":
+                if args:
+                    raise ValueError("Способность профиля не требует параметров.")
+                key = state["identity"]["profile"]
+                name, field, amount = ABILITIES[key]
+                day = state["minute"] // 1440
+                if state["ability_uses"].get(key) == day:
+                    raise ValueError("Способность уже использована сегодня.")
+                if field == "hp":
+                    if world.hp == world.max_hp:
+                        raise ValueError("Здоровье полное.")
+                    world = replace(world, hp=min(world.max_hp, world.hp + amount))
+                else:
+                    if state[field] >= state[field + "_cap"]:
+                        raise ValueError("Ресурс уже полон.")
+                    state[field] = min(state[field + "_cap"], state[field] + amount)
+                state["ability_uses"][key] = day
+                message = name + ": ресурс восстановлен, способность использована на сегодня."
+            elif command == "gather":
+                if set(args) != {"material", "quantity"} or args["material"] not in {
+                    "wood",
+                    "iron",
+                    "herb",
+                }:
+                    raise ValueError("Выберите материал и количество.")
+                amount = args["quantity"]
+                if type(amount) is not int or not 1 <= amount <= 10:
+                    raise ValueError("Количество1–10.")
+                node = state["living_world"]["nodes"][scene.current]
+                if node[args["material"]] < amount:
+                    raise ValueError("Доступный запас исчерпан.")
+                if args["material"] == "iron" and progress.rank("smithing") < 1:
+                    raise ValueError("Для добычи железа нужен ранг Кузнечного дела1.")
+                if not any(
+                    i["owner"] == "hero" and i["kind"] == "tools" and i["durability"]
+                    for i in state["items"]
+                ):
+>                   raise ValueError("Нужны исправные инструменты.")
+E                   ValueError: Нужны исправные инструменты.
+
+src/rpg_vkr/domain/gameplay_v5.py:154: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_complete_campaign.py::test_fork_from_oldest_fixture_survives_sqlite_and_preserves_source
+1 failed, 76 passed in 10.02s

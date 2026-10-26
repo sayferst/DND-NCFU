@@ -173,6 +173,11 @@ def build_frame(session):
     if session.gameplay:
         from rpg_vkr.domain.gameplay import SPELLS
 
+        if session.schema_version >= 28:
+            from rpg_vkr.domain.content_v5 import spell_rows
+
+            SPELLS = spell_rows()
+
         state = session.gameplay
         from rpg_vkr.domain.gameplay import PROFILES
 

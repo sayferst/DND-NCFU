@@ -1,0 +1,7 @@
+{
+  "backup_exact_bytes": true,
+  "copy_load_and_continuation": true,
+  "source_unchanged": true,
+  "overwrite_rejected_exit_code": 2,
+  "source_sha256": "a1a25307b2a6130950d93063bf92a669d7746453bdc36be023712e4455828573"
+}

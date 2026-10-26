@@ -1,5 +1,6 @@
 """Explicit homebrew creation with a fixed budget, separate from the legacy editor."""
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -8,6 +9,8 @@ from PySide6.QtWidgets import (
     QFormLayout,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
@@ -78,6 +81,22 @@ class CreationDialog(QDialog):
         for key, name in PROFILES.items():
             self.profile_choice.addItem(name, key)
         layout.addRow("Специализация (v3)", self.profile_choice)
+        from rpg_vkr.domain.content_v5 import KITS
+        from rpg_vkr.domain.content_v5 import SPELLS as NEW_SPELLS
+
+        self.kit_choice = QComboBox()
+        for key, value in KITS.items():
+            self.kit_choice.addItem(value[0], key)
+        layout.addRow("Стартовый набор", self.kit_choice)
+        self.starting_spells = QListWidget()
+        self.starting_spells.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        self.starting_spells.setMaximumHeight(95)
+        for key, value in NEW_SPELLS.items():
+            if value["circle"] == 1:
+                row = QListWidgetItem(value["name"])
+                row.setData(Qt.ItemDataRole.UserRole, key)
+                self.starting_spells.addItem(row)
+        layout.addRow("До двух начальных заклинаний", self.starting_spells)
         self.age_input = QSpinBox()
         self.age_input.setRange(18, 1000)
         self.age_input.setValue(20)
@@ -89,8 +108,8 @@ class CreationDialog(QDialog):
         self.appearance_input.setMaxLength(400)
         layout.addRow("Внешность (v3)", self.appearance_input)
         note_v3 = QLabel(
-            "v3 включается только для новой кампании. Виды описательные; "
-            "старые профили выше задают характеристики. Магия требует обучения "
+            "Новый набор включает особенности вида (+1 к характеристике), "
+            "способность профиля и выбор снаряжения. Магия требует обучения "
             "Теории магии. Все действия нового набора доступны на странице героя."
         )
         note_v3.setWordWrap(True)
@@ -189,6 +208,8 @@ class CreationDialog(QDialog):
         self.species_choice.currentIndexChanged.connect(self._update_budget)
         self.background_input.textChanged.connect(self._update_budget)
         self.appearance_input.textChanged.connect(self._update_budget)
+        self.kit_choice.currentIndexChanged.connect(self._update_budget)
+        self.starting_spells.itemSelectionChanged.connect(self._update_budget)
 
     def apply_recommended(self) -> None:
         for ability, score in zip(
@@ -201,8 +222,8 @@ class CreationDialog(QDialog):
         if self.use_gameplay.isChecked():
             from collections import Counter
 
-            from rpg_vkr.domain.gameplay import ITEM_NAMES
-            from rpg_vkr.domain.gameplay_v2 import initial
+            from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+            from rpg_vkr.domain.gameplay_v5 import initial
             from rpg_vkr.domain.hero_resources import limits
 
             try:
@@ -211,7 +232,9 @@ class CreationDialog(QDialog):
                     **{k: v.value() for k, v in self.scores.items()},
                 )
                 state = initial(self.gameplay_identity(), character)
-                caps = limits(state, character, 1)
+                from rpg_vkr.domain.content_v5 import inherited
+
+                caps = limits(state, inherited(character, state), 1)
                 inventory = ", ".join(
                     f"{ITEM_NAMES[k]} ×{n}"
                     for k, n in Counter(i["kind"] for i in state["items"]).items()
@@ -250,7 +273,7 @@ class CreationDialog(QDialog):
         )
         valid_identity = True
         if self.use_gameplay.isChecked():
-            from rpg_vkr.domain.gameplay_v2 import initial
+            from rpg_vkr.domain.gameplay_v5 import initial
 
             try:
                 initial(self.gameplay_identity(), Character())
@@ -297,6 +320,10 @@ class CreationDialog(QDialog):
 
     def gameplay_identity(self):
         return {
+            "kit": self.kit_choice.currentData(),
+            "starting_spells": [
+                i.data(Qt.ItemDataRole.UserRole) for i in self.starting_spells.selectedItems()
+            ],
             "species": self.species_choice.currentData(),
             "profile": self.profile_choice.currentData(),
             "age": self.age_input.value(),
@@ -317,14 +344,14 @@ class CreationDialog(QDialog):
         if self.use_d20_skills.isChecked():
             session.enable_d20_progress()
         if self.use_gameplay.isChecked():
-            session.enable_gameplay(self.gameplay_identity(), revision=4)
+            session.enable_gameplay(self.gameplay_identity(), revision=5)
         return session
 
     def accept(self) -> None:
         try:
             character = self.character()
             if self.use_gameplay.isChecked():
-                from rpg_vkr.domain.gameplay_v2 import initial
+                from rpg_vkr.domain.gameplay_v5 import initial
 
                 initial(self.gameplay_identity(), character)
             plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)

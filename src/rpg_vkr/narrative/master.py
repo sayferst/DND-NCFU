@@ -90,7 +90,7 @@ def campaign_context(session, target=""):
     scene = session.interaction_state()
     actors, validation_roster = [], []
     for actor in scene.actor_refs:
-        if actor.id in ACTORS:
+        if actor.id in ACTORS and session.schema_version < 28:
             state = session.combat.actor(actor.id)
             alive = state.hp > 0
         else:
@@ -205,6 +205,14 @@ def campaign_context(session, target=""):
                             "notes": [],
                         }
                     )
+    if session.schema_version >= 28 and session.gameplay.get("living_world"):
+        living = session.gameplay["living_world"]
+        public_simulation["living_world"] = {
+            "calendar": living.get("calendar"),
+            "reports": {k: v for k, v in living["observed"].items() if session.actor_is_here(k)},
+        }
+    if getattr(session, "_rag_mode", 0) == 2:
+        public_simulation["rag_enabled"] = True
     return {
         **public_simulation,
         "d20_skills": (
