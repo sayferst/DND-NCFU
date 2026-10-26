@@ -345,7 +345,10 @@ def request_world(window, error=""):
                 "world_brief": session.campaign.world_brief,
                 "variation": session.campaign.world_id,
                 **(
-                    {"gameplay_revision": 2, "equipment_rules": equipment_rules()}
+                    {
+                        "gameplay_revision": 3 if session.schema_version >= 26 else 2,
+                        "equipment_rules": equipment_rules(),
+                    }
                     if session.schema_version >= 25
                     else {}
                 ),

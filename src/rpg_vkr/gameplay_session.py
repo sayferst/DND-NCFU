@@ -28,7 +28,7 @@ def enable(session, identity, *, revision=1):
         for n in range(rank):
             progress = progress.train(skill, f"creation:{skill}:{n}")
     world, memory = session.world, session.memory
-    if revision == 2:
+    if revision >= 2:
         from rpg_vkr.domain.hero_resources import refresh
         from rpg_vkr.domain.memory import WorldMemory
 
@@ -53,7 +53,7 @@ def context(session):
         "progress": session.d20_progress.to_dict(),
         "turn": len(session.turns) + 1,
     }
-    if revision(session._gameplay["state"]) == 2:
+    if revision(session._gameplay["state"]) >= 2:
         value["aliases"] = session.catalog_aliases
     return value
 
@@ -161,7 +161,7 @@ def restore_turn(session, item):
         or set(ctx)
         != (
             {"world", "character", "combat", "scene", "catalog", "progress", "turn"}
-            | ({"aliases"} if revision(session._gameplay["state"]) == 2 else set())
+            | ({"aliases"} if revision(session._gameplay["state"]) >= 2 else set())
         )
         or type(ctx["turn"]) is not int
         or ctx["turn"] != len(session.turns) + 1
@@ -207,7 +207,7 @@ def restore_turn(session, item):
 def validate_history(record, fields, interactive, catalog, index, turns=()):
     """Bind replay input to actual historical world, not caller-supplied snapshots."""
     ctx, result = record["context"], record["result"]
-    if revision(result["state"]) == 2:
+    if revision(result["state"]) >= 2:
         from rpg_vkr.domain.gameplay_v2 import aliases
 
         prefix = turns[: index if record["command"] == "advance" else index - 1]

@@ -5,8 +5,9 @@ from rpg_vkr.domain import gameplay as v1
 
 def revision(state):
     from rpg_vkr.domain import gameplay_v2 as v2
+    from rpg_vkr.domain import gameplay_v3 as v3
 
-    versions = {v1.VERSION: 1, v2.VERSION: 2}
+    versions = {v1.VERSION: 1, v2.VERSION: 2, v3.VERSION: 3}
     if not isinstance(state, dict) or state.get("version") not in versions:
         raise ValueError("Неизвестная версия игрового обработчика.")
     return versions[state["version"]]
@@ -21,6 +22,10 @@ def initial(identity, character, *, revision=1):
         from rpg_vkr.domain import gameplay_v2 as v2
 
         return v2.initial(identity, character)
+    if revision == 3:
+        from rpg_vkr.domain import gameplay_v3 as v3
+
+        return v3.initial(identity, character)
     raise ValueError("Неизвестная версия новых правил.")
 
 
@@ -34,6 +39,10 @@ def restore_initial(identity, character, state, schema):
 def execute(state, command, args, context, dice):
     if revision(state) == 1:
         return v1.execute(state, command, args, context, dice)
-    from rpg_vkr.domain import gameplay_v2 as v2
+    if revision(state) == 2:
+        from rpg_vkr.domain import gameplay_v2 as v2
 
-    return v2.execute(state, command, args, context, dice)
+        return v2.execute(state, command, args, context, dice)
+    from rpg_vkr.domain import gameplay_v3 as v3
+
+    return v3.execute(state, command, args, context, dice)

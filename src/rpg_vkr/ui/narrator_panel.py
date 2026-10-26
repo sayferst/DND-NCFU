@@ -772,7 +772,7 @@ def catalog_context(window, text):
     if window._session.schema_version >= 25:
         from rpg_vkr.narrative.gameplay_prompt import equipment_rules
 
-        state["gameplay_revision"] = 2
+        state["gameplay_revision"] = 3 if window._session.schema_version >= 26 else 2
         state["equipment_rules"] = equipment_rules()
         state["actors_here"] = [
             id for id in state["actors_here"] if window._session.actor_is_here(id)

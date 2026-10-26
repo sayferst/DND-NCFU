@@ -234,11 +234,18 @@ class Session:
             self.campaign, self.progress.class_id
         ):
             raise ValueError("Этот мир создан для другого героя.")
+        candidate_gameplay = None
+        if self.schema_version >= 26:
+            from rpg_vkr.domain.factions import initialize
+
+            candidate_gameplay = initialize(self._gameplay["state"], seed.catalog, seed.scene)
         if self._gameplay:
             from rpg_vkr.domain.gameplay import ensure_names
 
-            ensure_names(self._gameplay["state"], seed.catalog)
+            ensure_names(candidate_gameplay or self._gameplay["state"], seed.catalog)
         world = project(seed.scene, replace(self.world, quest="completed", basket=0, trading=False))
+        if candidate_gameplay is not None:
+            self._gameplay["state"] = candidate_gameplay
         self.chronicle = Chronicle(seed)
         self.catalog, self.interactive_world = seed.catalog, seed.scene
         self.world, self.introduction = world, seed.opening
@@ -1563,6 +1570,7 @@ class Session:
             23,
             24,
             25,
+            26,
         ):
             raise ValueError("Unsupported session version")
         keys = {"seed", "introduction", "turns"}
@@ -1636,6 +1644,12 @@ class Session:
             ):
                 raise ValueError("Происхождение мира не совпадает с героем.")
             session.catalog = seed.catalog
+            if version >= 26:
+                from rpg_vkr.domain.factions import initialize
+
+                session._gameplay["state"] = initialize(
+                    session._gameplay["state"], seed.catalog, seed.scene
+                )
         if version < 17 and session.campaign.version != "campaign-1":
             raise ValueError("World brief requires session schema 17")
         session.introduction = _text(data["introduction"], 4000)
@@ -2322,6 +2336,12 @@ class Session:
                 session.progress.initial,
                 data["gameplay"]["state"],
                 version,
+            )
+        if version >= 26 and session.generated_world:
+            from rpg_vkr.domain.factions import initialize
+
+            historical_gameplay = initialize(
+                historical_gameplay, session.chronicle.seed.catalog, session.chronicle.seed.scene
             )
         for event in session.memory.events:
             turn = session.turns[event.turn_index - 1]

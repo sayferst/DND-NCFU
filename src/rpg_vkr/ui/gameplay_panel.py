@@ -188,6 +188,26 @@ def install(window, layout):
             "event": window.news_choice.currentData(),
         },
     )
+    tab = page("Фракции")
+    window.faction_tab = tabs.widget(tabs.count() - 1)
+    window.faction_choice = choice(tab, "Известное объединение")
+    window.faction_amount = QSpinBox()
+    window.faction_amount.setRange(1, 1_000_000)
+    window.faction_amount.setValue(100)
+    tab.addRow("Взнос, медных", window.faction_amount)
+    button(
+        tab,
+        "Передать взнос представителю рядом",
+        "donate",
+        lambda: {
+            "faction": window.faction_choice.currentData(),
+            "amount_cp": window.faction_amount.value(),
+        },
+    )
+    window.faction_info = QPlainTextEdit()
+    window.faction_info.setReadOnly(True)
+    window.faction_info.setMaximumHeight(180)
+    tab.addRow(window.faction_info)
     layout.addWidget(group)
 
 
@@ -212,6 +232,20 @@ def refresh(window):
     window.gameplay_group.setEnabled(
         session.world.hp > 0 and not getattr(getattr(window, "ollama", None), "busy", False)
     )
+    window.gameplay_tabs.setTabVisible(
+        window.gameplay_tabs.indexOf(window.faction_tab), session.schema_version >= 26
+    )
+    if session.schema_version >= 26:
+        known = state["known_factions"]
+        refill(window.faction_choice, [(k, f["name"]) for k, f in known.items()])
+        window.faction_info.setPlainText(
+            "\n\n".join(
+                f"{f['name']} · репутация {f['reputation']}\n{f['news']}\n"
+                f"Последние сведения: день {f['last_seen_minute'] // 1440 + 1}."
+                for f in known.values()
+            )
+            or "Объединения пока не известны. Сведения появляются при встрече с представителем."
+        )
     progress = session.d20_progress
     from rpg_vkr.domain.gameplay import TALENTS as LEGACY_TALENTS
 
@@ -294,8 +328,11 @@ def refresh(window):
         + (", ".join(TALENTS[k] for k in state["talents"]) or "нет")
         + f"\nНаграды: таланты {len(state['talents'])}/{progress.talent_rewards}, "
         f"характеристики {len(state['attributes'])}/{progress.attribute_rewards}."
-        + "\nРепутация местных свидетелей: "
-        + str(state["factions"].get("local_witnesses", 0))
+        + (
+            "\nРепутация местных свидетелей: " + str(state["factions"].get("local_witnesses", 0))
+            if session.schema_version < 26
+            else ""
+        )
         + "\n"
         + (
             next(

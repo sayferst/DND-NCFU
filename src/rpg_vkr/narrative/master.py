@@ -137,7 +137,27 @@ def campaign_context(session, target=""):
                 },
             }
         )
+    public_simulation = {}
+    if session.schema_version >= 26:
+        from rpg_vkr.domain.factions import can_speak
+
+        state = session.gameplay
+        public_simulation = {
+            "known_factions": list(state["known_factions"].values()),
+            "npc_public_events": {
+                actor["id"]: [
+                    fact
+                    for fact in state["npc"].get(actor["id"], {}).get("knowledge", [])
+                    if fact["event"] in state["victories"]
+                ]
+                for actor in actors
+                if actor["available"]
+                and session.catalog
+                and can_speak(session.catalog, actor["id"])
+            },
+        }
     return {
+        **public_simulation,
         "d20_skills": (
             {
                 "level": d20.level,

@@ -1356,3 +1356,14 @@ scripts/check.py; сырой результат docs/validation/gameplay-v3-play
 Сырые полные запуски — docs/validation/gameplay-v3-physical-2026-10-26.
 
 Итог схемы25: scripts/check.py exit0, 1687passed/217.22с, pip/Ruff успешны (262файла). После правки колонок UI/усиления actual-hit теста:87passed/8.02с, Ruff check/format успешны. Домен после полного прогона не менялся. Raw: docs/validation/gameplay-v3-physical-2026-10-26. Windows/Setup/liveAPI не проверялись.
+
+## 26.10.2026 — схема26/фракции
+
+`tests/test_world_factions.py`: создание/контакт, конечные бюджеты/патрули,
+взносы/повторный ID, пошлина и нехватка комиссии с атомарным отказом, знания
+NPC (личное/услышанное, источник, без секретов/немых существ), публичный UI,
+JSON/SQLite/архив/replay и порча результата. Fixture25 из1f1bd1b фиксирует SHA/RNG.
+Сырые прогоны и точный итог: docs/validation/gameplay-v3-factions-2026-10-26.
+Нативная ручная проверка Windows — по docs/GAMEPLAY_V3_FACTIONS.md, пока не выполнена.
+
+Итог финального full-02: scripts/check.py exit0; **1705 passed / 224.15с**; pip check, Ruff check и format (265файлов) успешны. Исходники после этого прогона не менялись. Windows/Setup/live API не проверялись. Raw: docs/validation/gameplay-v3-factions-2026-10-26/full-02.txt.

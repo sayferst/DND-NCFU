@@ -1,0 +1,11 @@
+{
+  "source_commit": "1f1bd1b",
+  "schema_version": 25,
+  "fixture_sha256": "9e2c66da0f73f9bb1523ee0f8463cbbabb77729b0fc2eaff8f8c9605e794ded4",
+  "turns": 6,
+  "next_roll": {
+    "index": 5,
+    "value": 5
+  },
+  "method": "Unmodified committed src/data via git archive; actual SaveSlots writer."
+}

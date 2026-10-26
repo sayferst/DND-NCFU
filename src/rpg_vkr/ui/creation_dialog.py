@@ -317,7 +317,7 @@ class CreationDialog(QDialog):
         if self.use_d20_skills.isChecked():
             session.enable_d20_progress()
         if self.use_gameplay.isChecked():
-            session.enable_gameplay(self.gameplay_identity(), revision=2)
+            session.enable_gameplay(self.gameplay_identity(), revision=3)
         return session
 
     def accept(self) -> None:

@@ -122,6 +122,16 @@ class CopperTradeDialog(QDialog):
             self.execute.setText("Сделка недоступна")
             self.status.setText(str(error))
             return
+        self.status.setText(
+            f"Ваши деньги: {self.session.world.gold * 100 + self.session.gameplay['copper']} "
+            "медных. "
+            + (
+                f"Товар: {receipt['base_price_cp']} медных; "
+                f"пошлина 5%: {receipt['duty_cp']} медных. Итог: {price}."
+                if receipt and receipt.get("duty_cp")
+                else "Цена учитывает прочность и размер партии."
+            )
+        )
         self.execute.setText(
             ("Купить" if self.mode.currentIndex() == 0 else "Продать") + f" за {price} медных"
         )
