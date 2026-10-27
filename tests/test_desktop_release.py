@@ -294,10 +294,32 @@ def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp
         capture_output=True,
         timeout=30,
     )
-    assert result.returncode == 0, result.stderr
+    failure = report.read_text(encoding="utf-8") if report.is_file() else "No diagnostic report"
+    assert result.returncode == 0, (result.stderr, failure)
     actual = json.loads(report.read_text(encoding="utf-8"))
     assert actual["ok"] and actual["references"] and actual["save_sqlite"] and actual["rng"]
     assert actual["loopback_posts"] == 4 and actual["network_requests"] == 6
     assert actual["world_creation"] and actual["world_brief_preserved"]
     assert actual["external_model_requests"] == 0
     assert not (tmp_path / "untouched-real-data").exists()
+
+
+def test_failed_release_probe_exposes_safe_frames_without_exception_message(tmp_path, monkeypatch):
+    from rpg_vkr import app, bootstrap
+
+    marker = "private-provider-credential-must-not-be-logged"
+
+    def fail():
+        raise RuntimeError(marker)
+
+    report = tmp_path / "failure.json"
+    monkeypatch.setenv("RPG_VKR_DATA_DIR", str(tmp_path / "isolated-data"))
+    monkeypatch.setattr(sys, "argv", ["game", "--self-check", "--report", str(report)])
+    monkeypatch.setattr(sys, "excepthook", sys.excepthook)
+    monkeypatch.setattr(app, "main", fail)
+    assert bootstrap.launch() == 1
+    text = report.read_text(encoding="utf-8")
+    value = json.loads(text)
+    assert value["ok"] is False and value["error_type"] == "RuntimeError"
+    assert value["frames"][-1]["function"] == "fail"
+    assert marker not in text and str(tmp_path) not in text

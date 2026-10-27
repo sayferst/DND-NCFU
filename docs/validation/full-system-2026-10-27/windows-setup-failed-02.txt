@@ -1,0 +1,487 @@
+﻿2026-10-27T16:23:59.8578042Z Current runner version: '2.338.0'
+2026-10-27T16:23:59.8842647Z ##[group]Runner Image Provisioner
+2026-10-27T16:23:59.8843582Z Hosted Compute Agent
+2026-10-27T16:23:59.8844187Z Version: 20261021.618
+2026-10-27T16:23:59.8844854Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-27T16:23:59.8845515Z Build Date: 2026-10-21T00:45:21Z
+2026-10-27T16:23:59.8846217Z Worker ID: {a4cd33cc-a6df-41ff-a9f3-91167c422cd5}
+2026-10-27T16:23:59.8846879Z Region: eastus2
+2026-10-27T16:23:59.8847362Z Cloud: Azure
+2026-10-27T16:23:59.8847859Z ##[endgroup]
+2026-10-27T16:23:59.8849265Z ##[group]Operating System
+2026-10-27T16:23:59.8849854Z Microsoft Windows Server 2025
+2026-10-27T16:23:59.8850464Z 10.0.26100
+2026-10-27T16:23:59.8850954Z Datacenter
+2026-10-27T16:23:59.8851424Z ##[endgroup]
+2026-10-27T16:23:59.8851936Z ##[group]Runner Image
+2026-10-27T16:23:59.8852516Z Image: windows-2025-vs2026
+2026-10-27T16:23:59.8853089Z Version: 20261021.278.1
+2026-10-27T16:23:59.8854971Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-27T16:23:59.8856909Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-27T16:23:59.8857851Z ##[endgroup]
+2026-10-27T16:23:59.8858906Z ##[group]GITHUB_TOKEN Permissions
+2026-10-27T16:23:59.8860748Z Contents: read
+2026-10-27T16:23:59.8861361Z Metadata: read
+2026-10-27T16:23:59.8861850Z ##[endgroup]
+2026-10-27T16:23:59.8864009Z Secret source: Actions
+2026-10-27T16:23:59.8864898Z Cache mode: write
+2026-10-27T16:23:59.8865562Z Prepare workflow directory
+2026-10-27T16:23:59.9841397Z Prepare all required actions
+2026-10-27T16:23:59.9893738Z Getting action download info
+2026-10-27T16:24:00.1922404Z Download action repository 'actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-27T16:24:00.3731575Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-27T16:24:00.5814707Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-27T16:24:01.3189410Z Complete job name: setup
+2026-10-27T16:24:02.1219023Z ##[group]Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+2026-10-27T16:24:02.1220562Z with:
+2026-10-27T16:24:02.1221053Z   repository: sayferst/DND-NCFU
+2026-10-27T16:24:02.1228406Z   token: ***
+2026-10-27T16:24:02.1228884Z   ssh-strict: true
+2026-10-27T16:24:02.1229373Z   ssh-user: git
+2026-10-27T16:24:02.1229877Z   persist-credentials: true
+2026-10-27T16:24:02.1230463Z   clean: true
+2026-10-27T16:24:02.1230972Z   sparse-checkout-cone-mode: true
+2026-10-27T16:24:02.1231615Z   fetch-depth: 1
+2026-10-27T16:24:02.1232097Z   fetch-tags: false
+2026-10-27T16:24:02.1232608Z   show-progress: true
+2026-10-27T16:24:02.1233118Z   lfs: false
+2026-10-27T16:24:02.1233587Z   submodules: false
+2026-10-27T16:24:02.1234135Z   set-safe-directory: true
+2026-10-27T16:24:02.1235152Z   allow-unsafe-pr-checkout: false
+2026-10-27T16:24:02.1236239Z ##[endgroup]
+2026-10-27T16:24:02.3184910Z Syncing repository: sayferst/DND-NCFU
+2026-10-27T16:24:02.3187291Z ##[group]Getting Git version info
+2026-10-27T16:24:02.3188209Z Working directory is 'D:\a\DND-NCFU\DND-NCFU'
+2026-10-27T16:24:02.4074084Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-27T16:24:02.7464024Z git version 2.56.0.windows.2
+2026-10-27T16:24:02.7518557Z ##[endgroup]
+2026-10-27T16:24:02.7557226Z Temporarily overriding HOME='D:\a\_temp\509cc74d-0abf-4500-a533-71913e6a888d' before making global git config changes
+2026-10-27T16:24:02.7559354Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T16:24:02.7561703Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\DND-NCFU\DND-NCFU
+2026-10-27T16:24:02.8242797Z Deleting the contents of 'D:\a\DND-NCFU\DND-NCFU'
+2026-10-27T16:24:02.8300894Z ##[group]Initializing the repository
+2026-10-27T16:24:02.8302041Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\DND-NCFU\DND-NCFU
+2026-10-27T16:24:02.9280310Z Initialized empty Git repository in D:/a/DND-NCFU/DND-NCFU/.git/
+2026-10-27T16:24:02.9330906Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/sayferst/DND-NCFU
+2026-10-27T16:24:03.0039670Z ##[endgroup]
+2026-10-27T16:24:03.0041082Z ##[group]Disabling automatic garbage collection
+2026-10-27T16:24:03.0048475Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-27T16:24:03.0435816Z ##[endgroup]
+2026-10-27T16:24:03.0437349Z ##[group]Setting up auth
+2026-10-27T16:24:03.0447978Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T16:24:03.0927284Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-27T16:24:05.0482453Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T16:24:05.0895195Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-27T16:24:05.6599971Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T16:24:05.6994878Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-27T16:24:06.2476735Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-27T16:24:06.2854926Z ##[endgroup]
+2026-10-27T16:24:06.2855615Z ##[group]Fetching the repository
+2026-10-27T16:24:06.2883571Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fb2c9f5f90bdd7bd1a9c580a3d84486ba9d7a99b:refs/remotes/origin/feature/unified-rpg-automatic-gm
+2026-10-27T16:24:10.0425726Z From https://github.com/sayferst/DND-NCFU
+2026-10-27T16:24:10.0429980Z  * [new ref]         fb2c9f5f90bdd7bd1a9c580a3d84486ba9d7a99b -> origin/feature/unified-rpg-automatic-gm
+2026-10-27T16:24:10.0472301Z ##[endgroup]
+2026-10-27T16:24:10.0472950Z ##[group]Determining the checkout info
+2026-10-27T16:24:10.0473793Z ##[endgroup]
+2026-10-27T16:24:10.0483222Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-27T16:24:10.0987643Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-27T16:24:10.1409191Z ##[group]Checking out the ref
+2026-10-27T16:24:10.1423916Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/unified-rpg-automatic-gm refs/remotes/origin/feature/unified-rpg-automatic-gm
+2026-10-27T16:24:10.8659122Z Switched to a new branch 'feature/unified-rpg-automatic-gm'
+2026-10-27T16:24:10.8683711Z branch 'feature/unified-rpg-automatic-gm' set up to track 'origin/feature/unified-rpg-automatic-gm'.
+2026-10-27T16:24:10.9228054Z ##[endgroup]
+2026-10-27T16:24:10.9236137Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-27T16:24:10.9577399Z fb2c9f5f90bdd7bd1a9c580a3d84486ba9d7a99b
+2026-10-27T16:24:11.0221757Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-27T16:24:11.0222239Z with:
+2026-10-27T16:24:11.0222430Z   python-version: 3.12
+2026-10-27T16:24:11.0222653Z   architecture: x64
+2026-10-27T16:24:11.0222842Z   check-latest: false
+2026-10-27T16:24:11.0225425Z   token: ***
+2026-10-27T16:24:11.0225620Z   update-environment: true
+2026-10-27T16:24:11.0225867Z   allow-prereleases: false
+2026-10-27T16:24:11.0226879Z   freethreaded: false
+2026-10-27T16:24:11.0227088Z ##[endgroup]
+2026-10-27T16:24:11.1806313Z ##[group]Installed versions
+2026-10-27T16:24:11.1958730Z Successfully set up CPython (3.12.10)
+2026-10-27T16:24:11.1959508Z ##[endgroup]
+2026-10-27T16:24:11.2257574Z ##[group]Run & .\scripts\build_windows.ps1 -Installer -Profile developer -TextModel 'deepseek/deepseek-v4.1-flash'
+2026-10-27T16:24:11.2258572Z [36;1m& .\scripts\build_windows.ps1 -Installer -Profile developer -TextModel 'deepseek/deepseek-v4.1-flash'[0m
+2026-10-27T16:24:11.2259197Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-10-27T16:24:11.2765542Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-27T16:24:11.2766214Z env:
+2026-10-27T16:24:11.2766689Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:24:11.2767467Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T16:24:11.2768203Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:24:11.2768877Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:24:11.2769513Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:24:11.2770071Z ##[endgroup]
+2026-10-27T16:24:22.0902403Z Ignoring macholib: markers 'sys_platform == "darwin"' don't match your environment
+2026-10-27T16:24:22.1981864Z Collecting altgraph==0.17.5 (from -r requirements-build.lock (line 3))
+2026-10-27T16:24:22.2545434Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-10-27T16:24:22.3819363Z Collecting cffi==2.1.1 (from -r requirements-build.lock (line 9))
+2026-10-27T16:24:22.3987784Z   Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl (185 kB)
+2026-10-27T16:24:22.4404504Z Collecting colorama==0.4.6 (from -r requirements-build.lock (line 113))
+2026-10-27T16:24:22.4549518Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-10-27T16:24:22.6601755Z Collecting cryptography==46.0.3 (from -r requirements-build.lock (line 119))
+2026-10-27T16:24:22.6803140Z   Downloading cryptography-46.0.3-cp311-abi3-win_amd64.whl (3.5 MB)
+2026-10-27T16:24:22.7490367Z      ---------------------------------------- 3.5/3.5 MB 69.2 MB/s eta 0:00:00
+2026-10-27T16:24:22.7712290Z Collecting iniconfig==2.3.1 (from -r requirements-build.lock (line 175))
+2026-10-27T16:24:22.7848800Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-27T16:24:22.8066607Z Collecting packaging==26.3 (from -r requirements-build.lock (line 185))
+2026-10-27T16:24:22.8201858Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-27T16:24:22.8331730Z Collecting pefile==2023.2.7 (from -r requirements-build.lock (line 193))
+2026-10-27T16:24:22.8526047Z   Downloading pefile-2023.2.7-py3-none-any.whl (71 kB)
+2026-10-27T16:24:22.8671873Z Collecting pluggy==1.7.0 (from -r requirements-build.lock (line 197))
+2026-10-27T16:24:22.8805723Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-27T16:24:22.8958505Z Collecting pycparser==3.11 (from -r requirements-build.lock (line 203))
+2026-10-27T16:24:22.9101282Z   Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+2026-10-27T16:24:22.9344487Z Collecting pygments==2.21.0 (from -r requirements-build.lock (line 209))
+2026-10-27T16:24:22.9481580Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-27T16:24:22.9537973Z      ---------------------------------------- 1.3/1.3 MB ? eta 0:00:00
+2026-10-27T16:24:23.0092102Z Collecting pyinstaller==6.16.0 (from -r requirements-build.lock (line 215))
+2026-10-27T16:24:23.0268310Z   Downloading pyinstaller-6.16.0-py3-none-win_amd64.whl (1.4 MB)
+2026-10-27T16:24:23.0472448Z      ---------------------------------------- 1.4/1.4 MB 34.8 MB/s eta 0:00:00
+2026-10-27T16:24:23.0743672Z Collecting pyinstaller-hooks-contrib==2026.8 (from -r requirements-build.lock (line 229))
+2026-10-27T16:24:23.0901060Z   Downloading pyinstaller_hooks_contrib-2026.8-py3-none-any.whl (462 kB)
+2026-10-27T16:24:23.1177733Z Collecting pyside6-essentials==6.10.1 (from -r requirements-build.lock (line 233))
+2026-10-27T16:24:23.1353468Z   Downloading pyside6_essentials-6.10.1-cp39-abi3-win_amd64.whl (74.5 MB)
+2026-10-27T16:24:23.7612201Z      -------------------------------------- 74.5/74.5 MB 118.8 MB/s eta 0:00:00
+2026-10-27T16:24:23.8773009Z Collecting pytest==8.4.2 (from -r requirements-build.lock (line 240))
+2026-10-27T16:24:23.8912364Z   Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2026-10-27T16:24:23.9064514Z Collecting pywin32-ctypes==0.2.3 (from -r requirements-build.lock (line 244))
+2026-10-27T16:24:23.9200100Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+2026-10-27T16:24:24.2990948Z Collecting ruff==0.14.1 (from -r requirements-build.lock (line 248))
+2026-10-27T16:24:24.3177264Z   Downloading ruff-0.14.1-py3-none-win_amd64.whl (13.4 MB)
+2026-10-27T16:24:24.6934740Z      -------------------------------------- 13.4/13.4 MB 423.8 MB/s eta 0:00:00
+2026-10-27T16:24:24.8205305Z Collecting setuptools==84.2.0 (from -r requirements-build.lock (line 269))
+2026-10-27T16:24:24.8364950Z   Downloading setuptools-84.2.0-py3-none-any.whl (875 kB)
+2026-10-27T16:24:24.8406602Z      ---------------------------------------- 875.8/875.8 kB ? eta 0:00:00
+2026-10-27T16:24:24.8718541Z Collecting shiboken6==6.10.1 (from -r requirements-build.lock (line 273))
+2026-10-27T16:24:24.8889867Z   Downloading shiboken6-6.10.1-cp39-abi3-win_amd64.whl (1.2 MB)
+2026-10-27T16:24:24.8938148Z      ---------------------------------------- 1.2/1.2 MB ? eta 0:00:00
+2026-10-27T16:24:25.0289575Z Installing collected packages: altgraph, shiboken6, setuptools, ruff, pywin32-ctypes, pygments, pycparser, pluggy, pefile, packaging, iniconfig, colorama, pytest, pyside6-essentials, pyinstaller-hooks-contrib, cffi, pyinstaller, cryptography
+2026-10-27T16:24:31.3048166Z Successfully installed altgraph-0.17.5 cffi-2.1.1 colorama-0.4.6 cryptography-46.0.3 iniconfig-2.3.1 packaging-26.3 pefile-2023.2.7 pluggy-1.7.0 pycparser-3.11 pygments-2.21.0 pyinstaller-6.16.0 pyinstaller-hooks-contrib-2026.8 pyside6-essentials-6.10.1 pytest-8.4.2 pywin32-ctypes-0.2.3 ruff-0.14.1 setuptools-84.2.0 shiboken6-6.10.1
+2026-10-27T16:24:31.5828579Z 
+2026-10-27T16:24:31.5830698Z [notice] A new release of pip is available: 25.0.1 -> 26.2.2
+2026-10-27T16:24:31.5831671Z [notice] To update, run: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m pip install --upgrade pip
+2026-10-27T16:24:31.8335421Z Already matches committed bytes: tests/fixtures/save-v15.json
+2026-10-27T16:24:31.8336204Z SHA-256 verified. Expected hashes and game saves were not changed.
+2026-10-27T16:24:32.0127994Z Platform: Windows AMD64
+2026-10-27T16:24:32.0131885Z Python: 3.12.10; SQLite: 3.49.1
+2026-10-27T16:24:32.0132276Z Running: git --version
+2026-10-27T16:24:32.0446956Z git version 2.56.0.windows.2
+2026-10-27T16:24:32.0483885Z Running: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+2026-10-27T16:24:32.4241551Z No broken requirements found.
+2026-10-27T16:24:32.4564657Z Running: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m pytest
+2026-10-27T16:24:37.5091571Z ============================= test session starts =============================
+2026-10-27T16:24:37.5092368Z platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+2026-10-27T16:24:37.5093013Z rootdir: D:\a\DND-NCFU\DND-NCFU
+2026-10-27T16:24:37.5093482Z configfile: pyproject.toml
+2026-10-27T16:24:37.5093915Z testpaths: tests
+2026-10-27T16:24:37.5094271Z collected 5270 items
+2026-10-27T16:24:37.5094487Z 
+2026-10-27T16:24:43.2854966Z tests\learning\test_evaluation.py .........                              [  0%]
+2026-10-27T16:24:44.4970736Z tests\learning\test_live_probe.py ....                                   [  0%]
+2026-10-27T16:25:09.1232370Z tests\learning\test_live_suite.py .......                                [  0%]
+2026-10-27T16:25:37.9591863Z tests\learning\test_memory_runtime.py .....                              [  0%]
+2026-10-27T16:25:39.2792490Z tests\learning\test_package.py ............                              [  0%]
+2026-10-27T16:25:40.8246668Z tests\learning\test_pipeline.py ........                                 [  0%]
+2026-10-27T16:25:41.6954759Z tests\learning\test_review_and_ui.py ...                                 [  0%]
+2026-10-27T16:25:55.0294251Z tests\test_accounts.py ......                                            [  1%]
+2026-10-27T16:25:56.7890843Z tests\test_adventure.py ...................                              [  1%]
+2026-10-27T16:25:57.5144832Z tests\test_adventure_consistency.py ........                             [  1%]
+2026-10-27T16:26:09.6388348Z tests\test_adventure_ui.py ............                                  [  1%]
+2026-10-27T16:26:43.7385421Z tests\test_artist_panel.py ......................                        [  2%]
+2026-10-27T16:26:44.8361156Z tests\test_automatic_corpus.py ............                              [  2%]
+2026-10-27T16:26:45.5927604Z tests\test_campaign_skills.py ...F....                                   [  2%]
+2026-10-27T16:26:47.2290753Z tests\test_catalog.py ...............................                    [  3%]
+2026-10-27T16:26:48.2982020Z tests\test_catalog_campaign.py .s                                        [  3%]
+2026-10-27T16:27:02.7592282Z tests\test_catalog_image_prices.py .......................               [  3%]
+2026-10-27T16:27:05.2109685Z tests\test_catalog_invariants.py .....                                   [  3%]
+2026-10-27T16:27:16.7422934Z tests\test_catalog_ui.py .........                                       [  3%]
+2026-10-27T16:27:19.2830183Z tests\test_catalog_ui_playable.py .....                                  [  3%]
+2026-10-27T16:27:19.4172220Z tests\test_catalog_writer_facts.py .                                     [  4%]
+2026-10-27T16:27:19.4404573Z tests\test_character.py ........................                         [  4%]
+2026-10-27T16:27:19.4478362Z tests\test_character_dialog.py ...                                       [  4%]
+2026-10-27T16:27:19.4999889Z tests\test_chat_intents.py ...................                           [  4%]
+2026-10-27T16:27:23.4972587Z tests\test_chronicles.py ..............                                  [  5%]
+2026-10-27T16:27:26.7402144Z tests\test_cloud_gate.py ...                                             [  5%]
+2026-10-27T16:27:26.7781393Z tests\test_combat.py .......................                             [  5%]
+2026-10-27T16:27:26.8867090Z tests\test_combat_storage.py ..............                              [  5%]
+2026-10-27T16:27:29.8876625Z tests\test_combat_ui.py ......                                           [  6%]
+2026-10-27T16:27:39.3119779Z tests\test_complete_campaign.py ........................................ [  6%]
+2026-10-27T16:27:53.1342961Z .......................................                                  [  7%]
+2026-10-27T16:27:56.1668259Z tests\test_connection_metadata.py ..........                             [  7%]
+2026-10-27T16:28:32.0486666Z tests\test_connection_revision.py ......................                 [  8%]
+2026-10-27T16:28:33.2614890Z tests\test_conversation_revision.py ........................             [  8%]
+2026-10-27T16:28:38.0423922Z tests\test_creation_and_roles.py ......                                  [  8%]
+2026-10-27T16:28:38.1195103Z tests\test_d20_combat.py .........                                       [  8%]
+2026-10-27T16:28:38.1599124Z tests\test_d20_progression.py ..............................             [  9%]
+2026-10-27T16:28:39.4397630Z tests\test_desktop_release.py .......................................... [ 10%]
+2026-10-27T16:28:46.5435987Z .F                                                                       [ 10%]
+2026-10-27T16:28:50.4007398Z tests\test_developer_access.py ....                                      [ 10%]
+2026-10-27T16:28:50.9628530Z tests\test_dialogue.py .............                                     [ 10%]
+2026-10-27T16:28:50.9682334Z tests\test_dice.py ...                                                   [ 10%]
+2026-10-27T16:28:51.9383237Z tests\test_embedded_knowledge.py ..                                      [ 10%]
+2026-10-27T16:28:52.0250286Z tests\test_environment.py ...                                            [ 10%]
+2026-10-27T16:29:09.0232929Z tests\test_episode_panels.py ..............                              [ 11%]
+2026-10-27T16:29:17.3712738Z tests\test_fantasy_menu.py .......                                       [ 11%]
+2026-10-27T16:29:18.1025118Z tests\test_fixture_git_checkout.py ..                                    [ 11%]
+2026-10-27T16:29:22.4351337Z tests\test_fixture_repair.py ...........                                 [ 11%]
+2026-10-27T16:29:35.3135371Z tests\test_flash_settings.py ...................                         [ 11%]
+2026-10-27T16:29:37.5758725Z tests\test_free_attempts.py .................................            [ 12%]
+2026-10-27T16:29:40.3854803Z tests\test_free_cloud.py .........                                       [ 12%]
+2026-10-27T16:29:42.5490094Z tests\test_full_game_catalog.py ........................................ [ 13%]
+2026-10-27T16:29:48.6260460Z ........................................................................ [ 14%]
+2026-10-27T16:29:57.5306576Z ........................................................................ [ 16%]
+2026-10-27T16:30:06.4643333Z ........................................................................ [ 17%]
+2026-10-27T16:30:15.2800875Z ........................................................................ [ 18%]
+2026-10-27T16:30:24.2942626Z ........................................................................ [ 20%]
+2026-10-27T16:30:33.1007205Z ........................................................................ [ 21%]
+2026-10-27T16:30:42.3885120Z ........................................................................ [ 22%]
+2026-10-27T16:30:51.2355851Z ........................................................................ [ 24%]
+2026-10-27T16:31:00.1498417Z ........................................................................ [ 25%]
+2026-10-27T16:31:08.8649287Z ........................................................................ [ 26%]
+2026-10-27T16:31:17.8952813Z ........................................................................ [ 28%]
+2026-10-27T16:31:26.8301055Z ........................................................................ [ 29%]
+2026-10-27T16:31:35.5569460Z ........................................................................ [ 31%]
+2026-10-27T16:31:43.7129483Z ........................................................................ [ 32%]
+2026-10-27T16:31:47.6010408Z ........................................................................ [ 33%]
+2026-10-27T16:31:51.3089821Z ........................................................................ [ 35%]
+2026-10-27T16:31:55.0247068Z ........................................................................ [ 36%]
+2026-10-27T16:31:58.8478383Z ........................................................................ [ 37%]
+2026-10-27T16:32:02.6921292Z ........................................................................ [ 39%]
+2026-10-27T16:32:06.5714414Z ........................................................................ [ 40%]
+2026-10-27T16:32:10.2823153Z ........................................................................ [ 41%]
+2026-10-27T16:32:14.1744441Z ........................................................................ [ 43%]
+2026-10-27T16:32:18.1791933Z ........................................................................ [ 44%]
+2026-10-27T16:32:22.0893200Z ........................................................................ [ 46%]
+2026-10-27T16:32:25.9195638Z ........................................................................ [ 47%]
+2026-10-27T16:32:29.4225584Z ........................................................................ [ 48%]
+2026-10-27T16:32:35.3537633Z ........................................................................ [ 50%]
+2026-10-27T16:32:41.4529415Z ........................................................................ [ 51%]
+2026-10-27T16:32:47.8161828Z ........................................................................ [ 52%]
+2026-10-27T16:32:54.6814828Z ........................................................................ [ 54%]
+2026-10-27T16:33:01.2494961Z ........................................................................ [ 55%]
+2026-10-27T16:33:06.3348785Z ........................................................................ [ 57%]
+2026-10-27T16:33:09.3879515Z ........................................................................ [ 58%]
+2026-10-27T16:33:12.9289304Z ........................................................................ [ 59%]
+2026-10-27T16:33:18.9848230Z ........................................................................ [ 61%]
+2026-10-27T16:33:22.3908377Z ........................................................................ [ 62%]
+2026-10-27T16:33:25.5983322Z ........................................................................ [ 63%]
+2026-10-27T16:33:29.0907167Z ........................................................................ [ 65%]
+2026-10-27T16:33:32.7785123Z ........................................................................ [ 66%]
+2026-10-27T16:33:36.5651471Z ........................................................................ [ 67%]
+2026-10-27T16:33:40.4733108Z ........................................................................ [ 69%]
+2026-10-27T16:33:44.2537333Z ........................................................................ [ 70%]
+2026-10-27T16:33:48.2934409Z ........................................................................ [ 72%]
+2026-10-27T16:33:52.0940243Z ........................................................................ [ 73%]
+2026-10-27T16:33:56.5340590Z ........................................................................ [ 74%]
+2026-10-27T16:34:00.3005644Z ........................................................................ [ 76%]
+2026-10-27T16:34:00.7801359Z .........                                                                [ 76%]
+2026-10-27T16:34:02.8439992Z tests\test_gameplay_integration.py ..................................... [ 77%]
+2026-10-27T16:34:09.0011820Z ...............                                                          [ 77%]
+2026-10-27T16:34:16.3630236Z tests\test_gateway.py ............                                       [ 77%]
+2026-10-27T16:34:18.3863890Z tests\test_gateway_request_headers.py ....                               [ 77%]
+2026-10-27T16:34:20.9049871Z tests\test_host_metadata_errors.py ......................                [ 78%]
+2026-10-27T16:34:20.9124392Z tests\test_host_public_readiness.py .....                                [ 78%]
+2026-10-27T16:34:20.9229106Z tests\test_host_tunnel_transport.py .........                            [ 78%]
+2026-10-27T16:34:26.2852673Z tests\test_images_client.py .........                                    [ 78%]
+2026-10-27T16:34:48.4473406Z tests\test_images_contract_revision.py ................................. [ 79%]
+2026-10-27T16:34:58.2908957Z ........                                                                 [ 79%]
+2026-10-27T16:34:58.3881067Z tests\test_inspection.py ..............................                  [ 79%]
+2026-10-27T16:34:58.8713302Z tests\test_journal_customization.py ........                             [ 79%]
+2026-10-27T16:35:13.3232047Z tests\test_launch.py ...                                                 [ 80%]
+2026-10-27T16:35:29.5733788Z tests\test_local_narrator.py ........................................... [ 80%]
+2026-10-27T16:35:43.3528660Z ..................                                                       [ 81%]
+2026-10-27T16:35:47.5482177Z tests\test_master_campaign.py ..........................                 [ 81%]
+2026-10-27T16:35:47.9459523Z tests\test_master_configuration.py ...........                           [ 81%]
+2026-10-27T16:35:50.0968617Z tests\test_master_language_profiles.py ........                          [ 82%]
+2026-10-27T16:35:50.1683270Z tests\test_master_prose_layout.py ........                               [ 82%]
+2026-10-27T16:35:51.8767001Z tests\test_mechanics_before_prose.py ................................... [ 82%]
+2026-10-27T16:35:52.3286552Z ....                                                                     [ 82%]
+2026-10-27T16:35:59.3981139Z tests\test_model_metrics.py ......                                       [ 83%]
+2026-10-27T16:36:02.6306664Z tests\test_navigation_scopes.py ...                                      [ 83%]
+2026-10-27T16:36:02.6718969Z tests\test_ngrok_host.py ...............                                 [ 83%]
+2026-10-27T16:36:02.8339169Z tests\test_ngrok_transport.py ....                                       [ 83%]
+2026-10-27T16:36:02.8938851Z tests\test_ngrok_version.py ..............                               [ 83%]
+2026-10-27T16:36:07.4788053Z tests\test_object_descriptions.py ...................                    [ 84%]
+2026-10-27T16:36:07.4884800Z tests\test_offline.py ..........                                         [ 84%]
+2026-10-27T16:36:07.5572364Z tests\test_owner_clipboard_key.py ........................               [ 84%]
+2026-10-27T16:36:09.3922523Z tests\test_owner_local.py .....                                          [ 84%]
+2026-10-27T16:36:11.0678974Z tests\test_photo_album.py .                                              [ 84%]
+2026-10-27T16:36:18.5909714Z tests\test_physical_gameplay.py ...................................      [ 85%]
+2026-10-27T16:36:27.6136076Z tests\test_plain_master.py .........................                     [ 85%]
+2026-10-27T16:36:27.6342714Z tests\test_polyhedral_dice.py ...............                            [ 86%]
+2026-10-27T16:36:27.6560138Z tests\test_presentation.py .................                             [ 86%]
+2026-10-27T16:36:27.7429617Z tests\test_progression.py ......................................         [ 87%]
+2026-10-27T16:36:28.2808803Z tests\test_release_profiles.py .                                         [ 87%]
+2026-10-27T16:36:43.2331217Z tests\test_resolution_ui.py ............                                 [ 87%]
+2026-10-27T16:36:44.1593826Z tests\test_resource_ledger.py ..........................                 [ 88%]
+2026-10-27T16:36:47.3217223Z tests\test_response_contract.py ........................................ [ 88%]
+2026-10-27T16:36:47.3224997Z                                                                          [ 88%]
+2026-10-27T16:36:51.8278549Z tests\test_response_delivery.py ...........................              [ 89%]
+2026-10-27T16:37:08.1025477Z tests\test_routerai.py .........................................         [ 90%]
+2026-10-27T16:37:08.3658558Z tests\test_routerai_narrator_fallback.py ..                              [ 90%]
+2026-10-27T16:37:08.4111960Z tests\test_safe_provider_diagnosis.py .............................      [ 90%]
+2026-10-27T16:37:08.5886695Z tests\test_save_migration.py ..........                                  [ 90%]
+2026-10-27T16:37:09.1014783Z tests\test_save_slots.py ....................                            [ 91%]
+2026-10-27T16:37:10.7517366Z tests\test_scene_director.py ..............................              [ 91%]
+2026-10-27T16:37:10.8069573Z tests\test_scene_length_and_receipts.py .                                [ 91%]
+2026-10-27T16:37:13.5634257Z tests\test_section_tabs.py ..                                            [ 91%]
+2026-10-27T16:37:18.1679911Z tests\test_semantic_challenges.py .............                          [ 92%]
+2026-10-27T16:37:18.2005758Z tests\test_session.py ....................                               [ 92%]
+2026-10-27T16:37:19.1433865Z tests\test_skill_allocation.py ....                                      [ 92%]
+2026-10-27T16:37:19.5173753Z tests\test_sqlite_lifecycle.py .........                                 [ 92%]
+2026-10-27T16:37:22.8346942Z tests\test_story_conversation_quality.py ................                [ 93%]
+2026-10-27T16:37:26.7938430Z tests\test_team_encounters.py ...............                            [ 93%]
+2026-10-27T16:37:28.5125328Z tests\test_tester_build.py ................                              [ 93%]
+2026-10-27T16:37:34.2377668Z tests\test_tester_connection.py ......                                   [ 93%]
+2026-10-27T16:37:41.7251189Z tests\test_tester_delivery.py .....................                      [ 94%]
+2026-10-27T16:37:44.7768776Z tests\test_theme_notices.py ..                                           [ 94%]
+2026-10-27T16:37:46.0177306Z tests\test_trade_context.py .........                                    [ 94%]
+2026-10-27T16:37:46.3024198Z tests\test_training_capture_session.py .                                 [ 94%]
+2026-10-27T16:37:46.3673087Z tests\test_training_pipeline.py ..                                       [ 94%]
+2026-10-27T16:37:46.5721076Z tests\test_training_story_contract.py ....                               [ 94%]
+2026-10-27T16:37:46.6312752Z tests\test_tunnel_dns.py ...................                             [ 94%]
+2026-10-27T16:37:46.6686926Z tests\test_tunnel_health.py ...............                              [ 95%]
+2026-10-27T16:37:46.6980164Z tests\test_tunnel_supervision.py .......                                 [ 95%]
+2026-10-27T16:37:47.1552098Z tests\test_unified_creation.py ......                                    [ 95%]
+2026-10-27T16:37:51.4671315Z tests\test_unified_rules.py ..................                           [ 95%]
+2026-10-27T16:37:51.5065491Z tests\test_update_tree.py .......                                        [ 95%]
+2026-10-27T16:37:53.0839845Z tests\test_visual_commands.py .........                                  [ 96%]
+2026-10-27T16:38:01.8363501Z tests\test_visual_context.py .....                                       [ 96%]
+2026-10-27T16:38:18.3635344Z tests\test_visual_controller.py .........                                [ 96%]
+2026-10-27T16:38:18.3820949Z tests\test_visual_policy.py ........                                     [ 96%]
+2026-10-27T16:38:20.0308220Z tests\test_visual_registry.py ........                                   [ 96%]
+2026-10-27T16:38:33.4546058Z tests\test_window.py .......................                             [ 97%]
+2026-10-27T16:38:35.0219580Z tests\test_windows_test_ids.py .                                         [ 97%]
+2026-10-27T16:38:35.1229685Z tests\test_workspace_tools.py .............                              [ 97%]
+2026-10-27T16:38:44.7542683Z tests\test_workspace_ui.py ..................                            [ 97%]
+2026-10-27T16:38:44.7991160Z tests\test_world.py ..............................                       [ 98%]
+2026-10-27T16:38:57.6991498Z tests\test_world_agent_ui.py ........                                    [ 98%]
+2026-10-27T16:39:09.3074905Z tests\test_world_creation_screen.py .......                              [ 98%]
+2026-10-27T16:39:16.5273897Z tests\test_world_factions.py ..................                          [ 98%]
+2026-10-27T16:39:28.8585429Z tests\test_world_generation_limits.py .......                            [ 98%]
+2026-10-27T16:39:28.9541485Z tests\test_world_memory.py ..................                            [ 99%]
+2026-10-27T16:39:54.2770227Z tests\test_world_start_gate.py ..............                            [ 99%]
+2026-10-27T16:39:56.3107127Z tests\test_world_transactions.py ......................                  [100%]
+2026-10-27T16:39:56.3107697Z 
+2026-10-27T16:39:56.3107968Z ================================== FAILURES ===================================
+2026-10-27T16:39:56.3108838Z ____________ test_skill_campaign_json_sqlite_and_archive_roundtrip ____________
+2026-10-27T16:39:56.3109766Z 
+2026-10-27T16:39:56.3110625Z tmp_path = WindowsPath('C:/Users/runneradmin/AppData/Local/Temp/pytest-of-runneradmin/pytest-0/test_skill_campaign_json_sqlit0')
+2026-10-27T16:39:56.3111735Z 
+2026-10-27T16:39:56.3112170Z     def test_skill_campaign_json_sqlite_and_archive_roundtrip(tmp_path):
+2026-10-27T16:39:56.3114560Z         session = trained()
+2026-10-27T16:39:56.3116257Z         session.submit_challenge("\u043f\u044b\u0442\u0430\u044e\u0441\u044c \u0432\u0437\u043e\u0431\u0440\u0430\u0442\u044c\u0441\u044f \u043d\u0430 \u0441\u0442\u0435\u043d\u0443")
+2026-10-27T16:39:56.3117830Z         slots = SaveSlots(tmp_path / "saves")
+2026-10-27T16:39:56.3118409Z         slots.save(1, session)
+2026-10-27T16:39:56.3119229Z >       assert json.loads((tmp_path / "saves/slot-1.json").read_text())["schema_version"] == 23
+2026-10-27T16:39:56.3120133Z                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T16:39:56.3120542Z 
+2026-10-27T16:39:56.3120763Z tests\test_campaign_skills.py:83: 
+2026-10-27T16:39:56.3121355Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-27T16:39:56.3122220Z C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\pathlib.py:1028: in read_text
+2026-10-27T16:39:56.3122971Z     return f.read()
+2026-10-27T16:39:56.3123327Z            ^^^^^^^^
+2026-10-27T16:39:56.3123838Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-27T16:39:56.3124233Z 
+2026-10-27T16:39:56.3124930Z self = <encodings.cp1252.IncrementalDecoder object at 0x000001CBD32B1D60>
+2026-10-27T16:39:56.3126873Z input = b'{\n  "schema_version": 23,\n  "saved_at": "2026-10-27T16:26:44.853879+00:00",\n  "session": {\n    "chronicle": null...2\xd0\xb5\xd1\x80\xd0\xba\xd0\xb0 \xd0\xb7\xd0\xb0\xd0\xb4\xd0\xb0\xd1\x87\xd0\xb8"\n        }\n      ]\n    }\n  }\n}'
+2026-10-27T16:39:56.3128407Z final = True
+2026-10-27T16:39:56.3128604Z 
+2026-10-27T16:39:56.3128987Z     def decode(self, input, final=False):
+2026-10-27T16:39:56.3129653Z >       return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+2026-10-27T16:39:56.3130364Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T16:39:56.3131273Z E       UnicodeDecodeError: 'charmap' codec can't decode byte 0x8f in position 3893: character maps to <undefined>
+2026-10-27T16:39:56.3132029Z 
+2026-10-27T16:39:56.3132412Z C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\encodings\cp1252.py:23: UnicodeDecodeError
+2026-10-27T16:39:56.3133285Z __ test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests ___
+2026-10-27T16:39:56.3133775Z 
+2026-10-27T16:39:56.3134371Z tmp_path = WindowsPath('C:/Users/runneradmin/AppData/Local/Temp/pytest-of-runneradmin/pytest-0/test_real_source_smoke_mode_is0')
+2026-10-27T16:39:56.3135151Z 
+2026-10-27T16:39:56.3135548Z     def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp_path):
+2026-10-27T16:39:56.3136214Z         import os
+2026-10-27T16:39:56.3136878Z         import subprocess
+2026-10-27T16:39:56.3137282Z         from pathlib import Path
+2026-10-27T16:39:56.3137658Z     
+2026-10-27T16:39:56.3138108Z         launcher = Path(__file__).resolve().parents[1] / "scripts/run_game.py"
+2026-10-27T16:39:56.3138737Z         report = tmp_path / "report.json"
+2026-10-27T16:39:56.3139395Z         environment = os.environ.copy()
+2026-10-27T16:39:56.3139986Z         environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "untouched-real-data")
+2026-10-27T16:39:56.3140602Z         result = subprocess.run(
+2026-10-27T16:39:56.3141171Z             [sys.executable, str(launcher), "--smoke-test", "--report", str(report)],
+2026-10-27T16:39:56.3141773Z             cwd=tmp_path,
+2026-10-27T16:39:56.3142140Z             env=environment,
+2026-10-27T16:39:56.3142526Z             capture_output=True,
+2026-10-27T16:39:56.3142906Z             timeout=30,
+2026-10-27T16:39:56.3143288Z         )
+2026-10-27T16:39:56.3143662Z >       assert result.returncode == 0, result.stderr
+2026-10-27T16:39:56.3144182Z E       AssertionError: b''
+2026-10-27T16:39:56.3144555Z E       assert 1 == 0
+2026-10-27T16:39:56.3146005Z E        +  where 1 = CompletedProcess(args=['D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Scripts\\python.exe', 'D:\\a\\DND-NCFU\\DND-NCFU\\scripts\\r...\pytest-of-runneradmin\\pytest-0\\test_real_source_smoke_mode_is0\\report.json'], returncode=1, stdout=b'', stderr=b'').returncode
+2026-10-27T16:39:56.3147622Z 
+2026-10-27T16:39:56.3147996Z tests\test_desktop_release.py:297: AssertionError
+2026-10-27T16:39:56.3148602Z =========================== short test summary info ===========================
+2026-10-27T16:39:56.3149452Z SKIPPED [1] tests\test_catalog_campaign.py:146: Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay
+2026-10-27T16:39:56.3151198Z FAILED tests/test_campaign_skills.py::test_skill_campaign_json_sqlite_and_archive_roundtrip - UnicodeDecodeError: 'charmap' codec can't decode byte 0x8f in position 3893: character maps to <undefined>
+2026-10-27T16:39:56.3152991Z FAILED tests/test_desktop_release.py::test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests - AssertionError: b''
+2026-10-27T16:39:56.3153893Z assert 1 == 0
+2026-10-27T16:39:56.3155334Z  +  where 1 = CompletedProcess(args=['D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Scripts\\python.exe', 'D:\\a\\DND-NCFU\\DND-NCFU\\scripts\\r...\pytest-of-runneradmin\\pytest-0\\test_real_source_smoke_mode_is0\\report.json'], returncode=1, stdout=b'', stderr=b'').returncode
+2026-10-27T16:39:56.3157300Z ============ 2 failed, 5267 passed, 1 skipped in 921.75s (0:15:21) ============
+2026-10-27T16:40:04.7776162Z Проверки не прошли. Сборка остановлена.
+2026-10-27T16:40:04.7776931Z At D:\a\DND-NCFU\DND-NCFU\scripts\build_windows.ps1:55 char:28
+2026-10-27T16:40:04.7777837Z + ... STEXITCODE -ne 0) { throw 'Проверки не прошли. Сборка остановлена.' }
+2026-10-27T16:40:04.7778642Z +                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-27T16:40:04.7779359Z     + CategoryInfo          : OperationStopped: (Проверки не прошли. Сборка остановлена.:String) [], RuntimeException
+2026-10-27T16:40:04.7780115Z     + FullyQualifiedErrorId : Проверки не прошли. Сборка остановлена.
+2026-10-27T16:40:04.7780864Z  
+2026-10-27T16:40:04.8205811Z ##[error]Process completed with exit code 1.
+2026-10-27T16:40:04.8446779Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-27T16:40:04.8447333Z with:
+2026-10-27T16:40:04.8447599Z   name: full-system-native-windows
+2026-10-27T16:40:04.8448366Z   path: dist/DND-NCFU-Setup.exe
+dist/DND-NCFU-Windows-x64-v*.zip
+dist/DND-NCFU-Windows-x64-v*.zip.sha256
+build/windows-*/checks/*.json
+build/setup-probe/*.json
+
+2026-10-27T16:40:04.8449096Z   if-no-files-found: warn
+2026-10-27T16:40:04.8449367Z   retention-days: 14
+2026-10-27T16:40:04.8449655Z   compression-level: 6
+2026-10-27T16:40:04.8449922Z   overwrite: false
+2026-10-27T16:40:04.8450179Z   include-hidden-files: false
+2026-10-27T16:40:04.8450459Z env:
+2026-10-27T16:40:04.8450773Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:40:04.8451350Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T16:40:04.8451860Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:40:04.8452420Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:40:04.8452877Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T16:40:04.8453250Z ##[endgroup]
+2026-10-27T16:40:05.0373681Z (node:7152) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-27T16:40:05.0374777Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-27T16:40:05.0427544Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-27T16:40:05.0431233Z The least common ancestor is D:\a\DND-NCFU\DND-NCFU. This will be the root directory of the artifact
+2026-10-27T16:40:05.0445980Z ##[warning]No files were found with the provided path: dist/DND-NCFU-Setup.exe
+dist/DND-NCFU-Windows-x64-v*.zip
+dist/DND-NCFU-Windows-x64-v*.zip.sha256
+build/windows-*/checks/*.json
+build/setup-probe/*.json. No artifacts will be uploaded.
+2026-10-27T16:40:05.0795747Z Post job cleanup.
+2026-10-27T16:40:05.2956678Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-27T16:40:05.3428671Z git version 2.56.0.windows.2
+2026-10-27T16:40:05.3513468Z Temporarily overriding HOME='D:\a\_temp\b12a4987-e95c-4dd4-9794-2c12d6267161' before making global git config changes
+2026-10-27T16:40:05.3515231Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T16:40:05.3528435Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\DND-NCFU\DND-NCFU
+2026-10-27T16:40:05.4084077Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T16:40:05.4472002Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-27T16:40:06.0377444Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T16:40:06.0701125Z http.https://github.com/.extraheader
+2026-10-27T16:40:06.0745471Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-27T16:40:06.1148461Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-27T16:40:06.6893061Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T16:40:06.7257190Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-27T16:40:07.2939507Z Cleaning up orphan processes
+2026-10-27T16:40:07.3652178Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

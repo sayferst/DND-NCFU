@@ -19,7 +19,20 @@ def launch():
             record_error(error)
             report = sys.argv[sys.argv.index("--report") + 1] if "--report" in sys.argv else None
             try:
-                write_report(report, {"ok": False, "error_type": type(error).__name__})
+                import traceback
+                from pathlib import Path
+
+                write_report(
+                    report,
+                    {
+                        "ok": False,
+                        "error_type": type(error).__name__,
+                        "frames": [
+                            {"module": Path(f.filename).name, "line": f.lineno, "function": f.name}
+                            for f in traceback.extract_tb(error.__traceback__)[-30:]
+                        ],
+                    },
+                )
             except (OSError, ValueError):
                 pass
         else:

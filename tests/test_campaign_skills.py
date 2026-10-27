@@ -80,7 +80,10 @@ def test_skill_campaign_json_sqlite_and_archive_roundtrip(tmp_path):
     session.submit_challenge("пытаюсь взобраться на стену")
     slots = SaveSlots(tmp_path / "saves")
     slots.save(1, session)
-    assert json.loads((tmp_path / "saves/slot-1.json").read_text())["schema_version"] == 23
+    assert (
+        json.loads((tmp_path / "saves/slot-1.json").read_text(encoding="utf-8"))["schema_version"]
+        == 23
+    )
     assert slots.load(1).to_dict() == session.to_dict()
     export_session(session, tmp_path / "world.sqlite3")
     assert restore_session(tmp_path / "world.sqlite3").to_dict() == session.to_dict()
