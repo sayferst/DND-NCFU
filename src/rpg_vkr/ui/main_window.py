@@ -146,6 +146,7 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             "Старый свободный редактор доступен только учебной песочнице."
         )
         note.setWordWrap(True)
+        self.hero_rules_note = note
         profile_layout.addWidget(note)
         profile_layout.addStretch()
         self.progress_label = QLabel()
@@ -374,6 +375,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             + ("герой" if self._session.progress.enabled else "песочница")
         )
         self.progress_label.setText(describe_progress(self._session.progress))
+        unified = getattr(self._session, "is_unified", False)
+        self.progress_label.setVisible(not unified)
+        self.hero_rules_note.setVisible(not unified)
+        self.edit_character_button.setVisible(not unified)
         if getattr(self._session, "is_unified", False):
             self.progress_label.setText(self.unified_info.text())
         elif self._session.gameplay:

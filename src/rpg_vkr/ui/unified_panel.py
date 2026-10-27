@@ -31,6 +31,7 @@ def install(window, layout):
         value = QPushButton(label)
         form.addRow(value)
         value.clicked.connect(lambda: run(window, command, arguments()))
+        return value
 
     button("Экипировать", "equip", lambda: {"item": window.unified_items.currentData()})
     button(
@@ -49,8 +50,9 @@ def install(window, layout):
     button("Атаковать", "attack", lambda: {"target": window.unified_target.currentData()})
     button("Перевести дух", "recover", dict)
     window.unified_spell = QComboBox()
-    form.addRow("Заклинание", window.unified_spell)
-    button(
+    window.unified_spell_label = QLabel("Заклинание")
+    form.addRow(window.unified_spell_label, window.unified_spell)
+    window.unified_cast_button = button(
         "Применить заклинание",
         "cast",
         lambda: {
@@ -194,6 +196,11 @@ def refresh(window):
     window.unified_talent.clear()
     expanded = state.get("content_revision") == 2
     window.catalog_actions.setVisible(expanded)
+    has_magic = bool(state["spells"])
+    for widget in (window.unified_spell, window.unified_spell_label, window.unified_cast_button):
+        widget.setVisible(has_magic)
+    if expanded and not state["mp_cap"]:
+        window.unified_learn_kind.setCurrentIndex(window.unified_learn_kind.findData("recipe"))
     if expanded:
         from rpg_vkr.domain import game_catalog as catalog
 
