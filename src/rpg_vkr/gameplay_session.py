@@ -49,6 +49,10 @@ def enable(session, identity, *, revision=1):
 
 
 def context(session):
+    if getattr(session, "is_unified", False):
+        from rpg_vkr.unified_session import context as unified_context
+
+        return unified_context(session)
     value = {
         "world": asdict(session.world),
         "character": asdict(session.character),

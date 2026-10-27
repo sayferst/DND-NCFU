@@ -33,7 +33,7 @@ from rpg_vkr.domain.gameplay_v2 import TALENTS
 
 
 def install(window, layout):
-    group = QGroupBox("Правила приключения · v3")
+    group = QGroupBox("Герой и действия")
     form = QFormLayout(group)
     window.gameplay_group = group
     window.gameplay_status = QLabel()
@@ -45,7 +45,7 @@ def install(window, layout):
     window.gameplay_info = QPlainTextEdit()
     window.gameplay_info.setReadOnly(True)
     window.gameplay_info.setMaximumHeight(180)
-    window.gameplay_info.setAccessibleName("Состояние новых игровых правил")
+    window.gameplay_info.setAccessibleName("Состояние героя")
     form.addRow(window.gameplay_info)
 
     def page(title):
@@ -257,6 +257,9 @@ def refresh(window):
     if not hasattr(window, "gameplay_group"):
         return
     session = window._session
+    if getattr(session, "is_unified", False):
+        window.gameplay_group.hide()
+        return
     state = session.gameplay
     window.gameplay_group.setVisible(state is not None)
     if state is None:

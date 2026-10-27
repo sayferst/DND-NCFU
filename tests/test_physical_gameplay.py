@@ -400,8 +400,8 @@ def test_creation_preview_matches_actual_resource_limits(qt_app):
     from rpg_vkr.ui.creation_dialog import CreationDialog
 
     dialog = CreationDialog()
-    dialog.use_gameplay.setChecked(True)
-    dialog.profile_choice.setCurrentIndex(dialog.profile_choice.findData("mage"))
+    dialog.class_choice.setCurrentIndex(dialog.class_choice.findData("mage"))
+    dialog.apply_recommended()
     dialog.initial_talent.setCurrentIndex(dialog.initial_talent.findData("focus"))
     session = dialog.create_session()
     assert f"HP {session.world.max_hp}" in dialog.creation_summary.text()

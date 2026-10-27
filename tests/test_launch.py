@@ -120,7 +120,7 @@ def fill_creator():
         assert isinstance(dialog, CreationDialog)
         dialog.name_input.setText('Мира')
         dialog.class_choice.setCurrentIndex(0)
-        dialog.generate_world.setChecked(False)  # Preserve the original progression scenario.
+        dialog.creation_steps.setCurrentIndex(3)
         dialog.apply_recommended()
         dialog.accept()
     except Exception:
@@ -144,30 +144,16 @@ def interact():
             assert window._session.character.name == 'Мира'
             assert window._session.progress.enabled
             assert not window.edit_character_button.isEnabled()
-            window.cart_button.click()
-            window.study_button.click()
-            window._run_command('идти на дорогу')
-            window.quick_buttons['исследовать дорогу'].click()
-            assert window._session.progress.level == 2
-            assert len(window._session.progress.events) == 3
-            assert window._session.world.max_hp == 14
+            window._session.perform_gameplay('wait', {'minutes': 10}, 'first')
             window.save_slot(1)
         else:
             window.load_slot(1)
             assert window._session.character.name == 'Мира'
-            assert window._session.progress.level == 2
-            assert window._session.world.max_hp == 14
-            assert len(window._session.progress.events) == 3
-            assert 'Мира' in window.resource_label.text()
-            assert 'уровень 2' in window.progress_label.text()
-            assert 'Учебный меч' in window.inventory_label.text()
-            assert 'Развитие:' in window.journal.toPlainText()
-            assert not window.study_button.isEnabled()
-            xp = window._session.progress.xp
-            window._run_command('изучить учебник')
-            assert window._session.progress.xp == xp
-            window._run_command('бросить d20')
-            assert window._session.turns[-1].roll.index == 3
+            assert window._session.schema_version == 30
+            assert window._session.gameplay['minute'] == 490
+            assert window._session.d20_progress is None
+            assert 'Меч' in window.inventory_label.text()
+            window._session.perform_gameplay('wait', {'minutes': 1}, 'second')
             window.save_slot(2)
         print('Created hero restart verified', flush=True)
         window.close()

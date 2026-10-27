@@ -252,3 +252,31 @@ def render_context(context):
         lines.append("Нужно ответить: " + task)
     lines.append("Объём: " + context["writing_profile"]["length"] + ". Простые точные фразы.")
     return "\n".join(lines)
+
+
+def scene_profile(model, text, base):
+    """Content-sensitive ceilings. Ranges guide length, never require filler."""
+    import re
+
+    normal = text.casefold()
+    result = dict(base)
+    if re.search(r"сколько стоит|какова цена|почем|почём", normal):
+        result["length"] = "1–3 предложения: ответь о цене; вопрос не совершает покупку"
+    elif re.search(r"начало кампании|вступление|пролог|начало приключения", normal):
+        result.update(
+            length="развёрнутое вступление обычно250–500слов, только публичные события",
+            num_predict=4500,
+            repair_predict=4500,
+        )
+    elif re.search(r"крупное событие|осада|важный разговор", normal):
+        result.update(
+            length="значимую сцену раскрой полно, обычно130–300слов, без повторов",
+            num_predict=4500,
+            repair_predict=4500,
+        )
+    elif re.search(r"осматри|осмотр", normal):
+        result["length"] = (
+            "осмотр по существу; обычно60–150слов, короче если деталей мало; "
+            "без новой панорамы мира"
+        )
+    return result

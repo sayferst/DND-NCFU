@@ -106,9 +106,8 @@ def test_new_legend_creates_and_persists_its_world_before_starting_chat(
     ) as (url, records):
         configure(modern, monkeypatch, url)
         modern.new_character()
-        assert not records and not modern.ollama.busy
+        assert modern.ollama.busy
         assert modern.screen_stack.currentWidget() is modern.world_creation_screen
-        modern.world_creation_screen.create_button.click()
         wait_for(qt_app, lambda: not modern.ollama.busy)
         assert modern._session.generated_world
         assert modern._session.character.name == "Асуна"

@@ -1,0 +1,30 @@
+............F......                                                      [100%]
+=================================== FAILURES ===================================
+____ test_real_world_team_attack_and_magic_have_one_shared_turn_and_replay _____
+tests/test_unified_rules.py:82: in test_real_world_team_attack_and_magic_have_one_shared_turn_and_replay
+    turn = s.perform_gameplay(command, args, "one-round")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/unified_session.py:182: in called
+    result = method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/storage/migration.py:100: in called
+    return method(session, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/application.py:211: in perform_gameplay
+    return perform(self, command, args, request_id, action=action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/gameplay_session.py:115: in perform
+    memory = session.memory.append(
+src/rpg_vkr/domain/memory.py:136: in append
+    roll_indices(turn),
+    ^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/memory.py:107: in roll_indices
+    return tuple(r["index"] for r in turn.gameplay["result"]["rolls"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/memory.py:107: in <genexpr>
+    return tuple(r["index"] for r in turn.gameplay["result"]["rolls"])
+                 ^^^^^^^^^^
+E   KeyError: 'index'
+=========================== short test summary info ============================
+FAILED tests/test_unified_rules.py::test_real_world_team_attack_and_magic_have_one_shared_turn_and_replay
+1 failed, 18 passed in 0.99s

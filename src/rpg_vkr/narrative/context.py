@@ -170,7 +170,20 @@ def build_frame(session):
             or "нет зарегистрированных предметов"
         )
         scene += "\nПри вас: " + state.inventory() + "."
-    if session.gameplay:
+    if getattr(session, "is_unified", False):
+        from rpg_vkr.domain.unified import CLASSES, level
+
+        data = session.gameplay
+        hero = (
+            f"{session.character.name}, {CLASSES[data['identity']['class_id']][0]}, "
+            f"уровень {level(data['xp'])}, опыт {data['xp']}"
+        )
+        scene += (
+            f"\nHP {world.hp}/{world.max_hp}; MP {data['mp']}/{data['mp_cap']}; "
+            f"ST {data['st']}/{data['st_cap']}; медных {data['copper']}."
+        )
+        scene += "\nПодтверждённая магия: " + ", ".join(data["spells"])
+    elif session.gameplay:
         from rpg_vkr.domain.gameplay import SPELLS
 
         if session.schema_version >= 28:

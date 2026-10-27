@@ -47,7 +47,7 @@ def receipt(session):
                 "status": "completed" if succeeded else "failed",
             }
         )
-    return {
+    value = {
         "id": id,
         "turn": index,
         "action": turn.action,
@@ -67,3 +67,19 @@ def receipt(session):
         "committed": True,
         "replay_allowed": False,
     }
+
+    if getattr(session, "is_unified", False) and turn.gameplay:
+        record = turn.gameplay
+        old = record["context"].get("unified_before", {})
+        after = record["result"]["state"]
+        for key in ("xp", "mp", "st", "copper"):
+            if old.get(key) != after[key]:
+                value["resource_changes"].append(
+                    {
+                        "field": "progress.xp" if key == "xp" else "gameplay." + key,
+                        "before": old.get(key),
+                        "after": after[key],
+                    }
+                )
+        value["dice"] = record["result"]["rolls"]
+    return value

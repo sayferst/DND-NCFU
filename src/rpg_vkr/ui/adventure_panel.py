@@ -268,12 +268,24 @@ def retry_world(window):
         except (ValueError, OSError, sqlite3.Error) as error:
             window.world_start_status.setText("Новая кампания не начата: " + str(error))
             return
-        window._session = Session.create_hero(
-            session.progress.initial,
-            session.progress.class_id,
-            description=session.campaign.raw_player_description,
-            world_brief=session.campaign.world_brief,
-        )
+        if getattr(session, "is_unified", False):
+            from rpg_vkr.unified_session import UnifiedSession
+
+            identity = session.gameplay["identity"]
+            window._session = UnifiedSession.create(
+                session.character,
+                identity["class_id"],
+                identity["talent"],
+                description=session.campaign.raw_player_description,
+                world_brief=session.campaign.world_brief,
+            )
+        else:
+            window._session = Session.create_hero(
+                session.progress.initial,
+                session.progress.class_id,
+                description=session.campaign.raw_player_description,
+                world_brief=session.campaign.world_brief,
+            )
         window._current_slot = None
         window._dirty = True
         window._refresh_character()
@@ -340,7 +352,9 @@ def request_world(window, error=""):
             window.local_model.currentText(),
             {
                 "hero": session.character.name,
-                "class": session.progress.class_id,
+                "class": session.gameplay["identity"]["class_id"]
+                if getattr(session, "is_unified", False)
+                else session.progress.class_id,
                 "hero_description": session.campaign.raw_player_description,
                 "world_brief": session.campaign.world_brief,
                 "variation": session.campaign.world_id,

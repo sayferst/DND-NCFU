@@ -145,6 +145,7 @@ def world_creation_probe(app, root, seed):
             raise ValueError("Hero creation dialog missing")
         dialog.name_input.setText("Проверка нового мира")
         dialog.world_brief_input.setPlainText(brief)
+        dialog.step(3)
         dialog.accept()
 
     def wait():
@@ -174,9 +175,8 @@ def world_creation_probe(app, root, seed):
                 raise ValueError("Uncreated world accepted a chat action")
             QTimer.singleShot(0, create)
             window.new_character()
-            if calls or window.world_creation_screen.state != "ready":
-                raise ValueError("Hero form started world generation without the central button")
-            window.world_creation_screen.create_button.click()
+            if window.world_creation_screen.state != "busy":
+                raise ValueError("Confirmed hero did not start world generation")
             window.action_input.setText("начать")
             window.submit_action()
             wait()

@@ -47,13 +47,18 @@ def install(window, layout):
     from rpg_vkr.ui.gameplay_panel import install as install_gameplay
 
     install_gameplay(window, layout)
+    from rpg_vkr.ui.unified_panel import install
+
+    install(window, layout)
 
 
 def refresh(window):
     if not hasattr(window, "skills_group"):
         return
     progress = window._session.d20_progress
-    window.skills_group.setVisible(progress is not None)
+    window.skills_group.setVisible(
+        progress is not None and getattr(window, "_legacy_controls", False)
+    )
     if progress is None:
         return
     stale = window._skill_draft_base is not None and (

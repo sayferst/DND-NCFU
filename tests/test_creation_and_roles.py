@@ -17,13 +17,14 @@ def test_creation_dialog_enforces_budget_and_name(qt_app, monkeypatch):
     errors = []
     monkeypatch.setattr(QMessageBox, "warning", lambda *args: errors.append(args[2]))
     dialog.accept()
-    assert errors
+    assert dialog.error.text()
     assert dialog.result() == QDialog.DialogCode.Rejected
     dialog.scores["charisma"].setValue(11)
     assert create.isEnabled()
     dialog.name_input.setText("   ")
     assert not create.isEnabled()
     dialog.name_input.setText("  Мира  ")
+    dialog.creation_steps.setCurrentIndex(3)
     dialog.accept()
     assert dialog.result() == QDialog.DialogCode.Accepted
     assert dialog.character().name == "Мира"
@@ -33,15 +34,13 @@ def test_changing_profile_keeps_custom_distribution_until_explicit_recommendatio
     dialog = CreationDialog()
     dialog.scores["strength"].setValue(15)
     dialog.scores["charisma"].setValue(11)
-    dialog.class_choice.setCurrentIndex(2)
+    dialog.class_choice.setCurrentIndex(dialog.class_choice.findData("mage"))
     assert dialog.scores["strength"].value() == 15
-    assert "Дорожный посох" in dialog.kit_label.text()
+    assert "Магический посох" in dialog.kit_label.text()
     dialog.apply_recommended()
     assert dialog.scores["intelligence"].value() == 16
     assert dialog.scores["strength"].value() == 8
-    session = dialog.create_session()
-    assert session.progress.class_id == "scholar"
-    assert session.world.gold == 9
+    assert dialog.create_session().gameplay["identity"]["class_id"] == "mage"
 
 
 def test_hero_buttons_grow_stats_and_refresh_inventory_profile_and_journal(window, monkeypatch):
@@ -52,7 +51,15 @@ def test_hero_buttons_grow_stats_and_refresh_inventory_profile_and_journal(windo
         return QDialog.DialogCode.Accepted
 
     monkeypatch.setattr(CreationDialog, "exec", create)
-    window.new_character()
+    from rpg_vkr.domain.character import ABILITY_NAMES, Character
+    from rpg_vkr.domain.progression import ARCHETYPES
+
+    character = Character(
+        name="Мира", **dict(zip(ABILITY_NAMES, ARCHETYPES["scholar"].scores, strict=True))
+    )
+    window._session = Session.create_hero(character, "scholar")
+    window._refresh_character()
+    window._render_journal()
     assert not window.edit_character_button.isEnabled()
     assert "Книжник" in window.progress_label.text()
     assert "Дорожный посох" in window.inventory_label.text()

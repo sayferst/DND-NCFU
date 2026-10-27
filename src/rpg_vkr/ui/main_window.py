@@ -353,6 +353,12 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         from rpg_vkr.ui.gameplay_panel import refresh as refresh_gameplay
 
         refresh_gameplay(self)
+        from rpg_vkr.ui.unified_panel import refresh
+
+        refresh(self)
+        for name in ("study_button", "cart_button", "development_log"):
+            if hasattr(self, name):
+                getattr(self, name).setVisible(not getattr(self._session, "is_unified", False))
         self._refresh_workspace()
         self._refresh_episode_panels()
         character = self._session.effective_character
@@ -368,7 +374,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             + ("герой" if self._session.progress.enabled else "песочница")
         )
         self.progress_label.setText(describe_progress(self._session.progress))
-        if self._session.gameplay:
+        if getattr(self._session, "is_unified", False):
+            self.progress_label.setText(self.unified_info.text())
+        elif self._session.gameplay:
             progress = self._session.d20_progress
             self.progress_label.setText(
                 f"Приключение D20 · уровень {progress.level} · XP {progress.xp}"
@@ -526,7 +534,10 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.action_input.setFocus(Qt.FocusReason.OtherFocusReason)
         if not self._legacy_controls:
             self.show_world_creation()
-        elif dialog.generate_world.isChecked():
+            from rpg_vkr.ui.adventure_panel import begin_world
+
+            begin_world(self)
+        elif self.enable_local_narrator.isChecked():
             from rpg_vkr.ui.adventure_panel import begin_world
 
             begin_world(self)
@@ -768,8 +779,6 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
             self.notifications.fade.stop()
         if hasattr(self, "developer_console") and hasattr(self.developer_console, "gateway_client"):
             self.developer_console.gateway_client.cancel()
-        if hasattr(self, "developer_console"):
-            self.developer_console.learning.shutdown()
         self._closing = True
         self.routerai_catalog.cancel()
         self.routerai_key_client.cancel()

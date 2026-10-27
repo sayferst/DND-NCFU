@@ -1,0 +1,10 @@
+{
+  "platform": "Linux",
+  "frozen": true,
+  "knowledge_included": true,
+  "knowledge_sha256": "a3308f564e75bc01b62beb90e9a9997a0c6b8d0990412ed55526881033c49c9d",
+  "file_count": 305,
+  "total_bytes": 272891039,
+  "forbidden_ml_or_raw_paths": [],
+  "windows_setup_verified": false
+}

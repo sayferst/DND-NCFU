@@ -47,8 +47,8 @@ def test_form_waits_for_central_button_then_loading_opens_story(staging, qt_app,
         assert staging.screen_stack.currentWidget() is screen and screen.isVisible()
         assert not staging.game_body.isVisible()
         assert screen.create_button.text() == "Создать новый мир"
-        assert screen.create_button.isVisible() and screen.progress.isHidden()
-        assert not records and not staging.ollama.busy
+        assert not screen.create_button.isVisible() and not screen.progress.isHidden()
+        assert staging.ollama.busy
         before = deepcopy(staging._session.to_dict()), staging._session.dice.checkpoint()
         screen.create_button.click()
         assert screen.state == "busy"
@@ -149,8 +149,8 @@ def test_menu_and_continue_preserve_uncreated_hero_without_request(staging, monk
         assert "Ворота деревни" not in staging.home_summary.text()
         staging.resume_button.click()
         assert staging.screen_stack.currentWidget() is staging.world_creation_screen
-        assert staging.world_creation_screen.state == "ready"
-        assert staging._session.to_dict() == saved and not records
+        assert staging.world_creation_screen.state in {"busy", "error"}
+        assert staging._session.to_dict() == saved
 
 
 def test_old_success_transition_cannot_open_a_new_heros_uncreated_world(
@@ -168,8 +168,8 @@ def test_old_success_transition_cannot_open_a_new_heros_uncreated_world(
         assert staging._session is not old and not staging._session.generated_world
         QTest.qWait(800)
         assert staging.screen_stack.currentWidget() is staging.world_creation_screen
-        assert staging.world_creation_screen.state == "ready"
-        assert len([r for r in records if r["method"] == "POST"]) == 1
+        assert staging.world_creation_screen.state in {"busy", "success"}
+        assert len([r for r in records if r["method"] == "POST"]) == 2
 
 
 def test_historical_journal_stays_readable_without_starting_a_new_world(staging):

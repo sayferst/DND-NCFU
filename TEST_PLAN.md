@@ -1,5 +1,25 @@
 # План проверок
 
+## Актуально: единый новый поток, schema30
+
+Матрица20критериев,реальные команды/числа/ограничения:
+[acceptance_report.md](docs/unified/acceptance_report.md).
+Baseline1851tests; новые проверки — test_unified_rules/creation,
+test_embedded_knowledge,training_pipeline,routerai_narrator_fallback,
+scene_length_and_receipts. Исторические fixtures не менялись.
+
+scripts/check.py проверяет весь набор,pip,Ruff. Обязательны фактические Session
+команды,JSON/SQLite/replay/RNG,6классов,4страницы/автомир,расход/продажа
+того же source без повторной выдачи,отказ атомарен,нет libraryUI.
+Архив/rights/privacy/split и blocker тренировки проверяются без модели/сети.
+Loopback fallback не повторяет игровые операции. Полная nativeWindows/DPI/
+Setup,реальныйGPU и holdout художественного качества остаются непроведёнными.
+Нельзя переносить Linux/mock/прошлуюWindows-приёмку в эти результаты.
+
+Фактический итог27.10.2026:full-check-09 —1882passed/288.86с,exit0;
+pip/Ruffcheck/format327файлов успешны. ФинальныйLinuxbundle:build03,
+self-check03/smoke04ok=true,external_model_requests=0.
+
 ## 0.3.0 — интерфейс игрока и подготовка закрытого тестирования, 21.10.2026
 
 Видимые вкладки с плавным переходом заменяют выпадающий «Раздел». Отдельная

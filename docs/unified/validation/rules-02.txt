@@ -1,0 +1,704 @@
+FFFFF.......                                                             [100%]
+=================================== FAILURES ===================================
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[warrior] _
+
+key = 'warrior'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-39/test_one_ruleset_all_classes_r0')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        assert s.gameplay['minute']==490
+        r=Session.from_dict(s.to_dict(),version=30)
+        assert r.to_dict()==s.to_dict() and r.dice.checkpoint()==s.dice.checkpoint()
+        slots=SaveSlots(tmp_path/'saves');slots.save(1,s)
+        assert slots.load(1).to_dict()==s.to_dict()
+>       repo=CampaignRepository(tmp_path/'campaigns.sqlite3');repo.sync(s)
+                                                              ^^^^^^^^^^^^
+
+tests/test_unified_rules.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/campaigns.py:153: in sync
+    types, entities = live_records(session)
+                      ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7f57d5b22270>
+
+    def live_records(session):
+        """Legacy bindings are read from their sole current state, never a second wallet."""
+        catalog = session.catalog or seed_catalog()
+        resource_world = session.interactive_world and session.interactive_world.version in {
+            "interactive-world-3",
+            "interactive-world-4",
+        }
+        types = {d.id: d.to_dict() for d in catalog.definitions}
+        records = {}
+    
+        def put(id, type_id, parent, owner, quantity, state=None, binding=""):
+            records[id] = {
+                "id": id,
+                "definition_id": type_id,
+                "parent_id": parent,
+                "owner_id": owner,
+                "quantity": quantity,
+                "state": state or {},
+                "binding": binding,
+            }
+    
+        put(
+            "legacy_bandages",
+            "type_bandage",
+            "hero",
+            "hero",
+            session.world.bandages,
+            binding="world.bandages",
+        )
+        types["type_currency"] = Definition(
+            "type_currency",
+            "Золото",
+            "item",
+            ("miscellaneous",),
+            {"currency": "gold", "copper_units_per_coin": 100, "mass_g": 5, "volume_ml": 1},
+            origin="legacy-adapter",
+        ).to_dict()
+        put("legacy_gold", "type_currency", "hero", "hero", session.world.gold, binding="world.gold")
+        put(
+            "legacy_quest_cargo",
+            "type_quest_cargo",
+            "hero",
+            "hero",
+            session.world.basket,
+            {"quest": session.world.quest},
+            binding="world.basket",
+        )
+        if session.progress.enabled and not session.gameplay:
+            type_id = {
+                "fighter": "type_training_sword",
+                "scout": "type_knife",
+                "scholar": "type_staff",
+            }[session.progress.class_id]
+            put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
+            put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
+        if session.gameplay:
+            from rpg_vkr.domain.d20_combat import ARMOUR, WEAPONS
+            from rpg_vkr.domain.gameplay import ITEM_NAMES, PRICES
+    
+            state = session.gameplay
+            types["type_copper"] = Definition(
+                "type_copper",
+                "Медные монеты",
+                "item",
+                ("miscellaneous",),
+                {"currency": "copper", "copper_units_per_coin": 1},
+                origin="project-homebrew",
+            ).to_dict()
+            put(
+                "gameplay_copper",
+                "type_copper",
+                "hero",
+                "hero",
+                state["copper"],
+                binding="gameplay.copper",
+            )
+            if session.schema_version >= 28:
+                from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+                from rpg_vkr.domain.content_v5 import PRICES
+            for value in state["items"]:
+                kind = value["kind"]
+                type_id = "v3_type_" + kind
+                if "source" in value:
+                    type_id = "v3_source_" + value["id"]
+                category = (
+                    "weapons"
+                    if kind in WEAPONS
+                    else "armour"
+                    if kind in ARMOUR or kind == "shield"
+                    else "materials"
+                    if kind in {"iron", "cloth", "herb"}
+                    else "miscellaneous"
+                )
+                props = {"durability": 20, "rules": state["version"]}
+                if kind in WEAPONS:
+                    props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
+                types[type_id] = Definition(
+                    type_id,
+                    value.get("name") or ITEM_NAMES[kind],
+                    "item",
+                    (category,),
+                    props,
+>                   price_cp=value.get("price_cp", PRICES[kind]),
+                                                   ^^^^^^^^^^^^
+                    origin="project-homebrew",
+                ).to_dict()
+E               KeyError: 'bandage'
+
+src/rpg_vkr/storage/catalog.py:116: KeyError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[archer] _
+
+key = 'archer'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-39/test_one_ruleset_all_classes_r1')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        assert s.gameplay['minute']==490
+        r=Session.from_dict(s.to_dict(),version=30)
+        assert r.to_dict()==s.to_dict() and r.dice.checkpoint()==s.dice.checkpoint()
+        slots=SaveSlots(tmp_path/'saves');slots.save(1,s)
+        assert slots.load(1).to_dict()==s.to_dict()
+>       repo=CampaignRepository(tmp_path/'campaigns.sqlite3');repo.sync(s)
+                                                              ^^^^^^^^^^^^
+
+tests/test_unified_rules.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/campaigns.py:153: in sync
+    types, entities = live_records(session)
+                      ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7f57d574f680>
+
+    def live_records(session):
+        """Legacy bindings are read from their sole current state, never a second wallet."""
+        catalog = session.catalog or seed_catalog()
+        resource_world = session.interactive_world and session.interactive_world.version in {
+            "interactive-world-3",
+            "interactive-world-4",
+        }
+        types = {d.id: d.to_dict() for d in catalog.definitions}
+        records = {}
+    
+        def put(id, type_id, parent, owner, quantity, state=None, binding=""):
+            records[id] = {
+                "id": id,
+                "definition_id": type_id,
+                "parent_id": parent,
+                "owner_id": owner,
+                "quantity": quantity,
+                "state": state or {},
+                "binding": binding,
+            }
+    
+        put(
+            "legacy_bandages",
+            "type_bandage",
+            "hero",
+            "hero",
+            session.world.bandages,
+            binding="world.bandages",
+        )
+        types["type_currency"] = Definition(
+            "type_currency",
+            "Золото",
+            "item",
+            ("miscellaneous",),
+            {"currency": "gold", "copper_units_per_coin": 100, "mass_g": 5, "volume_ml": 1},
+            origin="legacy-adapter",
+        ).to_dict()
+        put("legacy_gold", "type_currency", "hero", "hero", session.world.gold, binding="world.gold")
+        put(
+            "legacy_quest_cargo",
+            "type_quest_cargo",
+            "hero",
+            "hero",
+            session.world.basket,
+            {"quest": session.world.quest},
+            binding="world.basket",
+        )
+        if session.progress.enabled and not session.gameplay:
+            type_id = {
+                "fighter": "type_training_sword",
+                "scout": "type_knife",
+                "scholar": "type_staff",
+            }[session.progress.class_id]
+            put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
+            put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
+        if session.gameplay:
+            from rpg_vkr.domain.d20_combat import ARMOUR, WEAPONS
+            from rpg_vkr.domain.gameplay import ITEM_NAMES, PRICES
+    
+            state = session.gameplay
+            types["type_copper"] = Definition(
+                "type_copper",
+                "Медные монеты",
+                "item",
+                ("miscellaneous",),
+                {"currency": "copper", "copper_units_per_coin": 1},
+                origin="project-homebrew",
+            ).to_dict()
+            put(
+                "gameplay_copper",
+                "type_copper",
+                "hero",
+                "hero",
+                state["copper"],
+                binding="gameplay.copper",
+            )
+            if session.schema_version >= 28:
+                from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+                from rpg_vkr.domain.content_v5 import PRICES
+            for value in state["items"]:
+                kind = value["kind"]
+                type_id = "v3_type_" + kind
+                if "source" in value:
+                    type_id = "v3_source_" + value["id"]
+                category = (
+                    "weapons"
+                    if kind in WEAPONS
+                    else "armour"
+                    if kind in ARMOUR or kind == "shield"
+                    else "materials"
+                    if kind in {"iron", "cloth", "herb"}
+                    else "miscellaneous"
+                )
+                props = {"durability": 20, "rules": state["version"]}
+                if kind in WEAPONS:
+                    props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
+                types[type_id] = Definition(
+                    type_id,
+                    value.get("name") or ITEM_NAMES[kind],
+                    "item",
+                    (category,),
+                    props,
+>                   price_cp=value.get("price_cp", PRICES[kind]),
+                                                   ^^^^^^^^^^^^
+                    origin="project-homebrew",
+                ).to_dict()
+E               KeyError: 'arrow'
+
+src/rpg_vkr/storage/catalog.py:116: KeyError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[rogue] _
+
+key = 'rogue'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-39/test_one_ruleset_all_classes_r2')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        assert s.gameplay['minute']==490
+        r=Session.from_dict(s.to_dict(),version=30)
+        assert r.to_dict()==s.to_dict() and r.dice.checkpoint()==s.dice.checkpoint()
+        slots=SaveSlots(tmp_path/'saves');slots.save(1,s)
+        assert slots.load(1).to_dict()==s.to_dict()
+>       repo=CampaignRepository(tmp_path/'campaigns.sqlite3');repo.sync(s)
+                                                              ^^^^^^^^^^^^
+
+tests/test_unified_rules.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/campaigns.py:153: in sync
+    types, entities = live_records(session)
+                      ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7f57d55fe630>
+
+    def live_records(session):
+        """Legacy bindings are read from their sole current state, never a second wallet."""
+        catalog = session.catalog or seed_catalog()
+        resource_world = session.interactive_world and session.interactive_world.version in {
+            "interactive-world-3",
+            "interactive-world-4",
+        }
+        types = {d.id: d.to_dict() for d in catalog.definitions}
+        records = {}
+    
+        def put(id, type_id, parent, owner, quantity, state=None, binding=""):
+            records[id] = {
+                "id": id,
+                "definition_id": type_id,
+                "parent_id": parent,
+                "owner_id": owner,
+                "quantity": quantity,
+                "state": state or {},
+                "binding": binding,
+            }
+    
+        put(
+            "legacy_bandages",
+            "type_bandage",
+            "hero",
+            "hero",
+            session.world.bandages,
+            binding="world.bandages",
+        )
+        types["type_currency"] = Definition(
+            "type_currency",
+            "Золото",
+            "item",
+            ("miscellaneous",),
+            {"currency": "gold", "copper_units_per_coin": 100, "mass_g": 5, "volume_ml": 1},
+            origin="legacy-adapter",
+        ).to_dict()
+        put("legacy_gold", "type_currency", "hero", "hero", session.world.gold, binding="world.gold")
+        put(
+            "legacy_quest_cargo",
+            "type_quest_cargo",
+            "hero",
+            "hero",
+            session.world.basket,
+            {"quest": session.world.quest},
+            binding="world.basket",
+        )
+        if session.progress.enabled and not session.gameplay:
+            type_id = {
+                "fighter": "type_training_sword",
+                "scout": "type_knife",
+                "scholar": "type_staff",
+            }[session.progress.class_id]
+            put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
+            put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
+        if session.gameplay:
+            from rpg_vkr.domain.d20_combat import ARMOUR, WEAPONS
+            from rpg_vkr.domain.gameplay import ITEM_NAMES, PRICES
+    
+            state = session.gameplay
+            types["type_copper"] = Definition(
+                "type_copper",
+                "Медные монеты",
+                "item",
+                ("miscellaneous",),
+                {"currency": "copper", "copper_units_per_coin": 1},
+                origin="project-homebrew",
+            ).to_dict()
+            put(
+                "gameplay_copper",
+                "type_copper",
+                "hero",
+                "hero",
+                state["copper"],
+                binding="gameplay.copper",
+            )
+            if session.schema_version >= 28:
+                from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+                from rpg_vkr.domain.content_v5 import PRICES
+            for value in state["items"]:
+                kind = value["kind"]
+                type_id = "v3_type_" + kind
+                if "source" in value:
+                    type_id = "v3_source_" + value["id"]
+                category = (
+                    "weapons"
+                    if kind in WEAPONS
+                    else "armour"
+                    if kind in ARMOUR or kind == "shield"
+                    else "materials"
+                    if kind in {"iron", "cloth", "herb"}
+                    else "miscellaneous"
+                )
+                props = {"durability": 20, "rules": state["version"]}
+                if kind in WEAPONS:
+                    props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
+                types[type_id] = Definition(
+                    type_id,
+                    value.get("name") or ITEM_NAMES[kind],
+                    "item",
+                    (category,),
+                    props,
+>                   price_cp=value.get("price_cp", PRICES[kind]),
+                                                   ^^^^^^^^^^^^
+                    origin="project-homebrew",
+                ).to_dict()
+E               KeyError: 'locks'
+
+src/rpg_vkr/storage/catalog.py:116: KeyError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[mage] _
+
+key = 'mage'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-39/test_one_ruleset_all_classes_r3')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        assert s.gameplay['minute']==490
+        r=Session.from_dict(s.to_dict(),version=30)
+        assert r.to_dict()==s.to_dict() and r.dice.checkpoint()==s.dice.checkpoint()
+        slots=SaveSlots(tmp_path/'saves');slots.save(1,s)
+        assert slots.load(1).to_dict()==s.to_dict()
+>       repo=CampaignRepository(tmp_path/'campaigns.sqlite3');repo.sync(s)
+                                                              ^^^^^^^^^^^^
+
+tests/test_unified_rules.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/campaigns.py:153: in sync
+    types, entities = live_records(session)
+                      ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7f57d55fc590>
+
+    def live_records(session):
+        """Legacy bindings are read from their sole current state, never a second wallet."""
+        catalog = session.catalog or seed_catalog()
+        resource_world = session.interactive_world and session.interactive_world.version in {
+            "interactive-world-3",
+            "interactive-world-4",
+        }
+        types = {d.id: d.to_dict() for d in catalog.definitions}
+        records = {}
+    
+        def put(id, type_id, parent, owner, quantity, state=None, binding=""):
+            records[id] = {
+                "id": id,
+                "definition_id": type_id,
+                "parent_id": parent,
+                "owner_id": owner,
+                "quantity": quantity,
+                "state": state or {},
+                "binding": binding,
+            }
+    
+        put(
+            "legacy_bandages",
+            "type_bandage",
+            "hero",
+            "hero",
+            session.world.bandages,
+            binding="world.bandages",
+        )
+        types["type_currency"] = Definition(
+            "type_currency",
+            "Золото",
+            "item",
+            ("miscellaneous",),
+            {"currency": "gold", "copper_units_per_coin": 100, "mass_g": 5, "volume_ml": 1},
+            origin="legacy-adapter",
+        ).to_dict()
+        put("legacy_gold", "type_currency", "hero", "hero", session.world.gold, binding="world.gold")
+        put(
+            "legacy_quest_cargo",
+            "type_quest_cargo",
+            "hero",
+            "hero",
+            session.world.basket,
+            {"quest": session.world.quest},
+            binding="world.basket",
+        )
+        if session.progress.enabled and not session.gameplay:
+            type_id = {
+                "fighter": "type_training_sword",
+                "scout": "type_knife",
+                "scholar": "type_staff",
+            }[session.progress.class_id]
+            put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
+            put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
+        if session.gameplay:
+            from rpg_vkr.domain.d20_combat import ARMOUR, WEAPONS
+            from rpg_vkr.domain.gameplay import ITEM_NAMES, PRICES
+    
+            state = session.gameplay
+            types["type_copper"] = Definition(
+                "type_copper",
+                "Медные монеты",
+                "item",
+                ("miscellaneous",),
+                {"currency": "copper", "copper_units_per_coin": 1},
+                origin="project-homebrew",
+            ).to_dict()
+            put(
+                "gameplay_copper",
+                "type_copper",
+                "hero",
+                "hero",
+                state["copper"],
+                binding="gameplay.copper",
+            )
+            if session.schema_version >= 28:
+                from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+                from rpg_vkr.domain.content_v5 import PRICES
+            for value in state["items"]:
+                kind = value["kind"]
+                type_id = "v3_type_" + kind
+                if "source" in value:
+                    type_id = "v3_source_" + value["id"]
+                category = (
+                    "weapons"
+                    if kind in WEAPONS
+                    else "armour"
+                    if kind in ARMOUR or kind == "shield"
+                    else "materials"
+                    if kind in {"iron", "cloth", "herb"}
+                    else "miscellaneous"
+                )
+                props = {"durability": 20, "rules": state["version"]}
+                if kind in WEAPONS:
+                    props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
+                types[type_id] = Definition(
+                    type_id,
+                    value.get("name") or ITEM_NAMES[kind],
+                    "item",
+                    (category,),
+                    props,
+>                   price_cp=value.get("price_cp", PRICES[kind]),
+                                                   ^^^^^^^^^^^^
+                    origin="project-homebrew",
+                ).to_dict()
+E               KeyError: 'scroll_light'
+
+src/rpg_vkr/storage/catalog.py:116: KeyError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[cleric] _
+
+key = 'cleric'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-39/test_one_ruleset_all_classes_r4')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        assert s.gameplay['minute']==490
+        r=Session.from_dict(s.to_dict(),version=30)
+        assert r.to_dict()==s.to_dict() and r.dice.checkpoint()==s.dice.checkpoint()
+        slots=SaveSlots(tmp_path/'saves');slots.save(1,s)
+        assert slots.load(1).to_dict()==s.to_dict()
+>       repo=CampaignRepository(tmp_path/'campaigns.sqlite3');repo.sync(s)
+                                                              ^^^^^^^^^^^^
+
+tests/test_unified_rules.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/storage/campaigns.py:153: in sync
+    types, entities = live_records(session)
+                      ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7f57d56324e0>
+
+    def live_records(session):
+        """Legacy bindings are read from their sole current state, never a second wallet."""
+        catalog = session.catalog or seed_catalog()
+        resource_world = session.interactive_world and session.interactive_world.version in {
+            "interactive-world-3",
+            "interactive-world-4",
+        }
+        types = {d.id: d.to_dict() for d in catalog.definitions}
+        records = {}
+    
+        def put(id, type_id, parent, owner, quantity, state=None, binding=""):
+            records[id] = {
+                "id": id,
+                "definition_id": type_id,
+                "parent_id": parent,
+                "owner_id": owner,
+                "quantity": quantity,
+                "state": state or {},
+                "binding": binding,
+            }
+    
+        put(
+            "legacy_bandages",
+            "type_bandage",
+            "hero",
+            "hero",
+            session.world.bandages,
+            binding="world.bandages",
+        )
+        types["type_currency"] = Definition(
+            "type_currency",
+            "Золото",
+            "item",
+            ("miscellaneous",),
+            {"currency": "gold", "copper_units_per_coin": 100, "mass_g": 5, "volume_ml": 1},
+            origin="legacy-adapter",
+        ).to_dict()
+        put("legacy_gold", "type_currency", "hero", "hero", session.world.gold, binding="world.gold")
+        put(
+            "legacy_quest_cargo",
+            "type_quest_cargo",
+            "hero",
+            "hero",
+            session.world.basket,
+            {"quest": session.world.quest},
+            binding="world.basket",
+        )
+        if session.progress.enabled and not session.gameplay:
+            type_id = {
+                "fighter": "type_training_sword",
+                "scout": "type_knife",
+                "scholar": "type_staff",
+            }[session.progress.class_id]
+            put("legacy_equipment", type_id, "hero", "hero", 1, binding="progress.equipment")
+            put("legacy_book", "type_book", "hero", "hero", 1, binding="progress.book")
+        if session.gameplay:
+            from rpg_vkr.domain.d20_combat import ARMOUR, WEAPONS
+            from rpg_vkr.domain.gameplay import ITEM_NAMES, PRICES
+    
+            state = session.gameplay
+            types["type_copper"] = Definition(
+                "type_copper",
+                "Медные монеты",
+                "item",
+                ("miscellaneous",),
+                {"currency": "copper", "copper_units_per_coin": 1},
+                origin="project-homebrew",
+            ).to_dict()
+            put(
+                "gameplay_copper",
+                "type_copper",
+                "hero",
+                "hero",
+                state["copper"],
+                binding="gameplay.copper",
+            )
+            if session.schema_version >= 28:
+                from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
+                from rpg_vkr.domain.content_v5 import PRICES
+            for value in state["items"]:
+                kind = value["kind"]
+                type_id = "v3_type_" + kind
+                if "source" in value:
+                    type_id = "v3_source_" + value["id"]
+                category = (
+                    "weapons"
+                    if kind in WEAPONS
+                    else "armour"
+                    if kind in ARMOUR or kind == "shield"
+                    else "materials"
+                    if kind in {"iron", "cloth", "herb"}
+                    else "miscellaneous"
+                )
+                props = {"durability": 20, "rules": state["version"]}
+                if kind in WEAPONS:
+                    props.update(damage_dice=WEAPONS[kind][0], hands=WEAPONS[kind][1])
+                types[type_id] = Definition(
+                    type_id,
+                    value.get("name") or ITEM_NAMES[kind],
+                    "item",
+                    (category,),
+                    props,
+>                   price_cp=value.get("price_cp", PRICES[kind]),
+                                                   ^^^^^^^^^^^^
+                    origin="project-homebrew",
+                ).to_dict()
+E               KeyError: 'symbol'
+
+src/rpg_vkr/storage/catalog.py:116: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[warrior]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[archer]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[rogue]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[mage]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[cleric]
+5 failed, 7 passed in 0.26s

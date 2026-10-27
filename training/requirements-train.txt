@@ -1,0 +1,7 @@
+# Separate Linux/WSL2 NVIDIA environment. Not a Windows client dependency.
+torch==2.6.0
+transformers==4.51.3
+peft==0.15.2
+accelerate==1.6.0
+bitsandbytes==0.45.5
+safetensors==0.5.3

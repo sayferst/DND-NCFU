@@ -15,12 +15,15 @@ profile = helper['prepare_release_profile'](Path(CONF['workpath']) / 'release-pr
 bootstrap = helper['prepare_bootstrap'](Path(CONF['workpath']) / 'tester-bootstrap.json')
 personal = [(str(bootstrap), '.')] if bootstrap else []
 resources = [(str(resource_path(relative)), str(Path(relative).parent)) for relative in REQUIRED_RESOURCES]
+knowledge = root / 'data/approved_knowledge/index.json'
+if knowledge.is_file():
+    resources.append((str(knowledge), 'data/approved_knowledge'))
 a = Analysis(
     [str(root / 'scripts/run_game.py')], pathex=[str(root / 'src')], binaries=[],
     datas=[*resources, *personal, (str(profile), '.'),
            (str(root / 'LICENSES_AND_ATTRIBUTIONS.md'), '.'), *license_data],
     hiddenimports=collect_submodules('rpg_vkr'), hookspath=[], hooksconfig={}, runtime_hooks=[],
-    excludes=['tkinter', 'pytest', 'ruff', 'PyInstaller'], noarchive=False,
+    excludes=['tkinter', 'pytest', 'ruff', 'PyInstaller', 'training', 'torch', 'transformers', 'peft', 'bitsandbytes'], noarchive=False,
 )
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='DND-NCFU', debug=False,

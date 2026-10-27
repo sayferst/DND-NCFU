@@ -174,7 +174,7 @@ def test_rag_runtime_has_bounded_hints_and_unreviewed_corpora_are_blocked():
         "хочу купить предмет",
         campaign=campaign_context(session),
     )
-    assert "technique_not_fact" in payload["messages"][1]["content"]
+    assert "example_not_fact" in payload["messages"][1]["content"]
     hints = retrieve("купить предмет монеты")
     assert 0 < len(hints) <= 3 and len(json.dumps(hints, ensure_ascii=False)) <= 1200
     assert session.to_dict() == before
@@ -189,11 +189,9 @@ def test_new_controls_and_constructor_preview_match_actual_creation(qt_app, tmp_
     from rpg_vkr.ui.main_window import MainWindow
 
     dialog = CreationDialog()
-    dialog.use_gameplay.setChecked(True)
-    dialog.species_choice.setCurrentIndex(dialog.species_choice.findData("dwarf"))
     session = dialog.create_session()
-    assert session.schema_version == 28
-    assert f"HP {session.world.max_hp}" in dialog.kit_label.text()
+    assert session.schema_version == 30
+    assert f"HP {session.world.max_hp}" in dialog.resource_preview.text()
     window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "slots"))
     assert window.production_recipe.count() >= 10
     assert window.spell_choice.count() == 26
@@ -409,7 +407,7 @@ def test_legacy_migration_button_is_available_outside_gameplay(qt_app, tmp_path)
 
     window = MainWindow(session=Session(seed=13), saves=SaveSlots(tmp_path / "saves"))
     window.open_section("Сохранения")
-    assert not window.migrate_campaign_button.isHidden()
+    assert not hasattr(window, "migrate_campaign_button")
     assert window.gameplay_group.isHidden()
     window.close()
 

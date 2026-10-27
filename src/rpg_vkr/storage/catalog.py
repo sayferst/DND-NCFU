@@ -113,7 +113,7 @@ def live_records(session):
                 "item",
                 (category,),
                 props,
-                price_cp=value.get("price_cp", PRICES[kind]),
+                price_cp=value["price_cp"] if "price_cp" in value else PRICES[kind],
                 origin="project-homebrew",
             ).to_dict()
             put(

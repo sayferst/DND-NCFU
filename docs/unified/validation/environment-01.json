@@ -1,0 +1,12 @@
+{
+  "baseline": "468f774",
+  "task_sha256": "9568f5b92075fcfd4912077150c176db2db80b859408eb99232ef603486f33b6",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "cpus": 3,
+  "ram_bytes": 10452471808,
+  "disk_free": 31576662016,
+  "nvidia_smi_available": false,
+  "nvidia_devices": 0,
+  "torch_in_game_env": false
+}

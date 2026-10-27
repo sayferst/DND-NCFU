@@ -31,10 +31,13 @@ class WorldSeed:
     catalog: Catalog
     source: str
     signature: str
+    version: int = 1
 
     def __post_init__(self):
         plain(self.title, 100)
-        plain(self.opening, 3500)
+        if type(self.version) is not int or self.version not in (1, 2):
+            raise ValueError("Неизвестный формат вступления.")
+        plain(self.opening, 7500 if self.version == 2 else 3500)
         plain(self.private_plot, 6000)
         plain(self.source, 160)
         if len(self.signature) != 64 or self.scene.version != "interactive-world-4":
@@ -55,11 +58,15 @@ class WorldSeed:
                 raise ValueError("Предмет не связан с новым миром.")
 
     def to_dict(self):
-        return asdict(self) | {"scene": self.scene.to_dict(), "catalog": self.catalog.to_dict()}
+        value = asdict(self) | {"scene": self.scene.to_dict(), "catalog": self.catalog.to_dict()}
+        if self.version == 1:
+            value.pop("version")
+        return value
 
     @classmethod
     def from_dict(cls, data):
-        if not isinstance(data, dict) or set(data) != set(cls.__dataclass_fields__):
+        required = set(cls.__dataclass_fields__) - {"version"}
+        if not isinstance(data, dict) or set(data) not in (required, required | {"version"}):
             raise ValueError("Неверный снимок рождения мира.")
         return cls(
             **(
@@ -147,6 +154,7 @@ def build_world(value, session, source):
         catalog,
         source,
         input_signature(session.campaign, session.progress.class_id),
+        version=2 if getattr(session, "is_unified", False) else 1,
     )
 
 

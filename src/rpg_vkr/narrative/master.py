@@ -255,7 +255,11 @@ def campaign_context(session, target="", *, query=""):
         "resource_balances": {
             "world.gold": session.world.gold,
             "world.hp": session.world.hp,
-            "progress.xp": d20.xp if session.schema_version >= 25 else session.progress.xp,
+            "progress.xp": session.gameplay["xp"]
+            if getattr(session, "is_unified", False)
+            else d20.xp
+            if session.schema_version >= 25
+            else session.progress.xp,
         },
         "objects": [
             {"id": t.id, "name": t.name, "holder": t.holder} for t in scene.things if scene.here(t)

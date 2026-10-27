@@ -336,28 +336,20 @@ def test_generated_merchant_copper_wallet_and_schedule_are_physical():
 
 def test_ui_creation_and_equipment_are_real_commands(window, qt_app):
     from rpg_vkr.ui.creation_dialog import CreationDialog
-    from rpg_vkr.ui.gameplay_panel import run
+    from rpg_vkr.ui.unified_panel import run
 
     dialog = CreationDialog()
-    dialog.use_gameplay.setChecked(True)
-    dialog.initial_skills["arcana"].setValue(1)
-    dialog.initial_talent.setCurrentIndex(dialog.initial_talent.findData("medic"))
     session = dialog.create_session()
-    assert session.gameplay["talents"] == ["medic"]
-    assert session.d20_progress.rank("arcana") == 1
+    assert session.d20_progress is None
     window._session = session
     window._refresh_character()
-    assert not window.gameplay_group.isHidden()
-    run(window, "equip", {"item": "kit_2"})
-    assert session.gameplay["shield"] == "kit_2"
-    assert "Экипировано" in window.journal.toPlainText()
-    assert "AC" in window.gameplay_status.text()
-    window._refresh_character()
-    assert not window._archive_error
+    assert window.gameplay_group.isHidden() and not window.unified_group.isHidden()
+    shield = next(i["id"] for i in session.gameplay["items"] if i["kind"] == "shield")
+    run(window, "equip", {"item": shield})
+    assert session.gameplay["shield"] == shield
+    assert "Экипировано" in window.unified_log.toPlainText()
+    assert Session.from_dict(session.to_dict()).to_dict() == session.to_dict()
     dialog.close()
-    dialog.deleteLater()
-    qt_app.processEvents()
-    roundtrip(session)
 
 
 def test_initial_skill_draft_rejects_overspending_and_cancel_has_no_session_effect(qt_app):
@@ -366,15 +358,13 @@ def test_initial_skill_draft_rejects_overspending_and_cancel_has_no_session_effe
     from rpg_vkr.ui.creation_dialog import CreationDialog
 
     dialog = CreationDialog()
-    dialog.use_gameplay.setChecked(True)
-    for field in dialog.initial_skills.values():
-        field.setValue(2)
+    assert not hasattr(dialog, "initial_skills")
+    for spin in dialog.scores.values():
+        spin.setValue(16)
     assert not dialog.buttons.button(QDialogButtonBox.StandardButton.Ok).isEnabled()
     with pytest.raises(ValueError):
         dialog.create_session()
     dialog.reject()
-    dialog.deleteLater()
-    qt_app.processEvents()
 
 
 def test_ordinary_actions_advance_world_clock_and_failure_rolls_everything_back(monkeypatch):

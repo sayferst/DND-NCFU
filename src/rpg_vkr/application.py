@@ -711,6 +711,15 @@ class Session:
                 if roll
                 else None
             )
+            if roll and getattr(self, "is_unified", False):
+                from rpg_vkr.domain.character import AbilityCheck
+                from rpg_vkr.domain.unified import bonus
+
+                ability, modifier = bonus(self.gameplay, self.effective_character, "stealth")
+                total = roll.value + modifier
+                check = AbilityCheck(
+                    ability, self.effective_character.dexterity, 15, modifier, total, total >= 15
+                )
             after, _, witnesses, messages = apply_plan(
                 before,
                 plan,
@@ -1574,6 +1583,12 @@ class Session:
 
     @classmethod
     def from_dict(cls, data: object, version: int | None = None) -> "Session":
+        if isinstance(data, dict) and "unified" in data:
+            if version not in (None, 30):
+                raise ValueError("Единая кампания требует схему30.")
+            from rpg_vkr.unified_session import restore
+
+            return restore(data)
         if isinstance(data, dict) and "fork" in data:
             if version not in (None, 29):
                 raise ValueError("Копия требует схему29.")

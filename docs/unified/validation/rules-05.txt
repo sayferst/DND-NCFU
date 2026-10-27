@@ -1,0 +1,26 @@
+.............F                                                           [100%]
+=================================== FAILURES ===================================
+_ test_real_trade_spends_only_confirmed_copper_and_transfers_existing_instance _
+tests/test_unified_rules.py:101: in test_real_trade_spends_only_confirmed_copper_and_transfers_existing_instance
+    s.perform_gameplay('trade_world',{'merchant':'seller','item':rope.id,'operation':'buy','quantity':1},'trade')
+src/rpg_vkr/unified_session.py:187: in called
+    result = method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/storage/migration.py:100: in called
+    return method(session, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/application.py:211: in perform_gameplay
+    return perform(self, command, args, request_id, action=action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/gameplay_session.py:96: in perform
+    result = execute(session._gameplay["state"], command, args, before, session.dice)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/gameplay_rules.py:56: in execute
+    return unified_execute(state, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/unified.py:578: in execute
+    raise ValueError("Товара нет у продавца.")
+E   ValueError: Товара нет у продавца.
+=========================== short test summary info ============================
+FAILED tests/test_unified_rules.py::test_real_trade_spends_only_confirmed_copper_and_transfers_existing_instance
+1 failed, 13 passed in 0.55s

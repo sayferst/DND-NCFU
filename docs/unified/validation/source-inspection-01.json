@@ -1,0 +1,104 @@
+{
+  "source_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "files": [
+    {
+      "path": "AUDIT_REPORT.md",
+      "bytes": 5934,
+      "sha256": "e8e061a02df78083ec28f43f9b46f81b3e55b8239e247dfe5590dc8fba1c090b"
+    },
+    {
+      "path": "CODEX_DND_ARCHIVE_WORK_PROMPT.md",
+      "bytes": 26878,
+      "sha256": "5c632914da96e854bbb5ad948208f0a67488b18ff52d6e3f4ad82930414b4058"
+    },
+    {
+      "path": "DND_NCFU_CODEX_DEEPSEEK_DATA_TRAINING_MASTER_SPEC.md",
+      "bytes": 217283,
+      "sha256": "f9077208e471da0e6d160d9fa474c5988f168f20f5bddec3b08268c92daa4f19"
+    },
+    {
+      "path": "DND_RUNTIME_PROMPTS_OPTIONAL.md",
+      "bytes": 6581,
+      "sha256": "4b968c98e5608479d705b628f81e4ca93e0dc4825b9c3e47ec946062a51f552a"
+    },
+    {
+      "path": "MANIFEST_Codex_Training_Sources.json",
+      "bytes": 4910,
+      "sha256": "a7b55342749be866f91d15fcd2a33fac545343d37d69fd99605781ddb6fce7bc"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3026,
+      "sha256": "3a033ed9562b33f8db296c715d9fd421db01ee558a051ae0bdb0ca9f3f8fc103"
+    },
+    {
+      "path": "START_HERE_CODEX.md",
+      "bytes": 944,
+      "sha256": "bbb2d50a2b7cb02f0534867aaf5ac02f87930d91c2b72721d5d24b9e16e7ccf8"
+    },
+    {
+      "path": "STRUCTURAL_AUDIT.json",
+      "bytes": 5878,
+      "sha256": "b1c55e08e806f539466676493b4f96a87bc77b6a791e0c394d29f4a4c7468a04"
+    },
+    {
+      "path": "corpora/crafting_5000.md",
+      "bytes": 7068488,
+      "sha256": "76a0ffb686256c699ef50e29e9950583473b3dc401871b0ebd1c9b811789d853"
+    },
+    {
+      "path": "corpora/death_and_npc_1000.md",
+      "bytes": 11030424,
+      "sha256": "bb0c8fe41f4a119a0cc773aaaa1597928f29394f8e0eca15f6360bc3fb1d342a"
+    },
+    {
+      "path": "corpora/entities_5000.md",
+      "bytes": 7941379,
+      "sha256": "69cef2adceaae7cf0d495b06480ebbc6d71f269c5504d3e56da161ca56dbcc8a"
+    },
+    {
+      "path": "corpora/events_1000.md",
+      "bytes": 2706113,
+      "sha256": "641b2f622d1174cf40d9e01d81a9307d489532a95172c450a7b83746d07c3e7b"
+    },
+    {
+      "path": "corpora/everyday_1000.md",
+      "bytes": 4436822,
+      "sha256": "13a5a900ec4f7b5a2d760cbcb1789c87c84c20f4b5c583f0ea2febf19ef994ee"
+    },
+    {
+      "path": "corpora/npc_behavior_5000.md",
+      "bytes": 9018627,
+      "sha256": "62a2fcc6cac62e15493cf61911ea8d1d5a637b753ae0024e39973b52a1dfd049"
+    },
+    {
+      "path": "corpora/parties_1000.md",
+      "bytes": 19320323,
+      "sha256": "73a8a2c54b51c7e336f1cd29e2ca04d23d3b2bcfd9dc5f08b820782f364535ad"
+    },
+    {
+      "path": "corpora/parties_200.md",
+      "bytes": 4618464,
+      "sha256": "9e0a5391ccb67c800982a328b4471a7be58698ce3dcb298cd0e881285c5b8b94"
+    },
+    {
+      "path": "research/2022.emnlp-main.637.pdf",
+      "bytes": 764192,
+      "sha256": "b987079c8c29fa6f05e47d6136a5e7c7e09e5414f41976b0a583416910207d52"
+    },
+    {
+      "path": "research/github.txt",
+      "bytes": 115,
+      "sha256": "d8eaed9b336a69aeafe545b9dfd6e516a472d5dfe4ea42b48045ecfb7851bb8e"
+    },
+    {
+      "path": "verify_package.py",
+      "bytes": 7376,
+      "sha256": "f1357b84a0b4132605380e7312e7d19a123d7831657ef209057fc20022dd712d"
+    }
+  ],
+  "file_count": 19,
+  "candidate_samples": 0,
+  "campaigns": 0,
+  "real_receipts": 0
+}

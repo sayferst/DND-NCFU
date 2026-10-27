@@ -1,0 +1,10 @@
+F
+=================================== FAILURES ===================================
+_____ test_new_legend_creates_and_persists_its_world_before_starting_chat ______
+tests/test_world_start_gate.py:109: in test_new_legend_creates_and_persists_its_world_before_starting_chat
+    assert not records and not modern.ollama.busy
+E   AssertionError: assert (not [{'authenticated': True, 'body': None, 'has_auth': True, 'method': 'GET', ...}])
+=========================== short test summary info ============================
+FAILED tests/test_world_start_gate.py::test_new_legend_creates_and_persists_its_world_before_starting_chat
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 1.40s

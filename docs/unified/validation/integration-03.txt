@@ -1,0 +1,12 @@
+......................................F................................. [ 32%]
+........................................................................ [ 64%]
+........................................................................ [ 96%]
+.......                                                                  [100%]
+=================================== FAILURES ===================================
+____ test_rag_runtime_has_bounded_hints_and_unreviewed_corpora_are_blocked _____
+tests/test_complete_campaign.py:177: in test_rag_runtime_has_bounded_hints_and_unreviewed_corpora_are_blocked
+    assert "technique_not_fact" in payload["messages"][1]["content"]
+E   AssertionError: assert 'technique_not_fact' in 'Место: Пристань туманов\nГерой: Путник, Маг, уровень 1, опыт 0\nОтобранные приёмы рассказчика — справочные данные, не...шлый ответ.\nОбъём: простое действие кратко; важную ситуацию полнее, без обязательного минимума. Простые точные фразы.'
+=========================== short test summary info ============================
+FAILED tests/test_complete_campaign.py::test_rag_runtime_has_bounded_hints_and_unreviewed_corpora_are_blocked
+1 failed, 222 passed in 28.40s

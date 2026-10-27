@@ -172,11 +172,6 @@ class WorkspaceActions:
         self.saves_layout = saves_layout
         saves_layout.addWidget(slots_group)
         saves_layout.addWidget(slots_note)
-        from rpg_vkr.ui.campaign_v5_panel import migrate
-
-        self.migrate_campaign_button = QPushButton("Создать копию кампании на новых правилах")
-        self.migrate_campaign_button.clicked.connect(lambda: migrate(self))
-        saves_layout.addWidget(self.migrate_campaign_button)
         saves_layout.addStretch()
         self.tabs.addTab(saves_tab, "Сохранения")
 

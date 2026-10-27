@@ -8,7 +8,10 @@ def revision(state):
     from rpg_vkr.domain import gameplay_v3 as v3
     from rpg_vkr.domain import gameplay_v4 as v4
     from rpg_vkr.domain import gameplay_v5 as v5
+    from rpg_vkr.domain.unified import VERSION
 
+    if isinstance(state, dict) and state.get("version") == VERSION:
+        return 6
     versions = {v5.VERSION: 5, v1.VERSION: 1, v2.VERSION: 2, v3.VERSION: 3, v4.VERSION: 4}
     if not isinstance(state, dict) or state.get("version") not in versions:
         raise ValueError("Неизвестная версия игрового обработчика.")
@@ -47,6 +50,10 @@ def restore_initial(identity, character, state, schema):
 
 
 def execute(state, command, args, context, dice):
+    if revision(state) == 6:
+        from rpg_vkr.domain.unified import execute as unified_execute
+
+        return unified_execute(state, command, args, context, dice)
     if revision(state) == 1:
         return v1.execute(state, command, args, context, dice)
     if revision(state) == 2:

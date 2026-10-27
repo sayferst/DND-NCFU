@@ -1,0 +1,16 @@
+{
+  "verified": true,
+  "archive_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "counts": {
+    "raw_structural_count": 19200,
+    "parsed_count": 19200,
+    "legacy_alias_count": 200,
+    "unique_canonical_count": 19000,
+    "quality_approved_count": 0,
+    "indexed_count": 0,
+    "heldout_count": 0,
+    "sft_ready_count": 0
+  },
+  "sft_approved": 0,
+  "model_weights_created": false
+}

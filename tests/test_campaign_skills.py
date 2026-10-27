@@ -11,7 +11,6 @@ from rpg_vkr.domain.progression import ARCHETYPES
 from rpg_vkr.storage.campaigns import CampaignRepository
 from rpg_vkr.storage.knowledge import export_session, restore_session
 from rpg_vkr.storage.slots import SaveSlots
-from rpg_vkr.ui.creation_dialog import CreationDialog
 
 
 def hero():
@@ -125,9 +124,8 @@ def test_legacy_schema_unchanged_and_no_implicit_migration(tmp_path):
 
 
 def test_creation_and_skill_ui_spend_real_points(window, qt_app):
-    dialog = CreationDialog()
-    dialog.use_d20_skills.setChecked(True)
-    session = dialog.create_session()
+    session = hero()
+    session.enable_d20_progress()
     window._session = session
     window._refresh_character()
     window.skill_choice.setCurrentIndex(window.skill_choice.findData("athletics"))

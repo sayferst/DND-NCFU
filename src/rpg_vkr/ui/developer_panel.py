@@ -106,10 +106,6 @@ class DeveloperConsole(QWidget):
         testing_layout.addWidget(self.testing_info)
         testing_layout.addStretch()
         self.pages.addTab(testing, "Управление тестированием")
-        from rpg_vkr.ui.learning_panel import LearningPanel
-
-        self.learning = LearningPanel(self)
-        self.pages.addTab(self.learning, "Библиотека мастерства")
         change = QPushButton("Сменить локальный пароль…")
         change.clicked.connect(self.change_password)
         layout.addWidget(change)
@@ -174,10 +170,6 @@ class DeveloperConsole(QWidget):
 
     def logout(self):
         self.access.logout()
-        self.learning.cancel.set()
-        self.learning.preview.clear()
-        self.learning.results.clear()
-        self.learning.excerpt.clear()
         self.window.open_section("Главное меню")
         self.window.tabs.setTabVisible(self.window.tabs.indexOf(self), False)
 

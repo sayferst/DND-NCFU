@@ -1,5 +1,21 @@
 # Лицензии и происхождение материалов
 
+## Единый поток и отдельное обучение, 26.10.2026
+
+Канонический ruleset dnd-ncfu-unified-d20-v1 — авторская homebrew-механика.
+Прежняя атрибуция SRD ниже сохранена; не заявляется полный SRD-каталог.
+24метода data/approved_knowledge — оригинальные тексты проекта,не выдержки
+из частных сессий/публикаций.19000raw и PDF архива не распространяются вGit/клиенте.
+Права на допуск SFT и публичный retrieval учитываются отдельно:
+[docs/ml/data_rights.md](docs/ml/data_rights.md).
+
+Выбранная,но не скачанная/не обученная base:Qwen/Qwen3-4B,
+https://huggingface.co/Qwen/Qwen3-4B ,apache-2.0,
+revision1cfa9a7208912126459214e8b04321603b3df60c. Публичныеmetadata:
+docs/unified/validation/base-model-metadata-01.json. Это не лицензия на чужие
+training-тексты и не свидетельство наличия adapter. Возможные Torch/Transformers/
+PEFT/bitsandbytes относятся к отдельнойtraining-среде и исключены из клиента.
+
 ## Игровые правила
 
 Плановая основа: **System Reference Document 5.2.1**, Wizards of the Coast,

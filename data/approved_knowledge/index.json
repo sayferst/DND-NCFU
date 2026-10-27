@@ -1,0 +1,246 @@
+{
+  "schema": "approved-knowledge-1",
+  "sha256": "ea79635a2d70b28b7b262bdf5eb2b132116337e9584d2e96889b2f1413409777",
+  "records": [
+    {
+      "id": "project:inspect",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Описывай наблюдаемые свойства. Осмотр не меняет владельца и не означает покупку.",
+      "tags": "narrative осмотр вещь предмет внешность look inspect",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:trade",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Отделяй предложение сделки от её совершения. Итог и расходы бери из квитанции.",
+      "tags": "narrative купить продать цена торг монеты торговец buy sell",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:combat",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Описывай подтверждённый исход и самостоятельные действия участников очереди. Сохраняй право игрока на следующий выбор.",
+      "tags": "narrative бой удар атака противник сражение attack fight",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:knowledge",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Знание принадлежит конкретному собеседнику. Отмечай источник слуха и не превращай его в личное наблюдение.",
+      "tags": "behavior слух тайна знание источник npc rumors",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:craft",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Карточка рецепта не является готовым изделием. Описывай работу после подтверждения ресурсов, станции и результата.",
+      "tags": "crafting ремесло рецепт крафт изготовить кузница зелье craft",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:magic",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Эффект магии ограничен квитанцией: учитывай выбранную цель, расход MP, компоненты и длительность.",
+      "tags": "crafting магия заклинание mp мана школа spell magic",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:agency",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Различай вопрос, намерение, обещание и действие. Оставляй невыбранные решения открытыми.",
+      "tags": "narrative решить согласиться отказаться обещать хочу выбор",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:continuity",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Сохраняй имя и личность зарегистрированного NPC; используй его подтверждённые воспоминания.",
+      "tags": "behavior имя встреча персонаж помню ранее npc",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:world",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Меняй сцену по подтверждённому игровому времени. Автономные события имеют причины и доступные источники сведений.",
+      "tags": "events день сезон время город фракция мир календарь",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:stakes",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Покажи конкретные доступные признаки опасности и последствия уже произошедшего; не назначай исход следующего действия.",
+      "tags": "events риск опасность потеря последствие",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:opening",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Дай конкретный ориентир и занятого своим делом собеседника. Остановись перед выбором героя.",
+      "tags": "narrative начало место прибытие сцена introduction arrival",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:partial",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Опиши предел достигнутого по квитанции. Не превращай неудачу в бесплатный успех.",
+      "tags": "adjudication неудача частичный провал попытка failure partial",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:investigation",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Отделяй увиденную улику от объяснения её причины. Догадка персонажа остаётся догадкой.",
+      "tags": "adjudication след улика расследование проверить investigate clue",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:travel",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Используй подтверждённое место и время. Возможность пути не означает совершённый переход.",
+      "tags": "events дорога путь путешествие перейти переправа travel journey",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:rest",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Простое безопасное занятие не требует выдуманного броска. Восстановление берётся из правил.",
+      "tags": "adjudication отдых привал бытовой безопасный простой rest routine",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:aftermath",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Различай раненого, потерявшего сознание и погибшего по состоянию движка. Слух не меняет судьбу.",
+      "tags": "consequences смерть погиб без сознания рана dead injured aftermath",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:politics",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Покажи несовпадающие интересы участников и доступные сведения. Соглашение требует их действий.",
+      "tags": "behavior фракция переговоры влияние граница политический diplomacy faction",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:reputation",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Реакция знакомого опирается на пережитое или услышанное с источником, без всемирного знания.",
+      "tags": "behavior доверие репутация обещание долг отношение reputation trust",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:voice",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Пусть NPC отвечает на вопрос из своего опыта и занятия. Не сочиняй следующую реплику героя.",
+      "tags": "behavior говорить ответить спросить собеседник диалог voice dialogue",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:training",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Получение книги, чтение и освоение навыка — разные события. Используй подтверждённое развитие.",
+      "tags": "crafting книга навык учиться практика изучить book training",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:ownership",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Различай видимую вещь, её владельца и доступ героя. Карточка предмета не выдаёт экземпляр.",
+      "tags": "entities чужой владелец взять вещь подобрать сундук ownership item",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:encounter",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Покажи доступные признаки происшествия. Оно допускает отказ и разные способы решения.",
+      "tags": "events находка событие засада опасность предложение encounter event",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:production",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Различай сырьё, компонент и изделие. Ресурсы, инструмент и время подтверждаются до результата.",
+      "tags": "crafting материал станция изготовить руда компонент рецепт алхимия recipe forge",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    },
+    {
+      "id": "project:ecology",
+      "source": "PROJECT-METHODS-2",
+      "type": "scene_pattern",
+      "text": "Поведение существа связано со средой и потребностью. Наличие шаблона не создаёт встречу.",
+      "tags": "entities существо растение монстр зверь среда ecology creature",
+      "rights": "project_owned",
+      "review": "project_authored",
+      "external_allowed": true
+    }
+  ]
+}

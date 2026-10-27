@@ -1,0 +1,6417 @@
+{
+  "protocol": "original-offline-context-ab-1",
+  "seed": 37,
+  "pipeline": "corpus-qc-1",
+  "archive_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "scenario_sha256": "43726e1c865d07c530c8377ccf794b60db351bb5316c6437664b14540a5dea9f",
+  "scenarios": 100,
+  "conditions": 4,
+  "paid_calls": 0,
+  "model_calls": 0,
+  "same_mock_responses": true,
+  "canonical_state_and_rng_unchanged": true,
+  "quality_gain": "NOT_MEASURED_MOCK_RESPONSES",
+  "training": "BLOCKED_PROVIDER_TRAINING",
+  "metrics_not_measured": [
+    "literary_coherence",
+    "live_repetition",
+    "live_npc_voice"
+  ],
+  "summary": {
+    "B0": {
+      "cases": 100,
+      "validator_mismatches": 0,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 82,
+      "memory_available": 0,
+      "max_context_bytes": 42333,
+      "max_extra_bytes": 0,
+      "median_ms": 1.9803209997917293,
+      "p95_ms": 3.0372990004252642
+    },
+    "B1": {
+      "cases": 100,
+      "validator_mismatches": 0,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 81,
+      "memory_available": 0,
+      "max_context_bytes": 42333,
+      "max_extra_bytes": 1066,
+      "median_ms": 2.7413584994064877,
+      "p95_ms": 4.361709001386771
+    },
+    "B2": {
+      "cases": 100,
+      "validator_mismatches": 0,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 82,
+      "memory_available": 4,
+      "max_context_bytes": 42364,
+      "max_extra_bytes": 1018,
+      "median_ms": 2.0325000004959293,
+      "p95_ms": 3.1285360018955544
+    },
+    "B3": {
+      "cases": 100,
+      "validator_mismatches": 0,
+      "unsafe_accepts": 0,
+      "expected_method_hits_proxy": 81,
+      "memory_available": 4,
+      "max_context_bytes": 42345,
+      "max_extra_bytes": 1066,
+      "median_ms": 2.724916501392727,
+      "p95_ms": 3.9241080012288876
+    }
+  },
+  "rows": [
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41085,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 9.736556999996537
+    },
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41085,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.352496998559218
+    },
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41085,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 1.8704659996728878
+    },
+    {
+      "id": "own-eval:scene:01",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41085,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.714086000196403
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:opening",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41770,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.204017000622116
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41508,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.22146899998188
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:opening",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41770,
+      "extra_bytes": 600,
+      "memory_events": 0,
+      "latency_ms": 2.3445490005542524
+    },
+    {
+      "id": "own-eval:scene:02",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41508,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.8371510015858803
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41488,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.98043099953793
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41488,
+      "extra_bytes": 325,
+      "memory_events": 0,
+      "latency_ms": 2.803509996738285
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42052,
+      "extra_bytes": 640,
+      "memory_events": 1,
+      "latency_ms": 2.2650899991276674
+    },
+    {
+      "id": "own-eval:scene:03",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42052,
+      "extra_bytes": 640,
+      "memory_events": 1,
+      "latency_ms": 2.532392001739936
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:inspect",
+        "project:ecology",
+        "project:ownership"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42084,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.080522001051577
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41842,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 3.107077001914149
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:inspect",
+        "project:ecology",
+        "project:ownership"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42084,
+      "extra_bytes": 890,
+      "memory_events": 0,
+      "latency_ms": 2.124258000549162
+    },
+    {
+      "id": "own-eval:scene:04",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41842,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.6526830006332602
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:investigation",
+        "project:combat",
+        "project:partial"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42126,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.094673996907659
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial",
+        "project:investigation",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42231,
+      "extra_bytes": 1039,
+      "memory_events": 0,
+      "latency_ms": 3.108540000539506
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:investigation",
+        "project:combat",
+        "project:partial"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42126,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 2.2642479998467024
+    },
+    {
+      "id": "own-eval:scene:05",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial",
+        "project:investigation",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42231,
+      "extra_bytes": 1039,
+      "memory_events": 0,
+      "latency_ms": 3.024694000487216
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:opening",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41803,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2941340030229185
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41524,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.810019999742508
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:opening",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41803,
+      "extra_bytes": 617,
+      "memory_events": 0,
+      "latency_ms": 2.099271001497982
+    },
+    {
+      "id": "own-eval:scene:06",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41524,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 3.0357700015883893
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:investigation",
+        "project:travel",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42142,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8084520015690941
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:travel",
+        "project:partial",
+        "project:investigation"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42175,
+      "extra_bytes": 984,
+      "memory_events": 0,
+      "latency_ms": 2.7960790030192584
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:investigation",
+        "project:travel",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42142,
+      "extra_bytes": 963,
+      "memory_events": 0,
+      "latency_ms": 1.9880020008713473
+    },
+    {
+      "id": "own-eval:scene:07",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:travel",
+        "project:partial",
+        "project:investigation"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42175,
+      "extra_bytes": 984,
+      "memory_events": 0,
+      "latency_ms": 2.9320840003492776
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41511,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.144607999071013
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41506,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.8913329988426995
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41511,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.2062909993110225
+    },
+    {
+      "id": "own-eval:scene:08",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41506,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.911441999458475
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:opening",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42064,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9802110000455286
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41488,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.575667000201065
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:opening",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42064,
+      "extra_bytes": 894,
+      "memory_events": 0,
+      "latency_ms": 2.039650997176068
+    },
+    {
+      "id": "own-eval:scene:09",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41488,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.759344002697617
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:opening",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41800,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1510480000870302
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41515,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.7020070010621566
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:opening",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42364,
+      "extra_bytes": 938,
+      "memory_events": 1,
+      "latency_ms": 2.2040680014470126
+    },
+    {
+      "id": "own-eval:scene:10",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42079,
+      "extra_bytes": 669,
+      "memory_events": 1,
+      "latency_ms": 3.243021998059703
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [
+        "project:inspect",
+        "project:world"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41958,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8758639998850413
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41635,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 2.6531940020504408
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [
+        "project:inspect",
+        "project:world"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41958,
+      "extra_bytes": 640,
+      "memory_events": 0,
+      "latency_ms": 2.04201399901649
+    },
+    {
+      "id": "own-eval:scene:11",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41635,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 2.658181998413056
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40960,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1112680005899165
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40960,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.5560480025887955
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40960,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 1.8503460014471784
+    },
+    {
+      "id": "own-eval:scene:12",
+      "group": "scene",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40960,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.445922000333667
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice",
+        "project:agency",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42091,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8793290000758134
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:agency",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42196,
+      "extra_bytes": 999,
+      "memory_events": 0,
+      "latency_ms": 2.79586899705464
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice",
+        "project:agency",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42091,
+      "extra_bytes": 906,
+      "memory_events": 0,
+      "latency_ms": 1.975774001039099
+    },
+    {
+      "id": "own-eval:voice:01",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:agency",
+        "project:continuity"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42196,
+      "extra_bytes": 999,
+      "memory_events": 0,
+      "latency_ms": 3.078524001466576
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:craft",
+        "project:magic",
+        "project:production"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42154,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0704769995063543
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41900,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 3.020185999048408
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:craft",
+        "project:magic",
+        "project:production"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42154,
+      "extra_bytes": 973,
+      "memory_events": 0,
+      "latency_ms": 1.9471810010145418
+    },
+    {
+      "id": "own-eval:voice:02",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41900,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.840896999259712
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice",
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41776,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.00955499894917
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41846,
+      "extra_bytes": 668,
+      "memory_events": 0,
+      "latency_ms": 2.958524000860052
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice",
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41776,
+      "extra_bytes": 606,
+      "memory_events": 0,
+      "latency_ms": 1.8792989976645913
+    },
+    {
+      "id": "own-eval:voice:03",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41846,
+      "extra_bytes": 668,
+      "memory_events": 0,
+      "latency_ms": 2.947738001239486
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40943,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9214230014767963
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40943,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.586604001407977
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41507,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 1.8995190002897289
+    },
+    {
+      "id": "own-eval:voice:04",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41507,
+      "extra_bytes": 342,
+      "memory_events": 1,
+      "latency_ms": 2.5113999981840607
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41759,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.5192120010615326
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41829,
+      "extra_bytes": 647,
+      "memory_events": 0,
+      "latency_ms": 2.7190129985683598
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41759,
+      "extra_bytes": 585,
+      "memory_events": 0,
+      "latency_ms": 1.9686529994942248
+    },
+    {
+      "id": "own-eval:voice:05",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41829,
+      "extra_bytes": 647,
+      "memory_events": 0,
+      "latency_ms": 2.7155780007888097
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41918,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.790115002222592
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41988,
+      "extra_bytes": 671,
+      "memory_events": 0,
+      "latency_ms": 3.004662001330871
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41918,
+      "extra_bytes": 609,
+      "memory_events": 0,
+      "latency_ms": 2.030826999543933
+    },
+    {
+      "id": "own-eval:voice:06",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice",
+        "project:travel"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41988,
+      "extra_bytes": 671,
+      "memory_events": 0,
+      "latency_ms": 2.696990002732491
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41468,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0449189978535287
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41503,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.7249320010014344
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41468,
+      "extra_bytes": 315,
+      "memory_events": 0,
+      "latency_ms": 1.8464290005795192
+    },
+    {
+      "id": "own-eval:voice:07",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41503,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.646854001795873
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41466,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9131000008201227
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41501,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.849930002412293
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41466,
+      "extra_bytes": 315,
+      "memory_events": 0,
+      "latency_ms": 2.2335929970722646
+    },
+    {
+      "id": "own-eval:voice:08",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41501,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.8440909991331864
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41457,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9851280012517236
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41492,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.7352170000085607
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41457,
+      "extra_bytes": 315,
+      "memory_events": 0,
+      "latency_ms": 2.1283030000631697
+    },
+    {
+      "id": "own-eval:voice:09",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41492,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.694786999200005
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B0",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41452,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.3025959999358747
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B1",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41487,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.578682000603294
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B2",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41452,
+      "extra_bytes": 315,
+      "memory_events": 0,
+      "latency_ms": 1.8196990022261161
+    },
+    {
+      "id": "own-eval:voice:10",
+      "group": "voice",
+      "mode": "B3",
+      "selected_ids": [
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41487,
+      "extra_bytes": 346,
+      "memory_events": 0,
+      "latency_ms": 2.9543070013460238
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41788,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1189789986237884
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41500,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.782329000183381
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41788,
+      "extra_bytes": 619,
+      "memory_events": 0,
+      "latency_ms": 2.1215640008449554
+    },
+    {
+      "id": "own-eval:agency:01",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41500,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.7967599999101367
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41444,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.826158997573657
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41479,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.8563699997903313
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41444,
+      "extra_bytes": 316,
+      "memory_events": 0,
+      "latency_ms": 2.0001910015707836
+    },
+    {
+      "id": "own-eval:agency:02",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41479,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.4708290002308786
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency",
+        "project:aftermath",
+        "project:encounter"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42111,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8681529982131906
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41511,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.796979999402538
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency",
+        "project:aftermath",
+        "project:encounter"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42111,
+      "extra_bytes": 911,
+      "memory_events": 0,
+      "latency_ms": 2.0399709974299185
+    },
+    {
+      "id": "own-eval:agency:03",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41511,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.579441999841947
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41621,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.7409510001016315
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41656,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.6849409987335093
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41621,
+      "extra_bytes": 316,
+      "memory_events": 0,
+      "latency_ms": 1.8264799982716795
+    },
+    {
+      "id": "own-eval:agency:04",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41656,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.57600799886859
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41457,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9400599994696677
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41492,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.648046000103932
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41457,
+      "extra_bytes": 316,
+      "memory_events": 0,
+      "latency_ms": 1.997086001210846
+    },
+    {
+      "id": "own-eval:agency:05",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41492,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 4.757832997711375
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40959,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.9906210002081934
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40959,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.8301150016195606
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40959,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.909499999077525
+    },
+    {
+      "id": "own-eval:agency:06",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40959,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 3.7117270003363956
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency",
+        "project:encounter"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41921,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.8656940012297127
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41647,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.755402998649515
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency",
+        "project:encounter"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41921,
+      "extra_bytes": 605,
+      "memory_events": 0,
+      "latency_ms": 2.6505399982852396
+    },
+    {
+      "id": "own-eval:agency:07",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41647,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.7348329969972838
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41449,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.8859850026492495
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41484,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.8534609993803315
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41449,
+      "extra_bytes": 316,
+      "memory_events": 0,
+      "latency_ms": 2.8682580013992265
+    },
+    {
+      "id": "own-eval:agency:08",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41484,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 3.682203001517337
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41809,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0969670003978536
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency",
+        "project:opening",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42232,
+      "extra_bytes": 1056,
+      "memory_events": 0,
+      "latency_ms": 2.6850829999602865
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41809,
+      "extra_bytes": 665,
+      "memory_events": 0,
+      "latency_ms": 1.879268998891348
+    },
+    {
+      "id": "own-eval:agency:09",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency",
+        "project:opening",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42232,
+      "extra_bytes": 1056,
+      "memory_events": 0,
+      "latency_ms": 2.7256530011072755
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40966,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9282530010968912
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40966,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.4402360031672288
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40966,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.277260002301773
+    },
+    {
+      "id": "own-eval:agency:10",
+      "group": "agency",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40966,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.7231339990976267
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41463,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8899149981734809
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41498,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 2.551082998252241
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41463,
+      "extra_bytes": 331,
+      "memory_events": 0,
+      "latency_ms": 2.1123309998074546
+    },
+    {
+      "id": "own-eval:consequence:01",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41498,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 2.7241360003245063
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41845,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8061890004901215
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41915,
+      "extra_bytes": 742,
+      "memory_events": 0,
+      "latency_ms": 2.6255659977323376
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41845,
+      "extra_bytes": 680,
+      "memory_events": 0,
+      "latency_ms": 1.84197300040978
+    },
+    {
+      "id": "own-eval:consequence:02",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41915,
+      "extra_bytes": 742,
+      "memory_events": 0,
+      "latency_ms": 2.737536000495311
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41969,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8423729998175986
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42039,
+      "extra_bytes": 742,
+      "memory_events": 0,
+      "latency_ms": 3.846611001790734
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41969,
+      "extra_bytes": 680,
+      "memory_events": 0,
+      "latency_ms": 3.1285360018955544
+    },
+    {
+      "id": "own-eval:consequence:03",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42039,
+      "extra_bytes": 742,
+      "memory_events": 0,
+      "latency_ms": 3.3693699988361914
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:travel",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41789,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.059612001175992
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:travel",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41859,
+      "extra_bytes": 687,
+      "memory_events": 0,
+      "latency_ms": 2.9157249991840217
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:travel",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41789,
+      "extra_bytes": 625,
+      "memory_events": 0,
+      "latency_ms": 2.2462429988081567
+    },
+    {
+      "id": "own-eval:consequence:04",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:travel",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41859,
+      "extra_bytes": 687,
+      "memory_events": 0,
+      "latency_ms": 2.8134999993199017
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41796,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8178870013798587
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41866,
+      "extra_bytes": 696,
+      "memory_events": 0,
+      "latency_ms": 2.598005001345882
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41796,
+      "extra_bytes": 634,
+      "memory_events": 0,
+      "latency_ms": 2.044859000307042
+    },
+    {
+      "id": "own-eval:consequence:05",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41866,
+      "extra_bytes": 696,
+      "memory_events": 0,
+      "latency_ms": 2.839990000211401
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41814,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8964450027851854
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41884,
+      "extra_bytes": 721,
+      "memory_events": 0,
+      "latency_ms": 2.852959998563165
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41814,
+      "extra_bytes": 659,
+      "memory_events": 0,
+      "latency_ms": 1.8309759980184026
+    },
+    {
+      "id": "own-eval:consequence:06",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41884,
+      "extra_bytes": 721,
+      "memory_events": 0,
+      "latency_ms": 2.6661270021577366
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:continuity",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42137,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8682219997572247
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:continuity",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42242,
+      "extra_bytes": 1052,
+      "memory_events": 0,
+      "latency_ms": 2.698375999898417
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:continuity",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42137,
+      "extra_bytes": 959,
+      "memory_events": 0,
+      "latency_ms": 1.8632150022312999
+    },
+    {
+      "id": "own-eval:consequence:07",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:continuity",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42242,
+      "extra_bytes": 1052,
+      "memory_events": 0,
+      "latency_ms": 2.9757049996987917
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:agency",
+        "project:craft"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41974,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8606499979796354
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41650,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.5491910018899944
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:agency",
+        "project:craft"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41974,
+      "extra_bytes": 655,
+      "memory_events": 0,
+      "latency_ms": 1.8184969994763378
+    },
+    {
+      "id": "own-eval:consequence:08",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:agency"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41650,
+      "extra_bytes": 347,
+      "memory_events": 0,
+      "latency_ms": 2.491172999725677
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:encounter",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42096,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.86271400161786
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41857,
+      "extra_bytes": 670,
+      "memory_events": 0,
+      "latency_ms": 2.607960002933396
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:encounter",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42096,
+      "extra_bytes": 897,
+      "memory_events": 0,
+      "latency_ms": 2.1270629986247513
+    },
+    {
+      "id": "own-eval:consequence:09",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41857,
+      "extra_bytes": 670,
+      "memory_events": 0,
+      "latency_ms": 2.7358429979358334
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:encounter",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41812,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8358630004513543
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:encounter",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41812,
+      "extra_bytes": 663,
+      "memory_events": 0,
+      "latency_ms": 2.4264150015369523
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:encounter",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41812,
+      "extra_bytes": 663,
+      "memory_events": 0,
+      "latency_ms": 1.9710880005732179
+    },
+    {
+      "id": "own-eval:consequence:10",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:encounter",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41812,
+      "extra_bytes": 663,
+      "memory_events": 0,
+      "latency_ms": 2.484453001670772
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41855,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0104069990338758
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41855,
+      "extra_bytes": 674,
+      "memory_events": 0,
+      "latency_ms": 3.012942001078045
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41855,
+      "extra_bytes": 674,
+      "memory_events": 0,
+      "latency_ms": 2.0564260012179147
+    },
+    {
+      "id": "own-eval:consequence:11",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:stakes"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41855,
+      "extra_bytes": 674,
+      "memory_events": 0,
+      "latency_ms": 2.7250870007264894
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41476,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0239469995431136
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B1",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41511,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 2.816885000356706
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41476,
+      "extra_bytes": 331,
+      "memory_events": 0,
+      "latency_ms": 1.9655790019896813
+    },
+    {
+      "id": "own-eval:consequence:12",
+      "group": "consequence",
+      "mode": "B3",
+      "selected_ids": [
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41511,
+      "extra_bytes": 362,
+      "memory_events": 0,
+      "latency_ms": 5.148528001882369
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41797,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2901789998286404
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41506,
+      "extra_bytes": 384,
+      "memory_events": 0,
+      "latency_ms": 3.9295160022447817
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41797,
+      "extra_bytes": 659,
+      "memory_events": 0,
+      "latency_ms": 2.099802000884665
+    },
+    {
+      "id": "own-eval:knowledge:01",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41506,
+      "extra_bytes": 384,
+      "memory_events": 0,
+      "latency_ms": 2.7548610014491715
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:trade",
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42105,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.3690689995419234
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:trade",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42202,
+      "extra_bytes": 1014,
+      "memory_events": 0,
+      "latency_ms": 2.650554000865668
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:trade",
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42105,
+      "extra_bytes": 929,
+      "memory_events": 0,
+      "latency_ms": 2.0370370002638083
+    },
+    {
+      "id": "own-eval:knowledge:02",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:trade",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42202,
+      "extra_bytes": 1014,
+      "memory_events": 0,
+      "latency_ms": 2.6018799981102347
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:knowledge",
+        "project:aftermath",
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42178,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9129100001009647
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41887,
+      "extra_bytes": 718,
+      "memory_events": 0,
+      "latency_ms": 2.6605190032569226
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:knowledge",
+        "project:aftermath",
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42178,
+      "extra_bytes": 997,
+      "memory_events": 0,
+      "latency_ms": 1.897345999168465
+    },
+    {
+      "id": "own-eval:knowledge:03",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41887,
+      "extra_bytes": 718,
+      "memory_events": 0,
+      "latency_ms": 2.742944001511205
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:knowledge",
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42113,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.375988999119727
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41864,
+      "extra_bytes": 706,
+      "memory_events": 0,
+      "latency_ms": 2.6745299983303994
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:knowledge",
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42113,
+      "extra_bytes": 943,
+      "memory_events": 0,
+      "latency_ms": 1.8735100020421669
+    },
+    {
+      "id": "own-eval:knowledge:04",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41864,
+      "extra_bytes": 706,
+      "memory_events": 0,
+      "latency_ms": 2.518443998269504
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41834,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.829965000069933
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41543,
+      "extra_bytes": 384,
+      "memory_events": 0,
+      "latency_ms": 2.5895620019582566
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41834,
+      "extra_bytes": 659,
+      "memory_events": 0,
+      "latency_ms": 2.1495580003829673
+    },
+    {
+      "id": "own-eval:knowledge:05",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41543,
+      "extra_bytes": 384,
+      "memory_events": 0,
+      "latency_ms": 2.6056160022562835
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41501,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.821652000217
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41501,
+      "extra_bytes": 353,
+      "memory_events": 0,
+      "latency_ms": 2.499977003026288
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41501,
+      "extra_bytes": 353,
+      "memory_events": 0,
+      "latency_ms": 1.7899140002555214
+    },
+    {
+      "id": "own-eval:knowledge:06",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41501,
+      "extra_bytes": 353,
+      "memory_events": 0,
+      "latency_ms": 2.8101760035497136
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42153,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8796799995470792
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42248,
+      "extra_bytes": 1040,
+      "memory_events": 0,
+      "latency_ms": 2.6801589992828667
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:aftermath",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42153,
+      "extra_bytes": 957,
+      "memory_events": 0,
+      "latency_ms": 1.8172460004279856
+    },
+    {
+      "id": "own-eval:knowledge:07",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:knowledge",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42248,
+      "extra_bytes": 1040,
+      "memory_events": 0,
+      "latency_ms": 2.717554998525884
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41112,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0015940026496537
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42031,
+      "extra_bytes": 706,
+      "memory_events": 0,
+      "latency_ms": 2.8466010007832665
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41112,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.043257001787424
+    },
+    {
+      "id": "own-eval:knowledge:08",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:trade",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42031,
+      "extra_bytes": 706,
+      "memory_events": 0,
+      "latency_ms": 2.597965001768898
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation",
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42187,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.116167001076974
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation",
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42187,
+      "extra_bytes": 994,
+      "memory_events": 0,
+      "latency_ms": 2.7474999988044146
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation",
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42187,
+      "extra_bytes": 994,
+      "memory_events": 0,
+      "latency_ms": 2.0785599990631454
+    },
+    {
+      "id": "own-eval:knowledge:09",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge",
+        "project:reputation",
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42187,
+      "extra_bytes": 994,
+      "memory_events": 0,
+      "latency_ms": 3.1923530004860368
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B0",
+      "selected_ids": [
+        "project:investigation",
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42148,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8754230004560668
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B1",
+      "selected_ids": [
+        "project:investigation",
+        "project:knowledge",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42203,
+      "extra_bytes": 1018,
+      "memory_events": 0,
+      "latency_ms": 2.904657998442417
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B2",
+      "selected_ids": [
+        "project:investigation",
+        "project:aftermath",
+        "project:combat"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42148,
+      "extra_bytes": 975,
+      "memory_events": 0,
+      "latency_ms": 2.1179789982852526
+    },
+    {
+      "id": "own-eval:knowledge:10",
+      "group": "knowledge",
+      "mode": "B3",
+      "selected_ids": [
+        "project:investigation",
+        "project:knowledge",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42203,
+      "extra_bytes": 1018,
+      "memory_events": 0,
+      "latency_ms": 3.0145739983709063
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42150,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.863364999735495
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial",
+        "project:investigation",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42204,
+      "extra_bytes": 988,
+      "memory_events": 0,
+      "latency_ms": 2.9205319988250267
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42150,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 2.2263829996518325
+    },
+    {
+      "id": "own-eval:rules:01",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial",
+        "project:investigation",
+        "project:opening"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42204,
+      "extra_bytes": 988,
+      "memory_events": 0,
+      "latency_ms": 3.009365998877911
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42133,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9605010020313784
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41484,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 2.6418509987706784
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42133,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 2.0474730008572806
+    },
+    {
+      "id": "own-eval:rules:02",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41484,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 2.6579449986456893
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:combat",
+        "project:investigation",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42147,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9992899979115464
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial",
+        "project:inspect",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42234,
+      "extra_bytes": 1021,
+      "memory_events": 0,
+      "latency_ms": 5.147785999724874
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:combat",
+        "project:investigation",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42147,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 2.0422449997568037
+    },
+    {
+      "id": "own-eval:rules:03",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial",
+        "project:inspect",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42234,
+      "extra_bytes": 1021,
+      "memory_events": 0,
+      "latency_ms": 2.6624019992596004
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42182,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8157830018026289
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41489,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.171570999256801
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42182,
+      "extra_bytes": 990,
+      "memory_events": 0,
+      "latency_ms": 3.392685001017526
+    },
+    {
+      "id": "own-eval:rules:04",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41489,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.427617997658672
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42139,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.327676000277279
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41490,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 5.392064998886781
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42139,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 3.976176998548908
+    },
+    {
+      "id": "own-eval:rules:05",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41490,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 4.749253999762004
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:craft",
+        "project:ecology",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42114,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 3.945870997995371
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:ecology",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42114,
+      "extra_bytes": 933,
+      "memory_events": 0,
+      "latency_ms": 6.732680998538854
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:craft",
+        "project:ecology",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42114,
+      "extra_bytes": 933,
+      "memory_events": 0,
+      "latency_ms": 2.6207289993180893
+    },
+    {
+      "id": "own-eval:rules:06",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:ecology",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42114,
+      "extra_bytes": 933,
+      "memory_events": 0,
+      "latency_ms": 3.6227429991413374
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42122,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 5.006804000004195
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41473,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 8.9423089993943
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42122,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 5.00442999691586
+    },
+    {
+      "id": "own-eval:rules:07",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41473,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 5.797747999167768
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42125,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.6209600000584032
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41476,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 4.204581000522012
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42125,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 2.7102439998998307
+    },
+    {
+      "id": "own-eval:rules:08",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41476,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.8622540014330298
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42187,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.9915289997006766
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41494,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.968143999372842
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42187,
+      "extra_bytes": 990,
+      "memory_events": 0,
+      "latency_ms": 3.0328219982038718
+    },
+    {
+      "id": "own-eval:rules:09",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41494,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.9241080012288876
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42119,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1566079994954634
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41470,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 3.055204997508554
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial",
+        "project:combat",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42119,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 1.9999920004920568
+    },
+    {
+      "id": "own-eval:rules:10",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41470,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 2.627608999318909
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:combat",
+        "project:investigation",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42124,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9138210009259637
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41475,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 5.19909399736207
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:combat",
+        "project:investigation",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42124,
+      "extra_bytes": 946,
+      "memory_events": 0,
+      "latency_ms": 2.2133839993330184
+    },
+    {
+      "id": "own-eval:rules:11",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41475,
+      "extra_bytes": 333,
+      "memory_events": 0,
+      "latency_ms": 2.865498998289695
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B0",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41449,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9131799999740906
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B1",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41505,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.6315959985367954
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B2",
+      "selected_ids": [
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41449,
+      "extra_bytes": 302,
+      "memory_events": 0,
+      "latency_ms": 1.8341810027777683
+    },
+    {
+      "id": "own-eval:rules:12",
+      "group": "rules",
+      "mode": "B3",
+      "selected_ids": [
+        "project:opening"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41505,
+      "extra_bytes": 354,
+      "memory_events": 0,
+      "latency_ms": 2.7247460020589642
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:knowledge",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41802,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.826419000281021
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:knowledge",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41802,
+      "extra_bytes": 649,
+      "memory_events": 0,
+      "latency_ms": 2.6129469988518395
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:knowledge",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41802,
+      "extra_bytes": 649,
+      "memory_events": 0,
+      "latency_ms": 1.8677320003916975
+    },
+    {
+      "id": "own-eval:inventory:01",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:knowledge",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41802,
+      "extra_bytes": 649,
+      "memory_events": 0,
+      "latency_ms": 2.487588000803953
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42084,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8551030007074587
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41842,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.7671700008795597
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42084,
+      "extra_bytes": 890,
+      "memory_events": 0,
+      "latency_ms": 1.8881420000980143
+    },
+    {
+      "id": "own-eval:inventory:02",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41842,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.568849999079248
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:ownership",
+        "project:ecology",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42070,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8047770026896615
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41828,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.6439339999342337
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:ownership",
+        "project:ecology",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42070,
+      "extra_bytes": 890,
+      "memory_events": 0,
+      "latency_ms": 1.8658289991435595
+    },
+    {
+      "id": "own-eval:inventory:03",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41828,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.7065479989687447
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41460,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8088729993905872
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41460,
+      "extra_bytes": 321,
+      "memory_events": 0,
+      "latency_ms": 2.581349002866773
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41460,
+      "extra_bytes": 321,
+      "memory_events": 0,
+      "latency_ms": 1.8355530010012444
+    },
+    {
+      "id": "own-eval:inventory:04",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41460,
+      "extra_bytes": 321,
+      "memory_events": 0,
+      "latency_ms": 2.407556999969529
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41766,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.844686998083489
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41836,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.5950999988708645
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41766,
+      "extra_bytes": 598,
+      "memory_events": 0,
+      "latency_ms": 1.8510859990783501
+    },
+    {
+      "id": "own-eval:inventory:05",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41836,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.531104000809137
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42074,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.7904739979712758
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41832,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.517443001124775
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42074,
+      "extra_bytes": 890,
+      "memory_events": 0,
+      "latency_ms": 1.888652997877216
+    },
+    {
+      "id": "own-eval:inventory:06",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41832,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.747901999100577
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:ownership",
+        "project:aftermath",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42106,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9170349987689406
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41835,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.586908001831034
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:ownership",
+        "project:aftermath",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42106,
+      "extra_bytes": 919,
+      "memory_events": 0,
+      "latency_ms": 4.475680998439202
+    },
+    {
+      "id": "own-eval:inventory:07",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41835,
+      "extra_bytes": 660,
+      "memory_events": 0,
+      "latency_ms": 2.650934999110177
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40933,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.7890429990075063
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40933,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.366224998695543
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40933,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 1.7708449995552655
+    },
+    {
+      "id": "own-eval:inventory:08",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 40933,
+      "extra_bytes": 27,
+      "memory_events": 0,
+      "latency_ms": 2.373465002165176
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:investigation",
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42077,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8059480025840458
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:investigation",
+        "project:inspect",
+        "project:partial"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42163,
+      "extra_bytes": 967,
+      "memory_events": 0,
+      "latency_ms": 2.642161001858767
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:investigation",
+        "project:inspect",
+        "project:ownership"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42077,
+      "extra_bytes": 893,
+      "memory_events": 0,
+      "latency_ms": 1.9536809995770454
+    },
+    {
+      "id": "own-eval:inventory:09",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:investigation",
+        "project:inspect",
+        "project:partial"
+      ],
+      "expected_method_found": false,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42163,
+      "extra_bytes": 967,
+      "memory_events": 0,
+      "latency_ms": 2.6174039994657505
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B0",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42070,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 3.1130220013437793
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B1",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42153,
+      "extra_bytes": 961,
+      "memory_events": 0,
+      "latency_ms": 4.361709001386771
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B2",
+      "selected_ids": [
+        "project:inspect",
+        "project:ownership",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42070,
+      "extra_bytes": 890,
+      "memory_events": 0,
+      "latency_ms": 3.136867999273818
+    },
+    {
+      "id": "own-eval:inventory:10",
+      "group": "inventory",
+      "mode": "B3",
+      "selected_ids": [
+        "project:ownership",
+        "project:inspect",
+        "project:trade"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42153,
+      "extra_bytes": 961,
+      "memory_events": 0,
+      "latency_ms": 4.698407999967458
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41919,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.959330999146914
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41919,
+      "extra_bytes": 617,
+      "memory_events": 0,
+      "latency_ms": 3.923987998859957
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41919,
+      "extra_bytes": 617,
+      "memory_events": 0,
+      "latency_ms": 3.029637002327945
+    },
+    {
+      "id": "own-eval:isolation:01",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41919,
+      "extra_bytes": 617,
+      "memory_events": 0,
+      "latency_ms": 3.7244170016492717
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41950,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 3.0372990004252642
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41950,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 3.8977980002528057
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41950,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 3.0254609991970938
+    },
+    {
+      "id": "own-eval:isolation:02",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41950,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 3.803916999459034
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:knowledge",
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42122,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 3.0492160003632307
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:knowledge",
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42122,
+      "extra_bytes": 943,
+      "memory_events": 0,
+      "latency_ms": 3.9145830014604144
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:knowledge",
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42122,
+      "extra_bytes": 943,
+      "memory_events": 0,
+      "latency_ms": 2.987202002259437
+    },
+    {
+      "id": "own-eval:isolation:03",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:knowledge",
+        "project:voice"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42122,
+      "extra_bytes": 943,
+      "memory_events": 0,
+      "latency_ms": 3.8335010031005368
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41969,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.9709079972235486
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41969,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 3.941753999242792
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41969,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 3.0382290024135727
+    },
+    {
+      "id": "own-eval:isolation:04",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41969,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 3.854852999211289
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41801,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1885159985686187
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41801,
+      "extra_bytes": 628,
+      "memory_events": 0,
+      "latency_ms": 2.8412620013114065
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41801,
+      "extra_bytes": 628,
+      "memory_events": 0,
+      "latency_ms": 2.3431800000253133
+    },
+    {
+      "id": "own-eval:isolation:05",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:reputation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41801,
+      "extra_bytes": 628,
+      "memory_events": 0,
+      "latency_ms": 2.645827000378631
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:craft",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42333,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.5015589999384247
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:craft",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42333,
+      "extra_bytes": 992,
+      "memory_events": 0,
+      "latency_ms": 2.4918039998738095
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:craft",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42333,
+      "extra_bytes": 992,
+      "memory_events": 0,
+      "latency_ms": 2.122186000633519
+    },
+    {
+      "id": "own-eval:isolation:06",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:craft",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42333,
+      "extra_bytes": 992,
+      "memory_events": 0,
+      "latency_ms": 2.7837250017910264
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41781,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1497770030691754
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41781,
+      "extra_bytes": 620,
+      "memory_events": 0,
+      "latency_ms": 2.4277079974126536
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42345,
+      "extra_bytes": 935,
+      "memory_events": 1,
+      "latency_ms": 1.8575870017230045
+    },
+    {
+      "id": "own-eval:isolation:07",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:investigation"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42345,
+      "extra_bytes": 935,
+      "memory_events": 1,
+      "latency_ms": 2.6275589989381842
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B0",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42121,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8824229991878383
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B1",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42121,
+      "extra_bytes": 945,
+      "memory_events": 0,
+      "latency_ms": 2.447906997986138
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B2",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42121,
+      "extra_bytes": 945,
+      "memory_events": 0,
+      "latency_ms": 1.874962999863783
+    },
+    {
+      "id": "own-eval:isolation:08",
+      "group": "isolation",
+      "mode": "B3",
+      "selected_ids": [
+        "project:continuity",
+        "project:ecology",
+        "project:knowledge"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42121,
+      "extra_bytes": 945,
+      "memory_events": 0,
+      "latency_ms": 2.4495210018358193
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41508,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.979019998543663
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41508,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.440577001834754
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41508,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 1.9573669997043908
+    },
+    {
+      "id": "own-eval:retcon:01",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41508,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.3795149973011576
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41498,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.0758460013894364
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41498,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.672757000254933
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41498,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 1.997087001655018
+    },
+    {
+      "id": "own-eval:retcon:02",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41498,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.6315450013498776
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world",
+        "project:politics",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42152,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.111478999722749
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world",
+        "project:politics"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41910,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.9549640021286905
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world",
+        "project:politics",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42152,
+      "extra_bytes": 961,
+      "memory_events": 0,
+      "latency_ms": 2.53498899837723
+    },
+    {
+      "id": "own-eval:retcon:03",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world",
+        "project:politics"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41910,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.793610001390334
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world",
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42179,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8781870021484792
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world",
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42179,
+      "extra_bytes": 1007,
+      "memory_events": 0,
+      "latency_ms": 2.9705170018132776
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world",
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42179,
+      "extra_bytes": 1007,
+      "memory_events": 0,
+      "latency_ms": 2.027872997132363
+    },
+    {
+      "id": "own-eval:retcon:04",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world",
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42179,
+      "extra_bytes": 1007,
+      "memory_events": 0,
+      "latency_ms": 2.569532000052277
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41503,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8281119992025197
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41503,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.7305750008963514
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41503,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.118530002917396
+    },
+    {
+      "id": "own-eval:retcon:05",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41503,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.6654069988580886
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41513,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.1593519995803945
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41513,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.580397998826811
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41513,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 1.8409010008326732
+    },
+    {
+      "id": "own-eval:retcon:06",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41513,
+      "extra_bytes": 363,
+      "memory_events": 0,
+      "latency_ms": 2.4839030011207797
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41875,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.112120000674622
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41875,
+      "extra_bytes": 702,
+      "memory_events": 0,
+      "latency_ms": 2.619976999994833
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41875,
+      "extra_bytes": 702,
+      "memory_events": 0,
+      "latency_ms": 2.0341730014479253
+    },
+    {
+      "id": "own-eval:retcon:07",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41875,
+      "extra_bytes": 702,
+      "memory_events": 0,
+      "latency_ms": 2.78637899828027
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B0",
+      "selected_ids": [
+        "project:world",
+        "project:politics",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42141,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.259273001982365
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B1",
+      "selected_ids": [
+        "project:world",
+        "project:politics"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41899,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.7245460005360655
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B2",
+      "selected_ids": [
+        "project:world",
+        "project:politics",
+        "project:ecology"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42141,
+      "extra_bytes": 961,
+      "memory_events": 0,
+      "latency_ms": 1.9665510008053388
+    },
+    {
+      "id": "own-eval:retcon:08",
+      "group": "retcon",
+      "mode": "B3",
+      "selected_ids": [
+        "project:world",
+        "project:politics"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41899,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.523692000977462
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42171,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.941692997206701
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42266,
+      "extra_bytes": 1058,
+      "memory_events": 0,
+      "latency_ms": 2.645517000928521
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:aftermath"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42171,
+      "extra_bytes": 975,
+      "memory_events": 0,
+      "latency_ms": 1.9757250011025462
+    },
+    {
+      "id": "own-eval:errors:01",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42266,
+      "extra_bytes": 1058,
+      "memory_events": 0,
+      "latency_ms": 2.6169340017077047
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42158,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.8740509985946119
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42255,
+      "extra_bytes": 1058,
+      "memory_events": 0,
+      "latency_ms": 2.602790998935234
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42158,
+      "extra_bytes": 973,
+      "memory_events": 0,
+      "latency_ms": 1.8513270006224047
+    },
+    {
+      "id": "own-eval:errors:02",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:rest"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42255,
+      "extra_bytes": 1058,
+      "memory_events": 0,
+      "latency_ms": 2.7075399993918836
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:craft",
+        "project:magic",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42171,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9258800020907074
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42276,
+      "extra_bytes": 1066,
+      "memory_events": 0,
+      "latency_ms": 2.7005200026906095
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:craft",
+        "project:magic",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42171,
+      "extra_bytes": 973,
+      "memory_events": 0,
+      "latency_ms": 1.8975959974341094
+    },
+    {
+      "id": "own-eval:errors:03",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42276,
+      "extra_bytes": 1066,
+      "memory_events": 0,
+      "latency_ms": 2.659136996953748
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:craft",
+        "project:magic",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42131,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9170049999956973
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41877,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.6514259989198763
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:craft",
+        "project:magic",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42131,
+      "extra_bytes": 973,
+      "memory_events": 0,
+      "latency_ms": 1.8911869992734864
+    },
+    {
+      "id": "own-eval:errors:04",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41877,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.849214000889333
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:investigation",
+        "project:production",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42168,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.4512829986633733
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:investigation",
+        "project:production",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42201,
+      "extra_bytes": 995,
+      "memory_events": 0,
+      "latency_ms": 3.001434000907466
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:investigation",
+        "project:production",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42168,
+      "extra_bytes": 974,
+      "memory_events": 0,
+      "latency_ms": 1.9977279989689123
+    },
+    {
+      "id": "own-eval:errors:05",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:investigation",
+        "project:production",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42201,
+      "extra_bytes": 995,
+      "memory_events": 0,
+      "latency_ms": 2.809705001709517
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42142,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9693549984367564
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:production",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41888,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.6921370008494705
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42142,
+      "extra_bytes": 973,
+      "memory_events": 0,
+      "latency_ms": 1.9771769984799903
+    },
+    {
+      "id": "own-eval:errors:06",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:production",
+        "project:craft"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41888,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.574077996541746
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42151,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 2.2233790004975162
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41897,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.84765199830872
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:production",
+        "project:craft",
+        "project:magic"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42151,
+      "extra_bytes": 973,
+      "memory_events": 0,
+      "latency_ms": 1.847700998041546
+    },
+    {
+      "id": "own-eval:errors:07",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 41897,
+      "extra_bytes": 731,
+      "memory_events": 0,
+      "latency_ms": 2.642211999045685
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B0",
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42215,
+      "extra_bytes": 0,
+      "memory_events": 0,
+      "latency_ms": 1.9646979999379255
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B1",
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42248,
+      "extra_bytes": 1039,
+      "memory_events": 0,
+      "latency_ms": 2.7504339996085037
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B2",
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:combat"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42215,
+      "extra_bytes": 1018,
+      "memory_events": 0,
+      "latency_ms": 1.8853379988286179
+    },
+    {
+      "id": "own-eval:errors:08",
+      "group": "errors",
+      "mode": "B3",
+      "selected_ids": [
+        "project:craft",
+        "project:production",
+        "project:partial"
+      ],
+      "expected_method_found": true,
+      "validator_mismatches": 0,
+      "errors": [],
+      "context_bytes": 42248,
+      "extra_bytes": 1039,
+      "memory_events": 0,
+      "latency_ms": 2.668930999789154
+    }
+  ],
+  "local_base": "NOT_DEPLOYED",
+  "trained_model": "NOT_TRAINED",
+  "hybrid_quality": "NOT_MEASURED"
+}

@@ -55,3 +55,10 @@ tester-bootstrap.json
 # User training corpora and quarantined derived records remain local.
 /data/learning-local/
 /data/external/
+
+# Unified RPG: private training material and actual weights are never client resources.
+/training/source_archive/
+/data/processed/
+/data/reports/
+/artifacts/
+/checkpoints/

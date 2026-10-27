@@ -1,0 +1,13 @@
+F
+=================================== FAILURES ===================================
+_________ test_form_waits_for_central_button_then_loading_opens_story __________
+tests/test_world_creation_screen.py:50: in test_form_waits_for_central_button_then_loading_opens_story
+    assert screen.create_button.isVisible() and screen.progress.isHidden()
+E   assert (False)
+E    +  where False = <built-in method isVisible of PySide6.QtWidgets.QPushButton object at 0x7f581aad3b40>()
+E    +    where <built-in method isVisible of PySide6.QtWidgets.QPushButton object at 0x7f581aad3b40> = <PySide6.QtWidgets.QPushButton(0x7316740) at 0x7f581aad3b40>.isVisible
+E    +      where <PySide6.QtWidgets.QPushButton(0x7316740) at 0x7f581aad3b40> = <rpg_vkr.ui.world_creation_screen.WorldCreationScreen(0x7329420, name="worldCreationScreen") at 0x7f581aaf0340>.create_button
+=========================== short test summary info ============================
+FAILED tests/test_world_creation_screen.py::test_form_waits_for_central_button_then_loading_opens_story
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 1.41s

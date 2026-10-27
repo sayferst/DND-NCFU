@@ -5,8 +5,6 @@ from pathlib import Path
 from PySide6.QtWidgets import (
     QComboBox,
     QFileDialog,
-    QLabel,
-    QLineEdit,
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
@@ -14,7 +12,6 @@ from PySide6.QtWidgets import (
 )
 
 from rpg_vkr.domain.content_v5 import ABILITIES, ITEMS, RECIPES
-from rpg_vkr.learning.rag import retrieve
 
 
 def install(window, page):
@@ -90,68 +87,16 @@ def install(window, page):
     window.living_world_info.setReadOnly(True)
     window.living_world_info.setMaximumHeight(140)
     form.addRow(window.living_world_info)
-    form = page("Копия кампании и RAG")
-    migration = QPushButton("Создать проверяемую копию на новых правилах")
-    migration.clicked.connect(lambda: migrate(window))
-    form.addRow(migration)
-    window.rag_mode = QComboBox()
-    window.rag_mode.addItems(
-        ["RAG выключен", "Только поиск, без влияния на ответ", "Подсказки рассказчику"]
-    )
-    from rpg_vkr.learning.settings import load, update
-
-    mode = load()["mode"]
-    window.rag_mode.setCurrentIndex(mode)
-    form.addRow("Библиотека приёмов", window.rag_mode)
-
-    def changed(index):
-        window._session._rag_mode = index
-        update({"mode": index})
-
-    window.rag_mode.currentIndexChanged.connect(changed)
-    window.rag_query = QLineEdit()
-    form.addRow("Запрос к библиотеке", window.rag_query)
-    window.rag_results = QPlainTextEdit()
-    window.rag_results.setReadOnly(True)
-    window.rag_results.setMaximumHeight(150)
-    form.addRow(window.rag_results)
-    search = QPushButton("Найти приёмы (локально)")
-
-    def lookup():
-        values = retrieve(window.rag_query.text())
-        if load()["library"]:
-            import sqlite3
-
-            from rpg_vkr.learning.library import Library, active_path
-
-            try:
-                with Library(active_path()) as library:
-                    values = library.search(window.rag_query.text())
-            except (OSError, ValueError, KeyError, sqlite3.Error):
-                pass
-        window.rag_results.setPlainText(
-            "\n\n".join(r["id"] + ": " + r["text"] for r in values)
-            or "Подходящих приёмов нет; рассказчик работает обычным способом."
-        )
-
-    search.clicked.connect(lookup)
-    form.addRow(search)
-    note = QLabel(
-        "Библиотека содержит собственные приёмы проекта. Они не создают факты мира. "
-        "Непроверенные корпуса в неё автоматически не попадают."
-    )
-    note.setWordWrap(True)
-    form.addRow(note)
 
 
 def refresh(window):
     if not hasattr(window, "expanded_page"):
         return
     session, state = window._session, window._session.gameplay
-    window._session._rag_mode = window.rag_mode.currentIndex()
     from rpg_vkr.learning.settings import load
 
     window._session._learning_flags = load()
+    window._session._rag_mode = load()["mode"]
     enabled = state is not None and session.schema_version >= 28
     window.gameplay_tabs.setTabVisible(window.gameplay_tabs.indexOf(window.expanded_page), enabled)
     if not enabled:

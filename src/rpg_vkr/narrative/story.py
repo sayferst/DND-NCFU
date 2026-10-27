@@ -9,7 +9,12 @@ from rpg_vkr.narrative.failures import NarrativeConflict, ResponseFormatError
 from rpg_vkr.narrative.instructions import load_instructions
 from rpg_vkr.narrative.routing import addressed_to_master, simple_action
 from rpg_vkr.narrative.speech import speech_details
-from rpg_vkr.narrative.story_prompt import STORY_CONTRACT, render_context, writing_profile
+from rpg_vkr.narrative.story_prompt import (
+    STORY_CONTRACT,
+    render_context,
+    scene_profile,
+    writing_profile,
+)
 from rpg_vkr.narrative.story_quality import check_story_quality, spoken
 from rpg_vkr.narrative.turn_brief import turn_brief
 
@@ -102,7 +107,7 @@ def story_context(
         "memory": memory,
         "recent_events": recent,
         "turn_brief": brief,
-        "writing_profile": writing_profile(model, text),
+        "writing_profile": scene_profile(model, text, writing_profile(model, text)),
         "task": "Опиши уже подтверждённый итог без повторного действия."
         if confirmed
         else (
@@ -121,6 +126,11 @@ def story_context(
         and row.get("scope")
         == ("npc:" + brief["target_id"] if brief.get("mode") == "dialogue" else "player")
     ]
+    from rpg_vkr.learning.embedded import retrieve as embedded_retrieve
+
+    embedded = embedded_retrieve(text)
+    if embedded:
+        context["narrative_techniques"] = embedded
     if (campaign or {}).get("learning_features"):
         from rpg_vkr.learning.runtime import enrich
 

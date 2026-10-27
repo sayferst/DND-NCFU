@@ -1,0 +1,15 @@
+...F............                                                         [100%]
+=================================== FAILURES ===================================
+____________ test_library_is_absent_from_real_developer_navigation _____________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x40428e60) at 0x7f7963220cc0>
+
+    def test_library_is_absent_from_real_developer_navigation(window):
+>       console = window.developer_console
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'MainWindow' object has no attribute 'developer_console'
+
+tests/test_embedded_knowledge.py:24: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_embedded_knowledge.py::test_library_is_absent_from_real_developer_navigation
+1 failed, 15 passed in 0.67s

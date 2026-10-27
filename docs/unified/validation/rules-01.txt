@@ -1,0 +1,112 @@
+FFFFFF......                                                             [100%]
+=================================== FAILURES ===================================
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[warrior] _
+
+key = 'warrior'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-38/test_one_ruleset_all_classes_r0')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+>       assert s.gameplay['minute']==10
+E       assert 490 == 10
+
+tests/test_unified_rules.py:23: AssertionError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[archer] _
+
+key = 'archer'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-38/test_one_ruleset_all_classes_r1')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+>       assert s.gameplay['minute']==10
+E       assert 490 == 10
+
+tests/test_unified_rules.py:23: AssertionError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[rogue] _
+
+key = 'rogue'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-38/test_one_ruleset_all_classes_r2')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+>       assert s.gameplay['minute']==10
+E       assert 490 == 10
+
+tests/test_unified_rules.py:23: AssertionError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[mage] _
+
+key = 'mage'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-38/test_one_ruleset_all_classes_r3')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+>       assert s.gameplay['minute']==10
+E       assert 490 == 10
+
+tests/test_unified_rules.py:23: AssertionError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[cleric] _
+
+key = 'cleric'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-38/test_one_ruleset_all_classes_r4')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+>       assert s.gameplay['minute']==10
+E       assert 490 == 10
+
+tests/test_unified_rules.py:23: AssertionError
+_ test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[artisan] _
+
+key = 'artisan'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-38/test_one_ruleset_all_classes_r5')
+
+    @pytest.mark.parametrize('key',CLASSES)
+    def test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save(key,tmp_path):
+        s=hero(key);assert s.schema_version==30 and s.gameplay['version']==VERSION
+        assert s.d20_progress is None and s.gameplay['items']
+        assert sum(getattr(s.character,a)-8 for a in ABILITY_NAMES)==24
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+        before=s.to_dict(),s.dice.checkpoint()
+        s.perform_gameplay('wait',{'minutes':10},'wait_once')
+>       assert s.gameplay['minute']==10
+E       assert 490 == 10
+
+tests/test_unified_rules.py:23: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[warrior]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[archer]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[rogue]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[mage]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[cleric]
+FAILED tests/test_unified_rules.py::test_one_ruleset_all_classes_real_inventory_no_skill_currency_and_save[artisan]
+6 failed, 6 passed in 0.15s

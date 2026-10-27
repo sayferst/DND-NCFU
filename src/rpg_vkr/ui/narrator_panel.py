@@ -782,6 +782,22 @@ def catalog_context(window, text):
             else 2
         )
         state["equipment_rules"] = equipment_rules()
+        if getattr(window._session, "is_unified", False):
+            from rpg_vkr.domain.unified import CLASSES, TASKS, VERSION, proficiency
+
+            data = window._session.gameplay
+            state["gameplay_revision"] = 6
+            state["canonical_ruleset"] = VERSION
+            state["hero_class"] = CLASSES[data["identity"]["class_id"]][0]
+            state["class_preparation"] = proficiency(data["xp"])
+            state["skill_ranks"] = None
+            state["class_tasks"] = {
+                task: {
+                    "ability": ability,
+                    "prepared": task in CLASSES[data["identity"]["class_id"]][2],
+                }
+                for task, ability in TASKS.items()
+            }
         state["actors_here"] = [
             id for id in state["actors_here"] if window._session.actor_is_here(id)
         ]
@@ -1207,6 +1223,9 @@ def request_challenge(window, text, *, suggested_kind=None, assessment=None):
         return True
     if assessment:
         from rpg_vkr.domain.challenge import validate_assessment
+
+        if getattr(window._session, "is_unified", False):
+            from rpg_vkr.domain.unified import validate_assessment
 
         validate_assessment(assessment)
         ability, difficulty, purpose = (assessment[k] for k in ("ability", "dc", "purpose"))

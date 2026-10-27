@@ -1,362 +1,294 @@
-"""Explicit homebrew creation with a fixed budget, separate from the legacy editor."""
+"""Four-page creation flow for the single canonical new campaign."""
+
+from collections import Counter
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
     QFormLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
-    QListWidget,
-    QListWidgetItem,
-    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
     QSpinBox,
-    QTabWidget,
+    QStackedWidget,
     QVBoxLayout,
     QWidget,
 )
 
-from rpg_vkr.application import Session
 from rpg_vkr.domain.campaign import DESCRIPTION_LIMIT, WORLD_BRIEF_LIMIT, plain
-from rpg_vkr.domain.character import ABILITY_NAMES, Character
-from rpg_vkr.domain.progression import ARCHETYPES, POINT_BUDGET, validate_creation
+from rpg_vkr.domain.character import ABILITY_NAMES, Character, ability_modifier
+from rpg_vkr.domain.unified import CLASSES, ITEMS, KITS, TALENTS, caps, initial, talents
+from rpg_vkr.unified_session import UnifiedSession
+
+HELP = {
+    "strength": "Сила — физические усилия, тяжёлое оружие и перенос груза.",
+    "dexterity": "Ловкость — меткость, скрытность, реакция.",
+    "constitution": "Телосложение — здоровье и стойкость.",
+    "intelligence": "Интеллект — знания, исследование, ремесло.",
+    "wisdom": "Мудрость — внимательность и интуиция.",
+    "charisma": "Харизма — общение, убеждение и влияние.",
+}
 
 
 class CreationDialog(QDialog):
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent=None):
         super().__init__(parent)
-        if parent is not None and not getattr(parent, "_legacy_controls", False):
+        if parent is not None:
             self.setFont(parent.font())
-        self.setWindowTitle("Создать героя · авторские правила")
-        self.setMinimumSize(480, 550)
-        self.resize(580, 740)
+        self.setWindowTitle("Создать героя")
+        self.resize(680, 680)
+        self.setMinimumSize(480, 360)
         outer = QVBoxLayout(self)
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        content = QWidget()
-        container = QVBoxLayout(content)
-        self.creation_steps = QTabWidget()
-        container.addWidget(self.creation_steps)
+        self.heading = QLabel()
+        outer.addWidget(self.heading)
+        self.creation_steps = QStackedWidget()
+        outer.addWidget(self.creation_steps, 1)
 
-        def step(title):
-            page = QWidget()
-            self.creation_steps.addTab(page, title)
-            return QFormLayout(page)
+        def page(title):
+            scroll = QScrollArea()
+            scroll.setWidgetResizable(True)
+            scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            content = QWidget()
+            layout = QFormLayout(content)
+            layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
+            layout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+            scroll.setWidget(content)
+            scroll.setProperty("title", title)
+            self.creation_steps.addWidget(scroll)
+            return layout
 
-        layout = step("Личность")
-        scroll.setWidget(content)
-        outer.addWidget(scroll, 1)
-        note = QLabel(
-            "База 8, распределите 24 очка. Повышение на 1 стоит 1 очко; максимум 16. "
-            "Это homebrew-профили, не полные классы SRD."
-        )
-        note.setWordWrap(True)
-        layout.addRow(note)
+        def label(text):
+            v = QLabel(text)
+            v.setWordWrap(True)
+            v.setTextFormat(Qt.TextFormat.PlainText)
+            return v
+
+        form = page("Герой")
         self.name_input = QLineEdit("Путник")
         self.name_input.setMaxLength(40)
-        layout.addRow("Имя", self.name_input)
+        self.name_input.setToolTip(
+            "Имя героя. Остальные особенности можно описать на шаге «История и мир»."
+        )
+        form.addRow("Имя", self.name_input)
         self.class_choice = QComboBox()
-        for key, archetype in ARCHETYPES.items():
-            self.class_choice.addItem(archetype.name, key)
-        layout.addRow("Класс / авторский профиль", self.class_choice)
-        self.use_d20_skills = QCheckBox("Навыки D20: 13 очков, бонус +2 за ранг")
-        self.use_d20_skills.setToolTip(
-            "Отдельное развитие навыков; включается только для нового героя."
+        for key, data in CLASSES.items():
+            self.class_choice.addItem(data[0], key)
+        self.class_choice.setToolTip(
+            "Класс даёт подготовку к своим действиям. Другие действия тоже доступны."
         )
-        layout.addRow(self.use_d20_skills)
-        from rpg_vkr.domain.gameplay import PROFILES, SPECIES
-
-        self.use_gameplay = QCheckBox("Приключение v3: экипировка, бой, магия, мастерская, время")
-        layout.addRow(self.use_gameplay)
-        self.species_choice = QComboBox()
-        for key, name in SPECIES.items():
-            self.species_choice.addItem(name, key)
-        layout.addRow("Вид (v3)", self.species_choice)
-        self.profile_choice = QComboBox()
-        for key, name in PROFILES.items():
-            self.profile_choice.addItem(name, key)
-        layout.addRow("Специализация (v3)", self.profile_choice)
-        from rpg_vkr.domain.content_v5 import KITS
-        from rpg_vkr.domain.content_v5 import SPELLS as NEW_SPELLS
-
-        self.kit_choice = QComboBox()
-        for key, value in KITS.items():
-            self.kit_choice.addItem(value[0], key)
-        layout.addRow("Стартовый набор", self.kit_choice)
-        self.starting_spells = QListWidget()
-        self.starting_spells.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
-        self.starting_spells.setMaximumHeight(95)
-        for key, value in NEW_SPELLS.items():
-            if value["circle"] == 1:
-                row = QListWidgetItem(value["name"])
-                row.setData(Qt.ItemDataRole.UserRole, key)
-                self.starting_spells.addItem(row)
-        layout.addRow("До двух начальных заклинаний", self.starting_spells)
-        self.age_input = QSpinBox()
-        self.age_input.setRange(18, 1000)
-        self.age_input.setValue(20)
-        layout.addRow("Возраст (v3)", self.age_input)
-        self.background_input = QLineEdit("Путешественник")
-        self.background_input.setMaxLength(400)
-        layout.addRow("Происхождение (v3)", self.background_input)
-        self.appearance_input = QLineEdit("Дорожная одежда")
-        self.appearance_input.setMaxLength(400)
-        layout.addRow("Внешность (v3)", self.appearance_input)
-        note_v3 = QLabel(
-            "Новый набор включает особенности вида (+1 к характеристике), "
-            "способность профиля и выбор снаряжения. Магия требует обучения "
-            "Теории магии. Все действия нового набора доступны на странице героя."
-        )
-        note_v3.setWordWrap(True)
-        layout.addRow(note_v3)
-        from rpg_vkr.domain.d20_progression import SKILLS
-
-        layout = step("Навыки и талант")
-        from rpg_vkr.domain.gameplay_v2 import TALENTS
-
-        self.initial_talent = QComboBox()
-        self.initial_talent.addItem("Выбрать позже", "")
-        for key, name in TALENTS.items():
-            self.initial_talent.addItem(name, key)
-        layout.addRow("Начальный талант (v3)", self.initial_talent)
-        self.initial_skills = {}
-        self.initial_skill_budget = QLabel("Начальные навыки: 0 / 13 очков")
-        layout.addRow(self.initial_skill_budget)
-        for key, (name, _) in SKILLS.items():
-            spin = QSpinBox()
-            spin.setRange(0, 2)
-            spin.valueChanged.connect(self._update_creation_skills)
-            self.initial_skills[key] = spin
-            layout.addRow(name + " (v3)", spin)
-        layout = step("История и мир")
-        self.description_input = QPlainTextEdit()
-        self.description_input.setAccessibleName("Свободное описание героя")
-        self.description_input.setPlaceholderText(
-            "Внешность, происхождение, семья, прошлое и желания героя. Можно оставить пустым."
-        )
-        self.description_input.setMaximumHeight(150)
-        layout.addRow("Расскажите о герое", self.description_input)
-        self.description_limit = QLabel(
-            f"До {DESCRIPTION_LIMIT} символов. Исходный текст сохраняется без переписывания."
-        )
-        self.description_limit.setWordWrap(True)
-        layout.addRow(self.description_limit)
-        self.description_input.textChanged.connect(self._update_budget)
-        self.world_brief_input = QPlainTextEdit()
-        self.world_brief_input.setAccessibleName("Пожелания к миру и жанру")
-        self.world_brief_input.setPlaceholderText(
-            "Например: приключенческое фэнтези, редкая магия, торговля, интриги гильдий. "
-            "Это пожелания к повествованию, а не выдача предметов или готовый мир."
-        )
-        self.world_brief_input.setMaximumHeight(100)
-        layout.addRow("Мир, жанры и настроение", self.world_brief_input)
-        self.world_brief_limit = QLabel(f"До {WORLD_BRIEF_LIMIT} символов. Поле необязательное.")
-        self.world_brief_limit.setWordWrap(True)
-        layout.addRow(self.world_brief_limit)
-        self.world_brief_input.textChanged.connect(self._update_budget)
-        self.generate_world = QCheckBox("Создать новый мир и сюжет мастером")
-        self.generate_world.setChecked(not getattr(parent, "_legacy_controls", False))
-        layout.addRow(self.generate_world)
-        self.generate_world.setVisible(getattr(parent, "_legacy_controls", False))
-        generation_note = QLabel(
-            "Место и сюжет выбирает мастер по описаниям выше. Включите ИИ до "
-            "создания героя; для нового мира требуется облачное подключение."
-        )
-        generation_note.setWordWrap(True)
-        layout.addRow(generation_note)
-        layout = step("Характеристики")
-        self.kit_label = QLabel()
-        self.kit_label.setWordWrap(True)
-        layout.addRow(self.kit_label)
+        form.addRow("Класс", self.class_choice)
+        self.class_info = label("")
+        form.addRow(self.class_info)
+        self.kit_label = label("")
+        form.addRow("Стартовый комплект", self.kit_label)
+        form = page("Характеристики и талант")
         self.scores = {}
-        for ability, name in ABILITY_NAMES.items():
+        self.modifiers = {}
+        for key, title in ABILITY_NAMES.items():
+            line = QWidget()
+            row = QHBoxLayout(line)
+            row.setContentsMargins(0, 0, 0, 0)
             spin = QSpinBox()
             spin.setRange(8, 16)
-            self.scores[ability] = spin
-            layout.addRow(name, spin)
+            spin.setMaximumWidth(95)
+            spin.setToolTip(HELP[key])
+            spin.setAccessibleName(HELP[key])
+            value = label("")
+            row.addWidget(spin)
+            row.addWidget(value)
+            row.addStretch()
+            self.scores[key] = spin
+            self.modifiers[key] = value
+            form.addRow(title, line)
             spin.valueChanged.connect(self._update_budget)
-        recommended = QPushButton("Применить рекомендованные характеристики")
-        recommended.clicked.connect(self.apply_recommended)
-        layout.addRow(recommended)
-        self.budget_label = QLabel()
-        self.budget_label.setWordWrap(True)
-        layout.addRow(self.budget_label)
-        layout = step("Подтверждение")
-        self.creation_summary = QLabel()
-        self.creation_summary.setWordWrap(True)
-        layout.addRow(self.creation_summary)
+        self.budget_label = label("")
+        form.addRow(self.budget_label)
+        recommend = QPushButton("Рекомендованные характеристики")
+        recommend.clicked.connect(self.apply_recommended)
+        form.addRow(recommend)
+        self.initial_talent = QComboBox()
+        form.addRow("Талант", self.initial_talent)
+        self.talent_info = label("")
+        form.addRow(self.talent_info)
+        self.resource_preview = label("")
+        form.addRow(self.resource_preview)
+        form = page("История и мир")
+        self.description_input = QPlainTextEdit()
+        self.description_input.setMinimumHeight(140)
+        self.description_input.setPlaceholderText(
+            "Внешность, возраст, раса, семья, прошлое и желания. Можно оставить пустым."
+        )
+        self.description_input.setToolTip(
+            "Свободное описание сохраняется дословно; не выдаёт бонусы и предметы."
+        )
+        form.addRow("Описание персонажа", self.description_input)
+        self.description_limit = label("")
+        form.addRow(self.description_limit)
+        self.world_brief_input = QPlainTextEdit()
+        self.world_brief_input.setMinimumHeight(120)
+        self.world_brief_input.setPlaceholderText(
+            "Жанр, атмосфера, магия, пожелания и ограничения мира."
+        )
+        self.world_brief_input.setToolTip("Мастер создаст новый мир на основании этих пожеланий.")
+        form.addRow("Пожелания к миру", self.world_brief_input)
+        self.world_brief_limit = label("")
+        form.addRow(self.world_brief_limit)
+        form = page("Подтверждение")
+        self.creation_summary = label("")
+        form.addRow(self.creation_summary)
+        self.error = label("")
+        outer.addWidget(self.error)
+        row = QHBoxLayout()
+        outer.addLayout(row)
+        self.back = QPushButton("Назад")
+        self.next = QPushButton("Далее")
+        row.addWidget(self.back)
+        row.addStretch()
+        row.addWidget(self.next)
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText("Создать героя")
+        row.addWidget(self.buttons)
         self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("Отмена")
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
-        outer.addWidget(self.buttons)
-        self.class_choice.currentIndexChanged.connect(self._update_kit)
+        self.back.clicked.connect(lambda: self.step(-1))
+        self.next.clicked.connect(lambda: self.step(1))
         self.name_input.textChanged.connect(self._update_budget)
-        self.apply_recommended()
-        self._update_kit()
-        self.use_gameplay.toggled.connect(self._update_budget)
+        self.description_input.textChanged.connect(self._update_budget)
+        self.world_brief_input.textChanged.connect(self._update_budget)
         self.initial_talent.currentIndexChanged.connect(self._update_budget)
-        self.profile_choice.currentIndexChanged.connect(self._update_budget)
-        self.species_choice.currentIndexChanged.connect(self._update_budget)
-        self.background_input.textChanged.connect(self._update_budget)
-        self.appearance_input.textChanged.connect(self._update_budget)
-        self.kit_choice.currentIndexChanged.connect(self._update_budget)
-        self.starting_spells.itemSelectionChanged.connect(self._update_budget)
+        self.class_choice.currentIndexChanged.connect(self._update_kit)
+        self._update_kit()
+        self.step(0)
 
-    def apply_recommended(self) -> None:
-        for ability, score in zip(
-            ABILITY_NAMES, ARCHETYPES[self.class_choice.currentData()].scores, strict=True
+    def step(self, delta):
+        n = max(0, min(3, self.creation_steps.currentIndex() + delta))
+        self.creation_steps.setCurrentIndex(n)
+        self.heading.setText(
+            f"{n + 1}/4 · " + self.creation_steps.currentWidget().property("title")
+        )
+        self.back.setEnabled(n > 0)
+        self.next.setVisible(n < 3)
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setVisible(n == 3)
+        self._update_budget()
+        height = (360, 650, 600, 600 if self.description_input.toPlainText() else 460)[n]
+        self.resize(self.width(), height)
+
+    def apply_recommended(self):
+        for key, value in zip(
+            ABILITY_NAMES, CLASSES[self.class_choice.currentData()][3], strict=True
         ):
-            self.scores[ability].setValue(score)
+            self.scores[key].setValue(value)
         self._update_budget()
 
-    def _update_kit(self) -> None:
-        if self.use_gameplay.isChecked():
-            from collections import Counter
-
-            from rpg_vkr.domain.content_v5 import ITEMS as ITEM_NAMES
-            from rpg_vkr.domain.gameplay_v5 import initial
-            from rpg_vkr.domain.hero_resources import limits
-
-            try:
-                character = Character(
-                    name=self.name_input.text().strip() or "Путник",
-                    **{k: v.value() for k, v in self.scores.items()},
-                )
-                state = initial(self.gameplay_identity(), character)
-                from rpg_vkr.domain.content_v5 import inherited
-
-                caps = limits(state, inherited(character, state), 1)
-                inventory = ", ".join(
-                    f"{ITEM_NAMES[k]} ×{n}"
-                    for k, n in Counter(i["kind"] for i in state["items"]).items()
-                )
-                self.kit_label.setText(
-                    f"Предпросмотр: HP {caps['hp']}, ST {caps['st']}, MP {caps['mp']}. "
-                    f"Стартовый набор: {inventory}."
-                )
-            except ValueError as error:
-                self.kit_label.setText(str(error))
-            return
-        kit = ARCHETYPES[self.class_choice.currentData()]
-        self.kit_label.setText(
-            f"{kit.description}\nСтарт: {kit.gold} золотых, бинты ×{kit.bandages}, "
-            f"{kit.equipment}, дорожный учебник. Здоровье 12/12."
+    def _update_kit(self):
+        key = self.class_choice.currentData()
+        data = CLASSES[key]
+        self.class_info.setText(
+            data[1] + ". Подготовка +2 на первом уровне; растёт автоматически по уровню."
         )
-
-    def _update_budget(self) -> None:
-        if not hasattr(self, "buttons"):
-            return
-        remaining = POINT_BUDGET - sum(spin.value() - 8 for spin in self.scores.values())
-        self.budget_label.setText(f"Осталось очков: {remaining}. Для создания должно остаться 0.")
-        used = len(self.description_input.toPlainText())
-        world_used = len(self.world_brief_input.toPlainText())
-        self.world_brief_limit.setText(
-            f"Пожелания к миру: {world_used}/{WORLD_BRIEF_LIMIT} символов. "
-            + ("Сократите текст." if world_used > WORLD_BRIEF_LIMIT else "Поле необязательное.")
-        )
-        self.description_limit.setText(
-            f"Описание: {used}/{DESCRIPTION_LIMIT} символов. "
-            + (
-                "Лимит превышен; сократите текст. Он остаётся в поле ввода."
-                if used > DESCRIPTION_LIMIT
-                else "Исходный текст сохраняется без переписывания."
-            )
-        )
-        valid_identity = True
-        if self.use_gameplay.isChecked():
-            from rpg_vkr.domain.gameplay_v5 import initial
-
-            try:
-                initial(self.gameplay_identity(), Character())
-            except ValueError:
-                valid_identity = False
-        self._update_kit()
-        self.creation_summary.setText(
-            f"{self.name_input.text().strip()} · {self.class_choice.currentText()}\n"
-            f"Характеристики: {', '.join(str(v.value()) for v in self.scores.values())}.\n"
-            + (
-                f"Приключение v3: {self.species_choice.currentText()}, "
-                f"{self.profile_choice.currentText()}; {self.initial_skill_budget.text()}; "
-                f"талант: {self.initial_talent.currentText()}.\n"
-                + self.kit_label.text()
-                + "\n"
-                + "Проверьте выбор. До создания героя можно вернуться в любой раздел."
-                if self.use_gameplay.isChecked()
-                else "Прежний совместимый набор правил."
-            )
-        )
-        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(
-            valid_identity
-            and remaining == 0
-            and bool(self.name_input.text().strip())
-            and len(self.description_input.toPlainText()) <= DESCRIPTION_LIMIT
-            and world_used <= WORLD_BRIEF_LIMIT
-        )
-
-    def character(self) -> Character:
-        character = Character(
-            name=self.name_input.text().strip(),
-            **{key: spin.value() for key, spin in self.scores.items()},
-        )
-        validate_creation(character, self.class_choice.currentData())
-        return character
-
-    def _update_creation_skills(self):
-        cost = sum(spin.value() * (spin.value() + 1) // 2 for spin in self.initial_skills.values())
-        self.initial_skill_budget.setText(
-            f"Начальные навыки: {cost} / 13 очков; остаток {13 - cost}"
-        )
-        if hasattr(self, "buttons"):
+        self.kit_label.setText(", ".join(f"{ITEMS[k]} ×{n}" for k, n in Counter(KITS[key]).items()))
+        self.initial_talent.blockSignals(True)
+        self.initial_talent.clear()
+        for id in talents(key):
+            self.initial_talent.addItem(TALENTS[id][0], id)
+        self.initial_talent.setCurrentIndex(self.initial_talent.findData(CLASSES[key][4]))
+        self.initial_talent.blockSignals(False)
+        if not getattr(self, "_initialized", False):
+            self.apply_recommended()
+            self._initialized = True
+        else:
             self._update_budget()
 
-    def gameplay_identity(self):
-        return {
-            "kit": self.kit_choice.currentData(),
-            "starting_spells": [
-                i.data(Qt.ItemDataRole.UserRole) for i in self.starting_spells.selectedItems()
-            ],
-            "species": self.species_choice.currentData(),
-            "profile": self.profile_choice.currentData(),
-            "age": self.age_input.value(),
-            "background": self.background_input.text().strip(),
-            "appearance": self.appearance_input.text().strip(),
-            "talent": self.initial_talent.currentData(),
-            "skills": {k: v.value() for k, v in self.initial_skills.items() if v.value()},
-        }
-
-    def create_session(self) -> Session:
-        description = plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
-        session = Session.create_hero(
-            self.character(),
-            self.class_choice.currentData(),
-            description=description,
-            world_brief=plain(self.world_brief_input.toPlainText(), WORLD_BRIEF_LIMIT, empty=True),
+    def character(self):
+        value = Character(
+            name=self.name_input.text().strip(), **{k: s.value() for k, s in self.scores.items()}
         )
-        if self.use_d20_skills.isChecked():
-            session.enable_d20_progress()
-        if self.use_gameplay.isChecked():
-            session.enable_gameplay(self.gameplay_identity(), revision=5)
-        return session
+        initial(
+            {
+                "class_id": self.class_choice.currentData(),
+                "talent": self.initial_talent.currentData(),
+            },
+            value,
+        )
+        return value
 
-    def accept(self) -> None:
+    def _update_budget(self, *args):
+        if not hasattr(self, "buttons"):
+            return
+        left = 24 - sum(s.value() - 8 for s in self.scores.values())
+        self.budget_label.setText(f"Осталось очков: {left}. Нужно распределить ровно24.")
+        for key, spin in self.scores.items():
+            self.modifiers[key].setText(f"{spin.value()} → {ability_modifier(spin.value()):+}")
+        talent = self.initial_talent.currentData()
+        self.talent_info.setText(TALENTS[talent][1] if talent else "Выберите талант.")
+        self.initial_talent.setToolTip(self.talent_info.text())
+        self.description_limit.setText(
+            f"{len(self.description_input.toPlainText())}/{DESCRIPTION_LIMIT} символов"
+        )
+        self.world_brief_limit.setText(
+            f"{len(self.world_brief_input.toPlainText())}/{WORLD_BRIEF_LIMIT} символов"
+        )
         try:
             character = self.character()
-            if self.use_gameplay.isChecked():
-                from rpg_vkr.domain.gameplay_v5 import initial
-
-                initial(self.gameplay_identity(), character)
             plain(self.description_input.toPlainText(), DESCRIPTION_LIMIT, empty=True)
             plain(self.world_brief_input.toPlainText(), WORLD_BRIEF_LIMIT, empty=True)
-        except ValueError as error:
-            QMessageBox.warning(self, "Проверьте героя", str(error))
-            return
-        super().accept()
+            state = initial(
+                {"class_id": self.class_choice.currentData(), "talent": talent}, character
+            )
+            limits = caps(state, character)
+            self.resource_preview.setText(
+                f"HP {limits['hp']} · MP {limits['mp']} · ST {limits['st']}"
+            )
+            error = ""
+        except ValueError as e:
+            error = str(e)
+        self.error.setText(error)
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(not error)
+        self.next.setEnabled(not error)
+        self.creation_summary.setText(
+            self.name_input.text()
+            + " · "
+            + self.class_choice.currentText()
+            + "\n"
+            + self.kit_label.text()
+            + "\n"
+            + "\n".join(
+                f"{ABILITY_NAMES[k]} {s.value()} ({ability_modifier(s.value()):+})"
+                for k, s in self.scores.items()
+            )
+            + "\nТалант: "
+            + self.initial_talent.currentText()
+            + " — "
+            + self.talent_info.text()
+            + "\n"
+            + self.resource_preview.text()
+            + "\n\n"
+            + self.description_input.toPlainText()
+            + "\n\n"
+            + self.world_brief_input.toPlainText()
+        )
+
+    def create_session(self):
+        return UnifiedSession.create(
+            self.character(),
+            self.class_choice.currentData(),
+            self.initial_talent.currentData(),
+            description=self.description_input.toPlainText(),
+            world_brief=self.world_brief_input.toPlainText(),
+        )
+
+    def accept(self):
+        self._update_budget()
+        if (
+            self.creation_steps.currentIndex() == 3
+            and self.buttons.button(QDialogButtonBox.StandardButton.Ok).isEnabled()
+        ):
+            super().accept()
