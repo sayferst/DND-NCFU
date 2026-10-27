@@ -294,8 +294,28 @@ def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp
         capture_output=True,
         timeout=30,
     )
-    failure = report.read_text(encoding="utf-8") if report.is_file() else "No diagnostic report"
-    assert result.returncode == 0, (result.stderr, failure)
+    if result.returncode != 0:
+        failure = json.loads(report.read_text(encoding="utf-8")) if report.is_file() else {}
+        safe_report = {
+            k: failure[k]
+            for k in ("ok", "error_type", "frames", "dpapi", "catalog_gameplay")
+            if k in failure
+        }
+        diagnostics = [
+            json.loads(p.read_text(encoding="utf-8"))
+            for p in (tmp_path / "untouched-real-data/logs").glob("error-*.json")
+        ]
+        pytest.fail(
+            json.dumps(
+                {
+                    "returncode": result.returncode,
+                    "report": safe_report,
+                    "diagnostics": diagnostics,
+                },
+                ensure_ascii=True,
+                indent=2,
+            )
+        )
     actual = json.loads(report.read_text(encoding="utf-8"))
     assert actual["ok"] and actual["references"] and actual["save_sqlite"] and actual["rng"]
     assert actual["loopback_posts"] == 4 and actual["network_requests"] == 6
