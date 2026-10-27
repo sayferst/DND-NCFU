@@ -53,6 +53,19 @@ def test_resource_probe_ignores_user_override_and_does_not_touch_saves(
         write_report(destination, report)
 
 
+def test_report_stdout_is_valid_json_on_cp1252_while_file_stays_utf8(tmp_path, monkeypatch):
+    import io
+
+    raw = io.BytesIO()
+    console = io.TextIOWrapper(raw, encoding="cp1252", errors="strict")
+    value = {"ok": True, "gui_sections": ["Герой", "Инвентарь"]}
+    with monkeypatch.context() as patch:
+        patch.setattr(sys, "stdout", console)
+        write_report(tmp_path / "report.json", value)
+    assert json.loads(raw.getvalue().decode("cp1252")) == value
+    assert "Герой" in (tmp_path / "report.json").read_text(encoding="utf-8")
+
+
 @pytest.mark.parametrize(
     "relative",
     [

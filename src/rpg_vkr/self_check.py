@@ -105,4 +105,6 @@ def write_report(path, report):
         with target.open("x", encoding="utf-8") as stream:
             json.dump(report, stream, ensure_ascii=False, indent=2)
     if sys.stdout:
-        print(json.dumps(report, ensure_ascii=False), flush=True)
+        # Windows redirected consoles can use CP1252 even for a Russian game.
+        # Keep the file UTF-8; machine-readable stdout must fit every code page.
+        print(json.dumps(report, ensure_ascii=True), flush=True)
