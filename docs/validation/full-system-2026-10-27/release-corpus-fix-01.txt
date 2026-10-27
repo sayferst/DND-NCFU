@@ -1,0 +1,147 @@
+....................................................F.........           [100%]
+=================================== FAILURES ===================================
+___ test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests ___
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-35/test_real_source_smoke_mode_is0')
+
+    def test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests(tmp_path):
+        import os
+        import subprocess
+        from pathlib import Path
+    
+        launcher = Path(__file__).resolve().parents[1] / "scripts/run_game.py"
+        report = tmp_path / "report.json"
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "untouched-real-data")
+        result = subprocess.run(
+            [sys.executable, str(launcher), "--smoke-test", "--report", str(report)],
+            cwd=tmp_path,
+            env=environment,
+            capture_output=True,
+            timeout=30,
+        )
+        if result.returncode != 0:
+            failure = json.loads(report.read_text(encoding="utf-8")) if report.is_file() else {}
+            safe_report = {
+                k: failure[k]
+                for k in ("ok", "error_type", "frames", "dpapi", "catalog_gameplay")
+                if k in failure
+            }
+            diagnostics = [
+                json.loads(p.read_text(encoding="utf-8"))
+                for p in (tmp_path / "untouched-real-data/logs").glob("error-*.json")
+            ]
+>           pytest.fail(
+                json.dumps(
+                    {
+                        "returncode": result.returncode,
+                        "report": safe_report,
+                        "diagnostics": diagnostics,
+                    },
+                    ensure_ascii=True,
+                    indent=2,
+                )
+            )
+E           Failed: {
+E             "returncode": 1,
+E             "report": {
+E               "ok": false,
+E               "error_type": "PermissionError",
+E               "frames": [
+E                 {
+E                   "module": "bootstrap.py",
+E                   "line": 13,
+E                   "function": "launch"
+E                 },
+E                 {
+E                   "module": "app.py",
+E                   "line": 40,
+E                   "function": "main"
+E                 },
+E                 {
+E                   "module": "packaged_probe.py",
+E                   "line": 288,
+E                   "function": "smoke_test"
+E                 },
+E                 {
+E                   "module": "packaged_probe.py",
+E                   "line": 162,
+E                   "function": "world_creation_probe"
+E                 },
+E                 {
+E                   "module": "contextlib.py",
+E                   "line": 137,
+E                   "function": "__enter__"
+E                 },
+E                 {
+E                   "module": "packaged_probe.py",
+E                   "line": 94,
+E                   "function": "loopback"
+E                 },
+E                 {
+E                   "module": "socketserver.py",
+E                   "line": 453,
+E                   "function": "__init__"
+E                 },
+E                 {
+E                   "module": "socket.py",
+E                   "line": 233,
+E                   "function": "__init__"
+E                 }
+E               ]
+E             },
+E             "diagnostics": [
+E               {
+E                 "version": "0.3.1",
+E                 "time_utc": "2026-10-27T19:58:11.291609+00:00",
+E                 "error_type": "PermissionError",
+E                 "frames": [
+E                   {
+E                     "module": "bootstrap.py",
+E                     "line": 13,
+E                     "function": "launch"
+E                   },
+E                   {
+E                     "module": "app.py",
+E                     "line": 40,
+E                     "function": "main"
+E                   },
+E                   {
+E                     "module": "packaged_probe.py",
+E                     "line": 288,
+E                     "function": "smoke_test"
+E                   },
+E                   {
+E                     "module": "packaged_probe.py",
+E                     "line": 162,
+E                     "function": "world_creation_probe"
+E                   },
+E                   {
+E                     "module": "contextlib.py",
+E                     "line": 137,
+E                     "function": "__enter__"
+E                   },
+E                   {
+E                     "module": "packaged_probe.py",
+E                     "line": 94,
+E                     "function": "loopback"
+E                   },
+E                   {
+E                     "module": "socketserver.py",
+E                     "line": 453,
+E                     "function": "__init__"
+E                   },
+E                   {
+E                     "module": "socket.py",
+E                     "line": 233,
+E                     "function": "__init__"
+E                   }
+E                 ]
+E               }
+E             ]
+E           }
+
+tests/test_desktop_release.py:353: Failed
+=========================== short test summary info ============================
+FAILED tests/test_desktop_release.py::test_real_source_smoke_mode_is_isolated_and_makes_only_loopback_requests
+1 failed, 61 passed in 8.38s

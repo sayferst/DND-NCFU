@@ -1,6 +1,7 @@
 """Offline desktop startup and release safety tests; no real provider calls."""
 
 import json
+import shutil
 import struct
 import sys
 
@@ -181,6 +182,10 @@ def fake_bundle(tmp_path):
         path = bundle / "_internal" / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(b"public resource")
+    corpus = bundle / "_internal/data/corpus_knowledge"
+    corpus.mkdir(parents=True)
+    for name in ("manifest.json", "cards.sqlite3"):
+        shutil.copyfile(resources.resource_path("data/corpus_knowledge/" + name), corpus / name)
     licenses = bundle / "_internal/licenses"
     licenses.mkdir()
     for name in (
@@ -214,6 +219,11 @@ def fake_bundle(tmp_path):
         "master_system_prompt.local.txt",
         "slot-1.json",
         "campaigns.sqlite3",
+        "campaigns.SQLITE3",
+        "campaigns.sqlite3-wal",
+        "campaigns.db-shm",
+        "campaigns.sqlite-journal",
+        "cards.sqlite3",
     ],
 )
 def test_release_audit_rejects_user_files(fake_bundle, name):
@@ -227,6 +237,29 @@ def test_release_audit_checks_resource_inventory_and_credentials(fake_bundle):
     assert report["target"] == "windows-x64" and report["files"]
     (fake_bundle / "accidental.txt").write_text("sk-123456789012345678901234567890")
     with pytest.raises(ValueError, match="credential"):
+        verify_bundle(fake_bundle)
+
+
+@pytest.mark.parametrize("missing", ["manifest.json", "cards.sqlite3"])
+def test_release_requires_the_automatic_corpus(fake_bundle, missing):
+    (fake_bundle / "_internal/data/corpus_knowledge" / missing).unlink()
+    with pytest.raises(ValueError, match="Missing bundled resource"):
+        verify_bundle(fake_bundle)
+
+
+def test_release_rejects_a_replaced_corpus_even_with_a_matching_bundle_manifest(fake_bundle):
+    import hashlib
+
+    corpus = fake_bundle / "_internal/data/corpus_knowledge"
+    (corpus / "cards.sqlite3").write_bytes(b"private campaign renamed as the public index")
+    with pytest.raises(ValueError, match="database differs"):
+        verify_bundle(fake_bundle)
+    path = corpus / "manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    replacement_hash = hashlib.sha256((corpus / "cards.sqlite3").read_bytes()).hexdigest()
+    manifest["database_sha256"] = replacement_hash
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="manifest differs"):
         verify_bundle(fake_bundle)
 
 

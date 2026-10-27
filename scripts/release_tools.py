@@ -255,6 +255,20 @@ def verify_bundle(folder, *, windows=True):
     for relative in REQUIRED_RESOURCES:
         if not (folder / "_internal" / relative).is_file():
             raise ValueError("Missing bundled resource: " + relative)
+    # The shipped read-only reference index is the sole permitted database.
+    # Trust the version-controlled source manifest, never a hash supplied by
+    # the candidate bundle: user campaigns renamed to this path must fail too.
+    corpus_relative = "_internal/data/corpus_knowledge/cards.sqlite3"
+    corpus_manifest_relative = "_internal/data/corpus_knowledge/manifest.json"
+    for relative in (corpus_relative, corpus_manifest_relative):
+        if not (folder / relative).is_file():
+            raise ValueError("Missing bundled resource: " + relative)
+    published_corpus = json.loads(
+        (ROOT / "data/corpus_knowledge/manifest.json").read_text(encoding="utf-8")
+    )
+    bundled_corpus = json.loads((folder / corpus_manifest_relative).read_text(encoding="utf-8"))
+    if bundled_corpus != published_corpus:
+        raise ValueError("Bundled corpus manifest differs from the published source")
     files = []
     for path in sorted(folder.rglob("*")):
         if path.is_symlink():
@@ -281,10 +295,18 @@ def verify_bundle(folder, *, windows=True):
             or (path.name.startswith("activation-") and path.suffix == ".bin")
             or path.name.endswith(".local.txt")
             or re.fullmatch(r"slot-[123]\.json", path.name)
-            or path.suffix in {".sqlite3", ".sqlite", ".db"}
+            or (
+                re.search(r"\.(?:sqlite3?|db)(?:-(?:wal|shm|journal))?$", path.name, re.I)
+                and rel != corpus_relative
+            )
         ):
             raise ValueError("Forbidden release file: " + rel)
         raw = path.read_bytes()
+        if (
+            rel == corpus_relative
+            and hashlib.sha256(raw).hexdigest() != published_corpus["database_sha256"]
+        ):
+            raise ValueError("Bundled corpus database differs from the published source")
         if re.search(rb"(?<![A-Za-z0-9_])sk-[A-Za-z0-9_-]{20,}", raw):
             raise ValueError("Possible embedded provider credential in release file: " + rel)
         if path.name != "BUILD_MANIFEST.json":
