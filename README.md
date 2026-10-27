@@ -18,6 +18,7 @@
 
 ```powershell
 Set-Location D:\Projects\DND-NCFU
+git remote set-branches --add origin feature/unified-rpg-automatic-gm
 git fetch origin
 git switch feature/unified-rpg-automatic-gm
 git pull --ff-only

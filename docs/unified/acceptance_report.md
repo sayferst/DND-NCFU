@@ -202,6 +202,7 @@ ui/creation_dialog.py и точкиSession/сохранений/контекст
 
 ```powershell
 Set-Location D:\Projects\DND-NCFU
+git remote set-branches --add origin feature/unified-rpg-automatic-gm
 git fetch origin
 git switch feature/unified-rpg-automatic-gm
 git pull --ff-only
@@ -212,3 +213,5 @@ git pull --ff-only
 Игровые зависимости не добавлены. Существующие несохранённые локальные файлы
 не стирать;gitstatus перед переключением. Ownertraining — отдельный процесс,
 не настройка игрока;до появления реальных данных обучение не запускается.
+Командаset-branchesдобавляет загрузку новой ветки,если репозиторий был клонирован
+с ограничением одной веткой;локальные коммиты/файлы она не меняет.
