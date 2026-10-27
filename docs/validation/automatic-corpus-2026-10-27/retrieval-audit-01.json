@@ -1,0 +1,86 @@
+{
+  "platform": "Linux",
+  "archive_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "canonical_cards": 19000,
+  "aliases": 200,
+  "database_bytes": 28188672,
+  "largest_single_reference_bytes": 1085,
+  "all_cards_fit_context_budget": true,
+  "rejected_at_read_time": [],
+  "cold_lookup_ms": 22.629519000020082,
+  "warm_queries": 80,
+  "median_ms": 0.7620304997999483,
+  "p95_ms": 9.000380000088626,
+  "max_ms": 9.773496999969211,
+  "process_peak_rss_kib": 16296,
+  "model_calls": 0,
+  "paid_calls": 0,
+  "quality_gain": "NOT_MEASURED",
+  "sample_queries": [
+    {
+      "query": "разжечь сухую растопку",
+      "ids": [
+        "USER-SYN-EVERYDAY-1000:0001",
+        "USER-SYN-EVERYDAY-1000:0005",
+        "USER-SYN-EVERYDAY-1000:0542"
+      ],
+      "context_bytes": 2273
+    },
+    {
+      "query": "изготовить меч из железа",
+      "ids": [
+        "USER-SYN-CRAFT-5000:WPNC-0001",
+        "USER-SYN-CRAFT-5000:WPNC-0002",
+        "USER-SYN-CRAFT-5000:WPNC-0003"
+      ],
+      "context_bytes": 1134
+    },
+    {
+      "query": "событие праздник без музыкантов",
+      "ids": [
+        "USER-SYN-EVENTS-1000:EV-007",
+        "USER-SYN-EVENTS-1000:EV-004",
+        "USER-SYN-EVENTS-1000:LO-086"
+      ],
+      "context_bytes": 2385
+    },
+    {
+      "query": "характер уличного пекаря",
+      "ids": [
+        "USER-SYN-BEHAVIOR-5000:NPCM-0058",
+        "USER-SYN-BEHAVIOR-5000:NPCM-0232"
+      ],
+      "context_bytes": 2067
+    },
+    {
+      "query": "шипоспин",
+      "ids": [
+        "USER-SYN-BEHAVIOR-5000:MOBM-0414",
+        "USER-SYN-BEHAVIOR-5000:MOBM-0061",
+        "USER-SYN-BEHAVIOR-5000:MOBM-0120"
+      ],
+      "context_bytes": 2294
+    },
+    {
+      "query": "NPCM-0950",
+      "ids": [
+        "USER-SYN-BEHAVIOR-5000:NPCM-0950"
+      ],
+      "context_bytes": 1047
+    },
+    {
+      "query": "ORE-0600",
+      "ids": [
+        "USER-SYN-CRAFT-5000:ORE-0600"
+      ],
+      "context_bytes": 811
+    },
+    {
+      "query": "USER-SYN-1000:1000",
+      "ids": [
+        "USER-SYN-1000:1000"
+      ],
+      "context_bytes": 729
+    }
+  ]
+}

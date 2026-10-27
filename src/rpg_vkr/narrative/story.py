@@ -135,6 +135,9 @@ def story_context(
         from rpg_vkr.learning.runtime import enrich
 
         context = enrich(context, text, campaign["learning_features"], remote=remote)
+    from rpg_vkr.learning.corpus import references
+
+    context.update(references(text))
     if master_question(text):
         context["task"] += " Это вопрос ведущему о наблюдаемом: ответь описанием, не от лица NPC."
     return context

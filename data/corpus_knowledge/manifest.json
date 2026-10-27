@@ -1,0 +1,21 @@
+{
+  "schema": "corpus-reference-1",
+  "records": 19000,
+  "aliases": 200,
+  "fts": true,
+  "archive_sha256": "f1a7568e3461f7c2edc0e8badf1bc87f3c2eae7df085762b02a6058baa8146fe",
+  "sources": {
+    "USER-SYN-1000": 1000,
+    "USER-SYN-BEHAVIOR-5000": 5000,
+    "USER-SYN-CRAFT-5000": 5000,
+    "USER-SYN-DEATH-1000": 1000,
+    "USER-SYN-ENTITIES-5000": 5000,
+    "USER-SYN-EVENTS-1000": 1000,
+    "USER-SYN-EVERYDAY-1000": 1000
+  },
+  "database_sha256": "252f3d68abffcee4c612c6943ad3528fd012413559c400942d3646309abb65aa",
+  "projection": "public_descriptive_fields_no_hidden_plot_or_numeric_rules_v2",
+  "usage": "owner_requested_runtime_reference_not_training_or_human_review",
+  "raw_included": false,
+  "trained_weights": false
+}

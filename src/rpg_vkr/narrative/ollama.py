@@ -326,10 +326,18 @@ class OllamaClient(QObject):
         self._start_story(frame, model, text, memory=memory, campaign=campaign, history=history)
 
     def generate_world(self, frame, model, campaign, error=""):
+        from rpg_vkr.learning.corpus import POLICY, references
         from rpg_vkr.narrative.genres import relevant_cards
         from rpg_vkr.narrative.instructions import load_instructions
         from rpg_vkr.narrative.object_prompt import OBJECT_CREATION_GUIDE
 
+        campaign = dict(campaign)
+        campaign.update(
+            references(
+                " ".join(str(campaign.get(k, "")) for k in ("world_brief", "hero_description"))
+                or "путешествие встреча событие новый мир"
+            )
+        )
         self._frame, self._model = frame, model
         prompt = load_instructions() + (
             "\nРежим: новый мир. Создай оригинальный старт приключения для этого героя и жанров. "
@@ -370,7 +378,7 @@ class OllamaClient(QObject):
             "бинты уже выданы движком. "
             "JSON с двойными кавычками. Не добавляй SQL, код, статистику героя или исход броска."
         )
-        prompt += OBJECT_CREATION_GUIDE
+        prompt += OBJECT_CREATION_GUIDE + "\n" + POLICY
         if campaign.get("gameplay_revision", 0) >= 2:
             from rpg_vkr.narrative.gameplay_prompt import GUIDE
 
@@ -421,6 +429,10 @@ class OllamaClient(QObject):
         except ValueError as error:
             self.failed.emit(str(error))
             return
+        from rpg_vkr.learning.corpus import POLICY, references
+
+        state = dict(state)
+        state.update(references(text))
         self._frame, self._model = frame, model
         from rpg_vkr.narrative.story_prompt import writing_profile
 
@@ -533,7 +545,7 @@ class OllamaClient(QObject):
                 "Её ability должна совпадать. Без skill это чистая проверка характеристики, "
                 "без классовой подготовки. Рангов и очков навыков нет. ",
             )
-        prompt += OBJECT_CREATION_GUIDE + OBJECT_MEMORY_GUIDE
+        prompt += OBJECT_CREATION_GUIDE + OBJECT_MEMORY_GUIDE + "\n" + POLICY
         if state.get("gameplay_revision", 0) >= 2:
             from rpg_vkr.narrative.gameplay_prompt import GUIDE
 

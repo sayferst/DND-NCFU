@@ -95,6 +95,17 @@ def render_context(context):
             "факты мира и не результаты действий:"
             + json.dumps(context["narrative_techniques"], ensure_ascii=False)
         )
+    if context.get("archive_references"):
+        from rpg_vkr.learning.corpus import POLICY
+
+        lines.append(
+            POLICY
+            + "\nСправки корпуса: "
+            + json.dumps(
+                context["archive_references"],
+                ensure_ascii=False,
+            )
+        )
     if context.get("d20_skills"):
         lines.append(
             "Подтверждённые навыки D20 (ранг даёт +2; исход считает движок): "

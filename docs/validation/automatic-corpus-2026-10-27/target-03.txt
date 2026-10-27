@@ -1,0 +1,39 @@
+F...........                                                             [100%]
+=================================== FAILURES ===================================
+__ test_all_19000_canonical_cards_are_present_searchable_and_have_provenance ___
+
+    def test_all_19000_canonical_cards_are_present_searchable_and_have_provenance():
+        meta = corpus.manifest()
+        db, _ = corpus._connect()
+        try:
+            assert meta["records"] == 19000 and meta["aliases"] == 200
+            assert db.execute("SELECT count(*) FROM cards").fetchone()[0] == 19000
+            assert (
+                dict(db.execute("SELECT source,count(*) FROM cards GROUP BY source")) == meta["sources"]
+            )
+            assert (
+                db.execute(
+                    "SELECT count(*) FROM cards WHERE length(excerpt)>0 AND start_line>0 "
+                    "AND end_line>=start_line AND length(source_sha256)=64"
+                ).fetchone()[0]
+                == 19000
+            )
+            # External-content FTS count(*) alone would also pass for an empty index.
+            # Prove an actual indexed token match for EVERY document's rowid.
+            for row in db.execute("SELECT rowid,title,excerpt FROM cards"):
+                word = next(
+                    w for w in re.findall(r"[^\W\d_]+", row["title"] + row["excerpt"]) if len(w) >= 3
+                )
+                assert (
+>                   db.execute(
+                        "SELECT rowid FROM lookup WHERE lookup MATCH ? AND rowid=?",
+                        ('"' + word + '"', row["rowid"]),
+                    ).fetchone()[0]
+                    == row["rowid"]
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+tests/test_automatic_corpus.py:42: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_automatic_corpus.py::test_all_19000_canonical_cards_are_present_searchable_and_have_provenance
+1 failed, 11 passed in 0.47s

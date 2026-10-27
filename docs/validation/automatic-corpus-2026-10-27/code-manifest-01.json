@@ -1,0 +1,53 @@
+{
+  "baseline": "0721083",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "e13f659a6c84fa6c536b0f7c3cd94a13a7457b08d085fe442a2f4889aef2c24c"
+    },
+    {
+      "path": "DND-NCFU.spec",
+      "sha256": "c61a336d618becb10caec02f54494e0fda29f9a0106522c034360955ecf2d2ad"
+    },
+    {
+      "path": "data/corpus_knowledge/cards.sqlite3",
+      "sha256": "252f3d68abffcee4c612c6943ad3528fd012413559c400942d3646309abb65aa"
+    },
+    {
+      "path": "data/corpus_knowledge/manifest.json",
+      "sha256": "adc735d3e0515dc14528aeb99eb65e10c8eac0df23323909f80019a667ca1fc8"
+    },
+    {
+      "path": "src/rpg_vkr/learning/corpus.py",
+      "sha256": "0172432e650f336b9222772b69e861876c50b59287ea8af58c6b426eed93c9a7"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/ollama.py",
+      "sha256": "675cb0a38d2776dca5dacbdac81c946b67832f11b78790f02652248dd8141f24"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story.py",
+      "sha256": "3ac70450b14ced8fc70da3c67e83d513d7a6f587178d4da8569420c23ee9d076"
+    },
+    {
+      "path": "src/rpg_vkr/narrative/story_prompt.py",
+      "sha256": "7027fd473ef759fa72b09ed2be008d37b37bc25516f6db9964cb93c8aff1de22"
+    },
+    {
+      "path": "src/rpg_vkr/self_check.py",
+      "sha256": "3957b9c9023b35c3c8b4d669e8f0317b6e2c51d7614d46d435fa6e44941e0eec"
+    },
+    {
+      "path": "tests/test_automatic_corpus.py",
+      "sha256": "36f1dc2610b254415b20b617ddbe0a7f9c8047eeb5ed96381b043a834d4f5717"
+    },
+    {
+      "path": "training/README.md",
+      "sha256": "9f9f9056c83ba6d82003a778a3119aa91bd4e5bfeb36fe2e6718375a5d1be2a4"
+    },
+    {
+      "path": "training/build_corpus_knowledge.py",
+      "sha256": "4d3de02b51686965b31e36a98a12fd8e816bb1ba4fc8c50ba457609926d69a5a"
+    }
+  ]
+}

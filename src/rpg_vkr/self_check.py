@@ -69,6 +69,8 @@ def check_resources(progress=lambda value, label: None):
     public = base64.b64encode(key.public_key().public_bytes_raw()).decode()
     verify(json.dumps(value | {"signature": signature}).encode(), public)
     progress(75, "Хранилище и защищённое соединение")
+    from rpg_vkr.learning.corpus import diagnostics
+
     return {
         "ok": True,
         "mode": "self-check",
@@ -84,6 +86,7 @@ def check_resources(progress=lambda value, label: None):
         "sqlite": sqlite3.sqlite_version,
         "data_outside_application": str(data_directory()),
         "network_requests": 0,
+        "automatic_corpus": diagnostics(),
     }
 
 

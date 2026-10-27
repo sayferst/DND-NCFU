@@ -18,6 +18,10 @@ resources = [(str(resource_path(relative)), str(Path(relative).parent)) for rela
 knowledge = root / 'data/approved_knowledge/index.json'
 if knowledge.is_file():
     resources.append((str(knowledge), 'data/approved_knowledge'))
+for name in ('manifest.json', 'cards.sqlite3'):
+    corpus_resource = root / 'data/corpus_knowledge' / name
+    if corpus_resource.is_file():
+        resources.append((str(corpus_resource), 'data/corpus_knowledge'))
 a = Analysis(
     [str(root / 'scripts/run_game.py')], pathex=[str(root / 'src')], binaries=[],
     datas=[*resources, *personal, (str(profile), '.'),

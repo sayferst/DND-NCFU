@@ -1,0 +1,10 @@
+{
+  "build": "build-02.txt",
+  "platform": "Linux",
+  "corpus_included": true,
+  "manifest_included": true,
+  "files": 307,
+  "total_bytes": 303047606,
+  "forbidden_paths": [],
+  "windows_verified": false
+}
