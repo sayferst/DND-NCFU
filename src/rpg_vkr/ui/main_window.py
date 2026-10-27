@@ -409,6 +409,13 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 f"{world.gold * 100 + self._session.gameplay['copper']} медных · "
                 f"бинты {world.bandages} · {self._session.current_place_name}"
             )
+        if self._session.schema_version == 31:
+            state = self._session.gameplay
+            self.resource_label.setText(
+                f"{character.name} · HP {world.hp}/{world.max_hp} · "
+                f"MP {state['mp']}/{state['mp_cap']} · ST {state['st']}/{state['st_cap']} · "
+                f"{state['copper']} медных · {self._session.current_place_name}"
+            )
         if draft:
             from rpg_vkr.ui.adventure_panel import world_start_message
 
