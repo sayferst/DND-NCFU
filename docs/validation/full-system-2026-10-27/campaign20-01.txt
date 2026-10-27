@@ -1,0 +1,49 @@
+.F
+=================================== FAILURES ===================================
+____________________ test_public_progression_one_to_twenty _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-11/test_public_progression_one_to0')
+
+    def test_public_progression_one_to_twenty(tmp_path):
+        if not os.environ.get("DND_LONG_CAMPAIGN"):
+            pytest.skip("Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay")
+>       s = started(supplies=True)
+            ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_catalog_campaign.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_catalog_campaign.py:97: in started
+    s.start_world(build_world(v, s, "authored-integration-town"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'definitions': [{'categories': ['npcs'], 'id': 'seller_type', 'kind': 'actor', 'name': 'Рен', ...}, {'categories': ['...], 'opening': 'Ветер шевелит ленты на мачте. Рен раскладывает дорожные припасы у причала. «Нужен свет в дорогу?»', ...}
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7f73b615e600>
+source = 'authored-integration-town'
+
+    def build_world(value, session, source):
+        """Interpret declarative generation only; no code, SQL or model numeric decisions."""
+        if not isinstance(value, dict) or set(value) != {
+            "title",
+            "opening",
+            "private_plot",
+            "hooks",
+            "start",
+            "places",
+            "definitions",
+            "entities",
+        }:
+            raise ValueError("Неверные поля генерации мира.")
+        if (
+            not 1 <= len(value["places"]) <= 12
+            or len(value["entities"]) > 60
+            or len(value["definitions"]) > 30
+        ):
+>           raise ValueError("Первый район слишком большой.")
+E           ValueError: Первый район слишком большой.
+
+src/rpg_vkr/domain/adventure.py:101: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_catalog_campaign.py::test_public_progression_one_to_twenty
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 passed in 0.72s

@@ -414,6 +414,14 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
         self.inventory_label.setText(
             "Инвентарь: " + inventory_text(world) + ("; " + extras if extras else "")
         )
+        if self._session.schema_version == 31:
+            carried = self._session.interaction_state().carried()
+            names = [f"{t.name} ×{t.quantity}" for t in carried[:10]]
+            if len(carried) > 10:
+                names.append(f"и ещё {len(carried) - 10}; полный список — в инвентаре")
+            self.inventory_label.setText(
+                "Инвентарь: " + "; ".join(names + ([extras] if extras else []))
+            )
         self.quest_label.setText("Задание: " + quest_text(world))
         for ability, label in self.ability_labels.items():
             score = character.score(ability)

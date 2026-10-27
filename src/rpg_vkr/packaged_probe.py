@@ -406,7 +406,11 @@ def smoke_test(app):
                         RESOURCE_ROOT.resolve()
                     ):
                         raise ValueError("Dependency loaded outside bundle")
+            from rpg_vkr.catalog_probe import probe as catalog_probe
+
+            expanded = catalog_probe(root / "expanded-game")
             return {
+                "catalog_gameplay": expanded,
                 "mode": "smoke-test",
                 "ok": True,
                 "platform": platform.platform(),

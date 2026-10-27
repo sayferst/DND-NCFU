@@ -1,0 +1,281 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 65%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 85%]
+........................................................................ [ 87%]
+........................................................................ [ 89%]
+........................................................................ [ 91%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+...................................................................F
+=================================== FAILURES ===================================
+________ test_four_pages_one_class_one_talent_and_real_session[warrior] ________
+
+qt_app = <PySide6.QtWidgets.QApplication(0x21dcaaa0) at 0x7fbb3a73cec0>
+key = 'warrior'
+
+    @pytest.mark.parametrize("key", CLASSES)
+    def test_four_pages_one_class_one_talent_and_real_session(qt_app, key):
+        d = CreationDialog()
+        d.class_choice.setCurrentIndex(d.class_choice.findData(key))
+        assert d.creation_steps.count() == 4 and not d.findChildren(QCheckBox)
+        assert d.initial_talent.count() == 6
+        d.description_input.setPlainText("Эльф,32года; кузница семьи.")
+        d.world_brief_input.setPlainText("Тихое фэнтези")
+        assert not d.buttons.button(QDialogButtonBox.StandardButton.Ok).isVisible()
+        for _ in range(3):
+            d.step(1)
+        s = d.create_session()
+        frame = build_frame(s)
+>       ctx = campaign_context(s, query="Мастер, осматриваюсь")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_unified_creation.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = <rpg_vkr.unified_session.UnifiedSession object at 0x7fbb382b1790>
+target = ''
+
+    def campaign_context(session, target="", *, query=""):
+        from rpg_vkr.domain.d20_progression import SKILLS
+    
+        d20 = session.d20_progress
+        profile = session.campaign.profile(target)
+        from rpg_vkr.narrative.actions import NOTES
+        from rpg_vkr.narrative.presentation import present_turn
+        from rpg_vkr.ui.knowledge import knowledge_entries
+    
+        resolution = []
+        from rpg_vkr.domain.catalog_actions import ActorAttempt
+    
+        attempt = session.turns[-1].catalog if session.turns else None
+        if isinstance(attempt, ActorAttempt) and attempt.operation == "attack":
+            resolution.append(
+                {
+                    "target_id": attempt.target_id,
+                    "target": attempt.target_id,
+                    "command": "нападение",
+                    "summary": attempt.summary,
+                    "hit": attempt.check.succeeded,
+                    "defeated": attempt.entity_after.state["hp"] == 0,
+                    "rolled": True,
+                    "notes": [],
+                }
+            )
+        for turn in session.turns[-2:] if session.turns and session.turns[-1].combat else ():
+            if not turn.combat:
+                continue
+            outcome = turn.combat.outcome
+            resolution.append(
+                {
+                    "target_id": outcome.actor_id or "",
+                    "target": ACTORS[outcome.actor_id][0] if outcome.actor_id else "",
+                    "command": turn.combat.command,
+                    "summary": present_turn(turn).story,
+                    "hit": outcome.check.succeeded
+                    if outcome.check and turn.combat.command.startswith("атаковать")
+                    else None,
+                    "defeated": bool(
+                        outcome.actor_id and outcome.state.actor(outcome.actor_id).hp == 0
+                    ),
+                    "rolled": bool(outcome.rolls),
+                    "notes": [NOTES[n] for n in turn.notes],
+                }
+            )
+        catalog_scene = []
+        if session.catalog:
+            from rpg_vkr.storage.catalog import CatalogIndex
+    
+            index = CatalogIndex(session)
+            try:
+                for entity in session.catalog.entities:
+                    value = index.narrator_record(entity.id)
+                    if value and value["entity"]["parent_id"] in {session.current_place_id, "hero"}:
+                        catalog_scene.append(value)
+                    if len(catalog_scene) == 8:
+                        break
+            finally:
+                index.close()
+        from rpg_vkr.domain.receipts import receipt
+    
+        scene = session.interaction_state()
+        actors, validation_roster = [], []
+        for actor in scene.actor_refs:
+            if actor.id in ACTORS and session.schema_version < 28:
+                state = session.combat.actor(actor.id)
+                alive = state.hp > 0
+            else:
+                entity = (
+                    next((e for e in session.catalog.entities if e.id == actor.id), None)
+                    if session.catalog
+                    else None
+                )
+                alive = bool(
+                    entity
+                    and (entity.state or {}).get("hp", 1) > 0
+                    and (entity.state or {}).get("life") != "dead"
+                )
+            validation_roster.append(
+                {
+                    "id": actor.id,
+                    "name": actor.name,
+                    "here": session.actor_is_here(actor.id)
+                    if session.schema_version >= 25
+                    else actor.place == scene.current,
+                    "alive": alive,
+                }
+            )
+            if (
+                actor.place != scene.current
+                or session.schema_version >= 25
+                and not session.actor_is_here(actor.id)
+            ):
+                continue
+            from rpg_vkr.domain.social import grievance
+    
+            actors.append(
+                {
+                    "id": actor.id,
+                    "name": actor.name,
+                    "available": alive,
+                    "social_memory": {
+                        "grievance": grievance(session.turns, actor.id),
+                        "recent_acts": [
+                            t.dialogue.act
+                            for t in session.turns
+                            if t.dialogue and t.dialogue.target == actor.id
+                        ][-4:],
+                    },
+                }
+            )
+        public_simulation = {}
+        if session.schema_version >= 26:
+            from rpg_vkr.domain.factions import can_speak
+    
+            state = session.gameplay
+            public_simulation = {
+                "known_factions": list(state["known_factions"].values()),
+                "npc_public_events": {
+                    actor["id"]: [
+                        fact
+                        for fact in state["npc"].get(actor["id"], {}).get("knowledge", [])
+                        if fact["event"] in state["victories"]
+                    ]
+                    for actor in actors
+                    if actor["available"]
+                    and session.catalog
+                    and can_speak(session.catalog, actor["id"])
+                },
+            }
+        if session.schema_version >= 27 and session.turns and session.turns[-1].gameplay:
+            result = session.turns[-1].gameplay["result"]
+            if "battle_events" in result:
+                names = {a.id: a.name for a in scene.actor_refs}
+                encounter = result["state"]["battle"] or result["state"]["last_battle"]
+                participants = set(encounter["order"]) if encounter else set()
+                public_simulation["team_combat"] = {
+                    "active": session.in_combat,
+                    "attacks": result["attacks"],
+                    "events": result["battle_events"],
+                    "actors": [
+                        {
+                            "id": a.id,
+                            "name": names[a.id],
+                            "hp": (a.state or {}).get("hp", 1),
+                            "life": (a.state or {}).get("life", "alive"),
+                        }
+                        for a in session.catalog.entities
+                        if a.id in participants and a.id in names
+                    ],
+                }
+                for attack in result["attacks"]:
+                    if attack["actor_id"] == "hero":
+                        resolution.append(
+                            {
+                                "target_id": attack["target_id"],
+                                "target": names.get(attack["target_id"], attack["target_id"]),
+                                "command": "атака",
+                                "hit": attack["hit"],
+                                "defeated": attack["defeated"],
+                                "rolled": True,
+                                "summary": session.turns[-1].text,
+                                "notes": [],
+                            }
+                        )
+                for event in result["battle_events"]:
+                    if event["kind"] == "spell":
+                        resolution.append(
+                            {
+                                "target_id": event["target"],
+                                "target": names.get(event["target"], event["target"]),
+                                "command": "магия",
+                                "hit": event["damage"] > 0,
+                                "defeated": event.get("hp_after") == 0,
+                                "rolled": True,
+                                "summary": session.turns[-1].text,
+                                "notes": [],
+                            }
+                        )
+        if 28 <= session.schema_version <= 30 and session.gameplay.get("living_world"):
+            living = session.gameplay["living_world"]
+            public_simulation["living_world"] = {
+                "calendar": living.get("calendar"),
+                "reports": {k: v for k, v in living["observed"].items() if session.actor_is_here(k)},
+            }
+        if session.schema_version == 31:
+            living = session.gameplay["living_world"]
+            public_simulation["living_world"] = {
+>               "day": living.get("day", session.gameplay["minute"] // 1440),
+                       ^^^^^^^^^^
+                "weather": living.get("weather", "clear"),
+                "reports": living["observed"].get(scene.current, [])[-8:],
+                "nearby_goals": {
+                    k: {"job": v["job"], "goal": v["goal"]}
+                    for k, v in living.get("residents", {}).items()
+                    if session.actor_is_here(k)
+                },
+            }
+E           AttributeError: 'NoneType' object has no attribute 'get'
+
+src/rpg_vkr/narrative/master.py:217: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_unified_creation.py::test_four_pages_one_class_one_talent_and_real_session[warrior]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 3379 passed in 118.01s (0:01:58)

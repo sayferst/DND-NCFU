@@ -1,0 +1,70 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 32%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 77%]
+................................................ssssssssssssssssssssssss [ 79%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 81%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 83%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 85%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 87%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 89%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 92%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 94%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 96%]
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 98%]
+ssssssssssssssssssssssssssssssssssssssssssssssssF
+=================================== FAILURES ===================================
+____________ test_published_campaign30_replays_without_new_content _____________
+
+    def test_published_campaign30_replays_without_new_content():
+        path=Path("docs/validation/full-system-2026-10-27/campaign30-before.json")
+        data=json.loads(path.read_text(encoding="utf-8"))
+        session=Session.from_dict(data["session"],version=30)
+>       assert session.schema_version==30 and session.to_dict()==data["session"]
+E       AssertionError: assert (30 == 30 and {'snapshot': ...fied-d20-v1'}} == {'snapshot': ...fied-d20-v1'}}
+E        +  where 30 = <rpg_vkr.unified_session.UnifiedSession object at 0x7f31c8c952b0>.schema_version
+E         
+E         Differing items:
+E         {'unified': {'operations': [{'method': 'start_world', 'world_seed': {'catalog': {'definitions': [...], 'entities': [.....'dexterity': 12, 'intelligence': 16, ...}, 'class_id': 'mage', 'seed': 37, ...}, 'ruleset': 'dnd-ncfu-unified-d20-v1'}} != {'unified': {'operations': [{'method': 'start_world', 'world_seed': {'catalog': {'definitions': [...], 'entities': [.....'dexterity': 12, 'intelligence': 16, ...}, 'class_id': 'mage', 'seed': 37, ...}, 'ruleset': 'dnd-ncfu-unified-d20-v1'}}
+E         {'snapshot': {'campaign': {'hero_id': '2ea50107-9c41-4369-8be3-d3f2b5ee753d'...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show)
+
+tests/test_full_game_catalog.py:142: AssertionError
+=========================== short test summary info ============================
+SKIPPED [720] tests/test_full_game_catalog.py:134: Behavioral execution fixture not yet connected
+FAILED tests/test_full_game_catalog.py::test_published_campaign30_replays_without_new_content
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 2640 passed, 720 skipped in 96.15s (0:01:36)

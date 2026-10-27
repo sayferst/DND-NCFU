@@ -264,6 +264,10 @@ def bonus(state, character, task):
 
 
 def execute(original, command, args, context, dice):
+    if original.get("content_revision") == 2:
+        from rpg_vkr.domain.catalog_engine import execute as catalog_execute
+
+        return catalog_execute(original, command, args, context, dice)
     from rpg_vkr.domain.factions import initialize as factions
     from rpg_vkr.domain.factions import simulate
     from rpg_vkr.domain.world_v5 import advance

@@ -786,6 +786,10 @@ def catalog_context(window, text):
             from rpg_vkr.domain.unified import CLASSES, TASKS, VERSION, proficiency
 
             data = window._session.gameplay
+            if data.get("content_revision") == 2:
+                from rpg_vkr.narrative.catalog_protocol import planning_context
+
+                state["catalog_actions"] = planning_context(window._session, text)
             state["gameplay_revision"] = 6
             state["canonical_ruleset"] = VERSION
             state["hero_class"] = CLASSES[data["identity"]["class_id"]][0]
@@ -900,6 +904,52 @@ def accept_world_plan(window, result):
     window._story_obstacle = hints.get("obstacle") or ""
     window._pending_memories = memories
     text = window._chat_text
+    if trade and window._session.schema_version == 31:
+        hints["gameplay"] = {
+            "command": trade["operation"],
+            "args": {
+                "merchant": trade["merchant_id"],
+                "item": trade["item_id"],
+                "quantity": trade["quantity"],
+            },
+        }
+        trade = None
+    if hints.get("gameplay"):
+        from rpg_vkr.domain.interactions import nonexecuting
+
+        if nonexecuting(text):
+            failed(window, "Вопрос, отрицание и цитата не выполняют игровое действие.")
+            return
+        proposal = hints["gameplay"]
+        try:
+            from rpg_vkr.application import Session
+
+            preview = Session.from_dict(
+                window._session.to_dict(), version=window._session.schema_version
+            )
+            preview.perform_gameplay(proposal["command"], proposal["args"], "preview")
+        except (ValueError, TypeError, KeyError, AttributeError) as error:
+            failed(window, "Действие не выполнено: " + str(error))
+            return
+        from rpg_vkr.narrative.catalog_protocol import describe_proposal
+
+        if not window._confirm(
+            describe_proposal(window._session, proposal)
+            + "\nВыполнить? Ресурсы и кубики рассчитает движок."
+        ):
+            cancel_narration(window)
+            return
+        cancel_narration(window)
+        window._session.perform_gameplay(
+            proposal["command"], proposal["args"], window._session._request_token(), action=text
+        )
+        window.action_input.remember(text)
+        window.action_input.clear()
+        window._dirty = True
+        window._refresh_character()
+        window._render_journal()
+        request_narration(window)
+        return
     if trade:
         import re
 

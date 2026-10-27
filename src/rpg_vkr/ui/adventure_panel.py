@@ -278,6 +278,7 @@ def retry_world(window):
                 identity["talent"],
                 description=session.campaign.raw_player_description,
                 world_brief=session.campaign.world_brief,
+                content_revision=2,
             )
         else:
             window._session = Session.create_hero(

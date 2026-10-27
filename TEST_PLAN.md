@@ -1,5 +1,20 @@
 # План проверок
 
+## 27.10.2026 — фактические записи большого каталога
+
+`test_full_game_catalog`: каждый из3360ID проходит исполнение, предметы дополнительно
+проверяются в бою/защите/использовании. Контролируемые endgame fixtures обозначены
+явно и не считаются прохождением. `test_catalog_campaign`: публичные Session,
+сохранения31/SQLite/откат/RNG; дорогой1→20 запускается отдельно с
+`DND_LONG_CAMPAIGN=1` (в PowerShell `$env:DND_LONG_CAMPAIGN='1'`).
+`test_catalog_invariants`:20суток/сохранение монет/конечность/антиповторXP.
+`test_catalog_ui_playable`: UI и реальный локальный RouterAI протокол;
+`test_catalog_writer_facts`: найденные live-ошибки; `test_training_capture_session`:
+настоящие квитанции без выдуманного review.
+`audit_game_catalog --proof ...` считает зарегистрированные/проверенные ID по SHA.
+Windowsworkflow проверяет Qt4масштаба и Setup отдельно; Linux/offscreen не считать
+ручной Windows-приёмкой. Источник результатов: docs/validation/full-system-2026-10-27.
+
 ## 27.10.2026 — полный автоматический корпус
 
 test_automatic_corpus проверяет FTS-match каждого из 19 000 документов,

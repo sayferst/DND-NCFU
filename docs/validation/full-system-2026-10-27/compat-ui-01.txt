@@ -1,0 +1,98 @@
+.F..........................                                             [100%]
+=================================== FAILURES ===================================
+_______________ test_real_creator_modal_progression_and_restart ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-20/test_real_creator_modal_progre0')
+
+    def test_real_creator_modal_progression_and_restart(tmp_path):
+        launcher = Path(__file__).resolve().parents[1] / "scripts" / "run_game.py"
+        probe = """
+    import runpy
+    import sys
+    import traceback
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QApplication, QMainWindow
+    app = QApplication([])
+    
+    def fill_creator():
+        try:
+            from rpg_vkr.ui.creation_dialog import CreationDialog
+            dialog = app.activeModalWidget()
+            assert isinstance(dialog, CreationDialog)
+            dialog.name_input.setText('Мира')
+            dialog.class_choice.setCurrentIndex(0)
+            dialog.creation_steps.setCurrentIndex(3)
+            dialog.apply_recommended()
+            dialog.accept()
+        except Exception:
+            traceback.print_exc()
+            if app.activeModalWidget():
+                app.activeModalWidget().reject()
+            app.exit(1)
+    
+    def interact():
+        if not any(isinstance(w, QMainWindow) for w in app.topLevelWidgets()):
+            QTimer.singleShot(20, interact)
+            return
+        try:
+            window = next(w for w in app.topLevelWidgets() if isinstance(w, QMainWindow))
+            window._legacy_controls = True  # Explicit historical replay, not modern admission.
+            window.resume_session()
+            window.resolution_panel.show()
+            if phase == 'create':
+                QTimer.singleShot(0, fill_creator)
+                window.new_character()
+                assert window._session.character.name == 'Мира'
+                assert window._session.progress.enabled
+                assert not window.edit_character_button.isEnabled()
+                window._session.perform_gameplay('wait', {'minutes': 10}, 'first')
+                window.save_slot(1)
+            else:
+                window.load_slot(1)
+                assert window._session.character.name == 'Мира'
+                assert window._session.schema_version == 31
+                assert window._session.gameplay['minute'] == 490
+                assert window._session.d20_progress is None
+                assert 'меч' in window.inventory_label.text().casefold()
+                window._session.perform_gameplay('wait', {'minutes': 1}, 'second')
+                window.save_slot(2)
+            print('Created hero restart verified', flush=True)
+            window.close()
+        except Exception:
+            traceback.print_exc()
+            app.exit(1)
+    
+    QTimer.singleShot(0, interact)
+    QTimer.singleShot(10000, lambda: app.exit(2))
+    # Historical fixture/RNG replay opts into legacy controls explicitly.
+    # Modern admission is tested by test_world_start_gate and the packaged smoke test.
+    from pathlib import Path
+    sys.path.insert(0, str(Path(sys.argv[1]).resolve().parents[1] / 'src'))
+    launcher, phase = sys.argv[1:]
+    sys.argv = [launcher]
+    runpy.run_path(launcher, run_name='__main__')
+    """
+        environment = os.environ.copy()
+        environment["RPG_VKR_DATA_DIR"] = str(tmp_path / "created-data")
+        for phase in ("create", "restore"):
+            result = subprocess.run(
+                [sys.executable, "-c", probe, str(launcher), phase],
+                cwd=tmp_path,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: Traceback (most recent call last):
+E               File "<string>", line 48, in interact
+E             AssertionError
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/workspace/DND-NCFU/.venv/bin/python', '-c', "\nimport runpy\nimport sys\nimport traceback\nfr...e=1, stdout='', stderr='Traceback (most recent call last):\n  File "<string>", line 48, in interact\nAssertionError\n').returncode
+
+tests/test_launch.py:186: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_launch.py::test_real_creator_modal_progression_and_restart
+1 failed, 27 passed in 14.39s

@@ -1,0 +1,136 @@
+.F
+=================================== FAILURES ===================================
+____________________ test_public_progression_one_to_twenty _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-12/test_public_progression_one_to0')
+
+    def test_public_progression_one_to_twenty(tmp_path):
+        if not os.environ.get("DND_LONG_CAMPAIGN"):
+            pytest.skip("Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay")
+        s = started(supplies=True)
+        # Import real carried source goods through Engine.owned using a no-effect public check of their identity.
+        # The engine resolves carried warehouse sources lazily when a recipe requires them.
+        milestones = [{"level": 1, "turn": 0, "xp": 0}]
+        outputs = [r for r in catalog.load().values() if r["kind"] in ("weapon", "armour", "household")]
+        outputs.sort(key=lambda r: (r["level"], r["id"]))
+        attempts = 0
+    
+        def learn(recipe):
+            if recipe["id"] not in s.gameplay["known_recipes"]:
+                for _ in range(12):
+                    act(s, "research", entry=recipe["id"])
+                    if recipe["id"] in s.gameplay["known_recipes"]:
+                        return
+                raise AssertionError("Learning did not succeed")
+    
+        def count(id):
+            return sum(
+                i["quantity"]
+                for i in s.gameplay["items"]
+                if i.get("template") == id and i["owner"] == "hero"
+            )
+    
+        def prepare(recipe):
+            learn(recipe)
+            for key, n in recipe["ingredients"].items():
+                while count(key) < n:
+                    parent = next(r for r in catalog.available("recipe") if key in r["outputs"])
+                    prepare(parent)
+                    act(s, "manufacture", recipe=parent["id"], result=key)
+            tools = [
+                i
+                for i in s.gameplay["items"]
+                if i["owner"] == "hero"
+                and i["durability"] > 0
+                and catalog.row(i.get("template", "house_0_0")).get("capability") == "tools"
+            ]
+            if sum(i["durability"] for i in tools) < 4:
+                act(s, "manufacture", recipe="recipe_production_0_0", result="house_0_0")
+    
+        for row in outputs:
+            if level(s.gameplay["xp"]) == 20:
+                break
+            if row["level"] > level(s.gameplay["xp"]):
+                continue
+            recipe = next(r for r in catalog.available("recipe") if row["id"] in r["outputs"])
+            for _ in range(20):
+                attempts += 1
+                prepare(recipe)
+                act(s, "manufacture", recipe=recipe["id"], result=row["id"])
+                made = next(
+                    (
+                        i
+                        for i in s.gameplay["items"]
+                        if i.get("template") == row["id"]
+                        and i.get("made_by") == "hero"
+                        and i["owner"] == "hero"
+                    ),
+                    None,
+                )
+                if made:
+                    break
+            assert made
+            if not s.actor_is_here("seller"):
+                act(
+                    s,
+                    "travel",
+                    destination=next(
+                        a.place for a in s.interaction_state().actor_refs if a.id == "seller"
+                    ),
+                )
+>           act(s, "sell", merchant="seller", item=made["id"])
+
+tests/test_catalog_campaign.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_catalog_campaign.py:105: in act
+    return s.perform_gameplay(command, args, s._request_token())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/unified_session.py:255: in called
+    result = method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/storage/migration.py:100: in called
+    return method(session, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/application.py:211: in perform_gameplay
+    return perform(self, command, args, request_id, action=action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/gameplay_session.py:96: in perform
+    result = execute(session._gameplay["state"], command, args, before, session.dice)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/gameplay_rules.py:56: in execute
+    return unified_execute(state, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/unified.py:270: in execute
+    return catalog_execute(original, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/catalog_engine.py:576: in execute
+    perform(engine, command, args)
+src/rpg_vkr/domain/catalog_actions_v2.py:282: in perform
+    trade(e, args.get("operation", command), args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+e = <rpg_vkr.domain.catalog_engine.Engine object at 0x7feba03e9fa0>
+operation = 'sell', args = {'item': 'item_618_270', 'merchant': 'seller'}
+
+    def trade(e, operation, args):
+        merchant, spec = e.actor(args["merchant"])
+        if (
+            e.refs[merchant.id].place != e.scene.current
+            or e.state["living_world"]["residents"][merchant.id]["job"]
+            not in ("merchant", "trader", "shopkeeper")
+            and not spec.properties.get("can_trade")
+        ):
+            raise ValueError("Торговец недоступен.")
+        quantity = args.get("quantity", 1)
+        if type(quantity) is not int or quantity != 1:
+            raise ValueError("Сделки передают одну единицу.")
+        wallet = dict(merchant.state or {})
+        if wallet.get("closed_until", 0) > e.state["minute"]:
+>           raise ValueError("Лавка временно закрыта.")
+E           ValueError: Лавка временно закрыта.
+
+src/rpg_vkr/domain/catalog_actions_v2.py:762: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_catalog_campaign.py::test_public_progression_one_to_twenty
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 passed in 66.38s (0:01:06)

@@ -1,0 +1,72 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+............................F
+=================================== FAILURES ===================================
+_____ test_each_catalog_element_has_a_real_execution_path[gear_dagger_0_4] _____
+
+id = 'gear_dagger_0_4'
+
+    @pytest.mark.parametrize("id",list(catalog.load()),ids=list(catalog.load()))
+    def test_each_catalog_element_has_a_real_execution_path(id):
+        row=catalog.row(id);kind=row["kind"]
+        class_id=row["class_id"] if kind=="talent" else "artisan" if kind in ("recipe","material","household","weapon","armour") else "mage"
+        if kind=="weapon" and row["category"] in ("dagger","longbow","crossbow"):class_id="archer"
+        state,ctx=fixture_state(class_id)
+        if kind in ("spell","talent"):
+            primary=row["effects"][0]["op"]
+            target="watcher" if primary in ("damage","drain_mp","revive") else "hero"
+            if primary=="revive":
+                for entity in ctx["catalog"]["entities"]:
+                    if entity["id"]==target:entity["state"]["hp"]=0
+            args={"spell" if kind=="spell" else "talent":id,"target":target}
+            if primary in ("repair","appraise"):
+                item=next(i for i in state["items"] if i["id"]==state["weapon"])
+                item["durability"]=1;args["item"]=item["id"]
+            if primary=="travel":args["destination"]="path"
+            result=run(state,ctx,"cast" if kind=="spell" else "ability",args)
+            if row["mode"] in ("delayed","sustained"):
+                next_context=ctx|{k:result[k] for k in ("world","catalog","scene")}
+                result=run(result["state"],next_context,"wait",{"minutes":30})
+                assert not result["state"]["pending"]
+            assert result["state"]["mp"]>=0 and result["state"]["st"]>=0
+        elif kind=="consumable":
+            engine=Engine(state,ctx,DiceRoller(seed=0),{})
+            item=engine.add_item(id)
+            if row["category"]=="ammunition":
+                bow=engine.add_item("gear_longbow_0_0");engine.state["weapon"]=bow["id"]
+                engine.state["items"]=[i for i in engine.state["items"] if not i.get("ammunition") or i["id"]==item["id"]]
+                engine.state["battle"]={"order":["hero","watcher"],"sides":{"hero":"party","watcher":"enemy"},"round":1}
+                ready=engine.finish();args={"target":"watcher"};command="attack"
+            else:
+                ready=engine.finish();command="consume";primary=row.get("effects",[])[0]["op"]
+                args={"item":item["id"],"target":"watcher" if row["category"]=="scrolls" or primary=="revive" else "hero"}
+                if primary=="revive":
+                    for entity in ready["catalog"]["entities"]:
+                        if entity["id"]=="watcher":entity["state"]["hp"]=0
+            result=run(ready["state"],ctx|{k:ready[k] for k in ("world","catalog","scene")},command,args)
+            assert not any(i["id"]==item["id"] for i in result["state"]["items"])
+        elif kind in ("recipe","material","household","weapon","armour"):
+            if kind=="material" and row["process"]==0:
+                result=run(state,ctx,"gather",{"material":id,"quantity":1})
+                assert result["state"]["living_world"]["nodes"]["pier"][id]==state["living_world"]["nodes"]["pier"][id]-1
+            elif kind=="recipe" and row["category"]=="repair":
+                engine=Engine(state,ctx,DiceRoller(seed=0),{})
+                item=engine.add_item(f"gear_sword_{row['compatible_material']}_0");item["durability"]=1
+                ready=engine.finish()
+                result=run(ready["state"],ctx|{k:ready[k] for k in ("world","catalog","scene")},"repair",{"recipe":id,"item":item["id"]})
+                assert next(i for i in result["state"]["items"] if i["id"]==item["id"])["durability"]>1
+            else:
+                recipe=row if kind=="recipe" else next(r for r in catalog.available("recipe") if id in r["outputs"])
+                output=recipe["outputs"][0] if kind=="recipe" else id
+                old=sum(i.get("quantity",1) for i in state["items"] if i.get("template")==output)
+                result=run(state,ctx,"manufacture",{"recipe":recipe["id"],"result":output})
+>               assert sum(i.get("quantity",1) for i in result["state"]["items"] if i.get("template")==output)>old
+E               assert 0 > 0
+E                +  where 0 = sum(<generator object test_each_catalog_element_has_a_real_execution_path.<locals>.<genexpr> at 0x7f1ccf47a180>)
+
+tests/test_full_game_catalog.py:130: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_full_game_catalog.py::test_each_catalog_element_has_a_real_execution_path[gear_dagger_0_4]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 244 passed in 7.48s

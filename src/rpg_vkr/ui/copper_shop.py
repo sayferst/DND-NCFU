@@ -39,7 +39,7 @@ class CopperTradeDialog(QDialog):
         )
         layout.addWidget(self.table)
         self.quantity = QSpinBox()
-        self.quantity.setRange(1, 1000)
+        self.quantity.setRange(1, 1 if window._session.schema_version == 31 else 1000)
         layout.addWidget(self.quantity)
         self.execute = QPushButton("Проверить выбранную сделку")
         layout.addWidget(self.execute)
@@ -86,7 +86,17 @@ class CopperTradeDialog(QDialog):
             for t in scene.things
             if t.resource != "gold" and scene.root_holder(t) == owner
         ]
-        self.rows.extend((i["id"], name(i), 1, True) for i in state["items"] if i["owner"] == owner)
+        present = {r[0] for r in self.rows}
+        self.rows.extend(
+            (
+                i["id"],
+                i["name"] if session.schema_version == 31 else name(i),
+                i.get("quantity", 1),
+                True,
+            )
+            for i in state["items"]
+            if i["owner"] == owner and i["id"] not in present
+        )
         self.table.blockSignals(True)
         self.table.setRowCount(len(self.rows))
         for row, (_, title, quantity, _) in enumerate(self.rows):

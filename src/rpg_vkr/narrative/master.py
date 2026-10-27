@@ -205,11 +205,29 @@ def campaign_context(session, target="", *, query=""):
                             "notes": [],
                         }
                     )
-    if session.schema_version >= 28 and session.gameplay.get("living_world"):
+    if 28 <= session.schema_version <= 30 and session.gameplay.get("living_world"):
         living = session.gameplay["living_world"]
         public_simulation["living_world"] = {
             "calendar": living.get("calendar"),
             "reports": {k: v for k, v in living["observed"].items() if session.actor_is_here(k)},
+        }
+    if session.schema_version == 31:
+        public_simulation["last_committed_receipt"] = receipt(session)
+        public_simulation["current_resources"] = {
+            "hp": session.world.hp,
+            "hp_cap": session.world.max_hp,
+            **{k: session.gameplay[k] for k in ("mp", "mp_cap", "st", "st_cap", "copper")},
+        }
+        living = session.gameplay["living_world"] or {}
+        public_simulation["living_world"] = {
+            "day": living.get("day", session.gameplay["minute"] // 1440),
+            "weather": living.get("weather", "clear"),
+            "reports": living.get("observed", {}).get(scene.current, [])[-8:],
+            "nearby_goals": {
+                k: {"job": v["job"], "goal": v["goal"]}
+                for k, v in living.get("residents", {}).items()
+                if session.actor_is_here(k)
+            },
         }
     if getattr(session, "_rag_mode", 0) == 2:
         public_simulation["rag_enabled"] = True

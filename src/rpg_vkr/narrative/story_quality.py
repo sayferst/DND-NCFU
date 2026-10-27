@@ -127,6 +127,13 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
         prose, receipt, campaign.get("resource_balances")
     ):
         issues.append("Рассказ назначил неподтверждённое изменение ресурсов или характеристик.")
+    resources = campaign.get("current_resources", {})
+    if resources.get("mp", 0) < resources.get("mp_cap", 0) and re.search(
+        r"\bман[аы]\b[^.!?\n]{0,35}\b(?:полна|полны|полон|восстановлена)\b", prose, re.I
+    ):
+        issues.append("Мана героя не полна по текущему состоянию движка.")
+    if re.search(r"\b(?:cold|fire|damage|heal|shadow|lightning)-[А-Яа-яЁё]", text, re.I):
+        issues.append("В художественный текст попала метка эффекта на другом языке.")
     hero_name = frame.hero.split(",", 1)[0]
     rename = re.search(
         r"\b(?:теперь вас зовут|ваше (?:новое )?имя)\s*[:—-]?\s*([А-ЯЁ][а-яё]+)", prose, re.I

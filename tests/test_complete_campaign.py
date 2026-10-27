@@ -190,7 +190,7 @@ def test_new_controls_and_constructor_preview_match_actual_creation(qt_app, tmp_
 
     dialog = CreationDialog()
     session = dialog.create_session()
-    assert session.schema_version == 30
+    assert session.schema_version == 31
     assert f"HP {session.world.max_hp}" in dialog.resource_preview.text()
     window = MainWindow(session=hero(), saves=SaveSlots(tmp_path / "slots"))
     assert window.production_recipe.count() >= 10

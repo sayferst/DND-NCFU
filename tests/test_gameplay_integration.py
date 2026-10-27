@@ -346,8 +346,10 @@ def test_ui_creation_and_equipment_are_real_commands(window, qt_app):
     assert window.gameplay_group.isHidden() and not window.unified_group.isHidden()
     shield = next(i["id"] for i in session.gameplay["items"] if i["kind"] == "shield")
     run(window, "equip", {"item": shield})
+    assert session.gameplay["shield"] == ""
+    run(window, "equip", {"item": shield})
     assert session.gameplay["shield"] == shield
-    assert "Экипировано" in window.unified_log.toPlainText()
+    assert "Снаряжение изменено" in window.unified_log.toPlainText()
     assert Session.from_dict(session.to_dict()).to_dict() == session.to_dict()
     dialog.close()
 

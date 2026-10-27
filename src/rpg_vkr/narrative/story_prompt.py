@@ -112,6 +112,16 @@ def render_context(context):
             + json.dumps(context["d20_skills"], ensure_ascii=False)
         )
     lines.append("Режим: продолжение подтверждённой сцены, не генерация нового мира.")
+    if context.get("current_resources"):
+        lines.append(
+            "Текущие ресурсы героя (точные данные, не восстанавливай их словами): "
+            + json.dumps(context["current_resources"], ensure_ascii=False)
+        )
+    if context.get("last_committed_receipt") and not context.get("receipt"):
+        lines.append(
+            "Последний подтверждённый ход для справки и памяти (это прошлое, не новое действие): "
+            + json.dumps(context["last_committed_receipt"], ensure_ascii=False)
+        )
     if context.get("obstacle"):
         lines.append(
             "Действие НЕ выполнено. Объясни препятствие или уточни намерение, не описывай успех: "
@@ -275,7 +285,7 @@ def scene_profile(model, text, base):
         result["length"] = "1–3 предложения: ответь о цене; вопрос не совершает покупку"
     elif re.search(r"начало кампании|вступление|пролог|начало приключения", normal):
         result.update(
-            length="развёрнутое вступление обычно250–500слов, только публичные события",
+            length="развёрнутое вступление обычно350–750слов, только публичные события",
             num_predict=4500,
             repair_predict=4500,
         )
@@ -287,7 +297,7 @@ def scene_profile(model, text, base):
         )
     elif re.search(r"осматри|осмотр", normal):
         result["length"] = (
-            "осмотр по существу; обычно60–150слов, короче если деталей мало; "
+            "осмотр по существу; обычно100–240слов, короче если деталей мало; "
             "без новой панорамы мира"
         )
     return result

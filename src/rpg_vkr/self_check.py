@@ -69,7 +69,10 @@ def check_resources(progress=lambda value, label: None):
     public = base64.b64encode(key.public_key().public_bytes_raw()).decode()
     verify(json.dumps(value | {"signature": signature}).encode(), public)
     progress(75, "Хранилище и защищённое соединение")
+    from rpg_vkr.domain.game_catalog import digest, load
     from rpg_vkr.learning.corpus import diagnostics
+
+    catalog_rows = load()
 
     return {
         "ok": True,
@@ -87,6 +90,7 @@ def check_resources(progress=lambda value, label: None):
         "data_outside_application": str(data_directory()),
         "network_requests": 0,
         "automatic_corpus": diagnostics(),
+        "game_catalog": {"count": len(catalog_rows), "sha256": digest()},
     }
 
 

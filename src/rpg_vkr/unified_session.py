@@ -29,8 +29,15 @@ class UnifiedSession(Session):
         description="",
         world_brief="",
         campaign=None,
+        content_revision=2,
     ):
         state = rules.initial({"class_id": class_id, "talent": talent}, character)
+        if content_revision not in (1, 2):
+            raise ValueError("Неизвестная ревизия данных кампании.")
+        if content_revision == 2:
+            from rpg_vkr.domain.catalog_engine import initial
+
+            state = initial(state, character)
         limits = rules.caps(state, character)
         obj = cls(
             seed=seed,
@@ -49,6 +56,8 @@ class UnifiedSession(Session):
             "campaign": obj.campaign.to_dict(),
         }
         obj._operations = []
+        if content_revision == 2:
+            obj._origin["content_revision"] = 2
         obj._depth = 0
         obj._learning_flags = {"library": False, "memory": True}
         obj._rag_mode = 2
@@ -56,7 +65,21 @@ class UnifiedSession(Session):
 
     @property
     def schema_version(self):
-        return 30
+        return 31 if self.gameplay.get("content_revision") == 2 else 30
+
+    def start_world(self, seed):
+        super().start_world(seed)
+        if self.schema_version == 31:
+            from rpg_vkr.domain.catalog_engine import Engine
+
+            engine = Engine(self.gameplay, context(self), self.dice, {})
+            result = engine.finish()
+            from rpg_vkr.domain.catalog import Catalog
+            from rpg_vkr.domain.interactions import InteractiveWorld
+
+            self._gameplay["state"] = result["state"]
+            self.catalog = Catalog.from_dict(result["catalog"])
+            self.interactive_world = InteractiveWorld.from_dict(result["scene"])
 
     @property
     def effective_character(self):
@@ -162,6 +185,50 @@ def context(session):
     }
 
 
+def compact_latest(session, result):
+    """Keep a checked receipt, not a full inventory copy in every historical turn."""
+    from rpg_vkr.domain.receipts import receipt
+
+    old = session._turns[-1]
+    record = old.gameplay
+    if not record or record.get("receipt"):
+        return result
+    cached = receipt(session)
+    before = record["context"]
+    after = record["result"]
+    scene = before.get("scene", {})
+    actors = (before.get("catalog") or {}).get("entities", [])
+    alive = {a["id"] for a in actors if (a.get("state") or {}).get("hp", 1) > 0}
+    small_context = {
+        "world": before.get("world", {}),
+        "character": before.get("character", {}),
+        "unified_before": before.get("unified_before", {}),
+        "scene": {
+            "current": scene.get("current", session.current_place_id),
+            "actors": [a for a in scene.get("actors", []) if a["id"] in alive],
+        },
+    }
+    small_result = {k: deepcopy(after.get(k, [])) for k in ("rolls", "attacks", "battle_events")}
+    small_result["state"] = {
+        k: deepcopy(after["state"].get(k))
+        for k in ("xp", "mp", "st", "copper", "minute", "battle", "last_battle")
+    }
+    small_result["state"]["world_aliases"] = deepcopy(after["state"].get("world_aliases", {}))
+    small_result["world"] = after["world"]
+    small_result["text"] = after["text"]
+    compact = {
+        "request_id": record["request_id"],
+        "command": record["command"],
+        "args": record["args"],
+        "context": small_context,
+        "result": small_result,
+        "receipt": cached,
+    }
+    new = replace(old, gameplay=compact)
+    session._turns[-1] = new
+    return new if result is old else result
+
+
 def instrument():
     for name in METHODS | {"start_world"}:
         method = getattr(UnifiedSession, name)
@@ -188,6 +255,8 @@ def instrument():
                     result = method(self, *args, **kwargs)
                     if self.progress != previous["progress"]:
                         raise ValueError("Это действие не даёт подтверждённого развития героя.")
+                    if self.schema_version == 31 and self._turns:
+                        result = compact_latest(self, result)
                 except Exception:
                     vars(self).clear()
                     vars(self).update(previous)
@@ -220,6 +289,7 @@ def restore(data):
     ):
         raise ValueError("Неизвестный набор правил или журнал.")
     origin = deepcopy(meta["origin"])
+    origin.setdefault("content_revision", 1)
     origin["character"] = Character.from_dict(origin["character"])
     origin["campaign"] = Campaign.from_dict(origin["campaign"])
     session = UnifiedSession.create(**origin)

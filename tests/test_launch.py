@@ -149,10 +149,10 @@ def interact():
         else:
             window.load_slot(1)
             assert window._session.character.name == 'Мира'
-            assert window._session.schema_version == 30
+            assert window._session.schema_version == 31
             assert window._session.gameplay['minute'] == 490
             assert window._session.d20_progress is None
-            assert 'Меч' in window.inventory_label.text()
+            assert 'меч' in window.inventory_label.text().casefold()
             window._session.perform_gameplay('wait', {'minutes': 1}, 'second')
             window.save_slot(2)
         print('Created hero restart verified', flush=True)

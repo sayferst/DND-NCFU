@@ -78,6 +78,7 @@ class SaveSlots:
                 28,
                 29,
                 30,
+                31,
             ):
                 raise ValueError("Unsupported save version")
             saved_at = datetime.fromisoformat(data["saved_at"])

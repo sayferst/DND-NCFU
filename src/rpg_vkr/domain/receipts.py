@@ -11,6 +11,10 @@ def receipt(session):
     if not session.turns:
         return None
     turn = session.turns[-1]
+    if turn.gameplay and turn.gameplay.get("receipt"):
+        from copy import deepcopy
+
+        return deepcopy(turn.gameplay["receipt"])
     index = len(session.turns)
     raw = json.dumps(asdict(turn), ensure_ascii=False, sort_keys=True)
     id = hashlib.sha256((session.campaign.world_id + str(index) + raw).encode()).hexdigest()

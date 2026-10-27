@@ -1584,11 +1584,14 @@ class Session:
     @classmethod
     def from_dict(cls, data: object, version: int | None = None) -> "Session":
         if isinstance(data, dict) and "unified" in data:
-            if version not in (None, 30):
+            if version not in (None, 30, 31):
                 raise ValueError("Единая кампания требует схему30.")
             from rpg_vkr.unified_session import restore
 
-            return restore(data)
+            restored = restore(data)
+            if version is not None and restored.schema_version != version:
+                raise ValueError("Схема не соответствует содержимому кампании.")
+            return restored
         if isinstance(data, dict) and "fork" in data:
             if version not in (None, 29):
                 raise ValueError("Копия требует схему29.")

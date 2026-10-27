@@ -79,6 +79,8 @@ def story_context(
         recent.append(entry)
     context = {
         "obstacle": (campaign or {}).get("obstacle", ""),
+        "current_resources": (campaign or {}).get("current_resources", {}),
+        "last_committed_receipt": (campaign or {}).get("last_committed_receipt"),
         "receipt": (campaign or {}).get("receipt") if confirmed else None,
         "resource_balances": (campaign or {}).get("resource_balances", {}),
         "d20_skills": (campaign or {}).get("d20_skills"),

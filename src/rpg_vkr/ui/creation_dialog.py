@@ -283,6 +283,7 @@ class CreationDialog(QDialog):
             self.initial_talent.currentData(),
             description=self.description_input.toPlainText(),
             world_brief=self.world_brief_input.toPlainText(),
+            content_revision=2,
         )
 
     def accept(self):

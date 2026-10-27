@@ -546,15 +546,19 @@ class OllamaClient(QObject):
                 "без классовой подготовки. Рангов и очков навыков нет. ",
             )
         prompt += OBJECT_CREATION_GUIDE + OBJECT_MEMORY_GUIDE + "\n" + POLICY
-        if state.get("gameplay_revision", 0) >= 2:
+        if state.get("catalog_actions"):
+            from rpg_vkr.narrative.catalog_protocol import GUIDE as CATALOG_GUIDE
+
+            prompt += "\n" + CATALOG_GUIDE
+        if state.get("gameplay_revision", 0) >= 2 and not state.get("catalog_actions"):
             from rpg_vkr.narrative.gameplay_prompt import GUIDE
 
             prompt += GUIDE
-        if state.get("gameplay_revision", 0) >= 4:
+        if state.get("gameplay_revision", 0) >= 4 and not state.get("catalog_actions"):
             from rpg_vkr.narrative.gameplay_prompt import TEAM_GUIDE
 
             prompt += TEAM_GUIDE
-        if state.get("gameplay_revision", 0) >= 3:
+        if state.get("gameplay_revision", 0) >= 3 and not state.get("catalog_actions"):
             from rpg_vkr.narrative.gameplay_prompt import FACTION_GUIDE
 
             prompt += FACTION_GUIDE
@@ -1251,6 +1255,7 @@ class OllamaClient(QObject):
                         "dialogue_target",
                         "obstacle",
                         "assessment",
+                        "gameplay",
                     }
                     or not isinstance(value["check"], str)
                     or value["check"] not in {"none", *CHALLENGES}
@@ -1353,6 +1358,12 @@ class OllamaClient(QObject):
                         or value["check"] != "none"
                     ):
                         raise ValueError("Общая проверка требует отдельного шага.")
+                if value.get("gameplay") is not None:
+                    from rpg_vkr.narrative.catalog_protocol import validate_proposal
+
+                    hints["gameplay"] = validate_proposal(
+                        value["gameplay"], value, self._planning["state"]
+                    )
                 self._report(kind, model, raw, data, "OK: план получен, изменения ещё не применены")
                 self.world_plan_ready.emit(
                     (

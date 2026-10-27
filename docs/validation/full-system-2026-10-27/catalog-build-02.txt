@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/DND-NCFU/scripts/build_game_catalog.py", line 12, in <module>
+    data=build()
+         ^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog_authoring.py", line 232, in build
+    add("event", group, f"event_{group}_{p}_{m}", f"{group}: {DESIGNS[p]} — {MATERIALS[m]}",
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog_authoring.py", line 88, in add
+    "description": data.pop("description", name + ": " + data.get("role", group)), **data})
+                                           ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: can only concatenate str (not "int") to str

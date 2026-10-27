@@ -1,0 +1,66 @@
+name: Full RPG Windows validation
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/unified-rpg-automatic-gm]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'data/**'
+      - 'scripts/**'
+      - 'training/**'
+      - '.github/workflows/**'
+      - 'requirements*'
+      - 'pyproject.toml'
+      - 'DND-NCFU.spec'
+      - 'installer/**'
+permissions:
+  contents: read
+jobs:
+  dpi:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        scale: ['1', '1.25', '1.5', '2']
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Native Windows widgets at selected Qt scale
+        env:
+          QT_SCALE_FACTOR: ${{ matrix.scale }}
+        run: python -m pytest tests/test_catalog_ui_playable.py tests/test_unified_creation.py tests/test_catalog_campaign.py -q
+  setup:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Build portable and Windows Setup
+        shell: powershell
+        run: |
+          & .\scripts\build_windows.ps1 -Installer -Profile developer -TextModel 'deepseek/deepseek-v4.1-flash'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install, launch, update and check isolated data
+        shell: powershell
+        run: .\scripts\probe_windows_setup.ps1
+      - name: Upload package and actual reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: full-system-native-windows
+          path: |
+            dist/DND-NCFU-Setup.exe
+            dist/DND-NCFU-Windows-x64-v*.zip
+            dist/DND-NCFU-Windows-x64-v*.zip.sha256
+            build/windows-*/checks/*.json
+            build/setup-probe/*.json
+          if-no-files-found: warn
+          retention-days: 14

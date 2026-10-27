@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QFormLayout,
     QGroupBox,
     QLabel,
+    QLineEdit,
     QPlainTextEdit,
     QPushButton,
 )
@@ -54,14 +55,27 @@ def install(window, layout):
         "cast",
         lambda: {
             "spell": window.unified_spell.currentData(),
-            "target": window.unified_target.currentData(),
+            **target_args(window),
         },
     )
     window.unified_recipe = QComboBox()
     for key in RECIPES:
         window.unified_recipe.addItem(key, key)
     form.addRow("Рецепт", window.unified_recipe)
-    button("Изготовить", "manufacture", lambda: {"recipe": window.unified_recipe.currentData()})
+    window.unified_result = QComboBox()
+    form.addRow("Результат", window.unified_result)
+    button(
+        "Изготовить",
+        "manufacture",
+        lambda: {
+            "recipe": window.unified_recipe.currentData(),
+            **(
+                {"result": window.unified_result.currentData()}
+                if window.unified_result.currentData()
+                else {}
+            ),
+        },
+    )
     button("Отремонтировать", "repair", lambda: {"item": window.unified_items.currentData()})
     button("Отдохнуть", "rest", dict)
     from rpg_vkr.domain.character import ABILITY_NAMES
@@ -93,6 +107,59 @@ def install(window, layout):
     window.unified_log.setReadOnly(True)
     window.unified_log.setMaximumHeight(140)
     form.addRow(window.unified_log)
+    window.catalog_actions = QGroupBox("Исследование и обучение")
+    extra = QFormLayout(window.catalog_actions)
+    window.unified_world_info = QLabel()
+    window.unified_world_info.setWordWrap(True)
+    extra.addRow(window.unified_world_info)
+    window.unified_search = QLineEdit()
+    window.unified_search.setPlaceholderText("Название техники или рецепта")
+    extra.addRow("Поиск", window.unified_search)
+    window.unified_learn_kind = QComboBox()
+    for key, label in (("spell", "Заклинания"), ("recipe", "Рецепты")):
+        window.unified_learn_kind.addItem(label, key)
+    extra.addRow("Изучение", window.unified_learn_kind)
+    window.unified_learn = QComboBox()
+    extra.addRow(window.unified_learn)
+    learn = QPushButton("Изучить: сырьё трав и ткань ×1, 1 час, проверка")
+    learn.clicked.connect(
+        lambda: run(window, "research", {"entry": window.unified_learn.currentData()})
+    )
+    extra.addRow(learn)
+    window.unified_ability = QComboBox()
+    extra.addRow("Способность", window.unified_ability)
+    ability = QPushButton("Применить способность")
+    ability.clicked.connect(
+        lambda: run(
+            window,
+            "ability",
+            {"talent": window.unified_ability.currentData(), **target_args(window)},
+        )
+    )
+    extra.addRow(ability)
+    window.unified_material = QComboBox()
+    extra.addRow("Сырьё", window.unified_material)
+    gather = QPushButton("Добыть одну единицу")
+    gather.clicked.connect(
+        lambda: run(
+            window, "gather", {"material": window.unified_material.currentData(), "quantity": 1}
+        )
+    )
+    extra.addRow(gather)
+    window.unified_destination = QComboBox()
+    extra.addRow("Соседний путь", window.unified_destination)
+    travel = QPushButton("Отправиться")
+    travel.clicked.connect(
+        lambda: run(window, "travel", {"destination": window.unified_destination.currentData()})
+    )
+    extra.addRow(travel)
+    explore = QPushButton("Исследовать окрестности")
+    explore.clicked.connect(lambda: run(window, "explore", {}))
+    extra.addRow(explore)
+    form.addRow(window.catalog_actions)
+    window.unified_search.textChanged.connect(lambda: refresh_learning(window))
+    window.unified_learn_kind.currentIndexChanged.connect(lambda: refresh_learning(window))
+    window.unified_recipe.currentIndexChanged.connect(lambda: refresh_outputs(window))
     window.unified_group.hide()
 
 
@@ -125,6 +192,14 @@ def refresh(window):
     window.unified_raise_button.setEnabled(points > 0)
     window.unified_talent_button.setEnabled(choices > 0)
     window.unified_talent.clear()
+    expanded = state.get("content_revision") == 2
+    window.catalog_actions.setVisible(expanded)
+    if expanded:
+        from rpg_vkr.domain import game_catalog as catalog
+
+        for row in catalog.available("talent", lv, state["identity"]["class_id"]):
+            if row["id"] not in state["talents"]:
+                window.unified_talent.addItem(row["name"], row["id"])
     for key in talents(state["identity"]["class_id"]):
         if key not in state["talents"]:
             window.unified_talent.addItem(TALENTS[key][0] + " — " + TALENTS[key][1], key)
@@ -139,7 +214,16 @@ def refresh(window):
 
     refill(
         window.unified_items,
-        [(i["id"], i["name"]) for i in state["items"] if i["owner"] == "hero"]
+        [
+            (
+                i["id"],
+                i["name"]
+                + f" ×{i.get('quantity', 1)} · {i['durability']}/{i.get('durability_cap', 20)}",
+            )
+            for i in state["items"]
+            if i["owner"] == "hero"
+            and (not i.get("source") or i["id"] in {t.id for t in s.interaction_state().carried()})
+        ]
         + [
             (t.id, t.name)
             for t in s.interaction_state().carried()
@@ -151,6 +235,54 @@ def refresh(window):
         [("hero", "Герой")]
         + [(a.id, a.name) for a in s.interaction_state().actor_refs if s.actor_is_here(a.id)],
     )
+    if expanded:
+        minute = state["minute"]
+        world = state.get("living_world") or {}
+        weather = {
+            "clear": "ясно",
+            "rain": "дождь",
+            "drought": "засуха",
+            "fog": "туман",
+            "storm": "буря",
+            "frost": "заморозки",
+            "flood": "паводок",
+            "thaw": "оттепель",
+            "growth": "рост",
+        }.get(world.get("weather"), "")
+        public_news = "; ".join(
+            v["name"] + ": " + v["news"] for v in state["known_factions"].values()
+        )
+        window.unified_world_info.setText(
+            f"День {minute // 1440 + 1} · {minute // 60 % 24:02}:{minute % 60:02} · {weather}\n"
+            + public_news
+        )
+        refill(
+            window.unified_recipe,
+            [
+                (k, catalog.row(k)["name"])
+                for k in state["known_recipes"]
+                if catalog.row(k)["category"] != "repair"
+            ],
+        )
+        refill(
+            window.unified_ability,
+            [(k, catalog.row(k)["name"]) for k in state["talents"] if k.startswith("talent_")],
+        )
+        refill(
+            window.unified_material,
+            [(r["id"], r["name"]) for r in catalog.available("material", lv) if r["process"] == 0],
+        )
+        place = s.interaction_state().place()
+        refill(
+            window.unified_destination,
+            [
+                (p.id, p.name)
+                for p in s.interaction_state().places
+                if p.parent == place.id or place.parent == p.id
+            ],
+        )
+        refresh_learning(window)
+        refresh_outputs(window)
     refill(
         window.unified_spell,
         [
@@ -160,7 +292,9 @@ def refresh(window):
                     "light": "Путеводный свет ·1MP",
                     "heal": "Исцеление ·3MP",
                     "bolt": "Магический разряд ·3MP",
-                }.get(k, k),
+                }.get(k, k)
+                if not expanded
+                else catalog.row(k)["name"] + f" · {catalog.row(k)['mp']}MP",
             )
             for k in state["spells"]
         ],
@@ -178,3 +312,55 @@ def run(window, command, args):
         window._refresh_character()
     except ValueError as e:
         window.unified_log.setPlainText(str(e))
+
+
+def target_args(window):
+    result = {"target": window.unified_target.currentData()}
+    if window._session.gameplay.get("content_revision") == 2:
+        result.update(
+            item=window.unified_items.currentData(),
+            destination=window.unified_destination.currentData(),
+        )
+    return result
+
+
+def refresh_learning(window):
+    from rpg_vkr.domain import game_catalog as catalog
+    from rpg_vkr.domain.unified import level
+
+    if (
+        not getattr(window._session, "is_unified", False)
+        or window._session.gameplay.get("content_revision") != 2
+    ):
+        return
+    state = window._session.gameplay
+    kind = window.unified_learn_kind.currentData()
+    known = state["spells" if kind == "spell" else "known_recipes"]
+    query = window.unified_search.text().casefold().strip()
+    window.unified_learn.clear()
+    rows = catalog.available(kind, level(state["xp"]))
+    if kind == "spell" and not state["mp_cap"]:
+        rows = []
+    for r in rows:
+        if r["id"] not in known and (not query or query in r["name"].casefold()):
+            window.unified_learn.addItem(r["name"], r["id"])
+
+
+def refresh_outputs(window):
+    from rpg_vkr.domain import game_catalog as catalog
+    from rpg_vkr.domain.unified import level
+
+    if (
+        not getattr(window._session, "is_unified", False)
+        or window._session.gameplay.get("content_revision") != 2
+    ):
+        return
+    state = window._session.gameplay
+    key = window.unified_recipe.currentData()
+    window.unified_result.clear()
+    if not key:
+        return
+    for id in catalog.row(key, "recipe")["outputs"]:
+        row = catalog.row(id)
+        if row["level"] <= level(state["xp"]):
+            window.unified_result.addItem(row["name"], id)

@@ -305,7 +305,8 @@ def finish_turn(session, turn):
     checkpoint = session.dice.checkpoint()
     result = execute(session._gameplay["state"], "advance", {"minutes": minutes}, ctx, session.dice)
     if (
-        session.dice.checkpoint() != checkpoint
+        session.schema_version < 31
+        and session.dice.checkpoint() != checkpoint
         or (session.schema_version < 25 and result["world"] != ctx["world"])
         or (session.schema_version < 28 and result["combat"] != ctx["combat"])
     ):

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/DND-NCFU/scripts/build_game_catalog.py", line 8, in <module>
+    from rpg_vkr.domain.catalog_authoring import build  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog_authoring.py", line 115
+    add("armour", family, f"gear_{family}_{m}_{design}", f"{name} «{style}": {MATERIALS[m]}",
+                                                                                           ^
+SyntaxError: unterminated string literal (detected at line 115)

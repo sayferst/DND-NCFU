@@ -1,0 +1,105 @@
+.F
+=================================== FAILURES ===================================
+____________________ test_public_progression_one_to_twenty _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-14/test_public_progression_one_to0')
+
+    def test_public_progression_one_to_twenty(tmp_path):
+        if not os.environ.get("DND_LONG_CAMPAIGN"):
+            pytest.skip("Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay")
+        s = started(supplies=True)
+        # Genesis supplies remain finite; every subsequent change uses public Session actions.
+        milestones = [{"level": 1, "turn": 0, "xp": 0}]
+        outputs = [r for r in catalog.load().values() if r["kind"] in ("weapon", "armour", "household")]
+        outputs.sort(key=lambda r: (r["level"], r["id"]))
+        attempts = 0
+    
+        def learn(recipe):
+            if recipe["id"] not in s.gameplay["known_recipes"]:
+                for _ in range(12):
+                    act(s, "research", entry=recipe["id"])
+                    if recipe["id"] in s.gameplay["known_recipes"]:
+                        return
+                raise AssertionError("Learning did not succeed")
+    
+        def count(id):
+            return sum(
+                i["quantity"]
+                for i in s.gameplay["items"]
+                if i.get("template") == id and i["owner"] == "hero"
+            )
+    
+        def prepare(recipe):
+            learn(recipe)
+            for key, n in recipe["ingredients"].items():
+                while count(key) < n:
+                    parent = next(r for r in catalog.available("recipe") if key in r["outputs"])
+                    prepare(parent)
+                    act(s, "manufacture", recipe=parent["id"], result=key)
+            tools = [
+                i
+                for i in s.gameplay["items"]
+                if i["owner"] == "hero"
+                and i["durability"] > 0
+                and catalog.row(i.get("template", "house_0_0")).get("capability") == "tools"
+            ]
+            if sum(i["durability"] for i in tools) < 4:
+                act(s, "manufacture", recipe="recipe_production_0_0", result="house_0_0")
+    
+        for row in outputs:
+            if level(s.gameplay["xp"]) == 20:
+                break
+            if row["level"] > level(s.gameplay["xp"]):
+                continue
+            recipe = next(r for r in catalog.available("recipe") if row["id"] in r["outputs"])
+            for _ in range(20):
+                attempts += 1
+                prepare(recipe)
+                act(s, "manufacture", recipe=recipe["id"], result=row["id"])
+                made = next(
+                    (
+                        i
+                        for i in s.gameplay["items"]
+                        if i.get("template") == row["id"]
+                        and i.get("made_by") == "hero"
+                        and i["owner"] == "hero"
+                    ),
+                    None,
+                )
+                if made:
+                    break
+            assert made
+            if not s.actor_is_here("seller"):
+                act(
+                    s,
+                    "travel",
+                    destination=next(
+                        a.place for a in s.interaction_state().actor_refs if a.id == "seller"
+                    ),
+                )
+            for retry in range(8):
+                merchant = next(e for e in s.catalog.entities if e.id == "seller")
+                remaining = (merchant.state or {}).get("closed_until", 0) - s.gameplay["minute"]
+                if remaining > 0:
+                    act(s, "wait", minutes=min(1440, remaining))
+                    continue
+                if not s.actor_is_here("seller"):
+                    act(
+                        s,
+                        "travel",
+                        destination=next(
+                            a.place for a in s.interaction_state().actor_refs if a.id == "seller"
+                        ),
+                    )
+                    continue
+                act(s, "sell", merchant="seller", item=made["id"])
+                break
+            else:
+>               raise AssertionError("Town did not reopen")
+E               AssertionError: Town did not reopen
+
+tests/test_catalog_campaign.py:235: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_catalog_campaign.py::test_public_progression_one_to_twenty
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 passed in 2.03s

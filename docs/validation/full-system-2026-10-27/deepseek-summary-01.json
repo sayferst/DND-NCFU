@@ -1,0 +1,26 @@
+{
+  "model": "deepseek/deepseek-v4.1-flash",
+  "paid_posts": 16,
+  "reported_usage_cost_rub": "1.11135687629967003",
+  "this_task_reserved_rub": "8.74478368277514",
+  "including_prior_task_reserved_rub": "47.03478368277514",
+  "user_cap_rub": "150",
+  "cash_deductions_independently_verified": false,
+  "human_review": [
+    "first-run RAG memory claimed full MP despite 1 MP spent",
+    "first-run RAG contained cold-белого; a new regression guard rejects this",
+    "second-run both modes recalled actual light and 28→27 MP correctly"
+  ],
+  "quality_superiority_proven": false,
+  "local_baseline_or_trained_model_measured": false,
+  "post_fix": {
+    "without_rag": {
+      "accepted": 4,
+      "median_latency_ms": 5610.11
+    },
+    "automatic_rag": {
+      "accepted": 4,
+      "median_latency_ms": 6289.3
+    }
+  }
+}

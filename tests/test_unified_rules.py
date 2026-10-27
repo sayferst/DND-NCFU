@@ -16,6 +16,7 @@ def hero(class_id="mage", seed=13):
         class_id,
         CLASSES[class_id][4],
         seed=seed,
+        content_revision=1,  # Published schema30 compatibility suite.
     )
 
 

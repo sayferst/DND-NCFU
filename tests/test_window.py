@@ -250,7 +250,7 @@ def test_new_hero_resets_session_but_preserves_save_slots(window, monkeypatch):
     QTest.keyClick(window.action_input, Qt.Key.Key_Up)
     assert not window.action_input.text()
     assert window._session.gameplay["copper"] == 200
-    assert window._session.schema_version == 30
+    assert window._session.schema_version == 31
     assert (window._saves.directory / "slot-1.json").read_bytes() == original
 
 
