@@ -44,8 +44,15 @@ def test_catalog_controls_execute_and_filter_at_actual_level(window):
 
 
 def test_routerai_gameplay_proposal_commits_once_then_narrates(window, qt_app, monkeypatch):
+    from rpg_vkr.application import Session
+
     window._session = started("mage")
     monkeypatch.setattr(window, "_confirm", lambda text: True)
+
+    def reject_history_replay(*args, **kwargs):
+        raise AssertionError("An AI action preview must not reload and replay committed history")
+
+    monkeypatch.setattr(Session, "from_dict", reject_history_replay)
     text = "Зажигаю путеводный свет"
     proposal = {
         "steps": [],

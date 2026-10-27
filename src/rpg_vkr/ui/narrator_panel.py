@@ -922,12 +922,7 @@ def accept_world_plan(window, result):
             return
         proposal = hints["gameplay"]
         try:
-            from rpg_vkr.application import Session
-
-            preview = Session.from_dict(
-                window._session.to_dict(), version=window._session.schema_version
-            )
-            preview.perform_gameplay(proposal["command"], proposal["args"], "preview")
+            window._session.preview_gameplay(proposal["command"], proposal["args"])
         except (ValueError, TypeError, KeyError, AttributeError) as error:
             failed(window, "Действие не выполнено: " + str(error))
             return
