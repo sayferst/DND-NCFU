@@ -5,6 +5,9 @@
 
 ## Итог
 
+- `windows-setup-success-01.txt`: **5279 passed, 1 skipped / 997.66с**,
+  scripts/check.py exit0 на Windows, pip/Ruff349файлов успешны. Затем собраны
+  portable/Setup и пройдены установка/запуск/повторная установка; подробнее ниже.
 - `full-04.txt`: **5271passed,1skipped/504.45с**, scripts/check.py сообщает успех;
   pip/Ruff check/format349файлов успешны. Предыдущий `full-03.txt`:
   5269passed,1skipped/524.62с, exit0.
@@ -30,6 +33,7 @@
   `immutable-02.json`: повторная сверка86файлов на f2752bb, все неизменны.
   `immutable-03.json`: полные хэши повторной сверки на4cc4f4c, все86неизменны.
   `code-manifest-02.json`:52изменённых исходных/тестовых/данных/build-файла на4cc4f4c.
+  `code-manifest-03.json`:53файла после d70a4bf (последующий67b04a6 — документация).
 - `linux-build-02.txt`: успешная Linux onedir сборка.
   `linux-frozen-self-check-01.json` и `linux-frozen-smoke-01.json`:ok=true;
   внутри3360игровыхзаписей,automatic_corpus.ready/19000, новые магия/производство/
@@ -124,8 +128,24 @@ symlink PyInstaller, запрет не ослаблялся. `linux-release-audi
 временной копии с разыменованными ссылками,308файлов, индекс прошёл сверку;
 оригинал неизменён. Это проверка состава, не повторная сборка, запуск копии или Windows.
 
-Новый [CI d70a4bf](https://github.com/sayferst/DND-NCFU/actions/runs/40573954108)
-выполняется; результат установки будет записан отдельно. Четыре масштаба Qt
-в предыдущих запусках прошли (по12passed/1skipped); это offscreen widgets,
-не ручная оценка реального монитора. DPAPI roundtrip выполнен на Windows в smoke;
-ручная игра и первый запуск на чистом пользовательском ПК ещё не проверены.
+[Финальный CI d70a4bf](https://github.com/sayferst/DND-NCFU/actions/runs/40573954108)
+успешен: все6job success. Полный набор **5279passed,1skipped/997.66с**,
+pip/Ruff успешны. Четыре масштаба Qt прошли (по12passed/1skipped).
+Это offscreen widgets, не ручная оценка реального монитора.
+
+Portable ZIP и Inno Setup реально собраны. Установка в изолированный TEMP,
+запуск установленного EXE и повторная установка той же сборки успешны:
+`setup-result.json` содержит install/repeat_update/isolated_data_preserved=true,
+manual_gui=false. Оба saved-campaign отчёта подтверждают сохранность байтов,
+schema31load и MP. Frozen и установленные smoke:ok=true, DPAPI native-roundtrip-passed,
+game_catalog.count3360, automatic_corpus.ready/19000, catalog_gameplay mage/artisan
+schema31 JSON/SQLite/RNG=true. Реальных запросов RouterAI при этой проверке нет.
+
+[Артефакт Setup/portable](https://github.com/sayferst/DND-NCFU/actions/runs/40573954108/artifacts/12768045853):
+94215478байт, SHA256 `295b975808f760e3d3c308bf530c627bd317a3b8203aee8fabaa332cad648fb8`,
+хранится до10.11.2026. Получен через GitHub connector, SHA сверён перед чтением.
+10оригинальных JSON извлечены в `windows-artifact-01/`; EXE/ZIP не включены в Git.
+`windows-artifact-manifest-01.json` содержит исходные пути, размеры и SHA всех13файлов.
+`windows-jobs-success-01.json` фиксирует результаты job.
+Ручная игра, обновление со всех исторических версий и первый запуск на чистом
+пользовательском ПК ещё не проверены.

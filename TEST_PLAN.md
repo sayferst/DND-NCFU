@@ -26,6 +26,11 @@ UTF-8 файл отчёта и безопасную диагностику ош�
 Дополнительный шестиклассовый контроллер:360попыток,141принята/219ожидаемых
 атомарных отказов;6replay/RNG совпали. Это отдельная синтетическая проверка,
 не часть счётчика pytest и не длительная кампания всех классов.
+Финальный Windows CI40573954108/d70a4bf:5279passed,1skipped/997.66с,
+pip/Ruff успешны;4DPIjob, сборкаportable/Setup и install/repeat-update success.
+10оригинальных JSON-отчётов извлечены из проверенного по SHA артефакта в
+validation/full-system-2026-10-27/windows-artifact-01. Кампания/MP сохранены,
+frozen/installed smoke:ok=true, DPAPI native-roundtrip-passed, корпус ready/19000.
 
 ## 27.10.2026 — полный автоматический корпус
 

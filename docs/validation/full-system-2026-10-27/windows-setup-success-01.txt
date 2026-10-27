@@ -1,0 +1,868 @@
+﻿2026-10-27T20:00:03.2347743Z Current runner version: '2.338.0'
+2026-10-27T20:00:03.2389496Z ##[group]Runner Image Provisioner
+2026-10-27T20:00:03.2391181Z Hosted Compute Agent
+2026-10-27T20:00:03.2392608Z Version: 20261021.618
+2026-10-27T20:00:03.2393915Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-27T20:00:03.2395600Z Build Date: 2026-10-21T00:45:21Z
+2026-10-27T20:00:03.2397100Z Worker ID: {f61a2ce6-7aec-4b73-b671-9d95e68be649}
+2026-10-27T20:00:03.2398790Z Region: eastus
+2026-10-27T20:00:03.2399714Z Cloud: Azure
+2026-10-27T20:00:03.2400626Z ##[endgroup]
+2026-10-27T20:00:03.2403356Z ##[group]Operating System
+2026-10-27T20:00:03.2404464Z Microsoft Windows Server 2025
+2026-10-27T20:00:03.2405585Z 10.0.26100
+2026-10-27T20:00:03.2406427Z Datacenter
+2026-10-27T20:00:03.2407348Z ##[endgroup]
+2026-10-27T20:00:03.2408276Z ##[group]Runner Image
+2026-10-27T20:00:03.2409154Z Image: windows-2025-vs2026
+2026-10-27T20:00:03.2409989Z Version: 20261021.278.1
+2026-10-27T20:00:03.2411875Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-27T20:00:03.2414455Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-27T20:00:03.2416349Z ##[endgroup]
+2026-10-27T20:00:03.2418489Z ##[group]GITHUB_TOKEN Permissions
+2026-10-27T20:00:03.2421065Z Contents: read
+2026-10-27T20:00:03.2421953Z Metadata: read
+2026-10-27T20:00:03.2422903Z ##[endgroup]
+2026-10-27T20:00:03.2426155Z Secret source: Actions
+2026-10-27T20:00:03.2427576Z Cache mode: write
+2026-10-27T20:00:03.2428729Z Prepare workflow directory
+2026-10-27T20:00:03.2967994Z Prepare all required actions
+2026-10-27T20:00:03.3051728Z Getting action download info
+2026-10-27T20:00:03.5664265Z Download action repository 'actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-27T20:00:03.7309335Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-27T20:00:03.9922773Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-27T20:00:04.3943189Z Complete job name: setup
+2026-10-27T20:00:04.5721282Z ##[group]Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+2026-10-27T20:00:04.5723325Z with:
+2026-10-27T20:00:04.5724065Z   repository: sayferst/DND-NCFU
+2026-10-27T20:00:04.5732953Z   token: ***
+2026-10-27T20:00:04.5733694Z   ssh-strict: true
+2026-10-27T20:00:04.5734430Z   ssh-user: git
+2026-10-27T20:00:04.5735167Z   persist-credentials: true
+2026-10-27T20:00:04.5735997Z   clean: true
+2026-10-27T20:00:04.5736743Z   sparse-checkout-cone-mode: true
+2026-10-27T20:00:04.5737634Z   fetch-depth: 1
+2026-10-27T20:00:04.5738353Z   fetch-tags: false
+2026-10-27T20:00:04.5739098Z   show-progress: true
+2026-10-27T20:00:04.5739868Z   lfs: false
+2026-10-27T20:00:04.5740569Z   submodules: false
+2026-10-27T20:00:04.5741364Z   set-safe-directory: true
+2026-10-27T20:00:04.5742233Z   allow-unsafe-pr-checkout: false
+2026-10-27T20:00:04.5743462Z ##[endgroup]
+2026-10-27T20:00:04.7334900Z Syncing repository: sayferst/DND-NCFU
+2026-10-27T20:00:04.7337810Z ##[group]Getting Git version info
+2026-10-27T20:00:04.7338960Z Working directory is 'D:\a\DND-NCFU\DND-NCFU'
+2026-10-27T20:00:04.8441546Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-27T20:00:05.2137500Z git version 2.56.0.windows.2
+2026-10-27T20:00:05.2198996Z ##[endgroup]
+2026-10-27T20:00:05.2219355Z Temporarily overriding HOME='D:\a\_temp\0fa66967-68d9-4170-89d4-8bb7f1a1a6c5' before making global git config changes
+2026-10-27T20:00:05.2220307Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T20:00:05.2230657Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\DND-NCFU\DND-NCFU
+2026-10-27T20:00:05.2929171Z Deleting the contents of 'D:\a\DND-NCFU\DND-NCFU'
+2026-10-27T20:00:05.2938216Z ##[group]Initializing the repository
+2026-10-27T20:00:05.2947506Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\DND-NCFU\DND-NCFU
+2026-10-27T20:00:05.3953121Z Initialized empty Git repository in D:/a/DND-NCFU/DND-NCFU/.git/
+2026-10-27T20:00:05.4004547Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/sayferst/DND-NCFU
+2026-10-27T20:00:05.4753997Z ##[endgroup]
+2026-10-27T20:00:05.4754835Z ##[group]Disabling automatic garbage collection
+2026-10-27T20:00:05.4765265Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-27T20:00:05.5178542Z ##[endgroup]
+2026-10-27T20:00:05.5179617Z ##[group]Setting up auth
+2026-10-27T20:00:05.5192118Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T20:00:05.5592094Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-27T20:00:07.1647205Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T20:00:07.2023483Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-27T20:00:07.7636209Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T20:00:07.8067921Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-27T20:00:08.4140619Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-27T20:00:08.4583389Z ##[endgroup]
+2026-10-27T20:00:08.4584484Z ##[group]Fetching the repository
+2026-10-27T20:00:08.4616690Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d70a4bfffbcec5678cc5ecbd94c37f74da1507f1:refs/remotes/origin/feature/unified-rpg-automatic-gm
+2026-10-27T20:00:10.9636688Z From https://github.com/sayferst/DND-NCFU
+2026-10-27T20:00:10.9638077Z  * [new ref]         d70a4bfffbcec5678cc5ecbd94c37f74da1507f1 -> origin/feature/unified-rpg-automatic-gm
+2026-10-27T20:00:10.9681904Z ##[endgroup]
+2026-10-27T20:00:10.9682770Z ##[group]Determining the checkout info
+2026-10-27T20:00:10.9684958Z ##[endgroup]
+2026-10-27T20:00:10.9695909Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-27T20:00:11.0214045Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-27T20:00:11.0637885Z ##[group]Checking out the ref
+2026-10-27T20:00:11.0647416Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/unified-rpg-automatic-gm refs/remotes/origin/feature/unified-rpg-automatic-gm
+2026-10-27T20:00:11.7362212Z Switched to a new branch 'feature/unified-rpg-automatic-gm'
+2026-10-27T20:00:11.7386076Z branch 'feature/unified-rpg-automatic-gm' set up to track 'origin/feature/unified-rpg-automatic-gm'.
+2026-10-27T20:00:11.7477393Z ##[endgroup]
+2026-10-27T20:00:11.8131787Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-27T20:00:11.8744312Z d70a4bfffbcec5678cc5ecbd94c37f74da1507f1
+2026-10-27T20:00:11.9361067Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-27T20:00:11.9361599Z with:
+2026-10-27T20:00:11.9361794Z   python-version: 3.12
+2026-10-27T20:00:11.9362035Z   architecture: x64
+2026-10-27T20:00:11.9362238Z   check-latest: false
+2026-10-27T20:00:11.9365330Z   token: ***
+2026-10-27T20:00:11.9365550Z   update-environment: true
+2026-10-27T20:00:11.9365810Z   allow-prereleases: false
+2026-10-27T20:00:11.9366896Z   freethreaded: false
+2026-10-27T20:00:11.9367100Z ##[endgroup]
+2026-10-27T20:00:12.0991420Z ##[group]Installed versions
+2026-10-27T20:00:12.1231874Z Successfully set up CPython (3.12.10)
+2026-10-27T20:00:12.1232675Z ##[endgroup]
+2026-10-27T20:00:12.1536644Z ##[group]Run & .\scripts\build_windows.ps1 -Installer -Profile developer -TextModel 'deepseek/deepseek-v4.1-flash'
+2026-10-27T20:00:12.1537605Z [36;1m& .\scripts\build_windows.ps1 -Installer -Profile developer -TextModel 'deepseek/deepseek-v4.1-flash'[0m
+2026-10-27T20:00:12.1538165Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-10-27T20:00:12.2088512Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-27T20:00:12.2089165Z env:
+2026-10-27T20:00:12.2089584Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:00:12.2090328Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T20:00:12.2090980Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:00:12.2091585Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:00:12.2092158Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:00:12.2092648Z ##[endgroup]
+2026-10-27T20:00:24.4782568Z Ignoring macholib: markers 'sys_platform == "darwin"' don't match your environment
+2026-10-27T20:00:24.6043440Z Collecting altgraph==0.17.5 (from -r requirements-build.lock (line 3))
+2026-10-27T20:00:24.6519546Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-10-27T20:00:24.7815694Z Collecting cffi==2.1.1 (from -r requirements-build.lock (line 9))
+2026-10-27T20:00:24.8060822Z   Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl (185 kB)
+2026-10-27T20:00:24.8410550Z Collecting colorama==0.4.6 (from -r requirements-build.lock (line 113))
+2026-10-27T20:00:24.8503440Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-10-27T20:00:25.0573812Z Collecting cryptography==46.0.3 (from -r requirements-build.lock (line 119))
+2026-10-27T20:00:25.0709259Z   Downloading cryptography-46.0.3-cp311-abi3-win_amd64.whl (3.5 MB)
+2026-10-27T20:00:25.1147197Z      ---------------------------------------- 3.5/3.5 MB 101.6 MB/s eta 0:00:00
+2026-10-27T20:00:25.1377016Z Collecting iniconfig==2.3.1 (from -r requirements-build.lock (line 175))
+2026-10-27T20:00:25.1478370Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-27T20:00:25.1692562Z Collecting packaging==26.3 (from -r requirements-build.lock (line 185))
+2026-10-27T20:00:25.1848708Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-27T20:00:25.2005253Z Collecting pefile==2023.2.7 (from -r requirements-build.lock (line 193))
+2026-10-27T20:00:25.2196269Z   Downloading pefile-2023.2.7-py3-none-any.whl (71 kB)
+2026-10-27T20:00:25.2358250Z Collecting pluggy==1.7.0 (from -r requirements-build.lock (line 197))
+2026-10-27T20:00:25.2454898Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-27T20:00:25.2615880Z Collecting pycparser==3.11 (from -r requirements-build.lock (line 203))
+2026-10-27T20:00:25.2711382Z   Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+2026-10-27T20:00:25.2937034Z Collecting pygments==2.21.0 (from -r requirements-build.lock (line 209))
+2026-10-27T20:00:25.3036644Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-27T20:00:25.3091969Z      ---------------------------------------- 1.3/1.3 MB ? eta 0:00:00
+2026-10-27T20:00:25.3568532Z Collecting pyinstaller==6.16.0 (from -r requirements-build.lock (line 215))
+2026-10-27T20:00:25.3732958Z   Downloading pyinstaller-6.16.0-py3-none-win_amd64.whl (1.4 MB)
+2026-10-27T20:00:25.3789082Z      ---------------------------------------- 1.4/1.4 MB ? eta 0:00:00
+2026-10-27T20:00:25.4082509Z Collecting pyinstaller-hooks-contrib==2026.8 (from -r requirements-build.lock (line 229))
+2026-10-27T20:00:25.4203430Z   Downloading pyinstaller_hooks_contrib-2026.8-py3-none-any.whl (462 kB)
+2026-10-27T20:00:25.4483057Z Collecting pyside6-essentials==6.10.1 (from -r requirements-build.lock (line 233))
+2026-10-27T20:00:25.4595212Z   Downloading pyside6_essentials-6.10.1-cp39-abi3-win_amd64.whl (74.5 MB)
+2026-10-27T20:00:26.2518945Z      --------------------------------------- 74.5/74.5 MB 93.1 MB/s eta 0:00:00
+2026-10-27T20:00:26.4573733Z Collecting pytest==8.4.2 (from -r requirements-build.lock (line 240))
+2026-10-27T20:00:26.4677684Z   Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2026-10-27T20:00:26.4866747Z Collecting pywin32-ctypes==0.2.3 (from -r requirements-build.lock (line 244))
+2026-10-27T20:00:26.4970519Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+2026-10-27T20:00:26.8692615Z Collecting ruff==0.14.1 (from -r requirements-build.lock (line 248))
+2026-10-27T20:00:26.8799670Z   Downloading ruff-0.14.1-py3-none-win_amd64.whl (13.4 MB)
+2026-10-27T20:00:27.0615157Z      --------------------------------------- 13.4/13.4 MB 76.4 MB/s eta 0:00:00
+2026-10-27T20:00:27.1895597Z Collecting setuptools==84.2.0 (from -r requirements-build.lock (line 269))
+2026-10-27T20:00:27.2004251Z   Downloading setuptools-84.2.0-py3-none-any.whl (875 kB)
+2026-10-27T20:00:27.2044617Z      ---------------------------------------- 875.8/875.8 kB ? eta 0:00:00
+2026-10-27T20:00:27.2404066Z Collecting shiboken6==6.10.1 (from -r requirements-build.lock (line 273))
+2026-10-27T20:00:27.2604450Z   Downloading shiboken6-6.10.1-cp39-abi3-win_amd64.whl (1.2 MB)
+2026-10-27T20:00:27.2738437Z      ---------------------------------------- 1.2/1.2 MB 60.8 MB/s eta 0:00:00
+2026-10-27T20:00:27.4119032Z Installing collected packages: altgraph, shiboken6, setuptools, ruff, pywin32-ctypes, pygments, pycparser, pluggy, pefile, packaging, iniconfig, colorama, pytest, pyside6-essentials, pyinstaller-hooks-contrib, cffi, pyinstaller, cryptography
+2026-10-27T20:00:33.9246309Z Successfully installed altgraph-0.17.5 cffi-2.1.1 colorama-0.4.6 cryptography-46.0.3 iniconfig-2.3.1 packaging-26.3 pefile-2023.2.7 pluggy-1.7.0 pycparser-3.11 pygments-2.21.0 pyinstaller-6.16.0 pyinstaller-hooks-contrib-2026.8 pyside6-essentials-6.10.1 pytest-8.4.2 pywin32-ctypes-0.2.3 ruff-0.14.1 setuptools-84.2.0 shiboken6-6.10.1
+2026-10-27T20:00:34.2307917Z 
+2026-10-27T20:00:34.2310576Z [notice] A new release of pip is available: 25.0.1 -> 26.2.2
+2026-10-27T20:00:34.2311586Z [notice] To update, run: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m pip install --upgrade pip
+2026-10-27T20:00:34.5039553Z Already matches committed bytes: tests/fixtures/save-v15.json
+2026-10-27T20:00:34.5040205Z SHA-256 verified. Expected hashes and game saves were not changed.
+2026-10-27T20:00:34.6930110Z Platform: Windows AMD64
+2026-10-27T20:00:34.6933725Z Python: 3.12.10; SQLite: 3.49.1
+2026-10-27T20:00:34.6934128Z Running: git --version
+2026-10-27T20:00:34.7250497Z git version 2.56.0.windows.2
+2026-10-27T20:00:34.7285049Z Running: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m pip --no-cache-dir check
+2026-10-27T20:00:35.1079289Z No broken requirements found.
+2026-10-27T20:00:35.1425186Z Running: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m pytest
+2026-10-27T20:00:39.8930451Z ============================= test session starts =============================
+2026-10-27T20:00:39.8931248Z platform win32 -- Python 3.12.10, pytest-8.4.2, pluggy-1.7.0
+2026-10-27T20:00:39.8931723Z rootdir: D:\a\DND-NCFU\DND-NCFU
+2026-10-27T20:00:39.8932066Z configfile: pyproject.toml
+2026-10-27T20:00:39.8932376Z testpaths: tests
+2026-10-27T20:00:39.8932639Z collected 5280 items
+2026-10-27T20:00:39.8932813Z 
+2026-10-27T20:00:45.2465796Z tests\learning\test_evaluation.py .........                              [  0%]
+2026-10-27T20:00:46.6772258Z tests\learning\test_live_probe.py ....                                   [  0%]
+2026-10-27T20:01:11.5727608Z tests\learning\test_live_suite.py .......                                [  0%]
+2026-10-27T20:01:41.0554657Z tests\learning\test_memory_runtime.py .....                              [  0%]
+2026-10-27T20:01:42.4294153Z tests\learning\test_package.py ............                              [  0%]
+2026-10-27T20:01:44.1605349Z tests\learning\test_pipeline.py ........                                 [  0%]
+2026-10-27T20:01:45.2442713Z tests\learning\test_review_and_ui.py ...                                 [  0%]
+2026-10-27T20:01:59.3018710Z tests\test_accounts.py ......                                            [  1%]
+2026-10-27T20:02:01.3752132Z tests\test_adventure.py ...................                              [  1%]
+2026-10-27T20:02:02.1700212Z tests\test_adventure_consistency.py ........                             [  1%]
+2026-10-27T20:02:15.5418904Z tests\test_adventure_ui.py ............                                  [  1%]
+2026-10-27T20:02:53.0637797Z tests\test_artist_panel.py ......................                        [  2%]
+2026-10-27T20:02:54.1702375Z tests\test_automatic_corpus.py ............                              [  2%]
+2026-10-27T20:02:55.4003168Z tests\test_campaign_skills.py ........                                   [  2%]
+2026-10-27T20:02:57.0908180Z tests\test_catalog.py ...............................                    [  3%]
+2026-10-27T20:02:58.2770620Z tests\test_catalog_campaign.py .s                                        [  3%]
+2026-10-27T20:03:14.5237289Z tests\test_catalog_image_prices.py .......................               [  3%]
+2026-10-27T20:03:16.9511441Z tests\test_catalog_invariants.py .....                                   [  3%]
+2026-10-27T20:03:29.7565975Z tests\test_catalog_ui.py .........                                       [  3%]
+2026-10-27T20:03:32.5664804Z tests\test_catalog_ui_playable.py .....                                  [  3%]
+2026-10-27T20:03:32.7035049Z tests\test_catalog_writer_facts.py .                                     [  3%]
+2026-10-27T20:03:32.7270995Z tests\test_character.py ........................                         [  4%]
+2026-10-27T20:03:32.7346334Z tests\test_character_dialog.py ...                                       [  4%]
+2026-10-27T20:03:32.7879989Z tests\test_chat_intents.py ...................                           [  4%]
+2026-10-27T20:03:37.1902499Z tests\test_chronicles.py ..............                                  [  5%]
+2026-10-27T20:03:40.6827025Z tests\test_cloud_gate.py ...                                             [  5%]
+2026-10-27T20:03:40.7217645Z tests\test_combat.py .......................                             [  5%]
+2026-10-27T20:03:40.8549437Z tests\test_combat_storage.py ..............                              [  5%]
+2026-10-27T20:03:44.1254972Z tests\test_combat_ui.py ......                                           [  6%]
+2026-10-27T20:03:53.6166440Z tests\test_complete_campaign.py ........................................ [  6%]
+2026-10-27T20:04:07.7679506Z .......................................                                  [  7%]
+2026-10-27T20:04:10.8155352Z tests\test_connection_metadata.py ..........                             [  7%]
+2026-10-27T20:04:49.0124956Z tests\test_connection_revision.py ......................                 [  8%]
+2026-10-27T20:04:50.4300386Z tests\test_conversation_revision.py ........................             [  8%]
+2026-10-27T20:04:55.8273189Z tests\test_creation_and_roles.py ......                                  [  8%]
+2026-10-27T20:04:55.9081351Z tests\test_d20_combat.py .........                                       [  8%]
+2026-10-27T20:04:55.9478466Z tests\test_d20_progression.py ..............................             [  9%]
+2026-10-27T20:05:01.3408387Z tests\test_desktop_release.py .......................................... [ 10%]
+2026-10-27T20:05:14.7249795Z ............                                                             [ 10%]
+2026-10-27T20:05:18.9925764Z tests\test_developer_access.py ....                                      [ 10%]
+2026-10-27T20:05:19.8476080Z tests\test_dialogue.py .............                                     [ 10%]
+2026-10-27T20:05:19.8531627Z tests\test_dice.py ...                                                   [ 10%]
+2026-10-27T20:05:20.9853664Z tests\test_embedded_knowledge.py ..                                      [ 10%]
+2026-10-27T20:05:21.3399351Z tests\test_environment.py ...                                            [ 10%]
+2026-10-27T20:05:41.9345567Z tests\test_episode_panels.py ..............                              [ 11%]
+2026-10-27T20:05:51.2327043Z tests\test_fantasy_menu.py .......                                       [ 11%]
+2026-10-27T20:05:51.9788674Z tests\test_fixture_git_checkout.py ..                                    [ 11%]
+2026-10-27T20:05:56.5872801Z tests\test_fixture_repair.py ...........                                 [ 11%]
+2026-10-27T20:06:11.0357727Z tests\test_flash_settings.py ...................                         [ 11%]
+2026-10-27T20:06:13.8840258Z tests\test_free_attempts.py .................................            [ 12%]
+2026-10-27T20:06:16.8633085Z tests\test_free_cloud.py .........                                       [ 12%]
+2026-10-27T20:06:18.5968672Z tests\test_full_game_catalog.py ........................................ [ 13%]
+2026-10-27T20:06:24.5046257Z ........................................................................ [ 14%]
+2026-10-27T20:06:33.2765796Z ........................................................................ [ 16%]
+2026-10-27T20:06:42.3655866Z ........................................................................ [ 17%]
+2026-10-27T20:06:51.2291380Z ........................................................................ [ 18%]
+2026-10-27T20:07:00.8663461Z ........................................................................ [ 20%]
+2026-10-27T20:07:10.8784488Z ........................................................................ [ 21%]
+2026-10-27T20:07:21.0745926Z ........................................................................ [ 23%]
+2026-10-27T20:07:30.1946213Z ........................................................................ [ 24%]
+2026-10-27T20:07:39.0477113Z ........................................................................ [ 25%]
+2026-10-27T20:07:48.1103016Z ........................................................................ [ 27%]
+2026-10-27T20:07:57.0320483Z ........................................................................ [ 28%]
+2026-10-27T20:08:06.1929754Z ........................................................................ [ 29%]
+2026-10-27T20:08:15.2884313Z ........................................................................ [ 31%]
+2026-10-27T20:08:23.6856032Z ........................................................................ [ 32%]
+2026-10-27T20:08:27.8477449Z ........................................................................ [ 33%]
+2026-10-27T20:08:32.1417442Z ........................................................................ [ 35%]
+2026-10-27T20:08:36.3279216Z ........................................................................ [ 36%]
+2026-10-27T20:08:40.4624197Z ........................................................................ [ 38%]
+2026-10-27T20:08:44.5753687Z ........................................................................ [ 39%]
+2026-10-27T20:08:48.5429936Z ........................................................................ [ 40%]
+2026-10-27T20:08:52.4937630Z ........................................................................ [ 42%]
+2026-10-27T20:08:56.4995142Z ........................................................................ [ 43%]
+2026-10-27T20:09:00.2707759Z ........................................................................ [ 44%]
+2026-10-27T20:09:03.9920034Z ........................................................................ [ 46%]
+2026-10-27T20:09:08.0312362Z ........................................................................ [ 47%]
+2026-10-27T20:09:11.9551798Z ........................................................................ [ 48%]
+2026-10-27T20:09:18.4570970Z ........................................................................ [ 50%]
+2026-10-27T20:09:25.6335800Z ........................................................................ [ 51%]
+2026-10-27T20:09:32.5670621Z ........................................................................ [ 53%]
+2026-10-27T20:09:39.2363611Z ........................................................................ [ 54%]
+2026-10-27T20:09:46.5820176Z ........................................................................ [ 55%]
+2026-10-27T20:09:52.1568058Z ........................................................................ [ 57%]
+2026-10-27T20:09:55.5019385Z ........................................................................ [ 58%]
+2026-10-27T20:09:59.0016435Z ........................................................................ [ 59%]
+2026-10-27T20:10:04.8043639Z ........................................................................ [ 61%]
+2026-10-27T20:10:07.9951575Z ........................................................................ [ 62%]
+2026-10-27T20:10:11.2103556Z ........................................................................ [ 63%]
+2026-10-27T20:10:14.6042040Z ........................................................................ [ 65%]
+2026-10-27T20:10:18.2681619Z ........................................................................ [ 66%]
+2026-10-27T20:10:21.5426080Z ........................................................................ [ 68%]
+2026-10-27T20:10:25.0352735Z ........................................................................ [ 69%]
+2026-10-27T20:10:28.3025229Z ........................................................................ [ 70%]
+2026-10-27T20:10:31.7475671Z ........................................................................ [ 72%]
+2026-10-27T20:10:35.2519516Z ........................................................................ [ 73%]
+2026-10-27T20:10:38.5135228Z ........................................................................ [ 74%]
+2026-10-27T20:10:41.9400620Z ........................................................................ [ 76%]
+2026-10-27T20:10:42.3797826Z .........                                                                [ 76%]
+2026-10-27T20:10:44.0624131Z tests\test_gameplay_integration.py ..................................... [ 77%]
+2026-10-27T20:10:50.1965089Z ...............                                                          [ 77%]
+2026-10-27T20:10:58.1159208Z tests\test_gateway.py ............                                       [ 77%]
+2026-10-27T20:11:00.1468582Z tests\test_gateway_request_headers.py ....                               [ 77%]
+2026-10-27T20:11:03.3733339Z tests\test_host_metadata_errors.py ......................                [ 78%]
+2026-10-27T20:11:03.3810003Z tests\test_host_public_readiness.py .....                                [ 78%]
+2026-10-27T20:11:03.3913813Z tests\test_host_tunnel_transport.py .........                            [ 78%]
+2026-10-27T20:11:08.7247950Z tests\test_images_client.py .........                                    [ 78%]
+2026-10-27T20:11:29.7059139Z tests\test_images_contract_revision.py ................................. [ 79%]
+2026-10-27T20:11:39.8319038Z ........                                                                 [ 79%]
+2026-10-27T20:11:39.9334899Z tests\test_inspection.py ..............................                  [ 79%]
+2026-10-27T20:11:40.5370834Z tests\test_journal_customization.py ........                             [ 80%]
+2026-10-27T20:11:56.0029636Z tests\test_launch.py ...                                                 [ 80%]
+2026-10-27T20:12:14.0668988Z tests\test_local_narrator.py ........................................... [ 80%]
+2026-10-27T20:12:29.9904020Z ..................                                                       [ 81%]
+2026-10-27T20:12:35.0970493Z tests\test_master_campaign.py ..........................                 [ 81%]
+2026-10-27T20:12:35.5262754Z tests\test_master_configuration.py ...........                           [ 81%]
+2026-10-27T20:12:37.7278091Z tests\test_master_language_profiles.py ........                          [ 82%]
+2026-10-27T20:12:37.8155424Z tests\test_master_prose_layout.py ........                               [ 82%]
+2026-10-27T20:12:39.7421456Z tests\test_mechanics_before_prose.py ................................... [ 82%]
+2026-10-27T20:12:40.2638790Z ....                                                                     [ 82%]
+2026-10-27T20:12:47.5908259Z tests\test_model_metrics.py ......                                       [ 83%]
+2026-10-27T20:12:51.2696719Z tests\test_navigation_scopes.py ...                                      [ 83%]
+2026-10-27T20:12:51.3090392Z tests\test_ngrok_host.py ...............                                 [ 83%]
+2026-10-27T20:12:51.4743465Z tests\test_ngrok_transport.py ....                                       [ 83%]
+2026-10-27T20:12:51.5340129Z tests\test_ngrok_version.py ..............                               [ 83%]
+2026-10-27T20:12:56.6114983Z tests\test_object_descriptions.py ...................                    [ 84%]
+2026-10-27T20:12:56.6214424Z tests\test_offline.py ..........                                         [ 84%]
+2026-10-27T20:12:56.6939950Z tests\test_owner_clipboard_key.py ........................               [ 84%]
+2026-10-27T20:12:58.6446888Z tests\test_owner_local.py .....                                          [ 84%]
+2026-10-27T20:13:00.6042527Z tests\test_photo_album.py .                                              [ 84%]
+2026-10-27T20:13:09.0432674Z tests\test_physical_gameplay.py ...................................      [ 85%]
+2026-10-27T20:13:19.4100331Z tests\test_plain_master.py .........................                     [ 86%]
+2026-10-27T20:13:19.4366783Z tests\test_polyhedral_dice.py ...............                            [ 86%]
+2026-10-27T20:13:19.4651985Z tests\test_presentation.py .................                             [ 86%]
+2026-10-27T20:13:19.5566260Z tests\test_progression.py ......................................         [ 87%]
+2026-10-27T20:13:20.1107451Z tests\test_release_profiles.py .                                         [ 87%]
+2026-10-27T20:13:38.5104439Z tests\test_resolution_ui.py ............                                 [ 87%]
+2026-10-27T20:13:39.4704862Z tests\test_resource_ledger.py ..........................                 [ 88%]
+2026-10-27T20:13:42.0578657Z tests\test_response_contract.py ........................................ [ 88%]
+2026-10-27T20:13:42.0586298Z                                                                          [ 88%]
+2026-10-27T20:13:46.9936912Z tests\test_response_delivery.py ...........................              [ 89%]
+2026-10-27T20:14:05.9529081Z tests\test_routerai.py .........................................         [ 90%]
+2026-10-27T20:14:06.2450139Z tests\test_routerai_narrator_fallback.py ..                              [ 90%]
+2026-10-27T20:14:06.2924179Z tests\test_safe_provider_diagnosis.py .............................      [ 90%]
+2026-10-27T20:14:06.4720129Z tests\test_save_migration.py ..........                                  [ 90%]
+2026-10-27T20:14:07.1152796Z tests\test_save_slots.py ....................                            [ 91%]
+2026-10-27T20:14:09.0570789Z tests\test_scene_director.py ..............................              [ 91%]
+2026-10-27T20:14:09.4576257Z tests\test_scene_length_and_receipts.py .                                [ 91%]
+2026-10-27T20:14:12.5178910Z tests\test_section_tabs.py ..                                            [ 91%]
+2026-10-27T20:14:17.6158376Z tests\test_semantic_challenges.py .............                          [ 92%]
+2026-10-27T20:14:17.6492101Z tests\test_session.py ....................                               [ 92%]
+2026-10-27T20:14:18.9018327Z tests\test_skill_allocation.py ....                                      [ 92%]
+2026-10-27T20:14:19.4028635Z tests\test_sqlite_lifecycle.py .........                                 [ 92%]
+2026-10-27T20:14:23.2658414Z tests\test_story_conversation_quality.py ................                [ 93%]
+2026-10-27T20:14:27.3559571Z tests\test_team_encounters.py ...............                            [ 93%]
+2026-10-27T20:14:29.5748221Z tests\test_tester_build.py ................                              [ 93%]
+2026-10-27T20:14:35.7050736Z tests\test_tester_connection.py ......                                   [ 93%]
+2026-10-27T20:14:43.9222680Z tests\test_tester_delivery.py .....................                      [ 94%]
+2026-10-27T20:14:47.2299867Z tests\test_theme_notices.py ..                                           [ 94%]
+2026-10-27T20:14:48.6386742Z tests\test_trade_context.py .........                                    [ 94%]
+2026-10-27T20:14:48.9237273Z tests\test_training_capture_session.py .                                 [ 94%]
+2026-10-27T20:14:48.9951145Z tests\test_training_pipeline.py ..                                       [ 94%]
+2026-10-27T20:14:49.2023552Z tests\test_training_story_contract.py ....                               [ 94%]
+2026-10-27T20:14:49.2359610Z tests\test_tunnel_dns.py ...................                             [ 94%]
+2026-10-27T20:14:49.2746506Z tests\test_tunnel_health.py ...............                              [ 95%]
+2026-10-27T20:14:49.3026987Z tests\test_tunnel_supervision.py .......                                 [ 95%]
+2026-10-27T20:14:49.7841432Z tests\test_unified_creation.py ......                                    [ 95%]
+2026-10-27T20:14:57.1047503Z tests\test_unified_rules.py ..................                           [ 95%]
+2026-10-27T20:14:57.1482776Z tests\test_update_tree.py .......                                        [ 95%]
+2026-10-27T20:14:59.3204432Z tests\test_visual_commands.py .........                                  [ 96%]
+2026-10-27T20:15:10.5456729Z tests\test_visual_context.py .....                                       [ 96%]
+2026-10-27T20:15:25.7204053Z tests\test_visual_controller.py .........                                [ 96%]
+2026-10-27T20:15:25.7407363Z tests\test_visual_policy.py ........                                     [ 96%]
+2026-10-27T20:15:27.9337146Z tests\test_visual_registry.py ........                                   [ 96%]
+2026-10-27T20:15:44.3985071Z tests\test_window.py .......................                             [ 97%]
+2026-10-27T20:15:45.9637460Z tests\test_windows_test_ids.py .                                         [ 97%]
+2026-10-27T20:15:46.0566287Z tests\test_workspace_tools.py .............                              [ 97%]
+2026-10-27T20:15:57.5103260Z tests\test_workspace_ui.py ..................                            [ 97%]
+2026-10-27T20:15:57.5557631Z tests\test_world.py ..............................                       [ 98%]
+2026-10-27T20:16:11.2756262Z tests\test_world_agent_ui.py ........                                    [ 98%]
+2026-10-27T20:16:24.3916024Z tests\test_world_creation_screen.py .......                              [ 98%]
+2026-10-27T20:16:31.3059416Z tests\test_world_factions.py ..................                          [ 98%]
+2026-10-27T20:16:44.6647920Z tests\test_world_generation_limits.py .......                            [ 98%]
+2026-10-27T20:16:44.7656098Z tests\test_world_memory.py ..................                            [ 99%]
+2026-10-27T20:17:12.8683479Z tests\test_world_start_gate.py ..............                            [ 99%]
+2026-10-27T20:17:15.0776168Z tests\test_world_transactions.py ......................                  [100%]
+2026-10-27T20:17:15.0776660Z 
+2026-10-27T20:17:15.0776872Z =========================== short test summary info ===========================
+2026-10-27T20:17:15.0777716Z SKIPPED [1] tests\test_catalog_campaign.py:146: Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay
+2026-10-27T20:17:15.0778525Z ================= 5279 passed, 1 skipped in 997.66s (0:16:37) =================
+2026-10-27T20:17:24.0422184Z Running: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m ruff check .
+2026-10-27T20:17:24.2679951Z All checks passed!
+2026-10-27T20:17:24.2807742Z Running: D:\a\DND-NCFU\DND-NCFU\.venv\Scripts\python.exe -m ruff format --check .
+2026-10-27T20:17:24.4596379Z 349 files already formatted
+2026-10-27T20:17:24.4716487Z Environment and prototype checks passed. Manual Windows GUI check is still required.
+2026-10-27T20:17:25.0312275Z 172 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.8
+2026-10-27T20:17:25.0315279Z 172 INFO: Python: 3.12.10
+2026-10-27T20:17:25.0554604Z 196 INFO: Platform: Windows-2025Server-10.0.26100-SP0
+2026-10-27T20:17:25.0555132Z 196 INFO: Python environment: D:\a\DND-NCFU\DND-NCFU\.venv
+2026-10-27T20:17:25.0637312Z 204 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+2026-10-27T20:17:26.1379812Z 1279 INFO: Module search paths (PYTHONPATH):
+2026-10-27T20:17:26.1380258Z ['D:\\a\\DND-NCFU\\DND-NCFU\\src',
+2026-10-27T20:17:26.1380619Z  'D:\\a\\DND-NCFU\\DND-NCFU\\src',
+2026-10-27T20:17:26.1380928Z  'D:\\a\\DND-NCFU\\DND-NCFU',
+2026-10-27T20:17:26.1381360Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+2026-10-27T20:17:26.1381908Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+2026-10-27T20:17:26.1382400Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+2026-10-27T20:17:26.1382840Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+2026-10-27T20:17:26.1383223Z  'D:\\a\\DND-NCFU\\DND-NCFU\\.venv',
+2026-10-27T20:17:26.1383594Z  'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages',
+2026-10-27T20:17:26.1383973Z  'D:\\a\\DND-NCFU\\DND-NCFU\\scripts',
+2026-10-27T20:17:26.1384327Z  'D:\\a\\DND-NCFU\\DND-NCFU\\src']
+2026-10-27T20:17:26.4018332Z 1543 INFO: Appending 'datas' from .spec
+2026-10-27T20:17:26.4031232Z 1545 INFO: checking Analysis
+2026-10-27T20:17:26.4031957Z 1545 INFO: Building Analysis because Analysis-00.toc is non existent
+2026-10-27T20:17:26.4032554Z 1545 INFO: Looking for Python shared library...
+2026-10-27T20:17:26.4033457Z 1545 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+2026-10-27T20:17:26.4034183Z 1545 INFO: Running Analysis Analysis-00.toc
+2026-10-27T20:17:26.4034898Z 1545 INFO: Target bytecode optimization level: 0
+2026-10-27T20:17:26.4035697Z 1545 INFO: Initializing module dependency graph...
+2026-10-27T20:17:26.4045050Z 1545 INFO: Initializing module graph hook caches...
+2026-10-27T20:17:26.4177358Z 1559 INFO: Analyzing modules for base_library.zip ...
+2026-10-27T20:17:27.6477667Z 2789 INFO: Processing standard module hook 'hook-encodings.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:29.5237505Z 4665 INFO: Processing standard module hook 'hook-pickle.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:30.8444661Z 5986 INFO: Processing standard module hook 'hook-heapq.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:31.4494675Z 6591 INFO: Caching module dependency graph...
+2026-10-27T20:17:31.4880851Z 6629 INFO: Analyzing D:\a\DND-NCFU\DND-NCFU\scripts\run_game.py
+2026-10-27T20:17:31.5667895Z 6708 INFO: Processing standard module hook 'hook-platform.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:31.5775105Z 6718 INFO: Processing standard module hook 'hook-PySide6.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:31.7570931Z 6898 INFO: Processing standard module hook 'hook-shiboken6.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:31.9317637Z 7073 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:32.9747254Z 8115 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:33.9741535Z 9115 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:35.0019352Z 10143 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:35.4789591Z 10619 INFO: Processing standard module hook 'hook-_ctypes.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:35.8041392Z 10945 INFO: Processing standard module hook 'hook-cryptography.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-10-27T20:17:36.5539617Z 11695 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+2026-10-27T20:17:37.4835375Z 12625 INFO: Processing standard module hook 'hook-sqlite3.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:37.8261747Z 12967 INFO: Processing standard module hook 'hook-difflib.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:38.7120940Z 13853 INFO: Analyzing hidden import 'rpg_vkr.domain.conflict'
+2026-10-27T20:17:38.7153429Z 13856 INFO: Analyzing hidden import 'rpg_vkr.learning.evaluation'
+2026-10-27T20:17:38.7227687Z 13864 INFO: Analyzing hidden import 'rpg_vkr.learning.live_probe'
+2026-10-27T20:17:38.7303484Z 13870 INFO: Analyzing hidden import 'rpg_vkr.learning.live_suite'
+2026-10-27T20:17:38.8464859Z 13987 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:38.9344206Z 14076 INFO: Processing standard module hook 'hook-xml.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:39.1974017Z 14339 INFO: Analyzing hidden import 'rpg_vkr.learning.templates'
+2026-10-27T20:17:39.2147517Z 14356 INFO: Analyzing hidden import 'rpg_vkr.ui.learning_panel'
+2026-10-27T20:17:39.2275747Z 14368 INFO: Processing module hooks (post-graph stage)...
+2026-10-27T20:17:39.2998384Z 14441 INFO: Performing binary vs. data reclassification (158 entries)
+2026-10-27T20:17:39.3253916Z 14467 INFO: Looking for ctypes DLLs
+2026-10-27T20:17:39.3361856Z 14477 INFO: Analyzing run-time hooks ...
+2026-10-27T20:17:39.3385698Z 14479 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-10-27T20:17:39.3410966Z 14481 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-10-27T20:17:39.3428909Z 14483 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+2026-10-27T20:17:39.3444739Z 14485 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-10-27T20:17:39.3471286Z 14489 INFO: Including run-time hook 'pyi_rth_cryptography_openssl.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks'
+2026-10-27T20:17:39.3479499Z 14489 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-10-27T20:17:39.3499229Z 14491 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-10-27T20:17:39.3604341Z 14501 INFO: Creating base_library.zip...
+2026-10-27T20:17:39.3827375Z 14523 INFO: Looking for dynamic libraries
+2026-10-27T20:17:39.6383908Z 14780 INFO: Extra DLL search directories (AddDllDirectory): ['D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\shiboken6']
+2026-10-27T20:17:39.6385181Z 14780 INFO: Extra DLL search directories (PATH): ['D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6']
+2026-10-27T20:17:41.1053040Z 16245 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.dll'.
+2026-10-27T20:17:41.1055937Z 16245 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-l1-1-0.dll', dependency of 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+2026-10-27T20:17:41.1059879Z 16247 WARNING: Library not found: could not resolve 'api-ms-win-shcore-scaling-l1-1-1.dll', dependency of 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+2026-10-27T20:17:41.1063613Z 16247 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-string-l1-1-0.dll', dependency of 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+2026-10-27T20:17:41.1066898Z 16247 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-l1-1-0.dll', dependency of 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+2026-10-27T20:17:41.1070424Z 16247 WARNING: Library not found: could not resolve 'api-ms-win-shcore-scaling-l1-1-1.dll', dependency of 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+2026-10-27T20:17:41.1073989Z 16247 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-string-l1-1-0.dll', dependency of 'D:\\a\\DND-NCFU\\DND-NCFU\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+2026-10-27T20:17:41.1174140Z 16257 INFO: Warnings written to D:\a\DND-NCFU\DND-NCFU\build\windows-20261027-201724-632-55d9cc\work\DND-NCFU\warn-DND-NCFU.txt
+2026-10-27T20:17:41.1598021Z 16301 INFO: Graph cross-reference written to D:\a\DND-NCFU\DND-NCFU\build\windows-20261027-201724-632-55d9cc\work\DND-NCFU\xref-DND-NCFU.html
+2026-10-27T20:17:41.1857987Z 16327 INFO: checking PYZ
+2026-10-27T20:17:41.1859067Z 16327 INFO: Building PYZ because PYZ-00.toc is non existent
+2026-10-27T20:17:41.1860080Z 16327 INFO: Building PYZ (ZlibArchive) D:\a\DND-NCFU\DND-NCFU\build\windows-20261027-201724-632-55d9cc\work\DND-NCFU\PYZ-00.pyz
+2026-10-27T20:17:41.5466179Z 16687 INFO: Building PYZ (ZlibArchive) D:\a\DND-NCFU\DND-NCFU\build\windows-20261027-201724-632-55d9cc\work\DND-NCFU\PYZ-00.pyz completed successfully.
+2026-10-27T20:17:41.5628763Z 16705 INFO: checking PKG
+2026-10-27T20:17:41.5629854Z 16705 INFO: Building PKG because PKG-00.toc is non existent
+2026-10-27T20:17:41.5631086Z 16705 INFO: Building PKG (CArchive) DND-NCFU.pkg
+2026-10-27T20:17:41.5797902Z 16720 INFO: Building PKG (CArchive) DND-NCFU.pkg completed successfully.
+2026-10-27T20:17:41.5807527Z 16722 INFO: Bootloader D:\a\DND-NCFU\DND-NCFU\.venv\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+2026-10-27T20:17:41.5808167Z 16722 INFO: checking EXE
+2026-10-27T20:17:41.5808781Z 16722 INFO: Building EXE because EXE-00.toc is non existent
+2026-10-27T20:17:41.5809377Z 16722 INFO: Building EXE from EXE-00.toc
+2026-10-27T20:17:41.5811086Z 16722 INFO: Copying bootloader EXE to D:\a\DND-NCFU\DND-NCFU\build\windows-20261027-201724-632-55d9cc\work\DND-NCFU\DND-NCFU.exe
+2026-10-27T20:17:41.5833445Z 16724 INFO: Copying icon to EXE
+2026-10-27T20:17:41.5854292Z 16726 INFO: Copying version information to EXE
+2026-10-27T20:17:41.5882490Z 16728 INFO: Copying 0 resources to EXE
+2026-10-27T20:17:41.5883074Z 16728 INFO: Embedding manifest in EXE
+2026-10-27T20:17:41.5900696Z 16730 INFO: Appending PKG archive to EXE
+2026-10-27T20:17:41.5922681Z 16732 INFO: Fixing EXE headers
+2026-10-27T20:17:41.6633516Z 16804 INFO: Building EXE from EXE-00.toc completed successfully.
+2026-10-27T20:17:41.6667377Z 16808 INFO: checking COLLECT
+2026-10-27T20:17:41.6668469Z 16808 INFO: Building COLLECT because COLLECT-00.toc is non existent
+2026-10-27T20:17:41.6671735Z 16808 INFO: Building COLLECT COLLECT-00.toc
+2026-10-27T20:17:41.9875769Z 17129 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+2026-10-27T20:17:41.9930018Z 17134 INFO: Build complete! The results are available in: D:\a\DND-NCFU\DND-NCFU\build\windows-20261027-201724-632-55d9cc\dist
+2026-10-27T20:18:12.1049558Z Inno Setup 6 Command-Line Compiler
+2026-10-27T20:18:12.1050256Z Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+2026-10-27T20:18:12.1050926Z Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+2026-10-27T20:18:12.1051587Z Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+2026-10-27T20:18:12.1052220Z https://www.innosetup.com
+2026-10-27T20:18:12.1052444Z 
+2026-10-27T20:18:12.2653101Z Compiler engine version: Inno Setup 6.7.1
+2026-10-27T20:18:12.2653748Z Non-commercial use only
+2026-10-27T20:18:12.2654055Z 
+2026-10-27T20:18:12.3713451Z Preprocessing
+2026-10-27T20:18:12.3716492Z    Reading file: c:\program files (x86)\inno setup 6\ISPPBuiltins.iss
+2026-10-27T20:18:12.3729803Z Parsing [Setup] section, line 12
+2026-10-27T20:18:12.3730430Z Parsing [Setup] section, line 13
+2026-10-27T20:18:12.3731068Z Parsing [Setup] section, line 14
+2026-10-27T20:18:12.3731827Z Parsing [Setup] section, line 15
+2026-10-27T20:18:12.3732447Z Parsing [Setup] section, line 16
+2026-10-27T20:18:12.3733395Z Parsing [Setup] section, line 17
+2026-10-27T20:18:12.3733847Z Parsing [Setup] section, line 18
+2026-10-27T20:18:12.3734498Z Parsing [Setup] section, line 19
+2026-10-27T20:18:12.3735460Z Parsing [Setup] section, line 20
+2026-10-27T20:18:12.3736061Z Parsing [Setup] section, line 21
+2026-10-27T20:18:12.3736646Z Parsing [Setup] section, line 22
+2026-10-27T20:18:12.3737228Z Parsing [Setup] section, line 23
+2026-10-27T20:18:12.3737810Z Parsing [Setup] section, line 24
+2026-10-27T20:18:12.3738392Z Parsing [Setup] section, line 25
+2026-10-27T20:18:12.3738801Z Parsing [Setup] section, line 26
+2026-10-27T20:18:12.3739193Z Parsing [Setup] section, line 27
+2026-10-27T20:18:12.3739567Z Parsing [Setup] section, line 28
+2026-10-27T20:18:12.3739997Z Parsing [Setup] section, line 29
+2026-10-27T20:18:12.3740370Z Reading file (WizardImageFile)
+2026-10-27T20:18:12.3740747Z Reading file (WizardSmallImageFile)
+2026-10-27T20:18:12.3741156Z Preparing Setup program executable
+2026-10-27T20:18:12.7960132Z    Verification successful
+2026-10-27T20:18:12.8001807Z    Updating icons (Setup.e32)
+2026-10-27T20:18:12.8109694Z    Updating version info (Setup.e32)
+2026-10-27T20:18:12.8126690Z Determining language code pages
+2026-10-27T20:18:12.8127561Z Parsing [Languages] section, line 31
+2026-10-27T20:18:12.8128296Z    Reading file: c:\program files (x86)\inno setup 6\Languages\Russian.isl
+2026-10-27T20:18:12.8265091Z    Messages in script file
+2026-10-27T20:18:12.8265678Z Reading default messages from Default.isl
+2026-10-27T20:18:12.8357093Z Parsing [Languages] section, line 31
+2026-10-27T20:18:12.8357848Z    Reading file: c:\program files (x86)\inno setup 6\Languages\Russian.isl
+2026-10-27T20:18:12.8364939Z Parsing [LangOptions], [Messages], and [CustomMessages] sections
+2026-10-27T20:18:12.8366084Z    Messages in script file
+2026-10-27T20:18:12.8366880Z Reading [Code] section
+2026-10-27T20:18:12.8367402Z Parsing [Tasks] section, line 33
+2026-10-27T20:18:12.8368030Z Parsing [Icons] section, line 37
+2026-10-27T20:18:12.8368593Z Parsing [Icons] section, line 38
+2026-10-27T20:18:12.8369209Z Parsing [Run] section, line 40
+2026-10-27T20:18:12.8369761Z Parsing [Files] section, line 35
+2026-10-27T20:18:12.8414946Z Creating setup files
+2026-10-27T20:18:12.9204320Z    Verification successful
+2026-10-27T20:18:12.9214250Z    Updating icons (Setup.exe)
+2026-10-27T20:18:12.9247640Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\BUILD_MANIFEST.json
+2026-10-27T20:18:12.9255274Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\DND-NCFU.exe
+2026-10-27T20:18:12.9631483Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\verification\self-check.json
+2026-10-27T20:18:12.9632915Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\verification\smoke-test.json
+2026-10-27T20:18:12.9634727Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-console-l1-1-0.dll
+2026-10-27T20:18:12.9638697Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-datetime-l1-1-0.dll
+2026-10-27T20:18:12.9641800Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-debug-l1-1-0.dll
+2026-10-27T20:18:12.9645423Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-errorhandling-l1-1-0.dll
+2026-10-27T20:18:12.9648951Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-fibers-l1-1-0.dll
+2026-10-27T20:18:12.9652511Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-fibers-l1-1-1.dll
+2026-10-27T20:18:12.9655738Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-file-l1-1-0.dll
+2026-10-27T20:18:12.9659588Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-file-l1-2-0.dll
+2026-10-27T20:18:12.9662746Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-file-l2-1-0.dll
+2026-10-27T20:18:12.9666328Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-handle-l1-1-0.dll
+2026-10-27T20:18:12.9669779Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-heap-l1-1-0.dll
+2026-10-27T20:18:12.9673362Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-interlocked-l1-1-0.dll
+2026-10-27T20:18:12.9676707Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-kernel32-legacy-l1-1-1.dll
+2026-10-27T20:18:12.9680159Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-libraryloader-l1-1-0.dll
+2026-10-27T20:18:12.9683439Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-localization-l1-2-0.dll
+2026-10-27T20:18:12.9686480Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-memory-l1-1-0.dll
+2026-10-27T20:18:12.9690221Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-namedpipe-l1-1-0.dll
+2026-10-27T20:18:12.9694008Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-processenvironment-l1-1-0.dll
+2026-10-27T20:18:12.9697154Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-processthreads-l1-1-0.dll
+2026-10-27T20:18:12.9700577Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-processthreads-l1-1-1.dll
+2026-10-27T20:18:12.9703924Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-profile-l1-1-0.dll
+2026-10-27T20:18:12.9707312Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-rtlsupport-l1-1-0.dll
+2026-10-27T20:18:12.9710543Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-string-l1-1-0.dll
+2026-10-27T20:18:12.9714100Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-synch-l1-1-0.dll
+2026-10-27T20:18:12.9717704Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-synch-l1-2-0.dll
+2026-10-27T20:18:12.9721040Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-sysinfo-l1-1-0.dll
+2026-10-27T20:18:12.9724292Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-sysinfo-l1-2-0.dll
+2026-10-27T20:18:12.9727753Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-timezone-l1-1-0.dll
+2026-10-27T20:18:12.9730930Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-core-util-l1-1-0.dll
+2026-10-27T20:18:12.9734312Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-conio-l1-1-0.dll
+2026-10-27T20:18:12.9737969Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-convert-l1-1-0.dll
+2026-10-27T20:18:12.9741713Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-environment-l1-1-0.dll
+2026-10-27T20:18:12.9745151Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-filesystem-l1-1-0.dll
+2026-10-27T20:18:12.9748743Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-heap-l1-1-0.dll
+2026-10-27T20:18:12.9752114Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-locale-l1-1-0.dll
+2026-10-27T20:18:12.9756338Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-math-l1-1-0.dll
+2026-10-27T20:18:12.9760981Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-process-l1-1-0.dll
+2026-10-27T20:18:12.9764263Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-runtime-l1-1-0.dll
+2026-10-27T20:18:12.9767957Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-stdio-l1-1-0.dll
+2026-10-27T20:18:12.9772470Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-string-l1-1-0.dll
+2026-10-27T20:18:12.9775750Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-time-l1-1-0.dll
+2026-10-27T20:18:12.9779327Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\api-ms-win-crt-utility-l1-1-0.dll
+2026-10-27T20:18:12.9782619Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\base_library.zip
+2026-10-27T20:18:12.9914986Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\libcrypto-3-x64.dll
+2026-10-27T20:18:13.0668192Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\libcrypto-3.dll
+2026-10-27T20:18:15.0711391Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\libffi-8.dll
+2026-10-27T20:18:15.0716743Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\libssl-3-x64.dll
+2026-10-27T20:18:15.0860048Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\libssl-3.dll
+2026-10-27T20:18:15.0944173Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\LICENSES_AND_ATTRIBUTIONS.md
+2026-10-27T20:18:15.0950559Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\pyexpat.pyd
+2026-10-27T20:18:15.0973289Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\python3.dll
+2026-10-27T20:18:15.0981718Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\python312.dll
+2026-10-27T20:18:17.2114109Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\release-profile.json
+2026-10-27T20:18:17.2115527Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\select.pyd
+2026-10-27T20:18:17.2120411Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\sqlite3.dll
+2026-10-27T20:18:17.2296037Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\ucrtbase.dll
+2026-10-27T20:18:17.2479541Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\unicodedata.pyd
+2026-10-27T20:18:18.1540573Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\VCRUNTIME140.dll
+2026-10-27T20:18:18.1558623Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\VCRUNTIME140_1.dll
+2026-10-27T20:18:18.1566686Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_bz2.pyd
+2026-10-27T20:18:18.1579797Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_cffi_backend.cp312-win_amd64.pyd
+2026-10-27T20:18:18.1606531Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_ctypes.pyd
+2026-10-27T20:18:18.1625647Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_decimal.pyd
+2026-10-27T20:18:18.1663828Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_hashlib.pyd
+2026-10-27T20:18:18.1674295Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_lzma.pyd
+2026-10-27T20:18:18.1698469Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_multiprocessing.pyd
+2026-10-27T20:18:18.1704915Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_queue.pyd
+2026-10-27T20:18:18.1710555Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_socket.pyd
+2026-10-27T20:18:18.1723564Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_sqlite3.pyd
+2026-10-27T20:18:18.1740168Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_ssl.pyd
+2026-10-27T20:18:18.1760121Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_uuid.pyd
+2026-10-27T20:18:18.1764131Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\_wmi.pyd
+2026-10-27T20:18:18.1769438Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography\hazmat\bindings\_rust.pyd
+2026-10-27T20:18:20.2691227Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\INSTALLER
+2026-10-27T20:18:20.2692890Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\METADATA
+2026-10-27T20:18:20.2694647Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\RECORD
+2026-10-27T20:18:20.2697018Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\REQUESTED
+2026-10-27T20:18:20.2698751Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\WHEEL
+2026-10-27T20:18:20.2700196Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\licenses\LICENSE
+2026-10-27T20:18:20.2701544Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\licenses\LICENSE.APACHE
+2026-10-27T20:18:20.2703076Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\cryptography-46.0.3.dist-info\licenses\LICENSE.BSD
+2026-10-27T20:18:20.2703984Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\approved_knowledge\index.json
+2026-10-27T20:18:20.2705207Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\catalog\public-descriptions-v1.json
+2026-10-27T20:18:20.2707969Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\catalog\seed-v1.json
+2026-10-27T20:18:20.2711287Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\corpus_knowledge\cards.sqlite3
+2026-10-27T20:18:23.2394184Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\corpus_knowledge\manifest.json
+2026-10-27T20:18:23.2395892Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\gameplay\catalog-v1.json
+2026-10-27T20:18:23.2752965Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\data\narrative\genre-cards-v1.json
+2026-10-27T20:18:23.2754664Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\DEPENDENCIES.json
+2026-10-27T20:18:23.2756383Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\GPL-3.0-only.txt
+2026-10-27T20:18:23.2757642Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\LGPL-3.0-only.txt
+2026-10-27T20:18:23.2758896Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\OpenSSL-LICENSE.txt
+2026-10-27T20:18:23.2760189Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\PYTHON-LICENSE.txt
+2026-10-27T20:18:23.2761407Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\Qt-GPL-exception-1.0.txt
+2026-10-27T20:18:23.2762648Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\SOURCES.json
+2026-10-27T20:18:23.2763742Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\cffi\LICENSE
+2026-10-27T20:18:23.2764894Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\cryptography\LICENSE
+2026-10-27T20:18:23.2766141Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\cryptography\LICENSE.APACHE
+2026-10-27T20:18:23.2767415Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\cryptography\LICENSE.BSD
+2026-10-27T20:18:23.2768644Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\pycparser\LICENSE
+2026-10-27T20:18:23.2769873Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\pyinstaller\COPYING.txt
+2026-10-27T20:18:23.2771628Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\pyinstaller-hooks-contrib\LICENSE
+2026-10-27T20:18:23.2773303Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\PySide6-Essentials\LicenseRef-Qt-Commercial.txt
+2026-10-27T20:18:23.2778645Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\licenses\shiboken6\LicenseRef-Qt-Commercial.txt
+2026-10-27T20:18:23.2780090Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\prompts\master_system_prompt.txt
+2026-10-27T20:18:23.2781304Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\MSVCP140.dll
+2026-10-27T20:18:23.8250838Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\MSVCP140_1.dll
+2026-10-27T20:18:23.8254577Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\MSVCP140_2.dll
+2026-10-27T20:18:23.8285704Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\opengl32sw.dll
+2026-10-27T20:18:28.3741434Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\pyside6.abi3.dll
+2026-10-27T20:18:28.3781170Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\Qt6Core.dll
+2026-10-27T20:18:30.2790905Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\Qt6Gui.dll
+2026-10-27T20:18:32.5748195Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\Qt6Network.dll
+2026-10-27T20:18:32.5997138Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\Qt6Svg.dll
+2026-10-27T20:18:32.6081306Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\Qt6Widgets.dll
+2026-10-27T20:18:35.1953860Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\QtCore.pyd
+2026-10-27T20:18:35.2304574Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\QtGui.pyd
+2026-10-27T20:18:36.2712036Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\QtNetwork.pyd
+2026-10-27T20:18:36.2818777Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\QtWidgets.pyd
+2026-10-27T20:18:37.6051348Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\VCRUNTIME140.dll
+2026-10-27T20:18:37.6064929Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\VCRUNTIME140_1.dll
+2026-10-27T20:18:37.6070490Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\generic\qtuiotouchplugin.dll
+2026-10-27T20:18:37.6082443Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\iconengines\qsvgicon.dll
+2026-10-27T20:18:37.6090966Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qgif.dll
+2026-10-27T20:18:37.6097252Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qicns.dll
+2026-10-27T20:18:37.6104255Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qico.dll
+2026-10-27T20:18:37.6110177Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qjpeg.dll
+2026-10-27T20:18:37.6182453Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qsvg.dll
+2026-10-27T20:18:37.6187930Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qtga.dll
+2026-10-27T20:18:37.6194386Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qtiff.dll
+2026-10-27T20:18:38.8291591Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qwbmp.dll
+2026-10-27T20:18:38.8298071Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\imageformats\qwebp.dll
+2026-10-27T20:18:38.8381199Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\networkinformation\qnetworklistmanager.dll
+2026-10-27T20:18:38.8392186Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\platforms\qdirect2d.dll
+2026-10-27T20:18:38.8550431Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\platforms\qminimal.dll
+2026-10-27T20:18:38.8558837Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\platforms\qoffscreen.dll
+2026-10-27T20:18:38.8571274Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\platforms\qwindows.dll
+2026-10-27T20:18:38.8677397Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\styles\qmodernwindowsstyle.dll
+2026-10-27T20:18:38.8702755Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\tls\qcertonlybackend.dll
+2026-10-27T20:18:38.8714949Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\tls\qopensslbackend.dll
+2026-10-27T20:18:38.8748982Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\plugins\tls\qschannelbackend.dll
+2026-10-27T20:18:38.8778004Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_ar.qm
+2026-10-27T20:18:38.8795257Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_bg.qm
+2026-10-27T20:18:38.8812365Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_ca.qm
+2026-10-27T20:18:38.8836351Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_cs.qm
+2026-10-27T20:18:38.8861419Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_da.qm
+2026-10-27T20:18:38.8887570Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_de.qm
+2026-10-27T20:18:38.8917358Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_en.qm
+2026-10-27T20:18:38.8918815Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_es.qm
+2026-10-27T20:18:39.8472748Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_fa.qm
+2026-10-27T20:18:39.8493410Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_fi.qm
+2026-10-27T20:18:39.8517612Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_fr.qm
+2026-10-27T20:18:39.8539168Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_gd.qm
+2026-10-27T20:18:39.8564189Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_he.qm
+2026-10-27T20:18:39.8582737Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_hr.qm
+2026-10-27T20:18:39.8602833Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_hu.qm
+2026-10-27T20:18:39.8630216Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_it.qm
+2026-10-27T20:18:39.8652144Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_ja.qm
+2026-10-27T20:18:39.8669737Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_ka.qm
+2026-10-27T20:18:39.8696649Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_ko.qm
+2026-10-27T20:18:39.8717978Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_lg.qm
+2026-10-27T20:18:39.8750535Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_lv.qm
+2026-10-27T20:18:39.8772758Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_nl.qm
+2026-10-27T20:18:39.8799320Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_nn.qm
+2026-10-27T20:18:39.8826762Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_pl.qm
+2026-10-27T20:18:39.8847238Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_pt_BR.qm
+2026-10-27T20:18:39.8869635Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_ru.qm
+2026-10-27T20:18:39.8889607Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_sk.qm
+2026-10-27T20:18:39.8902838Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_sv.qm
+2026-10-27T20:18:39.8923495Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_tr.qm
+2026-10-27T20:18:39.8948897Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_uk.qm
+2026-10-27T20:18:39.8965759Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_zh_CN.qm
+2026-10-27T20:18:39.8981493Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qtbase_zh_TW.qm
+2026-10-27T20:18:39.8997761Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_ar.qm
+2026-10-27T20:18:39.8999237Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_bg.qm
+2026-10-27T20:18:39.9000553Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_ca.qm
+2026-10-27T20:18:39.9001807Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_cs.qm
+2026-10-27T20:18:39.9003130Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_da.qm
+2026-10-27T20:18:39.9004395Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_de.qm
+2026-10-27T20:18:39.9005650Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_en.qm
+2026-10-27T20:18:39.9006902Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_es.qm
+2026-10-27T20:18:39.9009128Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_fa.qm
+2026-10-27T20:18:39.9010440Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_fi.qm
+2026-10-27T20:18:39.9011668Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_fr.qm
+2026-10-27T20:18:39.9012831Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_gd.qm
+2026-10-27T20:18:39.9013920Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_gl.qm
+2026-10-27T20:18:39.9046739Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_he.qm
+2026-10-27T20:18:39.9048198Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_ar.qm
+2026-10-27T20:18:39.9049811Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_bg.qm
+2026-10-27T20:18:39.9051968Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_ca.qm
+2026-10-27T20:18:39.9053768Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_cs.qm
+2026-10-27T20:18:39.9056736Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_da.qm
+2026-10-27T20:18:39.9058014Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_de.qm
+2026-10-27T20:18:39.9059757Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_en.qm
+2026-10-27T20:18:39.9061047Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_es.qm
+2026-10-27T20:18:39.9063363Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_fr.qm
+2026-10-27T20:18:39.9064658Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_gl.qm
+2026-10-27T20:18:39.9066932Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_hr.qm
+2026-10-27T20:18:39.9068938Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_hu.qm
+2026-10-27T20:18:39.9071544Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_it.qm
+2026-10-27T20:18:39.9073000Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_ja.qm
+2026-10-27T20:18:39.9074314Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_ka.qm
+2026-10-27T20:18:39.9076072Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_ko.qm
+2026-10-27T20:18:39.9077715Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_nl.qm
+2026-10-27T20:18:39.9079226Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_nn.qm
+2026-10-27T20:18:39.9081052Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_pl.qm
+2026-10-27T20:18:39.9083354Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_pt_BR.qm
+2026-10-27T20:18:39.9086601Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_ru.qm
+2026-10-27T20:18:39.9088193Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_sk.qm
+2026-10-27T20:18:39.9091374Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_sl.qm
+2026-10-27T20:18:39.9093639Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_sv.qm
+2026-10-27T20:18:39.9095450Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_tr.qm
+2026-10-27T20:18:39.9097209Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_uk.qm
+2026-10-27T20:18:39.9099382Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_zh_CN.qm
+2026-10-27T20:18:39.9100917Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_help_zh_TW.qm
+2026-10-27T20:18:39.9102418Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_hr.qm
+2026-10-27T20:18:39.9103621Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_hu.qm
+2026-10-27T20:18:39.9104858Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_it.qm
+2026-10-27T20:18:39.9106089Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_ja.qm
+2026-10-27T20:18:39.9107345Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_ka.qm
+2026-10-27T20:18:39.9108477Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_ko.qm
+2026-10-27T20:18:39.9110007Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_lg.qm
+2026-10-27T20:18:39.9111256Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_lt.qm
+2026-10-27T20:18:40.9666392Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_lv.qm
+2026-10-27T20:18:40.9667950Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_nl.qm
+2026-10-27T20:18:40.9669276Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_nn.qm
+2026-10-27T20:18:40.9670642Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_pl.qm
+2026-10-27T20:18:40.9671930Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_pt_BR.qm
+2026-10-27T20:18:40.9673383Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_pt_PT.qm
+2026-10-27T20:18:40.9679110Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_ru.qm
+2026-10-27T20:18:40.9681060Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_sk.qm
+2026-10-27T20:18:40.9682330Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_sl.qm
+2026-10-27T20:18:40.9706790Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_sv.qm
+2026-10-27T20:18:40.9708543Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_tr.qm
+2026-10-27T20:18:40.9710014Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_uk.qm
+2026-10-27T20:18:40.9711370Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_zh_CN.qm
+2026-10-27T20:18:40.9712758Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\PySide6\translations\qt_zh_TW.qm
+2026-10-27T20:18:40.9714088Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\rpg_vkr\ui\assets\DND-NCFU.ico
+2026-10-27T20:18:40.9715938Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\rpg_vkr\ui\assets\DND-NCFU.png
+2026-10-27T20:18:40.9717204Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\rpg_vkr\ui\assets\kingdom.png
+2026-10-27T20:18:40.9983246Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\rpg_vkr\ui\assets\world-creation-atlas.png
+2026-10-27T20:18:41.6989260Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\shiboken6\MSVCP140.dll
+2026-10-27T20:18:41.6991505Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\shiboken6\Shiboken.pyd
+2026-10-27T20:18:41.6992878Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\shiboken6\shiboken6.abi3.dll
+2026-10-27T20:18:41.7015929Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\shiboken6\VCRUNTIME140.dll
+2026-10-27T20:18:41.7035346Z    Compressing: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\_internal\shiboken6\VCRUNTIME140_1.dll
+2026-10-27T20:18:42.1939404Z    Compressing Setup program executable
+2026-10-27T20:18:42.7910722Z    Updating version info (Setup.exe)
+2026-10-27T20:18:42.7911209Z    Updating manifest (Setup.exe)
+2026-10-27T20:18:42.7911964Z 
+2026-10-27T20:18:42.7915357Z 
+2026-10-27T20:18:42.7915771Z Successful compile (30.531 sec). Resulting Setup program filename is:
+2026-10-27T20:18:42.7916342Z D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU-Setup.exe
+2026-10-27T20:18:42.8205755Z Готово: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU\DND-NCFU.exe
+2026-10-27T20:18:42.8217105Z ZIP: D:\a\DND-NCFU\DND-NCFU\dist\DND-NCFU-Windows-x64-v0.3.1.zip
+2026-10-27T20:18:42.8226947Z Переносите всю папку. Пользовательские данные не изменялись.
+2026-10-27T20:18:42.8963685Z ##[group]Run .\scripts\probe_windows_setup.ps1
+2026-10-27T20:18:42.8964150Z [36;1m.\scripts\probe_windows_setup.ps1[0m
+2026-10-27T20:18:42.9042532Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-27T20:18:42.9042964Z env:
+2026-10-27T20:18:42.9043234Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:18:42.9043713Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T20:18:42.9044173Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:18:42.9044577Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:18:42.9044981Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:18:42.9045309Z ##[endgroup]
+2026-10-27T20:18:43.9008341Z {"save_bytes_preserved": true, "schema31_load": true, "mp_preserved": true, "phase": "create"}
+2026-10-27T20:19:15.0202017Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-27T20:19:15.0202490Z with:
+2026-10-27T20:19:15.0202691Z   name: full-system-native-windows
+2026-10-27T20:19:15.0203405Z   path: dist/DND-NCFU-Setup.exe
+dist/DND-NCFU-Windows-x64-v*.zip
+dist/DND-NCFU-Windows-x64-v*.zip.sha256
+build/windows-*/checks/*.json
+build/setup-probe/*.json
+
+2026-10-27T20:19:15.0204099Z   if-no-files-found: warn
+2026-10-27T20:19:15.0204557Z   retention-days: 14
+2026-10-27T20:19:15.0204758Z   compression-level: 6
+2026-10-27T20:19:15.0204958Z   overwrite: false
+2026-10-27T20:19:15.0205149Z   include-hidden-files: false
+2026-10-27T20:19:15.0205361Z env:
+2026-10-27T20:19:15.0205614Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:19:15.0206057Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T20:19:15.0206496Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:19:15.0206922Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:19:15.0207310Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T20:19:15.0207615Z ##[endgroup]
+2026-10-27T20:19:15.2150371Z (node:4032) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-27T20:19:15.2151432Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-27T20:19:15.2328897Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-27T20:19:15.2332708Z The least common ancestor is D:\a\DND-NCFU\DND-NCFU. This will be the root directory of the artifact
+2026-10-27T20:19:15.2333605Z With the provided path, there will be 13 files uploaded
+2026-10-27T20:19:15.2340903Z Artifact name is valid!
+2026-10-27T20:19:15.2343134Z Root directory input is valid!
+2026-10-27T20:19:15.4319547Z Beginning upload of artifact content to blob storage
+2026-10-27T20:19:15.7382254Z (node:4032) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-27T20:19:15.9096909Z Uploaded bytes 8388608
+2026-10-27T20:19:16.2757624Z Uploaded bytes 16777216
+2026-10-27T20:19:16.4776678Z Uploaded bytes 25165824
+2026-10-27T20:19:16.7004024Z Uploaded bytes 33554432
+2026-10-27T20:19:17.0597357Z Uploaded bytes 41943040
+2026-10-27T20:19:17.2975906Z Uploaded bytes 50331648
+2026-10-27T20:19:17.5506847Z Uploaded bytes 58720256
+2026-10-27T20:19:17.7976813Z Uploaded bytes 67108864
+2026-10-27T20:19:18.1166973Z Uploaded bytes 75497472
+2026-10-27T20:19:18.3441355Z Uploaded bytes 83886080
+2026-10-27T20:19:18.6169322Z Uploaded bytes 92274688
+2026-10-27T20:19:18.6858760Z Uploaded bytes 94215478
+2026-10-27T20:19:18.7060005Z Finished uploading artifact content to blob storage!
+2026-10-27T20:19:18.7065628Z SHA256 digest of uploaded artifact zip is 295b975808f760e3d3c308bf530c627bd317a3b8203aee8fabaa332cad648fb8
+2026-10-27T20:19:18.7068909Z Finalizing artifact upload
+2026-10-27T20:19:19.1150034Z Artifact full-system-native-windows.zip successfully finalized. Artifact ID 12768045853
+2026-10-27T20:19:19.1151572Z Artifact full-system-native-windows has been successfully uploaded! Final size is 94215478 bytes. Artifact ID is 12768045853
+2026-10-27T20:19:19.1165861Z Artifact download URL: https://github.com/sayferst/DND-NCFU/actions/runs/40573954108/artifacts/12768045853
+2026-10-27T20:19:19.1558994Z Post job cleanup.
+2026-10-27T20:19:19.3576286Z Post job cleanup.
+2026-10-27T20:19:19.5629467Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-27T20:19:19.5995709Z git version 2.56.0.windows.2
+2026-10-27T20:19:19.6068764Z Temporarily overriding HOME='D:\a\_temp\2e95f86a-493c-45a3-ba78-9220dfda54fe' before making global git config changes
+2026-10-27T20:19:19.6069630Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T20:19:19.6081030Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\DND-NCFU\DND-NCFU
+2026-10-27T20:19:19.6487593Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T20:19:19.6917230Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-27T20:19:20.2763064Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T20:19:20.3115954Z http.https://github.com/.extraheader
+2026-10-27T20:19:20.3164664Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-27T20:19:20.3582635Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-27T20:19:20.9366029Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T20:19:20.9758677Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-27T20:19:21.5467539Z Cleaning up orphan processes
+2026-10-27T20:19:21.6095529Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

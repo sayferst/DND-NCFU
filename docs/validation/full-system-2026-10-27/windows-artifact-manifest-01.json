@@ -1,0 +1,78 @@
+{
+  "workflow_run": 40573954108,
+  "source_commit": "d70a4bfffbcec5678cc5ecbd94c37f74da1507f1",
+  "job_id": 122435748646,
+  "artifact_id": 12768045853,
+  "artifact_bytes": 94215478,
+  "artifact_sha256": "295b975808f760e3d3c308bf530c627bd317a3b8203aee8fabaa332cad648fb8",
+  "artifact_url": "https://github.com/sayferst/DND-NCFU/actions/runs/40573954108/artifacts/12768045853",
+  "expires_utc": "2026-11-10T20:19:15Z",
+  "files": [
+    {
+      "path": "dist/DND-NCFU-Setup.exe",
+      "bytes": 40208872,
+      "sha256": "866652f923523ce61ed27501c5af433b421a5428e77ed04f6345db871a67c044"
+    },
+    {
+      "path": "dist/DND-NCFU-Windows-x64-v0.3.1.zip",
+      "bytes": 54706975,
+      "sha256": "62eba902483f2e80e08d44446316f41e1eb276c3830f12734a8190dcabe4ff83"
+    },
+    {
+      "path": "dist/DND-NCFU-Windows-x64-v0.3.1.zip.sha256",
+      "bytes": 99,
+      "sha256": "0f2ef9fc9d4f2586100c24f2e107ac95cc481966f00455757ded67a90e15fbc0"
+    },
+    {
+      "path": "build/setup-probe/first-saved-campaign.json",
+      "bytes": 99,
+      "sha256": "f9494738ae7f0d3402c3f9ad75f47ea69cd97246823d3e67082053dd7bb489fa"
+    },
+    {
+      "path": "build/setup-probe/first-self-check.json",
+      "bytes": 1443,
+      "sha256": "a739e72d914b2cf47fda9b153a7998d76937a1a35d59234951d6393260f02535"
+    },
+    {
+      "path": "build/setup-probe/first-smoke-test.json",
+      "bytes": 2424,
+      "sha256": "96792511a980009de1e89881c3cfc66a9953c73ee746c638f1f753fa29750145"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-saved-campaign.json",
+      "bytes": 99,
+      "sha256": "f9494738ae7f0d3402c3f9ad75f47ea69cd97246823d3e67082053dd7bb489fa"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-self-check.json",
+      "bytes": 1443,
+      "sha256": "a739e72d914b2cf47fda9b153a7998d76937a1a35d59234951d6393260f02535"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-smoke-test.json",
+      "bytes": 2424,
+      "sha256": "96792511a980009de1e89881c3cfc66a9953c73ee746c638f1f753fa29750145"
+    },
+    {
+      "path": "build/setup-probe/setup-result.json",
+      "bytes": 156,
+      "sha256": "ceb7d74abb062799d8cc47a66b4141473de9f96fc8a6e6add01ef27cc6ebd7db"
+    },
+    {
+      "path": "build/windows-20261027-201724-632-55d9cc/checks/bundle.json",
+      "bytes": 45081,
+      "sha256": "3b5ba7c79e6c5009750601ecfe8b705d77d045c0cd0bbad63a3afb6212d1cc0d"
+    },
+    {
+      "path": "build/windows-20261027-201724-632-55d9cc/checks/self-check.json",
+      "bytes": 1438,
+      "sha256": "65d9724d34cc9a0229f813596e76f4f9b36869c614965c0565cb68c687f0bfd2"
+    },
+    {
+      "path": "build/windows-20261027-201724-632-55d9cc/checks/smoke-test.json",
+      "bytes": 2419,
+      "sha256": "6b7879f5991b5c041d12f4f5738dd8aa454b00da12460b645a72800f6678ff27"
+    }
+  ],
+  "note": "Only original JSON reports extracted into Git; EXE and portable ZIP remain in the CI artifact. Artifact digest verified before inspection."
+}
