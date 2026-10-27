@@ -1,21 +1,25 @@
 # Owner workflow: always check GitHub before building the latest available sources.
-param([ValidateSet('exe', 'tester')][string]$Target = 'tester')
+param(
+    [ValidateSet('exe', 'tester')][string]$Target = 'tester',
+    [switch]$VerifyOnly
+)
 $ErrorActionPreference = 'Stop'
 try {
     Set-Location (Split-Path $PSScriptRoot -Parent)
     # Never replace scripts underneath an active owner host, including before ready exists.
     $hosts = Get-CimInstance Win32_Process -Filter "Name = 'python.exe'" |
         Where-Object { $_.CommandLine -match 'tester_host\.py["\s]+start(?:\s|$)' }
+    $releaseBranch = 'feature/unified-rpg-automatic-gm'
     $branch = & git branch --show-current
-    if ($LASTEXITCODE -ne 0 -or $branch.Trim() -ne 'setup/development-environment') {
-        throw 'Expected branch: setup/development-environment. No branch was changed.'
+    if ($LASTEXITCODE -ne 0 -or $branch.Trim() -ne $releaseBranch) {
+        throw "Expected branch: $releaseBranch. No branch was changed."
     }
     # Fetch changes references only: safe with local edits and a running host.
     # A failed network check must never silently produce an allegedly current build.
     Write-Host 'Checking GitHub for the latest game sources...'
-    & git fetch origin 'refs/heads/setup/development-environment:refs/remotes/origin/setup/development-environment'
+    & git fetch origin "refs/heads/${releaseBranch}:refs/remotes/origin/${releaseBranch}"
     if ($LASTEXITCODE -ne 0) { throw 'Cannot check GitHub. Build stopped; previous artifacts were not updated.' }
-    $remote = (& git rev-parse refs/remotes/origin/setup/development-environment).Trim()
+    $remote = (& git rev-parse "refs/remotes/origin/${releaseBranch}").Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Cannot resolve the checked remote version.' }
     & git merge-base --is-ancestor $remote HEAD
     $containsLatest = $LASTEXITCODE -eq 0
@@ -43,8 +47,15 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Update failed or branches diverged. Build stopped; local changes were preserved.' }
     }
     Write-Host "Latest checked GitHub version: $remote"
+    $buildCommit = (& git rev-parse HEAD).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot identify the source commit.' }
+    Write-Host "Build source commit: $buildCommit"
     if (!$clean) {
         Write-Host 'Including your additional local edits in this build.'
+    }
+    if ($VerifyOnly) {
+        Write-Host 'Checkout verified. No build, credentials or host configuration were opened.'
+        exit 0
     }
     if ($Target -eq 'exe') {
         & $python scripts\tester_host.py build-exe

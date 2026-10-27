@@ -1,4 +1,5 @@
 @echo off
+rem Stable game branch: feature/unified-rpg-automatic-gm. No automatic branch switching.
 setlocal
 chcp 65001 >nul
 title DND-NCFU - Personal EXE
