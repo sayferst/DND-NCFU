@@ -1,0 +1,524 @@
+{
+  "source_commit": "4cc4f4ca036971d877dce40950160613b2e6193d",
+  "baseline_commit": "bbe670ebce926229ba2fcc7f482800871a53437a",
+  "protected_count": 86,
+  "all_unchanged": true,
+  "protected": [
+    {
+      "path": "MASTER_CODEX_RPG_VKR_ZERO_COST.md",
+      "baseline_sha256": "782279f6fa500712ba703b2a10fb60372af875c4862878ecc87911bcc51990e6",
+      "sha256": "782279f6fa500712ba703b2a10fb60372af875c4862878ecc87911bcc51990e6",
+      "unchanged": true
+    },
+    {
+      "path": "data/catalog/public-descriptions-v1.json",
+      "baseline_sha256": "93d17b3c3e09f5ac8e49ba1c42979d51d6aab5e65864e7ee21ebd92b188e94f8",
+      "sha256": "93d17b3c3e09f5ac8e49ba1c42979d51d6aab5e65864e7ee21ebd92b188e94f8",
+      "unchanged": true
+    },
+    {
+      "path": "data/catalog/seed-v1.json",
+      "baseline_sha256": "cd9e5b2598eb42b50c8ca5907937676f34831d45ebcd3ef894ce19e145d880fb",
+      "sha256": "cd9e5b2598eb42b50c8ca5907937676f34831d45ebcd3ef894ce19e145d880fb",
+      "unchanged": true
+    },
+    {
+      "path": "data/catalog/seed-v1.source.json",
+      "baseline_sha256": "dc16534b63fbff7de9bb57048b8786a78b032c850c739942024c6963cea7661b",
+      "sha256": "dc16534b63fbff7de9bb57048b8786a78b032c850c739942024c6963cea7661b",
+      "unchanged": true
+    },
+    {
+      "path": "data/narrative/genre-cards-v1.json",
+      "baseline_sha256": "9186b75a7369cdff4348f357adec9ea27e0b34dbcc32dcf621872d7907e01d64",
+      "sha256": "9186b75a7369cdff4348f357adec9ea27e0b34dbcc32dcf621872d7907e01d64",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/AGENTS.md",
+      "baseline_sha256": "2061bde78724169817e07bc939c996858651cb147d1a4fea73bf99c0bc595198",
+      "sha256": "2061bde78724169817e07bc939c996858651cb147d1a4fea73bf99c0bc595198",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/CODEX_FIRST_PROMPT.md",
+      "baseline_sha256": "35812eb3216ce8cae44fbd0c5981f253e54e975636755f62ec5a02f8aca43af7",
+      "sha256": "35812eb3216ce8cae44fbd0c5981f253e54e975636755f62ec5a02f8aca43af7",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/MASTER_CODEX_RPG_VKR_ZERO_COST.docx",
+      "baseline_sha256": "6ac6bf060d4402c3d960550003066e92f2b699a866708eb1537a2e22c9c368f5",
+      "sha256": "6ac6bf060d4402c3d960550003066e92f2b699a866708eb1537a2e22c9c368f5",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/PROJECT_CONTEXT_OLDER.md",
+      "baseline_sha256": "2b033a1c233b2314a90ad3ff4ee0dbb14635fdf2acdf7306ec023add274696d7",
+      "sha256": "2b033a1c233b2314a90ad3ff4ee0dbb14635fdf2acdf7306ec023add274696d7",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/README_START_HERE.md",
+      "baseline_sha256": "c9b8979d60682a60a165cca4f6b1c3a5eb4dc2535d5168ba5f45db40a72e2d6e",
+      "sha256": "c9b8979d60682a60a165cca4f6b1c3a5eb4dc2535d5168ba5f45db40a72e2d6e",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/SHA256.json",
+      "baseline_sha256": "45071e0d26b91fca64abd4df3704fe2364e5e8f5192d1028a783b66a5e0022d6",
+      "sha256": "45071e0d26b91fca64abd4df3704fe2364e5e8f5192d1028a783b66a5e0022d6",
+      "unchanged": true
+    },
+    {
+      "path": "docs/originals/TECHNICAL_SPEC_OLDER.md",
+      "baseline_sha256": "10f6823b7dc83f535b43f286412df8d935349092dd8876ff2bf780850173d22c",
+      "sha256": "10f6823b7dc83f535b43f286412df8d935349092dd8876ff2bf780850173d22c",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/AI_MASTER_ROUTING_PROBES_2026-10-19.json",
+      "baseline_sha256": "83fa6f082342e899e2ecd3202b56c9b53b96db7545b7bd762059bff844abdfcc",
+      "sha256": "83fa6f082342e899e2ecd3202b56c9b53b96db7545b7bd762059bff844abdfcc",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/AI_MASTER_SOURCE_CHECKS_2026-10-19.json",
+      "baseline_sha256": "f1291b2ba4e5a97e58e534be26b31965ae21b3bd39756d73eaf22fd68b541068",
+      "sha256": "f1291b2ba4e5a97e58e534be26b31965ae21b3bd39756d73eaf22fd68b541068",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/CLOUD_API_SOURCES_2026_10_19.json",
+      "baseline_sha256": "cf1e5ef677ddf67f51dcd7a208bd726f7688ad37a537cc9eaed9cd58e06944c3",
+      "sha256": "cf1e5ef677ddf67f51dcd7a208bd726f7688ad37a537cc9eaed9cd58e06944c3",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/INTENT_DEVELOPMENT_CASES.json",
+      "baseline_sha256": "a40f2a06b1b77d366a749f5929ab529deda776b9304fdc1de15d14119bd34274",
+      "sha256": "a40f2a06b1b77d366a749f5929ab529deda776b9304fdc1de15d14119bd34274",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/LOCAL_AI_SOURCES_2026-10-17.json",
+      "baseline_sha256": "fc10385345dfac766a65bb23171cc6a3e70c2797403975be96ba88bbe1230246",
+      "sha256": "fc10385345dfac766a65bb23171cc6a3e70c2797403975be96ba88bbe1230246",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/LOCAL_LANGUAGE_SOURCE_CHECKS_2026-10-19.json",
+      "baseline_sha256": "b902036e2968d6dd702f59d746605064e5750f532872c2cfeb55eeef0cf4b4c1",
+      "sha256": "b902036e2968d6dd702f59d746605064e5750f532872c2cfeb55eeef0cf4b4c1",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/MASTER_PROVIDER_SOURCE_CHECKS_2026-10-19.json",
+      "baseline_sha256": "0bce142cf02c1744900e51bdaa38181b91457f886ee08b69c63262256ed506bb",
+      "sha256": "0bce142cf02c1744900e51bdaa38181b91457f886ee08b69c63262256ed506bb",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/ROUTERAI_ACCESS_CHECK_2026_10_19.json",
+      "baseline_sha256": "4c959da180c382e125419251b0797e31f90efe0ed7fd4190fde560458078dc68",
+      "sha256": "4c959da180c382e125419251b0797e31f90efe0ed7fd4190fde560458078dc68",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/STORYFORGE_REVIEW.md",
+      "baseline_sha256": "2327ff3414a5761c53eba0cf96ba4d960fb1c25e2b0aec833ce217794f6b02be",
+      "sha256": "2327ff3414a5761c53eba0cf96ba4d960fb1c25e2b0aec833ce217794f6b02be",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/STORYTELLER_CORPUS_AUDIT_2026-10-18.md",
+      "baseline_sha256": "ce497fd0a6c4fd3d4a8c319c6ef0f6c45d82c37d0b6872a56cf440c9c868d919",
+      "sha256": "ce497fd0a6c4fd3d4a8c319c6ef0f6c45d82c37d0b6872a56cf440c9c868d919",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/STORYTELLER_CORPUS_SOURCE.json",
+      "baseline_sha256": "8bcbd2645eed6dd99f7b1bbd75b174e08e5c9313b463d369a2157572c4bc403c",
+      "sha256": "8bcbd2645eed6dd99f7b1bbd75b174e08e5c9313b463d369a2157572c4bc403c",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_AI_MASTER_TARGET_SPEC.md",
+      "baseline_sha256": "81ac97617d11d348499c9fbf7ddeb3a2d6d0c99b4adaa1612b9f761b59489ece",
+      "sha256": "81ac97617d11d348499c9fbf7ddeb3a2d6d0c99b4adaa1612b9f761b59489ece",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_AI_MASTER_TARGET_SPEC_SOURCE.json",
+      "baseline_sha256": "6b5cb20cee2582d9b41209eec9a30d1811d2ca4563192ec8a985edc8a1a0364b",
+      "sha256": "6b5cb20cee2582d9b41209eec9a30d1811d2ca4563192ec8a985edc8a1a0364b",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_ROUTERAI_API_EXCERPTS.md",
+      "baseline_sha256": "79cc5c1a95f837f3479a4e29a404dc7950e09fcfc1762c1812afbbf8cd7d9049",
+      "sha256": "79cc5c1a95f837f3479a4e29a404dc7950e09fcfc1762c1812afbbf8cd7d9049",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_ROUTERAI_API_EXCERPTS.source.json",
+      "baseline_sha256": "0232ea714cef7a6604a476a0a616336cbca99aa7a47dba8b8a383d22f87ad049",
+      "sha256": "0232ea714cef7a6604a476a0a616336cbca99aa7a47dba8b8a383d22f87ad049",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_ROUTERAI_IMAGES_GUIDE_2026-10-20.md",
+      "baseline_sha256": "0ee51ab544568df481d1cba8bc433ef145a1529ed1d6f3ff6940cee71a8f2337",
+      "sha256": "0ee51ab544568df481d1cba8bc433ef145a1529ed1d6f3ff6940cee71a8f2337",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_ROUTERAI_IMAGES_GUIDE_2026-10-20.source.json",
+      "baseline_sha256": "ac2c3051a17b587b4710782c067ec4d1b910cffce6245dac683bf813f7493ed9",
+      "sha256": "ac2c3051a17b587b4710782c067ec4d1b910cffce6245dac683bf813f7493ed9",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_ROUTERAI_IMAGE_MODEL_EXAMPLES_2026-10-20.json",
+      "baseline_sha256": "e8cae5e1c1fb9e3e41c1ed8e25708d3e06057d24744d7e2c8de81378cb5dbbee",
+      "sha256": "e8cae5e1c1fb9e3e41c1ed8e25708d3e06057d24744d7e2c8de81378cb5dbbee",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_STORYFORGE_REVISION.md",
+      "baseline_sha256": "d9a3ea84da661633754cb658a3d0d636075f9208456e772db82e688486882531",
+      "sha256": "d9a3ea84da661633754cb658a3d0d636075f9208456e772db82e688486882531",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/USER_STORYFORGE_REVISION_SOURCE.json",
+      "baseline_sha256": "20c8efdaa8c82b96a47b363fe87ef2aa5f173d7e41f8350f7857f09b24e81653",
+      "sha256": "20c8efdaa8c82b96a47b363fe87ef2aa5f173d7e41f8350f7857f09b24e81653",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/routerai_starter/CODEX_IMPLEMENTATION_TASK.original.md",
+      "baseline_sha256": "c58e98e8c863578689d5711010f6c37104878fc646d0b2c2b8b1b60aa041d244",
+      "sha256": "c58e98e8c863578689d5711010f6c37104878fc646d0b2c2b8b1b60aa041d244",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/routerai_starter/README_RU.original.md",
+      "baseline_sha256": "e631556adc66367a46f402ef5a5cae69054c6a9bac99b5ab1a2ae9239659f74e",
+      "sha256": "e631556adc66367a46f402ef5a5cae69054c6a9bac99b5ab1a2ae9239659f74e",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/routerai_starter/SOURCE.json",
+      "baseline_sha256": "e21b8f3d5ba35efec14fa97da1e634d7acc393d849e4eb0d12daf918de4413e5",
+      "sha256": "e21b8f3d5ba35efec14fa97da1e634d7acc393d849e4eb0d12daf918de4413e5",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/routerai_starter/master_system_prompt.original.txt",
+      "baseline_sha256": "24f7cdfb3a2685b9b8e9c68a2cf74e5346c5341c46600f77f0144d5c63c027fe",
+      "sha256": "24f7cdfb3a2685b9b8e9c68a2cf74e5346c5341c46600f77f0144d5c63c027fe",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/system_logic/OWNER_SYSTEM_LOGIC.md",
+      "baseline_sha256": "d8a73915b1d73af7fe161dbe1d348a6437b73dc9b8c3fa44721dce96f907c198",
+      "sha256": "d8a73915b1d73af7fe161dbe1d348a6437b73dc9b8c3fa44721dce96f907c198",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/system_logic/SOURCE.json",
+      "baseline_sha256": "3bdbe0832528effed2cb302cb159d92b7f316bfad8d7355aecc4f8a77bc6b014",
+      "sha256": "3bdbe0832528effed2cb302cb159d92b7f316bfad8d7355aecc4f8a77bc6b014",
+      "unchanged": true
+    },
+    {
+      "path": "docs/research/ui/OWNER_UI_SPEC.md",
+      "baseline_sha256": "163a464a5ef7117c387e3dd2a4b315f0206c51c8b298b88f6856e37b0c82f47c",
+      "sha256": "163a464a5ef7117c387e3dd2a4b315f0206c51c8b298b88f6856e37b0c82f47c",
+      "unchanged": true
+    },
+    {
+      "path": "prompts/master_system_prompt.txt",
+      "baseline_sha256": "6b055f2828fc7c2154ba4307ee65232fa51128a439c9681f8d0071da10821abc",
+      "sha256": "6b055f2828fc7c2154ba4307ee65232fa51128a439c9681f8d0071da10821abc",
+      "unchanged": true
+    },
+    {
+      "path": "requirements-build.lock",
+      "baseline_sha256": "f89f1f863325f2d801b46a19a8dad72985831e2ffa97ae7a69761b26ba271be0",
+      "sha256": "f89f1f863325f2d801b46a19a8dad72985831e2ffa97ae7a69761b26ba271be0",
+      "unchanged": true
+    },
+    {
+      "path": "requirements-dev.in",
+      "baseline_sha256": "68e5cb47e49cc10ffb03d74093343d6326df62b4e116b31246c498e104e39bd7",
+      "sha256": "68e5cb47e49cc10ffb03d74093343d6326df62b4e116b31246c498e104e39bd7",
+      "unchanged": true
+    },
+    {
+      "path": "requirements-dev.lock",
+      "baseline_sha256": "afeb5b77b8b2d9181e8179d1091227fbca583029302fc8f64eaae8d72eb574c4",
+      "sha256": "afeb5b77b8b2d9181e8179d1091227fbca583029302fc8f64eaae8d72eb574c4",
+      "unchanged": true
+    },
+    {
+      "path": "requirements.in",
+      "baseline_sha256": "e99198e00573fc2557471e240bd38ebcb6fcdd518233b90710e8359a762d3db4",
+      "sha256": "e99198e00573fc2557471e240bd38ebcb6fcdd518233b90710e8359a762d3db4",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/content_v5.py",
+      "baseline_sha256": "8bf62379fad597b6687c8d3201fd3ee09a17e0bd8049ab95388e2dfb05a78d47",
+      "sha256": "8bf62379fad597b6687c8d3201fd3ee09a17e0bd8049ab95388e2dfb05a78d47",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/copper_trade.py",
+      "baseline_sha256": "563a158dba911043f39cdf08ad3534193091b3ac47a553b5ea9c233f2af95413",
+      "sha256": "563a158dba911043f39cdf08ad3534193091b3ac47a553b5ea9c233f2af95413",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/factions.py",
+      "baseline_sha256": "a9572711eebeb2ed8de64eae7b960bac842cfa916d5fcca7c2602cab796835ed",
+      "sha256": "a9572711eebeb2ed8de64eae7b960bac842cfa916d5fcca7c2602cab796835ed",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay.py",
+      "baseline_sha256": "55d56cf0cd6f3ec8cf23bc8caa67d8e34cf7c5989bc7f094b9bada162d5ebd4b",
+      "sha256": "55d56cf0cd6f3ec8cf23bc8caa67d8e34cf7c5989bc7f094b9bada162d5ebd4b",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v2.py",
+      "baseline_sha256": "73b5eeb48c212aa9d93f4cb9f7b829af075729069853bd0e0faae07c0da3b515",
+      "sha256": "73b5eeb48c212aa9d93f4cb9f7b829af075729069853bd0e0faae07c0da3b515",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v3.py",
+      "baseline_sha256": "b8356a7f815920d52ca93e7b4afd55482c43e414be55c0d8fa072c061b03f684",
+      "sha256": "b8356a7f815920d52ca93e7b4afd55482c43e414be55c0d8fa072c061b03f684",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v4.py",
+      "baseline_sha256": "dc2cd60b622fa6e2be6cf332da5e13152fdaafabf7e629bf4daf9bab154d2ad9",
+      "sha256": "dc2cd60b622fa6e2be6cf332da5e13152fdaafabf7e629bf4daf9bab154d2ad9",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/gameplay_v5.py",
+      "baseline_sha256": "53052f31c23a8bb705728461a6240cf8a7e99770c1550819d466547431ddb46f",
+      "sha256": "53052f31c23a8bb705728461a6240cf8a7e99770c1550819d466547431ddb46f",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/hero_resources.py",
+      "baseline_sha256": "194f783127cc9bd0a58909144b93899b463d8f3fc4357b65150eb5fb09923daf",
+      "sha256": "194f783127cc9bd0a58909144b93899b463d8f3fc4357b65150eb5fb09923daf",
+      "unchanged": true
+    },
+    {
+      "path": "src/rpg_vkr/domain/world_v5.py",
+      "baseline_sha256": "e9cffe2221370aad80f59246d02f1625fb9f87706eeec1bbf65d6d667a2c2c4f",
+      "sha256": "e9cffe2221370aad80f59246d02f1625fb9f87706eeec1bbf65d6d667a2c2c4f",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v1.json",
+      "baseline_sha256": "69fc91cf1aa14dbc8a27beaf48d957b7c081702d7b0f4681d8c6f50bd3ece236",
+      "sha256": "69fc91cf1aa14dbc8a27beaf48d957b7c081702d7b0f4681d8c6f50bd3ece236",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v10.json",
+      "baseline_sha256": "762c2672afba8b1ce33422e2763fc44a6cf3e6b0b4c9b431930d8f78234b5087",
+      "sha256": "762c2672afba8b1ce33422e2763fc44a6cf3e6b0b4c9b431930d8f78234b5087",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v10.source.json",
+      "baseline_sha256": "25f79418230faa94ccf4317800269e03daf62be0d03c0aac9da109a13c6a8ddf",
+      "sha256": "25f79418230faa94ccf4317800269e03daf62be0d03c0aac9da109a13c6a8ddf",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v11.json",
+      "baseline_sha256": "1c6a71705400cb155252822bde9e440e358d5e2414e54f002ff528811e48453f",
+      "sha256": "1c6a71705400cb155252822bde9e440e358d5e2414e54f002ff528811e48453f",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v11.source.json",
+      "baseline_sha256": "645f5912d38a9700caa34c7842ee93fd411c05b30a0a6848a078d9945f6cda44",
+      "sha256": "645f5912d38a9700caa34c7842ee93fd411c05b30a0a6848a078d9945f6cda44",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v12.json",
+      "baseline_sha256": "37cb323e8f6c06a6f59714c25d185b807b069825cac10c64b701f91312a17621",
+      "sha256": "37cb323e8f6c06a6f59714c25d185b807b069825cac10c64b701f91312a17621",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v12.source.json",
+      "baseline_sha256": "7c27eefee7d1cea8b3d15e8b4d725450506da391d310f4a1be0e49791ccc475f",
+      "sha256": "7c27eefee7d1cea8b3d15e8b4d725450506da391d310f4a1be0e49791ccc475f",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v13.json",
+      "baseline_sha256": "ee91b7319ffa72f16d23836dd046faea4dd7addea55359ae5c930fa8dca75833",
+      "sha256": "ee91b7319ffa72f16d23836dd046faea4dd7addea55359ae5c930fa8dca75833",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v14.json",
+      "baseline_sha256": "b2367632244ebec56949baf1c41317686ab7dc6909fc6a272b5bdddb0329d962",
+      "sha256": "b2367632244ebec56949baf1c41317686ab7dc6909fc6a272b5bdddb0329d962",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v15.json",
+      "baseline_sha256": "e00a333d44929de6d5e3ff6a87c70ca3e1b1f9704f55554ecaf2cb59bed94238",
+      "sha256": "e00a333d44929de6d5e3ff6a87c70ca3e1b1f9704f55554ecaf2cb59bed94238",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v15.source.json",
+      "baseline_sha256": "607e810a2b8aa88fdeb5f436d388c5afe8ef0dc43a1d44f092d49e4639c1a2a1",
+      "sha256": "607e810a2b8aa88fdeb5f436d388c5afe8ef0dc43a1d44f092d49e4639c1a2a1",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v16.json",
+      "baseline_sha256": "9d4535403e0631d1fec1515de46c464e5814e5d9160f3f7db2998fb7273edf44",
+      "sha256": "9d4535403e0631d1fec1515de46c464e5814e5d9160f3f7db2998fb7273edf44",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v16.source.json",
+      "baseline_sha256": "c27757d2bd7b92561ca49019c8797dce6dfa1a8c1f6afc11e25ea12b05641599",
+      "sha256": "c27757d2bd7b92561ca49019c8797dce6dfa1a8c1f6afc11e25ea12b05641599",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v17.json",
+      "baseline_sha256": "3ea844d4e85064d6e271838386554756cc530133b96d57e56f050488c9412fcd",
+      "sha256": "3ea844d4e85064d6e271838386554756cc530133b96d57e56f050488c9412fcd",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v17.source.json",
+      "baseline_sha256": "46ecb6124ab4215eb919fc88657cb67517d5df4a7d9d5539b48081f432f7a53e",
+      "sha256": "46ecb6124ab4215eb919fc88657cb67517d5df4a7d9d5539b48081f432f7a53e",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v18.json",
+      "baseline_sha256": "7be315005b5c3e7ce16b4d83f41d7dd6189d774544e0d7565dd6bff5fcacbabd",
+      "sha256": "7be315005b5c3e7ce16b4d83f41d7dd6189d774544e0d7565dd6bff5fcacbabd",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v18.source.json",
+      "baseline_sha256": "31f8cb77667a9a6093ff93f1b68e24d075a1a66dff0e0827c9aee805a832b3e4",
+      "sha256": "31f8cb77667a9a6093ff93f1b68e24d075a1a66dff0e0827c9aee805a832b3e4",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v19.json",
+      "baseline_sha256": "232e1863590c6e5f50a51605fceafd0f35b3c0fbf22b83ff985582bba1a9f923",
+      "sha256": "232e1863590c6e5f50a51605fceafd0f35b3c0fbf22b83ff985582bba1a9f923",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v19.source.json",
+      "baseline_sha256": "7ae95c8aac07e3ffb835891e5b02e7848677704ee851ddf1835d7b461224bbe1",
+      "sha256": "7ae95c8aac07e3ffb835891e5b02e7848677704ee851ddf1835d7b461224bbe1",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v2.json",
+      "baseline_sha256": "d770037ded63c27098544eead40f633f4ed79096796b412c1676ec396969c718",
+      "sha256": "d770037ded63c27098544eead40f633f4ed79096796b412c1676ec396969c718",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v20.json",
+      "baseline_sha256": "0b75b0db1fe76c8bf40d219b41aab112a051ab4b6bff715710dcd71de7bb6440",
+      "sha256": "0b75b0db1fe76c8bf40d219b41aab112a051ab4b6bff715710dcd71de7bb6440",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v20.source.json",
+      "baseline_sha256": "cc04fdb221a9c52524596d10c00ad075059a6550aa28447b581e2d74547db3bc",
+      "sha256": "cc04fdb221a9c52524596d10c00ad075059a6550aa28447b581e2d74547db3bc",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v21.json",
+      "baseline_sha256": "dd77c88f737ab71eaee6074f17f89744b8d8b074e07852e08ba1cddcd9327a8c",
+      "sha256": "dd77c88f737ab71eaee6074f17f89744b8d8b074e07852e08ba1cddcd9327a8c",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v21.source.json",
+      "baseline_sha256": "e2bb988137b835a99e1bf4a998d9fba1641abf3163a992ce4d1a82df98feab89",
+      "sha256": "e2bb988137b835a99e1bf4a998d9fba1641abf3163a992ce4d1a82df98feab89",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v3.json",
+      "baseline_sha256": "bd743be571147f2f95fc64c2ff1f0cacf4ef362b1b37aad369e50f174f3d6f7f",
+      "sha256": "bd743be571147f2f95fc64c2ff1f0cacf4ef362b1b37aad369e50f174f3d6f7f",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v4.json",
+      "baseline_sha256": "dd91dc72eb87e0e45c8e66e4badfa4c60465be733a4de468d73e82bbd6be8196",
+      "sha256": "dd91dc72eb87e0e45c8e66e4badfa4c60465be733a4de468d73e82bbd6be8196",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v5.json",
+      "baseline_sha256": "0056b587bd6f510858ebddd5c4c1859e67cbb5f1384efdac8461f58fcb2a28d7",
+      "sha256": "0056b587bd6f510858ebddd5c4c1859e67cbb5f1384efdac8461f58fcb2a28d7",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v6.json",
+      "baseline_sha256": "fb22add68b990b86be1e4c9e50c2ffe86b28b454fa0ccddbae752056af67b4df",
+      "sha256": "fb22add68b990b86be1e4c9e50c2ffe86b28b454fa0ccddbae752056af67b4df",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v7.json",
+      "baseline_sha256": "7eec7c00b9fd3b5b0fc45c538a4d794dd296b9ae8555dbd41c20479e40640fe5",
+      "sha256": "7eec7c00b9fd3b5b0fc45c538a4d794dd296b9ae8555dbd41c20479e40640fe5",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v8.json",
+      "baseline_sha256": "c51bfd1985236ca967e0d12fbf3f3f7e45abeeae8942447b1a272683a09eeb61",
+      "sha256": "c51bfd1985236ca967e0d12fbf3f3f7e45abeeae8942447b1a272683a09eeb61",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/save-v9.json",
+      "baseline_sha256": "f1765b979abe525a58400eb0b6a5180334904d4e403206cf27b68626cdb92a5e",
+      "sha256": "f1765b979abe525a58400eb0b6a5180334904d4e403206cf27b68626cdb92a5e",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/session-v27-teams.json",
+      "baseline_sha256": "a1a25307b2a6130950d93063bf92a669d7746453bdc36be023712e4455828573",
+      "sha256": "a1a25307b2a6130950d93063bf92a669d7746453bdc36be023712e4455828573",
+      "unchanged": true
+    }
+  ]
+}

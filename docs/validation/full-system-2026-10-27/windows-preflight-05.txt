@@ -1,0 +1,173 @@
+﻿2026-10-27T19:35:59.8938716Z Current runner version: '2.338.0'
+2026-10-27T19:35:59.8962352Z ##[group]Runner Image Provisioner
+2026-10-27T19:35:59.8963176Z Hosted Compute Agent
+2026-10-27T19:35:59.8963728Z Version: 20261021.618
+2026-10-27T19:35:59.8964323Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-27T19:35:59.8964993Z Build Date: 2026-10-21T00:45:21Z
+2026-10-27T19:35:59.8965695Z Worker ID: {823239e5-04cc-40d8-af28-f66eee0ea076}
+2026-10-27T19:35:59.8966356Z Region: westus3
+2026-10-27T19:35:59.8967355Z Cloud: Azure
+2026-10-27T19:35:59.8967868Z ##[endgroup]
+2026-10-27T19:35:59.8969392Z ##[group]Operating System
+2026-10-27T19:35:59.8970001Z Microsoft Windows Server 2025
+2026-10-27T19:35:59.8970662Z 10.0.26100
+2026-10-27T19:35:59.8971150Z Datacenter
+2026-10-27T19:35:59.8971695Z ##[endgroup]
+2026-10-27T19:35:59.8972255Z ##[group]Runner Image
+2026-10-27T19:35:59.8972830Z Image: windows-2025-vs2026
+2026-10-27T19:35:59.8973421Z Version: 20261021.278.1
+2026-10-27T19:35:59.8974958Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-27T19:35:59.8976520Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-27T19:35:59.8977470Z ##[endgroup]
+2026-10-27T19:35:59.8978518Z ##[group]GITHUB_TOKEN Permissions
+2026-10-27T19:35:59.8980523Z Contents: read
+2026-10-27T19:35:59.8981035Z Metadata: read
+2026-10-27T19:35:59.8981526Z ##[endgroup]
+2026-10-27T19:35:59.8983372Z Secret source: Actions
+2026-10-27T19:35:59.8984156Z Cache mode: write
+2026-10-27T19:35:59.8984913Z Prepare workflow directory
+2026-10-27T19:35:59.9291103Z Prepare all required actions
+2026-10-27T19:35:59.9338379Z Getting action download info
+2026-10-27T19:36:00.2419601Z Download action repository 'actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-27T19:36:00.3519686Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-27T19:36:00.5728982Z Complete job name: preflight
+2026-10-27T19:36:00.7055265Z ##[group]Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+2026-10-27T19:36:00.7056854Z with:
+2026-10-27T19:36:00.7057347Z   repository: sayferst/DND-NCFU
+2026-10-27T19:36:00.7061543Z   token: ***
+2026-10-27T19:36:00.7062110Z   ssh-strict: true
+2026-10-27T19:36:00.7062569Z   ssh-user: git
+2026-10-27T19:36:00.7063073Z   persist-credentials: true
+2026-10-27T19:36:00.7063596Z   clean: true
+2026-10-27T19:36:00.7064066Z   sparse-checkout-cone-mode: true
+2026-10-27T19:36:00.7064685Z   fetch-depth: 1
+2026-10-27T19:36:00.7065136Z   fetch-tags: false
+2026-10-27T19:36:00.7065668Z   show-progress: true
+2026-10-27T19:36:00.7066179Z   lfs: false
+2026-10-27T19:36:00.7066622Z   submodules: false
+2026-10-27T19:36:00.7067241Z   set-safe-directory: true
+2026-10-27T19:36:00.7067886Z   allow-unsafe-pr-checkout: false
+2026-10-27T19:36:00.7069025Z ##[endgroup]
+2026-10-27T19:36:00.8517405Z Syncing repository: sayferst/DND-NCFU
+2026-10-27T19:36:00.8520092Z ##[group]Getting Git version info
+2026-10-27T19:36:00.8520853Z Working directory is 'D:\a\DND-NCFU\DND-NCFU'
+2026-10-27T19:36:00.9256932Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-27T19:36:01.2980743Z git version 2.56.0.windows.2
+2026-10-27T19:36:01.3023981Z ##[endgroup]
+2026-10-27T19:36:01.3042430Z Temporarily overriding HOME='D:\a\_temp\18886e63-29df-4a4e-aba0-3f5b183df6ee' before making global git config changes
+2026-10-27T19:36:01.3044083Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T19:36:01.3054544Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\DND-NCFU\DND-NCFU
+2026-10-27T19:36:01.3724248Z Deleting the contents of 'D:\a\DND-NCFU\DND-NCFU'
+2026-10-27T19:36:01.3730216Z ##[group]Initializing the repository
+2026-10-27T19:36:01.3738933Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\DND-NCFU\DND-NCFU
+2026-10-27T19:36:01.4813557Z Initialized empty Git repository in D:/a/DND-NCFU/DND-NCFU/.git/
+2026-10-27T19:36:01.4816092Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/sayferst/DND-NCFU
+2026-10-27T19:36:01.5523702Z ##[endgroup]
+2026-10-27T19:36:01.5525231Z ##[group]Disabling automatic garbage collection
+2026-10-27T19:36:01.5533159Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-27T19:36:01.5870094Z ##[endgroup]
+2026-10-27T19:36:01.5871562Z ##[group]Setting up auth
+2026-10-27T19:36:01.5879995Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T19:36:01.6203081Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-27T19:36:03.1030540Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T19:36:03.1352489Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-27T19:36:03.6256839Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T19:36:03.6622737Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-27T19:36:04.1324204Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-27T19:36:04.1683005Z ##[endgroup]
+2026-10-27T19:36:04.1684092Z ##[group]Fetching the repository
+2026-10-27T19:36:04.1697382Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f2752bb1c299add0a257d18e55c711aef6cde601:refs/remotes/origin/feature/unified-rpg-automatic-gm
+2026-10-27T19:36:07.2339154Z From https://github.com/sayferst/DND-NCFU
+2026-10-27T19:36:07.2340716Z  * [new ref]         f2752bb1c299add0a257d18e55c711aef6cde601 -> origin/feature/unified-rpg-automatic-gm
+2026-10-27T19:36:07.2382380Z ##[endgroup]
+2026-10-27T19:36:07.2383199Z ##[group]Determining the checkout info
+2026-10-27T19:36:07.2384399Z ##[endgroup]
+2026-10-27T19:36:07.2394901Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-27T19:36:07.2900819Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-27T19:36:07.3274944Z ##[group]Checking out the ref
+2026-10-27T19:36:07.3283355Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/unified-rpg-automatic-gm refs/remotes/origin/feature/unified-rpg-automatic-gm
+2026-10-27T19:36:07.9228628Z Switched to a new branch 'feature/unified-rpg-automatic-gm'
+2026-10-27T19:36:07.9249293Z branch 'feature/unified-rpg-automatic-gm' set up to track 'origin/feature/unified-rpg-automatic-gm'.
+2026-10-27T19:36:07.9328953Z ##[endgroup]
+2026-10-27T19:36:07.9746945Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-27T19:36:08.0054659Z f2752bb1c299add0a257d18e55c711aef6cde601
+2026-10-27T19:36:08.0483650Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-27T19:36:08.0484349Z with:
+2026-10-27T19:36:08.0484670Z   python-version: 3.12
+2026-10-27T19:36:08.0485115Z   check-latest: false
+2026-10-27T19:36:08.0487533Z   token: ***
+2026-10-27T19:36:08.0487864Z   update-environment: true
+2026-10-27T19:36:08.0488210Z   allow-prereleases: false
+2026-10-27T19:36:08.0488528Z   freethreaded: false
+2026-10-27T19:36:08.0488864Z ##[endgroup]
+2026-10-27T19:36:08.1893511Z ##[group]Installed versions
+2026-10-27T19:36:08.2053940Z Successfully set up CPython (3.12.10)
+2026-10-27T19:36:08.2056258Z ##[endgroup]
+2026-10-27T19:36:08.2324852Z ##[group]Run python -m pip install --require-hashes -r requirements-dev.lock
+2026-10-27T19:36:08.2325659Z [36;1mpython -m pip install --require-hashes -r requirements-dev.lock[0m
+2026-10-27T19:36:08.2995367Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-27T19:36:08.2995841Z env:
+2026-10-27T19:36:08.2996197Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:08.2996729Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T19:36:08.2997302Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:08.2997764Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:08.2998420Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:08.2998804Z ##[endgroup]
+2026-10-27T19:36:13.5538436Z Collecting cffi==2.1.1 (from -r requirements-dev.lock (line 3))
+2026-10-27T19:36:13.7518679Z   Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl (185 kB)
+2026-10-27T19:36:13.8534703Z Requirement already satisfied: colorama==0.4.6 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from -r requirements-dev.lock (line 105)) (0.4.6)
+2026-10-27T19:36:14.0126409Z Collecting cryptography==46.0.3 (from -r requirements-dev.lock (line 109))
+2026-10-27T19:36:14.0244813Z   Downloading cryptography-46.0.3-cp311-abi3-win_amd64.whl (3.5 MB)
+2026-10-27T19:36:14.3185173Z      ---------------------------------------- 3.5/3.5 MB 12.2 MB/s  0:00:00
+2026-10-27T19:36:14.3529901Z Collecting iniconfig==2.3.1 (from -r requirements-dev.lock (line 165))
+2026-10-27T19:36:14.3669614Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-27T19:36:14.3911055Z Requirement already satisfied: packaging==26.3 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from -r requirements-dev.lock (line 169)) (26.3)
+2026-10-27T19:36:14.4146422Z Collecting pluggy==1.7.0 (from -r requirements-dev.lock (line 173))
+2026-10-27T19:36:14.4260366Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-27T19:36:14.4741653Z Collecting pycparser==3.11 (from -r requirements-dev.lock (line 177))
+2026-10-27T19:36:14.4848921Z   Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+2026-10-27T19:36:14.5535465Z Collecting pygments==2.21.0 (from -r requirements-dev.lock (line 181))
+2026-10-27T19:36:14.5643917Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-27T19:36:14.6322024Z      ---------------------------------------- 1.3/1.3 MB 15.9 MB/s  0:00:00
+2026-10-27T19:36:14.6697319Z Collecting pyside6-essentials==6.10.1 (from -r requirements-dev.lock (line 185))
+2026-10-27T19:36:14.6818829Z   Downloading pyside6_essentials-6.10.1-cp39-abi3-win_amd64.whl (74.5 MB)
+2026-10-27T19:36:16.3428211Z      ---------------------------------------- 74.5/74.5 MB 44.8 MB/s  0:00:01
+2026-10-27T19:36:16.4686204Z Collecting pytest==8.4.2 (from -r requirements-dev.lock (line 192))
+2026-10-27T19:36:16.4797242Z   Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2026-10-27T19:36:16.7837211Z Collecting ruff==0.14.1 (from -r requirements-dev.lock (line 196))
+2026-10-27T19:36:16.7969266Z   Downloading ruff-0.14.1-py3-none-win_amd64.whl (13.4 MB)
+2026-10-27T19:36:16.9469244Z      ---------------------------------------- 13.4/13.4 MB 93.2 MB/s  0:00:00
+2026-10-27T19:36:17.4978442Z Collecting shiboken6==6.10.1 (from -r requirements-dev.lock (line 217))
+2026-10-27T19:36:17.5094406Z   Downloading shiboken6-6.10.1-cp39-abi3-win_amd64.whl (1.2 MB)
+2026-10-27T19:36:17.5429476Z      ---------------------------------------- 1.2/1.2 MB 30.4 MB/s  0:00:00
+2026-10-27T19:36:17.7854717Z Installing collected packages: shiboken6, ruff, pygments, pycparser, pluggy, iniconfig, pytest, pyside6-essentials, cffi, cryptography
+2026-10-27T19:36:28.5775942Z 
+2026-10-27T19:36:28.5796902Z Successfully installed cffi-2.1.1 cryptography-46.0.3 iniconfig-2.3.1 pluggy-1.7.0 pycparser-3.11 pygments-2.21.0 pyside6-essentials-6.10.1 pytest-8.4.2 ruff-0.14.1 shiboken6-6.10.1
+2026-10-27T19:36:28.7644864Z ##[group]Run python -m pytest tests/test_campaign_skills.py tests/test_desktop_release.py -x -q
+2026-10-27T19:36:28.7645578Z [36;1mpython -m pytest tests/test_campaign_skills.py tests/test_desktop_release.py -x -q[0m
+2026-10-27T19:36:28.7707666Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-27T19:36:28.7708105Z env:
+2026-10-27T19:36:28.7708511Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:28.7709069Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-27T19:36:28.7709617Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:28.7710098Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:28.7710668Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-27T19:36:28.7711034Z ##[endgroup]
+2026-10-27T19:36:40.5078921Z ......................................................                   [100%]
+2026-10-27T19:36:40.5079751Z 54 passed in 10.85s
+2026-10-27T19:36:40.6883480Z Post job cleanup.
+2026-10-27T19:36:40.8546208Z Post job cleanup.
+2026-10-27T19:36:41.0223860Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-27T19:36:41.0541890Z git version 2.56.0.windows.2
+2026-10-27T19:36:41.0611778Z Temporarily overriding HOME='D:\a\_temp\c35587ec-328d-4893-9012-a7b8a7615b72' before making global git config changes
+2026-10-27T19:36:41.0613547Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T19:36:41.0622603Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\DND-NCFU\DND-NCFU
+2026-10-27T19:36:41.0979368Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T19:36:41.1320907Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-27T19:36:41.6575458Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T19:36:41.6906985Z http.https://github.com/.extraheader
+2026-10-27T19:36:41.6955415Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-27T19:36:41.7307360Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-27T19:36:42.2237210Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T19:36:42.2587266Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-27T19:36:42.7462993Z Cleaning up orphan processes

@@ -1,0 +1,14 @@
+{
+  "status": "controller_failure",
+  "exception": "IndexError: Cannot choose from an empty sequence",
+  "location": "probe controller, manufacture recipe output selection",
+  "completed_classes_stdout": [
+    "warrior 22 accepted; 38 atomic refusals",
+    "archer 23 accepted; 37 atomic refusals",
+    "rogue 25 accepted; 35 atomic refusals",
+    "mage 21 accepted; 39 atomic refusals",
+    "cleric 28 accepted; 32 atomic refusals"
+  ],
+  "cause": "Controller attempted to select a manufactured output from a repair recipe with no outputs. Game execution was not reached for that attempt. This is not a passed six-class run.",
+  "next_attempt": "Filter to recipes with outputs; preserve this failed attempt."
+}

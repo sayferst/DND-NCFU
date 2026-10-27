@@ -1,0 +1,2839 @@
+{
+  "commit": "d70a4bfffbcec5678cc5ecbd94c37f74da1507f1",
+  "controller_seed": 418,
+  "method": "Six independently created level-one classes in test_catalog_campaign.started authored integration town, campaign seeds17..22. Sixty attempted public Session operations per class, controller Random(418+class_index). Manufacture candidates require outputs; empty choices fall back to wait(1). No XP, resources or state injected after genesis. Every rejected ValueError must leave serialized Session and RNG unchanged. Final schema31 JSON roundtrip/replay and RNG checked. No model/network calls.",
+  "limitations": "Short synthetic exploration/resource sequences, not manual play, a level20 proof for six classes, full combat progression or a balance study. Refusals from unavailable local resources/class restrictions are expected.",
+  "classes": [
+    {
+      "class_id": "warrior",
+      "attempts": 60,
+      "committed_turns": 22,
+      "accepted": 22,
+      "rejected": 38,
+      "replay_state_equal": true,
+      "replay_rng_equal": true,
+      "save_bytes_utf8": 149868,
+      "final_state_sha256": "ebe3814f3ec4a13332e6062be805aad19db3f35920149ac88f6f33d8bdbd6c0a",
+      "trace": [
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_6_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_1_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_3_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_0_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_4_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_3_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "item_8_15"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "item_11_16"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_4"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_3_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_4_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        }
+      ]
+    },
+    {
+      "class_id": "archer",
+      "attempts": 60,
+      "committed_turns": 23,
+      "accepted": 23,
+      "rejected": 37,
+      "replay_state_equal": true,
+      "replay_rng_equal": true,
+      "save_bytes_utf8": 163545,
+      "final_state_sha256": "00e21567a1f8b79eb413157964bc4740ff3ec9670a64ba9b1db3352f6d8ce887",
+      "trace": [
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_2_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_7_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_1_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_3"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_9_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_9_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_5_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_2_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_9_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_3_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_7_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        }
+      ]
+    },
+    {
+      "class_id": "rogue",
+      "attempts": 60,
+      "committed_turns": 25,
+      "accepted": 25,
+      "rejected": 35,
+      "replay_state_equal": true,
+      "replay_rng_equal": true,
+      "save_bytes_utf8": 163114,
+      "final_state_sha256": "d486529adf5aeceb1b93699b79e02f0f9ef72b0eab8dd4155e2c95e22d575ffe",
+      "trace": [
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_8_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_7_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_3_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_3"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_6_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_0_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_7_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_7_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_3"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_0_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_9_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_0_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_3"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_3_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        }
+      ]
+    },
+    {
+      "class_id": "mage",
+      "attempts": 60,
+      "committed_turns": 21,
+      "accepted": 21,
+      "rejected": 39,
+      "replay_state_equal": true,
+      "replay_rng_equal": true,
+      "save_bytes_utf8": 150255,
+      "final_state_sha256": "2d9a2eee072fc1761a04c9dc69c74309258576fa0752e872c1eb1a8b7150f54f",
+      "trace": [
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_4"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_5_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_7_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_3"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "heal"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_4_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_6_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_9_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_6_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_0_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_3_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_0_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_1_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        }
+      ]
+    },
+    {
+      "class_id": "cleric",
+      "attempts": 60,
+      "committed_turns": 28,
+      "accepted": 28,
+      "rejected": 32,
+      "replay_state_equal": true,
+      "replay_rng_equal": true,
+      "save_bytes_utf8": 165543,
+      "final_state_sha256": "597a20661f87e0f8ca2b41e6bfed362fa3a1f566b60b5b8c98460d3bbc0efc9b",
+      "trace": [
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_3_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "house_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_3"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "item_6_15"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 5
+          },
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_6_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_1_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_4_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_0_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_ammunition_0_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_7_0",
+            "quantity": 1
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        }
+      ]
+    },
+    {
+      "class_id": "artisan",
+      "attempts": 60,
+      "committed_turns": 22,
+      "accepted": 22,
+      "rejected": 38,
+      "replay_state_equal": true,
+      "replay_rng_equal": true,
+      "save_bytes_utf8": 157575,
+      "final_state_sha256": "6950cba08eccc24f19fc9fe2d0461fb995ce52c660b811b37a7a4f8f77083bbd",
+      "trace": [
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_8_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_8_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_alchemy_0_0",
+            "result": "use_potions_0_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_7_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_2"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_2_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_5_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_8_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_3_0"
+          },
+          "accepted": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_0_0",
+            "result": "use_scrolls_0_8"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_2_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "wait",
+          "args": {
+            "minutes": 30
+          },
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_6_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_3_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_9_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_6_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "start_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "light",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_4_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "explore",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "research",
+          "args": {
+            "entry": "recipe_alchemy_5_1"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "manufacture",
+          "args": {
+            "recipe": "recipe_production_1_0",
+            "result": "use_scrolls_1_0"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "gather",
+          "args": {
+            "material": "mat_6_0",
+            "quantity": 1
+          },
+          "accepted": true
+        },
+        {
+          "command": "rest",
+          "args": {},
+          "accepted": true
+        },
+        {
+          "command": "cast",
+          "args": {
+            "spell": "missing-test-entry",
+            "target": "hero"
+          },
+          "accepted": false,
+          "unchanged": true
+        },
+        {
+          "command": "equip",
+          "args": {
+            "item": "item_19_20"
+          },
+          "accepted": false,
+          "unchanged": true
+        }
+      ]
+    }
+  ],
+  "duration_seconds": 15.258239419999882,
+  "status": "passed"
+}

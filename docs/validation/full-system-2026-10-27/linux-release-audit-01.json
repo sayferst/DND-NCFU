@@ -1,0 +1,7 @@
+{
+  "status": "rejected",
+  "audit_code_commit": "d70a4bfffbcec5678cc5ecbd94c37f74da1507f1",
+  "target": "linux-test-only",
+  "reason": "Symlink forbidden in release",
+  "note": "The existing Linux PyInstaller bundle contains library symlinks. The release policy forbids symlinks; it was not weakened."
+}

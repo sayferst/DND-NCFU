@@ -1,0 +1,50 @@
+{
+  "commit": "4cc4f4ca036971d877dce40950160613b2e6193d",
+  "created_utc": "2026-10-27T19:55:02.685767+00:00",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "method": "Authored Mage test-town (test_catalog_campaign.started), seed17, 20 then200 public wait(minutes=1) turns. Seven current-state previews versus three Session.from_dict(snapshot,version=31)+perform_gameplay trials at each history length. Snapshot construction excluded from timing, which favors history reload. Original Session/RNG equality checked after trials. No network calls.",
+  "results": [
+    {
+      "turns": 20,
+      "preview_ms": [
+        10.801270000229124,
+        10.449238998262445,
+        10.469660999660846,
+        10.503019999305252,
+        10.58772900069016,
+        13.444391999655636,
+        12.579075002577156
+      ],
+      "history_reload_and_execute_ms": [
+        515.7410430001619,
+        484.61500000121305,
+        487.491964999208
+      ],
+      "median_preview_ms": 10.58772900069016,
+      "median_history_reload_and_execute_ms": 487.491964999208,
+      "original_state_and_rng_unchanged": true
+    },
+    {
+      "turns": 200,
+      "preview_ms": [
+        53.105483999388525,
+        11.737345001165522,
+        17.20581200061133,
+        12.70732000193675,
+        12.046151001413818,
+        13.079170003038598,
+        12.15207000132068
+      ],
+      "history_reload_and_execute_ms": [
+        4400.252462000935,
+        4759.036057999765,
+        4725.262603998999
+      ],
+      "median_preview_ms": 12.70732000193675,
+      "median_history_reload_and_execute_ms": 4725.262603998999,
+      "original_state_and_rng_unchanged": true
+    }
+  ],
+  "limitations": "Synthetic wait history in current Linux environment; not model latency, human gameplay, a cross-machine guarantee or a 1316-turn benchmark."
+}
