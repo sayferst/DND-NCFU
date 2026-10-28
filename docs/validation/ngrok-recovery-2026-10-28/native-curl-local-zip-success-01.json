@@ -1,0 +1,19 @@
+{
+  "source_commit": "f2d6b8568bac1cdc824c4a5ba4421e2e8aa4d7b1",
+  "run_id": 40732893243,
+  "job_id": 122973637932,
+  "windows_tests_passed": 58,
+  "windows_test_seconds": 0.99,
+  "linux_host_tests_passed": 135,
+  "linux_test_seconds": 0.47,
+  "actual_curl_download": true,
+  "actual_local_zip_installation": true,
+  "python_payload_disabled_during_local_install": true,
+  "source_zip_preserved": true,
+  "authenticode": "Valid",
+  "publisher": "ngrok, Inc.",
+  "installed_version": "3.39.13",
+  "owner_host_restart_confirmed": false,
+  "owner_original_full_download_failure_cause": "unknown",
+  "paid_model_calls": 0
+}
