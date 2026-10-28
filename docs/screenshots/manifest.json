@@ -1,0 +1,61 @@
+{
+  "platform": "linux",
+  "qt_platform": "offscreen",
+  "data": "authored test town; no live model response",
+  "screens": [
+    {
+      "file": "menu.png",
+      "width": 1280,
+      "height": 900,
+      "sha256": "6cfdd72ca03d7603fc793a877976199aab2cb92c0c6aba6eef5541c2be76d955"
+    },
+    {
+      "file": "hero.png",
+      "width": 1280,
+      "height": 900,
+      "sha256": "f3baed2c068c9be1377879529e2cae3d6a8e9e1946d20b8213f50da91a54e3fd"
+    },
+    {
+      "file": "adventure.png",
+      "width": 1280,
+      "height": 900,
+      "sha256": "b5887e12962d31094d8d9aa06346bcb5d8ff2ce52d116f3e2d3b7b7c3af00dad"
+    },
+    {
+      "file": "inventory.png",
+      "width": 1280,
+      "height": 900,
+      "sha256": "272fdafbbdeedb2fd0093cd2534e091ffaf228aabb9922fe734ff514c8a55ade"
+    },
+    {
+      "file": "map.png",
+      "width": 1280,
+      "height": 900,
+      "sha256": "31d5341aabae40bd08541f572646db3d622419700df3aa4357093a8381c15dc7"
+    },
+    {
+      "file": "creation-identity.png",
+      "width": 840,
+      "height": 840,
+      "sha256": "0bd2f0ac543469bf5ecde667c619861ac5cf0b10f522def5d0b35083a78e6c35"
+    },
+    {
+      "file": "creation-attributes.png",
+      "width": 840,
+      "height": 650,
+      "sha256": "f9a7ccce06b40314f423083e7560aaaf37f29b4cdc06d2ce2afe177309892711"
+    },
+    {
+      "file": "creation-story.png",
+      "width": 840,
+      "height": 600,
+      "sha256": "359403635f46dcfc1bcee56ae75231b5b3d8d69a65badf1733b36d7a602b28db"
+    },
+    {
+      "file": "creation-confirmation.png",
+      "width": 840,
+      "height": 460,
+      "sha256": "215ce12e986c33f849c8ae82eef1927ee5d16f55f84bbb3d80522199d9d55b27"
+    }
+  ]
+}
