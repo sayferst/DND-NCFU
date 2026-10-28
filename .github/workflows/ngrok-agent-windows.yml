@@ -1,0 +1,28 @@
+name: Native ngrok recovery
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/unified-rpg-automatic-gm]
+    paths:
+      - 'scripts/ngrok_*.py'
+      - 'tests/test_ngrok*.py'
+      - '.github/workflows/ngrok-agent-windows.yml'
+permissions:
+  contents: read
+jobs:
+  recovery:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Regression tests
+        run: python -m pytest tests/test_ngrok_download.py tests/test_ngrok_version.py tests/test_ngrok_host.py tests/test_ngrok_transport.py -q
+      - name: Verify actual official publisher and executable version
+        run: |
+          python -c "from pathlib import Path; from scripts.ngrok_download import download_agent; from scripts.ngrok_host import require_supported; p=Path('build/ngrok-native-probe/ngrok.exe'); p.parent.mkdir(parents=True, exist_ok=True); download_agent(p); print('Verified official ngrok:', require_supported(str(p.resolve())))"

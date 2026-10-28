@@ -19,7 +19,13 @@ MIN_VERSION = (3, 39, 12)  # Config/flags verified on this official agent releas
 def version(agent):
     try:
         result = subprocess.run(
-            [agent, "version"], capture_output=True, text=True, timeout=15, check=False
+            [agent, "version"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=15,
+            check=False,
         )
         match = re.fullmatch(r"ngrok version (\d+)\.(\d+)\.(\d+)(?:[^\r\n]*)\s*", result.stdout)
         if result.returncode == 0 and match:
@@ -45,28 +51,40 @@ def update_agent(root):
     # A private portable copy: never modify a package-manager-owned executable.
     target = root / "ngrok-agent" / "ngrok.exe"
     target.parent.mkdir(parents=True, exist_ok=True)
-    if not target.is_file():
-        shutil.copy2(executable(), target)
     print(
         "Обновляю отдельную копию ngrok; обновление проверяет цифровую подпись ngrok…", flush=True
     )
     environment = os.environ.copy()
     for name in ("NGROK_AUTHTOKEN", "NGROK_API_KEY"):
         environment.pop(name, None)
-    config = None
-    try:
+    from scripts.ngrok_download import download_agent
+
+    with tempfile.TemporaryDirectory(prefix="ngrok-update-", dir=root) as temporary:
+        staging = Path(temporary)
+        candidate = staging / "ngrok.exe"
+        if target.is_file():
+            source = target
+        else:
+            try:
+                source = Path(executable())
+            except ValueError:
+                source = None
+        if source is not None:
+            shutil.copy2(source, candidate)
+        else:
+            download_agent(candidate)
         # v2 is understood by the old bootstrap agent as well as the latest one.
-        with tempfile.NamedTemporaryFile(
-            mode="w", encoding="utf-8", suffix=".yml", dir=root, delete=False
-        ) as file:
-            config = Path(file.name)
+        config = staging / "bootstrap.yml"
+        with config.open("w", encoding="utf-8") as file:
             json.dump({"version": "2", "web_addr": False, "update_check": False}, file)
         try:
             result = subprocess.run(
-                [str(target), "update", "--config", str(config)],
+                [str(candidate), "update", "--config", str(config)],
                 env=environment,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=180,
                 check=False,
             )
@@ -79,11 +97,18 @@ def update_agent(root):
                 "Обновление ngrok не выполнено. Проверьте доступ к сервису обновления "
                 "и повторите update-ngrok. Ключи сохранены."
             )
-        found = require_supported(str(target))
+        # Some Windows bootstrap versions leave only .ngrok.exe.old even on exit0.
+        # Recover inside staging; the installed executable is never self-updated.
+        if not candidate.is_file():
+            download_agent(candidate)
+        found = require_supported(str(candidate))
+        try:
+            os.replace(candidate, target)
+        except OSError:
+            raise ValueError(
+                "Не удалось заменить ngrok. Остановите хост и повторите обновление."
+            ) from None
         print("ngrok обновлён: " + ".".join(map(str, found)) + ". Выполните tester_host.cmd start.")
-    finally:
-        if config:
-            config.unlink(missing_ok=True)
 
 
 def domain_name(value):

@@ -93,6 +93,66 @@ def test_project_agent_preferred_over_stale_winget_alias(tmp_path, monkeypatch):
     assert ngrok.executable() == str(managed.resolve())
 
 
+@pytest.mark.parametrize("installed", [True, False])
+def test_exit_zero_but_deleted_agent_recovers_in_staging(tmp_path, monkeypatch, installed):
+    from scripts import ngrok_download
+
+    target = tmp_path / "ngrok-agent/ngrok.exe"
+    target.parent.mkdir()
+    backup = target.parent / ".ngrok.exe.old"
+    backup.write_bytes(b"previous-user-backup")
+    source = tmp_path / "winget.exe"
+    source.write_bytes(b"old-bootstrap")
+    if installed:
+        target.write_bytes(b"working-installed-agent")
+    monkeypatch.setattr(ngrok, "executable", lambda: str(source))
+    calls = []
+
+    def run(args, **kwargs):
+        candidate = Path(args[0])
+        assert candidate != target
+        if installed:
+            assert target.read_bytes() == b"working-installed-agent"
+        if args[1] == "update":
+            candidate.rename(candidate.with_name(".ngrok.exe.old"))
+            return SimpleNamespace(returncode=0)
+        return SimpleNamespace(returncode=0, stdout="ngrok version 3.40.0\n")
+
+    def download(candidate):
+        calls.append(candidate)
+        candidate.write_bytes(b"verified-official-agent")
+
+    monkeypatch.setattr(ngrok.subprocess, "run", run)
+    monkeypatch.setattr(ngrok_download, "download_agent", download)
+    ngrok.update_agent(tmp_path)
+    assert calls and target.read_bytes() == b"verified-official-agent"
+    assert source.read_bytes() == b"old-bootstrap"
+    assert backup.read_bytes() == b"previous-user-backup"
+    assert not list(tmp_path.glob("ngrok-update-*"))
+
+
+def test_deleted_stage_and_failed_download_preserve_installed_agent(tmp_path, monkeypatch):
+    from scripts import ngrok_download
+
+    target = tmp_path / "ngrok-agent/ngrok.exe"
+    target.parent.mkdir()
+    target.write_bytes(b"working-agent")
+
+    def run(args, **kwargs):
+        Path(args[0]).unlink()
+        return SimpleNamespace(returncode=0)
+
+    def failed_download(path):
+        raise ValueError("Official download refused")
+
+    monkeypatch.setattr(ngrok.subprocess, "run", run)
+    monkeypatch.setattr(ngrok_download, "download_agent", failed_download)
+    with pytest.raises(ValueError, match="refused"):
+        ngrok.update_agent(tmp_path)
+    assert target.read_bytes() == b"working-agent"
+    assert not list(tmp_path.glob("ngrok-update-*"))
+
+
 @pytest.mark.parametrize(
     "line",
     ["unknown flag: --url", "error reading configuration", "ERROR ERR_NGROK_105 private-token"],
