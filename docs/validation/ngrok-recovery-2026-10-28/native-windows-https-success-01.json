@@ -1,0 +1,18 @@
+{
+  "source_commit": "736b25f811a7d2949979322639b283eff0be7fb4",
+  "run_id": 40730644051,
+  "job_id": 122965704129,
+  "conclusion": "success",
+  "linux_targeted_tests": 71,
+  "windows_targeted_tests": 49,
+  "forced_python_transport_failure": true,
+  "actual_system_https_download": true,
+  "https_only": true,
+  "size_limit_bytes": 41943040,
+  "authenticode_trust": "Valid",
+  "publisher": "ngrok, Inc.",
+  "installed_version": "3.39.13",
+  "paid_model_calls": 0,
+  "owner_environment_root_cause": "unknown; HTTP200 first-byte probe only",
+  "owner_host_restart": "pending"
+}
