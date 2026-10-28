@@ -91,6 +91,10 @@ class Engine:
         self.definitions = {d.id: d for d in self.catalog.definitions}
         self.things = {t.id: t for t in self.scene.things}
         self.refs = {a.id: a for a in self.scene.actor_refs}
+        if self.state.get("catalog_revision") == 3:
+            # Before world creation the generic scene can still have tutorial
+            # references. Only real registered actors participate in this world.
+            self.refs = {id: ref for id, ref in self.refs.items() if id in self.actors}
         for item in self.state["items"]:
             if item.get("source") in self.actors:
                 entity = self.actors[item["source"]]

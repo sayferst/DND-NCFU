@@ -31,6 +31,36 @@ def test_actual_published_writer_two_fixture_and_next_d100_are_unchanged():
     assert path.read_bytes() == raw and session.gameplay["catalog_revision"] == 2
 
 
+def test_actual_previous_world_three_replays_with_identical_next_roll():
+    path = Path("docs/validation/final-campaign-2026-10-28/published-world3-save.json")
+    saved = json.loads(path.read_bytes())
+    session = Session.from_dict(saved["session"], version=31)
+    assert json.loads(json.dumps(session.to_dict())) == saved["session"]
+    assert "world_policy" not in session.gameplay
+    result = asdict(session.dice.roll("1d100", reason="compatibility continuation"))
+    result["individual_rolls"] = list(result["individual_rolls"])
+    assert result == saved["next_d100"]
+
+
+def test_food_production_catalog_only_accepts_edible_input():
+    s = started("artisan")
+    with content.using(3):
+        e = Engine(s.gameplay, context(s), DiceRoller(seed=0), {})
+        row = next(r for r in content.load().values() if r.get("op") == "production")
+        assert all(
+            r["resource"] == "mat_2_0"
+            for r in content.load().values()
+            if r.get("op") == "production"
+        )
+        stock = e.state["living_world"]["stocks"][e.scene.current]
+        stock["mat_0_0"] = 100
+        stock["mat_2_0"] = 100
+        food = stock["food"]
+        assert apply_event(e, row)
+        assert stock["food"] == food + row["amount"] * 2
+        assert stock["mat_0_0"] == 100 and stock["mat_2_0"] == 100 - row["amount"]
+
+
 def test_bulk_shop_preserves_quantity_and_coins_and_rejects_overdraft():
     s = started("archer")
     item = next(i for i in s.gameplay["items"] if i["owner"] == "seller" and i.get("ammunition"))

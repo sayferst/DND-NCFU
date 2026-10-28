@@ -1,0 +1,65 @@
+...................................................................F
+=================================== FAILURES ===================================
+__________ test_routerai_gameplay_proposal_commits_once_then_narrates __________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x2b6236c0) at 0x7f9c25b6d300>
+qt_app = <PySide6.QtWidgets.QApplication(0x26a2c830) at 0x7f9c285db940>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9c242f5c40>
+
+    def test_routerai_gameplay_proposal_commits_once_then_narrates(window, qt_app, monkeypatch):
+        from rpg_vkr.application import Session
+    
+        window._session = started("mage")
+        monkeypatch.setattr(window, "_confirm", lambda text: True)
+    
+        def reject_history_replay(*args, **kwargs):
+            raise AssertionError("An AI action preview must not reload and replay committed history")
+    
+        monkeypatch.setattr(Session, "from_dict", reject_history_replay)
+        text = "Зажигаю путеводный свет"
+        proposal = {
+            "steps": [],
+            "places": [],
+            "check": "none",
+            "gameplay": {"command": "cast", "args": {"spell": "light", "target": "hero"}},
+        }
+>       with router_server(
+            world_plans={text: proposal}, writer_text="У ладони загорается мягкий свет."
+        ) as (url, records):
+
+tests/test_catalog_ui_playable.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+tests/test_routerai.py:152: in router_server
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:453: in __init__
+    self.socket = socket.socket(self.address_family,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=0, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py:233: PermissionError
+=========================== short test summary info ============================
+FAILED tests/test_catalog_ui_playable.py::test_routerai_gameplay_proposal_commits_once_then_narrates
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 67 passed in 8.04s
