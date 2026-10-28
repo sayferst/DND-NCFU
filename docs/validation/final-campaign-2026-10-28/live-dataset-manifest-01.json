@@ -1,0 +1,21 @@
+{
+  "source_save_sha256": "6ace3acaf8bf5584eae34ac95d790b96c61952d2bce88b94e598eab00fe98eb4",
+  "dataset_sha256": "480437a647a68ae47795dd21c26ab3afe500023b1e0d53ce2706da3c41b035be",
+  "records": 488,
+  "actual_engine_receipts": true,
+  "review_statuses": [
+    "pending"
+  ],
+  "rights_statuses": [
+    "unknown"
+  ],
+  "campaign_groups": 1,
+  "human_play": false,
+  "torch_installed": false,
+  "nvidia_device_visible": false,
+  "nvidia_smi_available": false,
+  "reviewed_base_weights_present": false,
+  "training_started": false,
+  "training_steps": 0,
+  "raw_dataset_published_or_shipped": false
+}

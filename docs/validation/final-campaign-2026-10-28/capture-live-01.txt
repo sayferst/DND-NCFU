@@ -1,0 +1,1 @@
+{"candidates": 488, "admitted_for_training": 0, "training_started": false}

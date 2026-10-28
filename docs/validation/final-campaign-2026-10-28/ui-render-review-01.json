@@ -1,0 +1,17 @@
+{
+  "platform": "Linux Qt offscreen",
+  "manual_native_windows": false,
+  "paid_requests": 0,
+  "hero_motion_disabled_for_static_review": true,
+  "images": [
+    {
+      "path": "ui-hero-static-01.png",
+      "sha256": "819fb73aa6504760a8ff7ad1e1cbefab791f9e9fd0f566dc9a50fe21ff03ef4f"
+    },
+    {
+      "path": "ui-creation-01.png",
+      "sha256": "3db926529ad611161d804d577facc2812505e56b2b28f72ab218bc3f3c0e624c"
+    }
+  ],
+  "finding": "No skill point currencies or adventure version checkboxes in new four-page creator; hero tab is readable after transitions. Review is a rendered screenshot, not human gameplay."
+}

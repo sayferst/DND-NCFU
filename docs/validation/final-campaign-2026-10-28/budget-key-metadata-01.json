@@ -1,0 +1,7 @@
+{
+  "operation": "Read-only RouterAI GET /api/v1/key after all paid requests",
+  "paid_model_requests": 0,
+  "monthly_key_usage_below150": true,
+  "scope": "Aggregate monthly key usage, not an isolated task delta. No account balance, key, key label or exact monthly amount published.",
+  "task_reconciliation": "budget-reconciliation-01.json"
+}

@@ -1,0 +1,337 @@
+{
+  "catalog_sha256": "fcf8ebd1e5f7e24d00fb3f8a5ab6288fa792a90e451b5638beba12d90edb1535",
+  "distinct_records": 3360,
+  "distinct_tested_records": 3360,
+  "groups": [
+    {
+      "category": "armour/heavy",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "armour/light",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "armour/medium",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "armour/shield",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "consumable/ammunition",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "consumable/dressings",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "consumable/potions",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "consumable/scrolls",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "creature/arcane",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "creature/beast",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "creature/humanoid",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "creature/undead",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "event/economic",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "event/military",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "event/natural",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "event/political",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "event/social",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "household/household",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "material/materials",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "recipe/alchemy",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "recipe/production",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "recipe/repair",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "recipe/smithing",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "school/Воля",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "school/Жизнь",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "school/Обереги",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "school/Познание",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "school/Разрушение",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "spell/attack",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "spell/defense",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "spell/healing",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "spell/research",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "spell/support",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "talent/archer",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "talent/artisan",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "talent/cleric",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "talent/mage",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "talent/rogue",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "talent/warrior",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/axe",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/crossbow",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/dagger",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/focus",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/greatsword",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/hammer",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/longbow",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    },
+    {
+      "category": "weapon/sword",
+      "required": 80,
+      "registered": 80,
+      "executed": 80,
+      "status": "execution_passed"
+    }
+  ],
+  "quality_limit": "Controlled execution proves dispatch/state transitions, not literary originality or all balance interactions"
+}

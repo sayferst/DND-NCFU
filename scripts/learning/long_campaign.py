@@ -91,6 +91,8 @@ def execute(key, output, turns, controls, prior, cap):
     s = genesis("mage", 37)
     started = time.perf_counter()
     rows, pairs = output / "responses.jsonl", output / "pending-engine-pairs.jsonl"
+    rows.touch(exist_ok=False)
+    pairs.touch(exist_ok=False)
     completed = 0
     stop_reason = "COMPLETED"
     with ThreadPoolExecutor(max_workers=2) as pool:
@@ -214,6 +216,7 @@ def execute(key, output, turns, controls, prior, cap):
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
         "completed_turns": completed,
+        "committed_engine_turns": len(s.turns),
         "paired_control_states": sum(r["id"].endswith("without_rag") for r in ledger.rows),
         "requested_turns": turns,
         "stop_reason": stop_reason,

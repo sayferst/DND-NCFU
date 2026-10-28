@@ -1,0 +1,37 @@
+{
+  "source_sha256": "480437a647a68ae47795dd21c26ab3afe500023b1e0d53ce2706da3c41b035be",
+  "files": [
+    {
+      "path": "gm-sft-candidates-01.jsonl",
+      "bytes": 2624140,
+      "sha256": "480437a647a68ae47795dd21c26ab3afe500023b1e0d53ce2706da3c41b035be"
+    }
+  ],
+  "file_count": 1,
+  "candidate_samples": 488,
+  "campaigns": 1,
+  "real_receipts": 488,
+  "schema": "gm-sft-v1",
+  "group_diagnostics": {
+    "groups": 0,
+    "normalized_exact_links": 0,
+    "near_duplicate_links": 0,
+    "candidate_comparisons": 0,
+    "split_counts": {},
+    "split_group_overlap": 0,
+    "semantic_independence": "not_proven",
+    "near_duplicate_threshold": 0.88
+  },
+  "accepted": 0,
+  "reasons": {
+    "rights_or_review": 488
+  },
+  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "splits": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+  },
+  "privacy_review_confirmed": false,
+  "status": "BLOCKED_DATA"
+}
