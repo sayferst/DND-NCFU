@@ -18,6 +18,7 @@ DOCS += [
     for name in (
         "README",
         "tester-guide",
+        "player-guide",
         "development",
         "owner-guide",
         "troubleshooting",

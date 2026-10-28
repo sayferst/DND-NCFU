@@ -2,6 +2,8 @@
 
 ## Игроку и тестировщику
 
+[**Как пользоваться программой и играть — полный гайд**](player-guide.md)
+
 [Установка и начало игры](tester-guide.md) · [Решение проблем](troubleshooting.md) ·
 [Ограничения](known-limitations.md) · [Галерея](screenshots/README.md) ·
 [Действующие правила](unified/ruleset.md).
