@@ -1,11 +1,13 @@
 """One new-campaign type, with whitelist operation replay and no skill currency."""
 
+import hashlib
 import uuid
 from copy import deepcopy
 from dataclasses import asdict, replace
 from functools import wraps
 
 from rpg_vkr.application import Session
+from rpg_vkr.domain import game_catalog as content
 from rpg_vkr.domain import unified as rules
 from rpg_vkr.domain.campaign import Campaign
 from rpg_vkr.domain.character import Character
@@ -30,6 +32,7 @@ class UnifiedSession(Session):
         world_brief="",
         campaign=None,
         content_revision=2,
+        catalog_revision=1,
     ):
         state = rules.initial({"class_id": class_id, "talent": talent}, character)
         if content_revision not in (1, 2):
@@ -37,7 +40,12 @@ class UnifiedSession(Session):
         if content_revision == 2:
             from rpg_vkr.domain.catalog_engine import initial
 
-            state = initial(state, character)
+            with content.using(catalog_revision):
+                state = initial(state, character)
+            if catalog_revision == 2:
+                state["catalog_revision"] = 2
+        elif catalog_revision != 1:
+            raise ValueError("Каталог недоступен для этой кампании.")
         limits = rules.caps(state, character)
         obj = cls(
             seed=seed,
@@ -58,6 +66,8 @@ class UnifiedSession(Session):
         obj._operations = []
         if content_revision == 2:
             obj._origin["content_revision"] = 2
+        if catalog_revision == 2:
+            obj._origin["catalog_revision"] = 2
         obj._depth = 0
         obj._learning_flags = {"library": False, "memory": True}
         obj._rag_mode = 2
@@ -66,6 +76,10 @@ class UnifiedSession(Session):
     @property
     def schema_version(self):
         return 31 if self.gameplay.get("content_revision") == 2 else 30
+
+    @property
+    def history_limit(self):
+        return 10000 if self.gameplay.get("catalog_revision") == 2 else 2000
 
     def start_world(self, seed):
         super().start_world(seed)
@@ -163,13 +177,22 @@ class UnifiedSession(Session):
         )
 
     def to_dict(self):
+        value = self._plain_dict()
+        if self.gameplay.get("catalog_revision") == 2:
+            # The whitelist log reconstructs these fields exactly. Persist their
+            # digests instead of a second copy of the complete history.
+            for key in ("turns", "memory", "narrations"):
+                value[key] = {
+                    "encoding": "replayed-sha256-1",
+                    "sha256": hashlib.sha256(canonical(value[key]).encode("utf-8")).hexdigest(),
+                }
         return {
             "unified": {
                 "ruleset": rules.VERSION,
                 "origin": deepcopy(self._origin),
                 "operations": deepcopy(self._operations),
             },
-            "snapshot": self._plain_dict(),
+            "snapshot": value,
         }
 
 
@@ -252,7 +275,8 @@ def instrument():
                 checkpoint = self.dice.checkpoint()
                 self._depth = 1
                 try:
-                    result = method(self, *args, **kwargs)
+                    with content.using(self.gameplay.get("catalog_revision", 1)):
+                        result = method(self, *args, **kwargs)
                     if self.progress != previous["progress"]:
                         raise ValueError("Это действие не даёт подтверждённого развития героя.")
                     if self.schema_version == 31 and self._turns:
@@ -285,7 +309,8 @@ def restore(data):
         set(meta) != {"ruleset", "origin", "operations"}
         or meta["ruleset"] != rules.VERSION
         or not isinstance(meta["operations"], list)
-        or len(meta["operations"]) > 6000
+        or len(meta["operations"])
+        > (30000 if meta.get("origin", {}).get("catalog_revision") == 2 else 6000)
     ):
         raise ValueError("Неизвестный набор правил или журнал.")
     origin = deepcopy(meta["origin"])

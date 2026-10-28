@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QPushButton,
 )
 
+from rpg_vkr.domain.game_catalog import for_session
 from rpg_vkr.domain.unified import CLASSES, RECIPES
 
 
@@ -66,6 +67,10 @@ def install(window, layout):
     form.addRow("Рецепт", window.unified_recipe)
     window.unified_result = QComboBox()
     form.addRow("Результат", window.unified_result)
+    window.unified_recipe_cost = QLabel()
+    window.unified_recipe_cost.setWordWrap(True)
+    form.addRow(window.unified_recipe_cost)
+    window.unified_result.currentIndexChanged.connect(lambda: refresh_cost(window))
     button(
         "Изготовить",
         "manufacture",
@@ -78,7 +83,7 @@ def install(window, layout):
             ),
         },
     )
-    button("Отремонтировать", "repair", lambda: {"item": window.unified_items.currentData()})
+    button("Отремонтировать", "repair", lambda: repair_args(window))
     button("Отдохнуть", "rest", dict)
     from rpg_vkr.domain.character import ABILITY_NAMES
 
@@ -165,6 +170,7 @@ def install(window, layout):
     window.unified_group.hide()
 
 
+@for_session
 def refresh(window):
     enabled = getattr(window._session, "is_unified", False)
     window.unified_group.setVisible(enabled)
@@ -196,6 +202,7 @@ def refresh(window):
     window.unified_talent.clear()
     expanded = state.get("content_revision") == 2
     window.catalog_actions.setVisible(expanded)
+    window.unified_recipe_cost.setVisible(expanded)
     has_magic = bool(state["spells"])
     for widget in (window.unified_spell, window.unified_spell_label, window.unified_cast_button):
         widget.setVisible(has_magic)
@@ -268,7 +275,7 @@ def refresh(window):
             [
                 (k, catalog.row(k)["name"])
                 for k in state["known_recipes"]
-                if catalog.row(k)["category"] != "repair"
+                if state.get("catalog_revision") == 2 or catalog.row(k)["category"] != "repair"
             ],
         )
         refill(
@@ -331,6 +338,7 @@ def target_args(window):
     return result
 
 
+@for_session
 def refresh_learning(window):
     from rpg_vkr.domain import game_catalog as catalog
     from rpg_vkr.domain.unified import level
@@ -348,11 +356,14 @@ def refresh_learning(window):
     rows = catalog.available(kind, level(state["xp"]))
     if kind == "spell" and not state["mp_cap"]:
         rows = []
-    for r in rows:
-        if r["id"] not in known and (not query or query in r["name"].casefold()):
+    from rpg_vkr.domain.catalog_search import ranked
+
+    for r in ranked(rows, query, matching_only=True):
+        if r["id"] not in known:
             window.unified_learn.addItem(r["name"], r["id"])
 
 
+@for_session
 def refresh_outputs(window):
     from rpg_vkr.domain import game_catalog as catalog
     from rpg_vkr.domain.unified import level
@@ -371,3 +382,41 @@ def refresh_outputs(window):
         row = catalog.row(id)
         if row["level"] <= level(state["xp"]):
             window.unified_result.addItem(row["name"], id)
+    refresh_cost(window)
+
+
+@for_session
+def refresh_cost(window):
+    from rpg_vkr.domain import game_catalog as catalog
+
+    if not window._session.gameplay or window._session.gameplay.get("content_revision") != 2:
+        return
+    key, result = window.unified_recipe.currentData(), window.unified_result.currentData()
+    if not key:
+        window.unified_recipe_cost.clear()
+        return
+    recipe = catalog.row(key, "recipe")
+    materials = recipe.get("materials_by_output", {}).get(result, recipe["ingredients"])
+    text = "; ".join(catalog.row(id)["name"] + f" ×{n}" for id, n in materials.items())
+    stations = {
+        "forge": "горн",
+        "alchemy": "алхимический стол",
+        "workbench": "верстак",
+        "tools": "инструменты",
+    }
+    window.unified_recipe_cost.setText(
+        f"Расход: {text}. Рабочее место: {stations[recipe['station']]}; "
+        f"время: {recipe['minutes']} мин. Неудача тоже расходует сырьё."
+    )
+
+
+@for_session
+def repair_args(window):
+    from rpg_vkr.domain import game_catalog as catalog
+
+    args = {"item": window.unified_items.currentData()}
+    key = window.unified_recipe.currentData()
+    if window._session.gameplay.get("content_revision") == 2 and key:
+        if catalog.row(key, "recipe")["category"] == "repair":
+            args["recipe"] = key
+    return args

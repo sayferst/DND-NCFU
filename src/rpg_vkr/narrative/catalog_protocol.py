@@ -42,15 +42,17 @@ def validate_proposal(value, plan, state):
     return {"command": command, "args": args}
 
 
+@catalog.for_session
 def planning_context(session, query=""):
     """Bounded available options, no private NPC wallets, global stocks or hidden events."""
     s = session.gameplay
     lv = level(s["xp"])
-    words = [w for w in query.casefold().split() if len(w) > 3]
 
     def options(ids):
+        from rpg_vkr.domain.catalog_search import ranked
+
         rows = [catalog.row(k) for k in ids]
-        rows.sort(key=lambda r: (-sum(w in r["name"].casefold() for w in words), r["id"]))
+        rows = ranked(rows, query, limit=16)
         return [
             {
                 k: r[k]
@@ -111,6 +113,7 @@ GUIDE = (
 )
 
 
+@catalog.for_session
 def describe_proposal(session, proposal):
     verbs = {
         "cast": "Применить заклинание",

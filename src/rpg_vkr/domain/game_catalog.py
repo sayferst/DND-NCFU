@@ -3,7 +3,9 @@
 import hashlib
 import json
 from collections import Counter
-from functools import lru_cache
+from contextlib import contextmanager
+from contextvars import ContextVar
+from functools import lru_cache, wraps
 
 from rpg_vkr.domain.catalog_authoring import CLASSES, MODES, PROFILES, WEAPONS
 from rpg_vkr.domain.interactions import identifier, label
@@ -64,12 +66,39 @@ KINDS = {
     "creature",
     "event",
 }
+ACTIVE_REVISION = ContextVar("game_catalog_revision", default=1)
+
+
+@contextmanager
+def using(revision):
+    if type(revision) is not int or revision not in (1, 2):
+        raise ValueError("Неизвестная ревизия каталога.")
+    token = ACTIVE_REVISION.set(revision)
+    try:
+        yield
+    finally:
+        ACTIVE_REVISION.reset(token)
+
+
+def for_session(function):
+    @wraps(function)
+    def wrapped(owner, *args, **kwargs):
+        session = getattr(owner, "_session", owner)
+        state = getattr(session, "gameplay", None) or {}
+        with using(state.get("catalog_revision", 1)):
+            return function(owner, *args, **kwargs)
+
+    return wrapped
 
 
 def validate(data):
     if data.get("schema") != "game-catalog-1" or not isinstance(data.get("records"), list):
         raise ValueError("Неверная схема каталога.")
     rows = data["records"]
+    if data.get("revision") == 2:
+        from rpg_vkr.domain.catalog_revision2 import validate_construction
+
+        validate_construction(data)
     ids, signatures, counts = set(), set(), Counter()
     for row in rows:
         identifier(row["id"])
@@ -171,12 +200,16 @@ def validate(data):
     }
 
 
-@lru_cache(maxsize=1)
-def load():
-    path = resource_path("data/gameplay/catalog-v1.json")
+@lru_cache(maxsize=2)
+def _load(revision):
+    path = resource_path(f"data/gameplay/catalog-v{revision}.json")
     data = json.loads(path.read_text(encoding="utf-8"))
     validate(data)
     return {r["id"]: r for r in data["records"]}
+
+
+def load():
+    return _load(ACTIVE_REVISION.get())
 
 
 def row(id, kind=None):
@@ -187,7 +220,9 @@ def row(id, kind=None):
 
 
 def digest():
-    return hashlib.sha256(resource_path("data/gameplay/catalog-v1.json").read_bytes()).hexdigest()
+    return hashlib.sha256(
+        resource_path(f"data/gameplay/catalog-v{ACTIVE_REVISION.get()}.json").read_bytes()
+    ).hexdigest()
 
 
 def available(kind, level=20, category=None):

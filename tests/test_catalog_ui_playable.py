@@ -15,9 +15,48 @@ from rpg_vkr.ui.creation_dialog import CreationDialog
 
 def test_creation_launches_expanded_game_without_technical_options(qt_app):
     dialog = CreationDialog()
-    assert dialog.create_session().schema_version == 31
+    session = dialog.create_session()
+    assert session.schema_version == 31 and session.gameplay["catalog_revision"] == 2
     assert dialog.creation_steps.count() == 4
     dialog.close()
+
+
+def test_revision_two_recipe_cost_tracks_the_selected_product(window):
+    window._session = started("artisan", catalog_revision=2)
+    unified_panel.refresh(window)
+    window.unified_recipe.setCurrentIndex(window.unified_recipe.findData("recipe_production_0_0"))
+    costs = []
+    with catalog.using(2):
+        recipe = catalog.row("recipe_production_0_0")
+        for result in ("house_0_0", "gear_light_0_0"):
+            window.unified_result.setCurrentIndex(window.unified_result.findData(result))
+            text = window.unified_recipe_cost.text()
+            for material, quantity in recipe["materials_by_output"][result].items():
+                assert catalog.row(material)["name"] + f" ×{quantity}" in text
+            costs.append(text)
+    assert costs[0] != costs[1]
+    assert catalog.ACTIVE_REVISION.get() == 1
+
+
+def test_revision_two_repair_button_honours_selected_recipe_atomically(window):
+    from PySide6.QtWidgets import QPushButton
+    from test_catalog_campaign import act
+
+    window._session = s = started("artisan", supplies=True, catalog_revision=2)
+    act(s, "manufacture", recipe="recipe_production_0_0", result="house_0_0")
+    unified_panel.refresh(window)
+    window.unified_items.setCurrentIndex(window.unified_items.findData("start_1"))
+    index = window.unified_recipe.findData("recipe_repair_1_0")
+    assert index >= 0
+    window.unified_recipe.setCurrentIndex(index)
+    repair = next(b for b in window.findChildren(QPushButton) if b.text() == "Отремонтировать")
+    before = s.to_dict(), s.dice.checkpoint()
+    repair.click()
+    assert "Несовместимая" in window.unified_log.toPlainText()
+    assert (s.to_dict(), s.dice.checkpoint()) == before
+    window.unified_recipe.setCurrentIndex(window.unified_recipe.findData("recipe_repair_0_0"))
+    repair.click()
+    assert len(s.turns) == 2
 
 
 def test_catalog_controls_execute_and_filter_at_actual_level(window):

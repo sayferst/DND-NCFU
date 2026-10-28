@@ -601,6 +601,11 @@ class Engine:
 
 
 def execute(original, command, args, context, dice):
+    with content.using(original.get("catalog_revision", 1)):
+        return _execute(original, command, args, context, dice)
+
+
+def _execute(original, command, args, context, dice):
     from rpg_vkr.domain.catalog_actions_v2 import advance, npc_round, perform
 
     engine = Engine(original, context, dice, args)

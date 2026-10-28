@@ -17,7 +17,7 @@ def main() -> int:
     commands = [
         ["git", "--version"],
         [sys.executable, "-m", "pip", "--no-cache-dir", "check"],
-        [sys.executable, "-m", "pytest"],
+        [sys.executable, "scripts/check_batches.py"],
         [sys.executable, "-m", "ruff", "check", "."],
         [sys.executable, "-m", "ruff", "format", "--check", "."],
     ]

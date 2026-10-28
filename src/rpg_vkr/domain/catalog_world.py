@@ -88,6 +88,10 @@ def initialize(e):
                 "last_seen_minute": e.state["minute"],
                 "news": faction["last_public"],
             }
+    if e.state.get("catalog_revision") == 2:
+        from rpg_vkr.domain.causal_world import initialize as causal_initialize
+
+        causal_initialize(e)
     return w
 
 
@@ -111,6 +115,8 @@ def faction_day(e, day):
         place = e.refs[member].place
         stock = w["stocks"][place]
         resource = "mat_0_0" if faction["goal"] == "security" else "mat_1_0"
+        if e.state.get("catalog_revision") == 2 and faction["goal"] != "security":
+            resource = "mat_2_0"
         if stock.get(resource, 0) < 2:
             continue
         stock[resource] -= 2
@@ -337,6 +343,7 @@ def advance_world(e, start, end):
                 if destination == e.scene.current:
                     e.events.append(event)
     for day in range(w["day"] + 1, end // 1440 + 1):
+        previous_food = {p: stock["food"] for p, stock in w["stocks"].items()}
         w["day"] = day
         faction_day(e, day)
         for node in w["nodes"].values():
@@ -379,6 +386,10 @@ def advance_world(e, start, end):
             place = places[(day + row["role"]) % len(places)]
             if apply_event(e, row, place):
                 w["last_events"][row["id"]] = day
+        if e.state.get("catalog_revision") == 2:
+            from rpg_vkr.domain.causal_world import day as causal_day
+
+            causal_day(e, day, previous_food=previous_food)
     if w.get("weather_until", 0) <= end:
         w["weather"] = "clear"
 
@@ -393,6 +404,10 @@ def explore(e):
     w["exploration"][key] = True
     creatures = content.available("creature", level(e) + 1)
     choices = [r for r in creatures if "defeat:" + r["id"] not in e.state["achievements"]]
+    if e.state.get("catalog_revision") == 2:
+        from rpg_vkr.domain.causal_world import permit_encounter
+
+        choices = permit_encounter(e, choices)
     if not choices:
         e.text.append("Новых следов нет.")
         return
@@ -404,6 +419,8 @@ def explore(e):
         )
         % len(choices)
     ]
+    if e.state.get("catalog_revision") == 2:
+        w["causal"]["ecology"][e.scene.current]["encounter_budget"] -= row["spawn_cost"]
     return spawn_creature(e, row, key)
 
 

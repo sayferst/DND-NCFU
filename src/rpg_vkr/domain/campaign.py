@@ -48,7 +48,7 @@ class NPCProfile:
             ):
                 raise ValueError("NPC detail attempted an unsupported effect or markup")
         plain(self.source, 160)
-        if type(self.created_at_turn) is not int or not 1 <= self.created_at_turn <= 2000:
+        if type(self.created_at_turn) is not int or not 1 <= self.created_at_turn <= 10000:
             raise ValueError("Invalid NPC creation anchor")
 
     def to_dict(self):

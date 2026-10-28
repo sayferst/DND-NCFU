@@ -116,6 +116,10 @@ def _text(value: object, limit: int) -> str:
 
 
 class Session:
+    @property
+    def history_limit(self):
+        return MAX_TURNS
+
     def __init__(
         self,
         seed: int | None = None,
@@ -495,7 +499,12 @@ class Session:
                 "trade_" + self._request_token(),
                 action=action,
             )
-        if not self.catalog or self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if (
+            not self.catalog
+            or self.in_combat
+            or self.world.hp <= 0
+            or len(self.turns) >= self.history_limit
+        ):
             raise ValueError("Сделка сейчас недоступна.")
         catalog, world, record = transact(
             self.catalog,
@@ -534,7 +543,7 @@ class Session:
     @atomic
     def register_catalog(self, action, definitions, entities, reason, model):
         action = _text(action, 500).strip()
-        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= self.history_limit:
             raise ValueError("Создание сцены недоступно в схватке или после выбытия.")
         record = Registration(
             tuple(definitions),
@@ -616,7 +625,7 @@ class Session:
                 "cmd_" + self._request_token(),
                 action=action,
             )
-        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= self.history_limit:
             raise ValueError("Сначала завершите текущую схватку или загрузите живого героя.")
         catalog = self.catalog or seed_catalog()
         scene = self.interaction_state()
@@ -690,7 +699,7 @@ class Session:
         if not isinstance(plan, WorldPlan) or not plan.steps:
             raise ValueError("Нет плана изменения мира.")
         bind_plan(action, plan, confirmed=confirmed_plan)
-        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= self.history_limit:
             raise ValueError("Эта цепочка недоступна в бою или после выбытия.")
         before = self.plan_state(plan)
         index = len(self.turns) + 1
@@ -810,7 +819,7 @@ class Session:
                 kind = suggested_kind
             if kind is None:
                 raise ValueError("Для этой попытки пока нет проверяемой проверки.")
-        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= MAX_TURNS:
+        if self.in_combat or self.world.hp <= 0 or len(self.turns) >= self.history_limit:
             raise ValueError("Эта проверка недоступна во время схватки или после выбытия.")
         ability, difficulty = (
             (assessment["ability"], assessment["dc"]) if assessment else CHALLENGES[kind][:2]
@@ -907,8 +916,8 @@ class Session:
                 return self.perform_gameplay(
                     *parsed, "text_" + self._request_token(), action=action
                 )
-        if len(self._turns) >= MAX_TURNS:
-            raise ValueError("Достигнут предел в 2000 действий. Сохраните сессию.")
+        if len(self._turns) >= self.history_limit:
+            raise ValueError(f"Достигнут предел в {self.history_limit} действий. Сохраните сессию.")
         if intent is not None and (not isinstance(intent, str) or intent not in allowed_intents()):
             raise ValueError("Неподдерживаемое намерение. Мир не изменён.")
         if meaning is not None and not isinstance(meaning, Meaning):
@@ -1119,7 +1128,7 @@ class Session:
             raise ValueError("Нет подтверждённого локального действия.")
         if plan.clarification:
             raise ValueError(plan.clarification)
-        if len(self.turns) + len(plan.commands) > MAX_TURNS:
+        if len(self.turns) + len(plan.commands) > self.history_limit:
             raise ValueError("Достигнут предел действий. Сохраните сессию.")
         state = (
             self.world,
@@ -1486,7 +1495,7 @@ class Session:
             raise ValueError("Invalid character")
         if character == self.character:
             return False
-        if len(self._turns) >= MAX_TURNS:
+        if len(self._turns) >= self.history_limit:
             raise ValueError("Достигнут предел действий. Сохраните сессию и начните новую.")
         summary = "; ".join(
             f"{label}: {character.score(key)}" for key, label in ABILITY_NAMES.items()

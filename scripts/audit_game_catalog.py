@@ -52,9 +52,11 @@ def audit(proof=None):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--proof", type=Path)
+    p.add_argument("--revision", type=int, choices=(1, 2), default=1)
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args()
-    result = audit(args.proof)
+    with catalog.using(args.revision):
+        result = audit(args.proof)
     with args.output.open("x", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     print("| Категория | Требуется | Зарегистрировано | Исполнено в тесте | Статус |")

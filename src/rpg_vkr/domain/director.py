@@ -110,7 +110,7 @@ class SceneRecord:
     version: str = "scene-director-6"
 
     def __post_init__(self):
-        if type(self.base_turn) is not int or not 0 <= self.base_turn < 2000:
+        if type(self.base_turn) is not int or not 0 <= self.base_turn < 10000:
             raise ValueError("Invalid scene revision")
         if self.location not in LOCATIONS or self.version not in {
             "scene-director-1",

@@ -349,7 +349,7 @@ class Registration:
     def __post_init__(self):
         label(self.reason, 400)
         label(self.model, 128)
-        if type(self.base_turn) is not int or not 0 <= self.base_turn <= 2000:
+        if type(self.base_turn) is not int or not 0 <= self.base_turn <= 10000:
             raise ValueError("Неверный ход создания сущности.")
         if not 0 < len(self.definitions) + len(self.entities) <= 12:
             raise ValueError("За ход можно зарегистрировать до 12 записей.")

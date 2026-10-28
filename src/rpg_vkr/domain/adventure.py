@@ -246,7 +246,7 @@ class DiaryRevision:
         if (
             str(uuid.UUID(self.id)) != self.id
             or type(self.turn) is not int
-            or not 0 <= self.turn <= 2000
+            or not 0 <= self.turn <= 10000
         ):
             raise ValueError("Неверная запись дневника.")
         plain(self.title, 150)
@@ -287,7 +287,7 @@ class MemoryNote:
             or type(self.private) is not bool
         ):
             raise ValueError("Неверная важность воспоминания.")
-        if type(self.turn) is not int or not 0 <= self.turn <= 2000:
+        if type(self.turn) is not int or not 0 <= self.turn <= 10000:
             raise ValueError("Неверное время воспоминания.")
 
 

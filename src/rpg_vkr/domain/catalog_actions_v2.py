@@ -499,7 +499,10 @@ def craft(e, command, args):
         result = args.get("result") or next(iter(row["outputs"]), None)
         if result not in row["outputs"] or content.row(result)["level"] > level(e):
             raise ValueError("Недоступный результат производства.")
-    ingredients = e.require_materials(row["ingredients"], quality)
+    required = row["ingredients"]
+    if command != "repair" and e.state.get("catalog_revision") == 2:
+        required = row["materials_by_output"][result]
+    ingredients = e.require_materials(required, quality)
     success = e.check(row["task"], row["dc"] + 5 * (quality - 1))
     tool = next(
         (

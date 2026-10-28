@@ -33,6 +33,8 @@ def validate(row):
         return False, "missing_real_receipt"
     if row.get("synthetic") is True:
         return False, "fixture_not_training_data"
+    if str(row["engine_receipt"].get("provenance", "")).upper().startswith("SYNTHETIC"):
+        return False, "fixture_not_training_data"
     if any(
         k in json.dumps(row["public_context"]).casefold()
         for k in (

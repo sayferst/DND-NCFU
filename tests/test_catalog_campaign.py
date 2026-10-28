@@ -19,13 +19,14 @@ from rpg_vkr.storage.slots import MAX_SAVE_BYTES, SaveSlots
 from rpg_vkr.unified_session import UnifiedSession
 
 
-def started(class_id="artisan", *, supplies=False, seed=17):
+def started(class_id="artisan", *, supplies=False, seed=17, catalog_revision=1):
     s = UnifiedSession.create(
         Character(**dict(zip(ABILITY_NAMES, CLASSES[class_id][3], strict=True))),
         class_id,
         CLASSES[class_id][4],
         seed=seed,
         content_revision=2,
+        catalog_revision=catalog_revision,
     )
     v = world_value()
     v["title"] = "Поселение мастерских"

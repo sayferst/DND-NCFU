@@ -19,6 +19,7 @@ def probe(root):
             CLASSES[class_id][4],
             seed=0,
             content_revision=2,
+            catalog_revision=2,
         )
         value = {
             "title": "Проверка мастерской",
@@ -67,6 +68,7 @@ def probe(root):
             raise ValueError("Packaged SQLite replay differs")
         results[class_id] = {
             "schema": 31,
+            "catalog_revision": 2,
             "json": True,
             "sqlite": True,
             "rng": restored.dice.checkpoint() == s.dice.checkpoint(),

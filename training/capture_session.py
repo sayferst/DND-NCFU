@@ -60,6 +60,7 @@ def candidates(data):
                     "assistant_reply": note.text,
                     "review_status": "pending",
                     "rights_status": "unknown",
+                    "synthetic": note.model.startswith("fixture:"),
                 }
             )
         getattr(session, op["method"])(*args, **kwargs)

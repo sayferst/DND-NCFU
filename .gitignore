@@ -62,6 +62,7 @@ tester-bootstrap.json
 /data/reports/
 /artifacts/
 /checkpoints/
+/data/synthetic_gm/
 
 # Prepared descriptive references; raw archives and training data remain excluded.
 !data/corpus_knowledge/cards.sqlite3

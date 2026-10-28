@@ -73,7 +73,7 @@ def request_identifier(value):
 
 
 def perform(session, command, args, request_id, *, action=None):
-    from rpg_vkr.application import MAX_TURNS, Turn, _text
+    from rpg_vkr.application import Turn, _text
 
     request_identifier(request_id)
     if action is not None:
@@ -88,7 +88,7 @@ def perform(session, command, args, request_id, *, action=None):
             if record["command"] != command or canonical(record["args"]) != canonical(args):
                 raise ValueError("Этот ID уже использован для другого действия.")
             return turn
-    if len(session.turns) >= MAX_TURNS:
+    if len(session.turns) >= session.history_limit:
         raise ValueError("Достигнут предел истории кампании.")
     before = context(session)
     checkpoint = session.dice.checkpoint()
