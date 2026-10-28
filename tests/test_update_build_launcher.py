@@ -1,5 +1,6 @@
 """Actual PowerShell updater against disposable local Git remotes; no user checkout."""
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -38,18 +39,28 @@ def checkout(tmp_path):
     return shell, owner, other
 
 
-def run(checkout):
+def run(checkout, *, active_host=False):
     shell, owner, _ = checkout
+    environment = os.environ.copy()
+    environment["DND_UPDATER_TEST_SCRIPT"] = str(owner / "scripts/update_and_build.ps1")
+    environment["DND_UPDATER_TEST_HOST"] = "1" if active_host else "0"
+    # Only this child shell shadows process enumeration. Never query/stop a real host.
+    command = (
+        "function Get-CimInstance { param($ClassName, $Filter); "
+        "if ($env:DND_UPDATER_TEST_HOST -eq '1') { "
+        "[pscustomobject]@{CommandLine='python.exe tester_host.py start'} } }; "
+        "& $env:DND_UPDATER_TEST_SCRIPT -VerifyOnly"
+    )
     return subprocess.run(
         [
             shell,
             "-NoProfile",
             "-ExecutionPolicy",
             "Bypass",
-            "-File",
-            str(owner / "scripts/update_and_build.ps1"),
-            "-VerifyOnly",
+            "-Command",
+            command,
         ],
+        env=environment,
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -99,3 +110,13 @@ def test_dirty_checkout_with_remote_changes_is_preserved(checkout):
     assert result.returncode != 0
     assert git(checkout[1], "rev-parse", "HEAD") == before
     assert path.read_text(encoding="utf-8") == "unsaved owner work"
+
+
+def test_active_host_prevents_fast_forward_without_touching_checkout(checkout):
+    before = git(checkout[1], "rev-parse", "HEAD")
+    expected = publish(checkout[2])
+    result = run(checkout, active_host=True)
+    assert result.returncode != 0
+    assert "Stop START_HOST.bat" in result.stdout + result.stderr
+    assert git(checkout[1], "rev-parse", "HEAD") == before
+    assert git(checkout[1], "rev-parse", "origin/" + BRANCH) == expected
