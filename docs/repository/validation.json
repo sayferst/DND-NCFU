@@ -1,0 +1,29 @@
+{
+  "base_commit": "f033d94c44dbb9a1cee81fa0c8b6279cdc6f51d3",
+  "product_documents_checked": 16,
+  "local_links_checked": 53,
+  "screenshot_hashes_checked": 9,
+  "issue_forms_checked": 3,
+  "ruff": "passed",
+  "ui_desktop_tests": {
+    "passed": 69,
+    "seconds": 14.18,
+    "first_attempt": {
+      "passed": 67,
+      "failed": 2,
+      "cause": "sandbox loopback socket denied"
+    },
+    "repeat": "network permission enabled; local transports only"
+  },
+  "previous_runtime_windows": {
+    "run_id": 40739613065,
+    "passed": 12233,
+    "skipped": 1,
+    "all_jobs": "success"
+  },
+  "paid_api_calls": 0,
+  "trained_weights": 0,
+  "public_changes_applied": false,
+  "publication_authorized": true,
+  "license_decision": "owner chose no open-source license"
+}
