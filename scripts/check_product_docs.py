@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md"]
 DOCS += [
     str(p.relative_to(ROOT))
-    for directory in ("docs/repository", "docs/screenshots", "docs/releases")
+    for directory in ("docs/repository", "docs/screenshots", "docs/releases", "docs/examples")
     for p in (ROOT / directory).glob("*.md")
 ]
 DOCS += [

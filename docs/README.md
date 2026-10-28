@@ -8,6 +8,8 @@
 [Ограничения](known-limitations.md) · [Галерея](screenshots/README.md) ·
 [Действующие правила](unified/ruleset.md).
 
+[Готовые описания героя и мира для тестера](examples/README.md).
+
 ## Разработчику и владельцу
 
 [Разработка](development.md) · [Хост и сборки](owner-guide.md) ·
