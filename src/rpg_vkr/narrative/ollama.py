@@ -379,6 +379,10 @@ class OllamaClient(QObject):
             "JSON с двойными кавычками. Не добавляй SQL, код, статистику героя или исход броска."
         )
         prompt += OBJECT_CREATION_GUIDE + "\n" + POLICY
+        if campaign.get("npc_inventory_policy") == 4:
+            from rpg_vkr.narrative.gameplay_prompt import NPC_WORLD_GUIDE
+
+            prompt += NPC_WORLD_GUIDE
         if campaign.get("gameplay_revision", 0) >= 2:
             from rpg_vkr.narrative.gameplay_prompt import GUIDE
 

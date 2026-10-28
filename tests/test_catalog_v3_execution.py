@@ -24,6 +24,7 @@ def revision_three_proof():
             json.dump(
                 {
                     "catalog_sha256": content.digest(),
+                    "world_policy": 4,
                     "tested_ids": sorted(VERIFIED),
                     "method": "controlled_endgame_execution_not_campaign_progression",
                 },
@@ -39,7 +40,7 @@ def test_revision_three_record_executes(id, monkeypatch):
 
     def fixture(class_id="mage"):
         state, ctx = prepare(class_id)
-        state.update(catalog_revision=3, catalog_hash=content.digest())
+        state.update(catalog_revision=3, catalog_hash=content.digest(), world_policy=4)
         state.update(contracts={}, activity={"gathered": {}, "crafted": {}, "visited": {}})
         return state, ctx
 

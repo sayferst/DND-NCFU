@@ -41,3 +41,19 @@ NPC может иметь properties.party_ally=true только при обо�
 автоматическое участие. Состав обеих сторон выбирает игрок. Числа инициативы,
 ходы, попадания, ST и последствия назначает движок; не создавай их повествованием.
 """
+
+NPC_WORLD_GUIDE = """
+Профессия NPC задаётся properties.class: smith, forester, farmer, weaver, hunter,
+quarrier, miner, glassmaker, alchemist, artisan; для торговли merchant/trader/shopkeeper.
+Обычный житель — resident, охранник — guard. Придерживайся выбранного мира: профессии
+не обязательный список персонажей. home_place/workplace могут ссылаться только на
+существующие места. NPC перемещаются по дорогам, питаются и расходуют реальные запасы.
+Работа требует настоящих инструментов и станции. Пример инструментов: определение
+kind='item', properties.game_template_id='house_0_0'; экземпляр parent_id=ID NPC,
+owner_id=тот же ID. Это его вещь, не награда герою. Для общественного верстака:
+properties.station='workbench', public=true; аналогично forge/alchemy при необходимости.
+Не назначай готовые результаты производства или доходы: их вычисляет движок.
+Согласившийся союзник может иметь properties.party_ally=true и state.disposition='friendly'.
+Это разрешает выбор в команду, но не включает его автоматически. Фракция задаётся
+faction_id/faction_name/faction_goal (security/prosperity), без выдуманной казны и репутации.
+"""

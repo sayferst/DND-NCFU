@@ -298,6 +298,8 @@ def hourly(e):
 
 
 def _tool(e, id):
+    from rpg_vkr.domain.npc_inventory import accessible
+
     return next(
         (
             i
@@ -306,6 +308,7 @@ def _tool(e, id):
             and i.get("template") in content.load()
             and content.row(i["template"]).get("capability") == "tools"
             and i["durability"] > 0
+            and (e.state.get("world_policy") != 4 or accessible(e, i, id))
         ),
         None,
     )
@@ -786,7 +789,11 @@ def day(e, number):
             continue
         place = e.refs[id].place
         stock = w["stocks"][place]
-        if resident["job"] != "dependent" and e.hp(id) > 0:
+        if (
+            resident["job"] != "dependent"
+            and e.hp(id) > 0
+            and (e.state.get("world_policy") != 4 or s["people"][id]["mature"])
+        ):
             livelihood(e, id, place)
         if resident["food"]:
             resident["food"] -= 1

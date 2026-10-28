@@ -233,6 +233,8 @@ def campaign_context(session, target="", *, query=""):
         from rpg_vkr.domain.contracts import public as public_contracts
 
         public_simulation["mechanics_revision"] = 3
+        if session.gameplay.get("world_policy") == 4:
+            public_simulation["npc_inventory_policy"] = 4
         public_simulation["contracts"] = public_contracts(session)
         for id, resident in (
             (session.gameplay.get("living_world") or {}).get("residents", {}).items()

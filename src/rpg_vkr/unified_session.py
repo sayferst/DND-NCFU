@@ -33,10 +33,13 @@ class UnifiedSession(Session):
         campaign=None,
         content_revision=2,
         catalog_revision=1,
+        world_policy=4,
     ):
         state = rules.initial({"class_id": class_id, "talent": talent}, character)
         if content_revision not in (1, 2):
             raise ValueError("Неизвестная ревизия данных кампании.")
+        if type(world_policy) is not int or world_policy not in (3, 4):
+            raise ValueError("Неизвестные правила инвентаря мира.")
         if content_revision == 2:
             from rpg_vkr.domain.catalog_engine import initial
 
@@ -50,6 +53,8 @@ class UnifiedSession(Session):
         if catalog_revision == 3:
             state.update(mp=limits["mp"], mp_cap=limits["mp"], st=limits["st"], st_cap=limits["st"])
             state.update(contracts={}, activity={"gathered": {}, "crafted": {}, "visited": {}})
+            if world_policy == 4:
+                state["world_policy"] = 4
         obj = cls(
             seed=seed,
             character=character,
@@ -71,6 +76,8 @@ class UnifiedSession(Session):
             obj._origin["content_revision"] = 2
         if catalog_revision in (2, 3):
             obj._origin["catalog_revision"] = catalog_revision
+        if catalog_revision == 3 and world_policy == 4:
+            obj._origin["world_policy"] = 4
         obj._depth = 0
         obj._learning_flags = {"library": False, "memory": True}
         obj._rag_mode = 2
@@ -318,6 +325,7 @@ def restore(data):
         raise ValueError("Неизвестный набор правил или журнал.")
     origin = deepcopy(meta["origin"])
     origin.setdefault("content_revision", 1)
+    origin.setdefault("world_policy", 3)
     origin["character"] = Character.from_dict(origin["character"])
     origin["campaign"] = Campaign.from_dict(origin["campaign"])
     session = UnifiedSession.create(**origin)

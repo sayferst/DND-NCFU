@@ -23,6 +23,7 @@ def candidates(data):
     verified = Session.from_dict(data["session"], version=version)
     origin = dict(verified._origin)
     origin.setdefault("content_revision", 1)
+    origin.setdefault("world_policy", 3)
     origin["character"] = Character.from_dict(origin["character"])
     origin["campaign"] = Campaign.from_dict(origin["campaign"])
     session = UnifiedSession.create(**origin)

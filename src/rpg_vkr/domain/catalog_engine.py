@@ -95,6 +95,10 @@ class Engine:
             # Before world creation the generic scene can still have tutorial
             # references. Only real registered actors participate in this world.
             self.refs = {id: ref for id, ref in self.refs.items() if id in self.actors}
+        if self.state.get("world_policy") == 4:
+            from rpg_vkr.domain.npc_inventory import import_items
+
+            import_items(self)
         for item in self.state["items"]:
             if item.get("source") in self.actors:
                 entity = self.actors[item["source"]]
