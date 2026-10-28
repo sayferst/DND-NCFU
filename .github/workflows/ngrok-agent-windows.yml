@@ -34,6 +34,18 @@ jobs:
       - name: Verify actual curl download and offline ZIP installation
         run: |
           python -c "from pathlib import Path; from unittest.mock import patch; from scripts.ngrok_download import curl_payload; from scripts.ngrok_host import update_agent,require_supported; root=Path('build/ngrok-curl-offline-probe').resolve(); root.mkdir(parents=True,exist_ok=True); archive=root/'official.zip'; archive.write_bytes(curl_payload(root/'candidate.exe')); original=archive.read_bytes(); ctx=patch('scripts.ngrok_download.payload',side_effect=AssertionError('No network allowed')); ctx.start(); update_agent(root,archive_path=archive); ctx.stop(); assert archive.read_bytes()==original; print('Verified curl and offline ZIP installation:',require_supported(str(root/'ngrok-agent/ngrok.exe')))"
+      - name: Record official archive digest
+        run: |
+          python -c "from pathlib import Path; import hashlib,json; from scripts.ngrok_download import URL; from scripts.ngrok_host import require_supported; root=Path('build/ngrok-curl-offline-probe'); archive=root/'official.zip'; report=dict(source_url=URL,sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),size_bytes=archive.stat().st_size,version=list(require_supported(str((root/'ngrok-agent/ngrok.exe').resolve()))),publisher='ngrok, Inc.',authenticode='Valid'); (root/'official-manifest.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')"
+      - name: Save verified official archive for owner recovery
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ngrok-official-windows-recovery
+          path: |
+            build/ngrok-curl-offline-probe/official.zip
+            build/ngrok-curl-offline-probe/official-manifest.json
+          if-no-files-found: error
+          retention-days: 3
       - name: Public binary signature diagnostics on failure
         if: failure()
         shell: powershell
