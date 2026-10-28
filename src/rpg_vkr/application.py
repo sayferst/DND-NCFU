@@ -262,7 +262,7 @@ class Session:
 
             candidate_gameplay = initialize(self._gameplay["state"], seed.catalog, seed.scene)
         if self._gameplay:
-            from rpg_vkr.domain.gameplay import ensure_names
+            from rpg_vkr.domain.catalog_identity import ensure_names
 
             ensure_names(candidate_gameplay or self._gameplay["state"], seed.catalog)
         world = project(seed.scene, replace(self.world, quest="completed", basket=0, trading=False))
@@ -555,7 +555,7 @@ class Session:
         )
         catalog, expanded = register(self.catalog or seed_catalog(), record.before, record)
         if self._gameplay:
-            from rpg_vkr.domain.gameplay import ensure_names
+            from rpg_vkr.domain.catalog_identity import ensure_names
 
             ensure_names(self._gameplay["state"], catalog)
         names = {d.id: d.name for d in catalog.definitions}
@@ -2801,7 +2801,7 @@ class Session:
 
         validate_progress(session._d20_progress, session.turns)
         if version >= 24:
-            from rpg_vkr.domain.gameplay import ensure_names
+            from rpg_vkr.domain.catalog_identity import ensure_names
 
             ensure_names(session._gameplay["state"], session.catalog)
         if version >= 24 and canonical(session._gameplay) != canonical(data["gameplay"]):

@@ -45,7 +45,7 @@ jobs:
       - name: Native Windows widgets at selected Qt scale
         env:
           QT_SCALE_FACTOR: ${{ matrix.scale }}
-        run: python -m pytest tests/test_catalog_ui_playable.py tests/test_unified_creation.py tests/test_catalog_campaign.py -q
+        run: python -m pytest tests/test_catalog_ui_playable.py tests/test_unified_creation.py tests/test_catalog_campaign.py tests/test_contracts.py -q
   preflight:
     runs-on: windows-latest
     timeout-minutes: 15
@@ -60,7 +60,7 @@ jobs:
   setup:
     needs: preflight
     runs-on: windows-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
