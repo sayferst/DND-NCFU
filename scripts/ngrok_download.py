@@ -15,9 +15,12 @@ def verify_publisher(path):
     environment = os.environ.copy()
     for name in ("NGROK_AUTHTOKEN", "NGROK_API_KEY"):
         environment.pop(name, None)
+    # A caller running pwsh can export PS7 module paths into Windows PowerShell5.
+    environment.pop("PSModulePath", None)
     environment["DND_NGROK_VERIFY_PATH"] = str(path.resolve())
     script = (
         "$ErrorActionPreference='Stop'; "
+        'Import-Module "$PSHOME\\Modules\\Microsoft.PowerShell.Security\\Microsoft.PowerShell.Security.psd1"; '
         "$s=Get-AuthenticodeSignature -LiteralPath $env:DND_NGROK_VERIFY_PATH; "
         "if ($s.Status -ne 'Valid' -or !$s.SignerCertificate) {exit 1}; "
         "$n=$s.SignerCertificate.GetNameInfo("

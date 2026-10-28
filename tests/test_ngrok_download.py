@@ -61,11 +61,13 @@ def test_invalid_download_never_leaves_an_executable(tmp_path, monkeypatch, case
 def test_signature_requires_windows_trust_and_ngrok_publisher(tmp_path, monkeypatch, relative):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("NGROK_AUTHTOKEN", "private-token")
+    monkeypatch.setenv("PSModulePath", "incompatible-PowerShell7-modules")
     calls = []
 
     def run(args, **kwargs):
         calls.append(args)
         assert "NGROK_AUTHTOKEN" not in kwargs["env"]
+        assert "PSModulePath" not in kwargs["env"]
         assert kwargs["env"]["DND_NGROK_VERIFY_PATH"] == str(tmp_path / "candidate.exe")
         return SimpleNamespace(returncode=1)
 
