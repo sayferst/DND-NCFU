@@ -26,7 +26,7 @@ def test_reservation_precedes_io_and_unknown_cost_cannot_be_reused(tmp_path):
 def test_only_verified_token_usage_releases_unused_reservation(tmp_path):
     journal = SpendJournal(tmp_path / "spend.json", D(149), D(150))
     journal.reserve("one", D(".7"))
-    journal.settle("one", {"prompt_tokens": 100, "completion_tokens": 50}, QUOTE)
+    journal.settle("one", {"prompt_tokens": 100, "completion_tokens": 50, "cost": 0.15}, QUOTE)
     assert journal.accounted == D("149.2")
     journal.reserve("two", D(".8"))
     assert journal.accounted == D(150)
@@ -50,5 +50,22 @@ def test_quote_overrun_is_recorded_and_stops(tmp_path):
     journal = SpendJournal(tmp_path / "spend.json", D(0), D(150))
     journal.reserve("one", D(".1"))
     with pytest.raises(ValueError, match="exceeded"):
-        journal.settle("one", {"prompt_tokens": 200, "completion_tokens": 0}, QUOTE)
+        journal.settle("one", {"prompt_tokens": 200, "completion_tokens": 0, "cost": 0.2}, QUOTE)
     assert journal.accounted == D(".2")
+
+
+def test_provider_charge_above_the_token_quote_is_not_discarded(tmp_path):
+    journal = SpendJournal(tmp_path / "spend.json", D(149), D(150))
+    journal.reserve("one", D(".8"))
+    journal.settle("one", {"prompt_tokens": 100, "completion_tokens": 50, "cost": 0.6}, QUOTE)
+    assert journal.accounted == D("149.6")
+    with pytest.raises(ValueError, match="exhausted"):
+        journal.reserve("two", D(".5"))
+
+
+@pytest.mark.parametrize("cost", [None, True, -1, "NaN", "Infinity", "bad"])
+def test_token_counts_without_valid_reported_cost_cannot_release_reserve(tmp_path, cost):
+    journal = SpendJournal(tmp_path / "spend.json", D(0), D(150))
+    journal.reserve("one", D(1))
+    journal.settle("one", {"prompt_tokens": 100, "completion_tokens": 50, "cost": cost}, QUOTE)
+    assert journal.accounted == 1 and not journal.rows[0]["settled"]

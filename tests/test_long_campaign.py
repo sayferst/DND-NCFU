@@ -25,7 +25,7 @@ def test_three_actual_engine_turns_paired_requests_and_real_persistence(tmp_path
                     "finish_reason": "stop",
                 }
             ],
-            "usage": {"prompt_tokens": 100, "completion_tokens": 20},
+            "usage": {"prompt_tokens": 100, "completion_tokens": 20, "cost": 0.00014},
         }
 
     monkeypatch.setattr(runner, "request", offline_request)

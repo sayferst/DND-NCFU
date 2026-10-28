@@ -1,0 +1,41 @@
+{
+  "model": "deepseek/deepseek-v4.1-flash",
+  "source_commit": "f21699e635a5f0f20faa1f545650895355f33157",
+  "completed_turns": 500,
+  "paired_control_states": 100,
+  "requested_turns": 500,
+  "stop_reason": "COMPLETED",
+  "calls": 600,
+  "prior_accounted_rub": "51.75717978434651",
+  "prompt_rub_per_token": "0.00001036430109",
+  "completion_rub_per_token": "0.00002072860218",
+  "json_sqlite_replay_rng_equal": true,
+  "responses_sha256": "375ae6ea0f494cac81829384297b6cc28c9428a17b49da76337cd7e6c03cd523",
+  "seconds": 3144.683692021994,
+  "human_blind_review": false,
+  "independent_scenes": false,
+  "training_started": false,
+  "conditions": "One sequential authored noncombat campaign; paired controls share exact states. Automatic validators do not establish literary quality or complete freedom from hallucinations.",
+  "invalid_original_quote_only_total_rub": "120.67863159542552",
+  "budget_accounted_total_rub": "143.06704210327096605",
+  "budget_reconciliation": "budget-reconciliation-01.json",
+  "accepted": 588,
+  "rejected": 12,
+  "reasons": {
+    "Рассказ обрезан лимитом генерации": 10,
+    "Собеседника нет рядом либо он выбыл; прямой разговор не подтверждён.": 1,
+    "Мастер придумал мысли, чувства, молчание или решение героя. Оставь выбор игроку.": 1
+  },
+  "actual_engine_pairs_pending": 488,
+  "paired_first100": {
+    "automatic_rag": {
+      "ACCEPTED_BY_GAME_VALIDATOR": 99,
+      "REJECTED_BY_GAME_VALIDATOR": 1
+    },
+    "without_rag": {
+      "ACCEPTED_BY_GAME_VALIDATOR": 100
+    }
+  },
+  "training_admitted": 0,
+  "raw_texts_location": "Ignored build/live-long-500-01; not published, shipped or admitted to training."
+}

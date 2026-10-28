@@ -34,7 +34,9 @@ from rpg_vkr.narrative.story import story_context, story_payload, story_proposal
 from rpg_vkr.storage.campaigns import CampaignRepository  # noqa: E402
 from rpg_vkr.storage.slots import SaveSlots  # noqa: E402
 
-PRIOR = Decimal("51.43295335334804")
+# Confirmed charges for all later probes plus the unchanged original38.29 reserve.
+# See the separate reconciliation; historical raw journals are never overwritten.
+PRIOR = Decimal("143.06704210327096605")
 
 
 def step(s, index):
@@ -124,7 +126,7 @@ def execute(key, output, turns, controls, prior, cap):
                 if "reasoning_effort" in quote.supported_parameters:
                     payload["reasoning_effort"] = "low"
                 identifier = f"turn-{index + 1:04}-{mode}"
-                bound = upper_cost(payload, quote)
+                bound = 2 * upper_cost(payload, quote)
                 if ledger.accounted + bound > ledger.cap:
                     stop_reason = "CUMULATIVE_BUDGET_STOP"
                     break
