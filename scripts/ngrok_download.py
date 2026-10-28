@@ -15,7 +15,7 @@ def verify_publisher(path):
     environment = os.environ.copy()
     for name in ("NGROK_AUTHTOKEN", "NGROK_API_KEY"):
         environment.pop(name, None)
-    environment["DND_NGROK_VERIFY_PATH"] = str(path)
+    environment["DND_NGROK_VERIFY_PATH"] = str(path.resolve())
     script = (
         "$ErrorActionPreference='Stop'; "
         "$s=Get-AuthenticodeSignature -LiteralPath $env:DND_NGROK_VERIFY_PATH; "
@@ -36,6 +36,7 @@ def verify_publisher(path):
 
 
 def download_agent(path):
+    stage = "HTTPS"
     try:
         with urllib.request.urlopen(URL, timeout=30) as response:
             if not response.geturl().startswith("https://"):
@@ -43,6 +44,7 @@ def download_agent(path):
             payload = response.read(MAX_ARCHIVE + 1)
         if len(payload) > MAX_ARCHIVE:
             raise ValueError("Archive too large")
+        stage = "ZIP"
         with zipfile.ZipFile(io.BytesIO(payload)) as archive:
             entries = [info for info in archive.infolist() if info.filename == "ngrok.exe"]
             if len(entries) != 1 or not 0 < entries[0].file_size <= MAX_BINARY:
@@ -51,11 +53,12 @@ def download_agent(path):
         if not binary.startswith(b"MZ"):
             raise ValueError("Not a Windows executable")
         path.write_bytes(binary)
+        stage = "Authenticode"
         verify_publisher(path)
     except (OSError, ValueError, zipfile.BadZipFile, subprocess.SubprocessError):
         path.unlink(missing_ok=True)
         raise ValueError(
-            "Не удалось загрузить и проверить официальный ngrok. "
+            f"Не удалось загрузить и проверить официальный ngrok ({stage}). "
             "Проверьте доступ к bin.equinox.io и проверку подписи Windows. "
             "Существующий агент и ключи сохранены."
         ) from None

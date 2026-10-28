@@ -26,3 +26,16 @@ jobs:
       - name: Verify actual official publisher and executable version
         run: |
           python -c "from pathlib import Path; from scripts.ngrok_download import download_agent; from scripts.ngrok_host import require_supported; p=Path('build/ngrok-native-probe/ngrok.exe'); p.parent.mkdir(parents=True, exist_ok=True); download_agent(p); print('Verified official ngrok:', require_supported(str(p.resolve())))"
+      - name: Public binary signature diagnostics on failure
+        if: failure()
+        shell: powershell
+        run: |
+          python -c "from pathlib import Path; import urllib.request,zipfile,io; from scripts.ngrok_download import URL,MAX_ARCHIVE; b=urllib.request.urlopen(URL,timeout=30).read(MAX_ARCHIVE+1); assert len(b)<=MAX_ARCHIVE; z=zipfile.ZipFile(io.BytesIO(b)); p=Path('build/ngrok-native-probe/diagnostic.exe'); p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(z.read('ngrok.exe')); print('Downloaded bytes:',len(b))"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $file = (Resolve-Path 'build/ngrok-native-probe/diagnostic.exe').Path
+          $signature = Get-AuthenticodeSignature -LiteralPath $file
+          Write-Host 'Authenticode status:' $signature.Status
+          Write-Host 'Authenticode message:' $signature.StatusMessage
+          if ($signature.SignerCertificate) {
+            Write-Host 'Public publisher:' $signature.SignerCertificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+          }

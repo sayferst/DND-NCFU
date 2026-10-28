@@ -2,6 +2,7 @@
 
 import io
 import zipfile
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -56,7 +57,9 @@ def test_invalid_download_never_leaves_an_executable(tmp_path, monkeypatch, case
     assert not target.exists() and not (tmp_path.parent / "escape.exe").exists()
 
 
-def test_signature_requires_windows_trust_and_ngrok_publisher(tmp_path, monkeypatch):
+@pytest.mark.parametrize("relative", [False, True])
+def test_signature_requires_windows_trust_and_ngrok_publisher(tmp_path, monkeypatch, relative):
+    monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("NGROK_AUTHTOKEN", "private-token")
     calls = []
 
@@ -68,6 +71,6 @@ def test_signature_requires_windows_trust_and_ngrok_publisher(tmp_path, monkeypa
 
     monkeypatch.setattr(download.subprocess, "run", run)
     with pytest.raises(ValueError, match="Подпись"):
-        download.verify_publisher(tmp_path / "candidate.exe")
+        download.verify_publisher(Path("candidate.exe") if relative else tmp_path / "candidate.exe")
     assert "Get-AuthenticodeSignature" in calls[0][-1]
     assert "'Valid'" in calls[0][-1] and "'ngrok, Inc.'" in calls[0][-1]
