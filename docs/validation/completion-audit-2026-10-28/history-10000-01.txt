@@ -1,0 +1,3 @@
+{"turns": 2000, "save_bytes": 335287, "elapsed_seconds": 90.23517711299792, "load_seconds": 45.9133062050023, "state_and_rng_equal": true, "narration_anchor_verified": 2000}
+{"turns": 5000, "save_bytes": 722148, "elapsed_seconds": 200.92171562000294, "load_seconds": 125.54554790400289, "state_and_rng_equal": true, "narration_anchor_verified": 5000}
+{"turns": 10000, "save_bytes": 1365155, "elapsed_seconds": 425.7958126029989, "load_seconds": 278.56995921699854, "state_and_rng_equal": true, "narration_anchor_verified": 10000}

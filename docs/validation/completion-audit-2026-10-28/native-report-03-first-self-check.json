@@ -1,0 +1,47 @@
+{
+  "ok": true,
+  "mode": "self-check",
+  "version": "0.3.1",
+  "release_profile": {
+    "mode": "developer",
+    "gateway": "",
+    "text_model": "deepseek/deepseek-v4.1-flash",
+    "commit": "e6bb23732478",
+    "discovery": "",
+    "verification_key": "",
+    "account_login": false,
+    "owner_binding": ""
+  },
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.12.10",
+  "frozen": true,
+  "resources": [
+    "rpg_vkr/ui/assets/kingdom.png",
+    "rpg_vkr/ui/assets/DND-NCFU.png",
+    "rpg_vkr/ui/assets/DND-NCFU.ico",
+    "rpg_vkr/ui/assets/world-creation-atlas.png",
+    "data/catalog/seed-v1.json",
+    "data/gameplay/catalog-v1.json",
+    "data/gameplay/catalog-v2.json",
+    "data/catalog/public-descriptions-v1.json",
+    "data/narrative/genre-cards-v1.json",
+    "prompts/master_system_prompt.txt"
+  ],
+  "qt_tls": true,
+  "discovery_signature": "native-roundtrip-passed",
+  "python_tls": "OpenSSL 3.0.16 11 Feb 2025",
+  "sqlite": "3.49.1",
+  "data_outside_application": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\DND-setup-probe-4ca558b8f7404c4eb5690e27e21369cf\\user-data",
+  "network_requests": 0,
+  "automatic_corpus": {
+    "status": "ready",
+    "records": 19000,
+    "aliases": 200,
+    "database_sha256": "252f3d68abffcee4c612c6943ad3528fd012413559c400942d3646309abb65aa"
+  },
+  "game_catalog": {
+    "count": 3360,
+    "sha256": "36bdcdc89d06f7d63f4991960ec02867f0b88f20202d125e1635eec4e6d93935",
+    "revision": 2
+  }
+}

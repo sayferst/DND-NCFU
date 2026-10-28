@@ -1,0 +1,11 @@
+{
+  "engine_executed_receipts": 100,
+  "linked_fixture_narrations": 100,
+  "replay_verified": true,
+  "synthetic": true,
+  "review_status": "pending",
+  "rights_status": "unknown",
+  "admitted_real_sft": 0,
+  "sha256": "e5eaceebdb506230d6b299700c01c2ac0747e354447e72276cae4f2420a97494",
+  "note": "Actual engine actions, authored test-town and templated fixture prose. Not human-reviewed live play or an admitted real-world training dataset."
+}

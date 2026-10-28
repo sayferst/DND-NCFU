@@ -1,0 +1,9 @@
+{
+  "baseline_commit": "e43b55ec7a9b75d0487747ffac52127fa5e615d7",
+  "protected_count": 86,
+  "protected_unchanged": true,
+  "catalog_sha256": "ec77df664a3a4895e298272647054e2afad9acd880a26adda961c02ab6bed888",
+  "corpus_sha256": "252f3d68abffcee4c612c6943ad3528fd012413559c400942d3646309abb65aa",
+  "existing_native_ci": 40573954108,
+  "training_started": false
+}

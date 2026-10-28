@@ -1,0 +1,10 @@
+{
+  "raw_report": "history-10000-final-03.json",
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "save_bytes_definition": "UTF-8 compact json.dumps(Session.to_dict(), ensure_ascii=False), with default JSON separators; excludes the SaveSlots envelope/timestamp and indent=2 expansion. Not a measured on-disk slot size.",
+  "load_seconds_definition": "Time for json.loads plus Session.from_dict(version=31); file I/O is not part of this measurement.",
+  "elapsed_seconds_definition": "Each checkpoint interval separately: new wait operations since the prior checkpoint, narration, serialization, reload, and equality checks. Not cumulative from zero.",
+  "narration_scope": "Three fixture narrations at2000/5000/10000, not10000full model responses.",
+  "state_rng_verified": true,
+  "training_or_api_calls": 0
+}

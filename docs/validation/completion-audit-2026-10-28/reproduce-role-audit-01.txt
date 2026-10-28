@@ -1,0 +1,54 @@
+"""Coarse mechanical-role audit; differences in progression/stats are retained separately."""
+import hashlib
+import json
+from collections import defaultdict
+from pathlib import Path
+
+folder = Path('docs/validation/completion-audit-2026-10-28')
+raw = Path('data/gameplay/catalog-v2.json').read_bytes()
+rows = json.loads(raw)['records']
+lookup = {r['id']:r for r in rows}
+meta = {'id','name','description','acquire','limitations','conditions','scope','role_description','construction','ecological_role','obtain','school','circle'}
+
+def role(r):
+    kind=r['kind']
+    if kind in ('spell','talent','consumable'):
+        return {k:r.get(k) for k in ('mode','element','class_id','role','combat','targets','target_limit')} | {'operations':[e['op']for e in r.get('effects',[])]}
+    if kind=='weapon':
+        return {k:r.get(k)for k in ('category','dice','hands','damage_type','trait','range')}
+    if kind=='armour':
+        return {k:r.get(k)for k in ('category','dex_cap','resistance','trait')}
+    if kind=='material':
+        return {'base':r['base'],'raw_or_processed':'processed' if r['process'] else 'raw'}
+    if kind=='household':
+        return {'capability':r['capability']}
+    if kind=='creature':
+        return {k:r.get(k)for k in ('behavior','habitat','resistance','vulnerability','skill_effect','peaceful','ecological_role')}
+    if kind=='event':
+        return {'operation':r['op'],'resource_base':lookup[r['resource']]['base']}
+    if kind=='recipe':
+        return {k:r.get(k)for k in ('category','task','station','tools','compatible_material')} | {'output_categories':sorted({lookup[id]['kind']+'/'+lookup[id]['category'] for id in r['outputs']})}
+    raise ValueError(kind)
+
+groups=defaultdict(list)
+for row in rows:groups[row['kind']+'/'+row['category']].append(row)
+report={'source_commit':'e6bb2373247873ae4074700259ea56e163faf2ec','catalog_sha256':hashlib.sha256(raw).hexdigest(),'records':len(rows),'human_reviewed':False,'acceptance':'B03 role-diversity and balance remain open; this is a static projection, not execution or a literary assessment.','method':'Within each category group cards by operation/behavior/equipment role; ignore progression, cost, magnitude and duration for that coarse role. Report declared attribute variants separately. Output references and recipe constraints are retained there.','categories':{}}
+for key, values in sorted(groups.items()):
+    roles=defaultdict(list)
+    attrs=set()
+    for r in values:
+        roles[json.dumps(role(r),sort_keys=True)].append(r)
+        attrs.add(json.dumps({k:v for k,v in r.items()if k not in meta},sort_keys=True))
+    examples=[]
+    for signature, members in roles.items():
+        if len(members)>1:
+            a,b=members[:2]
+            fields=sorted(k for k in set(a)|set(b) if k not in meta and a.get(k)!=b.get(k))
+            examples.append({'ids':[a['id'],b['id']],'same_coarse_role':json.loads(signature),'different_declared_fields':fields})
+    report['categories'][key]={'cards':len(values),'distinct_declared_attribute_sets':len(attrs),'distinct_coarse_roles':len(roles),'max_cards_per_coarse_role':max(map(len,roles.values())),'examples':examples[:3]}
+with (folder/'catalog-role-audit-01.json').open('x',encoding='utf-8')as stream:json.dump(report,stream,ensure_ascii=False,indent=2);stream.write('\n')
+print('Static role projection complete:',len(report['categories']),'groups;',len(rows),'cards; no human approval or balance claim.')
+for key in ('household/household','material/materials','talent/warrior','spell/attack'):
+    d=report['categories'][key]
+    print(key,{k:v for k,v in d.items()if k!='examples'})
+(folder/'reproduce-role-audit-01.txt').write_bytes(Path(__file__).read_bytes())

@@ -1,0 +1,20 @@
+{
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "catalog_revision": 2,
+  "generation_requests": 8,
+  "statuses": {
+    "ACCEPTED_BY_GAME_VALIDATOR": 8
+  },
+  "usage_cost_rub": "0.56075843761423202",
+  "prior_reserved_rub": "47.0348",
+  "new_reserved_upper_rub": "4.39815335334804",
+  "cumulative_reserved_upper_rub": "51.43295335334804",
+  "user_cap_rub": "150",
+  "state_and_rng_unchanged": true,
+  "corpus_records": 19000,
+  "actual_training_steps": 0,
+  "quality_gain_established": false,
+  "human_blind_review": false,
+  "limitations": "Four queries on one committed scene, eight paired generations. Validator acceptance is not semantic correctness; prose introduces uncommitted offer terms/location names. Not a 500-turn campaign."
+}

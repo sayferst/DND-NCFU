@@ -60,3 +60,4 @@ docs/validation/full-system-2026-10-27/*.txt -text whitespace=-blank-at-eol
 docs/validation/full-system-2026-10-27/windows-artifact-01/**/*.json -text whitespace=cr-at-eol,-blank-at-eol
 docs/validation/completion-audit-2026-10-28/*.json -text
 docs/validation/completion-audit-2026-10-28/*.txt -text whitespace=-blank-at-eol
+docs/validation/completion-audit-2026-10-28/native-report-*.json -text whitespace=cr-at-eol

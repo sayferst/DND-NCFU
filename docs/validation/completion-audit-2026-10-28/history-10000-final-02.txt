@@ -1,0 +1,47 @@
+Traceback (most recent call last):
+  File "/tmp/dnd_history_final_02.py", line 32, in <module>
+    act(s,'wait',minutes=1)
+  File "/workspace/DND-NCFU/tests/test_catalog_campaign.py", line 106, in act
+    return s.perform_gameplay(command, args, s._request_token())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/unified_session.py", line 279, in called
+    result = method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/storage/migration.py", line 100, in called
+    return method(session, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/application.py", line 215, in perform_gameplay
+    return perform(self, command, args, request_id, action=action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/gameplay_session.py", line 96, in perform
+    result = execute(session._gameplay["state"], command, args, before, session.dice)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/gameplay_rules.py", line 56, in execute
+    return unified_execute(state, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/unified.py", line 270, in execute
+    return catalog_execute(original, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog_engine.py", line 605, in execute
+    return _execute(original, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog_engine.py", line 611, in _execute
+    engine = Engine(original, context, dice, args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog_engine.py", line 79, in __init__
+    Catalog.from_dict(context["catalog"]) if context["catalog"] else seed_catalog()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog.py", line 297, in from_dict
+    tuple(Definition.from_dict(d) for d in data["definitions"]),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog.py", line 297, in <genexpr>
+    tuple(Definition.from_dict(d) for d in data["definitions"]),
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog.py", line 177, in from_dict
+    return cls(**data)
+           ^^^^^^^^^^^
+  File "<string>", line 14, in __init__
+  File "/workspace/DND-NCFU/src/rpg_vkr/domain/catalog.py", line 102, in __post_init__
+    if key in self.properties and (
+       ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

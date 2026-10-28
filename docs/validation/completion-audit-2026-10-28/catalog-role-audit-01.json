@@ -1,0 +1,1710 @@
+{
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "catalog_sha256": "36bdcdc89d06f7d63f4991960ec02867f0b88f20202d125e1635eec4e6d93935",
+  "records": 3360,
+  "human_reviewed": false,
+  "acceptance": "B03 role-diversity and balance remain open; this is a static projection, not execution or a literary assessment.",
+  "method": "Within each category group cards by operation/behavior/equipment role; ignore progression, cost, magnitude and duration for that coarse role. Report declared attribute variants separately. Output references and recipe constraints are retained there.",
+  "categories": {
+    "armour/heavy": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 40,
+      "max_cards_per_coarse_role": 2,
+      "examples": [
+        {
+          "ids": [
+            "gear_heavy_0_0",
+            "gear_heavy_5_0"
+          ],
+          "same_coarse_role": {
+            "category": "heavy",
+            "dex_cap": 0,
+            "resistance": "physical",
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_heavy_0_1",
+            "gear_heavy_5_1"
+          ],
+          "same_coarse_role": {
+            "category": "heavy",
+            "dex_cap": 0,
+            "resistance": "physical",
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_heavy_0_2",
+            "gear_heavy_5_2"
+          ],
+          "same_coarse_role": {
+            "category": "heavy",
+            "dex_cap": 0,
+            "resistance": "physical",
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "armour/light": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 40,
+      "max_cards_per_coarse_role": 2,
+      "examples": [
+        {
+          "ids": [
+            "gear_light_0_0",
+            "gear_light_5_0"
+          ],
+          "same_coarse_role": {
+            "category": "light",
+            "dex_cap": 5,
+            "resistance": "physical",
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_light_0_1",
+            "gear_light_5_1"
+          ],
+          "same_coarse_role": {
+            "category": "light",
+            "dex_cap": 5,
+            "resistance": "physical",
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_light_0_2",
+            "gear_light_5_2"
+          ],
+          "same_coarse_role": {
+            "category": "light",
+            "dex_cap": 5,
+            "resistance": "physical",
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "armour/medium": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 40,
+      "max_cards_per_coarse_role": 2,
+      "examples": [
+        {
+          "ids": [
+            "gear_medium_0_0",
+            "gear_medium_5_0"
+          ],
+          "same_coarse_role": {
+            "category": "medium",
+            "dex_cap": 2,
+            "resistance": "physical",
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_medium_0_1",
+            "gear_medium_5_1"
+          ],
+          "same_coarse_role": {
+            "category": "medium",
+            "dex_cap": 2,
+            "resistance": "physical",
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_medium_0_2",
+            "gear_medium_5_2"
+          ],
+          "same_coarse_role": {
+            "category": "medium",
+            "dex_cap": 2,
+            "resistance": "physical",
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "armour/shield": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 40,
+      "max_cards_per_coarse_role": 2,
+      "examples": [
+        {
+          "ids": [
+            "gear_shield_0_0",
+            "gear_shield_5_0"
+          ],
+          "same_coarse_role": {
+            "category": "shield",
+            "dex_cap": 0,
+            "resistance": "physical",
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_shield_0_1",
+            "gear_shield_5_1"
+          ],
+          "same_coarse_role": {
+            "category": "shield",
+            "dex_cap": 0,
+            "resistance": "physical",
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_shield_0_2",
+            "gear_shield_5_2"
+          ],
+          "same_coarse_role": {
+            "category": "shield",
+            "dex_cap": 0,
+            "resistance": "physical",
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "consumable/ammunition": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 5,
+      "max_cards_per_coarse_role": 40,
+      "examples": [
+        {
+          "ids": [
+            "use_ammunition_0_0",
+            "use_ammunition_0_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": null,
+            "element": "physical",
+            "mode": null,
+            "operations": [],
+            "role": null,
+            "target_limit": null,
+            "targets": null
+          },
+          "different_declared_fields": [
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "use_ammunition_3_0",
+            "use_ammunition_3_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": null,
+            "element": "thunder",
+            "mode": null,
+            "operations": [],
+            "role": null,
+            "target_limit": null,
+            "targets": null
+          },
+          "different_declared_fields": [
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "use_ammunition_4_0",
+            "use_ammunition_4_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": null,
+            "element": "fire",
+            "mode": null,
+            "operations": [],
+            "role": null,
+            "target_limit": null,
+            "targets": null
+          },
+          "different_declared_fields": [
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "consumable/dressings": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 8,
+      "max_cards_per_coarse_role": 10,
+      "examples": [
+        {
+          "ids": [
+            "use_dressings_0_0",
+            "use_dressings_0_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": false,
+            "element": null,
+            "mode": "direct",
+            "operations": [
+              "heal",
+              "anchor"
+            ],
+            "role": null,
+            "target_limit": null,
+            "targets": 1
+          },
+          "different_declared_fields": [
+            "duration",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "use_dressings_1_0",
+            "use_dressings_1_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": false,
+            "element": null,
+            "mode": "direct",
+            "operations": [
+              "heal",
+              "cure_bleed"
+            ],
+            "role": null,
+            "target_limit": null,
+            "targets": 1
+          },
+          "different_declared_fields": [
+            "duration",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "use_dressings_2_0",
+            "use_dressings_2_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": false,
+            "element": null,
+            "mode": "direct",
+            "operations": [
+              "heal",
+              "cure_burn"
+            ],
+            "role": null,
+            "target_limit": null,
+            "targets": 1
+          },
+          "different_declared_fields": [
+            "duration",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "consumable/potions": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 8,
+      "max_cards_per_coarse_role": 10,
+      "examples": [
+        {
+          "ids": [
+            "use_potions_0_0",
+            "use_potions_0_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": true,
+            "element": null,
+            "mode": "direct",
+            "operations": [
+              "heal",
+              "anchor"
+            ],
+            "role": null,
+            "target_limit": null,
+            "targets": 1
+          },
+          "different_declared_fields": [
+            "duration",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "use_potions_1_0",
+            "use_potions_1_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": true,
+            "element": null,
+            "mode": "direct",
+            "operations": [
+              "heal",
+              "cure_bleed"
+            ],
+            "role": null,
+            "target_limit": null,
+            "targets": 1
+          },
+          "different_declared_fields": [
+            "duration",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "use_potions_2_0",
+            "use_potions_2_1"
+          ],
+          "same_coarse_role": {
+            "class_id": null,
+            "combat": true,
+            "element": null,
+            "mode": "direct",
+            "operations": [
+              "heal",
+              "cure_burn"
+            ],
+            "role": null,
+            "target_limit": null,
+            "targets": 1
+          },
+          "different_declared_fields": [
+            "duration",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "consumable/scrolls": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "creature/arcane": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "creature/beast": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "creature/humanoid": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "creature/undead": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "event/economic": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 71,
+      "max_cards_per_coarse_role": 10,
+      "examples": [
+        {
+          "ids": [
+            "event_economic_1_0",
+            "event_economic_1_1"
+          ],
+          "same_coarse_role": {
+            "operation": "production",
+            "resource_base": 2
+          },
+          "different_declared_fields": [
+            "amount",
+            "money",
+            "season",
+            "threshold"
+          ]
+        }
+      ]
+    },
+    "event/military": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "event/natural": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "event/political": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "event/social": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "household/household": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 8,
+      "max_cards_per_coarse_role": 10,
+      "examples": [
+        {
+          "ids": [
+            "house_0_0",
+            "house_1_0"
+          ],
+          "same_coarse_role": {
+            "capability": "tools"
+          },
+          "different_declared_fields": [
+            "durability",
+            "mass_g",
+            "material",
+            "price_cp",
+            "strength"
+          ]
+        },
+        {
+          "ids": [
+            "house_0_1",
+            "house_1_1"
+          ],
+          "same_coarse_role": {
+            "capability": "forge"
+          },
+          "different_declared_fields": [
+            "durability",
+            "mass_g",
+            "material",
+            "price_cp",
+            "strength"
+          ]
+        },
+        {
+          "ids": [
+            "house_0_2",
+            "house_1_2"
+          ],
+          "same_coarse_role": {
+            "capability": "alchemy"
+          },
+          "different_declared_fields": [
+            "durability",
+            "mass_g",
+            "material",
+            "price_cp",
+            "strength"
+          ]
+        }
+      ]
+    },
+    "material/materials": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 20,
+      "max_cards_per_coarse_role": 7,
+      "examples": [
+        {
+          "ids": [
+            "mat_0_1",
+            "mat_0_2"
+          ],
+          "same_coarse_role": {
+            "base": 0,
+            "raw_or_processed": "processed"
+          },
+          "different_declared_fields": [
+            "conductivity",
+            "durability",
+            "elasticity",
+            "hardness",
+            "level",
+            "mass_g",
+            "price_cp",
+            "process"
+          ]
+        },
+        {
+          "ids": [
+            "mat_1_1",
+            "mat_1_2"
+          ],
+          "same_coarse_role": {
+            "base": 1,
+            "raw_or_processed": "processed"
+          },
+          "different_declared_fields": [
+            "conductivity",
+            "durability",
+            "elasticity",
+            "hardness",
+            "level",
+            "mass_g",
+            "price_cp",
+            "process"
+          ]
+        },
+        {
+          "ids": [
+            "mat_2_1",
+            "mat_2_2"
+          ],
+          "same_coarse_role": {
+            "base": 2,
+            "raw_or_processed": "processed"
+          },
+          "different_declared_fields": [
+            "conductivity",
+            "durability",
+            "elasticity",
+            "hardness",
+            "level",
+            "mass_g",
+            "price_cp",
+            "process"
+          ]
+        }
+      ]
+    },
+    "recipe/alchemy": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 10,
+      "max_cards_per_coarse_role": 8,
+      "examples": [
+        {
+          "ids": [
+            "recipe_alchemy_0_0",
+            "recipe_alchemy_0_1"
+          ],
+          "same_coarse_role": {
+            "category": "alchemy",
+            "compatible_material": 0,
+            "output_categories": [
+              "consumable/dressings",
+              "consumable/potions"
+            ],
+            "station": "alchemy",
+            "task": "alchemy",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_alchemy_1_0",
+            "recipe_alchemy_1_1"
+          ],
+          "same_coarse_role": {
+            "category": "alchemy",
+            "compatible_material": 1,
+            "output_categories": [
+              "consumable/dressings",
+              "consumable/potions"
+            ],
+            "station": "alchemy",
+            "task": "alchemy",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_alchemy_2_0",
+            "recipe_alchemy_2_1"
+          ],
+          "same_coarse_role": {
+            "category": "alchemy",
+            "compatible_material": 2,
+            "output_categories": [
+              "consumable/dressings",
+              "consumable/potions"
+            ],
+            "station": "alchemy",
+            "task": "alchemy",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        }
+      ]
+    },
+    "recipe/production": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 20,
+      "max_cards_per_coarse_role": 7,
+      "examples": [
+        {
+          "ids": [
+            "recipe_production_0_1",
+            "recipe_production_0_2"
+          ],
+          "same_coarse_role": {
+            "category": "production",
+            "compatible_material": 0,
+            "output_categories": [
+              "armour/light",
+              "consumable/ammunition",
+              "consumable/scrolls",
+              "household/household",
+              "material/materials",
+              "weapon/focus",
+              "weapon/longbow"
+            ],
+            "station": "workbench",
+            "task": "repair",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "dc",
+            "ingredients",
+            "level",
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_production_1_1",
+            "recipe_production_1_2"
+          ],
+          "same_coarse_role": {
+            "category": "production",
+            "compatible_material": 1,
+            "output_categories": [
+              "armour/light",
+              "consumable/ammunition",
+              "consumable/scrolls",
+              "household/household",
+              "material/materials",
+              "weapon/focus",
+              "weapon/longbow"
+            ],
+            "station": "workbench",
+            "task": "repair",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "dc",
+            "ingredients",
+            "level",
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_production_2_1",
+            "recipe_production_2_2"
+          ],
+          "same_coarse_role": {
+            "category": "production",
+            "compatible_material": 2,
+            "output_categories": [
+              "armour/light",
+              "consumable/ammunition",
+              "consumable/scrolls",
+              "household/household",
+              "material/materials",
+              "weapon/focus",
+              "weapon/longbow"
+            ],
+            "station": "workbench",
+            "task": "repair",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "dc",
+            "ingredients",
+            "level",
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        }
+      ]
+    },
+    "recipe/repair": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 8,
+      "max_cards_per_coarse_role": 24,
+      "examples": [
+        {
+          "ids": [
+            "recipe_repair_0_0",
+            "recipe_repair_0_1"
+          ],
+          "same_coarse_role": {
+            "category": "repair",
+            "compatible_material": 0,
+            "output_categories": [],
+            "station": "tools",
+            "task": "repair",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "ingredients",
+            "minutes",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_repair_1_0",
+            "recipe_repair_1_1"
+          ],
+          "same_coarse_role": {
+            "category": "repair",
+            "compatible_material": 1,
+            "output_categories": [],
+            "station": "tools",
+            "task": "repair",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "ingredients",
+            "minutes",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_repair_3_0",
+            "recipe_repair_3_1"
+          ],
+          "same_coarse_role": {
+            "category": "repair",
+            "compatible_material": 3,
+            "output_categories": [],
+            "station": "tools",
+            "task": "repair",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "ingredients",
+            "minutes",
+            "repair_power"
+          ]
+        }
+      ]
+    },
+    "recipe/smithing": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 10,
+      "max_cards_per_coarse_role": 8,
+      "examples": [
+        {
+          "ids": [
+            "recipe_smithing_0_0",
+            "recipe_smithing_0_1"
+          ],
+          "same_coarse_role": {
+            "category": "smithing",
+            "compatible_material": 0,
+            "output_categories": [
+              "armour/heavy",
+              "armour/medium",
+              "armour/shield",
+              "weapon/axe",
+              "weapon/crossbow",
+              "weapon/dagger",
+              "weapon/greatsword",
+              "weapon/hammer",
+              "weapon/sword"
+            ],
+            "station": "forge",
+            "task": "smithing",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_smithing_1_0",
+            "recipe_smithing_1_1"
+          ],
+          "same_coarse_role": {
+            "category": "smithing",
+            "compatible_material": 1,
+            "output_categories": [
+              "armour/heavy",
+              "armour/medium",
+              "armour/shield",
+              "weapon/axe",
+              "weapon/crossbow",
+              "weapon/dagger",
+              "weapon/greatsword",
+              "weapon/hammer",
+              "weapon/sword"
+            ],
+            "station": "forge",
+            "task": "smithing",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        },
+        {
+          "ids": [
+            "recipe_smithing_2_0",
+            "recipe_smithing_2_1"
+          ],
+          "same_coarse_role": {
+            "category": "smithing",
+            "compatible_material": 2,
+            "output_categories": [
+              "armour/heavy",
+              "armour/medium",
+              "armour/shield",
+              "weapon/axe",
+              "weapon/crossbow",
+              "weapon/dagger",
+              "weapon/greatsword",
+              "weapon/hammer",
+              "weapon/sword"
+            ],
+            "station": "forge",
+            "task": "smithing",
+            "tools": "tools"
+          },
+          "different_declared_fields": [
+            "materials_by_output",
+            "minutes",
+            "outputs",
+            "repair_power"
+          ]
+        }
+      ]
+    },
+    "spell/attack": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "spell/defense": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "spell/healing": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "spell/research": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "spell/support": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "talent/archer": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "talent/artisan": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "talent/cleric": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "talent/mage": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "talent/rogue": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "talent/warrior": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 80,
+      "max_cards_per_coarse_role": 1,
+      "examples": []
+    },
+    "weapon/axe": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_axe_0_0",
+            "gear_axe_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "axe",
+            "damage_type": "physical",
+            "dice": "1d12",
+            "hands": 2,
+            "range": 0,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_axe_0_1",
+            "gear_axe_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "axe",
+            "damage_type": "physical",
+            "dice": "1d12",
+            "hands": 2,
+            "range": 0,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_axe_0_2",
+            "gear_axe_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "axe",
+            "damage_type": "physical",
+            "dice": "1d12",
+            "hands": 2,
+            "range": 0,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/crossbow": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_crossbow_0_0",
+            "gear_crossbow_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "crossbow",
+            "damage_type": "physical",
+            "dice": "1d10",
+            "hands": 2,
+            "range": 1,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_crossbow_0_1",
+            "gear_crossbow_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "crossbow",
+            "damage_type": "physical",
+            "dice": "1d10",
+            "hands": 2,
+            "range": 1,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_crossbow_0_2",
+            "gear_crossbow_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "crossbow",
+            "damage_type": "physical",
+            "dice": "1d10",
+            "hands": 2,
+            "range": 1,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/dagger": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_dagger_0_0",
+            "gear_dagger_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "dagger",
+            "damage_type": "physical",
+            "dice": "1d4",
+            "hands": 1,
+            "range": 0,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_dagger_0_1",
+            "gear_dagger_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "dagger",
+            "damage_type": "physical",
+            "dice": "1d4",
+            "hands": 1,
+            "range": 0,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_dagger_0_2",
+            "gear_dagger_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "dagger",
+            "damage_type": "physical",
+            "dice": "1d4",
+            "hands": 1,
+            "range": 0,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/focus": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_focus_0_0",
+            "gear_focus_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "focus",
+            "damage_type": "physical",
+            "dice": "1d6",
+            "hands": 2,
+            "range": 0,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_focus_0_1",
+            "gear_focus_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "focus",
+            "damage_type": "physical",
+            "dice": "1d6",
+            "hands": 2,
+            "range": 0,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_focus_0_2",
+            "gear_focus_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "focus",
+            "damage_type": "physical",
+            "dice": "1d6",
+            "hands": 2,
+            "range": 0,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/greatsword": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_greatsword_0_0",
+            "gear_greatsword_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "greatsword",
+            "damage_type": "physical",
+            "dice": "2d6",
+            "hands": 2,
+            "range": 0,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_greatsword_0_1",
+            "gear_greatsword_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "greatsword",
+            "damage_type": "physical",
+            "dice": "2d6",
+            "hands": 2,
+            "range": 0,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_greatsword_0_2",
+            "gear_greatsword_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "greatsword",
+            "damage_type": "physical",
+            "dice": "2d6",
+            "hands": 2,
+            "range": 0,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/hammer": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_hammer_0_0",
+            "gear_hammer_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "hammer",
+            "damage_type": "physical",
+            "dice": "1d10",
+            "hands": 2,
+            "range": 0,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_hammer_0_1",
+            "gear_hammer_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "hammer",
+            "damage_type": "physical",
+            "dice": "1d10",
+            "hands": 2,
+            "range": 0,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_hammer_0_2",
+            "gear_hammer_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "hammer",
+            "damage_type": "physical",
+            "dice": "1d10",
+            "hands": 2,
+            "range": 0,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/longbow": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_longbow_0_0",
+            "gear_longbow_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "longbow",
+            "damage_type": "physical",
+            "dice": "1d8",
+            "hands": 2,
+            "range": 1,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_longbow_0_1",
+            "gear_longbow_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "longbow",
+            "damage_type": "physical",
+            "dice": "1d8",
+            "hands": 2,
+            "range": 1,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_longbow_0_2",
+            "gear_longbow_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "longbow",
+            "damage_type": "physical",
+            "dice": "1d8",
+            "hands": 2,
+            "range": 1,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    },
+    "weapon/sword": {
+      "cards": 80,
+      "distinct_declared_attribute_sets": 80,
+      "distinct_coarse_roles": 32,
+      "max_cards_per_coarse_role": 3,
+      "examples": [
+        {
+          "ids": [
+            "gear_sword_0_0",
+            "gear_sword_4_0"
+          ],
+          "same_coarse_role": {
+            "category": "sword",
+            "damage_type": "physical",
+            "dice": "1d8",
+            "hands": 1,
+            "range": 0,
+            "trait": "guard"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_sword_0_1",
+            "gear_sword_4_1"
+          ],
+          "same_coarse_role": {
+            "category": "sword",
+            "damage_type": "physical",
+            "dice": "1d8",
+            "hands": 1,
+            "range": 0,
+            "trait": "precision"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        },
+        {
+          "ids": [
+            "gear_sword_0_2",
+            "gear_sword_4_2"
+          ],
+          "same_coarse_role": {
+            "category": "sword",
+            "damage_type": "physical",
+            "dice": "1d8",
+            "hands": 1,
+            "range": 0,
+            "trait": "power"
+          },
+          "different_declared_fields": [
+            "durability",
+            "level",
+            "mass_g",
+            "material",
+            "price_cp"
+          ]
+        }
+      ]
+    }
+  }
+}

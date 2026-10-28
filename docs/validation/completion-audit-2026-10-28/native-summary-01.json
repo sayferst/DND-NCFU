@@ -1,0 +1,35 @@
+{
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "run_id": 40609470324,
+  "artifact_id": 12783288083,
+  "conclusion": "success",
+  "native_windows": true,
+  "full_check": {
+    "passed": 8784,
+    "skipped": 1,
+    "failed": 0,
+    "errors": 0,
+    "complete": true
+  },
+  "powershell_update_tests_passed": 4,
+  "dpi_scales": [
+    "1",
+    "1.25",
+    "1.5",
+    "2"
+  ],
+  "native_reports_count": 11,
+  "json_report_bytes_preserved": true,
+  "artifact_sha256_verified": "597033bb204fe48b5ebe05e72967690906cc6614637ebdfbd47d31949dc11447",
+  "catalog_revision": 2,
+  "catalog_executable_records": 3360,
+  "automatic_corpus_records": 19000,
+  "installed_mage_artisan_json_sqlite_rng": true,
+  "native_dpapi_roundtrip": true,
+  "retained_save_schema31_mp": true,
+  "clean_install": true,
+  "repeat_install_same_new_package": true,
+  "historical_031_binary_upgrade": false,
+  "physical_owner_pc_or_manual_monitor": false,
+  "actual_training_steps": 0
+}

@@ -1,0 +1,31 @@
+{
+  "source_parent": "7d5e650d7603188ff61c7a9fbcad33769085a9fe",
+  "method": "New-revision Mage; 10000 actual public wait(1 minute) operations; real day ticks and finite resident policies; snapshots checked at2000/5000/10000. Fixture narration at each checkpoint, no model calls. No XP/state injection.",
+  "limitations": "Wait-history profile, not a 10000-turn live GM or six-class level20 campaign. Source is a working tree; final code hashes recorded separately.",
+  "checkpoints": [
+    {
+      "turns": 2000,
+      "save_bytes": 335287,
+      "elapsed_seconds": 90.23517711299792,
+      "load_seconds": 45.9133062050023,
+      "state_and_rng_equal": true,
+      "narration_anchor_verified": 2000
+    },
+    {
+      "turns": 5000,
+      "save_bytes": 722148,
+      "elapsed_seconds": 200.92171562000294,
+      "load_seconds": 125.54554790400289,
+      "state_and_rng_equal": true,
+      "narration_anchor_verified": 5000
+    },
+    {
+      "turns": 10000,
+      "save_bytes": 1365155,
+      "elapsed_seconds": 425.7958126029989,
+      "load_seconds": 278.56995921699854,
+      "state_and_rng_equal": true,
+      "narration_anchor_verified": 10000
+    }
+  ]
+}

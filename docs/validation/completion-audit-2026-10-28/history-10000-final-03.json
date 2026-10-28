@@ -1,0 +1,32 @@
+{
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "catalog_sha256": "36bdcdc89d06f7d63f4991960ec02867f0b88f20202d125e1635eec4e6d93935",
+  "method": "Mage in authored three-place world; public wait(1min) and add_narration at2000/5000/10000, full JSON reload and RNG equality at each checkpoint.",
+  "limitations": "Wait-history profile on CI-class Linux, not a human or live-GM campaign. Three fixture narrations, not10000full prose responses. Load remains linear replay and takes minutes.",
+  "checkpoints": [
+    {
+      "turns": 2000,
+      "save_bytes": 335065,
+      "elapsed_seconds": 142.95434817099886,
+      "load_seconds": 64.417536904999,
+      "state_and_rng_equal": true,
+      "narration_anchor_verified": 2000
+    },
+    {
+      "turns": 5000,
+      "save_bytes": 721917,
+      "elapsed_seconds": 267.023776353999,
+      "load_seconds": 148.72302627500176,
+      "state_and_rng_equal": true,
+      "narration_anchor_verified": 5000
+    },
+    {
+      "turns": 10000,
+      "save_bytes": 1368076,
+      "elapsed_seconds": 423.037996179999,
+      "load_seconds": 271.0975499470005,
+      "state_and_rng_equal": true,
+      "narration_anchor_verified": 10000
+    }
+  ]
+}

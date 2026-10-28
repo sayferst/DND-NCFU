@@ -1,0 +1,62 @@
+F....................................................................... [ 52%]
+.....................................................F......ssss         [100%]
+=================================== FAILURES ===================================
+___________ test_both_published_catalogs_and_actual_previous_writer ____________
+
+    def test_both_published_catalogs_and_actual_previous_writer():
+        old = Path("data/gameplay/catalog-v1.json")
+        fresh = json.loads(Path("data/gameplay/catalog-v2.json").read_text(encoding="utf-8"))
+        assert fresh == build(json.loads(old.read_text(encoding="utf-8")))
+        assert content.validate(fresh)["total"] == 3360
+        with content.using(2):
+            assert set(content.load()) == {
+                r["id"] for r in json.loads(old.read_text(encoding="utf-8"))["records"]
+            }
+            for row in content.load().values():
+                if row["kind"] in ("weapon", "armour"):
+                    assert content.row(row["material"])["base"] not in (2, 7, 8)
+        fixture = json.loads(
+            Path("docs/validation/completion-audit-2026-10-28/schema31-before.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        old_session = Session.from_dict(fixture["session"], version=31)
+>       assert old_session.to_dict() == fixture["session"]
+E       AssertionError: assert {'snapshot': ...fied-d20-v1'}} == {'snapshot': ...fied-d20-v1'}}
+E         
+E         Differing items:
+E         {'snapshot': {'campaign': {'hero_id': '7958e9f2-7da1-4808-aa70-b5795bb88e2b', 'npc_profiles': (), 'raw_player_descript...lot': 'Гильдия скрывает переправу, связанную с пропавшим учителем героя. Секретный знак: янтарная птица.', ...}}, ...}} != {'snapshot': {'campaign': {'hero_id': '7958e9f2-7da1-4808-aa70-b5795bb88e2b', 'npc_profiles': [], 'raw_player_descript...lot': 'Гильдия скрывает переправу, связанную с пропавшим учителем героя. Секретный знак: янтарная птица.', ...}}, ...}}
+E         {'unified': {'operations': [{'method': 'start_world', 'world_seed': {'catalo...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/test_completion_revision.py:48: AssertionError
+_ test_intent_synonyms[\u0437\u0430\u043c\u0435\u0434\u043b\u0438\u0442\u044c \u043f\u0440\u043e\u0442\u0438\u0432\u043d\u0438\u043a\u0430-slow] _
+
+query = 'замедлить противника', operation = 'slow'
+
+    @pytest.mark.parametrize(
+        "query,operation",
+        [
+            ("осветить темноту", "light"),
+            ("найти дорогу", "reveal_routes"),
+            ("починить снаряжение", "repair"),
+            ("замедлить противника", "slow"),
+        ],
+    )
+    def test_intent_synonyms(query, operation):
+        with content.using(2):
+            results = ranked(content.available("spell"), query, limit=16)
+>       assert any(r["effects"][0]["op"] == operation for r in results)
+E       assert False
+E        +  where False = any(<generator object test_intent_synonyms.<locals>.<genexpr> at 0x7f8a61caa670>)
+
+tests/test_completion_revision.py:95: AssertionError
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_update_build_launcher.py:69: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:75: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:83: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:93: Actual PowerShell updater integration requires Windows/PowerShell
+FAILED tests/test_completion_revision.py::test_both_published_catalogs_and_actual_previous_writer
+FAILED tests/test_completion_revision.py::test_intent_synonyms[\u0437\u0430\u043c\u0435\u0434\u043b\u0438\u0442\u044c \u043f\u0440\u043e\u0442\u0438\u0432\u043d\u0438\u043a\u0430-slow]
+2 failed, 130 passed, 4 skipped in 1.67s

@@ -1,0 +1,75 @@
+{
+  "run_id": 40609470324,
+  "artifact_id": 12783288083,
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "artifact_sha256": "597033bb204fe48b5ebe05e72967690906cc6614637ebdfbd47d31949dc11447",
+  "artifact_bytes": 94427868,
+  "reports": [
+    {
+      "member": "build/check-batches-ce7dbad17ecc4b8f8819b610cd232b1e/summary.json",
+      "saved_as": "native-report-01-summary.json",
+      "sha256": "29d370d75370eab738d3e45c5dad71ce8f0a0cdde4a263d2302482d8f969740d",
+      "bytes": 13838
+    },
+    {
+      "member": "build/setup-probe/first-saved-campaign.json",
+      "saved_as": "native-report-02-first-saved-campaign.json",
+      "sha256": "f9494738ae7f0d3402c3f9ad75f47ea69cd97246823d3e67082053dd7bb489fa",
+      "bytes": 99
+    },
+    {
+      "member": "build/setup-probe/first-self-check.json",
+      "saved_as": "native-report-03-first-self-check.json",
+      "sha256": "54cf7816d9f6c757452d857b7dd6b2c125fa9db1364fe64068416863323f7355",
+      "bytes": 1501
+    },
+    {
+      "member": "build/setup-probe/first-smoke-test.json",
+      "saved_as": "native-report-04-first-smoke-test.json",
+      "sha256": "f5de2aec7463322062e9932ec3192754f64ca77f829bf887ad1fa9e67820f58e",
+      "bytes": 2542
+    },
+    {
+      "member": "build/setup-probe/repeat-update-saved-campaign.json",
+      "saved_as": "native-report-05-repeat-update-saved-campaign.json",
+      "sha256": "f9494738ae7f0d3402c3f9ad75f47ea69cd97246823d3e67082053dd7bb489fa",
+      "bytes": 99
+    },
+    {
+      "member": "build/setup-probe/repeat-update-self-check.json",
+      "saved_as": "native-report-06-repeat-update-self-check.json",
+      "sha256": "54cf7816d9f6c757452d857b7dd6b2c125fa9db1364fe64068416863323f7355",
+      "bytes": 1501
+    },
+    {
+      "member": "build/setup-probe/repeat-update-smoke-test.json",
+      "saved_as": "native-report-07-repeat-update-smoke-test.json",
+      "sha256": "f5de2aec7463322062e9932ec3192754f64ca77f829bf887ad1fa9e67820f58e",
+      "bytes": 2542
+    },
+    {
+      "member": "build/setup-probe/setup-result.json",
+      "saved_as": "native-report-08-setup-result.json",
+      "sha256": "ceb7d74abb062799d8cc47a66b4141473de9f96fc8a6e6add01ef27cc6ebd7db",
+      "bytes": 156
+    },
+    {
+      "member": "build/windows-20261028-005651-329-d61aaa/checks/bundle.json",
+      "saved_as": "native-report-09-bundle.json",
+      "sha256": "6fc5a298d6c59d2ade004baf6cca44338453fbec862187ba509d9b82acdf9df5",
+      "bytes": 45263
+    },
+    {
+      "member": "build/windows-20261028-005651-329-d61aaa/checks/self-check.json",
+      "saved_as": "native-report-10-self-check.json",
+      "sha256": "f1a8f7c150f0fca9b6ae9f154b2cd0f028e3dd4389723217c955638b6d1b3bd9",
+      "bytes": 1496
+    },
+    {
+      "member": "build/windows-20261028-005651-329-d61aaa/checks/smoke-test.json",
+      "saved_as": "native-report-11-smoke-test.json",
+      "sha256": "bdee07905f57b93ae971405f1d114b3426b98854df7336e51a1b5510963ace31",
+      "bytes": 2537
+    }
+  ]
+}

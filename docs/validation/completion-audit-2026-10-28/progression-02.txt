@@ -1,0 +1,69 @@
+warrior {'level': 2, 'turn': 7, 'xp': 140}
+warrior {'level': 3, 'turn': 39, 'xp': 300}
+warrior {'level': 4, 'turn': 58, 'xp': 600}
+warrior {'level': 5, 'turn': 105, 'xp': 1020}
+warrior {'level': 6, 'turn': 155, 'xp': 1530}
+warrior {'level': 7, 'turn': 199, 'xp': 2100}
+warrior {'level': 8, 'turn': 262, 'xp': 2820}
+warrior {'level': 9, 'turn': 334, 'xp': 3620}
+warrior {'level': 10, 'turn': 514, 'xp': 4560}
+warrior {'level': 11, 'turn': 645, 'xp': 5520}
+{"class": "warrior", "level": 12, "turns": 934, "seconds": 159.96297560499806}
+archer {'level': 2, 'turn': 6, 'xp': 140}
+archer {'level': 3, 'turn': 20, 'xp': 300}
+archer {'level': 4, 'turn': 37, 'xp': 600}
+archer {'level': 5, 'turn': 82, 'xp': 1020}
+archer {'level': 6, 'turn': 129, 'xp': 1530}
+archer {'level': 7, 'turn': 185, 'xp': 2100}
+archer {'level': 8, 'turn': 247, 'xp': 2820}
+archer {'level': 9, 'turn': 318, 'xp': 3620}
+archer {'level': 10, 'turn': 448, 'xp': 4560}
+archer {'level': 11, 'turn': 597, 'xp': 5520}
+{"class": "archer", "level": 12, "turns": 884, "seconds": 160.43885582200164}
+rogue {'level': 2, 'turn': 6, 'xp': 140}
+rogue {'level': 3, 'turn': 20, 'xp': 300}
+rogue {'level': 4, 'turn': 37, 'xp': 600}
+rogue {'level': 5, 'turn': 82, 'xp': 1020}
+rogue {'level': 6, 'turn': 129, 'xp': 1530}
+rogue {'level': 7, 'turn': 179, 'xp': 2100}
+rogue {'level': 8, 'turn': 240, 'xp': 2820}
+rogue {'level': 9, 'turn': 305, 'xp': 3620}
+rogue {'level': 10, 'turn': 420, 'xp': 4560}
+rogue {'level': 11, 'turn': 532, 'xp': 5520}
+{"class": "rogue", "level": 12, "turns": 854, "seconds": 148.68992246199923}
+mage {'level': 2, 'turn': 6, 'xp': 140}
+mage {'level': 3, 'turn': 18, 'xp': 300}
+mage {'level': 4, 'turn': 34, 'xp': 600}
+mage {'level': 5, 'turn': 73, 'xp': 1020}
+mage {'level': 6, 'turn': 114, 'xp': 1530}
+mage {'level': 7, 'turn': 150, 'xp': 2100}
+mage {'level': 8, 'turn': 207, 'xp': 2820}
+mage {'level': 9, 'turn': 270, 'xp': 3620}
+mage {'level': 10, 'turn': 378, 'xp': 4560}
+mage {'level': 11, 'turn': 480, 'xp': 5520}
+mage {'level': 12, 'turn': 617, 'xp': 6640}
+{"class": "mage", "level": 13, "turns": 912, "seconds": 198.72394817100576}
+cleric {'level': 2, 'turn': 6, 'xp': 140}
+cleric {'level': 3, 'turn': 20, 'xp': 300}
+cleric {'level': 4, 'turn': 37, 'xp': 600}
+cleric {'level': 5, 'turn': 82, 'xp': 1020}
+cleric {'level': 6, 'turn': 129, 'xp': 1530}
+cleric {'level': 7, 'turn': 185, 'xp': 2100}
+cleric {'level': 8, 'turn': 247, 'xp': 2820}
+cleric {'level': 9, 'turn': 318, 'xp': 3620}
+cleric {'level': 10, 'turn': 448, 'xp': 4560}
+cleric {'level': 11, 'turn': 597, 'xp': 5520}
+{"class": "cleric", "level": 12, "turns": 884, "seconds": 221.8515585760033}
+artisan {'level': 2, 'turn': 5, 'xp': 130}
+artisan {'level': 3, 'turn': 17, 'xp': 330}
+artisan {'level': 4, 'turn': 35, 'xp': 630}
+artisan {'level': 5, 'turn': 74, 'xp': 1060}
+artisan {'level': 6, 'turn': 112, 'xp': 1500}
+artisan {'level': 7, 'turn': 149, 'xp': 2120}
+artisan {'level': 8, 'turn': 208, 'xp': 2840}
+artisan {'level': 9, 'turn': 271, 'xp': 3640}
+artisan {'level': 10, 'turn': 363, 'xp': 4530}
+artisan {'level': 11, 'turn': 453, 'xp': 5560}
+artisan {'level': 12, 'turn': 570, 'xp': 6610}
+artisan {'level': 13, 'turn': 708, 'xp': 7820}
+{"class": "artisan", "level": 14, "turns": 979, "seconds": 223.51855766700464}

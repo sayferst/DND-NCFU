@@ -1,0 +1,44 @@
+"""Final-source history profile; real waits and replay, no model calls or injected XP."""
+import hashlib
+import json
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+ROOT = Path.cwd()
+sys.path[:0] = [str(ROOT / 'src'), str(ROOT / 'tests')]
+from test_completion_revision import new_session
+from test_catalog_campaign import act
+from rpg_vkr.application import Session
+from rpg_vkr.narrative.records import Narration
+from rpg_vkr.narrative.context import build_frame
+
+output = ROOT / 'docs/validation/completion-audit-2026-10-28/history-10000-final-03.json'
+if output.exists():
+    raise SystemExit('Use a new attempt filename')
+source = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+s = new_session()
+report = {
+    'source_commit': source,
+    'catalog_sha256': hashlib.sha256((ROOT/'data/gameplay/catalog-v2.json').read_bytes()).hexdigest(),
+    'method': 'Mage in authored three-place world; public wait(1min) and add_narration at2000/5000/10000, full JSON reload and RNG equality at each checkpoint.',
+    'limitations': 'Wait-history profile on CI-class Linux, not a human or live-GM campaign. Three fixture narrations, not10000full prose responses. Load remains linear replay and takes minutes.',
+    'checkpoints': [],
+}
+last = 0
+for target in (2000,5000,10000):
+    begin = time.perf_counter()
+    for n in range(last,target):
+        act(s,'wait',minutes=1)
+    s.add_narration(Narration(target,'fixture:history','Проверочная запись времени.',build_frame(s).fingerprint))
+    serialized = json.dumps(s.to_dict(),ensure_ascii=False)
+    load_begin = time.perf_counter()
+    restored = Session.from_dict(json.loads(serialized),version=31)
+    elapsed = time.perf_counter()-load_begin
+    assert restored.to_dict()==s.to_dict() and restored.dice.checkpoint()==s.dice.checkpoint()
+    row = {'turns':target,'save_bytes':len(serialized.encode()),'elapsed_seconds':time.perf_counter()-begin,'load_seconds':elapsed,'state_and_rng_equal':True,'narration_anchor_verified':restored.narrations[-1].turn_index}
+    report['checkpoints'].append(row)
+    output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(row),flush=True)
+    last=target

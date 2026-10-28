@@ -1,0 +1,4 @@
+{
+  "history_profile_catalog_sha256": "1303a8c50039524c2282fd7f7fac959a6d24a6bbc2adbf8ffe5700968d607297",
+  "note": "10000-turn profile used this unpublished draft. Final content edits change names/construction ingredients; final causal-world edits add food-balance provenance and use herbs for faction food production. The history codec and replay mechanism are unchanged. This performance profile is not relabeled as final-content coverage; current code is checked separately."
+}

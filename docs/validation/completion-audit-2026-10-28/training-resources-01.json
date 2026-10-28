@@ -1,0 +1,9 @@
+{
+  "torch_installed": false,
+  "nvidia_smi_available": false,
+  "base_model_present": false,
+  "reviewed_dataset_present": false,
+  "training_started": false,
+  "optimizer_steps": 0,
+  "adapter_created": false
+}

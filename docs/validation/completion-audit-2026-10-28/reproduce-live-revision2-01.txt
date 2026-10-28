@@ -1,0 +1,42 @@
+"""Bounded existing A/B on revision2; no change to runtime defaults."""
+import getpass
+import hashlib
+import json
+import os
+import sys
+from decimal import Decimal
+from pathlib import Path
+
+ROOT = Path('/workspace/DND-NCFU')
+sys.path.insert(0, str(ROOT))
+from scripts.learning.compare_automatic_rag import compare
+from rpg_vkr.unified_session import UnifiedSession
+
+output = ROOT / 'docs/validation/completion-audit-2026-10-28/deepseek-revision2-ab-01.json'
+if output.exists():
+    raise SystemExit('Choose a new report filename')
+original = UnifiedSession.create
+
+def create_revision_two(*args, **kwargs):
+    kwargs['catalog_revision'] = 2
+    return original(*args, **kwargs)
+
+UnifiedSession.create = staticmethod(create_revision_two)
+key = os.environ.get('DND_ROUTERAI_API_KEY') or getpass.getpass('RouterAI key (hidden): ')
+try:
+    summary = compare(key, output, Decimal('47.0348'))
+    report = json.loads(output.read_text(encoding='utf-8'))
+    report.update(
+        source_commit='e6bb2373247873ae4074700259ea56e163faf2ec',
+        catalog_revision=2,
+        catalog_sha256=hashlib.sha256((ROOT/'data/gameplay/catalog-v2.json').read_bytes()).hexdigest(),
+        scenario_scope='Four original queries, one actual offline world and committed light spell; paired inference, not a 500-turn campaign.',
+    )
+    output.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(summary,ensure_ascii=False))
+except (ValueError, OSError) as error:
+    if not output.exists():
+        output.write_text(json.dumps({'status':'BLOCKED_PREFLIGHT','generation_requests':0,'reserved_upper_rub':'0','reason':str(error)[:250]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Probe stopped; see the sanitised report.')
+finally:
+    key = ''

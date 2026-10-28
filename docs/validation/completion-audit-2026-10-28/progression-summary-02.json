@@ -1,0 +1,81 @@
+{
+  "source_commit": "e6bb2373247873ae4074700259ea56e163faf2ec",
+  "classes": [
+    {
+      "class": "archer",
+      "level": 12,
+      "turns": 884,
+      "replay_and_rng_equal": true,
+      "save_bytes": 409351,
+      "seconds": 160.43885582200164,
+      "skip_reasons": {
+        "finite raw supply exhausted": 300,
+        "finite raw tool supply exhausted": 356
+      }
+    },
+    {
+      "class": "artisan",
+      "level": 14,
+      "turns": 979,
+      "replay_and_rng_equal": true,
+      "save_bytes": 459138,
+      "seconds": 223.51855766700464,
+      "skip_reasons": {
+        "finite raw supply exhausted": 408,
+        "finite raw tool supply exhausted": 498
+      }
+    },
+    {
+      "class": "cleric",
+      "level": 12,
+      "turns": 884,
+      "replay_and_rng_equal": true,
+      "save_bytes": 404106,
+      "seconds": 221.8515585760033,
+      "skip_reasons": {
+        "finite raw supply exhausted": 300,
+        "finite raw tool supply exhausted": 356
+      }
+    },
+    {
+      "class": "mage",
+      "level": 13,
+      "turns": 912,
+      "replay_and_rng_equal": true,
+      "save_bytes": 437707,
+      "seconds": 198.72394817100576,
+      "skip_reasons": {
+        "finite raw supply exhausted": 423,
+        "finite raw tool supply exhausted": 495
+      }
+    },
+    {
+      "class": "rogue",
+      "level": 12,
+      "turns": 854,
+      "replay_and_rng_equal": true,
+      "save_bytes": 406720,
+      "seconds": 148.68992246199923,
+      "skip_reasons": {
+        "finite raw supply exhausted": 295,
+        "finite raw tool supply exhausted": 355
+      }
+    },
+    {
+      "class": "warrior",
+      "level": 12,
+      "turns": 934,
+      "replay_and_rng_equal": true,
+      "save_bytes": 413838,
+      "seconds": 159.96297560499806,
+      "skip_reasons": {
+        "finite raw supply exhausted": 311,
+        "finite raw tool supply exhausted": 348
+      }
+    }
+  ],
+  "all_reached_twenty": false,
+  "all_replay_and_rng_equal": true,
+  "genesis": "Finite authored warehouse400units per raw material; merchant200000cp. No post-genesis XP/stock injection.",
+  "limitations": "Measurement succeeded, acceptance C01-C06 not passed. The controller exhausted raw/tool supply; class-neutral manufacturing/trade, not combat/stealth/ammo/mana balance or a scarce start. Other player strategies may continue progress."
+}

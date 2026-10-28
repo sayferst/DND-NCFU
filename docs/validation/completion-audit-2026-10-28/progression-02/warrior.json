@@ -1,0 +1,2708 @@
+{
+  "class": "warrior",
+  "level": 12,
+  "turns": 934,
+  "days": 21,
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 0,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 7,
+      "xp": 140
+    },
+    {
+      "level": 3,
+      "turn": 39,
+      "xp": 300
+    },
+    {
+      "level": 4,
+      "turn": 58,
+      "xp": 600
+    },
+    {
+      "level": 5,
+      "turn": 105,
+      "xp": 1020
+    },
+    {
+      "level": 6,
+      "turn": 155,
+      "xp": 1530
+    },
+    {
+      "level": 7,
+      "turn": 199,
+      "xp": 2100
+    },
+    {
+      "level": 8,
+      "turn": 262,
+      "xp": 2820
+    },
+    {
+      "level": 9,
+      "turn": 334,
+      "xp": 3620
+    },
+    {
+      "level": 10,
+      "turn": 514,
+      "xp": 4560
+    },
+    {
+      "level": 11,
+      "turn": 645,
+      "xp": 5520
+    }
+  ],
+  "skipped": [
+    {
+      "product": "gear_hammer_0_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_1_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_0_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_1_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_light_2_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_2_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_2_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_8_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_9_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_0_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_1_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_8_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_9_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_0_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_1_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_0_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_1_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_0_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_1_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_0_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_1_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_2_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_2_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_2_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_8_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_9_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_focus_0_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_1_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_2_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_8_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_9_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_light_0_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_1_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_2_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_8_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_9_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_0_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_1_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_8_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_9_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_1_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_1_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_0_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_1_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_2_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_3_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_3_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_3_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_3_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_9_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_0_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_1_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_2_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_8_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_9_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_0_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_1_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_2_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_8_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_9_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_0_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_1_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_8_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_9_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_1_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_0_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_1_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_0_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_1_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_2_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_3_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_4_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_4_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_4_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_4_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_4_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_8_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_9_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_0_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_1_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_2_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_8_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_9_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_0_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_1_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_2_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_8_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_9_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_0_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_1_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_8_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_9_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_1_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_1_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_0_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_1_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_2_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_3_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_4_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_5_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_5_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_9_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_axe_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_crossbow_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_dagger_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_focus_0_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_1_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_2_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_3_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_4_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_8_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_focus_9_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_greatsword_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_hammer_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_heavy_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_light_0_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_1_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_2_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_3_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_4_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_8_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_light_9_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_0_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_1_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_2_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_3_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_4_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_8_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_longbow_9_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_medium_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_1_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_2_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_3_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_4_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_shield_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_0_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_1_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_2_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_3_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_4_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_0",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_1",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_2",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_3",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_4",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_5",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "gear_sword_8_6",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_0_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_1_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_2_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_3_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_4_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_5_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_6_0",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_6_1",
+      "reason": "finite raw supply exhausted"
+    },
+    {
+      "product": "house_6_2",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_6_3",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_6_4",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_6_5",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_6_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_8_6",
+      "reason": "finite raw tool supply exhausted"
+    },
+    {
+      "product": "house_9_6",
+      "reason": "finite raw tool supply exhausted"
+    }
+  ],
+  "seconds": 159.96297560499806,
+  "save_bytes": 413838,
+  "replay_and_rng_equal": true,
+  "reached_level_twenty": false,
+  "catalog_sha256": "36bdcdc89d06f7d63f4991960ec02867f0b88f20202d125e1635eec4e6d93935",
+  "conditions": "Authored finite 400-units-per-raw-material warehouse and merchant200000cp; all post-genesis changes through Session; no injected XP/level.",
+  "limitations": "Class-neutral manufacturing/trade progression, not class-specific combat balance, a scarce market or human play."
+}
