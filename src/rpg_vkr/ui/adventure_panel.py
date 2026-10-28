@@ -231,7 +231,9 @@ def recover(window):
     ):
         return
     try:
-        session = window._campaign_repository.load(id)
+        from rpg_vkr.ui.save_loading import read_with_progress
+
+        session = read_with_progress(window, window._campaign_repository, id)
     except (OSError, ValueError, sqlite3.Error) as error:
         window.diary_status.setText("Кампания не открыта: " + str(error))
         return

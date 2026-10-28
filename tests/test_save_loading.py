@@ -57,3 +57,32 @@ def test_worker_error_is_preserved_for_the_existing_error_dialog(qt_app):
 
     with pytest.raises(SaveError, match="отклонена"):
         read_with_progress(None, BrokenStore(), 1)
+
+
+def test_sqlite_recovery_button_loads_on_worker_and_keeps_qt_responsive(window, monkeypatch):
+    from rpg_vkr.storage.campaigns import CampaignRepository
+
+    saved = Session(seed=37)
+    saved.submit("бросить d20")
+    repository = CampaignRepository(window._saves.directory.parent / "recovery.sqlite3")
+    repository.sync(saved)
+    identity = repository.identity(saved)
+    window._campaign_repository = repository
+    window.campaign_choice.clear()
+    window.campaign_choice.addItem("Сохранённая кампания", identity)
+    window._dirty = window._diary_draft = False
+    monkeypatch.setattr(window, "resume_session", lambda: None)
+    main_thread = get_ident()
+    release = Event()
+    actual_load = repository.load
+
+    def slow_load(id):
+        assert id == identity and get_ident() != main_thread
+        assert release.wait(timeout=5), "Recovery blocked the GUI timer"
+        return actual_load(id)
+
+    monkeypatch.setattr(repository, "load", slow_load)
+    QTimer.singleShot(20, release.set)
+    window.recover_campaign.click()
+    assert window._session.to_dict() == saved.to_dict()
+    assert window._session.dice.checkpoint() == saved.dice.checkpoint()
