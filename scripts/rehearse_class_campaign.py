@@ -105,9 +105,20 @@ def genesis(class_id, seed):
     return s
 
 
-def rehearse(class_id, seed, max_enemies, save_directory=None):
+def rehearse(class_id, seed, max_enemies, save_directory=None, continue_directory=None):
     begin = time.perf_counter()
-    s = genesis(class_id, seed)
+    s = (
+        SaveSlots(continue_directory).load(1)
+        if continue_directory is not None
+        else genesis(class_id, seed)
+    )
+    if s.gameplay["identity"]["class_id"] != class_id:
+        raise ValueError("Continuation class does not match")
+    inherited = {"turns": len(s.turns), "xp": s.gameplay["xp"], "level": level(s.gameplay["xp"])}
+    if continue_directory is not None:
+        inherited["source_save_sha256"] = hashlib.sha256(
+            (continue_directory / "slot-1.json").read_bytes()
+        ).hexdigest()
     counts = {}
     milestones = []
     errors = []
@@ -417,6 +428,7 @@ def rehearse(class_id, seed, max_enemies, save_directory=None):
         }
     return {
         "class": class_id,
+        "inherited_campaign": inherited,
         "source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
@@ -447,10 +459,11 @@ if __name__ == "__main__":
     p.add_argument("--max-enemies", type=int, default=320)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--save-directory", type=Path)
+    p.add_argument("--continue-directory", type=Path)
     a = p.parse_args()
     if a.output.exists() or (a.save_directory is not None and a.save_directory.exists()):
         raise SystemExit("Use a new report filename")
-    result = rehearse(a.class_id, a.seed, a.max_enemies, a.save_directory)
+    result = rehearse(a.class_id, a.seed, a.max_enemies, a.save_directory, a.continue_directory)
     a.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False), flush=True)
     raise SystemExit(0 if result["reached_twenty"] else 2)

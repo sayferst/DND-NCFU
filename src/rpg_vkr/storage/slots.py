@@ -37,7 +37,7 @@ class SaveSlots:
             raise ValueError("Slot must be 1, 2 or 3")
         return self.directory / f"slot-{slot}.json"
 
-    def _read(self, slot: int) -> tuple[Session, datetime]:
+    def _envelope(self, slot: int) -> tuple[dict, datetime]:
         path = self._path(slot)
         try:
             with path.open("rb") as stream:
@@ -47,6 +47,8 @@ class SaveSlots:
             data = json.loads(raw)
             if not isinstance(data, dict) or set(data) != {"schema_version", "saved_at", "session"}:
                 raise ValueError("Invalid save structure")
+            if not isinstance(data["session"], dict):
+                raise ValueError("Invalid session structure")
             if type(data["schema_version"]) is not int or data["schema_version"] not in (
                 1,
                 2,
@@ -85,7 +87,7 @@ class SaveSlots:
             if saved_at.tzinfo is None:
                 raise ValueError("Missing timestamp timezone")
             saved_at = saved_at.astimezone()
-            return Session.from_dict(data["session"], version=data["schema_version"]), saved_at
+            return data, saved_at
         except FileNotFoundError as error:
             raise SaveError("Эта ячейка пуста.") from error
         except (ValueError, TypeError, KeyError, RecursionError, OverflowError) as error:
@@ -93,15 +95,30 @@ class SaveSlots:
         except OSError as error:
             raise SaveError("Не удалось прочитать сохранение. Проверьте доступ к папке.") from error
 
+    def _read(self, slot: int) -> tuple[Session, datetime]:
+        data, saved_at = self._envelope(slot)
+        try:
+            return Session.from_dict(data["session"], version=data["schema_version"]), saved_at
+        except (ValueError, TypeError, KeyError, RecursionError, OverflowError) as error:
+            raise SaveError("Сохранение повреждено или имеет неподдерживаемую версию.") from error
+        except OSError as error:
+            raise SaveError("Не удалось прочитать сохранение. Проверьте доступ к папке.") from error
+
     def info(self, slot: int) -> SlotInfo:
         try:
-            session, saved_at = self._read(slot)
+            data, saved_at = self._envelope(slot)
         except SaveError as error:
             if isinstance(error.__cause__, FileNotFoundError):
                 return SlotInfo(False, "пусто")
             return SlotInfo(True, "повреждено или недоступно")
         timestamp = saved_at.astimezone().strftime("%d.%m.%Y %H:%M")
-        return SlotInfo(True, f"{timestamp} · действий: {len(session.turns)}")
+        # This is an advisory listing, not an integrity verdict. Only load() replays
+        # the campaign. Compressed/forked formats need no replay to show their date.
+        session = data["session"]
+        snapshot = session.get("snapshot", session)
+        turns = snapshot.get("turns") if isinstance(snapshot, dict) else None
+        detail = f"действий: {len(turns)}" if isinstance(turns, list) else "кампания"
+        return SlotInfo(True, f"{timestamp} · {detail}")
 
     def load(self, slot: int) -> Session:
         return self._read(slot)[0]

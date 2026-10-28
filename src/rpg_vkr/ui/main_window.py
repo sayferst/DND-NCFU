@@ -737,7 +737,9 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
 
     def load_slot(self, slot: int) -> None:
         try:
-            session = self._saves.load(slot)
+            from rpg_vkr.ui.save_loading import read_with_progress
+
+            session = read_with_progress(self, self._saves, slot)
         except SaveError as error:
             QMessageBox.warning(self, "Ошибка загрузки", str(error))
             return
