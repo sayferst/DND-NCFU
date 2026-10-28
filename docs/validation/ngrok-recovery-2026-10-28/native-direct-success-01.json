@@ -1,0 +1,16 @@
+{
+  "source_commit": "ef5a1db5270cb0e69e6bf69a471f9a16d0ea6af7",
+  "run_id": 40725524210,
+  "job_id": 122947611179,
+  "conclusion": "success",
+  "windows_tests_passed": 43,
+  "linux_targeted_tests_passed": 65,
+  "actual_update_agent_executions": 2,
+  "official_version": "3.39.13",
+  "old_file_preserved": true,
+  "authenticode_trust": "Valid",
+  "publisher": "ngrok, Inc.",
+  "bootstrap_or_self_update_executions": 0,
+  "paid_model_calls": 0,
+  "owner_restart": "pending"
+}
