@@ -1,0 +1,133 @@
+{
+  "class": "cleric",
+  "seed": 17,
+  "level": 20,
+  "turns": 1869,
+  "days": 86,
+  "victories": 149,
+  "actions": {
+    "rest": 181,
+    "buy": 3,
+    "research": 1,
+    "world_registration": 181,
+    "encounter": 181,
+    "cast": 996,
+    "wait": 247,
+    "sell": 68,
+    "raise": 8,
+    "talent": 3
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 19,
+      "xp": 100
+    },
+    {
+      "level": 3,
+      "turn": 56,
+      "xp": 310
+    },
+    {
+      "level": 4,
+      "turn": 103,
+      "xp": 610
+    },
+    {
+      "level": 5,
+      "turn": 166,
+      "xp": 1045
+    },
+    {
+      "level": 6,
+      "turn": 227,
+      "xp": 1570
+    },
+    {
+      "level": 7,
+      "turn": 309,
+      "xp": 2110
+    },
+    {
+      "level": 8,
+      "turn": 408,
+      "xp": 2860
+    },
+    {
+      "level": 9,
+      "turn": 491,
+      "xp": 3700
+    },
+    {
+      "level": 10,
+      "turn": 586,
+      "xp": 4540
+    },
+    {
+      "level": 11,
+      "turn": 681,
+      "xp": 5500
+    },
+    {
+      "level": 12,
+      "turn": 784,
+      "xp": 6700
+    },
+    {
+      "level": 13,
+      "turn": 879,
+      "xp": 7840
+    },
+    {
+      "level": 14,
+      "turn": 1017,
+      "xp": 9190
+    },
+    {
+      "level": 15,
+      "turn": 1140,
+      "xp": 10555
+    },
+    {
+      "level": 16,
+      "turn": 1280,
+      "xp": 12055
+    },
+    {
+      "level": 17,
+      "turn": 1426,
+      "xp": 13705
+    },
+    {
+      "level": 18,
+      "turn": 1560,
+      "xp": 15460
+    },
+    {
+      "level": 19,
+      "turn": 1701,
+      "xp": 17110
+    },
+    {
+      "level": 20,
+      "turn": 1869,
+      "xp": 19150
+    }
+  ],
+  "errors": [],
+  "replay_and_rng_equal": true,
+  "reached_twenty": true,
+  "seconds": 1598.44480053,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.",
+  "persistence": {
+    "json_bytes": 1921820,
+    "json_sha256": "b0ee6d86c28dd6ce506c9046c184cf981189a5f88cce0528cbacb8ca6b472c3e",
+    "sqlite_bytes": 17428480,
+    "json_sqlite_and_rng_equal": true
+  }
+}

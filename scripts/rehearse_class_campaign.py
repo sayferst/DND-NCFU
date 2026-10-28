@@ -1,7 +1,9 @@
 """Public-action class campaign; normal hero kit, finite town, real enemy templates."""
 
 import argparse
+import hashlib
 import json
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -16,6 +18,8 @@ from rpg_vkr.domain.adventure import build_world  # noqa: E402
 from rpg_vkr.domain.catalog import Definition, Entity  # noqa: E402
 from rpg_vkr.domain.character import ABILITY_NAMES, Character  # noqa: E402
 from rpg_vkr.domain.unified import CLASSES, level  # noqa: E402
+from rpg_vkr.storage.campaigns import CampaignRepository  # noqa: E402
+from rpg_vkr.storage.slots import SaveSlots  # noqa: E402
 from rpg_vkr.unified_session import UnifiedSession  # noqa: E402
 
 
@@ -36,6 +40,14 @@ def genesis(class_id, seed):
             "name": "Старый рудник",
             "parent": "pier",
             "description": "Короткая дорога к забою.",
+        }
+    )
+    w["places"].append(
+        {
+            "id": "forest",
+            "name": "Лес у поселения",
+            "parent": "pier",
+            "description": "Конечная лесная делянка, доступная по дороге от пристани.",
         }
     )
     w["entities"] = [e for e in w["entities"] if e["id"] not in ("watcher", "stock", "rope")]
@@ -93,7 +105,7 @@ def genesis(class_id, seed):
     return s
 
 
-def rehearse(class_id, seed, max_enemies):
+def rehearse(class_id, seed, max_enemies, save_directory=None):
     begin = time.perf_counter()
     s = genesis(class_id, seed)
     counts = {}
@@ -150,20 +162,25 @@ def rehearse(class_id, seed, max_enemies):
                 continue
             row = c.row(key)
             if row["kind"] == "material" and not row["process"]:
-                for destination in ("pier", "path", "mine"):
+                for destination in ("pier", "path", "mine", "forest"):
                     if s.interaction_state().current != destination:
                         if s.interaction_state().current != "pier":
                             safe_travel("pier")
                         if destination != "pier":
                             safe_travel(destination)
-                    if s.gameplay["living_world"]["nodes"][destination].get(key, 0) > 0:
+                    nodes = s.gameplay["living_world"]["nodes"][destination]
+                    deposit = s.gameplay["living_world"]["society"]["places"][destination][
+                        "deposits"
+                    ]
+                    available = nodes.get(key, 0) + deposit.get(key, 0)
+                    if available > 0:
                         act(
                             "gather",
                             material=key,
                             quantity=min(
                                 5,
                                 n - qty(key),
-                                s.gameplay["living_world"]["nodes"][destination][key],
+                                available,
                             ),
                         )
                         break
@@ -254,12 +271,16 @@ def rehearse(class_id, seed, max_enemies):
                     break
                 for key, n in recipe["ingredients"].items():
                     obtain(key, n)
+                if s.interaction_state().current != "pier":
+                    safe_travel("pier")
                 act("repair", recipe=recipe["id"], item=item["id"])
                 item = next(i for i in s.gameplay["items"] if i["id"] == item["id"])
         if class_id == "archer":
             while qty("use_ammunition_0_0") < 36:
                 obtain("mat_0_0", 2)
                 obtain("mat_1_0", 1)
+                if s.interaction_state().current != "pier":
+                    safe_travel("pier")
                 act("manufacture", recipe="recipe_production_0_0", result="use_ammunition_0_0")
         lv = level(s.gameplay["xp"])
         while 2 * sum(lv >= x for x in (4, 8, 12, 16, 20)) > sum(
@@ -376,8 +397,29 @@ def rehearse(class_id, seed, max_enemies):
     payload = json.loads(json.dumps(s.to_dict()))
     restored = Session.from_dict(payload, version=31)
     assert restored.to_dict() == s.to_dict() and restored.dice.checkpoint() == s.dice.checkpoint()
+    persistence = {}
+    if save_directory is not None:
+        slots = SaveSlots(save_directory / "saves")
+        slots.save(1, s)
+        restored = slots.load(1)
+        repository = CampaignRepository(save_directory / "campaigns.sqlite3")
+        repository.sync(s)
+        sqlite_restored = repository.load(repository.identity(s))
+        for loaded in (restored, sqlite_restored):
+            assert loaded.to_dict() == s.to_dict()
+            assert loaded.dice.checkpoint() == s.dice.checkpoint()
+        path = save_directory / "saves/slot-1.json"
+        persistence = {
+            "json_bytes": path.stat().st_size,
+            "json_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "sqlite_bytes": (save_directory / "campaigns.sqlite3").stat().st_size,
+            "json_sqlite_and_rng_equal": True,
+        }
     return {
         "class": class_id,
+        "source_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip(),
         "seed": seed,
         "level": level(s.gameplay["xp"]),
         "turns": len(s.turns),
@@ -394,6 +436,7 @@ def rehearse(class_id, seed, max_enemies):
             "No injected XP or post-genesis stock. Enemies added by real catalog registrations "
             "using unmodified creature templates. Automated authored scenario, not human play."
         ),
+        "persistence": persistence,
     }
 
 
@@ -403,10 +446,11 @@ if __name__ == "__main__":
     p.add_argument("--seed", type=int, default=17)
     p.add_argument("--max-enemies", type=int, default=320)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--save-directory", type=Path)
     a = p.parse_args()
-    if a.output.exists():
+    if a.output.exists() or (a.save_directory is not None and a.save_directory.exists()):
         raise SystemExit("Use a new report filename")
-    result = rehearse(a.class_id, a.seed, a.max_enemies)
+    result = rehearse(a.class_id, a.seed, a.max_enemies, a.save_directory)
     a.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False), flush=True)
     raise SystemExit(0 if result["reached_twenty"] else 2)

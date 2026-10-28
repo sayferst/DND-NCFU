@@ -1,0 +1,24 @@
+F
+=================================== FAILURES ===================================
+_____ test_actual_published_writer_two_fixture_and_next_d100_are_unchanged _____
+
+    def test_actual_published_writer_two_fixture_and_next_d100_are_unchanged():
+        path = Path("docs/validation/final-campaign-2026-10-28/published-catalog2-save.json")
+        raw = path.read_bytes()
+        saved = json.loads(raw)
+        assert saved["source_commit"] == "e6bb2373247873ae4074700259ea56e163faf2ec"
+        session = Session.from_dict(saved["session"], version=saved["schema_version"])
+>       assert session.to_dict() == saved["session"]
+E       AssertionError: assert {'snapshot': ...fied-d20-v1'}} == {'snapshot': ...fied-d20-v1'}}
+E         
+E         Differing items:
+E         {'snapshot': {'campaign': {'hero_id': 'c28a62ac-d138-41e0-b5d0-b03add339153', 'npc_profiles': (), 'raw_player_descript...', 'private_plot': 'Не навязывать готовый путь. Связать происхождение героя с потерянной картой: \nМир: ', ...}}, ...}} != {'snapshot': {'campaign': {'hero_id': 'c28a62ac-d138-41e0-b5d0-b03add339153', 'npc_profiles': [], 'raw_player_descript...', 'private_plot': 'Не навязывать готовый путь. Связать происхождение героя с потерянной картой: \nМир: ', ...}}, ...}}
+E         {'unified': {'operations': [{'method': 'start_world', 'world_seed': {'catalo...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/test_revision_three_transactions.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_revision_three_transactions.py::test_actual_published_writer_two_fixture_and_next_d100_are_unchanged
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.47s

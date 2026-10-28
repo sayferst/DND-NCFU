@@ -175,12 +175,31 @@ def perform(e, command, args):
         if row["base"] not in (1, 2, 3) and not has_tool(e, "tools"):
             raise ValueError("Нужны исправные инструменты.")
         node = e.state["living_world"]["nodes"][e.scene.current]
-        if node.get(template, 0) < quantity:
+        deposit = (
+            e.state["living_world"]["society"]["places"][e.scene.current]["deposits"]
+            if e.state.get("catalog_revision") == 3
+            else {}
+        )
+        opened = max(0, quantity - node.get(template, 0))
+        if opened and (deposit.get(template, 0) < opened or not has_tool(e, "tools")):
             raise ValueError("Запас сырья исчерпан.")
         success = e.check("survival", 5 + 5 * (row["base"] // 5))
         e.action_minutes = 10 * quantity
         if success:
-            node[template] -= quantity
+            node[template] -= quantity - opened
+            if opened:
+                from rpg_vkr.domain.society import emit
+
+                deposit[template] -= opened
+                emit(
+                    e,
+                    "deposit_harvested",
+                    e.scene.current,
+                    actor="hero",
+                    resource=template,
+                    quantity=opened,
+                    deposit_after=deposit[template],
+                )
             e.add_item(template, quantity)
             if e.state.get("catalog_revision") == 3:
                 gathered = e.state["activity"]["gathered"]
@@ -850,7 +869,9 @@ def trade(e, operation, args):
     ):
         raise ValueError("Торговец недоступен.")
     quantity = args.get("quantity", 1)
-    if type(quantity) is not int or quantity != 1:
+    if type(quantity) is not int or not 1 <= quantity <= (
+        20 if e.state.get("catalog_revision") == 3 else 1
+    ):
         raise ValueError("Сделки передают одну единицу.")
     wallet = dict(merchant.state or {})
     if wallet.get("closed_until", 0) > e.state["minute"]:
@@ -859,6 +880,8 @@ def trade(e, operation, args):
         entity = e.actors.get(args["item"])
         if entity is None or entity.owner_id != merchant.id:
             raise ValueError("Товара нет у продавца.")
+        if entity.quantity < quantity:
+            raise ValueError("У продавца нет такого количества.")
         definition = e.definitions[entity.definition_id]
         price = definition.price_cp
         if price is None:
@@ -875,25 +898,30 @@ def trade(e, operation, args):
             price = max(1, price)
         else:
             price = max(1, price * e.state["living_world"].get("price_percent", 100) // 100)
+        price *= quantity
         if e.state["copper"] < price:
             raise ValueError("Недостаточно денег.")
         thing = e.things[entity.id]
-        if entity.quantity > 1:
-            e.actors[entity.id] = replace(entity, quantity=entity.quantity - 1)
-            e.things[entity.id] = replace(thing, quantity=entity.quantity - 1)
+        if entity.quantity > quantity:
+            e.actors[entity.id] = replace(entity, quantity=entity.quantity - quantity)
+            e.things[entity.id] = replace(thing, quantity=entity.quantity - quantity)
             for existing in e.state["items"]:
                 if existing["id"] == entity.id:
-                    existing["quantity"] = entity.quantity - 1
-            entity = replace(entity, id=e.mint("purchase"), quantity=1)
+                    existing["quantity"] = entity.quantity - quantity
+            entity = replace(entity, id=e.mint("purchase"), quantity=quantity)
         entity = replace(entity, owner_id="hero", parent_id="hero")
         e.actors[entity.id] = entity
-        e.things[entity.id] = replace(thing, id=entity.id, holder="hero", owner="hero", quantity=1)
+        e.things[entity.id] = replace(
+            thing, id=entity.id, holder="hero", owner="hero", quantity=quantity
+        )
         e.state["items"] = [i for i in e.state["items"] if i["id"] != entity.id]
         e.owned(entity.id)
         e.state["copper"] -= price
         wallet["gold_cp"] = wallet.get("gold_cp", 0) + price
     elif operation == "sell":
         item = e.owned(args["item"])
+        if item["quantity"] < quantity:
+            raise ValueError("Нет такого количества для продажи.")
         if item["id"] in (e.state["weapon"], e.state["armour"], e.state["shield"]):
             raise ValueError("Сначала снимите снаряжение.")
         price = max(1, item["price_cp"] // 2)
@@ -901,15 +929,16 @@ def trade(e, operation, args):
             from rpg_vkr.domain.society import price_percent, unit_value
 
             price = max(1, unit_value(e, item) * price_percent(e, item.get("template")) // 200)
+        price *= quantity
         if wallet.get("gold_cp", 0) < price:
             raise ValueError("У торговца недостаточно средств.")
         wallet["gold_cp"] -= price
         e.state["copper"] += price
         if item.get("made_by") == "hero":
             e.award("order:" + item["template"], 40 + 10 * e.template(item)["level"])
-        if item["quantity"] > 1:
-            e.consume_item(item)
-            sold = dict(item, id=e.mint("sold"), quantity=1, owner=merchant.id)
+        if item["quantity"] > quantity:
+            e.consume_item(item, quantity)
+            sold = dict(item, id=e.mint("sold"), quantity=quantity, owner=merchant.id)
             sold.pop("source", None)
             e.state["items"].append(sold)
         else:

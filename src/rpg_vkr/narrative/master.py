@@ -234,6 +234,11 @@ def campaign_context(session, target="", *, query=""):
 
         public_simulation["mechanics_revision"] = 3
         public_simulation["contracts"] = public_contracts(session)
+        for id, resident in session.gameplay["living_world"]["residents"].items():
+            if session.actor_is_here(id):
+                public_simulation["living_world"]["nearby_goals"][id]["unconfirmed_rumors"] = (
+                    resident.get("rumors", [])[-5:]
+                )
     if getattr(session, "_rag_mode", 0) == 2:
         public_simulation["rag_enabled"] = True
     features = getattr(session, "_learning_flags", {})

@@ -10,6 +10,7 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--self-check", action="store_true")
     mode.add_argument("--smoke-test", action="store_true")
+    mode.add_argument("--verify-saved-campaign", metavar="DIRECTORY")
     parser.add_argument("--report")
     parser.add_argument("--data-dir")
     args = parser.parse_args(sys.argv[1:])
@@ -30,6 +31,12 @@ def main() -> int:
     app.setApplicationDisplayName(DISPLAY_NAME)
     app.setApplicationVersion(VERSION)
     app.setWindowIcon(QIcon(str(resource_path("rpg_vkr/ui/assets/DND-NCFU.png"))))
+    if args.verify_saved_campaign:
+        from rpg_vkr.self_check import write_report
+        from rpg_vkr.storage.update_probe import verify
+
+        write_report(args.report, verify(args.verify_saved_campaign))
+        return 0
     if args.self_check or args.smoke_test:
         from rpg_vkr.self_check import check_resources, write_report
 

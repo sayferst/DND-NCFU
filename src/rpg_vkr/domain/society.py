@@ -54,7 +54,8 @@ def initialize(e):
             "predator_hunger": 0,
             "prey_hunger": 0,
             "population_cap": 24,
-            "deposits": {f"mat_{i}_0": 120 for i in (0, 5, 6, 7, 8, 9)},
+            "deposits": {f"mat_{i}_0": 120 for i in (0, 5, 6, 7, 8, 9)}
+            | ({"mat_1_0": 120} if habitat == 0 else {}),
             "price": 100,
             "weather_cause": None,
         }
@@ -97,8 +98,13 @@ def initialize(e):
         if not group:
             continue
         identifier(group)
-        name = spec.properties.get("faction_name", group)
-        goal = spec.properties.get("faction_goal", "prosperity")
+        name = spec.properties.get(
+            "faction_name",
+            factions[group]["name"] if group in factions else group.replace("_", " "),
+        )
+        goal = spec.properties.get(
+            "faction_goal", factions[group]["goal"] if group in factions else "prosperity"
+        )
         label(name, 100)
         if goal not in ("security", "prosperity"):
             raise ValueError("Неизвестная цель объединения.")
@@ -181,6 +187,9 @@ def emit(e, kind, place, *, cause=None, **details):
             "quantity",
             "shipment",
             "weather",
+            "reporter",
+            "reported_event",
+            "confirmed",
         )
     }
     w["observed"].setdefault(place, []).append(public)
@@ -252,7 +261,7 @@ def hourly(e):
             continue
         p = e.refs[id].place
         person = s["people"][id]
-        if not person["civilian"]:
+        if not person["civilian"] or not person["mature"]:
             continue
         person["known_places"][p] = {"food": w["stocks"][p]["food"], "seen_day": w["day"]}
         destination = resident["work"] if 8 <= hour < 18 else resident["home"]
@@ -771,13 +780,13 @@ def day(e, number):
     for place in sorted(w["stocks"]):
         ecology(e, place, number)
     for id, resident in sorted(w["residents"].items()):
-        if id not in e.refs or id in engaged or e.hp(id) <= 0:
+        if id not in e.refs or id in engaged or (e.actors[id].state or {}).get("life") == "dead":
             continue
         if not s["people"][id]["civilian"]:
             continue
         place = e.refs[id].place
         stock = w["stocks"][place]
-        if resident["job"] != "dependent":
+        if resident["job"] != "dependent" and e.hp(id) > 0:
             livelihood(e, id, place)
         if resident["food"]:
             resident["food"] -= 1
@@ -810,7 +819,10 @@ def day(e, number):
 
 
 def advance(e, start, end):
+    from rpg_vkr.domain.contracts import expire
+
     initialize(e)
+    expire(e)
     if start // 60 != end // 60:
         hourly(e)
     for number in range(e.state["living_world"]["day"] + 1, end // 1440 + 1):
@@ -822,6 +834,59 @@ def apply_event(e, row, place=None):
 
     s = initialize(e)
     place = place or e.scene.current
+    if row["op"] in ("gossip", "exchange_news"):
+        people = [
+            id
+            for id in sorted(e.refs)
+            if e.refs[id].place == place
+            and e.hp(id) > 0
+            and (
+                s["people"][id]["civilian"]
+                or e.definitions[e.actors[id].definition_id].properties.get("can_speak") is True
+            )
+        ]
+        if len(people) < 2:
+            return False
+        reporter = people[row["role"] % len(people)]
+        recipient = people[(row["role"] + 1) % len(people)]
+        resident = e.state["living_world"]["residents"][reporter]
+        available = [
+            r
+            for r in s["ledger"]
+            if r["id"] in resident["knowledge"]
+            and r.get("resource") == row["resource"]
+            and r["kind"] != "rumor_received"
+            and r["id"] not in e.state["living_world"]["residents"][recipient]["knowledge"]
+        ]
+        if not available:
+            return False
+        fact = available[-1]
+        heard = e.state["living_world"]["residents"][recipient].setdefault("rumors", [])
+        if any(r["event_id"] == fact["id"] and r["reporter"] == reporter for r in heard):
+            return False
+        heard.append(
+            {
+                "event_id": fact["id"],
+                "reporter": reporter,
+                "confirmed": False,
+                "topic": row["resource"],
+                "received_minute": e.state["minute"],
+            }
+        )
+        heard[:] = heard[-30:]
+        emit(
+            e,
+            "rumor_received",
+            place,
+            actor=recipient,
+            reporter=reporter,
+            reported_event=fact["id"],
+            confirmed=False,
+            resource=row["resource"],
+            template=row["id"],
+            cause=fact["id"],
+        )
+        return True
     if row["op"] in ("delivery", "resupply", "subsidy"):
         resource, amount = row["resource"], row["amount"]
         sources = [

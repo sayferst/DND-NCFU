@@ -78,6 +78,14 @@ def test_revision_three_record_executes(id, monkeypatch):
             for actor_id, resident in engine.state["living_world"]["residents"].items():
                 resident["job"] = "resident"
                 resident["knowledge"] = ["observed_" + actor_id]
+                engine.state["living_world"]["society"]["people"][actor_id]["civilian"] = True
+            from rpg_vkr.domain.society import emit
+
+            emit(engine, "resource_observed", engine.scene.current, resource=row["resource"])
+            if row["op"] in ("gossip", "exchange_news"):
+                people = sorted(engine.refs)
+                recipient = people[(row["role"] + 1) % len(people)]
+                engine.state["living_world"]["residents"][recipient]["knowledge"] = []
             before = deepcopy(engine.state["living_world"])
             assert apply_event(engine, row)
             assert engine.state["living_world"] != before

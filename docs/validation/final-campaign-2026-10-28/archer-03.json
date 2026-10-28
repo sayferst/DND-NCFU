@@ -1,0 +1,111 @@
+{
+  "class": "archer",
+  "seed": 17,
+  "level": 14,
+  "turns": 1613,
+  "days": 91,
+  "victories": 98,
+  "actions": {
+    "rest": 111,
+    "buy": 20,
+    "manufacture": 48,
+    "gather": 116,
+    "world_registration": 110,
+    "encounter": 110,
+    "attack": 327,
+    "wait": 174,
+    "sell": 72,
+    "recover": 1,
+    "research": 3,
+    "repair": 33,
+    "raise": 6,
+    "talent": 2,
+    "ability": 145,
+    "travel": 335
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 30,
+      "xp": 100
+    },
+    {
+      "level": 3,
+      "turn": 73,
+      "xp": 310
+    },
+    {
+      "level": 4,
+      "turn": 128,
+      "xp": 630
+    },
+    {
+      "level": 5,
+      "turn": 191,
+      "xp": 1065
+    },
+    {
+      "level": 6,
+      "turn": 251,
+      "xp": 1515
+    },
+    {
+      "level": 7,
+      "turn": 339,
+      "xp": 2145
+    },
+    {
+      "level": 8,
+      "turn": 436,
+      "xp": 2880
+    },
+    {
+      "level": 9,
+      "turn": 530,
+      "xp": 3635
+    },
+    {
+      "level": 10,
+      "turn": 637,
+      "xp": 4580
+    },
+    {
+      "level": 11,
+      "turn": 797,
+      "xp": 5510
+    },
+    {
+      "level": 12,
+      "turn": 946,
+      "xp": 6710
+    },
+    {
+      "level": 13,
+      "turn": 1100,
+      "xp": 7850
+    },
+    {
+      "level": 14,
+      "turn": 1290,
+      "xp": 9200
+    }
+  ],
+  "errors": [
+    "resource exhausted mat_1_0"
+  ],
+  "replay_and_rng_equal": true,
+  "reached_twenty": false,
+  "seconds": 1240.3010838359987,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.",
+  "persistence": {
+    "json_bytes": 1525414,
+    "json_sha256": "d81c40751f0640cf898a59985c70a34ddb77c2e6ccb4eddd270335050f33e744",
+    "sqlite_bytes": 11177984,
+    "json_sqlite_and_rng_equal": true
+  }
+}

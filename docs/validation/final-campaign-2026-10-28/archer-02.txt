@@ -1,0 +1,9 @@
+archer {'level': 1, 'turn': 1, 'xp': 0}
+archer {'level': 2, 'turn': 30, 'xp': 100}
+archer {'level': 3, 'turn': 73, 'xp': 310}
+archer {'level': 4, 'turn': 128, 'xp': 630}
+archer {'level': 5, 'turn': 191, 'xp': 1065}
+archer {'level': 6, 'turn': 251, 'xp': 1515}
+archer {'level': 7, 'turn': 339, 'xp': 2145}
+archer {'level': 8, 'turn': 436, 'xp': 2880}
+{"class": "archer", "seed": 17, "level": 8, "turns": 516, "days": 22, "victories": 44, "actions": {"rest": 48, "buy": 20, "manufacture": 18, "gather": 39, "world_registration": 47, "encounter": 47, "attack": 153, "wait": 52, "sell": 40, "recover": 1, "research": 3, "repair": 12, "raise": 4, "talent": 1, "ability": 30, "travel": 1}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 30, "xp": 100}, {"level": 3, "turn": 73, "xp": 310}, {"level": 4, "turn": 128, "xp": 630}, {"level": 5, "turn": 191, "xp": 1065}, {"level": 6, "turn": 251, "xp": 1515}, {"level": 7, "turn": 339, "xp": 2145}, {"level": 8, "turn": 436, "xp": 2880}], "errors": ["Нужны инструменты и подходящее рабочее место."], "replay_and_rng_equal": true, "reached_twenty": false, "seconds": 129.56032296799822, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.", "persistence": {"json_bytes": 712379, "json_sha256": "b54bd31c7730d21abba23d20d3e266d7c7fcded60c693238987eb313ab5da476", "sqlite_bytes": 3477504, "json_sqlite_and_rng_equal": true}}

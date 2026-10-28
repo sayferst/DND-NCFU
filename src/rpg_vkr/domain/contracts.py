@@ -109,7 +109,10 @@ def perform(e, args):
     key = args["offer"]
     quests = e.state.setdefault("contracts", {})
     if operation == "accept":
-        offer = next((q for q in _offers(e.state, e.catalog, e.scene) if q["id"] == key), None)
+        from dataclasses import replace
+
+        current = replace(e.catalog, entities=tuple(e.actors.values()))
+        offer = next((q for q in _offers(e.state, current, e.scene) if q["id"] == key), None)
         if offer is None:
             raise ValueError("Предложение устарело или недоступно.")
         actor, _ = e.actor(offer["npc"])
@@ -117,8 +120,6 @@ def perform(e, args):
         if wallet.get("gold_cp", 0) < offer["reward_cp"]:
             raise ValueError("Награда не обеспечена средствами заказчика.")
         wallet["gold_cp"] = wallet.get("gold_cp", 0) - offer["reward_cp"]
-        from dataclasses import replace
-
         e.actors[actor.id] = replace(actor, state=wallet)
         quests[key] = offer | {"status": "accepted", "escrow_cp": offer["reward_cp"]}
         e.text.append(
@@ -213,4 +214,5 @@ def faction_action(e, args):
     e.state["copper"] -= amount
     f["treasury_cp"] += amount
     f["reputation"] = min(100, f["reputation"] + 1)
+    e.state["known_factions"][id]["reputation"] = f["reputation"]
     e.text.append("В объединение передано " + str(amount) + " медных.")

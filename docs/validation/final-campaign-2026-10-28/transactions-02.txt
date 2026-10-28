@@ -1,0 +1,17 @@
+.....F
+=================================== FAILURES ===================================
+_________ test_rumor_is_not_confirmed_knowledge_or_hidden_source_fact __________
+
+    def test_rumor_is_not_confirmed_knowledge_or_hidden_source_fact():
+        s = started()
+        with content.using(3):
+            e = Engine(s.gameplay, context(s), DiceRoller(seed=0), {})
+>           event = next(r for r in content.load().values() if r.get("op") == "gossip")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           StopIteration
+
+tests/test_revision_three_transactions.py:106: StopIteration
+=========================== short test summary info ============================
+FAILED tests/test_revision_three_transactions.py::test_rumor_is_not_confirmed_knowledge_or_hidden_source_fact
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 5 passed in 0.85s

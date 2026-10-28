@@ -10,6 +10,11 @@ def perform(e, command, args):
             raise ValueError("Нет активной схватки.")
         if destination not in e.neighbors():
             raise ValueError("Нужен соседний известный путь.")
+        if (
+            e.state["living_world"].get("blocked_until", {}).get(e.scene.current, 0)
+            > e.state["minute"]
+        ):
+            raise ValueError("Путь временно перекрыт.")
         if e.state["living_world"].get("blocked_until", {}).get(destination, 0) > e.state["minute"]:
             raise ValueError("Путь временно перекрыт.")
         if e.state["st"] < 3:

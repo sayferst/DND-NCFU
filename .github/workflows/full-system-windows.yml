@@ -16,6 +16,7 @@ on:
       - 'installer/**'
 permissions:
   contents: read
+  actions: read
 jobs:
   launchers:
     runs-on: windows-latest
@@ -71,9 +72,20 @@ jobs:
         run: |
           & .\scripts\build_windows.ps1 -Installer -Profile developer -TextModel 'deepseek/deepseek-v4.1-flash'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: e6bb2373247873ae4074700259ea56e163faf2ec
+          path: build/previous-source
+      - name: Download the previously validated 0.3.1 installer
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 40609470324 --repo sayferst/DND-NCFU --name full-system-native-windows --dir build/previous-native
+          if ($LASTEXITCODE -ne 0) { throw 'Historical installer download failed.' }
       - name: Install, launch, update and check isolated data
         shell: powershell
-        run: .\scripts\probe_windows_setup.ps1
+        run: .\scripts\probe_windows_setup.ps1 -PreviousInstaller build\previous-native\dist\DND-NCFU-Setup.exe -PreviousSource build\previous-source
       - name: Upload package and actual reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

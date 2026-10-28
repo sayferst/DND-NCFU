@@ -59,9 +59,14 @@ class CopperTradeDialog(QDialog):
         id, _, _, equipment = self.rows[row]
         operation = "buy" if self.mode.currentIndex() == 0 else "sell"
         if equipment:
-            if self.quantity.value() != 1:
+            expanded = self.session.gameplay.get("catalog_revision") == 3
+            if self.quantity.value() != 1 and not expanded:
                 raise ValueError("Этот экземпляр передаётся по одному.")
-            return operation, {"merchant": self.actor_id, "item": id}
+            return operation, {
+                "merchant": self.actor_id,
+                "item": id,
+                **({"quantity": self.quantity.value()} if expanded else {}),
+            }
         return "trade_world", {
             "merchant": self.actor_id,
             "item": id,
@@ -113,6 +118,14 @@ class CopperTradeDialog(QDialog):
 
     def update_quote(self):
         self.execute.setEnabled(False)
+        if (
+            self.session.gameplay
+            and self.session.gameplay.get("catalog_revision") == 3
+            and 0 <= self.table.currentRow() < len(self.rows)
+        ):
+            self.quantity.blockSignals(True)
+            self.quantity.setMaximum(min(20, self.rows[self.table.currentRow()][2]))
+            self.quantity.blockSignals(False)
         if self.window._session is not self.session:
             self.close()
             return

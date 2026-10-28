@@ -74,6 +74,9 @@ class Engine:
         self.state = deepcopy(state)
         self.char = Character.from_dict(context["character"])
         self.world = WorldState.from_dict(context["world"])
+        if self.state.get("catalog_revision") == 3 and self.world.gold:
+            self.state["copper"] += self.world.gold * 100
+            self.world = replace(self.world, gold=0)
         self.scene = InteractiveWorld.from_dict(context["scene"])
         self.catalog = (
             Catalog.from_dict(context["catalog"]) if context["catalog"] else seed_catalog()
@@ -514,6 +517,12 @@ class Engine:
             return
         if destination not in self.neighbors():
             raise ValueError("Нужен известный соседний путь.")
+        if (
+            self.state.get("catalog_revision") == 3
+            and self.state["living_world"].get("blocked_until", {}).get(self.scene.current, 0)
+            > self.state["minute"]
+        ):
+            raise ValueError("Путь временно перекрыт природным событием.")
         if (
             self.state["living_world"].get("blocked_until", {}).get(destination, 0)
             > self.state["minute"]

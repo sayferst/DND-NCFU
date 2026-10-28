@@ -143,6 +143,10 @@ def describe_proposal(session, proposal):
         "sell": "Продать",
         "explore": "Исследовать окрестности",
         "travel": "Отправиться",
+        "flee": "Отступить",
+        "first_aid": "Оказать первую помощь",
+        "contract": "Поручение",
+        "faction": "Объединение",
     }
     names = {r["id"]: r["name"] for r in catalog.load().values()}
     scene = session.interaction_state()
@@ -150,9 +154,23 @@ def describe_proposal(session, proposal):
     names.update({a.id: a.name for a in scene.actor_refs})
     names.update({p.id: p.name for p in scene.places})
     names["hero"] = "Герой"
+    names.update({q["id"]: q["title"] for q in public_contracts(session)})
+    names.update({k: f["name"] for k, f in session.gameplay.get("known_factions", {}).items()})
+    operations = {
+        "accept": "принять",
+        "complete": "сдать добытое",
+        "cancel": "отменить",
+        "join": "вступить",
+        "leave": "покинуть",
+        "donate": "передать взнос",
+    }
     values = []
     for key, value in proposal["args"].items():
-        if key in ("quality", "quantity", "minutes"):
+        if key == "operation":
+            values.append(operations.get(value, "выбранное действие"))
+        elif key == "amount":
+            values.append(f"{value} медных")
+        elif key in ("quality", "quantity", "minutes"):
             values.append(f"{value} " + ("мин." if key == "minutes" else "ед."))
         elif isinstance(value, str):
             values.append(names.get(value, "выбранная цель"))

@@ -1,0 +1,138 @@
+{
+  "class": "rogue",
+  "seed": 17,
+  "level": 20,
+  "turns": 2168,
+  "days": 88,
+  "victories": 151,
+  "actions": {
+    "rest": 188,
+    "world_registration": 188,
+    "encounter": 188,
+    "attack": 713,
+    "wait": 224,
+    "sell": 85,
+    "buy": 79,
+    "research": 4,
+    "repair": 79,
+    "recover": 4,
+    "gather": 17,
+    "raise": 8,
+    "talent": 3,
+    "ability": 360,
+    "travel": 28
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 28,
+      "xp": 135
+    },
+    {
+      "level": 3,
+      "turn": 60,
+      "xp": 300
+    },
+    {
+      "level": 4,
+      "turn": 145,
+      "xp": 620
+    },
+    {
+      "level": 5,
+      "turn": 222,
+      "xp": 1055
+    },
+    {
+      "level": 6,
+      "turn": 306,
+      "xp": 1550
+    },
+    {
+      "level": 7,
+      "turn": 389,
+      "xp": 2110
+    },
+    {
+      "level": 8,
+      "turn": 490,
+      "xp": 2875
+    },
+    {
+      "level": 9,
+      "turn": 572,
+      "xp": 3610
+    },
+    {
+      "level": 10,
+      "turn": 709,
+      "xp": 4600
+    },
+    {
+      "level": 11,
+      "turn": 825,
+      "xp": 5560
+    },
+    {
+      "level": 12,
+      "turn": 930,
+      "xp": 6640
+    },
+    {
+      "level": 13,
+      "turn": 1081,
+      "xp": 7840
+    },
+    {
+      "level": 14,
+      "turn": 1259,
+      "xp": 9190
+    },
+    {
+      "level": 15,
+      "turn": 1402,
+      "xp": 10510
+    },
+    {
+      "level": 16,
+      "turn": 1547,
+      "xp": 12010
+    },
+    {
+      "level": 17,
+      "turn": 1689,
+      "xp": 13690
+    },
+    {
+      "level": 18,
+      "turn": 1844,
+      "xp": 15340
+    },
+    {
+      "level": 19,
+      "turn": 1986,
+      "xp": 17155
+    },
+    {
+      "level": 20,
+      "turn": 2168,
+      "xp": 19105
+    }
+  ],
+  "errors": [],
+  "replay_and_rng_equal": true,
+  "reached_twenty": true,
+  "seconds": 1921.8422289340015,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.",
+  "persistence": {
+    "json_bytes": 2140708,
+    "json_sha256": "95dacbd55030c4e5bfd1cd3fdce0c72ad70beddeccf5a0b14d41f926cabf4d09",
+    "sqlite_bytes": 20807680,
+    "json_sqlite_and_rng_equal": true
+  }
+}

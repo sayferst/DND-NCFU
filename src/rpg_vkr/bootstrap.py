@@ -12,7 +12,9 @@ def launch():
 
         return main()
     except Exception as error:
-        if "--self-check" in sys.argv or "--smoke-test" in sys.argv:
+        if any(
+            flag in sys.argv for flag in ("--self-check", "--smoke-test", "--verify-saved-campaign")
+        ):
             from rpg_vkr.diagnostics import record_error
             from rpg_vkr.self_check import write_report
 

@@ -120,7 +120,10 @@ class SaveSlots:
                 indent=2,
             ).encode("utf-8")
             if len(payload) > MAX_SAVE_BYTES:
-                raise SaveError("Сессия превышает допустимый размер сохранения (4 МБ).")
+                raise SaveError(
+                    "Сессия превышает допустимый размер сохранения "
+                    f"({MAX_SAVE_BYTES // 1048576} МБ)."
+                )
             self.directory.mkdir(parents=True, exist_ok=True)
             with tempfile.NamedTemporaryFile(
                 dir=self.directory, prefix=f".slot-{slot}-", suffix=".tmp", delete=False

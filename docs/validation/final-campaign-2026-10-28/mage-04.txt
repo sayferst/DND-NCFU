@@ -14,3 +14,8 @@ mage {'level': 13, 'turn': 927, 'xp': 7885}
 mage {'level': 14, 'turn': 1028, 'xp': 9100}
 mage {'level': 15, 'turn': 1168, 'xp': 10645}
 mage {'level': 16, 'turn': 1303, 'xp': 12145}
+mage {'level': 17, 'turn': 1445, 'xp': 13645}
+mage {'level': 18, 'turn': 1606, 'xp': 15445}
+mage {'level': 19, 'turn': 1766, 'xp': 17260}
+mage {'level': 20, 'turn': 1904, 'xp': 19015}
+{"class": "mage", "seed": 17, "level": 20, "turns": 1904, "days": 88, "victories": 145, "actions": {"rest": 185, "buy": 3, "research": 1, "world_registration": 185, "encounter": 185, "cast": 1013, "wait": 253, "sell": 68, "raise": 8, "talent": 3}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 19, "xp": 100}, {"level": 3, "turn": 59, "xp": 310}, {"level": 4, "turn": 105, "xp": 610}, {"level": 5, "turn": 170, "xp": 1045}, {"level": 6, "turn": 233, "xp": 1570}, {"level": 7, "turn": 317, "xp": 2110}, {"level": 8, "turn": 408, "xp": 2860}, {"level": 9, "turn": 499, "xp": 3700}, {"level": 10, "turn": 581, "xp": 4540}, {"level": 11, "turn": 692, "xp": 5500}, {"level": 12, "turn": 807, "xp": 6700}, {"level": 13, "turn": 927, "xp": 7885}, {"level": 14, "turn": 1028, "xp": 9100}, {"level": 15, "turn": 1168, "xp": 10645}, {"level": 16, "turn": 1303, "xp": 12145}, {"level": 17, "turn": 1445, "xp": 13645}, {"level": 18, "turn": 1606, "xp": 15445}, {"level": 19, "turn": 1766, "xp": 17260}, {"level": 20, "turn": 1904, "xp": 19015}], "errors": [], "replay_and_rng_equal": true, "reached_twenty": true, "seconds": 618.6976167460016, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."}
