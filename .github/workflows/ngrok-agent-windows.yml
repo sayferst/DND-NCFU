@@ -13,6 +13,8 @@ jobs:
   recovery:
     runs-on: windows-latest
     timeout-minutes: 10
+    env:
+      PYTHONIOENCODING: utf-8
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
@@ -25,7 +27,7 @@ jobs:
         run: python -m pytest tests/test_ngrok_download.py tests/test_ngrok_version.py tests/test_ngrok_host.py tests/test_ngrok_transport.py -q
       - name: Verify actual official publisher and executable version
         run: |
-          python -c "from pathlib import Path; from scripts.ngrok_download import download_agent; from scripts.ngrok_host import require_supported; p=Path('build/ngrok-native-probe/ngrok.exe'); p.parent.mkdir(parents=True, exist_ok=True); download_agent(p); print('Verified official ngrok:', require_supported(str(p.resolve())))"
+          python -c "from pathlib import Path; from scripts.ngrok_host import update_agent,require_supported; root=Path('build/ngrok-native-probe/host').resolve(); old=root/'ngrok-agent/.ngrok.exe.old'; old.parent.mkdir(parents=True,exist_ok=True); old.write_bytes(b'legacy-backup'); update_agent(root); update_agent(root); assert old.read_bytes()==b'legacy-backup'; print('Verified official ngrok after two updates:',require_supported(str(root/'ngrok-agent/ngrok.exe')))"
       - name: Public binary signature diagnostics on failure
         if: failure()
         shell: powershell

@@ -51,56 +51,12 @@ def update_agent(root):
     # A private portable copy: never modify a package-manager-owned executable.
     target = root / "ngrok-agent" / "ngrok.exe"
     target.parent.mkdir(parents=True, exist_ok=True)
-    print(
-        "Обновляю отдельную копию ngrok; обновление проверяет цифровую подпись ngrok…", flush=True
-    )
-    environment = os.environ.copy()
-    for name in ("NGROK_AUTHTOKEN", "NGROK_API_KEY"):
-        environment.pop(name, None)
     from scripts.ngrok_download import download_agent
 
+    print("Загружаю официальный ngrok и проверяю подпись Windows…", flush=True)
     with tempfile.TemporaryDirectory(prefix="ngrok-update-", dir=root) as temporary:
-        staging = Path(temporary)
-        candidate = staging / "ngrok.exe"
-        if target.is_file():
-            source = target
-        else:
-            try:
-                source = Path(executable())
-            except ValueError:
-                source = None
-        if source is not None:
-            shutil.copy2(source, candidate)
-        else:
-            download_agent(candidate)
-        # v2 is understood by the old bootstrap agent as well as the latest one.
-        config = staging / "bootstrap.yml"
-        with config.open("w", encoding="utf-8") as file:
-            json.dump({"version": "2", "web_addr": False, "update_check": False}, file)
-        try:
-            result = subprocess.run(
-                [str(candidate), "update", "--config", str(config)],
-                env=environment,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=180,
-                check=False,
-            )
-        except (OSError, subprocess.TimeoutExpired):
-            raise ValueError(
-                "Обновление ngrok не завершилось. Повторите update-ngrok; ключи сохранены."
-            ) from None
-        if result.returncode:
-            raise ValueError(
-                "Обновление ngrok не выполнено. Проверьте доступ к сервису обновления "
-                "и повторите update-ngrok. Ключи сохранены."
-            )
-        # Some Windows bootstrap versions leave only .ngrok.exe.old even on exit0.
-        # Recover inside staging; the installed executable is never self-updated.
-        if not candidate.is_file():
-            download_agent(candidate)
+        candidate = Path(temporary) / "ngrok.exe"
+        download_agent(candidate)
         found = require_supported(str(candidate))
         try:
             os.replace(candidate, target)
