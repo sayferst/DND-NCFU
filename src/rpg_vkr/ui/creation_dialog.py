@@ -284,7 +284,7 @@ class CreationDialog(QDialog):
             description=self.description_input.toPlainText(),
             world_brief=self.world_brief_input.toPlainText(),
             content_revision=2,
-            catalog_revision=2,
+            catalog_revision=3,
         )
 
     def accept(self):

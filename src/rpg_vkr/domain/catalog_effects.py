@@ -44,12 +44,26 @@ def apply(engine, effect, target, record):
         bonus = engine.hero_bonus(record.get("attack_task", "arcana")) + (
             2 if record["mode"] == "focused" else 0
         )
+        if engine.state.get("catalog_revision") == 3:
+            task = record.get("attack_task", "arcana")
+            bonus += int(
+                (task == "ranged" and "marksman" in engine.state["talents"])
+                or (task == "melee" and "duelist" in engine.state["talents"])
+            )
         defence = engine.defence(target)
         hit = attack == 20 or attack != 1 and attack + bonus >= defence
         amount = engine.roll(record["dice"], "Урон заклинания") if hit else 0
         if attack == 20 and hit:
             amount += engine.roll(record["dice"], "Критический урон")
-        engine.damage(target, amount, record.get("element", "physical"))
+        if hit and engine.state.get("catalog_revision") == 3:
+            from rpg_vkr.domain.character import ability_modifier
+            from rpg_vkr.domain.unified import TASKS
+
+            ability = TASKS[record.get("attack_task", "arcana")]
+            amount = max(0, amount + ability_modifier(getattr(engine.char, ability)))
+        delivered = engine.damage(target, amount, record.get("element", "physical"))
+        if engine.state.get("catalog_revision") == 3:
+            amount = delivered
         engine.attacks.append(
             {
                 "actor_id": "hero",
@@ -60,10 +74,16 @@ def apply(engine, effect, target, record):
                 "total": attack + bonus,
                 "defence": defence,
                 "defeated": engine.hp(target) == 0,
-                "resolver_version": "canonical-effects-1",
+                "resolver_version": "canonical-effects-2"
+                if engine.state.get("catalog_revision") == 3
+                else "canonical-effects-1",
             }
         )
         engine.last_damage = amount
+        if engine.state.get("catalog_revision") == 3:
+            engine.text.append(
+                f"Магическая атака: d20({attack}) {bonus:+} против защиты {defence}; урон {amount}."
+            )
     elif op in STATUS:
         if (
             target != "hero"
@@ -75,7 +95,12 @@ def apply(engine, effect, target, record):
     elif op in CURES:
         engine.remove_status(target, CURES[op])
     elif op == "heal":
+        before = engine.hp(target)
+        if engine.state.get("catalog_revision") == 3 and "healer" in engine.state["talents"]:
+            power += 1
         engine.change_hp(target, engine.roll(record["dice"], "Исцеление") + power)
+        if engine.state.get("catalog_revision") == 3:
+            engine.text.append(f"Исцеление: восстановлено {engine.hp(target) - before} HP.")
     elif op == "revive":
         if engine.hp(target) == 0:
             engine.change_hp(target, power)
@@ -158,5 +183,12 @@ def apply(engine, effect, target, record):
 
 def resolve(engine, record, targets):
     for target in targets:
-        for effect in record["effects"]:
+        for index, effect in enumerate(record["effects"]):
+            if (
+                index
+                and engine.state.get("catalog_revision") == 3
+                and record["effects"][0]["op"] == "damage"
+                and engine.last_damage == 0
+            ):
+                continue
             apply(engine, effect, target, record)

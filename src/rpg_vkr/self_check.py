@@ -72,8 +72,8 @@ def check_resources(progress=lambda value, label: None):
     from rpg_vkr.domain.game_catalog import digest, load, using
     from rpg_vkr.learning.corpus import diagnostics
 
-    with using(2):
-        catalog_report = {"count": len(load()), "sha256": digest(), "revision": 2}
+    with using(3):
+        catalog_report = {"count": len(load()), "sha256": digest(), "revision": 3}
 
     return {
         "ok": True,

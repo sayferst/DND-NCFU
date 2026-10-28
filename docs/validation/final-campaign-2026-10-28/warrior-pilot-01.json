@@ -1,0 +1,26 @@
+{
+  "class": "warrior",
+  "seed": 17,
+  "level": 1,
+  "turns": 2,
+  "days": 0,
+  "victories": 0,
+  "actions": {
+    "rest": 1,
+    "buy": 1
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    }
+  ],
+  "errors": [
+    "Модель может создавать только записи с происхождением generated."
+  ],
+  "replay_and_rng_equal": true,
+  "reached_twenty": false,
+  "seconds": 0.2827159259977634,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."
+}

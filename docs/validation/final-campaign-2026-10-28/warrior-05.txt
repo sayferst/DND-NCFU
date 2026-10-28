@@ -1,0 +1,18 @@
+warrior {'level': 1, 'turn': 1, 'xp': 0}
+warrior {'level': 2, 'turn': 25, 'xp': 135}
+warrior {'level': 3, 'turn': 55, 'xp': 300}
+warrior {'level': 4, 'turn': 100, 'xp': 620}
+warrior {'level': 5, 'turn': 159, 'xp': 1055}
+warrior {'level': 6, 'turn': 222, 'xp': 1520}
+warrior {'level': 7, 'turn': 300, 'xp': 2150}
+warrior {'level': 8, 'turn': 394, 'xp': 2820}
+warrior {'level': 9, 'turn': 490, 'xp': 3660}
+warrior {'level': 10, 'turn': 579, 'xp': 4500}
+warrior {'level': 11, 'turn': 704, 'xp': 5535}
+warrior {'level': 12, 'turn': 831, 'xp': 6615}
+warrior {'level': 13, 'turn': 984, 'xp': 7875}
+warrior {'level': 14, 'turn': 1162, 'xp': 9225}
+warrior {'level': 15, 'turn': 1329, 'xp': 10605}
+warrior {'level': 16, 'turn': 1510, 'xp': 12105}
+warrior {'level': 17, 'turn': 1672, 'xp': 13605}
+{"class": "warrior", "seed": 17, "level": 17, "turns": 1803, "days": 71, "victories": 127, "actions": {"rest": 147, "buy": 22, "world_registration": 146, "encounter": 146, "attack": 568, "wait": 178, "sell": 74, "research": 9, "repair": 97, "raise": 8, "talent": 3, "ability": 250, "gather": 79, "travel": 76}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 25, "xp": 135}, {"level": 3, "turn": 55, "xp": 300}, {"level": 4, "turn": 100, "xp": 620}, {"level": 5, "turn": 159, "xp": 1055}, {"level": 6, "turn": 222, "xp": 1520}, {"level": 7, "turn": 300, "xp": 2150}, {"level": 8, "turn": 394, "xp": 2820}, {"level": 9, "turn": 490, "xp": 3660}, {"level": 10, "turn": 579, "xp": 4500}, {"level": 11, "turn": 704, "xp": 5535}, {"level": 12, "turn": 831, "xp": 6615}, {"level": 13, "turn": 984, "xp": 7875}, {"level": 14, "turn": 1162, "xp": 9225}, {"level": 15, "turn": 1329, "xp": 10605}, {"level": 16, "turn": 1510, "xp": 12105}, {"level": 17, "turn": 1672, "xp": 13605}], "errors": ["Путь временно перекрыт природным событием."], "replay_and_rng_equal": true, "reached_twenty": false, "seconds": 469.31412151499535, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."}

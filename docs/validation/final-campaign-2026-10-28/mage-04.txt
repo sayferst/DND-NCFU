@@ -1,0 +1,16 @@
+mage {'level': 1, 'turn': 1, 'xp': 0}
+mage {'level': 2, 'turn': 19, 'xp': 100}
+mage {'level': 3, 'turn': 59, 'xp': 310}
+mage {'level': 4, 'turn': 105, 'xp': 610}
+mage {'level': 5, 'turn': 170, 'xp': 1045}
+mage {'level': 6, 'turn': 233, 'xp': 1570}
+mage {'level': 7, 'turn': 317, 'xp': 2110}
+mage {'level': 8, 'turn': 408, 'xp': 2860}
+mage {'level': 9, 'turn': 499, 'xp': 3700}
+mage {'level': 10, 'turn': 581, 'xp': 4540}
+mage {'level': 11, 'turn': 692, 'xp': 5500}
+mage {'level': 12, 'turn': 807, 'xp': 6700}
+mage {'level': 13, 'turn': 927, 'xp': 7885}
+mage {'level': 14, 'turn': 1028, 'xp': 9100}
+mage {'level': 15, 'turn': 1168, 'xp': 10645}
+mage {'level': 16, 'turn': 1303, 'xp': 12145}

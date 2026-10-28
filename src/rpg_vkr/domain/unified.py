@@ -170,6 +170,8 @@ def caps(state, character):
     con = ability_modifier(character.constitution)
     strength = ability_modifier(character.strength)
     intelligence = ability_modifier(character.intelligence)
+    if state.get("catalog_revision") == 3 and state["identity"]["class_id"] == "cleric":
+        intelligence = ability_modifier(character.wisdom)
     lv = level(state["xp"])
     return {
         "hp": 16

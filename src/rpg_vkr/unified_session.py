@@ -42,11 +42,14 @@ class UnifiedSession(Session):
 
             with content.using(catalog_revision):
                 state = initial(state, character)
-            if catalog_revision == 2:
-                state["catalog_revision"] = 2
+            if catalog_revision in (2, 3):
+                state["catalog_revision"] = catalog_revision
         elif catalog_revision != 1:
             raise ValueError("Каталог недоступен для этой кампании.")
         limits = rules.caps(state, character)
+        if catalog_revision == 3:
+            state.update(mp=limits["mp"], mp_cap=limits["mp"], st=limits["st"], st_cap=limits["st"])
+            state.update(contracts={}, activity={"gathered": {}, "crafted": {}, "visited": {}})
         obj = cls(
             seed=seed,
             character=character,
@@ -66,8 +69,8 @@ class UnifiedSession(Session):
         obj._operations = []
         if content_revision == 2:
             obj._origin["content_revision"] = 2
-        if catalog_revision == 2:
-            obj._origin["catalog_revision"] = 2
+        if catalog_revision in (2, 3):
+            obj._origin["catalog_revision"] = catalog_revision
         obj._depth = 0
         obj._learning_flags = {"library": False, "memory": True}
         obj._rag_mode = 2
@@ -79,7 +82,7 @@ class UnifiedSession(Session):
 
     @property
     def history_limit(self):
-        return 10000 if self.gameplay.get("catalog_revision") == 2 else 2000
+        return 10000 if self.gameplay.get("catalog_revision") in (2, 3) else 2000
 
     def start_world(self, seed):
         super().start_world(seed)
@@ -178,7 +181,7 @@ class UnifiedSession(Session):
 
     def to_dict(self):
         value = self._plain_dict()
-        if self.gameplay.get("catalog_revision") == 2:
+        if self.gameplay.get("catalog_revision") in (2, 3):
             # The whitelist log reconstructs these fields exactly. Persist their
             # digests instead of a second copy of the complete history.
             for key in ("turns", "memory", "narrations"):
@@ -310,7 +313,7 @@ def restore(data):
         or meta["ruleset"] != rules.VERSION
         or not isinstance(meta["operations"], list)
         or len(meta["operations"])
-        > (30000 if meta.get("origin", {}).get("catalog_revision") == 2 else 6000)
+        > (30000 if meta.get("origin", {}).get("catalog_revision") in (2, 3) else 6000)
     ):
         raise ValueError("Неизвестный набор правил или журнал.")
     origin = deepcopy(meta["origin"])

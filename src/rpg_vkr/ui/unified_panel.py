@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPlainTextEdit,
     QPushButton,
+    QSpinBox,
 )
 
 from rpg_vkr.domain.game_catalog import for_session
@@ -85,6 +86,17 @@ def install(window, layout):
     )
     button("Отремонтировать", "repair", lambda: repair_args(window))
     button("Отдохнуть", "rest", dict)
+    window.unified_flee = button(
+        "Отступить", "flee", lambda: {"destination": window.unified_destination.currentData()}
+    )
+    window.unified_first_aid = button(
+        "Оказать первую помощь",
+        "first_aid",
+        lambda: {
+            "target": window.unified_target.currentData(),
+            "item": window.unified_items.currentData(),
+        },
+    )
     from rpg_vkr.domain.character import ABILITY_NAMES
 
     window.unified_growth = QGroupBox("Развитие героя")
@@ -146,10 +158,18 @@ def install(window, layout):
     extra.addRow(ability)
     window.unified_material = QComboBox()
     extra.addRow("Сырьё", window.unified_material)
-    gather = QPushButton("Добыть одну единицу")
+    window.unified_gather_quantity = QSpinBox()
+    window.unified_gather_quantity.setRange(1, 20)
+    extra.addRow("Количество", window.unified_gather_quantity)
+    gather = QPushButton("Добыть ресурс")
     gather.clicked.connect(
         lambda: run(
-            window, "gather", {"material": window.unified_material.currentData(), "quantity": 1}
+            window,
+            "gather",
+            {
+                "material": window.unified_material.currentData(),
+                "quantity": window.unified_gather_quantity.value(),
+            },
         )
     )
     extra.addRow(gather)
@@ -160,6 +180,9 @@ def install(window, layout):
         lambda: run(window, "travel", {"destination": window.unified_destination.currentData()})
     )
     extra.addRow(travel)
+    from rpg_vkr.ui.contracts_panel import build as build_contracts
+
+    build_contracts(window, extra)
     explore = QPushButton("Исследовать окрестности")
     explore.clicked.connect(lambda: run(window, "explore", {}))
     extra.addRow(explore)
@@ -203,6 +226,12 @@ def refresh(window):
     expanded = state.get("content_revision") == 2
     window.catalog_actions.setVisible(expanded)
     window.unified_recipe_cost.setVisible(expanded)
+    window.unified_flee.setVisible(state.get("catalog_revision") == 3)
+    window.unified_flee.setEnabled(bool(state.get("battle")))
+    window.unified_first_aid.setVisible(state.get("catalog_revision") == 3)
+    from rpg_vkr.ui.contracts_panel import refresh as refresh_contracts
+
+    refresh_contracts(window)
     has_magic = bool(state["spells"])
     for widget in (window.unified_spell, window.unified_spell_label, window.unified_cast_button):
         widget.setVisible(has_magic)
@@ -275,7 +304,7 @@ def refresh(window):
             [
                 (k, catalog.row(k)["name"])
                 for k in state["known_recipes"]
-                if state.get("catalog_revision") == 2 or catalog.row(k)["category"] != "repair"
+                if state.get("catalog_revision") in (2, 3) or catalog.row(k)["category"] != "repair"
             ],
         )
         refill(

@@ -16,7 +16,7 @@ from rpg_vkr.ui.creation_dialog import CreationDialog
 def test_creation_launches_expanded_game_without_technical_options(qt_app):
     dialog = CreationDialog()
     session = dialog.create_session()
-    assert session.schema_version == 31 and session.gameplay["catalog_revision"] == 2
+    assert session.schema_version == 31 and session.gameplay["catalog_revision"] == 3
     assert dialog.creation_steps.count() == 4
     dialog.close()
 

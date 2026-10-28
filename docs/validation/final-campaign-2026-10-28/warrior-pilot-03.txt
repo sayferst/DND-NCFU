@@ -1,0 +1,5 @@
+warrior {'level': 1, 'turn': 1, 'xp': 0}
+warrior {'level': 2, 'turn': 25, 'xp': 110}
+warrior {'level': 3, 'turn': 125, 'xp': 300}
+warrior {'level': 4, 'turn': 216, 'xp': 600}
+{"class": "warrior", "seed": 17, "level": 4, "turns": 233, "days": 7, "victories": 10, "actions": {"rest": 11, "buy": 50, "world_registration": 10, "encounter": 10, "attack": 46, "wait": 18, "research": 11, "repair": 31, "sell": 4, "gather": 66, "travel": 7, "raise": 2}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 25, "xp": 110}, {"level": 3, "turn": 125, "xp": 300}, {"level": 4, "turn": 216, "xp": 600}], "errors": ["Новое существо появляется в текущей сцене без владельца."], "replay_and_rng_equal": true, "reached_twenty": false, "seconds": 15.904764749000606, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."}

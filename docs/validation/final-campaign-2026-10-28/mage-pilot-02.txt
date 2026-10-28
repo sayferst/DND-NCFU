@@ -1,0 +1,8 @@
+mage {'level': 1, 'turn': 1, 'xp': 0}
+mage {'level': 2, 'turn': 23, 'xp': 135}
+mage {'level': 3, 'turn': 45, 'xp': 300}
+mage {'level': 4, 'turn': 91, 'xp': 600}
+mage {'level': 5, 'turn': 151, 'xp': 1035}
+mage {'level': 6, 'turn': 213, 'xp': 1560}
+mage {'level': 7, 'turn': 300, 'xp': 2100}
+{"class": "mage", "seed": 17, "level": 7, "turns": 300, "days": 13, "victories": 28, "actions": {"rest": 32, "buy": 1, "world_registration": 32, "encounter": 32, "cast": 148, "wait": 31, "sell": 21, "raise": 2, "talent": 1}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 23, "xp": 135}, {"level": 3, "turn": 45, "xp": 300}, {"level": 4, "turn": 91, "xp": 600}, {"level": 5, "turn": 151, "xp": 1035}, {"level": 6, "turn": 213, "xp": 1560}, {"level": 7, "turn": 300, "xp": 2100}], "errors": [], "replay_and_rng_equal": true, "reached_twenty": false, "seconds": 27.068986222002422, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."}

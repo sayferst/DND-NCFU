@@ -2,6 +2,7 @@
 
 from rpg_vkr.domain import game_catalog as catalog
 from rpg_vkr.domain.catalog_actions_v2 import PARAMETERS
+from rpg_vkr.domain.contracts import public as public_contracts
 from rpg_vkr.domain.unified import level
 
 # Development/state management commands are never part of the model protocol.
@@ -66,6 +67,9 @@ def planning_context(session, query=""):
                     "ingredients",
                     "outputs",
                     "station",
+                    "materials_by_output",
+                    "requires_ammunition",
+                    "requires_repair_material",
                 )
                 if k in r
             }
@@ -74,8 +78,13 @@ def planning_context(session, query=""):
 
     scene = session.interaction_state()
     return {
-        "commands": sorted(COMMANDS),
+        "commands": sorted(
+            COMMANDS
+            if s.get("catalog_revision") == 3
+            else COMMANDS - {"flee", "first_aid", "contract", "faction"}
+        ),
         "spells": options(s["spells"]),
+        "contracts": public_contracts(session) if s.get("catalog_revision") == 3 else [],
         "abilities": options([k for k in s["talents"] if k.startswith("talent_")]),
         "recipes": options(s["known_recipes"]),
         "learn_candidates": options(

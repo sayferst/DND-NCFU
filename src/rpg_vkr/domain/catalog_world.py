@@ -92,6 +92,10 @@ def initialize(e):
         from rpg_vkr.domain.causal_world import initialize as causal_initialize
 
         causal_initialize(e)
+    elif e.state.get("catalog_revision") == 3:
+        from rpg_vkr.domain.society import initialize as society_initialize
+
+        society_initialize(e)
     return w
 
 
@@ -115,7 +119,7 @@ def faction_day(e, day):
         place = e.refs[member].place
         stock = w["stocks"][place]
         resource = "mat_0_0" if faction["goal"] == "security" else "mat_1_0"
-        if e.state.get("catalog_revision") == 2 and faction["goal"] != "security":
+        if e.state.get("catalog_revision") in (2, 3) and faction["goal"] != "security":
             resource = "mat_2_0"
         if stock.get(resource, 0) < 2:
             continue
@@ -168,6 +172,14 @@ def _wallet(e, id, delta):
 
 
 def apply_event(e, row, place=None):
+    if e.state.get("catalog_revision") == 3:
+        from rpg_vkr.domain.society import apply_event as apply_society_event
+
+        return apply_society_event(e, row, place)
+    return apply_legacy_event(e, row, place)
+
+
+def apply_legacy_event(e, row, place=None):
     w = initialize(e)
     place = place or e.scene.current
     if place not in w["nodes"]:
@@ -331,6 +343,11 @@ def apply_event(e, row, place=None):
 
 def advance_world(e, start, end):
     w = initialize(e)
+    if e.state.get("catalog_revision") == 3:
+        from rpg_vkr.domain.society import advance as advance_society
+
+        advance_society(e, start, end)
+        return
     engaged = set((e.state.get("battle") or {}).get("order", []))
     if end // 60 != start // 60:
         hour = end // 60 % 24
@@ -398,6 +415,10 @@ def explore(e):
     from rpg_vkr.domain.catalog_actions_v2 import level
 
     w = initialize(e)
+    if e.state.get("catalog_revision") == 3:
+        from rpg_vkr.domain.society import explore as explore_society
+
+        return explore_society(e)
     key = e.scene.current + ":" + str(w["day"])
     if key in w["exploration"]:
         raise ValueError("Этот участок сегодня уже исследован.")

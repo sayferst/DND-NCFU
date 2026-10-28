@@ -1,0 +1,68 @@
+{
+  "class": "warrior",
+  "seed": 17,
+  "level": 7,
+  "turns": 813,
+  "days": 60,
+  "victories": 29,
+  "actions": {
+    "rest": 33,
+    "buy": 19,
+    "world_registration": 32,
+    "encounter": 32,
+    "attack": 120,
+    "wait": 138,
+    "research": 10,
+    "repair": 73,
+    "sell": 14,
+    "gather": 91,
+    "raise": 2,
+    "travel": 233,
+    "talent": 1,
+    "ability": 15
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 25,
+      "xp": 110
+    },
+    {
+      "level": 3,
+      "turn": 70,
+      "xp": 320
+    },
+    {
+      "level": 4,
+      "turn": 165,
+      "xp": 600
+    },
+    {
+      "level": 5,
+      "turn": 264,
+      "xp": 1020
+    },
+    {
+      "level": 6,
+      "turn": 491,
+      "xp": 1575
+    },
+    {
+      "level": 7,
+      "turn": 660,
+      "xp": 2115
+    }
+  ],
+  "errors": [
+    "resource exhausted mat_0_0"
+  ],
+  "replay_and_rng_equal": true,
+  "reached_twenty": false,
+  "seconds": 90.34989092799515,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."
+}

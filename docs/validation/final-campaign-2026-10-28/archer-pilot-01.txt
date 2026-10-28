@@ -1,0 +1,7 @@
+archer {'level': 1, 'turn': 1, 'xp': 0}
+archer {'level': 2, 'turn': 30, 'xp': 100}
+archer {'level': 3, 'turn': 79, 'xp': 310}
+archer {'level': 4, 'turn': 129, 'xp': 630}
+archer {'level': 5, 'turn': 198, 'xp': 1065}
+archer {'level': 6, 'turn': 262, 'xp': 1530}
+{"class": "archer", "seed": 17, "level": 6, "turns": 355, "days": 13, "victories": 28, "actions": {"rest": 32, "buy": 18, "manufacture": 19, "gather": 35, "world_registration": 32, "encounter": 32, "attack": 115, "wait": 26, "sell": 18, "recover": 1, "research": 1, "repair": 8, "raise": 2, "talent": 1, "ability": 15}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 30, "xp": 100}, {"level": 3, "turn": 79, "xp": 310}, {"level": 4, "turn": 129, "xp": 630}, {"level": 5, "turn": 198, "xp": 1065}, {"level": 6, "turn": 262, "xp": 1530}], "errors": [], "replay_and_rng_equal": true, "reached_twenty": false, "seconds": 32.058461958004045, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."}

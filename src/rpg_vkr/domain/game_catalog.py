@@ -71,7 +71,7 @@ ACTIVE_REVISION = ContextVar("game_catalog_revision", default=1)
 
 @contextmanager
 def using(revision):
-    if type(revision) is not int or revision not in (1, 2):
+    if type(revision) is not int or revision not in (1, 2, 3):
         raise ValueError("Неизвестная ревизия каталога.")
     token = ACTIVE_REVISION.set(revision)
     try:
@@ -95,7 +95,7 @@ def validate(data):
     if data.get("schema") != "game-catalog-1" or not isinstance(data.get("records"), list):
         raise ValueError("Неверная схема каталога.")
     rows = data["records"]
-    if data.get("revision") == 2:
+    if data.get("revision") in (2, 3):
         from rpg_vkr.domain.catalog_revision2 import validate_construction
 
         validate_construction(data)
@@ -200,7 +200,7 @@ def validate(data):
     }
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=3)
 def _load(revision):
     path = resource_path(f"data/gameplay/catalog-v{revision}.json")
     data = json.loads(path.read_text(encoding="utf-8"))

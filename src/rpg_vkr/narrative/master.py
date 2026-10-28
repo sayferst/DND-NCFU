@@ -229,6 +229,11 @@ def campaign_context(session, target="", *, query=""):
                 if session.actor_is_here(k)
             },
         }
+    if session.gameplay and session.gameplay.get("catalog_revision") == 3:
+        from rpg_vkr.domain.contracts import public as public_contracts
+
+        public_simulation["mechanics_revision"] = 3
+        public_simulation["contracts"] = public_contracts(session)
     if getattr(session, "_rag_mode", 0) == 2:
         public_simulation["rag_enabled"] = True
     features = getattr(session, "_learning_flags", {})

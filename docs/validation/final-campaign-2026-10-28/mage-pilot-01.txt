@@ -1,0 +1,3 @@
+mage {'level': 1, 'turn': 1, 'xp': 0}
+mage {'level': 2, 'turn': 34, 'xp': 135}
+{"class": "mage", "seed": 17, "level": 2, "turns": 88, "days": 2, "victories": 5, "actions": {"rest": 6, "buy": 1, "world_registration": 6, "encounter": 6, "cast": 39, "wait": 8, "sell": 2, "attack": 13, "recover": 7}, "milestones": [{"level": 1, "turn": 1, "xp": 0}, {"level": 2, "turn": 34, "xp": 135}], "errors": ["hero defeated"], "replay_and_rng_equal": true, "reached_twenty": false, "seconds": 4.716366186999949, "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play."}

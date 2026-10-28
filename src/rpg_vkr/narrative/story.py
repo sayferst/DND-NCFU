@@ -117,6 +117,9 @@ def story_context(
             "Не копируй прошлый ответ."
         ),
     }
+    if (campaign or {}).get("mechanics_revision") == 3:
+        context["mechanics_revision"] = 3
+        context["contracts"] = (campaign or {}).get("contracts", [])
     if (campaign or {}).get("rag_enabled"):
         from rpg_vkr.learning.rag import retrieve
 
@@ -258,6 +261,9 @@ def story_proposal(data, frame, player_text, *, context=None, previous=()):
     context = context or {}
     master = master_question(player_text)
     brief = context.get("turn_brief") or turn_brief(frame, player_text, master=master)
+    from rpg_vkr.narrative.payment_guard import validate as validate_payment
+
+    validate_payment(text, context)
     check_story_quality(
         text,
         frame,

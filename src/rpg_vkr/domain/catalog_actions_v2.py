@@ -8,6 +8,10 @@ from rpg_vkr.domain.catalog_effects import resolve
 from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 
 PARAMETERS = {
+    "contract": ({"offer", "operation"}, {"offer", "operation"}),
+    "faction": ({"faction", "operation", "amount"}, {"faction", "operation"}),
+    "flee": ({"destination"}, {"destination"}),
+    "first_aid": ({"target", "item"}, {"target", "item"}),
     "cast": ({"spell", "target", "targets", "item", "destination"}, {"spell"}),
     "ability": ({"talent", "target", "targets", "item", "destination"}, {"talent"}),
     "consume": ({"item", "target", "targets", "destination"}, {"item"}),
@@ -85,6 +89,17 @@ def perform(e, command, args):
             not isinstance(args[field], list) or any(not isinstance(v, str) for v in args[field])
         ):
             raise ValueError("Неверный список участников.")
+    if command in ("flee", "first_aid"):
+        from rpg_vkr.domain.field_actions import perform as field_action
+
+        field_action(e, command, args)
+        return
+    if command in ("contract", "faction"):
+        from rpg_vkr.domain.contracts import faction_action
+        from rpg_vkr.domain.contracts import perform as contract_action
+
+        (contract_action if command == "contract" else faction_action)(e, args)
+        return
     if e.state["battle"] and command in (
         "rest",
         "research",
@@ -130,7 +145,14 @@ def perform(e, command, args):
                 | {"gold_cp": (actor.state or {}).get("gold_cp", 0) + fee},
             )
         success = e.check(
-            "arcana" if entry["kind"] == "spell" else "knowledge",
+            (
+                "faith"
+                if e.state.get("catalog_revision") == 3
+                and e.state["identity"]["class_id"] == "cleric"
+                else "arcana"
+            )
+            if entry["kind"] == "spell"
+            else "knowledge",
             5 if args.get("teacher") else 10 + 5 * (entry["level"] // 8),
         )
         for item, n in selected:
@@ -160,6 +182,9 @@ def perform(e, command, args):
         if success:
             node[template] -= quantity
             e.add_item(template, quantity)
+            if e.state.get("catalog_revision") == 3:
+                gathered = e.state["activity"]["gathered"]
+                gathered[template] = gathered.get(template, 0) + quantity
         e.text.append(f"Добыто: {quantity if success else 0} — {row['name']}.")
     elif command in ("wait", "advance"):
         minutes = args["minutes"]
@@ -368,6 +393,10 @@ def use(e, command, args):
     ):
         raise ValueError("Недостаточно ресурсов.")
     selected = targets(e, row, args)
+    if e.state.get("catalog_revision") == 3:
+        from rpg_vkr.domain.catalog_revision3 import pay_ability_materials
+
+        pay_ability_materials(e, row, selected)
     if row["effects"][0]["op"] == "travel":
         row["destination"] = args.get("destination")
         if row["destination"] not in e.neighbors():
@@ -397,6 +426,8 @@ def use(e, command, args):
             "artisan": "repair",
         }[e.state["identity"]["class_id"]]
         e.state["cooldowns"][row["id"]] = e.state["minute"] + row["cooldown"] * 10
+    elif e.state.get("catalog_revision") == 3 and e.state["identity"]["class_id"] == "cleric":
+        row["attack_task"] = "faith"
     if item:
         e.consume_item(item)
     if row["effects"][0]["op"] in ("damage", "drain_mp") and not e.state["battle"]:
@@ -500,7 +531,7 @@ def craft(e, command, args):
         if result not in row["outputs"] or content.row(result)["level"] > level(e):
             raise ValueError("Недоступный результат производства.")
     required = row["ingredients"]
-    if command != "repair" and e.state.get("catalog_revision") == 2:
+    if command != "repair" and e.state.get("catalog_revision") in (2, 3):
         required = row["materials_by_output"][result]
     ingredients = e.require_materials(required, quality)
     success = e.check(row["task"], row["dc"] + 5 * (quality - 1))
@@ -530,6 +561,9 @@ def craft(e, command, args):
             made["quality"] = quality
             made["durability_cap"] += 3 * (quality - 1)
             made["durability"] = made["durability_cap"]
+            if e.state.get("catalog_revision") == 3:
+                stats = e.state["activity"]["crafted"]
+                stats[result] = stats.get(result, 0) + product.get("batch", 1)
         e.award("recipe:" + key, 10)
     e.text.append(
         ("Работа выполнена: " if success else "Неудача, часть материалов израсходована: ")
@@ -634,7 +668,9 @@ def hit(e, attacker, target):
         if value == 20:
             amount += e.roll(row["dice"], "Критический урон")
         amount = max(0, amount + damage_bonus)
-        e.damage(target, amount, row.get("damage_type", "physical"), attacker)
+        delivered = e.damage(target, amount, row.get("damage_type", "physical"), attacker)
+        if e.state.get("catalog_revision") == 3:
+            amount = delivered
         if ammunition:
             effect = ammunition.get("effect")
             if effect == "power":
@@ -650,7 +686,11 @@ def hit(e, attacker, target):
                     ammunition["element"],
                 )
         trait = row.get("trait")
-        if trait in ("weaken", "bleed", "slow", "mark") and e.hp(target) > 0:
+        if (
+            trait in ("weaken", "bleed", "slow", "mark")
+            and e.hp(target) > 0
+            and (e.state.get("catalog_revision") != 3 or amount > 0)
+        ):
             e.status(target, trait, 1, 2)
     e.attacks.append(
         {
@@ -662,10 +702,17 @@ def hit(e, attacker, target):
             "total": value + bonus,
             "defence": defence,
             "defeated": e.hp(target) == 0,
-            "resolver_version": "canonical-effects-1",
+            "resolver_version": "canonical-effects-2"
+            if e.state.get("catalog_revision") == 3
+            else "canonical-effects-1",
         }
     )
-    e.text.append(f"{attacker}: d20({value}) {bonus:+} против AC{defence}; урон {amount}.")
+    name = e.char.name if attacker == "hero" else e.refs[attacker].name
+    e.text.append(
+        (f"{name}: d20({value}) {bonus:+} против защиты {defence}; урон {amount}.")
+        if e.state.get("catalog_revision") == 3
+        else f"{attacker}: d20({value}) {bonus:+} против AC{defence}; урон {amount}."
+    )
 
 
 def npc_round(e, command):
@@ -731,7 +778,13 @@ def npc_round(e, command):
             continue
         hit(e, id, enemies[0])
         template = spec.properties.get("game_template_id")
-        if template and e.attacks and e.attacks[-1]["actor_id"] == id and e.attacks[-1]["hit"]:
+        if (
+            template
+            and e.attacks
+            and e.attacks[-1]["actor_id"] == id
+            and e.attacks[-1]["hit"]
+            and (e.state.get("catalog_revision") != 3 or e.attacks[-1]["damage"] > 0)
+        ):
             skill = content.row(template, "creature")["skill_effect"]
             if skill == "heal":
                 e.change_hp(id, 1)
@@ -810,7 +863,18 @@ def trade(e, operation, args):
         price = definition.price_cp
         if price is None:
             raise ValueError("Цена не подтверждена.")
-        price = max(1, price * e.state["living_world"].get("price_percent", 100) // 100)
+        if e.state.get("catalog_revision") == 3:
+            from rpg_vkr.domain.society import price_percent, unit_value
+
+            merchandise = next((i for i in e.state["items"] if i["id"] == entity.id), None)
+            price = (
+                unit_value(e, merchandise, price)
+                * price_percent(e, definition.properties.get("game_template_id"))
+                // 100
+            )
+            price = max(1, price)
+        else:
+            price = max(1, price * e.state["living_world"].get("price_percent", 100) // 100)
         if e.state["copper"] < price:
             raise ValueError("Недостаточно денег.")
         thing = e.things[entity.id]
@@ -833,6 +897,10 @@ def trade(e, operation, args):
         if item["id"] in (e.state["weapon"], e.state["armour"], e.state["shield"]):
             raise ValueError("Сначала снимите снаряжение.")
         price = max(1, item["price_cp"] // 2)
+        if e.state.get("catalog_revision") == 3:
+            from rpg_vkr.domain.society import price_percent, unit_value
+
+            price = max(1, unit_value(e, item) * price_percent(e, item.get("template")) // 200)
         if wallet.get("gold_cp", 0) < price:
             raise ValueError("У торговца недостаточно средств.")
         wallet["gold_cp"] -= price

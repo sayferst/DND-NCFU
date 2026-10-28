@@ -235,6 +235,20 @@ class Engine:
             }
             if template:
                 item["template"] = content.row(template)["id"]
+                if self.state.get("catalog_revision") == 3:
+                    row = content.row(template)
+                    physical = entity.state or {}
+                    quality = physical.get("quality", 1)
+                    if type(quality) is not int or not 1 <= quality <= 5:
+                        raise ValueError("Неверное качество физического предмета.")
+                    cap = row.get("durability", 20) + 3 * (quality - 1)
+                    item.update(kind=row["kind"], quality=quality, durability_cap=cap)
+                    item["durability"] = min(cap, item["durability"])
+                    for key in ("made_by", "spell_override", "deployed", "open"):
+                        if key in physical:
+                            item[key] = physical[key]
+                    if row.get("category") == "ammunition":
+                        item["ammunition"] = True
             elif definition.id == "type_bandage":
                 item["template"] = "use_dressings_0_0"
             self.state["items"] = [i for i in self.state["items"] if i["id"] != id] + [item]
@@ -419,6 +433,7 @@ class Engine:
         )
 
     def damage(self, target, amount, element="physical", source="hero", reflection=True):
+        previous_hp = self.hp(target)
         resistance = (
             self.status_power(target, "resist")
             if any(
@@ -479,7 +494,7 @@ class Engine:
                 if self.award("defeat:" + template, spec["xp"]):
                     for material, qty in spec["loot"].items():
                         self.add_item(material, qty)
-        return amount
+        return previous_hp - self.hp(target) if self.state.get("catalog_revision") == 3 else amount
 
     def award(self, key, amount):
         if key in self.state["achievements"]:
@@ -507,6 +522,9 @@ class Engine:
         self.scene = replace(self.scene, current=destination)
         self.world = replace(self.world, location=self.scene.place().anchor)
         self.events.append({"kind": "travel", "destination": destination})
+        if self.state.get("catalog_revision") == 3:
+            visits = self.state["activity"]["visited"]
+            visits[destination] = visits.get(destination, 0) + 1
 
     def sync_physical(self):
         for item in self.state["items"]:
@@ -557,6 +575,14 @@ class Engine:
             holder = old.parent_id if old else item["owner"]
             state = (old.state or {}) if old else {}
             state = state | {"condition": item["durability"]}
+            if self.state.get("catalog_revision") == 3:
+                state.update(
+                    {
+                        k: item[k]
+                        for k in ("quality", "made_by", "spell_override", "deployed")
+                        if k in item
+                    }
+                )
             if spec.get("capability") == "container":
                 state.update(open=item.get("open", True), locked=not item.get("open", True))
             self.actors[source] = Entity(

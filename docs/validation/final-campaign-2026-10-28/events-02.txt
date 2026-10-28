@@ -1,0 +1,645 @@
+........................................................................ [ 18%]
+......................................................................F. [ 36%]
+..F.................................FFFFFFFFFF.......................... [ 54%]
+........................................................................ [ 72%]
+........................................................................ [ 90%]
+........................................                                 [100%]
+=================================== FAILURES ===================================
+___________ test_revision_three_record_executes[event_political_6_2] ___________
+
+id = 'event_political_6_2'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d76d953a0>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d76d963c0>, {'amount': 3, 'category': 'political', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 1, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+___________ test_revision_three_record_executes[event_political_6_6] ___________
+
+id = 'event_political_6_6'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d75633440>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d75631cd0>, {'amount': 1, 'category': 'political', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 1, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_0] _____________
+
+id = 'event_social_2_0'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d76d78f20>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d76d79550>, {'amount': 3, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_1] _____________
+
+id = 'event_social_2_1'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d757a0080>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d757a1a30>, {'amount': 1, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_2] _____________
+
+id = 'event_social_2_2'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d76d79eb0>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d758e3320>, {'amount': 2, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_3] _____________
+
+id = 'event_social_2_3'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d757a3830>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d757c9b20>, {'amount': 3, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_4] _____________
+
+id = 'event_social_2_4'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d75782d50>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d75783e60>, {'amount': 1, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_5] _____________
+
+id = 'event_social_2_5'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d7572c1a0>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d7572f8f0>, {'amount': 2, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_6] _____________
+
+id = 'event_social_2_6'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d757a1eb0>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d757a3aa0>, {'amount': 3, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_7] _____________
+
+id = 'event_social_2_7'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d7585cf80>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d75776ff0>, {'amount': 1, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_8] _____________
+
+id = 'event_social_2_8'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d76e168d0>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d7575b050>, {'amount': 2, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+____________ test_revision_three_record_executes[event_social_2_9] _____________
+
+id = 'event_social_2_9'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3d7572e0c0>
+
+    @pytest.mark.parametrize("id", IDS, ids=IDS)
+    def test_revision_three_record_executes(id, monkeypatch):
+        prepare = original.fixture_state
+    
+        def fixture(class_id="mage"):
+            state, ctx = prepare(class_id)
+            state.update(catalog_revision=3, catalog_hash=content.digest())
+            return state, ctx
+    
+        with content.using(3):
+            monkeypatch.setattr(original, "fixture_state", fixture)
+            row = content.row(id)
+            if row["kind"] == "recipe" and row["category"] == "repair":
+                state, ctx = fixture("artisan")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                base = row["compatible_material"]
+                target = next(
+                    r
+                    for r in content.load().values()
+                    if r["kind"] in ("weapon", "armour", "household")
+                    and content.row(r["material"])["base"] == base
+                )
+                item = engine.add_item(target["id"])
+                item["durability"] = 1
+                ready = engine.finish()
+                result = original.run(
+                    ready["state"],
+                    ctx | {k: ready[k] for k in ("world", "catalog", "scene")},
+                    "repair",
+                    {"recipe": id, "item": item["id"]},
+                )
+                assert (
+                    next(i for i in result["state"]["items"] if i["id"] == item["id"])["durability"] > 1
+                )
+            elif row["kind"] == "event":
+                from copy import deepcopy
+    
+                from rpg_vkr.domain.catalog_world import apply_event
+    
+                state, ctx = fixture("mage")
+                engine = Engine(state, ctx, DiceRoller(seed=0), {})
+                before = deepcopy(engine.state["living_world"])
+>               assert apply_event(engine, row)
+E               AssertionError: assert False
+E                +  where False = <function apply_event at 0x7f3d76478fe0>(<rpg_vkr.domain.catalog_engine.Engine object at 0x7f3d7572dbe0>, {'amount': 3, 'category': 'social', 'conditions': ['living_witness', 'finite_supply'], 'cooldown_days': 3, ...})
+
+tests/test_catalog_v3_execution.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_political_6_2]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_political_6_6]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_0]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_1]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_2]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_3]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_4]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_5]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_6]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_7]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_8]
+FAILED tests/test_catalog_v3_execution.py::test_revision_three_record_executes[event_social_2_9]
+12 failed, 388 passed, 2960 deselected in 8.64s
