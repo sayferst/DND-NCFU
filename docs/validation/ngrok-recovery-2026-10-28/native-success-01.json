@@ -1,0 +1,14 @@
+{
+  "source_commit": "1d5aef46c338d21bff18f0eae2046534c756a6ed",
+  "run_id": 40723773170,
+  "job_id": 122941424162,
+  "conclusion": "success",
+  "windows_tests_passed": 43,
+  "official_download_verified": true,
+  "authenticode_trust_required": "Valid",
+  "publisher": "ngrok, Inc.",
+  "agent_version": "3.39.13",
+  "linux_targeted_tests_passed": 65,
+  "paid_model_calls": 0,
+  "owner_machine_host_restart": "pending user execution"
+}
