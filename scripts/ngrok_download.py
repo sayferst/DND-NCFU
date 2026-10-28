@@ -20,7 +20,8 @@ def verify_publisher(path):
     environment["DND_NGROK_VERIFY_PATH"] = str(path.resolve())
     script = (
         "$ErrorActionPreference='Stop'; "
-        'Import-Module "$PSHOME\\Modules\\Microsoft.PowerShell.Security\\Microsoft.PowerShell.Security.psd1"; '
+        'Import-Module "$PSHOME\\Modules\\Microsoft.PowerShell.Security'
+        '\\Microsoft.PowerShell.Security.psd1"; '
         "$s=Get-AuthenticodeSignature -LiteralPath $env:DND_NGROK_VERIFY_PATH; "
         "if ($s.Status -ne 'Valid' -or !$s.SignerCertificate) {exit 1}; "
         "$n=$s.SignerCertificate.GetNameInfo("
