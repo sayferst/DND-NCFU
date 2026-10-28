@@ -1,0 +1,9 @@
+{
+  "old_export_sha256": "480437a647a68ae47795dd21c26ab3afe500023b1e0d53ce2706da3c41b035be",
+  "current_reader_sha256": "480437a647a68ae47795dd21c26ab3afe500023b1e0d53ce2706da3c41b035be",
+  "bytes_equal": true,
+  "lines": 488,
+  "old_world_policy": 3,
+  "new_default_world_policy": 4,
+  "admitted_to_training": 0
+}

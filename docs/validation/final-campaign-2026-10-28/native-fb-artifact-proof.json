@@ -1,0 +1,95 @@
+{
+  "run_id": 40704957897,
+  "source_commit": "fb7594ac2dadd03c0fc0cabde7fd6f0093d3ea0f",
+  "artifact_id": 12824514909,
+  "artifact_sha256": "78a9ea6efd8867e3604637f5f59999f4e3e04882806486dbeb2ca1a4ce272f4f",
+  "zip_integrity": "all CRC checks passed",
+  "files": [
+    {
+      "path": "dist/DND-NCFU-Setup.exe",
+      "size": 40380204,
+      "sha256": "b6df824bb9d82e84b6f1eec451565733e7896fa893835307ca0d75d10f2e4e79"
+    },
+    {
+      "path": "dist/DND-NCFU-Windows-x64-v0.4.0.zip.sha256",
+      "size": 99,
+      "sha256": "4f14c3aa187ecc06411e53743b80e0a1413f150a3cf513a430c255417c2b2613"
+    },
+    {
+      "path": "dist/DND-NCFU-Windows-x64-v0.4.0.zip",
+      "size": 55009689,
+      "sha256": "f057cc58818aea93a1046a38bb7a87857bcf2e86303d016bd20ac06dd9d01c2f"
+    },
+    {
+      "path": "build/check-batches-bad7ef96d8f14699914bd51b11108095/summary.json",
+      "size": 14701,
+      "sha256": "969d7ac06e0ff4e2fe06c705dfbabbda5110a5d0081444d04e7fe237cc556cb3"
+    },
+    {
+      "path": "build/setup-probe/first-installed-save-load.json",
+      "size": 128,
+      "sha256": "3f1e56c4a0e66c9c668e449dd7a874078b076bd5413b7eae2d52327840f95a72"
+    },
+    {
+      "path": "build/setup-probe/first-saved-campaign.json",
+      "size": 99,
+      "sha256": "f9494738ae7f0d3402c3f9ad75f47ea69cd97246823d3e67082053dd7bb489fa"
+    },
+    {
+      "path": "build/setup-probe/first-self-check.json",
+      "size": 1539,
+      "sha256": "8840a0fa81cdf0801c9a662f80da8e11ea9d540d52e839aafcbb1e3f09d6c596"
+    },
+    {
+      "path": "build/setup-probe/first-smoke-test.json",
+      "size": 2580,
+      "sha256": "2555d45665afda4f93a66ad68a8425aa04ca60f6bb22275493214894a203317a"
+    },
+    {
+      "path": "build/setup-probe/historical-self-check.json",
+      "size": 1501,
+      "sha256": "e1099b9bc5141e8554c37bfa2eada6713705fa37f305653dc73de6947a22ee76"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-installed-save-load.json",
+      "size": 128,
+      "sha256": "3f1e56c4a0e66c9c668e449dd7a874078b076bd5413b7eae2d52327840f95a72"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-saved-campaign.json",
+      "size": 99,
+      "sha256": "f9494738ae7f0d3402c3f9ad75f47ea69cd97246823d3e67082053dd7bb489fa"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-self-check.json",
+      "size": 1539,
+      "sha256": "8840a0fa81cdf0801c9a662f80da8e11ea9d540d52e839aafcbb1e3f09d6c596"
+    },
+    {
+      "path": "build/setup-probe/repeat-update-smoke-test.json",
+      "size": 2580,
+      "sha256": "2555d45665afda4f93a66ad68a8425aa04ca60f6bb22275493214894a203317a"
+    },
+    {
+      "path": "build/setup-probe/setup-result.json",
+      "size": 268,
+      "sha256": "22bc3ea598464c25f17f1bf6bc2437d8928c1f97aea0fc5bd30df712102b139f"
+    },
+    {
+      "path": "build/windows-20261028-144956-887-1c697c/checks/bundle.json",
+      "size": 45445,
+      "sha256": "ef1a6e31229cd22869a5b14038561a8c89093d353eb99966540dcb2884dc175b"
+    },
+    {
+      "path": "build/windows-20261028-144956-887-1c697c/checks/self-check.json",
+      "size": 1534,
+      "sha256": "fe7a0ff841964d428d821e97d07890278887f4ea6e206f20280de8df9c4cf242"
+    },
+    {
+      "path": "build/windows-20261028-144956-887-1c697c/checks/smoke-test.json",
+      "size": 2575,
+      "sha256": "1567bdb57307f639a307fd5c06a2f28f2e9a1f5eadfbd2b043292eb0588bcc8b"
+    }
+  ],
+  "limit": "Native Windows CI, historical0.3.1 to0.4.0 and repeat update, installed-EXE reader. Not manual owner-PC, real-display or clean machine without Python acceptance."
+}

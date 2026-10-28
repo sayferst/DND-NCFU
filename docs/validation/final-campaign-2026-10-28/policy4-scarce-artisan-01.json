@@ -1,0 +1,80 @@
+{
+  "source_commit": "8cf1228b4876a4ac44cc245bac863b5c6f60a4d2",
+  "class": "artisan",
+  "goal": 11,
+  "level": 11,
+  "turns": 1101,
+  "days": 14,
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 10
+    },
+    {
+      "level": 2,
+      "turn": 9,
+      "xp": 130
+    },
+    {
+      "level": 3,
+      "turn": 27,
+      "xp": 300
+    },
+    {
+      "level": 4,
+      "turn": 54,
+      "xp": 600
+    },
+    {
+      "level": 5,
+      "turn": 125,
+      "xp": 1030
+    },
+    {
+      "level": 6,
+      "turn": 181,
+      "xp": 1500
+    },
+    {
+      "level": 7,
+      "turn": 302,
+      "xp": 2140
+    },
+    {
+      "level": 8,
+      "turn": 448,
+      "xp": 2810
+    },
+    {
+      "level": 9,
+      "turn": 625,
+      "xp": 3640
+    },
+    {
+      "level": 10,
+      "turn": 868,
+      "xp": 4510
+    },
+    {
+      "level": 11,
+      "turn": 1101,
+      "xp": 5500
+    }
+  ],
+  "actions": {
+    "manufacture": 253,
+    "sell": 92,
+    "buy": 104,
+    "research": 25,
+    "gather": 361,
+    "travel": 266
+  },
+  "errors": [],
+  "seconds": 1289.9052770319977,
+  "seed": 17,
+  "json_sqlite_replay_rng_equal": true,
+  "json_bytes": 912467,
+  "json_sha256": "953eedb4ad90d1260e78711f1621b676ec48bbd29f5e1ebf1a20e974b9cb6638",
+  "conditions": "Normal artisan kit and200cp; merchant1000cp, two workers100cp each. Finite deposits and forest, no stock or XP edits after genesis. Only research, gathering, crafting and funded sales; no combat. Buyer liquidity is recycled through real purchases of existing goods. Authored automated controller, not human play."
+}

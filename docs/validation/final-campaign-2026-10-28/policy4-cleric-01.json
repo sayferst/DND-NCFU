@@ -1,0 +1,134 @@
+{
+  "class": "cleric",
+  "inherited_campaign": {
+    "turns": 0,
+    "xp": 0,
+    "level": 1
+  },
+  "source_commit": "8cf1228b4876a4ac44cc245bac863b5c6f60a4d2",
+  "seed": 17,
+  "level": 20,
+  "turns": 1894,
+  "days": 86,
+  "victories": 149,
+  "actions": {
+    "rest": 181,
+    "buy": 3,
+    "research": 1,
+    "world_registration": 181,
+    "encounter": 181,
+    "cast": 996,
+    "wait": 246,
+    "sell": 94,
+    "raise": 8,
+    "talent": 3
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 19,
+      "xp": 100
+    },
+    {
+      "level": 3,
+      "turn": 56,
+      "xp": 310
+    },
+    {
+      "level": 4,
+      "turn": 103,
+      "xp": 610
+    },
+    {
+      "level": 5,
+      "turn": 166,
+      "xp": 1045
+    },
+    {
+      "level": 6,
+      "turn": 227,
+      "xp": 1570
+    },
+    {
+      "level": 7,
+      "turn": 309,
+      "xp": 2110
+    },
+    {
+      "level": 8,
+      "turn": 408,
+      "xp": 2860
+    },
+    {
+      "level": 9,
+      "turn": 491,
+      "xp": 3700
+    },
+    {
+      "level": 10,
+      "turn": 586,
+      "xp": 4540
+    },
+    {
+      "level": 11,
+      "turn": 681,
+      "xp": 5500
+    },
+    {
+      "level": 12,
+      "turn": 790,
+      "xp": 6700
+    },
+    {
+      "level": 13,
+      "turn": 887,
+      "xp": 7840
+    },
+    {
+      "level": 14,
+      "turn": 1026,
+      "xp": 9190
+    },
+    {
+      "level": 15,
+      "turn": 1152,
+      "xp": 10555
+    },
+    {
+      "level": 16,
+      "turn": 1295,
+      "xp": 12055
+    },
+    {
+      "level": 17,
+      "turn": 1443,
+      "xp": 13705
+    },
+    {
+      "level": 18,
+      "turn": 1579,
+      "xp": 15460
+    },
+    {
+      "level": 19,
+      "turn": 1724,
+      "xp": 17110
+    },
+    {
+      "level": 20,
+      "turn": 1894,
+      "xp": 19150
+    }
+  ],
+  "errors": [],
+  "replay_and_rng_equal": true,
+  "reached_twenty": true,
+  "seconds": 2534.6254878680047,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.",
+  "persistence": {}
+}

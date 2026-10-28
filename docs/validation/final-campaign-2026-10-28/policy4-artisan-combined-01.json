@@ -1,0 +1,92 @@
+{
+  "class": "artisan",
+  "inherited_campaign": {
+    "turns": 1101,
+    "xp": 5500,
+    "level": 11,
+    "source_save_sha256": "953eedb4ad90d1260e78711f1621b676ec48bbd29f5e1ebf1a20e974b9cb6638"
+  },
+  "source_commit": "fb7594ac2dadd03c0fc0cabde7fd6f0093d3ea0f",
+  "seed": 17,
+  "level": 20,
+  "turns": 3176,
+  "days": 97,
+  "victories": 119,
+  "actions": {
+    "rest": 148,
+    "sell": 3,
+    "travel": 166,
+    "gather": 65,
+    "repair": 62,
+    "wait": 250,
+    "raise": 8,
+    "talent": 3,
+    "world_registration": 148,
+    "encounter": 148,
+    "ability": 378,
+    "attack": 696
+  },
+  "milestones": [
+    {
+      "level": 11,
+      "turn": 1102,
+      "xp": 5500
+    },
+    {
+      "level": 12,
+      "turn": 1390,
+      "xp": 6620
+    },
+    {
+      "level": 13,
+      "turn": 1566,
+      "xp": 7835
+    },
+    {
+      "level": 14,
+      "turn": 1748,
+      "xp": 9155
+    },
+    {
+      "level": 15,
+      "turn": 1985,
+      "xp": 10610
+    },
+    {
+      "level": 16,
+      "turn": 2202,
+      "xp": 12050
+    },
+    {
+      "level": 17,
+      "turn": 2422,
+      "xp": 13640
+    },
+    {
+      "level": 18,
+      "turn": 2681,
+      "xp": 15440
+    },
+    {
+      "level": 19,
+      "turn": 2929,
+      "xp": 17240
+    },
+    {
+      "level": 20,
+      "turn": 3176,
+      "xp": 19085
+    }
+  ],
+  "errors": [],
+  "replay_and_rng_equal": true,
+  "reached_twenty": true,
+  "seconds": 2360.3174899200094,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.",
+  "persistence": {
+    "json_bytes": 2382926,
+    "json_sha256": "a4f259b959e69df29b9a2de210ddc42315881d89731cc21c6a9786cb6a45945a",
+    "sqlite_bytes": 24600576,
+    "json_sqlite_and_rng_equal": true
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "class": "archer",
+  "inherited_campaign": {
+    "turns": 0,
+    "xp": 0,
+    "level": 1
+  },
+  "source_commit": "8cf1228b4876a4ac44cc245bac863b5c6f60a4d2",
+  "seed": 17,
+  "level": 20,
+  "turns": 2656,
+  "days": 105,
+  "victories": 153,
+  "actions": {
+    "rest": 184,
+    "buy": 91,
+    "manufacture": 85,
+    "gather": 169,
+    "world_registration": 184,
+    "encounter": 184,
+    "attack": 494,
+    "wait": 280,
+    "sell": 88,
+    "research": 3,
+    "repair": 55,
+    "raise": 8,
+    "talent": 3,
+    "ability": 358,
+    "travel": 470
+  },
+  "milestones": [
+    {
+      "level": 1,
+      "turn": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "turn": 30,
+      "xp": 100
+    },
+    {
+      "level": 3,
+      "turn": 73,
+      "xp": 330
+    },
+    {
+      "level": 4,
+      "turn": 126,
+      "xp": 650
+    },
+    {
+      "level": 5,
+      "turn": 179,
+      "xp": 1010
+    },
+    {
+      "level": 6,
+      "turn": 244,
+      "xp": 1535
+    },
+    {
+      "level": 7,
+      "turn": 353,
+      "xp": 2150
+    },
+    {
+      "level": 8,
+      "turn": 463,
+      "xp": 2900
+    },
+    {
+      "level": 9,
+      "turn": 578,
+      "xp": 3635
+    },
+    {
+      "level": 10,
+      "turn": 693,
+      "xp": 4595
+    },
+    {
+      "level": 11,
+      "turn": 833,
+      "xp": 5555
+    },
+    {
+      "level": 12,
+      "turn": 981,
+      "xp": 6635
+    },
+    {
+      "level": 13,
+      "turn": 1137,
+      "xp": 7805
+    },
+    {
+      "level": 14,
+      "turn": 1330,
+      "xp": 9155
+    },
+    {
+      "level": 15,
+      "turn": 1547,
+      "xp": 10565
+    },
+    {
+      "level": 16,
+      "turn": 1739,
+      "xp": 12065
+    },
+    {
+      "level": 17,
+      "turn": 1984,
+      "xp": 13715
+    },
+    {
+      "level": 18,
+      "turn": 2180,
+      "xp": 15350
+    },
+    {
+      "level": 19,
+      "turn": 2422,
+      "xp": 17165
+    },
+    {
+      "level": 20,
+      "turn": 2656,
+      "xp": 19070
+    }
+  ],
+  "errors": [],
+  "replay_and_rng_equal": true,
+  "reached_twenty": true,
+  "seconds": 3059.502469957006,
+  "conditions": "Normal hero kit and200cp; merchant1000cp plus two workers100cp each. No injected XP or post-genesis stock. Enemies added by real catalog registrations using unmodified creature templates. Automated authored scenario, not human play.",
+  "persistence": {}
+}

@@ -1,0 +1,10 @@
+﻿{
+    "manual_gui":  false,
+    "repeat_update":  true,
+    "historical_writer":  true,
+    "installed_exe_save_reader":  true,
+    "install":  true,
+    "isolated_data_preserved":  true,
+    "native_windows":  true,
+    "historical_031_upgrade":  true
+}

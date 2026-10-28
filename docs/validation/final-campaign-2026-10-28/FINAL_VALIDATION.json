@@ -1,0 +1,218 @@
+{
+  "schema": "dnd-ncfu-final-validation-1",
+  "runtime_commit": "fb7594ac2dadd03c0fc0cabde7fd6f0093d3ea0f",
+  "gameplay_commit": "e3c536fbc8b4d485af51c64e5f3551a628dd6add",
+  "local_compiled_checkpoint": "8cf1228b4876a4ac44cc245bac863b5c6f60a4d2",
+  "gameplay_rules_bytes_equal": true,
+  "subsequent_gui_recovery_fix_only": [
+    "src/rpg_vkr/ui/adventure_panel.py",
+    "tests/test_save_loading.py"
+  ],
+  "checkpoint_difference_only_local_logs": [
+    "docs/validation/final-campaign-2026-10-28/npc-inventory-01.txt",
+    "docs/validation/final-campaign-2026-10-28/npc-inventory-02.txt",
+    "docs/validation/final-campaign-2026-10-28/npc-policy4-01.txt",
+    "docs/validation/final-campaign-2026-10-28/npc-policy4-02.txt",
+    "docs/validation/final-campaign-2026-10-28/npc-tool-repro-01.json"
+  ],
+  "linux": {
+    "complete": true,
+    "passed": 12203,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 5
+  },
+  "windows": {
+    "complete": true,
+    "passed": 12207,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "catalog": {
+    "unique_ids": 3360,
+    "tested_ids": 3360,
+    "disjoint_categories": 42,
+    "additional_overlapping_schools": 5,
+    "per_group": 80,
+    "world_policy": 4,
+    "sha256": "fcf8ebd1e5f7e24d00fb3f8a5ab6288fa792a90e451b5638beba12d90edb1535",
+    "limit": "Controlled endgame execution, not3360independent mechanics or exhaustive balance/human review"
+  },
+  "class_campaigns": {
+    "warrior": {
+      "report": "policy4-warrior-01.json",
+      "level": 20,
+      "turns": 1930,
+      "days": 86,
+      "errors": [],
+      "replay_and_rng_equal": true,
+      "persistence": {},
+      "inherited_campaign": {
+        "turns": 0,
+        "xp": 0,
+        "level": 1
+      }
+    },
+    "archer": {
+      "report": "policy4-archer-01.json",
+      "level": 20,
+      "turns": 2656,
+      "days": 105,
+      "errors": [],
+      "replay_and_rng_equal": true,
+      "persistence": {},
+      "inherited_campaign": {
+        "turns": 0,
+        "xp": 0,
+        "level": 1
+      }
+    },
+    "rogue": {
+      "report": "policy4-rogue-01.json",
+      "level": 20,
+      "turns": 2199,
+      "days": 88,
+      "errors": [],
+      "replay_and_rng_equal": true,
+      "persistence": {},
+      "inherited_campaign": {
+        "turns": 0,
+        "xp": 0,
+        "level": 1
+      }
+    },
+    "mage": {
+      "report": "policy4-mage-01.json",
+      "level": 20,
+      "turns": 1929,
+      "days": 88,
+      "errors": [],
+      "replay_and_rng_equal": true,
+      "persistence": {},
+      "inherited_campaign": {
+        "turns": 0,
+        "xp": 0,
+        "level": 1
+      }
+    },
+    "cleric": {
+      "report": "policy4-cleric-01.json",
+      "level": 20,
+      "turns": 1894,
+      "days": 86,
+      "errors": [],
+      "replay_and_rng_equal": true,
+      "persistence": {},
+      "inherited_campaign": {
+        "turns": 0,
+        "xp": 0,
+        "level": 1
+      }
+    },
+    "artisan": {
+      "report": "policy4-artisan-combined-01.json",
+      "level": 20,
+      "turns": 3176,
+      "days": 97,
+      "errors": [],
+      "replay_and_rng_equal": true,
+      "persistence": {
+        "json_bytes": 2382926,
+        "json_sha256": "a4f259b959e69df29b9a2de210ddc42315881d89731cc21c6a9786cb6a45945a",
+        "sqlite_bytes": 24600576,
+        "json_sqlite_and_rng_equal": true
+      },
+      "inherited_campaign": {
+        "turns": 1101,
+        "xp": 5500,
+        "level": 11,
+        "source_save_sha256": "953eedb4ad90d1260e78711f1621b676ec48bbd29f5e1ebf1a20e974b9cb6638"
+      }
+    }
+  },
+  "pure_artisan": {
+    "report": "policy4-scarce-artisan-02.json",
+    "level": 11,
+    "turns": 1203,
+    "errors": [
+      "Funded demand exhausted"
+    ],
+    "json_sqlite_replay_rng_equal": true
+  },
+  "campaign_limit": "Authored automated controllers, normal200cp hero kit, finite NPC wallets/resources, public commands and unmodified enemy registrations. No post-genesis XP/HP/stock edits. Artisan mixed route begins with actual work-only level11 save. Not human play.",
+  "routerai": {
+    "model": "deepseek/deepseek-v4.1-flash",
+    "engine_turns": 500,
+    "responses": 600,
+    "accepted": 588,
+    "rejected": 12,
+    "reconciled_total_with_initial_reserve_rub": "143.06704210327096605",
+    "overall_limit_rub": 150,
+    "paid_requests_stopped": true,
+    "monthly_key_usage_below150_confirmed": true,
+    "limit": "One authored noncombat campaign;100matched controls, not100independent scenes or two-human blind literary evaluation"
+  },
+  "training": {
+    "live_receipt_candidates": 488,
+    "admitted": 0,
+    "global_step": 0,
+    "trained_adapters": 0,
+    "rights": "unknown",
+    "review": "pending",
+    "campaign_groups": 1,
+    "blocked": "No reviewed dataset/independent holdout, GPU/CUDA/Torch or local base weights"
+  },
+  "legacy": {
+    "protected_originals": 86,
+    "all_unchanged": true,
+    "report": "immutable-final-ui-01.json",
+    "old_live_export_byte_equal": true,
+    "fixtures": [
+      "real writer31/catalog2",
+      "real world3",
+      "real world3 with physical NPC tool"
+    ]
+  },
+  "windows_package": {
+    "run_id": 40704957897,
+    "artifact_id": 12824514909,
+    "artifact_sha256": "78a9ea6efd8867e3604637f5f59999f4e3e04882806486dbeb2ca1a4ce272f4f",
+    "seven_jobs_success": true,
+    "historical_031_upgrade": true,
+    "installed_exe_save_reader": true,
+    "repeat_update": true,
+    "scope": "Native Windows CI, isolated setup. Not manual owner PC/real display or clean PC without Python."
+  },
+  "knowledge": {
+    "canonical_cards": 19000,
+    "aliases": 200,
+    "automatic": true,
+    "database_sha256": "252f3d68abffcee4c612c6943ad3528fd012413559c400942d3646309abb65aa",
+    "limit": "Bounded relevant reference retrieval, not all19000full transcripts in each prompt or trained weights"
+  },
+  "input_report_sha256": {
+    "policy4-warrior-01.json": "675b9648a5ee0a07c3b1fcfe80fe3ccba18d31617d4d4f216c211998074e48ae",
+    "policy4-archer-01.json": "99ddc1952ca312d79731b6c49a5e39de84d40dc990c6d0759c96b92c49cd911a",
+    "policy4-rogue-01.json": "65193a7de86a9d6ca982ed9d82af3849225eeb7f6754678f94d262e5545b6de8",
+    "policy4-mage-01.json": "6865fbc2ec4bc333fd88a3efbae110040b2d60484951828696de98265b7fa2df",
+    "policy4-cleric-01.json": "272917f699636b4389958bcade1a1667d11f31836b61647c7f43e9c9643dba57",
+    "policy4-artisan-combined-01.json": "72a2a01eaab051013eb96236322ebdf82c9c9aedd571860f90cdd3faa0889cff",
+    "policy4-scarce-artisan-01.json": "bc11b9132013d699cbb613170b38eeed889b14a91c7eaedea62830c7e98ad24f",
+    "policy4-scarce-artisan-02.json": "27608cebe04ac5c7e1215e9a750b53e06ad50d062739e6178f81a15fbc9ac0e9",
+    "catalog3-policy4-audit-01.json": "bf0ebb6d91a31e5e4f82f3d04f900157734555ba06a0869856585bc1633e44f4",
+    "catalog3-policy4-proof-01.json": "38ef8a7a91dad95e8214505b04de062f3a58573e6890fe0f4e3d765f2bfcdecf",
+    "linux-policy4-summary-01.json": "e04414244f9b1b48e984ca452acd2df183dbf5d36e2914e9b05e6f4694d309fb",
+    "linux-final-ui-summary-01.json": "b7de5ce48f211c904e1bcbe92e5483c93a510b8db7e1cb0d6fc3023d619994c1",
+    "native-fb-summary.json": "969d7ac06e0ff4e2fe06c705dfbabbda5110a5d0081444d04e7fe237cc556cb3",
+    "native-fb-artifact-proof.json": "f9cecedd0a01a7a530b6af49356021292300241a33b5367efdf14fc65350d31c",
+    "native-fb-setup-result.json": "22bc3ea598464c25f17f1bf6bc2437d8928c1f97aea0fc5bd30df712102b139f",
+    "native-fb-first-installed-save-load.json": "3f1e56c4a0e66c9c668e449dd7a874078b076bd5413b7eae2d52327840f95a72",
+    "native-fb-repeat-update-installed-save-load.json": "3f1e56c4a0e66c9c668e449dd7a874078b076bd5413b7eae2d52327840f95a72",
+    "capture-replay-compatibility-01.json": "409936fcbbcf2d99ddd8f32adb8bcfa030bc839294015349d8bd77390c1265e2",
+    "immutable-policy4-01.json": "04dba077f2d75c507ac82066dfc018c91f13bc0e1642eb562df3aa20ac5da1af",
+    "budget-reconciliation-01.json": "b4216dec4536183424d2e194ab896b76dd17154329ee50899e0d1bf1b7564283",
+    "deepseek-long-500-01.json": "3fd1662c839d68a46f5cc75d0d88856d529ac9ff656166ef9f501595df35f0d6",
+    "budget-key-metadata-01.json": "428b7a477c0720ba730780c59169df17343f0ff323103717200ecb720990bc24"
+  }
+}
