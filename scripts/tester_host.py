@@ -1056,7 +1056,10 @@ def main():
     commands.add_parser("start")
     commands.add_parser("accounts", help="Настроить пароли и отдельные ключи admin/tester")
     commands.add_parser("build-exe", help="Собрать личный admin EXE без хоста и входа")
-    commands.add_parser("update-ngrok", help="Обновить отдельную копию агента ngrok")
+    update_command = commands.add_parser(
+        "update-ngrok", help="Обновить отдельную копию агента ngrok"
+    )
+    update_command.add_argument("--archive", type=Path, help="Официальный ZIP, скачанный браузером")
     ngrok_command = commands.add_parser("ngrok", help="Настроить ngrok вместо Cloudflare")
     ngrok_command.add_argument("--domain", required=True)
     ngrok_command.add_argument("--replace-token", action="store_true")
@@ -1100,7 +1103,10 @@ def main():
             from scripts.ngrok_host import update_agent
 
             with host_lock(root):
-                update_agent(root)
+                if args.archive is None:
+                    update_agent(root)
+                else:
+                    update_agent(root, archive_path=args.archive)
         elif args.command == "ngrok":
             from scripts.ngrok_host import configure
 

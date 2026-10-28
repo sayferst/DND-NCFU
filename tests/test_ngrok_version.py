@@ -208,3 +208,44 @@ def test_failed_update_keeps_credentials_and_cleans_config(tmp_path, monkeypatch
     assert "private" not in str(error.value) + capsys.readouterr().out
     assert secret.read_bytes() == b"protected-existing-secret"
     assert target.read_bytes() == b"old-agent" and not list(tmp_path.glob("*.yml"))
+
+
+def test_local_zip_cli_reaches_installer_without_keys(tmp_path, monkeypatch):
+    import sys
+
+    from scripts import tester_host as host
+
+    monkeypatch.setattr(
+        host, "os", SimpleNamespace(name="nt", environ={"LOCALAPPDATA": str(tmp_path)})
+    )
+    monkeypatch.setattr(host, "Store", lambda *a, **k: pytest.fail("No database"))
+    monkeypatch.setattr(host, "load_secret", lambda *a: pytest.fail("No token reads"))
+    monkeypatch.setattr(host, "host_lock", lambda root: nullcontext())
+    called = []
+    monkeypatch.setattr(ngrok, "update_agent", lambda root, **kw: called.append((root, kw)))
+    monkeypatch.setattr(
+        sys, "argv", ["tester_host.py", "update-ngrok", "--archive", "official.zip"]
+    )
+    assert host.main() == 0
+    assert called == [(tmp_path / "DND-NCFU-Host", {"archive_path": Path("official.zip")})]
+
+
+def test_local_archive_installs_atomically_and_preserves_source(tmp_path, monkeypatch):
+    from scripts import ngrok_download
+
+    source = tmp_path / "official.zip"
+    source.write_bytes(b"official-archive")
+    target = tmp_path / "ngrok-agent/ngrok.exe"
+    target.parent.mkdir()
+    target.write_bytes(b"old-agent")
+
+    def install(candidate, archive_path):
+        assert archive_path == source
+        assert target.read_bytes() == b"old-agent"
+        candidate.write_bytes(b"verified-binary")
+
+    monkeypatch.setattr(ngrok_download, "download_agent", install)
+    monkeypatch.setattr(ngrok, "require_supported", lambda path: (3, 39, 13))
+    ngrok.update_agent(tmp_path, archive_path=source)
+    assert target.read_bytes() == b"verified-binary"
+    assert source.read_bytes() == b"official-archive"

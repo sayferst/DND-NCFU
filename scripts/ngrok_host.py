@@ -47,16 +47,24 @@ def require_supported(agent):
     return found
 
 
-def update_agent(root):
+def update_agent(root, archive_path=None):
     # A private portable copy: never modify a package-manager-owned executable.
     target = root / "ngrok-agent" / "ngrok.exe"
     target.parent.mkdir(parents=True, exist_ok=True)
     from scripts.ngrok_download import download_agent
 
-    print("Загружаю официальный ngrok и проверяю подпись Windows…", flush=True)
+    print(
+        "Проверяю локальный ZIP ngrok…"
+        if archive_path
+        else "Загружаю официальный ngrok и проверяю подпись Windows…",
+        flush=True,
+    )
     with tempfile.TemporaryDirectory(prefix="ngrok-update-", dir=root) as temporary:
         candidate = Path(temporary) / "ngrok.exe"
-        download_agent(candidate)
+        if archive_path is None:
+            download_agent(candidate)
+        else:
+            download_agent(candidate, archive_path=archive_path)
         found = require_supported(str(candidate))
         try:
             os.replace(candidate, target)

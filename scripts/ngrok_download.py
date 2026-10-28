@@ -3,6 +3,7 @@
 import http.client
 import io
 import os
+import ssl
 import subprocess
 import urllib.request
 import zipfile
@@ -11,6 +12,67 @@ URL = "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip"
 MAX_ARCHIVE = 40 * 1024 * 1024
 MAX_BINARY = 100 * 1024 * 1024
 WINDOWS = os.name == "nt"
+
+
+def failure_code(error):
+    """Only bounded, non-sensitive diagnostics; never echo server/subprocess text."""
+    if isinstance(error, urllib.error.HTTPError):
+        return f"HTTP-{error.code}"
+    if isinstance(error, urllib.error.URLError):
+        return failure_code(error.reason)
+    if isinstance(error, (TimeoutError, subprocess.TimeoutExpired)):
+        return "timeout"
+    if isinstance(error, ssl.SSLError):
+        return "TLS-certificate-or-handshake"
+    if isinstance(error, http.client.IncompleteRead):
+        return "incomplete-body"
+    if isinstance(error, OSError):
+        return f"OS-{error.errno}" if isinstance(error.errno, int) else "OS-error"
+    return "transport-failed"
+
+
+def curl_payload(path):
+    """Windows ships curl with its own transport; do not inherit a curl config."""
+    archive = path.with_suffix(".curl.zip")
+    environment = os.environ.copy()
+    for name in ("NGROK_AUTHTOKEN", "NGROK_API_KEY"):
+        environment.pop(name, None)
+    agent = os.path.join(environment.get("SystemRoot", r"C:\Windows"), "System32", "curl.exe")
+    try:
+        result = subprocess.run(
+            [
+                agent,
+                "--disable",
+                "--fail",
+                "--location",
+                "--proto",
+                "=https",
+                "--proto-redir",
+                "=https",
+                "--connect-timeout",
+                "20",
+                "--max-time",
+                "180",
+                "--max-filesize",
+                str(MAX_ARCHIVE),
+                "--output",
+                str(archive.resolve()),
+                URL,
+            ],
+            env=environment,
+            capture_output=True,
+            timeout=190,
+            check=False,
+        )
+        if result.returncode:
+            # curl codes are public fixed numeric diagnostics, not raw stderr.
+            print(f"ngrok download: curl-exit-{int(result.returncode)}", flush=True)
+            raise ValueError("curl HTTPS failed")
+        if not archive.is_file() or not 0 < archive.stat().st_size <= MAX_ARCHIVE:
+            raise ValueError("Invalid archive size")
+        return archive.read_bytes()
+    finally:
+        archive.unlink(missing_ok=True)
 
 
 def windows_payload(path):
@@ -45,8 +107,11 @@ def windows_payload(path):
             timeout=240,
             check=False,
         )
-        if result.returncode or not archive.is_file() or archive.stat().st_size > MAX_ARCHIVE:
+        if result.returncode:
+            print(f"ngrok download: PowerShell-exit-{int(result.returncode)}", flush=True)
             raise ValueError("Windows HTTPS download failed")
+        if not archive.is_file() or archive.stat().st_size > MAX_ARCHIVE:
+            raise ValueError("Invalid archive size")
         return archive.read_bytes()
     finally:
         archive.unlink(missing_ok=True)
@@ -66,11 +131,17 @@ def payload(path):
             if expected.isdigit() and int(expected) != len(result):
                 raise http.client.IncompleteRead(b"", int(expected))
             return bytes(result)
-    except (OSError, http.client.HTTPException):
+    except (OSError, http.client.HTTPException) as error:
+        print("ngrok download: Python-" + failure_code(error), flush=True)
         if not WINDOWS:
             raise
         print("Повторяю полную загрузку через системный HTTPS Windows…", flush=True)
-        return windows_payload(path)
+        try:
+            return windows_payload(path)
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            print("ngrok download: Windows-" + failure_code(error), flush=True)
+            print("Повторяю загрузку через системный curl Windows…", flush=True)
+            return curl_payload(path)
 
 
 def verify_publisher(path):
@@ -101,10 +172,15 @@ def verify_publisher(path):
         raise ValueError("Подпись официального ngrok не подтверждена. Установка остановлена.")
 
 
-def download_agent(path):
-    stage = "HTTPS"
+def download_agent(path, archive_path=None):
+    stage = "local ZIP" if archive_path is not None else "HTTPS"
     try:
-        data = payload(path)
+        if archive_path is None:
+            data = payload(path)
+        else:
+            # Read only a bounded local ZIP; never execute a user-provided binary.
+            with archive_path.open("rb") as source:
+                data = source.read(MAX_ARCHIVE + 1)
         if len(data) > MAX_ARCHIVE:
             raise ValueError("Archive too large")
         stage = "ZIP"
@@ -123,5 +199,7 @@ def download_agent(path):
         raise ValueError(
             f"Не удалось загрузить и проверить официальный ngrok ({stage}). "
             "Проверьте доступ к bin.equinox.io и проверку подписи Windows. "
-            "Существующий агент и ключи сохранены."
+            "Существующий агент и ключи сохранены. "
+            "Можно скачать официальный ZIP браузером и выполнить "
+            'tester_host.cmd update-ngrok --archive "ПУТЬ-К-ZIP".'
         ) from None

@@ -31,6 +31,9 @@ jobs:
       - name: Verify real Windows HTTPS fallback and installed signature
         run: |
           python -c "from pathlib import Path; from unittest.mock import patch; from scripts.ngrok_host import update_agent,require_supported; root=Path('build/ngrok-windows-https-probe').resolve(); transport='scripts.ngrok_download.urllib.request.urlopen'; failure=OSError('Simulated Python transport failure'); ctx=patch(transport,side_effect=failure); ctx.start(); update_agent(root); ctx.stop(); print('Verified Windows HTTPS fallback:',require_supported(str(root/'ngrok-agent/ngrok.exe')))"
+      - name: Verify actual curl download and offline ZIP installation
+        run: |
+          python -c "from pathlib import Path; from unittest.mock import patch; from scripts.ngrok_download import curl_payload; from scripts.ngrok_host import update_agent,require_supported; root=Path('build/ngrok-curl-offline-probe').resolve(); root.mkdir(parents=True,exist_ok=True); archive=root/'official.zip'; archive.write_bytes(curl_payload(root/'candidate.exe')); original=archive.read_bytes(); ctx=patch('scripts.ngrok_download.payload',side_effect=AssertionError('No network allowed')); ctx.start(); update_agent(root,archive_path=archive); ctx.stop(); assert archive.read_bytes()==original; print('Verified curl and offline ZIP installation:',require_supported(str(root/'ngrok-agent/ngrok.exe')))"
       - name: Public binary signature diagnostics on failure
         if: failure()
         shell: powershell
