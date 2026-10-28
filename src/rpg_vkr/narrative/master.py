@@ -234,7 +234,9 @@ def campaign_context(session, target="", *, query=""):
 
         public_simulation["mechanics_revision"] = 3
         public_simulation["contracts"] = public_contracts(session)
-        for id, resident in session.gameplay["living_world"]["residents"].items():
+        for id, resident in (
+            (session.gameplay.get("living_world") or {}).get("residents", {}).items()
+        ):
             if session.actor_is_here(id):
                 public_simulation["living_world"]["nearby_goals"][id]["unconfirmed_rumors"] = (
                     resident.get("rumors", [])[-5:]

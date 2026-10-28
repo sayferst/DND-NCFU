@@ -295,6 +295,13 @@ def refresh(window):
         public_news = "; ".join(
             v["name"] + ": " + v["news"] for v in state["known_factions"].values()
         )
+        if state.get("catalog_revision") == 3:
+            from rpg_vkr.ui.world_news import labels
+
+            public_news = "\n".join(
+                ([public_news] if public_news else [])
+                + labels(world, s.interaction_state().current)
+            )
         window.unified_world_info.setText(
             f"День {minute // 1440 + 1} · {minute // 60 % 24:02}:{minute % 60:02} · {weather}\n"
             + public_news
