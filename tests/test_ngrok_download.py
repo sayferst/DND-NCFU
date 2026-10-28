@@ -76,3 +76,59 @@ def test_signature_requires_windows_trust_and_ngrok_publisher(tmp_path, monkeypa
         download.verify_publisher(Path("candidate.exe") if relative else tmp_path / "candidate.exe")
     assert "Get-AuthenticodeSignature" in calls[0][-1]
     assert "'Valid'" in calls[0][-1] and "'ngrok, Inc.'" in calls[0][-1]
+
+
+@pytest.mark.parametrize("failure", ["connect", "body", "short_body"])
+def test_python_transport_failure_restarts_full_download_with_windows(
+    tmp_path, monkeypatch, failure
+):
+    class BrokenResponse(Response):
+        headers = {"Content-Length": "9999"}
+
+        def read(self, n):
+            if failure == "body":
+                raise TimeoutError("body stalled after HTTP200")
+            return super().read(n)
+
+    def request(*args, **kwargs):
+        if failure == "connect":
+            raise OSError("Python transport unavailable")
+        return BrokenResponse(b"partial")
+
+    monkeypatch.setattr(download, "WINDOWS", True)
+    monkeypatch.setattr(download.urllib.request, "urlopen", request)
+    calls = []
+    monkeypatch.setattr(download, "windows_payload", lambda p: (calls.append(p), archive())[1])
+    verified = []
+    monkeypatch.setattr(download, "verify_publisher", lambda p: verified.append(p.read_bytes()))
+    target = tmp_path / "candidate.exe"
+    download.download_agent(target)
+    assert calls == [target] and verified == [b"MZ-test-binary"]
+
+
+@pytest.mark.parametrize("outcome", ["valid", "failed", "oversize"])
+def test_windows_transport_bounds_secrets_and_temporary_archive(tmp_path, monkeypatch, outcome):
+    monkeypatch.setenv("NGROK_AUTHTOKEN", "private-token")
+    monkeypatch.setenv("PSModulePath", "incompatible-modules")
+    target = tmp_path / "candidate.exe"
+    payload = b"zip"
+    if outcome == "oversize":
+        monkeypatch.setattr(download, "MAX_ARCHIVE", 2)
+
+    def run(args, **kwargs):
+        assert kwargs["timeout"] == 240
+        assert "NGROK_AUTHTOKEN" not in kwargs["env"] and "PSModulePath" not in kwargs["env"]
+        script = args[-1]
+        assert "ResponseUri.Scheme -ne 'https'" in script
+        assert "ServerCertificateValidationCallback" not in script
+        assert f"$total -gt {download.MAX_ARCHIVE}" in script
+        Path(kwargs["env"]["DND_NGROK_ZIP"]).write_bytes(payload)
+        return SimpleNamespace(returncode=1 if outcome == "failed" else 0)
+
+    monkeypatch.setattr(download.subprocess, "run", run)
+    if outcome == "valid":
+        assert download.windows_payload(target) == payload
+    else:
+        with pytest.raises(ValueError):
+            download.windows_payload(target)
+    assert not target.with_suffix(".download.zip").exists()
