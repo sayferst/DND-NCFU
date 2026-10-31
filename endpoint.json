@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sequence": 1793428582744,
-  "issued": 1793428582,
-  "expires": 1796193382,
+  "sequence": 1793436017017,
+  "issued": 1793436017,
+  "expires": 1796200817,
   "endpoint": "https://identity-ruby-timothy.ngrok-free.dev/api/v1",
-  "signature": "kHleOTeKXSDtIZ8O/m6T6e1AOiM7CIG4KaQQ9RdLamP0je1B2r0KP4XL/5dd9/Pw+ibtQhH1UTvlRa8h2H5lAw=="
+  "signature": "hhV0M89H6zIiZOJIxmY3NMaV7SGyy22VQAWfDzEBCXwAvHPIGLZDSsQRwkuXrXcqdMQTdzzFY1NCv8Xtgw+ECw=="
 }
