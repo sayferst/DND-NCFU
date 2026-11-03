@@ -1,0 +1,49 @@
+{
+  "implementation_commit": "67b38cde98cbe61b30be3d54bbf3cea46e1b7c85",
+  "command": ".venv/bin/python scripts/check.py",
+  "exit_code": 0,
+  "platform": "Linux x86_64; offscreen Qt",
+  "python": "3.12.14",
+  "complete": true,
+  "batches": 13,
+  "test_files": 155,
+  "passed": 12301,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 6,
+  "junit_elapsed_seconds": 1075.166,
+  "skip_details": [
+    {
+      "test": "tests.test_catalog_campaign.test_public_progression_one_to_twenty",
+      "reason": "Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay"
+    },
+    {
+      "test": "tests.test_update_build_launcher.test_current_checkout_prints_actual_sha",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "tests.test_update_build_launcher.test_fetches_and_fast_forwards_only_current_release_branch",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "tests.test_update_build_launcher.test_wrong_branch_never_switches_or_updates",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "tests.test_update_build_launcher.test_dirty_checkout_with_remote_changes_is_preserved",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "tests.test_update_build_launcher.test_active_host_prevents_fast_forward_without_touching_checkout",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    }
+  ],
+  "pip_check": "PASS",
+  "ruff_check": "PASS",
+  "ruff_format_files": 418,
+  "full_log_sha256": "c702bc14aa6946cc8c8629fe8df5bb31bb4cb042d12652162ee869e54e50782e",
+  "native_windows_current_code": "NOT_RUN",
+  "real_faun_inference": "NOT_RUN",
+  "real_training_steps": 0,
+  "admitted_sft_samples": 0
+}

@@ -1,5 +1,12 @@
 # DND-NCFU
 
+**Faun / разметка v2:** [установка на Windows](docs/intelligent_gm/WINDOWS_FAUN_SETUP.md),
+[Excel на1000 сценариев](docs/intelligent_gm/scenarios-1000-v2.xlsx),
+[инструкция разметки](docs/intelligent_gm/ANNOTATION_V2.md),
+[проверенное состояние и ограничения](docs/intelligent_gm/STATUS.md).
+Установщик запускается через `scripts\SETUP_FAUN.cmd`; большие загрузки требуют
+отдельного подтверждения на вашем ПК. Faun на Acer ещё не измерена.
+
 ## Единая RPG: актуальный поток новых игр
 
 Создание героя состоит из четырёх шагов: имя и класс → характеристики и талант

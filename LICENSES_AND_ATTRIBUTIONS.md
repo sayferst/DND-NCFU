@@ -557,3 +557,25 @@ docs/intelligent_gm/DATASETS.md.1000сценариев сгенерирован�
 с явной меткой PROJECT_AUTHORED_SYNTHETIC, не являются человеческой разметкой.
 openpyxl3.1.5/MIT и et_xmlfile2.0.0/MIT использованы только во временной среде
 независимой валидации XLSX, не включены в клиент или его runtime-зависимости.
+
+
+## 03.11.2026 — дополнительные метаданные Faun/данных
+
+Ollama: официальный https://ollama.com/download/windows и подписанный
+OllamaSetup.exe. Установщик/веса не включаются в Git или GPU-tools ZIP.
+Faun/GGUF: ссылки и закреплённые metadata revisions приведены в
+docs/intelligent_gm/FAUN.md; Apache2.0 объявлена карточкой, происхождение всех
+merge-training данных независимо не доказано. Реальных скачиваний весов0.
+
+PIPPA https://huggingface.co/datasets/PygmalionAI/PIPPA, revision
+6412b0cae4d879b678e7a33df3ba076b9581f4d4: Apache2.0 в карточке; EN
+community-contributed partially synthetic roleplay. Не включён в обучение.
+CaSiNo mirror https://huggingface.co/datasets/kchawla123/casino, revision
+290898d2d08b6591db17005504e40ce00ac1028e: CC BY4.0 в карточке;1030 EN
+переговоров. Лицензия/приватность оригинальных реплик требуют отдельной проверки;
+данные не скачаны. Raw metadata и причины решений сохранены в новом отчёте.
+
+openpyxl3.1.5 MIT используется только из временного каталога для независимой
+проверки XLSX, не добавлен в игру. training/requirements-faun-linux.lock —
+отдельное воспроизводимое разрешение candidate зависимостей, не новое право
+распространения их бинарников и не результат GPU-теста.

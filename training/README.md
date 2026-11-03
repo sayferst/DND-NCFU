@@ -1,5 +1,12 @@
 # Отдельный контур данных и обучения
 
+Обновление03.11.2026: [Excel v2 и импорт](../docs/intelligent_gm/ANNOTATION_V2.md),
+[установка Faun на Windows](../docs/intelligent_gm/WINDOWS_FAUN_SETUP.md),
+[сбор эпизодов/предложения меток](../docs/intelligent_gm/DATA_COLLECTION_V2.md),
+[переносимый GPU-процесс](../docs/intelligent_gm/GPU_FAUN_WORKFLOW.md).
+Старый annotation.py сохранён для v1; v2 использует training.annotation_v2.
+Наличие инструментов не означает обучения: шагов0, допущенных SFT-примеров0.
+
 Автоматический runtime теперь имеет отдельный готовый индекс 19 000 карточек:
 [AUTOMATIC_CORPUS.md](../docs/learning/AUTOMATIC_CORPUS.md). Воспроизведение:
 `python -m training.build_corpus_knowledge --input ARCHIVE.zip --output NEW_DIRECTORY`.

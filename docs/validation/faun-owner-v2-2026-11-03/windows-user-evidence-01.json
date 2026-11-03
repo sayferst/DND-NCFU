@@ -1,0 +1,72 @@
+{
+  "source": "USER_SUPPLIED_WINDOWS_TERMINAL_LOG",
+  "source_sha256": "575ea8bf74f70f816a4c7ea1d709c227f242b8180ba64752d8c384d4a7b0e43c",
+  "raw_log_committed": false,
+  "platform": "Windows",
+  "test_summaries_in_log": [
+    {
+      "passed": 97,
+      "skipped": 0
+    },
+    {
+      "passed": 6848,
+      "skipped": 1
+    },
+    {
+      "passed": 193,
+      "skipped": 0
+    },
+    {
+      "passed": 320,
+      "skipped": 0
+    },
+    {
+      "passed": 3489,
+      "skipped": 0
+    },
+    {
+      "passed": 256,
+      "skipped": 0
+    },
+    {
+      "passed": 161,
+      "skipped": 0
+    },
+    {
+      "passed": 195,
+      "skipped": 0
+    },
+    {
+      "passed": 252,
+      "skipped": 0
+    },
+    {
+      "passed": 113,
+      "skipped": 0
+    },
+    {
+      "passed": 108,
+      "skipped": 0
+    },
+    {
+      "passed": 124,
+      "skipped": 0
+    },
+    {
+      "passed": 124,
+      "skipped": 0
+    }
+  ],
+  "current_revision_verified_by_this_log": false,
+  "ollama_installed_by_this_log": false,
+  "interpretation": "Existing local branch causes git switch --track failure; use switch without --track and ff-only merge. hardware_probe compatibility entry point added.",
+  "private_paths_redacted": true,
+  "aggregate": {
+    "complete": true,
+    "batches": 13,
+    "passed": 12280,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1
+  }
+}

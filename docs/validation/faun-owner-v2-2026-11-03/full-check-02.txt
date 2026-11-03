@@ -1,0 +1,457 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python scripts/check_batches.py
+Full suite batch 1: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 105 items
+
+tests/learning/test_evaluation.py .........                              [  8%]
+tests/learning/test_live_probe.py ....                                   [ 12%]
+tests/learning/test_live_suite.py .......                                [ 19%]
+tests/learning/test_memory_runtime.py .....                              [ 23%]
+tests/learning/test_package.py ............                              [ 35%]
+tests/learning/test_pipeline.py ........                                 [ 42%]
+tests/learning/test_review_and_ui.py ...                                 [ 45%]
+tests/test_accounts.py ......                                            [ 51%]
+tests/test_adventure.py ...................                              [ 69%]
+tests/test_adventure_consistency.py ........                             [ 77%]
+tests/test_adventure_ui.py ............                                  [ 88%]
+tests/test_annotation_v2.py ............                                 [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-01.xml -
+======================== 105 passed in 71.47s (0:01:11) ========================
+Full suite batch 2: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 3493 items
+
+tests/test_annotation_workbook.py ....                                   [  0%]
+tests/test_artist_panel.py ......................                        [  0%]
+tests/test_attempt_generalization.py ..........                          [  1%]
+tests/test_automatic_corpus.py ............                              [  1%]
+tests/test_campaign_skills.py ........                                   [  1%]
+tests/test_catalog.py ...............................                    [  2%]
+tests/test_catalog_campaign.py .s                                        [  2%]
+tests/test_catalog_image_prices.py .......................               [  3%]
+tests/test_catalog_invariants.py .....                                   [  3%]
+tests/test_catalog_ui.py .........                                       [  3%]
+tests/test_catalog_ui_playable.py .......                                [  3%]
+tests/test_catalog_v2_execution.py ..................................... [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+........................................................................ [ 85%]
+........................................................................ [ 87%]
+........................................................................ [ 89%]
+........................................................................ [ 91%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+........................................................................ [ 99%]
+...........                                                              [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-02.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_catalog_campaign.py:147: Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay
+================= 3492 passed, 1 skipped in 233.80s (0:03:53) ==================
+Full suite batch 3: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 3474 items
+
+tests/test_catalog_v3_execution.py ..................................... [  1%]
+........................................................................ [  3%]
+........................................................................ [  5%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+........................................................................ [ 32%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 54%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 65%]
+........................................................................ [ 67%]
+........................................................................ [ 69%]
+........................................................................ [ 71%]
+........................................................................ [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 92%]
+........................................................................ [ 94%]
+........................................................................ [ 96%]
+...........                                                              [ 96%]
+tests/test_catalog_writer_facts.py .                                     [ 96%]
+tests/test_causal_world.py .....                                         [ 96%]
+tests/test_character.py ........................                         [ 97%]
+tests/test_character_dialog.py ...                                       [ 97%]
+tests/test_chat_intents.py ...................                           [ 98%]
+tests/test_check_batches.py ..                                           [ 98%]
+tests/test_chronicles.py ..............                                  [ 98%]
+tests/test_cloud_gate.py ...                                             [ 98%]
+tests/test_combat.py .......................                             [ 99%]
+tests/test_combat_storage.py ..............                              [ 99%]
+tests/test_combat_ui.py ......                                           [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-03.xml -
+======================= 3474 passed in 238.17s (0:03:58) =======================
+Full suite batch 4: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 398 items
+
+tests/test_complete_campaign.py ........................................ [ 10%]
+.......................................                                  [ 19%]
+tests/test_completion_revision.py ...................................... [ 29%]
+........................................................................ [ 47%]
+..................                                                       [ 52%]
+tests/test_connection_metadata.py ..........                             [ 54%]
+tests/test_connection_revision.py ........................               [ 60%]
+tests/test_contracts.py ...............                                  [ 64%]
+tests/test_conversation_revision.py ........................             [ 70%]
+tests/test_creation_and_roles.py ......                                  [ 71%]
+tests/test_d20_combat.py .........                                       [ 74%]
+tests/test_d20_progression.py ..............................             [ 81%]
+tests/test_desktop_release.py .......................................... [ 92%]
+..............                                                           [ 95%]
+tests/test_developer_access.py ....                                      [ 96%]
+tests/test_dialogue.py .............                                     [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-04.xml -
+============================= 398 passed in 57.24s =============================
+Full suite batch 5: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 100 items
+
+tests/test_dice.py ...                                                   [  3%]
+tests/test_embedded_knowledge.py ..                                      [  5%]
+tests/test_environment.py ...                                            [  8%]
+tests/test_episode_panels.py ..............                              [ 22%]
+tests/test_fantasy_menu.py .......                                       [ 29%]
+tests/test_faun_owner_workflow.py .......                                [ 36%]
+tests/test_faun_preflight.py ........                                    [ 44%]
+tests/test_faun_setup.py ....                                            [ 48%]
+tests/test_fixture_git_checkout.py ..                                    [ 50%]
+tests/test_fixture_repair.py ...........                                 [ 61%]
+tests/test_flash_settings.py ...................                         [ 80%]
+tests/test_free_actions_pipeline.py ....................                 [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-05.xml -
+============================= 100 passed in 23.33s =============================
+Full suite batch 6: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 3587 items
+
+tests/test_free_attempts.py .................................            [  0%]
+tests/test_free_cloud.py .........                                       [  1%]
+tests/test_full_game_catalog.py ........................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+........................................................................ [ 32%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 92%]
+........................................................................ [ 94%]
+.........                                                                [ 94%]
+tests/test_gameplay_integration.py ..................................... [ 95%]
+...............                                                          [ 96%]
+tests/test_gateway.py ............                                       [ 96%]
+tests/test_gateway_request_headers.py ....                               [ 96%]
+tests/test_host_metadata_errors.py ......................                [ 97%]
+tests/test_host_public_readiness.py .....                                [ 97%]
+tests/test_host_tunnel_transport.py .........                            [ 97%]
+tests/test_images_client.py .........                                    [ 98%]
+tests/test_images_contract_revision.py ................................. [ 98%]
+........                                                                 [ 99%]
+tests/test_inspection.py ..............................                  [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-06.xml -
+======================= 3587 passed in 237.43s (0:03:57) =======================
+Full suite batch 7: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 195 items
+
+tests/test_journal_customization.py ........                             [  4%]
+tests/test_launch.py ...                                                 [  5%]
+tests/test_local_narrator.py ........................................... [ 27%]
+..................                                                       [ 36%]
+tests/test_long_campaign.py ..                                           [ 37%]
+tests/test_master_campaign.py ..........................                 [ 51%]
+tests/test_master_configuration.py ...........                           [ 56%]
+tests/test_master_language_profiles.py ........                          [ 61%]
+tests/test_master_prose_layout.py ........                               [ 65%]
+tests/test_mechanics_before_prose.py ................................... [ 83%]
+....                                                                     [ 85%]
+tests/test_model_metrics.py ......                                       [ 88%]
+tests/test_navigation_scopes.py ...                                      [ 89%]
+tests/test_ngrok_download.py ....................                        [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-07.xml -
+============================= 195 passed in 31.52s =============================
+Full suite batch 8: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 177 items
+
+tests/test_ngrok_host.py ...............                                 [  8%]
+tests/test_ngrok_transport.py ....                                       [ 10%]
+tests/test_ngrok_version.py ...................                          [ 21%]
+tests/test_npc_inventory.py .....                                        [ 24%]
+tests/test_object_descriptions.py ...................                    [ 35%]
+tests/test_offline.py ..........                                         [ 40%]
+tests/test_owner_clipboard_key.py ........................               [ 54%]
+tests/test_owner_local.py .....                                          [ 57%]
+tests/test_photo_album.py .                                              [ 57%]
+tests/test_physical_gameplay.py ...................................      [ 77%]
+tests/test_plain_master.py .........................                     [ 91%]
+tests/test_polyhedral_dice.py ...............                            [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-08.xml -
+============================= 177 passed in 16.96s =============================
+Full suite batch 9: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 248 items
+
+tests/test_presentation.py .................                             [  6%]
+tests/test_progression.py ......................................         [ 22%]
+tests/test_release_profiles.py .                                         [ 22%]
+tests/test_resolution_ui.py ............                                 [ 27%]
+tests/test_resource_ledger.py ..........................                 [ 37%]
+tests/test_response_contract.py ........................................ [ 54%]
+                                                                         [ 54%]
+tests/test_response_delivery.py ...........................              [ 64%]
+tests/test_revision_three_transactions.py ...........                    [ 69%]
+tests/test_routerai.py .........................................         [ 85%]
+tests/test_routerai_narrator_fallback.py ..                              [ 86%]
+tests/test_safe_provider_diagnosis.py .............................      [ 98%]
+tests/test_save_loading.py ....                                          [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-09.xml -
+============================= 248 passed in 22.23s =============================
+Full suite batch 10: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 150 items
+
+tests/test_save_migration.py ..........                                  [  6%]
+tests/test_save_slots.py ....................                            [ 20%]
+tests/test_scene_director.py ..............................              [ 40%]
+tests/test_scene_length_and_receipts.py .                                [ 40%]
+tests/test_section_tabs.py ..                                            [ 42%]
+tests/test_semantic_challenges.py .............                          [ 50%]
+tests/test_session.py ....................                               [ 64%]
+tests/test_skill_allocation.py ....                                      [ 66%]
+tests/test_society_campaign.py ............                              [ 74%]
+tests/test_spend_journal.py .............                                [ 83%]
+tests/test_sqlite_lifecycle.py .........                                 [ 89%]
+tests/test_story_conversation_quality.py ................                [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-10.xml -
+======================== 150 passed in 63.89s (0:01:03) ========================
+Full suite batch 11: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 104 items
+
+tests/test_strategic_conflicts.py .....                                  [  4%]
+tests/test_synthetic_audit.py ...                                        [  7%]
+tests/test_team_encounters.py ...............                            [ 22%]
+tests/test_tester_build.py ................                              [ 37%]
+tests/test_tester_connection.py ......                                   [ 43%]
+tests/test_tester_delivery.py .....................                      [ 63%]
+tests/test_theme_notices.py ..                                           [ 65%]
+tests/test_trade_context.py .........                                    [ 74%]
+tests/test_training_capture_session.py ..                                [ 75%]
+tests/test_training_pipeline.py ..                                       [ 77%]
+tests/test_training_story_contract.py ....                               [ 81%]
+tests/test_tunnel_dns.py ...................                             [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-11.xml -
+============================= 104 passed in 13.96s =============================
+Full suite batch 12: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 120 items
+
+tests/test_tunnel_health.py ...............                              [ 12%]
+tests/test_tunnel_supervision.py .......                                 [ 18%]
+tests/test_unified_creation.py ......                                    [ 23%]
+tests/test_unified_rules.py ..................                           [ 38%]
+tests/test_update_build_launcher.py sssss                                [ 42%]
+tests/test_update_tree.py .......                                        [ 48%]
+tests/test_visual_commands.py .........                                  [ 55%]
+tests/test_visual_context.py .....                                       [ 60%]
+tests/test_visual_controller.py .........                                [ 67%]
+tests/test_visual_policy.py ........                                     [ 74%]
+tests/test_visual_registry.py ........                                   [ 80%]
+tests/test_window.py .......................                             [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-12.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_update_build_launcher.py:80: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:86: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:94: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:104: Actual PowerShell updater integration requires Windows/PowerShell
+SKIPPED [1] tests/test_update_build_launcher.py:115: Actual PowerShell updater integration requires Windows/PowerShell
+======================= 115 passed, 5 skipped in 19.07s ========================
+Full suite batch 13: 11 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 156 items
+
+tests/test_windows_test_ids.py .                                         [  0%]
+tests/test_workspace_tools.py .............                              [  8%]
+tests/test_workspace_ui.py ..................                            [ 20%]
+tests/test_world.py ..............................                       [ 39%]
+tests/test_world_agent_ui.py ........                                    [ 44%]
+tests/test_world_creation_screen.py .......                              [ 49%]
+tests/test_world_factions.py ..................                          [ 60%]
+tests/test_world_generation_limits.py .......                            [ 65%]
+tests/test_world_memory.py ..................                            [ 76%]
+tests/test_world_start_gate.py ..............                            [ 85%]
+tests/test_world_transactions.py ......................                  [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/batch-13.xml -
+============================= 156 passed in 46.35s =============================
+{"complete": true, "batches": 13, "passed": 12301, "failed": 0, "errors": 0, "skipped": 6}
+Full suite report: /workspace/DND-NCFU/build/check-batches-65cabcbdffa74ae0b82ea3a2a9111871/summary.json
+Running: /workspace/DND-NCFU/.venv/bin/python -m ruff check .
+All checks passed!
+Running: /workspace/DND-NCFU/.venv/bin/python -m ruff format --check .
+418 files already formatted
+Environment and prototype checks passed. Manual Windows GUI check is still required.
