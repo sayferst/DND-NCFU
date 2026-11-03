@@ -19,6 +19,7 @@
   "lora_dropout": 0.05,
   "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
   "quantization": "nf4",
+  "double_quant": true,
   "precision": "bf16",
   "gradient_checkpointing": true,
   "compatibility_status": "METADATA_VERIFIED_GPU_SMOKE_NOT_RUN"

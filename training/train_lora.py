@@ -37,6 +37,13 @@ def preflight(config):
     try:
         import torch
 
+        if config.get("model_family") == "faun_mistral_nemo":
+            from training.model_profiles import validate_faun_cuda
+
+            try:
+                validate_faun_cuda(torch)
+            except ValueError as error:
+                return str(error)
         if not torch.cuda.is_available():
             return "BLOCKED_HARDWARE: NVIDIA CUDA required for this QLoRA configuration"
         if config.get("precision", "bf16") == "bf16" and not torch.cuda.is_bf16_supported():
@@ -103,7 +110,10 @@ def train(config, *, smoke=False, resume=None):
         local_files_only=True,
         trust_remote_code=False,
         quantization_config=BitsAndBytesConfig(
-            load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=config.get("double_quant", False),
         ),
         device_map={"": 0},
     )

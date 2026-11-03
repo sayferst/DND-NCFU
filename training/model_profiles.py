@@ -5,6 +5,16 @@ import json
 from pathlib import Path
 
 
+def validate_faun_cuda(torch):
+    """Check logical CUDA device0, rather than another card in nvidia-smi."""
+    if not torch.cuda.is_available():
+        raise ValueError("BLOCKED_HARDWARE: NVIDIA CUDA unavailable")
+    if torch.cuda.get_device_properties(0).total_memory < 16 * 1024**3:
+        raise ValueError("BLOCKED_HARDWARE: selected CUDA device needs at least16GiB VRAM")
+    if not torch.cuda.is_bf16_supported():
+        raise ValueError("BLOCKED_HARDWARE: selected CUDA device does not support BF16")
+
+
 def template_arguments(config):
     # Keep legacy Qwen behavior; Faun's ChatML template has no thinking control.
     return {} if config.get("model_family") == "faun_mistral_nemo" else {"enable_thinking": False}

@@ -13,6 +13,8 @@ from training.hardware_preflight import collect
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
+    "docs/intelligent_gm/TRAINING_TRANSFER.md",
+    "docs/intelligent_gm/GPU_FAUN_WORKFLOW.md",
     "training/__init__.py",
     "training/train_lora.py",
     "training/model_profiles.py",
@@ -22,6 +24,7 @@ FILES = (
     "training/split_dataset.py",
     "training/hardware_preflight.py",
     "training/setup_faun_gpu.py",
+    "training/prepare_faun_transfer.py",
     "training/serve.py",
     "training/export_model.py",
     "training/merge_gguf.py",
@@ -140,10 +143,10 @@ def main():
             [
                 str(python),
                 "-c",
-                "import torch; assert torch.cuda.is_available() and "
-                'torch.cuda.is_bf16_supported(), "BLOCKED_HARDWARE: '
-                'CUDA/BF16 unavailable"',
+                "import torch; from training.model_profiles import validate_faun_cuda; "
+                "validate_faun_cuda(torch)",
             ],
+            cwd=ROOT,
             check=True,
         )
         config = json.loads(

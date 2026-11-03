@@ -1731,3 +1731,8 @@ Faun inference/скорость/RAM/качество, GPU batch/обучение
 ## 03.11.2026 — повтор Faun002 и полнота диагностики
 
 Получен owner benchmark002:1/3 принят, два сценария отклонены после двух попыток с UNCONFIRMED_CRAFT_INPUT; save/replay/no-double-action успешны по отчёту. Тексты отклонённых ответов в старом benchmark отсутствуют, обоснованность каждого отказа независимо не установлена. Новый benchmark сохраняет до двух ограниченных response_diagnostics (ответы и причины, без prompts/headers/thinking). Добавлен тест реального loopback-клиента с отклонённым ответом; механика не изменена. Подробности: docs/validation/faun-live-grounding-2026-11-03/owner-game-review-02.json. Это не человеческое approval и не SFT.
+
+
+## 03.11.2026 — перенос QLoRA и бюджетный GPU
+
+Новый набор переноса/QLoRA/data:37passed (см. docs/validation/faun-transfer-2026-11-03/targeted-final.txt); проверены извлечение ZIP и dry-run без полной игры, несовместимая CUDA0/BF16/VRAM, разные output и отказ перезаписи, binding reviewed dataset без включения файлов. Ruff check/format421файлов успешны. Это CPU/fixture-проверки, не реальные GPU batch или обучение. Полный игровой набор заново не запускался.

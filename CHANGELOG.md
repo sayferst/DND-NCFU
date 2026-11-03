@@ -524,3 +524,8 @@ docs/validation/faun-owner-v2-2026-11-03. Native Windows/Faun/GPU-training NOT_R
 ## 03.11.2026 — повтор Faun002 и полнота диагностики
 
 Получен owner benchmark002:1/3 принят, два сценария отклонены после двух попыток с UNCONFIRMED_CRAFT_INPUT; save/replay/no-double-action успешны по отчёту. Тексты отклонённых ответов в старом benchmark отсутствуют, обоснованность каждого отказа независимо не установлена. Новый benchmark сохраняет до двух ограниченных response_diagnostics (ответы и причины, без prompts/headers/thinking). Добавлен тест реального loopback-клиента с отклонённым ответом; механика не изменена. Подробности: docs/validation/faun-live-grounding-2026-11-03/owner-game-review-02.json. Это не человеческое approval и не SFT.
+
+
+## 03.11.2026 — перенос QLoRA и бюджетный GPU
+
+Добавлен training.prepare_faun_transfer: переносимый ZIP с SHA, отдельными smoke/full конфигурациями, русским руководством и закреплением SHA только проверенного датасета без его копирования. Исправлена проверка фактически выбранной CUDA0; Faun train/serve используют согласованный NF4 double-quant. Серверы/веса/обучение не запускались.

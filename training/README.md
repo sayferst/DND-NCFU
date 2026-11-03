@@ -79,3 +79,7 @@ training.serve — один выбранный путь: localhost Ollama-compat
 запускается владельцем только при наличии настоящего адаптера/оборудования.
 Игра читает trained-narrator.json вне UI,сверяет hash/evaluation/localhost;
 неуспех возвращает к RouterAI без повторной игровой транзакции.
+
+
+QLoRA transfer: `python -m training.prepare_faun_transfer --output NEW.zip`.
+Инструкции и бюджетные GPU: [TRAINING_TRANSFER.md](../docs/intelligent_gm/TRAINING_TRANSFER.md).

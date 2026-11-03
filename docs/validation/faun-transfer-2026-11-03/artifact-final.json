@@ -1,0 +1,13 @@
+{
+  "artifact": "faun-qlora-transfer-ready.zip",
+  "sha256": "630a281fc7b4b208703b250954de1e78ab40663cbbe3fd64c0342ab048c3754d",
+  "bytes": 75214,
+  "scope": "TOOLS_AND_CONFIGS_ONLY",
+  "weights_downloaded": false,
+  "servers_rented": 0,
+  "payments": 0,
+  "training_steps": 0,
+  "real_cuda_smoke": "NOT_RUN",
+  "owner_laptop_qlora": "BLOCKED_HARDWARE",
+  "dataset": "PENDING_OWNER_UPLOAD_AND_REVIEW"
+}

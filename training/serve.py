@@ -34,7 +34,10 @@ def serve(config, adapter, port):
         trust_remote_code=False,
         device_map={"": 0},
         quantization_config=BitsAndBytesConfig(
-            load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=config.get("double_quant", False),
         ),
     )
     model = PeftModel.from_pretrained(base, adapter, local_files_only=True).eval()
