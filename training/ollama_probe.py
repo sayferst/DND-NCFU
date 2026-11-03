@@ -19,13 +19,20 @@ PROMPTS = (
 )
 
 
-def request(path, body=None, *, timeout=180):
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("Local inference cannot redirect to another address")
+
+
+def request(path, body=None, *, timeout=180, port=11434):
+    if port not in (11434, 11435) or not path.startswith("/api/"):
+        raise ValueError("Only the two local inference ports and API paths are supported")
     raw = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(
-        "http://127.0.0.1:11434" + path, data=raw, headers={"Content-Type": "application/json"}
+        f"http://127.0.0.1:{port}" + path, data=raw, headers={"Content-Type": "application/json"}
     )
     # Only fixed loopback. No proxy credentials or external hosts are contacted.
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
     with opener.open(req, timeout=timeout) as response:
         data = response.read(2 * 1024 * 1024 + 1)
     if len(data) > 2 * 1024 * 1024:

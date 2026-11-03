@@ -70,6 +70,8 @@ def install_narrator_panels(window):
     window.ai_provider.addItem("Облако: OpenAI API · отдельный доступ", "openai")
     window.ai_provider.addItem("Облако: OpenRouter API · условия провайдера", "openrouter")
     window.ai_provider.addItem("Облако: RouterAI · тарифы в рублях", "routerai")
+    if not window._legacy_controls:
+        window.ai_provider.addItem("Локально: Ollama · Faun · без оплаты API", "local")
     page.addWidget(window.ai_provider)
     window.cloud_model = QLineEdit()
     window.cloud_model.setPlaceholderText("Идентификатор модели API (указывается у провайдера)")
@@ -371,7 +373,10 @@ def prepare_model(window):
 
 def find_models(window):
     if window.ai_provider.currentData() == "local":
+        window._local_provider_reachable = False
+        window.ollama.models = ()
         window.ollama.list_models()
+        refresh_narrator_panels(window)
     elif not window._legacy_controls:
         from rpg_vkr.ui.flash_settings import connect_selected
 
@@ -387,9 +392,13 @@ def change_mode(window, enabled):
         cancel_narration(window)
     if not window._legacy_controls:
         window.narrator_status.setText(
-            "Облачный мастер выбран. Проверьте модель, ключ и разрешение отправки сцены."
+            (
+                "Локальный мастер выбран. Обновите список и выберите установленную модель."
+                if window.ai_provider.currentData() == "local"
+                else "Облачный мастер выбран. Проверьте модель, ключ и разрешение отправки сцены."
+            )
             if enabled
-            else "Мастер выключен. Для новых действий включите облачное подключение."
+            else "Мастер выключен. Выберите подключение и включите мастера."
         )
         refresh_narrator_panels(window)
         return
@@ -482,6 +491,8 @@ def failed(window, message):
 
 
 def models_ready(window, models):
+    window._local_provider_reachable = True
+    window._local_models = tuple(models)
     previous = window.local_model.currentText()
     window.local_model.clear()
     window.local_model.addItems(list(models))
@@ -494,6 +505,35 @@ def models_ready(window, models):
         else "Локальных моделей нет. Облачный API настраивается отдельно."
     )
     refresh_narrator_panels(window)
+    from rpg_vkr.ui.connection_panel import refresh_connection_layout
+
+    refresh_connection_layout(window)
+
+
+def select_faun(window):
+    from rpg_vkr.narrative.local_models import FAUN_MODEL
+
+    index = next(
+        (
+            i
+            for i in range(window.local_model.count())
+            if window.local_model.itemText(i).casefold() == FAUN_MODEL.casefold()
+        ),
+        -1,
+    )
+    if index < 0:
+        window.narrator_status.setText(
+            "Faun не установлена. Запустите scripts/SETUP_FAUN.cmd и обновите список."
+        )
+        return
+    window.local_model.setCurrentIndex(index)
+    window.enable_local_narrator.setChecked(True)
+    window.ai_chat.setChecked(True)
+    window.director_mode.setChecked(True)
+    window.ollama.use_local()
+    from rpg_vkr.ui.connection_panel import refresh_connection_layout
+
+    refresh_connection_layout(window)
 
 
 def request_narration(window):

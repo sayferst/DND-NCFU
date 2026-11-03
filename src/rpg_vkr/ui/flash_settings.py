@@ -90,7 +90,14 @@ def install_flash_settings(window):
             stored = load_secret(window._credential_path)
             window.cloud_key.setText(stored)
             window.remember_key.setChecked(bool(stored))
-    if not window._legacy_controls and preferences.provider == "local":
+    if preferences.provider == "local" and preferences.model:
+        window.ai_provider.setCurrentIndex(window.ai_provider.findData("local"))
+        window.local_model.addItem(preferences.model)
+        window.enable_local_narrator.setChecked(preferences.enabled)
+        connection_message(
+            window, "Локальная модель сохранена. Обновите список для проверки Ollama."
+        )
+    elif not window._legacy_controls and preferences.provider == "local":
         window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
         stored = load_secret(window._credential_path)
         window.cloud_key.setText(stored)
@@ -156,7 +163,9 @@ def save_preferences(window, enabled):
     try:
         preferences = ConnectionPreferences(
             window.ai_provider.currentData(),
-            window.cloud_model.text().strip(),
+            window.local_model.currentText().strip()
+            if window.ai_provider.currentData() == "local"
+            else window.cloud_model.text().strip(),
             enabled,
             window.cloud_allowed.isChecked(),
         )

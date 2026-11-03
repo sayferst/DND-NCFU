@@ -1,0 +1,1043 @@
+{
+  "schema": "faun-game-benchmark-v1",
+  "source": "SYNTHETIC_ENGINE_SCENARIOS_NOT_SFT",
+  "model": "hf.co/limloop/MN-12B-Faun-RP-RU-GGUF:Q4_K_M",
+  "mode": "contracts_without_model",
+  "cases": [
+    {
+      "id": "bow_damage",
+      "action": "Разбираю свой лук и делаю из него удочку",
+      "receipt": {
+        "id": "4fddcd472d9d08a1fb13e921481298516ab8895bc30777c642a5b2525dd62956",
+        "turn": 1,
+        "action": "Разбираю свой лук и делаю из него удочку",
+        "summary": "Импровизированная удочка: damaged. d20(3) +3 = 6.\nИсходные предметы больше не доступны отдельно; свойства результата ограничены материалами.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [
+          {
+            "expression": "1d20",
+            "index": 1,
+            "individual_rolls": [
+              3
+            ],
+            "modifier": 0,
+            "reason": "Работа с материалами: Ловкость",
+            "rng_counter": 1,
+            "total": 3
+          }
+        ],
+        "free_attempt": {
+          "dc": 20,
+          "dice": [
+            {
+              "expression": "1d20",
+              "index": 1,
+              "individual_rolls": [
+                3
+              ],
+              "modifier": 0,
+              "reason": "Работа с материалами: Ловкость",
+              "rng_counter": 1,
+              "total": 3
+            }
+          ],
+          "duration_minutes": 30,
+          "item_changes": [
+            {
+              "after": {
+                "affordances": [],
+                "consumed_provenance": [
+                  {
+                    "durability": 53,
+                    "id": "start_0",
+                    "quantity": 1,
+                    "source": "start_0",
+                    "template": "gear_longbow_0_0"
+                  }
+                ],
+                "craft_origin": {
+                  "definition_id": "gc_gear_longbow_0_0",
+                  "durability": 53,
+                  "durability_cap": 53,
+                  "kind": "longbow",
+                  "name": "Лук",
+                  "template": "gear_longbow_0_0"
+                },
+                "durability": 0,
+                "durability_cap": 1,
+                "form": "",
+                "id": "start_0",
+                "kind": "damaged_materials",
+                "name": "Повреждённые материалы",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_0",
+                "usage_penalty": -3
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_0",
+                "kind": "longbow",
+                "name": "Лук",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_0",
+                "template": "gear_longbow_0_0"
+              },
+              "id": "start_0"
+            },
+            {
+              "after": {
+                "durability": 52,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "id": "start_1"
+            }
+          ],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "CHECK_REQUIRED",
+          "outcome": "damaged",
+          "plan": {
+            "goal": "fishing_gear",
+            "items": [
+              "start_0"
+            ],
+            "operation": "transform",
+            "tool": "start_1"
+          },
+          "total": 6,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "bow_partial",
+      "action": "Разбираю свой лук и делаю из него удочку",
+      "receipt": {
+        "id": "50239f233c98de2150d8d7bd10a2eb011379c57a27a001d530ec643fce2303af",
+        "turn": 1,
+        "action": "Разбираю свой лук и делаю из него удочку",
+        "summary": "Импровизированная удочка: partial. d20(12) +3 = 15.\nИсходные предметы больше не доступны отдельно; свойства результата ограничены материалами.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [
+          {
+            "expression": "1d20",
+            "index": 1,
+            "individual_rolls": [
+              12
+            ],
+            "modifier": 0,
+            "reason": "Работа с материалами: Ловкость",
+            "rng_counter": 1,
+            "total": 12
+          }
+        ],
+        "free_attempt": {
+          "dc": 20,
+          "dice": [
+            {
+              "expression": "1d20",
+              "index": 1,
+              "individual_rolls": [
+                12
+              ],
+              "modifier": 0,
+              "reason": "Работа с материалами: Ловкость",
+              "rng_counter": 1,
+              "total": 12
+            }
+          ],
+          "duration_minutes": 30,
+          "item_changes": [
+            {
+              "after": {
+                "affordances": [],
+                "consumed_provenance": [
+                  {
+                    "durability": 53,
+                    "id": "start_0",
+                    "quantity": 1,
+                    "source": "start_0",
+                    "template": "gear_longbow_0_0"
+                  }
+                ],
+                "craft_origin": {
+                  "definition_id": "gc_gear_longbow_0_0",
+                  "durability": 53,
+                  "durability_cap": 53,
+                  "kind": "longbow",
+                  "name": "Лук",
+                  "template": "gear_longbow_0_0"
+                },
+                "durability": 2,
+                "durability_cap": 2,
+                "form": "",
+                "id": "start_0",
+                "kind": "salvage",
+                "name": "Незавершённая заготовка",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_0",
+                "usage_penalty": -3
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_0",
+                "kind": "longbow",
+                "name": "Лук",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_0",
+                "template": "gear_longbow_0_0"
+              },
+              "id": "start_0"
+            },
+            {
+              "after": {
+                "durability": 52,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "id": "start_1"
+            }
+          ],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "CHECK_REQUIRED",
+          "outcome": "partial",
+          "plan": {
+            "goal": "fishing_gear",
+            "items": [
+              "start_0"
+            ],
+            "operation": "transform",
+            "tool": "start_1"
+          },
+          "total": 15,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "bow_success",
+      "action": "Разбираю свой лук и делаю из него удочку",
+      "receipt": {
+        "id": "85afea2b9fe6ce5a7f8984655aa81647335ab6e8c2fe590367730875c3c5cadd",
+        "turn": 1,
+        "action": "Разбираю свой лук и делаю из него удочку",
+        "summary": "Импровизированная удочка: success. d20(20) +3 = 23.\nИсходные предметы больше не доступны отдельно; свойства результата ограничены материалами.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [
+          {
+            "expression": "1d20",
+            "index": 1,
+            "individual_rolls": [
+              20
+            ],
+            "modifier": 0,
+            "reason": "Работа с материалами: Ловкость",
+            "rng_counter": 1,
+            "total": 20
+          }
+        ],
+        "free_attempt": {
+          "dc": 20,
+          "dice": [
+            {
+              "expression": "1d20",
+              "index": 1,
+              "individual_rolls": [
+                20
+              ],
+              "modifier": 0,
+              "reason": "Работа с материалами: Ловкость",
+              "rng_counter": 1,
+              "total": 20
+            }
+          ],
+          "duration_minutes": 30,
+          "item_changes": [
+            {
+              "after": {
+                "affordances": [
+                  "shaft",
+                  "cord"
+                ],
+                "consumed_provenance": [
+                  {
+                    "durability": 53,
+                    "id": "start_0",
+                    "quantity": 1,
+                    "source": "start_0",
+                    "template": "gear_longbow_0_0"
+                  }
+                ],
+                "craft_origin": {
+                  "definition_id": "gc_gear_longbow_0_0",
+                  "durability": 53,
+                  "durability_cap": 53,
+                  "kind": "longbow",
+                  "name": "Лук",
+                  "template": "gear_longbow_0_0"
+                },
+                "durability": 6,
+                "durability_cap": 6,
+                "form": "fishing_gear",
+                "id": "start_0",
+                "kind": "tool",
+                "name": "Импровизированная удочка",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_0",
+                "usage_penalty": -1
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_0",
+                "kind": "longbow",
+                "name": "Лук",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_0",
+                "template": "gear_longbow_0_0"
+              },
+              "id": "start_0"
+            },
+            {
+              "after": {
+                "durability": 52,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "id": "start_1"
+            }
+          ],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "CHECK_REQUIRED",
+          "outcome": "success",
+          "plan": {
+            "goal": "fishing_gear",
+            "items": [
+              "start_0"
+            ],
+            "operation": "transform",
+            "tool": "start_1"
+          },
+          "total": 23,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "armour_repair",
+      "action": "Ремонтирую сломанный доспех",
+      "receipt": {
+        "id": "f2f73c3eb17d5662a65edbd54177c3834a1a97174992333f40c59403a2ac7698",
+        "turn": 1,
+        "action": "Ремонтирую сломанный доспех",
+        "summary": "Ремонт: success; итог 20, DC15. Материал и время израсходованы.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [
+          {
+            "expression": "1d20",
+            "index": 1,
+            "individual_rolls": [
+              20
+            ],
+            "modifier": 0,
+            "reason": "Ремонт",
+            "rng_counter": 1,
+            "total": 20
+          }
+        ],
+        "free_attempt": {
+          "dc": 15,
+          "dice": [
+            {
+              "expression": "1d20",
+              "index": 1,
+              "individual_rolls": [
+                20
+              ],
+              "modifier": 0,
+              "reason": "Ремонт",
+              "rng_counter": 1,
+              "total": 20
+            }
+          ],
+          "duration_minutes": 30,
+          "item_changes": [
+            {
+              "after": null,
+              "before": {
+                "durability": 20,
+                "durability_cap": 21,
+                "id": "cloth",
+                "kind": "material",
+                "name": "Ткань для ремонта",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "cloth",
+                "template": "mat_3_0"
+              },
+              "id": "cloth"
+            },
+            {
+              "after": {
+                "durability": 6,
+                "durability_cap": 63,
+                "id": "mail",
+                "kind": "armour",
+                "name": "Сломанный доспех",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "mail",
+                "template": "gear_light_0_0"
+              },
+              "before": {
+                "durability": 1,
+                "durability_cap": 63,
+                "id": "mail",
+                "kind": "armour",
+                "name": "Сломанный доспех",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "mail",
+                "template": "gear_light_0_0"
+              },
+              "id": "mail"
+            },
+            {
+              "after": {
+                "durability": 19,
+                "durability_cap": 43,
+                "id": "tools",
+                "kind": "household",
+                "name": "Ремонтные инструменты",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "tools",
+                "template": "house_0_0"
+              },
+              "before": {
+                "durability": 20,
+                "durability_cap": 43,
+                "id": "tools",
+                "kind": "household",
+                "name": "Ремонтные инструменты",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "tools",
+                "template": "house_0_0"
+              },
+              "id": "tools"
+            }
+          ],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "CHECK_REQUIRED",
+          "outcome": "success",
+          "plan": {
+            "goal": "",
+            "items": [
+              "mail"
+            ],
+            "operation": "repair",
+            "tool": "tools"
+          },
+          "total": 20,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "spear",
+      "action": "Делаю копьё из ясеневого древка",
+      "receipt": {
+        "id": "9c78b0a3ee43ef584bd0471f8ea915ba2decf8ae51ebab3990157bfa3db5b3da",
+        "turn": 1,
+        "action": "Делаю копьё из ясеневого древка",
+        "summary": "Самодельное копьё: success. d20(20) +3 = 23.\nИсходные предметы больше не доступны отдельно; свойства результата ограничены материалами.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [
+          {
+            "expression": "1d20",
+            "index": 1,
+            "individual_rolls": [
+              20
+            ],
+            "modifier": 0,
+            "reason": "Работа с материалами: Ловкость",
+            "rng_counter": 1,
+            "total": 20
+          }
+        ],
+        "free_attempt": {
+          "dc": 20,
+          "dice": [
+            {
+              "expression": "1d20",
+              "index": 1,
+              "individual_rolls": [
+                20
+              ],
+              "modifier": 0,
+              "reason": "Работа с материалами: Ловкость",
+              "rng_counter": 1,
+              "total": 20
+            }
+          ],
+          "duration_minutes": 30,
+          "item_changes": [
+            {
+              "after": {
+                "affordances": [
+                  "shaft"
+                ],
+                "consumed_provenance": [
+                  {
+                    "durability": 20,
+                    "id": "pole",
+                    "quantity": 1,
+                    "source": "pole"
+                  }
+                ],
+                "craft_origin": {
+                  "definition_id": "type_pole",
+                  "durability": 20,
+                  "durability_cap": 20,
+                  "kind": "world_item",
+                  "name": "Ясеневое древко",
+                  "template": null
+                },
+                "durability": 6,
+                "durability_cap": 6,
+                "form": "spear",
+                "id": "pole",
+                "kind": "weapon",
+                "name": "Самодельное копьё",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "pole",
+                "usage_penalty": -1
+              },
+              "before": {
+                "durability": 20,
+                "durability_cap": 20,
+                "id": "pole",
+                "kind": "world_item",
+                "name": "Ясеневое древко",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "pole"
+              },
+              "id": "pole"
+            },
+            {
+              "after": {
+                "durability": 52,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "before": {
+                "durability": 53,
+                "durability_cap": 53,
+                "id": "start_1",
+                "kind": "dagger",
+                "name": "Кинжал",
+                "owner": "hero",
+                "price_cp": 70,
+                "quality": 1,
+                "quantity": 1,
+                "source": "start_1",
+                "template": "gear_dagger_0_0"
+              },
+              "id": "start_1"
+            }
+          ],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "CHECK_REQUIRED",
+          "outcome": "success",
+          "plan": {
+            "goal": "spear",
+            "items": [
+              "pole"
+            ],
+            "operation": "transform",
+            "tool": "start_1"
+          },
+          "total": 23,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "broom",
+      "action": "Сажусь на метлу и пытаюсь взлететь",
+      "receipt": {
+        "id": "154ed565f1160a2915e953c1f521f0a2521d7985890e451b128408b89ef41c2c",
+        "turn": 1,
+        "action": "Сажусь на метлу и пытаюсь взлететь",
+        "summary": "Попытка выполнена в доступных физических пределах. Запрошенный результат не возникает: необходимые свойства или исполняемая способность не подтверждены.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [],
+        "free_attempt": {
+          "dc": null,
+          "dice": [],
+          "duration_minutes": 1,
+          "item_changes": [],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "ATTEMPT_WITHOUT_TARGET_SUCCESS",
+          "outcome": "target_unreachable",
+          "plan": {
+            "goal": "flight",
+            "items": [
+              "broom"
+            ],
+            "operation": "use",
+            "tool": ""
+          },
+          "total": null,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "coins",
+      "action": "Пытаюсь наколдовать сто золотых монет",
+      "receipt": {
+        "id": "1fdec25797161fa8ee5d216679c8a67d65db67a10b70e27c679c520e02b2cbba",
+        "turn": 1,
+        "action": "Пытаюсь наколдовать сто золотых монет",
+        "summary": "Попытка выполнена в доступных физических пределах. Запрошенный результат не возникает: необходимые свойства или исполняемая способность не подтверждены.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [],
+        "free_attempt": {
+          "dc": null,
+          "dice": [],
+          "duration_minutes": 1,
+          "item_changes": [],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "ATTEMPT_WITHOUT_TARGET_SUCCESS",
+          "outcome": "target_unreachable",
+          "plan": {
+            "goal": "currency",
+            "items": [],
+            "operation": "magic",
+            "tool": ""
+          },
+          "total": null,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "coins_no_magic",
+      "action": "Пытаюсь наколдовать сто золотых монет",
+      "receipt": {
+        "id": "33c8398c558e39df22b52a99c1ce363d986ffa946a8590e2b9a11cf9f17a0bba",
+        "turn": 1,
+        "action": "Пытаюсь наколдовать сто золотых монет",
+        "summary": "Попытка выполнена в доступных физических пределах. Запрошенный результат не возникает: необходимые свойства или исполняемая способность не подтверждены.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [],
+        "free_attempt": {
+          "dc": null,
+          "dice": [],
+          "duration_minutes": 1,
+          "item_changes": [],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "ATTEMPT_WITHOUT_TARGET_SUCCESS",
+          "outcome": "target_unreachable",
+          "plan": {
+            "goal": "currency",
+            "items": [],
+            "operation": "magic",
+            "tool": ""
+          },
+          "total": null,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "glove",
+      "action": "Подбираю рукавицу",
+      "receipt": {
+        "id": "3d9b120e9a45ca56118097f6e815e48b5fe92e950fe547a75b8f323fc6f52bfd",
+        "turn": 1,
+        "action": "Подбираю рукавицу",
+        "summary": "Подобран существующий предмет: Рукавица.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [],
+        "free_attempt": {
+          "dc": null,
+          "dice": [],
+          "duration_minutes": 1,
+          "item_changes": [
+            {
+              "after": {
+                "durability": 20,
+                "durability_cap": 20,
+                "id": "glove",
+                "kind": "world_item",
+                "name": "Рукавица",
+                "owner": "hero",
+                "price_cp": 0,
+                "quality": 1,
+                "quantity": 1,
+                "source": "glove"
+              },
+              "before": null,
+              "id": "glove"
+            }
+          ],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "AUTO_SUCCESS",
+          "outcome": "completed",
+          "plan": {
+            "goal": "",
+            "items": [
+              "glove"
+            ],
+            "operation": "take",
+            "tool": ""
+          },
+          "total": null,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "road",
+      "action": "Иду по дороге к шахте",
+      "receipt": {
+        "id": "22f5c0e868fc1aedb4ba440fb094964a01fdf56375442af39530624df76cab82",
+        "turn": 1,
+        "action": "Иду по дороге к шахте",
+        "summary": "Герой прошёл по существующему пути: Дорога к шахте.",
+        "place_id": "road",
+        "place": "Дорога к шахте",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [],
+        "free_attempt": {
+          "dc": null,
+          "dice": [],
+          "duration_minutes": 30,
+          "item_changes": [],
+          "kind": "free_attempt",
+          "mechanics": "physical-affordances-1",
+          "mode": "AUTO_SUCCESS",
+          "outcome": "completed",
+          "plan": {
+            "goal": "road",
+            "items": [],
+            "operation": "move",
+            "tool": ""
+          },
+          "total": null,
+          "version": 1
+        }
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    },
+    {
+      "id": "food",
+      "action": "Предлагаю распределить продовольствие между жителями и гарнизоном",
+      "receipt": {
+        "id": "99af7351a196b4477b5e482cdaf7459a01dd71c1c9173b02b4c7d48c014bc835",
+        "turn": 2,
+        "action": "Предлагаю распределить продовольствие между жителями и гарнизоном",
+        "summary": "d20(12) +0 = 12 против DC 15\nПредложение выслушано, но соглашение не достигнуто. Припасы не переданы.",
+        "place_id": "camp",
+        "place": "Лагерь",
+        "steps": [
+          {
+            "operation": "action",
+            "status": "completed"
+          }
+        ],
+        "resource_changes": [],
+        "committed": true,
+        "replay_allowed": false,
+        "dice": [
+          {
+            "expression": "1d20",
+            "index": 3,
+            "individual_rolls": [
+              12
+            ],
+            "modifier": 0,
+            "reason": "persuasion",
+            "rng_counter": 3,
+            "total": 12
+          }
+        ]
+      },
+      "save_replay_equal": true,
+      "narration_did_not_apply_action_again": true,
+      "narration": {
+        "status": "NOT_RUN_CONTRACT_ONLY"
+      }
+    }
+  ],
+  "human_quality_review": "NOT_PERFORMED",
+  "training_steps": 0,
+  "accepted_replies": 0,
+  "status": "CONTRACTS_PASSED_MODEL_NOT_RUN"
+}

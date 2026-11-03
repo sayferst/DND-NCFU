@@ -107,6 +107,11 @@ def possessions(e):
 
 def mentions(text, rows, name=lambda r: r["name"]):
     words = re.findall(r"[а-яa-z_]+", text.casefold().replace("ё", "е"))
+    words = [
+        w
+        for w in words
+        if not re.match(r"^(?:ремонтир|изгот|разбир|пыта|использ|применя|дела|созда|подбира)", w)
+    ]
     return [
         r
         for r in rows
@@ -141,6 +146,7 @@ def infer_plan(e, intent):
         sources = sources or [i for i in owned if i.get("craft_origin")]
         tools = [i for i in owned if i["durability"] > 0 and "repair" in traits(e, i)]
         tool = tools[0]["id"] if tools else ""
+        sources = [i for i in sources if i["id"] != tool]
     elif operation in ("magic", "use"):
         value = intent.text.casefold()
         goals = [
