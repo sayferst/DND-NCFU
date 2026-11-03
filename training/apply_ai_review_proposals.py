@@ -131,17 +131,25 @@ def main():
             + (" | НЕОПРЕДЕЛЁННО: " + "; ".join(issues) if issues else "")
         )[:10000]
         ws.cell(rownum, 12).value = ann["consequences_and_spend"]
-        ws.cell(rownum, 17).value = obj["review_status"]
-        summary[obj["review_status"]] += 1
+        unresolved_label = any(ann[key] == "Неясно" for key in ("attempt_possible", "goal_reachable", "d20_required"))
+        effective_status = "Нужна проверка" if (issues or unresolved_label) else "Предложено ИИ"
+        ws.cell(rownum, 17).value = effective_status
+        summary[effective_status] += 1
     issues_sheet = book.create_sheet("Спорные случаи R14")
     issues_sheet.append(["№", "ID", "Действие", "Вариант условий", "Что не подтверждено", "Режим", "Приоритет"])
     for obj in records:
-        if not obj["unresolved"]:
+        original_issues = obj["unresolved"]
+        ann = obj["proposal"]
+        unknown_labels = [key for key in ("attempt_possible", "goal_reachable", "d20_required") if ann[key] == "Неясно"]
+        if not original_issues and not unknown_labels:
             continue
         orig = obj["original"]
+        issue_text = " | ".join(original_issues)
+        if unknown_labels:
+            issue_text += (" | " if issue_text else "") + "Неопределённые поля: " + ", ".join(unknown_labels)
         issues_sheet.append([
             obj["ordinal"], obj["id"], orig["action"], orig["condition_type"],
-            " | ".join(obj["unresolved"]), obj["proposal"]["execution_mode"],
+            issue_text, obj["proposal"]["execution_mode"],
             orig["review_track"],
         ])
     protocol_sheet = book.create_sheet("Правила R01-R14")
