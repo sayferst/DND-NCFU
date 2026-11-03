@@ -5,11 +5,51 @@ import re
 from collections import Counter
 
 
-def inspect(receipt, narration=""):
+def attempt_claims(attempt, narration, objects):
+    """Bounded explicit source/completion checks, independent of product names."""
+    findings = []
+    plan = attempt.get("plan", {})
+    if plan.get("operation") not in ("transform", "repair", "restore"):
+        return findings
+    allowed = set(plan.get("items", [])) | {plan.get("tool", "")}
+    aliases = {}
+    for obj in objects:
+        words = re.findall(r"[а-яё]{4,}", obj.get("name", "").casefold().replace("ё", "е"))
+        if words:
+            aliases.setdefault(words[-1][:4], set()).add(obj.get("id"))
+    clauses = re.findall(
+        r"\b(?:используя|использовав|с помощью|из|заменив)\s+([^,;.!?\n]+)",
+        narration.casefold().replace("ё", "е"),
+    )
+    for clause in clauses:
+        if re.search(r"\b(?:не|если|бы|рядом)\b", clause):
+            continue
+        for root, ids in aliases.items():
+            if not ids.intersection(allowed) and re.search(r"\b" + root + r"[а-я]*\b", clause):
+                findings.append({"code": "UNCONFIRMED_CRAFT_INPUT", "severity": "critical"})
+    unfinished = plan.get("operation") == "transform" and any(
+        c.get("after", {}).get("kind") in ("salvage", "damaged_materials")
+        and not c.get("after", {}).get("form")
+        for c in attempt.get("item_changes", [])
+    )
+    if unfinished:
+        for sentence in re.split(r"[.!?\n]", narration.casefold()):
+            if re.search(r"\b(?:не|незаверш\w*|заготов\w*|недодел\w*)\b", sentence):
+                continue
+            if re.search(
+                r"\b(?:изготовлен[аоы]?|готов[аоы]?|сделан[аоы]?|соорудили|изготовили)\b",
+                sentence,
+            ):
+                findings.append({"code": "UNCONFIRMED_FINISHED_PRODUCT", "severity": "critical"})
+    return findings
+
+
+def inspect(receipt, narration="", *, objects=()):
     findings = []
     if not receipt or receipt.get("committed") is not True:
         return [{"code": "UNCONFIRMED_RESULT", "severity": "critical"}]
     attempt = receipt.get("free_attempt", {})
+    findings.extend(attempt_claims(attempt, narration, objects))
     if attempt.get("mode") == "ATTEMPT_WITHOUT_TARGET_SUCCESS":
         if attempt.get("dice"):
             findings.append({"code": "UNNECESSARY_ROLL", "severity": "critical"})

@@ -1431,6 +1431,8 @@ class OllamaClient(QObject):
                             "receipt": context.get("receipt"),
                             "resource_balances": context.get("resource_balances", {}),
                             "validation_roster": context.get("validation_roster", []),
+                            "objects": context.get("objects", []),
+                            "public_objects": context.get("public_objects", []),
                         },
                     )
                     note = Narration(
