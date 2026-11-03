@@ -37,7 +37,9 @@ def verify(deployment, config, llama_cpp, output):
     if (
         training.get("smoke")
         or training.get("global_step", 0) < 1
-        or training.get("checkpoint_reloaded") is not True
+        or not (
+            training.get("adapter_reloaded") is True or training.get("checkpoint_reloaded") is True
+        )
         or digest(weights) != record["adapter_sha256"]
         or training.get("model_revision") != config["revision"]
     ):

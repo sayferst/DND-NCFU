@@ -1736,3 +1736,12 @@ Faun inference/скорость/RAM/качество, GPU batch/обучение
 ## 03.11.2026 — перенос QLoRA и бюджетный GPU
 
 Новый набор переноса/QLoRA/data:37passed (см. docs/validation/faun-transfer-2026-11-03/targeted-final.txt); проверены извлечение ZIP и dry-run без полной игры, несовместимая CUDA0/BF16/VRAM, разные output и отказ перезаписи, binding reviewed dataset без включения файлов. Ruff check/format421файлов успешны. Это CPU/fixture-проверки, не реальные GPU batch или обучение. Полный игровой набор заново не запускался.
+
+
+## 03.11.2026 — проверка v3 перед GPU
+
+Целевой запуск11 файлов:78passed/25.48с, raw docs/validation/training-v3-2026-11-03/targeted-78.txt. Проверены настоящий importer на авторском1000-строчном fixture, SHA/ID/факты/согласованность Excel, утечки splits, поддельное одобрение, строгое JSON, ограниченное исправление связи без перезаписи; отдельная синтетика и редакторские SHA; маска только ответа, явный return_dict=False, ошибки длины/разделителей/смены шаблона; отказ до загрузки весов; отдельный opt-in holdout; перенос без данных и изменение smoke/full при resume. Сетевые loopback-тесты требуют разрешённой локальной сети sandbox.
+
+Отдельно фактически выполнены CPU-токенизация40 примеров и полное совпадение ID/масок с AutoTokenizer5.3.0, включая чистую среду из CPU hash-lock. В новой папке распакован tool/data layout; dry-run останавливается BLOCKED_MODEL, не из-за отсутствия модулей. Весов/реальной CUDA не использовано. GPU smoke, real resume, новая Windows GUI/Setup, новая литературная приёмка NOT_RUN.
+
+Полный итог этой версии: scripts/check.py exit0;12346passed/6skipped/0failed/errors,14пакетов160файлов. Пропущены дорогой opt-in1→20 replay и пять Windows/PowerShell-тестов. pip check/Ruff check/format430 успешны; raw docs/validation/training-v3-2026-11-03/full-check-01.txt. Целевые78 пересекаются с полным набором и к нему не прибавляются.

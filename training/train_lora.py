@@ -6,7 +6,7 @@ import json
 import re
 from pathlib import Path
 
-from training.schema import validate
+from training.tokenize_dataset import encode_dataset, verify_cpu_report
 
 
 def preflight(config):
@@ -15,7 +15,19 @@ def preflight(config):
     if not (data / "manifest.json").is_file():
         return "BLOCKED_DATA: no reviewed training dataset"
     manifest = json.loads((data / "manifest.json").read_text(encoding="utf-8"))
-    if manifest.get("status") != "READY" or manifest["sha256"] != config["dataset_sha256"]:
+    if config.get("dataset_policy") == "synthetic-pilot-v1":
+        from training.synthetic_corpus import verify
+
+        try:
+            verify(data)
+        except (ValueError, OSError, KeyError, TypeError):
+            return "BLOCKED_DATA: invalid synthetic pilot"
+        expected_status = "PILOT_READY"
+    else:
+        expected_status = "READY"
+    if manifest.get("status") != expected_status or manifest.get("sha256") != config.get(
+        "dataset_sha256"
+    ):
         return "BLOCKED_DATA: unapproved or changed dataset"
     if config.get("model_family") == "faun_mistral_nemo":
         hashes = manifest.get("file_sha256", {})
@@ -26,6 +38,13 @@ def preflight(config):
                 or hashes.get(split) != hashlib.sha256(path.read_bytes()).hexdigest()
             ):
                 return "BLOCKED_DATA: actual split hashes missing or changed"
+    if config.get("model_family") == "faun_mistral_nemo":
+        from training.tokenize_dataset import load_splits
+
+        try:
+            load_splits(config)
+        except (ValueError, OSError, KeyError, TypeError):
+            return "BLOCKED_DATA: invalid samples or holdout separation"
     if not config.get("revision") or not config.get("license") or not base.is_dir():
         return "BLOCKED_MODEL: local reviewed base model missing"
     from training.model_profiles import validate_local
@@ -57,7 +76,7 @@ def run_signature(config):
     return hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()
 
 
-def validate_resume(config, checkpoint):
+def validate_resume(config, checkpoint, *, smoke=None):
     output = Path(config["output"]).resolve()
     checkpoint = Path(checkpoint).resolve()
     if checkpoint.parent != output or not re.fullmatch(r"checkpoint-[0-9]+", checkpoint.name):
@@ -66,6 +85,8 @@ def validate_resume(config, checkpoint):
     state = json.loads((checkpoint / "trainer_state.json").read_text(encoding="utf-8"))
     if provenance.get("config_sha256") != run_signature(config) or state.get("global_step", 0) < 1:
         raise ValueError("Changed run configuration or checkpoint without actual steps")
+    if smoke is not None and provenance.get("smoke") is not smoke:
+        raise ValueError("Cannot change smoke/full mode when resuming")
     return str(checkpoint)
 
 
@@ -84,27 +105,30 @@ def train(config, *, smoke=False, resume=None):
         TrainingArguments,
     )
 
-    from training.model_profiles import template_arguments, validate_lora_modules
+    from training.model_profiles import validate_lora_modules
 
     output = Path(config["output"])
     if resume:
-        resume = validate_resume(config, resume)
+        resume = validate_resume(config, resume, smoke=smoke)
     elif output.exists():
         raise ValueError("Choose a new output run directory")
-    rows = [
-        json.loads(line)
-        for line in (Path(config["dataset"]) / "train.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-        if line.strip()
-    ]
-    if not rows or not all(validate(row)[0] for row in rows):
-        raise ValueError("Invalid training samples")
     tokenizer = AutoTokenizer.from_pretrained(
         config["model_path"], local_files_only=True, trust_remote_code=False
     )
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
+    # All splits are validated and encoded before allocating any model weights.
+    parts, token_report = encode_dataset(config, tokenizer)
+    verify_cpu_report(config, token_report)
+    if config.get("model_family") == "faun_mistral_nemo":
+        from training.tokenize_dataset import PinnedFaunTokenizer
+
+        _, backend_report = encode_dataset(
+            config, PinnedFaunTokenizer(config["model_path"], config)
+        )
+        if backend_report["splits"] != token_report["splits"]:
+            raise ValueError("BLOCKED_DATA: CPU backend and AutoTokenizer disagree")
+    encoded = parts["train"]
     model = AutoModelForCausalLM.from_pretrained(
         config["model_path"],
         local_files_only=True,
@@ -132,48 +156,6 @@ def train(config, *, smoke=False, resume=None):
             task_type="CAUSAL_LM",
         ),
     )
-    encoded = []
-    for row in rows:
-        prompt = json.dumps(
-            {
-                "context": row["public_context"],
-                "player": row["player_message"],
-                "receipt": row["engine_receipt"],
-            },
-            ensure_ascii=False,
-        )
-        prefix = tokenizer.apply_chat_template(
-            [{"role": "user", "content": prompt}],
-            tokenize=True,
-            add_generation_prompt=True,
-            **template_arguments(config),
-        )
-        answer = tokenizer(row["assistant_reply"], add_special_tokens=False)["input_ids"] + [
-            tokenizer.eos_token_id
-        ]
-        if config.get("model_family") == "faun_mistral_nemo":
-            complete = tokenizer.apply_chat_template(
-                [
-                    {"role": "user", "content": prompt},
-                    {"role": "assistant", "content": row["assistant_reply"]},
-                ],
-                tokenize=True,
-                add_generation_prompt=False,
-            )
-            if complete[: len(prefix)] != prefix:
-                raise ValueError("Faun chat template does not preserve the generation prefix")
-            answer = complete[len(prefix) :]
-        if len(prefix) + len(answer) > config["max_length"]:
-            continue
-        encoded.append(
-            {
-                "input_ids": prefix + answer,
-                "attention_mask": [1] * (len(prefix) + len(answer)),
-                "labels": [-100] * len(prefix) + answer,
-            }
-        )
-    if not encoded:
-        raise ValueError("No samples fit the context; nothing trained")
     args = TrainingArguments(
         output_dir=str(output),
         max_steps=2 if smoke else -1,
@@ -185,19 +167,25 @@ def train(config, *, smoke=False, resume=None):
         bf16=True,
         report_to=[],
         save_strategy="steps",
-        save_steps=100,
+        save_steps=1 if smoke else config.get("save_steps", 25),
+        save_total_limit=2,
         logging_steps=1,
+        eval_strategy="steps" if smoke else "epoch",
+        eval_steps=1 if smoke else None,
     )
     trainer = Trainer(
         model=model,
         args=args,
         train_dataset=encoded,
+        eval_dataset=parts["val"],
         data_collator=DataCollatorForSeq2Seq(tokenizer, padding=True, label_pad_token_id=-100),
     )
     if not resume:
         output.mkdir(parents=True, exist_ok=True)
         (output / "run-provenance.json").write_text(
-            json.dumps({"config_sha256": run_signature(config), "training_started": True}),
+            json.dumps(
+                {"config_sha256": run_signature(config), "training_started": True, "smoke": smoke}
+            ),
             encoding="utf-8",
         )
     result = trainer.train(resume_from_checkpoint=resume)
@@ -213,10 +201,16 @@ def train(config, *, smoke=False, resume=None):
         "smoke": smoke,
         "adapter_sha256": hashlib.sha256(adapter.read_bytes()).hexdigest(),
         "approved_for_runtime": False,
-        "checkpoint_reloaded": True,
+        "adapter_reloaded": True,
+        "checkpoint_reloaded": bool(resume),
         "resumed_from": resume,
         "model_revision": config["revision"],
         "training_examples": len(encoded),
+        "validation_examples": len(parts["val"]),
+        "test_examples_used_for_training": 0,
+        "dataset_policy": config.get("dataset_policy", "gm-sft-v1"),
+        "tokenization": token_report,
+        "max_vram_allocated_bytes": torch.cuda.max_memory_allocated(0),
         "hardware": {
             "gpu": torch.cuda.get_device_name(0),
             "vram_bytes": torch.cuda.get_device_properties(0).total_memory,

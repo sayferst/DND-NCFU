@@ -24,12 +24,14 @@ CUDA_VISIBLE_DEVICES before launching Python if the machine has multiple GPUs.
    python3.12 -m training.setup_faun_gpu --install-stack
 3. Original pinned Safetensors (explicit confirmation, about24GB;60GiB free disk):
    python3.12 -m training.setup_faun_gpu --download-base
-4. Separately transfer only permitted, privacy-reviewed data. Prepare it at
-   data/processed/gm-sft-v1 using training.prepare_dataset. Excel action labels
-   alone are not narrator SFT: SFT requires checked replies and real receipts.
-5. Rebuild a NEW transfer archive with --dataset pointing at that prepared folder
-   to bind dataset SHA, or bind the matching manifest SHA in your config copies.
-   Data is NEVER copied into this archive automatically.
+4. Separately transfer selected, reviewed data. Real episodes use gm-sft-v1
+   and training.prepare_dataset. An explicitly permitted synthetic pilot uses
+   data/processed/gm-synthetic-pilot-v1 and its distinct manifest/provenance.
+   Excel action labels alone are not narrator SFT.
+5. Rebuild a NEW transfer archive with --dataset to bind its SHA. Synthetic
+   pilots also require --synthetic-pilot --cpu-report REPORT.json. Put that
+   unchanged report beside the dataset manifest as cpu-tokenization.json.
+   Data and CPU reports are NEVER copied into this tools archive automatically.
 6. Run only when reviewed data, original base and CUDA are ready:
    .venv-faun/bin/python -m training.train_lora --config faun-smoke.json --dry-run
    .venv-faun/bin/python -m training.train_lora --config faun-smoke.json --smoke-test
@@ -41,6 +43,14 @@ CUDA_VISIBLE_DEVICES before launching Python if the machine has multiple GPUs.
    Human review is required before training.export_model / training.merge_gguf.
    Deployment is not automatic. QLoRA does not guarantee faster CPU inference.
 
+Synthetic pilot mode is a separate explicit policy. It creates faun-pilot.json
+instead of faun-full.json and requires a bound CPU tokenization report. Copy
+that report separately to the configured dataset directory as cpu-tokenization.json.
+A 40-example synthetic pilot checks the pipeline, not full game-master quality.
+Its examples are editorially reviewed by an assistant, not by a human. Use a
+new GPU pilot output directory after the two-step smoke. Test examples remain
+excluded from gradient updates. Read docs/intelligent_gm/TRAINING_DATA_V3.md.
+
 Default configs remain BLOCKED_DATA until the dataset is approved and bound.
 A successful package creation is NOT a training step. Original Safetensors stay
 frozen during QLoRA; only the LoRA adapter is optimized. Keep the game GGUF as
@@ -48,19 +58,48 @@ baseline. Never put API keys, private saves or unapproved dialogues in the ZIP.
 """
 
 
-def prepare(output, *, dataset=None):
+def prepare(output, *, dataset=None, synthetic_pilot=False, cpu_report=None):
     output = Path(output)
     if output.exists():
         raise FileExistsError("Choose a new transfer archive; existing files are preserved")
     config = json.loads((ROOT / "training/configs/faun_qlora_v1.json").read_text(encoding="utf-8"))
     data_status, data_sha = "BLOCKED_DATA", None
     if dataset is not None:
-        from training.evaluate_faun import holdout
+        if synthetic_pilot:
+            from training.synthetic_corpus import verify
 
-        manifest, _ = holdout(dataset)
-        data_status, data_sha = "REVIEWED_DATA_HASH_BOUND_NOT_INCLUDED", manifest["sha256"]
+            manifest, _ = verify(dataset)
+            data_status = "SYNTHETIC_PILOT_HASH_BOUND_NOT_INCLUDED"
+            config["dataset_policy"] = "synthetic-pilot-v1"
+        else:
+            from training.evaluate_faun import holdout
+
+            manifest, _ = holdout(dataset)
+            data_status = "REVIEWED_DATA_HASH_BOUND_NOT_INCLUDED"
+        data_sha = manifest["sha256"]
+    elif synthetic_pilot:
+        raise ValueError("BLOCKED_DATA: --synthetic-pilot requires a prepared dataset")
     config["dataset_sha256"] = data_sha
-    config["dataset"] = "data/processed/gm-sft-v1"
+    config["dataset"] = (
+        "data/processed/gm-synthetic-pilot-v1" if synthetic_pilot else "data/processed/gm-sft-v1"
+    )
+    report_sha = None
+    if cpu_report is not None:
+        raw = Path(cpu_report).read_bytes()
+        report = json.loads(raw)
+        if (
+            data_sha is None
+            or report.get("dataset_sha256") != data_sha
+            or report.get("max_length") != config["max_length"]
+            or report.get("dropped_samples") != 0
+            or report.get("schema") != "faun-cpu-tokenization-v1"
+        ):
+            raise ValueError("BLOCKED_DATA: CPU report is not bound to this corpus/config")
+        report_sha = hashlib.sha256(raw).hexdigest()
+        config["cpu_tokenization_report"] = config["dataset"] + "/cpu-tokenization.json"
+        config["cpu_tokenization_report_sha256"] = report_sha
+    if synthetic_pilot and cpu_report is None:
+        raise ValueError("BLOCKED_DATA: tokenize the synthetic pilot on CPU first")
     config["model_path"] = "models/faun-reviewed-base"
     files = {}
     with tempfile.TemporaryDirectory(prefix="faun-transfer-") as folder:
@@ -69,8 +108,10 @@ def prepare(output, *, dataset=None):
         with ZipFile(tools_zip) as source:
             for name in source.namelist():
                 files[name] = source.read(name)
-    for stage in ("smoke", "full"):
+    for stage in ("smoke", "pilot" if synthetic_pilot else "full"):
         value = config | {"output": "artifacts/faun-" + stage}
+        if synthetic_pilot:
+            value["training_purpose"] = "SYNTHETIC_PIPELINE_PILOT"
         files["faun-" + stage + ".json"] = json.dumps(value, indent=2).encode()
     files["START_HERE.md"] = GUIDE.encode()
     manifest = {
@@ -78,6 +119,9 @@ def prepare(output, *, dataset=None):
         "status": "TOOLS_PREPARED_NOT_TRAINED",
         "dataset_status": data_status,
         "dataset_sha256": data_sha,
+        "synthetic_pilot": synthetic_pilot,
+        "cpu_report_sha256": report_sha,
+        "cpu_report_included": False,
         "base_model_id": config["model_id"],
         "base_revision": config["revision"],
         "weights_included": False,
@@ -97,8 +141,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--dataset", type=Path)
+    parser.add_argument("--synthetic-pilot", action="store_true")
+    parser.add_argument("--cpu-report", type=Path)
     args = parser.parse_args()
-    report = prepare(args.output, dataset=args.dataset)
+    report = prepare(
+        args.output,
+        dataset=args.dataset,
+        synthetic_pilot=args.synthetic_pilot,
+        cpu_report=args.cpu_report,
+    )
     print(json.dumps({k: v for k, v in report.items() if k != "files_sha256"}, indent=2))
 
 

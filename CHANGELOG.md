@@ -529,3 +529,12 @@ docs/validation/faun-owner-v2-2026-11-03. Native Windows/Faun/GPU-training NOT_R
 ## 03.11.2026 — перенос QLoRA и бюджетный GPU
 
 Добавлен training.prepare_faun_transfer: переносимый ZIP с SHA, отдельными smoke/full конфигурациями, русским руководством и закреплением SHA только проверенного датасета без его копирования. Исправлена проверка фактически выбранной CUDA0; Faun train/serve используют согласованный NF4 double-quant. Серверы/веса/обучение не запускались.
+
+
+## 03.11.2026 — аудит учебного v3 и отдельный синтетический пилот
+
+Добавлены офлайн-проверка архива, сверка настоящего Excel-импорта, безопасная копия исправления274 связей вопросов, отдельное подтверждение правил и gm-synthetic-sft-v1 с привязанной редактурой. Пользовательские строки вне Git, gm-sft-v1 не ослаблен. Добавлены CPU hash-lock/закреплённый токенизатор/проверка loss-масок, opt-in synthetic holdout и smoke/pilot transfer. Исправлен default BatchEncoding Transformers5.3; длинные примеры больше не пропускаются молча; все splits проверяются до весов, val-loss и checkpoint-mode учитываются явно.
+
+Подготовлен40-примерный пилот32/4/4, не полный обученный мастер.78 целевых тестов успешны; GPU-обучения0/расходы0₽. Подробности:docs/intelligent_gm/TRAINING_DATA_V3.md.
+
+Полный итог этой версии: scripts/check.py exit0;12346passed/6skipped/0failed/errors,14пакетов160файлов. Пропущены дорогой opt-in1→20 replay и пять Windows/PowerShell-тестов. pip check/Ruff check/format430 успешны; raw docs/validation/training-v3-2026-11-03/full-check-01.txt. Целевые78 пересекаются с полным набором и к нему не прибавляются.

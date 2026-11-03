@@ -12,7 +12,12 @@ from training.ollama_probe import request
 from training.schema import validate
 
 
-def holdout(directory):
+def holdout(directory, *, synthetic_pilot=False):
+    if synthetic_pilot:
+        from training.synthetic_corpus import verify
+
+        manifest, splits = verify(directory)
+        return manifest, splits["test"]
     directory = Path(directory)
     manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("status") != "READY" or not manifest.get("privacy_review_confirmed"):
@@ -38,8 +43,8 @@ def holdout(directory):
     return manifest, splits["test"]
 
 
-def evaluate(directory, *, model=FAUN_MODEL, limit=20, requester=request):
-    manifest, rows = holdout(directory)
+def evaluate(directory, *, model=FAUN_MODEL, limit=20, requester=request, synthetic_pilot=False):
+    manifest, rows = holdout(directory, synthetic_pilot=synthetic_pilot)
     tags = requester("/api/tags")
     if model not in local_models(tags):
         raise ValueError("BLOCKED_MODEL: installed local model required; no download attempted")
@@ -51,7 +56,8 @@ def evaluate(directory, *, model=FAUN_MODEL, limit=20, requester=request):
         "model": model,
         "model_revision": identity["digest"],
         "dataset_sha256": manifest["sha256"],
-        "prompt_mode": "confirmed_engine_receipt",
+        "prompt_mode": "synthetic_mock_receipt" if synthetic_pilot else "confirmed_engine_receipt",
+        "synthetic_pilot": synthetic_pilot,
         "actual_inference": False,
         "human_review": None,
         "automatic_checks": "LIMITED_RULE_CRITIC_NOT_FULL_FACT_VERIFICATION",
@@ -114,15 +120,17 @@ def main():
     p.add_argument("--port", type=int, choices=(11434, 11435), default=11434)
     p.add_argument("--limit", type=int, default=20)
     p.add_argument("--run-local", action="store_true")
+    p.add_argument("--synthetic-pilot", action="store_true")
     a = p.parse_args()
     if not a.run_local:
-        manifest, rows = holdout(a.directory)
+        manifest, rows = holdout(a.directory, synthetic_pilot=a.synthetic_pilot)
         result = {"status": "DATA_READY_INFERENCE_NOT_RUN", "test_samples": len(rows)}
     else:
         result = evaluate(
             a.directory,
             model=a.model,
             limit=a.limit,
+            synthetic_pilot=a.synthetic_pilot,
             requester=lambda path, body=None: request(path, body, port=a.port, timeout=600),
         )
     with a.output.open("x", encoding="utf-8") as stream:
