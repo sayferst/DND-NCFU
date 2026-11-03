@@ -76,6 +76,24 @@ def test_real_ollama_client_gets_engine_context_without_applying_action_twice(qt
     assert session.to_dict() == before
 
 
+def test_rejected_benchmark_responses_remain_available_for_review(qt_app):
+    session, text = game_benchmark.execute_case("bow_damage")
+    before = deepcopy(session.to_dict())
+    with local_server(mode="plain_always_bad") as (url, requests):
+        result = game_benchmark.narrate(
+            session,
+            text,
+            FAUN_MODEL,
+            client_factory=lambda **kwargs: OllamaClient(base_url=url, **kwargs),
+        )
+    assert result["status"] == "rejected_or_unavailable"
+    assert 1 <= len(result["response_diagnostics"]) <= 2
+    assert all(len(d) <= 16000 for d in result["response_diagnostics"])
+    assert "走近" in result["response_diagnostics"][-1]
+    assert "Ответ" in result["response_diagnostics"][-1]
+    assert session.to_dict() == before
+
+
 def test_rules_and_optional_ai_never_approve_training_labels():
     rules = suggest()
     assert len(rules) == 800

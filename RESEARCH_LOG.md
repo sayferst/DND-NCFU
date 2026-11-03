@@ -2115,3 +2115,8 @@ DeepSeek и статистическое улучшение не заявлен�
 ## 03.11.2026 — реальный Faun benchmark и проверка квитанций
 
 Получен реальный owner Faun benchmark3 авторских сцен: средняя полная задержка132,13с; transport accepted3/3, но assistant/rule review выявил2 критически неверных результата. Это отрицательный результат проверки качества, а не человеческое approval. Save/replay/no-double-action подтверждены пользовательским отчётом; новых оптимизационных шагов/SFT-допуска0. Обезличенная производная с SHA исходного файла: docs/validation/faun-live-grounding-2026-11-03/owner-game-review-01.json.
+
+
+## 03.11.2026 — повтор Faun002 и полнота диагностики
+
+Получен owner benchmark002:1/3 принят, два сценария отклонены после двух попыток с UNCONFIRMED_CRAFT_INPUT; save/replay/no-double-action успешны по отчёту. Тексты отклонённых ответов в старом benchmark отсутствуют, обоснованность каждого отказа независимо не установлена. Новый benchmark сохраняет до двух ограниченных response_diagnostics (ответы и причины, без prompts/headers/thinking). Добавлен тест реального loopback-клиента с отклонённым ответом; механика не изменена. Подробности: docs/validation/faun-live-grounding-2026-11-03/owner-game-review-02.json. Это не человеческое approval и не SFT.

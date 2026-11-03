@@ -156,6 +156,12 @@ def narrate(session, text, model, *, client_factory=None):
     client.begin_turn()
     loop = QEventLoop()
     result = {}
+    diagnostics = []
+
+    def observed_diagnostic(value):
+        # The client redacts prompts/headers/thinking and bounds visible model text.
+        diagnostics.append(value[:16000])
+        del diagnostics[:-2]
 
     def accepted(note):
         result.update(status="accepted", text=note.text)
@@ -167,6 +173,7 @@ def narrate(session, text, model, *, client_factory=None):
 
     client.narration_ready.connect(accepted)
     client.failed.connect(failed)
+    client.diagnostics_ready.connect(observed_diagnostic)
     timer = QTimer()
     timer.setSingleShot(True)
     timer.timeout.connect(lambda: failed("benchmark timeout"))
@@ -191,6 +198,7 @@ def narrate(session, text, model, *, client_factory=None):
     client.cancel()
     result["elapsed_seconds"] = time.perf_counter() - started
     result["events"] = deepcopy(client.events)
+    result["response_diagnostics"] = diagnostics
     result["ollama_working_set_before"] = memory_before
     result["ollama_working_set_after"] = memory()
     timings = [e["local_timing"] for e in client.events if "local_timing" in e]

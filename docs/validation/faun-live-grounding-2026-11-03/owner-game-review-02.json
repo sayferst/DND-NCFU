@@ -1,0 +1,48 @@
+{
+  "source": "OWNER_AUTHORED_BENCHMARK_REPEAT_002",
+  "source_sha256": "0ecb4b7a83c8e5891e1b3e13e1009e01046e8de018e3c179575b5828bae518f1",
+  "model_digest": "2f9499fe553fb70ed2024f024c72d4f3f2326b83f0263e653207f9b0299a39df",
+  "original_status": "LIVE_DEGRADED_REQUIRES_REVIEW",
+  "accepted_replies": 1,
+  "rejection_validity": "NOT_ESTABLISHED_WITHOUT_REJECTED_RESPONSE_TEXT",
+  "human_review": "NOT_PERFORMED",
+  "training_steps": 0,
+  "cases": [
+    {
+      "id": "bow_damage",
+      "engine_outcome": "damaged",
+      "status": "rejected_or_unavailable",
+      "reply": null,
+      "reason": "Описание результата: canon_conflict: Рассказ противоречит квитанции: UNCONFIRMED_CRAFT_INPUT. После 2 попыток описание не принято; игровые действия не повторялись.",
+      "elapsed_seconds": 134.82840660000147,
+      "tokens_per_second": 2.5970813449874863,
+      "attempts": 2,
+      "save_replay_equal_reported": true,
+      "no_second_action_reported": true
+    },
+    {
+      "id": "bow_partial",
+      "engine_outcome": "partial",
+      "status": "rejected_or_unavailable",
+      "reply": null,
+      "reason": "Описание результата: canon_conflict: Рассказ противоречит квитанции: UNCONFIRMED_CRAFT_INPUT. После 2 попыток описание не принято; игровые действия не повторялись.",
+      "elapsed_seconds": 145.76311290000012,
+      "tokens_per_second": 2.6232330020396373,
+      "attempts": 2,
+      "save_replay_equal_reported": true,
+      "no_second_action_reported": true
+    },
+    {
+      "id": "bow_success",
+      "engine_outcome": "success",
+      "status": "accepted",
+      "reply": "Вы разобрали лук, заменив его на удочку. У вас теперь есть импровизированная удочка для рыбалки.",
+      "reason": null,
+      "elapsed_seconds": 120.25141939999958,
+      "tokens_per_second": 2.618513056243971,
+      "attempts": 1,
+      "save_replay_equal_reported": true,
+      "no_second_action_reported": true
+    }
+  ]
+}
