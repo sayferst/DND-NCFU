@@ -1,0 +1,25 @@
+{
+  "status": "preparation-only-not-published",
+  "proposed_tag": "v0.4.0-rc.1",
+  "application_version": "0.4.0",
+  "runtime_commit": "f033d94c44dbb9a1cee81fa0c8b6279cdc6f51d3",
+  "windows_validation_run": 40739613065,
+  "windows_validation_result": "success",
+  "windows_tests_passed": 12233,
+  "windows_tests_skipped": 1,
+  "ci_profile": "developer",
+  "public_tester_setup": {
+    "file_name": "setup.exe",
+    "sha256": null,
+    "source_commit": null,
+    "profile": "tester",
+    "verified": false
+  },
+  "existing_ci_artifact": {
+    "id": 12838744140,
+    "sha256": "1269fc36042eee1f8a4fa01f3498a4d5c062f400215e3f2454498925c7c36ff1",
+    "sha256_scope": "outer Actions artifact ZIP; not installer",
+    "expires": "2026-11-11"
+  },
+  "publication_approved": false
+}

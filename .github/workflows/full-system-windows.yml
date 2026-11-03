@@ -1,6 +1,9 @@
 name: Full RPG Windows validation
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main, feature/unified-rpg-automatic-gm]
+    paths: ['src/**', 'tests/**', 'data/**', 'scripts/**', 'training/**', 'requirements*', 'pyproject.toml', 'DND-NCFU.spec', 'installer/**', '.github/workflows/full-system-windows.yml']
   push:
     branches: [feature/unified-rpg-automatic-gm]
     paths:

@@ -1,0 +1,52 @@
+{
+  "name": "Предложение функции",
+  "description": "Предложите улучшение игрового процесса.",
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "Не публикуйте токены, пароли, персональные данные и чужие сохранения. Удалите их из текста и скриншотов."
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "request",
+      "attributes": {
+        "label": "Что требуется"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "problem",
+      "attributes": {
+        "label": "Какую проблему это решает"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "player",
+      "attributes": {
+        "label": "Как это работает для игрока"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "alternatives",
+      "attributes": {
+        "label": "Возможные альтернативы"
+      },
+      "validations": {
+        "required": false
+      }
+    }
+  ]
+}
