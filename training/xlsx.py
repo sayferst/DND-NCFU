@@ -30,7 +30,7 @@ def xml(value):
     return ET.tostring(value, encoding="utf-8", xml_declaration=True)
 
 
-def worksheet(rows, *, lists=None, status_column=None):
+def worksheet(rows, *, lists=None, status_column=None, hidden_columns=(), readonly_columns=()):
     root = ET.Element("{" + NS + "}worksheet")
     views = node(root, "sheetViews")
     view = node(views, "sheetView", {"workbookViewId": "0"})
@@ -41,10 +41,18 @@ def worksheet(rows, *, lists=None, status_column=None):
     )
     columns = node(root, "cols")
     for n in range(1, len(rows[0]) + 1):
+        attributes = {
+            "min": str(n),
+            "max": str(n),
+            "width": "22" if n < 3 else "40",
+            "customWidth": "1",
+        }
+        if n in hidden_columns:
+            attributes["hidden"] = "1"
         node(
             columns,
             "col",
-            {"min": str(n), "max": str(n), "width": "22" if n < 3 else "40", "customWidth": "1"},
+            attributes,
         )
     data = node(root, "sheetData")
     for index, row in enumerate(rows, 1):
@@ -55,7 +63,11 @@ def worksheet(rows, *, lists=None, status_column=None):
                 "c",
                 {
                     "r": col(column) + str(index),
-                    "s": "1" if index == 1 else "0" if column == 1 else "2",
+                    "s": "1"
+                    if index == 1
+                    else "0"
+                    if column == 1 or column in readonly_columns
+                    else "2",
                 },
             )
             if isinstance(value, dict) and set(value) == {"formula"}:
@@ -82,7 +94,13 @@ def worksheet(rows, *, lists=None, status_column=None):
             root, "conditionalFormatting", {"sqref": f"{letter}2:{letter}{len(rows)}"}
         )
         for priority, (status, style) in enumerate(
-            (("HUMAN_APPROVED", 0), ("HUMAN_REJECTED", 1)), 1
+            (
+                ("HUMAN_APPROVED", 0),
+                ("HUMAN_REJECTED", 1),
+                ("Одобрено человеком", 0),
+                ("Отклонено человеком", 1),
+            ),
+            1,
         ):
             rule = node(
                 formatting,
@@ -232,22 +250,42 @@ def read(path, *, sheet=1):
             or sum(i.file_size for i in archive.infolist()) > 32 * 1024 * 1024
         ):
             raise ValueError("Workbook exceeds annotation limits")
+        if len(set(archive.namelist())) != len(archive.namelist()):
+            raise ValueError("Duplicate workbook parts")
+        target = f"xl/worksheets/sheet{sheet}.xml"
+        if isinstance(sheet, str):
+            book = ET.fromstring(archive.read("xl/workbook.xml"))
+            selected = [s for s in book.find(f"{{{NS}}}sheets") if s.attrib.get("name") == sheet]
+            if len(selected) != 1:
+                raise ValueError("Missing or duplicated worksheet name")
+            id = selected[0].attrib[f"{{{REL}}}id"]
+            relationships = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
+            link = next((r for r in relationships if r.attrib.get("Id") == id), None)
+            if link is None or link.attrib.get("TargetMode") == "External":
+                raise ValueError("Invalid worksheet relationship")
+            part = link.attrib["Target"]
+            if not re.fullmatch(r"(?:/xl/)?worksheets/sheet[0-9]+\.xml", part):
+                raise ValueError("Invalid worksheet target")
+            target = part.lstrip("/") if part.startswith("/xl/") else "xl/" + part
         shared = []
         if "xl/sharedStrings.xml" in archive.namelist():
             tree = ET.fromstring(archive.read("xl/sharedStrings.xml"))
             shared = ["".join(t.itertext()) for t in tree]
-        tree = ET.fromstring(archive.read(f"xl/worksheets/sheet{sheet}.xml"))
+        tree = ET.fromstring(archive.read(target))
         result = []
         for row in tree.findall(f"{{{NS}}}sheetData/{{{NS}}}row"):
             values = {}
             for cell in row:
                 column = re.match(r"[A-Z]+", cell.attrib["r"])[0]
+                if column in values:
+                    raise ValueError("Duplicated cell")
                 if cell.find(f"{{{NS}}}f") is not None:
                     raise ValueError("Formula is forbidden in annotation cells")
                 kind = cell.attrib.get("t")
                 value = cell.findtext(f"{{{NS}}}v", "")
+                inline = cell.find(f"{{{NS}}}is")
                 values[column] = (
-                    "".join(cell.find(f"{{{NS}}}is").itertext())
+                    ("".join(inline.itertext()) if inline is not None else "")
                     if kind == "inlineStr"
                     else shared[int(value)]
                     if kind == "s"
