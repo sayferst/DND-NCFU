@@ -509,3 +509,8 @@ Safetensors и SHA, resume своего run, локальная test-split оц�
 Полный итог v2:12301passed/6skipped/0failed/0errors; pip check и Ruff
 check/format418 файлов успешны. Подробные свидетельства —
 docs/validation/faun-owner-v2-2026-11-03. Native Windows/Faun/GPU-training NOT_RUN.
+
+
+## 03.11.2026 — Faun: результат запуска владельцем
+
+Владелец прислал журнал успешного pull Faun Q4_K_M7,5ГБ, проверки SHA-256 и короткого локального запроса на Acer. Status LOCAL_SMOKE_OK_GAME_EVALUATION_REQUIRED; игровые ответы/метрики ещё не предоставлены.

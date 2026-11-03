@@ -1,5 +1,11 @@
 # Faun: подготовленный путь и реальные блокировки
 
+Обновление03.11.2026: владелец сообщил об успешном pull GGUF7,5ГБ, проверке SHA-256
+и коротком локальном ответе на Acer: LOCAL_SMOKE_OK_GAME_EVALUATION_REQUIRED.
+Метрики полного JSON и игровой benchmark ещё не получены.
+См. [свидетельство](../validation/faun-owner-v2-2026-11-03/owner-faun-smoke-01.json).
+Ниже сохранён исходный отчёт разработки из облака, где весов не было.
+
 Проверенные публичные метаданные от03.11.2026:
 [Faun](https://huggingface.co/limloop/MN-12B-Faun-RP-RU), revision
 `bdfc761b14feb9dd03ef158a4d337fc1cf5fd183`; GGUF revision

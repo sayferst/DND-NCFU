@@ -1714,3 +1714,8 @@ checkout; raw с личными путями не добавлен. Новая W
 Faun inference/скорость/RAM/качество, GPU batch/обучение/reload/holdout/экспорт
 не выполнялись. Пропуски полного Linux-набора:1 дорогой opt-in1→20 и5 проверок
 настоящего Windows PowerShell updater. Веса/платные запросы/аренда0.
+
+
+## 03.11.2026 — Faun: результат запуска владельцем
+
+Новый пользовательский Windows-журнал подтверждает pull100%, verifying SHA-256, writing manifest/success и LOCAL_SMOKE_OK_GAME_EVALUATION_REQUIRED. Это реальный одиночный API-smoke пользователя; не игровой benchmark и не тест агента. JSON с TPS/RAM/latency ещё не получен. Код не менялся; повторный полный pytest для обновления документов не запускался. Свидетельство: docs/validation/faun-owner-v2-2026-11-03/owner-faun-smoke-01.json.
