@@ -1,0 +1,22 @@
+{
+  "schema": "dnd-hardware-1",
+  "scope": "execution_environment",
+  "observed_at": "2026-11-03T15:11:43.885805+00:00",
+  "platform": "Linux",
+  "cpu": "",
+  "logical_cpus": 3,
+  "free_disk_bytes": 7527559168,
+  "ollama_installed": false,
+  "llama_cpp_installed": false,
+  "training_stack_installed": false,
+  "memory": {
+    "total_bytes": 10452459520,
+    "available_bytes": 9281740800
+  },
+  "gpus": [],
+  "gpus_source": "nvidia-smi CUDA candidates, not all display adapters",
+  "display_adapters": [],
+  "training_status": "BLOCKED_HARDWARE",
+  "inference_status": "REQUIRES_LOCAL_MODEL_AND_MEASUREMENT",
+  "training_started": false
+}

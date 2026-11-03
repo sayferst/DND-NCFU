@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from training.schema import validate
@@ -45,7 +46,23 @@ def preflight(config):
     return "READY"
 
 
-def train(config, *, smoke=False):
+def run_signature(config):
+    return hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()
+
+
+def validate_resume(config, checkpoint):
+    output = Path(config["output"]).resolve()
+    checkpoint = Path(checkpoint).resolve()
+    if checkpoint.parent != output or not re.fullmatch(r"checkpoint-[0-9]+", checkpoint.name):
+        raise ValueError("Checkpoint must belong to this run directory")
+    provenance = json.loads((output / "run-provenance.json").read_text(encoding="utf-8"))
+    state = json.loads((checkpoint / "trainer_state.json").read_text(encoding="utf-8"))
+    if provenance.get("config_sha256") != run_signature(config) or state.get("global_step", 0) < 1:
+        raise ValueError("Changed run configuration or checkpoint without actual steps")
+    return str(checkpoint)
+
+
+def train(config, *, smoke=False, resume=None):
     status = preflight(config)
     if status != "READY":
         raise ValueError(status)
@@ -63,7 +80,9 @@ def train(config, *, smoke=False):
     from training.model_profiles import template_arguments, validate_lora_modules
 
     output = Path(config["output"])
-    if output.exists():
+    if resume:
+        resume = validate_resume(config, resume)
+    elif output.exists():
         raise ValueError("Choose a new output run directory")
     rows = [
         json.loads(line)
@@ -165,7 +184,13 @@ def train(config, *, smoke=False):
         train_dataset=encoded,
         data_collator=DataCollatorForSeq2Seq(tokenizer, padding=True, label_pad_token_id=-100),
     )
-    result = trainer.train()
+    if not resume:
+        output.mkdir(parents=True, exist_ok=True)
+        (output / "run-provenance.json").write_text(
+            json.dumps({"config_sha256": run_signature(config), "training_started": True}),
+            encoding="utf-8",
+        )
+    result = trainer.train(resume_from_checkpoint=resume)
     model.save_pretrained(output, safe_serialization=True)
     tokenizer.save_pretrained(output)
     model.load_adapter(output, adapter_name="reload_check", is_trainable=False)
@@ -179,6 +204,7 @@ def train(config, *, smoke=False):
         "adapter_sha256": hashlib.sha256(adapter.read_bytes()).hexdigest(),
         "approved_for_runtime": False,
         "checkpoint_reloaded": True,
+        "resumed_from": resume,
         "model_revision": config["revision"],
         "training_examples": len(encoded),
         "hardware": {
@@ -195,13 +221,14 @@ def main():
     p.add_argument("--config", required=True, type=Path)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--smoke-test", action="store_true")
+    p.add_argument("--resume-from-checkpoint", type=Path)
     a = p.parse_args()
     config = json.loads(a.config.read_text(encoding="utf-8"))
     print(
         json.dumps(
             {"status": preflight(config), "training_started": False}
             if a.dry_run
-            else train(config, smoke=a.smoke_test),
+            else train(config, smoke=a.smoke_test, resume=a.resume_from_checkpoint),
             indent=2,
         )
     )

@@ -54,7 +54,17 @@ def serve(config, adapter, port):
 
         def do_GET(self):
             if self.path == "/api/tags":
-                self.send({"models": [{"name": "dnd-trained-narrator"}]})
+                self.send(
+                    {
+                        "models": [
+                            {
+                                "name": "dnd-trained-narrator",
+                                "size": (adapter / "adapter_model.safetensors").stat().st_size,
+                                "digest": manifest["adapter_sha256"],
+                            }
+                        ]
+                    }
+                )
             else:
                 self.send({"error": "not_found"}, 404)
 
