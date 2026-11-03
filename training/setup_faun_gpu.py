@@ -13,6 +13,7 @@ from training.hardware_preflight import collect
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
+    "LICENSES_AND_ATTRIBUTIONS.md",
     "docs/intelligent_gm/TRAINING_TRANSFER.md",
     "docs/intelligent_gm/GPU_FAUN_WORKFLOW.md",
     "docs/intelligent_gm/TRAINING_DATA_V3.md",
