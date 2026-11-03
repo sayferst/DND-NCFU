@@ -982,6 +982,10 @@ class OllamaClient(QObject):
             self.failed.emit(message)
 
     def _send(self, path, kind, payload=None):
+        if payload is not None and not self.cloud:
+            if "mn-12b-faun-rp-ru" in payload.get("model", "").casefold():
+                payload = dict(payload)
+                payload.pop("think", None)
         if payload is not None:
             if not self.turn_id:
                 self.begin_turn()

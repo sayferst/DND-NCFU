@@ -1,6 +1,7 @@
 """Closed AI action proposals; only Session commits resource changes."""
 
 from rpg_vkr.domain import game_catalog as catalog
+from rpg_vkr.domain.attempt_plans import FORMS, public_facts, validate_plan
 from rpg_vkr.domain.catalog_actions_v2 import PARAMETERS
 from rpg_vkr.domain.contracts import public as public_contracts
 from rpg_vkr.domain.unified import level
@@ -22,6 +23,10 @@ def validate_proposal(value, plan, state):
     allowed, required = PARAMETERS[command]
     if not required <= args.keys() <= allowed:
         raise ValueError("Неверные параметры игрового действия.")
+    if command == "attempt":
+        if not state["catalog_actions"].get("attempt_plans"):
+            raise ValueError("Свободные планы не включены для этой кампании.")
+        validate_plan(args["plan"])
     if (
         any(
             plan.get(k)
@@ -79,9 +84,12 @@ def planning_context(session, query=""):
     scene = session.interaction_state()
     return {
         "commands": sorted(
-            COMMANDS
-            if s.get("catalog_revision") == 3
-            else COMMANDS - {"flee", "first_aid", "contract", "faction"}
+            (
+                COMMANDS
+                if s.get("catalog_revision") == 3
+                else COMMANDS - {"flee", "first_aid", "contract", "faction"}
+            )
+            - ({"attempt"} if s.get("free_action_policy") != 1 else set())
         ),
         "spells": options(s["spells"]),
         "contracts": public_contracts(session) if s.get("catalog_revision") == 3 else [],
@@ -104,10 +112,43 @@ def planning_context(session, query=""):
             for p in scene.places
             if p.parent == scene.current or scene.place().parent == p.id
         ],
+        **(
+            {
+                "attempt_plans": {
+                    "physical_items": public_facts(session),
+                    "operations": [
+                        "transform",
+                        "repair",
+                        "restore",
+                        "use",
+                        "magic",
+                        "take",
+                        "move",
+                        "explore",
+                    ],
+                    "forms": {
+                        k: {"name": v.name, "requires": list(v.requires), "tools": list(v.tools)}
+                        for k, v in FORMS.items()
+                    },
+                    "schema": {
+                        "operation": "primitive",
+                        "goal": "form_or_affordance_or_place_id",
+                        "items": ["real_id"],
+                        "tool": "real_id_or_empty",
+                    },
+                }
+            }
+            if s.get("free_action_policy") == 1
+            else {}
+        ),
     }
 
 
 GUIDE = (
+    "Для нестандартных действий при attempt_plans предложи gameplay:"
+    "{command:'attempt',args:{version:1,plan:{operation,goal,items,tool}}}. "
+    "Это композиция общих операций и реальных ID, не готовый результат. "
+    "Не назначай DC, свойства материалов, урон, награды или успешность. "
     "При наличии catalog_actions используй для магии, ремесла, добычи, боя, предметов, "
     "исследования и изучения поле gameplay:{command,args}. command — только из commands; "
     'ID бери из текущего состояния. Например gameplay:{"command":"cast",'
@@ -164,6 +205,27 @@ def describe_proposal(session, proposal):
         "leave": "покинуть",
         "donate": "передать взнос",
     }
+    if proposal["command"] == "attempt":
+        plan = validate_plan(proposal["args"]["plan"])
+        labels = {
+            "transform": "Переделать",
+            "repair": "Отремонтировать",
+            "restore": "Восстановить прежнюю форму",
+            "use": "Применить",
+            "magic": "Попробовать магический эффект",
+            "take": "Подобрать",
+            "move": "Перейти",
+            "explore": "Исследовать",
+        }
+        goal = FORMS[plan["goal"]].name if plan["goal"] in FORMS else names.get(plan["goal"], "")
+        return (
+            labels[plan["operation"]]
+            + ": "
+            + ", ".join(names.get(id, id) for id in plan["items"])
+            + (" → " + goal if goal else "")
+            + ("; инструмент: " + names.get(plan["tool"], plan["tool"]) if plan["tool"] else "")
+            + ". Изменения предметов и затраты сохранятся в мире."
+        )
     values = []
     for key, value in proposal["args"].items():
         if key == "operation":

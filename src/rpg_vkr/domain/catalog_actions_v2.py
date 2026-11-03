@@ -8,6 +8,7 @@ from rpg_vkr.domain.catalog_effects import resolve
 from rpg_vkr.domain.character import ABILITY_NAMES, ability_modifier
 
 PARAMETERS = {
+    "attempt": ({"plan", "version"}, {"plan", "version"}),
     "contract": ({"offer", "operation"}, {"offer", "operation"}),
     "faction": ({"faction", "operation", "amount"}, {"faction", "operation"}),
     "flee": ({"destination"}, {"destination"}),

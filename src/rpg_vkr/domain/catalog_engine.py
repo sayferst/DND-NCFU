@@ -131,6 +131,10 @@ class Engine:
         from rpg_vkr.domain.unified import bonus
 
         result = bonus(self.state, self.char, task)[1]
+        if task == "melee" and self.state.get("free_action_policy") == 1:
+            weapon = next((i for i in self.state["items"] if i["id"] == self.state["weapon"]), {})
+            if weapon.get("form"):
+                result += weapon["usage_penalty"]
         if task in ("melee", "ranged", "arcana"):
             result += self.status_power("hero", "accuracy")
         if task in ("ranged", "stealth"):
@@ -184,6 +188,22 @@ class Engine:
         return value + bonus >= dc
 
     def template(self, item):
+        if item.get("form"):
+            from rpg_vkr.domain.attempt_plans import FORMS
+
+            form = FORMS[item["form"]]
+            return {
+                "id": "improvised_" + item["form"],
+                "name": item["name"],
+                "kind": form.kind,
+                "category": form.category,
+                "level": 1,
+                "dice": form.dice,
+                "hands": 2,
+                "stamina": 2,
+                "price_cp": 0,
+                "durability": item["durability_cap"],
+            }
         return (
             content.row(item["template"])
             if item.get("template")
@@ -655,7 +675,39 @@ def _execute(original, command, args, context, dice):
     engine.context_combat = context["combat"]
     if engine.world.hp <= 0:
         raise ValueError("Герой выбыл.")
-    perform(engine, command, args)
+    if command == "enable_attempt_plans":
+        if (
+            args != {"version": 1}
+            or type(args.get("version")) is not int
+            or original.get("catalog_revision") != 3
+            or original.get("free_action_policy")
+            or engine.state["battle"]
+        ):
+            raise ValueError("Нельзя включить свободные планы в этом состоянии.")
+        engine.state["free_action_policy"] = 1
+        engine.text.append("Включены планы свободных действий. Исторические операции сохранены.")
+        return engine.finish()
+    if command == "attempt":
+        from rpg_vkr.domain.attempt_plans import resolve
+
+        if (
+            not isinstance(args, dict)
+            or set(args) != {"plan", "version"}
+            or type(args["version"]) is not int
+            or args["version"] != 1
+        ):
+            raise ValueError("Неверная версия плана попытки.")
+        resolve(engine, args["plan"])
+    elif command == "negotiate_food":
+        from rpg_vkr.domain.food_negotiation import execute as negotiate_food
+
+        negotiate_food(engine, args)
+    elif command == "free_attempt":
+        from rpg_vkr.domain.free_actions import execute as free_attempt
+
+        free_attempt(engine, args)
+    else:
+        perform(engine, command, args)
     npc_round(engine, command)
     advance(engine, engine.action_minutes)
     return engine.finish()

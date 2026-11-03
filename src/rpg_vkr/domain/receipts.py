@@ -86,4 +86,11 @@ def receipt(session):
                     }
                 )
         value["dice"] = record["result"]["rolls"]
+        attempts = [
+            event
+            for event in record["result"].get("battle_events", [])
+            if event.get("kind") == "free_attempt"
+        ]
+        if attempts:
+            value["free_attempt"] = attempts[-1]
     return value

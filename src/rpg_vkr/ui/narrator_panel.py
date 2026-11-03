@@ -710,6 +710,25 @@ def request_local_actions(window, text):
     from rpg_vkr.commands import normalise_action
     from rpg_vkr.narrative.actions import action_plan
 
+    if (window._session.gameplay or {}).get("free_action_policy") == 1:
+        from rpg_vkr.domain.free_actions import interpret
+
+        if interpret(text) is not None:
+            cancel_narration(window)
+            try:
+                window._session.submit(text)
+            except ValueError as error:
+                window.narrator_status.setText(str(error))
+                return True
+            window.action_input.remember(text)
+            window.action_input.clear()
+            window._dirty = True
+            window._refresh_character()
+            window._render_journal()
+            window.narrator_status.setText("Попытка и её последствия рассчитаны и сохранены.")
+            if window.enable_local_narrator.isChecked() and window.ai_chat.isChecked():
+                request_narration(window)
+            return True
     value = normalise_action(text)
     if re.fullmatch(
         r"(?:(?:хочу\s+)?(?:осмотреть|посмотреть|проверить|покажи|показать)\s+)?(?:свой\s+|мой\s+)?инвентар[ьe]",
