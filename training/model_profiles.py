@@ -40,6 +40,19 @@ def validate_local(config):
         raise ValueError("BLOCKED_MODEL: Faun chat template missing or changed")
     if not (root / "model.safetensors.index.json").is_file():
         raise ValueError("BLOCKED_MODEL: original Safetensors required, GGUF cannot be trained")
+    index = json.loads((root / "model.safetensors.index.json").read_text(encoding="utf-8"))
+    mapping = index.get("weight_map")
+    if not isinstance(mapping, dict) or not mapping:
+        raise ValueError("BLOCKED_MODEL: empty Safetensors weight index")
+    for name in mapping.values():
+        if (
+            not isinstance(name, str)
+            or Path(name).name != name
+            or not name.endswith(".safetensors")
+            or not (root / name).is_file()
+            or (root / name).stat().st_size < 8
+        ):
+            raise ValueError("BLOCKED_MODEL: missing or invalid Safetensors shard")
 
 
 def validate_lora_modules(model, config):

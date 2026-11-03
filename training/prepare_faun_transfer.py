@@ -58,14 +58,35 @@ baseline. Never put API keys, private saves or unapproved dialogues in the ZIP.
 """
 
 
-def prepare(output, *, dataset=None, synthetic_pilot=False, cpu_report=None):
+GUIDE += """
+V4 full grounded synthetic mode (--grounded-synthetic) is distinct from the old
+40-pair pilot. It creates faun-smoke.json and faun-full.json; place the separately
+authorized corpus under data/processed/gm-grounded-synthetic-v1 and its bound
+CPU report at cpu-tokenization.json in that directory. Read TRAINING_DATA_V4.md.
+The complete private delivery includes those authorized data separately; this
+tools-only archive never adds them automatically. Public curriculum definition
+tables are code inputs included in the tools, not private played campaigns.
+"""
+
+
+def prepare(
+    output, *, dataset=None, synthetic_pilot=False, grounded_synthetic=False, cpu_report=None
+):
+    if synthetic_pilot and grounded_synthetic:
+        raise ValueError("Choose one explicit synthetic corpus policy")
     output = Path(output)
     if output.exists():
         raise FileExistsError("Choose a new transfer archive; existing files are preserved")
     config = json.loads((ROOT / "training/configs/faun_qlora_v1.json").read_text(encoding="utf-8"))
     data_status, data_sha = "BLOCKED_DATA", None
     if dataset is not None:
-        if synthetic_pilot:
+        if grounded_synthetic:
+            from training.grounded_validation import verify
+
+            manifest, _ = verify(dataset)
+            data_status = "GROUNDED_SYNTHETIC_HASH_BOUND_NOT_INCLUDED"
+            config["dataset_policy"] = "grounded-synthetic-v1"
+        elif synthetic_pilot:
             from training.synthetic_corpus import verify
 
             manifest, _ = verify(dataset)
@@ -77,11 +98,15 @@ def prepare(output, *, dataset=None, synthetic_pilot=False, cpu_report=None):
             manifest, _ = holdout(dataset)
             data_status = "REVIEWED_DATA_HASH_BOUND_NOT_INCLUDED"
         data_sha = manifest["sha256"]
-    elif synthetic_pilot:
+    elif synthetic_pilot or grounded_synthetic:
         raise ValueError("BLOCKED_DATA: --synthetic-pilot requires a prepared dataset")
     config["dataset_sha256"] = data_sha
     config["dataset"] = (
-        "data/processed/gm-synthetic-pilot-v1" if synthetic_pilot else "data/processed/gm-sft-v1"
+        "data/processed/gm-grounded-synthetic-v1"
+        if grounded_synthetic
+        else "data/processed/gm-synthetic-pilot-v1"
+        if synthetic_pilot
+        else "data/processed/gm-sft-v1"
     )
     report_sha = None
     if cpu_report is not None:
@@ -98,7 +123,7 @@ def prepare(output, *, dataset=None, synthetic_pilot=False, cpu_report=None):
         report_sha = hashlib.sha256(raw).hexdigest()
         config["cpu_tokenization_report"] = config["dataset"] + "/cpu-tokenization.json"
         config["cpu_tokenization_report_sha256"] = report_sha
-    if synthetic_pilot and cpu_report is None:
+    if (synthetic_pilot or grounded_synthetic) and cpu_report is None:
         raise ValueError("BLOCKED_DATA: tokenize the synthetic pilot on CPU first")
     config["model_path"] = "models/faun-reviewed-base"
     files = {}
@@ -120,6 +145,7 @@ def prepare(output, *, dataset=None, synthetic_pilot=False, cpu_report=None):
         "dataset_status": data_status,
         "dataset_sha256": data_sha,
         "synthetic_pilot": synthetic_pilot,
+        "grounded_synthetic": grounded_synthetic,
         "cpu_report_sha256": report_sha,
         "cpu_report_included": False,
         "base_model_id": config["model_id"],
@@ -142,12 +168,14 @@ def main():
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--dataset", type=Path)
     parser.add_argument("--synthetic-pilot", action="store_true")
+    parser.add_argument("--grounded-synthetic", action="store_true")
     parser.add_argument("--cpu-report", type=Path)
     args = parser.parse_args()
     report = prepare(
         args.output,
         dataset=args.dataset,
         synthetic_pilot=args.synthetic_pilot,
+        grounded_synthetic=args.grounded_synthetic,
         cpu_report=args.cpu_report,
     )
     print(json.dumps({k: v for k, v in report.items() if k != "files_sha256"}, indent=2))

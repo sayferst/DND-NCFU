@@ -18,6 +18,10 @@ def load_splits(config):
         from training.synthetic_corpus import verify
 
         manifest, splits = verify(root)
+    elif config.get("dataset_policy") == "grounded-synthetic-v1":
+        from training.grounded_validation import verify
+
+        manifest, splits = verify(root)
     else:
         from training.evaluate_faun import holdout
 
@@ -38,6 +42,10 @@ def load_splits(config):
 
 
 def messages_for(row):
+    if row.get("schema_version") == "gm-grounded-synthetic-v1":
+        from training.grounded_prompt import messages
+
+        return messages(row)
     return [
         {
             "role": "user",
@@ -58,7 +66,8 @@ def encode_rows(tokenizer, rows, config):
     for row in rows:
         messages = messages_for(row)
         if any(
-            token in messages[0]["content"] + row["assistant_reply"] for token in CONTROL_TOKENS
+            token in "".join(message["content"] for message in messages) + row["assistant_reply"]
+            for token in CONTROL_TOKENS
         ):
             raise ValueError("BLOCKED_DATA: embedded chat control token")
         prefix = tokenizer.apply_chat_template(
@@ -170,7 +179,9 @@ def encode_dataset(config, tokenizer):
         "training_steps": 0,
         "model_weights_loaded": False,
         "gpu_fit_verified": False,
-        "prompt_contract": "context_player_receipt_v1",
+        "prompt_contract": "grounded_relevant_facts_v1"
+        if manifest.get("dataset_policy") == "grounded-synthetic-v1"
+        else "context_player_receipt_v1",
     }
 
 

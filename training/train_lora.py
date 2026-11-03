@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -23,6 +24,14 @@ def preflight(config):
         except (ValueError, OSError, KeyError, TypeError):
             return "BLOCKED_DATA: invalid synthetic pilot"
         expected_status = "PILOT_READY"
+    elif config.get("dataset_policy") == "grounded-synthetic-v1":
+        from training.grounded_validation import verify
+
+        try:
+            verify(data)
+        except (ValueError, OSError, KeyError, TypeError):
+            return "BLOCKED_DATA: invalid grounded synthetic corpus"
+        expected_status = "READY_SYNTHETIC"
     else:
         expected_status = "READY"
     if manifest.get("status") != expected_status or manifest.get("sha256") != config.get(
@@ -90,6 +99,23 @@ def validate_resume(config, checkpoint, *, smoke=None):
     return str(checkpoint)
 
 
+def smoke_samples(rows):
+    """Exercise the longest real sequence and a typical one without using test data."""
+    ordered = sorted(rows, key=lambda row: len(row["input_ids"]))
+    if not ordered:
+        raise ValueError("Cannot smoke-test an empty split")
+    return [ordered[-1]] if len(ordered) == 1 else [ordered[-1], ordered[(len(ordered) - 1) // 2]]
+
+
+def validate_losses(logs):
+    """Fail rather than hide a NaN/Inf training or evaluation loss in a paid run."""
+    for key, value in logs.items():
+        if "loss" in key and isinstance(value, (int, float)) and not math.isfinite(value):
+            raise ValueError(
+                "Non-finite loss; stop and inspect the run before spending more GPU time"
+            )
+
+
 def train(config, *, smoke=False, resume=None):
     status = preflight(config)
     if status != "READY":
@@ -129,6 +155,10 @@ def train(config, *, smoke=False, resume=None):
         if backend_report["splits"] != token_report["splits"]:
             raise ValueError("BLOCKED_DATA: CPU backend and AutoTokenizer disagree")
     encoded = parts["train"]
+    validation = parts["val"]
+    if smoke:
+        encoded = smoke_samples(encoded)
+        validation = smoke_samples(validation)
     model = AutoModelForCausalLM.from_pretrained(
         config["model_path"],
         local_files_only=True,
@@ -161,6 +191,9 @@ def train(config, *, smoke=False, resume=None):
         max_steps=2 if smoke else -1,
         num_train_epochs=config["epochs"],
         per_device_train_batch_size=config["batch_size"],
+        per_device_eval_batch_size=1,
+        prediction_loss_only=True,
+        logging_nan_inf_filter=False,
         gradient_accumulation_steps=1 if smoke else config["gradient_accumulation"],
         learning_rate=config["learning_rate"],
         seed=config["seed"],
@@ -173,12 +206,23 @@ def train(config, *, smoke=False, resume=None):
         eval_strategy="steps" if smoke else "epoch",
         eval_steps=1 if smoke else None,
     )
+
+    from transformers import TrainerCallback
+
+    class FiniteLoss(TrainerCallback):
+        def on_log(self, args, state, control, logs=None, **kwargs):
+            validate_losses(logs or {})
+
+        def on_evaluate(self, args, state, control, metrics=None, **kwargs):
+            validate_losses(metrics or {})
+
     trainer = Trainer(
         model=model,
         args=args,
         train_dataset=encoded,
-        eval_dataset=parts["val"],
+        eval_dataset=validation,
         data_collator=DataCollatorForSeq2Seq(tokenizer, padding=True, label_pad_token_id=-100),
+        callbacks=[FiniteLoss()],
     )
     if not resume:
         output.mkdir(parents=True, exist_ok=True)
@@ -189,6 +233,7 @@ def train(config, *, smoke=False, resume=None):
             encoding="utf-8",
         )
     result = trainer.train(resume_from_checkpoint=resume)
+    validate_losses(result.metrics)
     model.save_pretrained(output, safe_serialization=True)
     tokenizer.save_pretrained(output)
     model.load_adapter(output, adapter_name="reload_check", is_trainable=False)
@@ -211,6 +256,7 @@ def train(config, *, smoke=False, resume=None):
         "dataset_policy": config.get("dataset_policy", "gm-sft-v1"),
         "tokenization": token_report,
         "max_vram_allocated_bytes": torch.cuda.max_memory_allocated(0),
+        "max_vram_reserved_bytes": torch.cuda.max_memory_reserved(0),
         "hardware": {
             "gpu": torch.cuda.get_device_name(0),
             "vram_bytes": torch.cuda.get_device_properties(0).total_memory,
