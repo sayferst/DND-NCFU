@@ -9,6 +9,9 @@ from pathlib import Path
 
 
 def serve(config, adapter, port):
+    from training.model_profiles import template_arguments, validate_local
+
+    validate_local(config)
     import torch
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -72,7 +75,7 @@ def serve(config, adapter, port):
                     messages,
                     tokenize=True,
                     add_generation_prompt=True,
-                    enable_thinking=False,
+                    **template_arguments(config),
                     return_tensors="pt",
                 ).to(model.device)
                 if inputs.shape[1] > 8192:

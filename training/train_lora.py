@@ -16,13 +16,30 @@ def preflight(config):
     manifest = json.loads((data / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("status") != "READY" or manifest["sha256"] != config["dataset_sha256"]:
         return "BLOCKED_DATA: unapproved or changed dataset"
+    if config.get("model_family") == "faun_mistral_nemo":
+        hashes = manifest.get("file_sha256", {})
+        for split in ("train", "val", "test"):
+            path = data / (split + ".jsonl")
+            if (
+                not path.is_file()
+                or hashes.get(split) != hashlib.sha256(path.read_bytes()).hexdigest()
+            ):
+                return "BLOCKED_DATA: actual split hashes missing or changed"
     if not config.get("revision") or not config.get("license") or not base.is_dir():
         return "BLOCKED_MODEL: local reviewed base model missing"
+    from training.model_profiles import validate_local
+
+    try:
+        validate_local(config)
+    except (ValueError, OSError, KeyError) as error:
+        return "BLOCKED_MODEL: " + type(error).__name__
     try:
         import torch
 
         if not torch.cuda.is_available():
             return "BLOCKED_HARDWARE: NVIDIA CUDA required for this QLoRA configuration"
+        if config.get("precision", "bf16") == "bf16" and not torch.cuda.is_bf16_supported():
+            return "BLOCKED_HARDWARE: configured BF16 is unsupported"
     except ImportError:
         return "BLOCKED_HARDWARE: separate training stack unavailable"
     return "READY"
@@ -42,6 +59,8 @@ def train(config, *, smoke=False):
         Trainer,
         TrainingArguments,
     )
+
+    from training.model_profiles import template_arguments, validate_lora_modules
 
     output = Path(config["output"])
     if output.exists():
@@ -69,7 +88,11 @@ def train(config, *, smoke=False):
         ),
         device_map={"": 0},
     )
+    validate_lora_modules(model, config)
     model = prepare_model_for_kbit_training(model)
+    if config.get("gradient_checkpointing"):
+        model.gradient_checkpointing_enable()
+        model.config.use_cache = False
     model = get_peft_model(
         model,
         LoraConfig(
@@ -94,11 +117,23 @@ def train(config, *, smoke=False):
             [{"role": "user", "content": prompt}],
             tokenize=True,
             add_generation_prompt=True,
-            enable_thinking=False,
+            **template_arguments(config),
         )
         answer = tokenizer(row["assistant_reply"], add_special_tokens=False)["input_ids"] + [
             tokenizer.eos_token_id
         ]
+        if config.get("model_family") == "faun_mistral_nemo":
+            complete = tokenizer.apply_chat_template(
+                [
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": row["assistant_reply"]},
+                ],
+                tokenize=True,
+                add_generation_prompt=False,
+            )
+            if complete[: len(prefix)] != prefix:
+                raise ValueError("Faun chat template does not preserve the generation prefix")
+            answer = complete[len(prefix) :]
         if len(prefix) + len(answer) > config["max_length"]:
             continue
         encoded.append(
@@ -133,6 +168,8 @@ def train(config, *, smoke=False):
     result = trainer.train()
     model.save_pretrained(output, safe_serialization=True)
     tokenizer.save_pretrained(output)
+    model.load_adapter(output, adapter_name="reload_check", is_trainable=False)
+    model.delete_adapter("reload_check")
     adapter = output / "adapter_model.safetensors"
     manifest = {
         "config": config,
@@ -141,6 +178,13 @@ def train(config, *, smoke=False):
         "smoke": smoke,
         "adapter_sha256": hashlib.sha256(adapter.read_bytes()).hexdigest(),
         "approved_for_runtime": False,
+        "checkpoint_reloaded": True,
+        "model_revision": config["revision"],
+        "training_examples": len(encoded),
+        "hardware": {
+            "gpu": torch.cuda.get_device_name(0),
+            "vram_bytes": torch.cuda.get_device_properties(0).total_memory,
+        },
     }
     (output / "training-manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest

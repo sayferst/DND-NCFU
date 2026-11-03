@@ -60,6 +60,10 @@ def prepare(path, output, *, privacy_review=False, dry_run=True):
             with (output / (split + ".jsonl")).open("x", encoding="utf-8") as f:
                 for value in values:
                     f.write(json.dumps(value, ensure_ascii=False) + "\n")
+        manifest["file_sha256"] = {
+            name: hashlib.sha256((output / (name + ".jsonl")).read_bytes()).hexdigest()
+            for name in parts
+        }
         (output / "manifest.json").write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
         )
