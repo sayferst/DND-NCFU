@@ -1,0 +1,61 @@
+{
+  "schema": "training-v4-release-validation-v1",
+  "code_commit": "b9be8af",
+  "full_check_exit_code": 0,
+  "test_files": 164,
+  "passed": 12405,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 6,
+  "batches": 14,
+  "summed_pytest_batch_seconds": 1069.29,
+  "skip_reasons": [
+    {
+      "test": "test_current_checkout_prints_actual_sha",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "test_fetches_and_fast_forwards_only_current_release_branch",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "test_wrong_branch_never_switches_or_updates",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "test_dirty_checkout_with_remote_changes_is_preserved",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "test_active_host_prevents_fast_forward_without_touching_checkout",
+      "reason": "Actual PowerShell updater integration requires Windows/PowerShell"
+    },
+    {
+      "test": "test_public_progression_one_to_twenty",
+      "reason": "Run explicitly: DND_LONG_CAMPAIGN=1; expensive 1-to-20 replay"
+    }
+  ],
+  "ruff_check": true,
+  "ruff_format_files": 443,
+  "pip_check": true,
+  "dataset_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+  "source_scenarios": 1000,
+  "additional_rule_boundaries": 100,
+  "human_reviewed_samples": 0,
+  "real_game_episodes": 0,
+  "cpu_auto_tokenizer_parity": true,
+  "private_data_published": false,
+  "post_ui_fix_targeted": {
+    "passed": 20,
+    "seconds": 4.71
+  },
+  "post_transfer_attribution_targeted": {
+    "passed": 15,
+    "seconds": 4.13
+  },
+  "gpu_training": "NOT_RUN",
+  "model_weights_downloaded": false,
+  "training_steps": 0,
+  "paid_operations": 0,
+  "native_windows": "NOT_RUN"
+}

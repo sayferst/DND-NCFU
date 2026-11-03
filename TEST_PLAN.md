@@ -1745,3 +1745,23 @@ Faun inference/скорость/RAM/качество, GPU batch/обучение
 Отдельно фактически выполнены CPU-токенизация40 примеров и полное совпадение ID/масок с AutoTokenizer5.3.0, включая чистую среду из CPU hash-lock. В новой папке распакован tool/data layout; dry-run останавливается BLOCKED_MODEL, не из-за отсутствия модулей. Весов/реальной CUDA не использовано. GPU smoke, real resume, новая Windows GUI/Setup, новая литературная приёмка NOT_RUN.
 
 Полный итог этой версии: scripts/check.py exit0;12346passed/6skipped/0failed/errors,14пакетов160файлов. Пропущены дорогой opt-in1→20 replay и пять Windows/PowerShell-тестов. pip check/Ruff check/format430 успешны; raw docs/validation/training-v3-2026-11-03/full-check-01.txt. Целевые78 пересекаются с полным набором и к нему не прибавляются.
+
+
+## 03.11.2026 — полный синтетический корпус V4 и подключение правил владельца
+
+
+Целевой прогон128passed/25.31с (11 файлов); после новых правок41passed/15.67с
+(3 пересекающихся файла), последняя проверка корпуса14passed/14.30с. Эти числа
+нельзя складывать. В evidence сохранены команды/логи; полная проверка выполняется
+scripts/check.py с реальным loopback HTTP и offscreen Qt. CPU parity охватывает
+все1100 примеров, без весов/Torch; выделение памяти под модель — только после
+проверки данных. Проверка реального CUDA batch/адаптера/литературного качества
+не подменяется fake-model протокольными тестами.
+
+Описание и команды: docs/intelligent_gm/TRAINING_DATA_V4.md; свидетельства: docs/validation/training-v4-2026-11-03.
+
+Итог V4: scripts/check.py exit0; **12405passed/6skipped/0failed/errors**,
+14 пакетов164 файла, pip check/Ruff check/format443 успешны. После поправки
+ожидания в UI20passed/4.71с, после состава transfer15passed/4.13с. Пропуски:
+opt-in1→20 и5 Windows/PowerShell-тестов. GPU/native Windows/обучение NOT_RUN.
+Окончательный corpus SHA79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c.

@@ -1,0 +1,24 @@
+{
+  "status": "EXTRACTED_DATA_READY_MODEL_EXPECTED_MISSING",
+  "checks": [
+    {
+      "module": "training.train_lora",
+      "exit_code": 0,
+      "stdout": "{\n  \"status\": \"BLOCKED_MODEL: local reviewed base model missing\",\n  \"training_started\": false\n}",
+      "stderr": ""
+    },
+    {
+      "module": "training.evaluate_faun",
+      "exit_code": 0,
+      "stdout": "DATA_READY_INFERENCE_NOT_RUN",
+      "stderr": ""
+    }
+  ],
+  "holdout": {
+    "status": "DATA_READY_INFERENCE_NOT_RUN",
+    "test_samples": 110
+  },
+  "dataset_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+  "gpu_exercised": false,
+  "training_steps": 0
+}

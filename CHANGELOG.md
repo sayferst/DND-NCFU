@@ -538,3 +538,24 @@ docs/validation/faun-owner-v2-2026-11-03. Native Windows/Faun/GPU-training NOT_R
 Подготовлен40-примерный пилот32/4/4, не полный обученный мастер.78 целевых тестов успешны; GPU-обучения0/расходы0₽. Подробности:docs/intelligent_gm/TRAINING_DATA_V3.md.
 
 Полный итог этой версии: scripts/check.py exit0;12346passed/6skipped/0failed/errors,14пакетов160файлов. Пропущены дорогой opt-in1→20 replay и пять Windows/PowerShell-тестов. pip check/Ruff check/format430 успешны; raw docs/validation/training-v3-2026-11-03/full-check-01.txt. Целевые78 пересекаются с полным набором и к нему не прибавляются.
+
+
+## 03.11.2026 — полный синтетический корпус V4 и подключение правил владельца
+
+
+Добавлены полный синтетический корпус1100, Excel, явный допуск отдельной политики,
+проверки состояния/расхода/дубликатов/групп, компактный промпт и точная токенизация.
+Правила владельца подключены к Engine/NPC/каноническим HP/UI/save/replay: смерть,
+стабилизация, нелетальное оглушение, истощение, явный перерасход и условия NPC.
+Старые кампании сохраняют свою версию правил. QLoRA использует длинный smoke,
+eval batch1, остановку NaN/Inf и сохранение/reload адаптера. Оценка базовой и
+обученной моделей связывается с одинаковыми SHA промптов/корпуса. Обучение не
+запускалось, датасеты и частные материалы в Git не добавляются.
+
+Описание и команды: docs/intelligent_gm/TRAINING_DATA_V4.md; свидетельства: docs/validation/training-v4-2026-11-03.
+
+Итог V4: scripts/check.py exit0; **12405passed/6skipped/0failed/errors**,
+14 пакетов164 файла, pip check/Ruff check/format443 успешны. После поправки
+ожидания в UI20passed/4.71с, после состава transfer15passed/4.13с. Пропуски:
+opt-in1→20 и5 Windows/PowerShell-тестов. GPU/native Windows/обучение NOT_RUN.
+Окончательный corpus SHA79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c.
