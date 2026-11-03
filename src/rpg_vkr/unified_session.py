@@ -35,6 +35,7 @@ class UnifiedSession(Session):
         catalog_revision=1,
         world_policy=4,
         free_action_policy=1,
+        owner_rules_policy=0,
     ):
         state = rules.initial({"class_id": class_id, "talent": talent}, character)
         if content_revision not in (1, 2):
@@ -43,6 +44,12 @@ class UnifiedSession(Session):
             raise ValueError("Неизвестные правила инвентаря мира.")
         if type(free_action_policy) is not int or free_action_policy not in (0, 1):
             raise ValueError("Неизвестные правила свободных действий.")
+        if type(owner_rules_policy) is not int or owner_rules_policy not in (0, 1):
+            raise ValueError("Неизвестная версия авторских правил.")
+        if owner_rules_policy and (catalog_revision != 3 or not free_action_policy):
+            raise ValueError("Авторские правила требуют catalog3 со свободными планами.")
+        if owner_rules_policy:
+            state["owner_rules_policy"] = 1
         if content_revision == 2:
             from rpg_vkr.domain.catalog_engine import initial
 
@@ -85,6 +92,8 @@ class UnifiedSession(Session):
             obj._origin["world_policy"] = 4
         if catalog_revision == 3 and free_action_policy:
             obj._origin["free_action_policy"] = free_action_policy
+        if owner_rules_policy:
+            obj._origin["owner_rules_policy"] = 1
         obj._depth = 0
         obj._learning_flags = {"library": False, "memory": True}
         obj._rag_mode = 2

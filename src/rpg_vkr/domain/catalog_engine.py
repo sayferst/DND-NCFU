@@ -184,6 +184,12 @@ class Engine:
     def check(self, task, dc):
         value = self.roll("1d20", task)
         bonus = self.hero_bonus(task)
+        if self.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import resolve_check
+
+            result = resolve_check(self, value, bonus, task, dc)
+            self.text.append(f"d20({value}) {bonus:+}, итог {result['total']} против DC {dc}")
+            return result["succeeded"]
         self.text.append(f"d20({value}) {bonus:+} = {value + bonus} против DC {dc}")
         return value + bonus >= dc
 
@@ -371,6 +377,10 @@ class Engine:
         return (e.state or {}).get("hp", d.properties["hp_max"])
 
     def change_hp(self, id, delta):
+        if self.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import change_hp
+
+            return change_hp(self, id, delta)
         if id == "hero":
             self.world = replace(
                 self.world, hp=max(0, min(self.world.max_hp, self.world.hp + delta))
@@ -512,7 +522,14 @@ class Engine:
             if shield > blocked:
                 self.status(target, "shield", shield - blocked, 2)
         amount = max(0, amount - resistance)
-        self.change_hp(target, -amount)
+        if self.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import change_hp
+
+            flags = getattr(self, "owner_hit_flags", {})
+            self.owner_hit_flags = {}  # Only the originating hit, never reflection or a later DOT.
+            change_hp(self, target, -amount, **flags)
+        else:
+            self.change_hp(target, -amount)
         if amount and reflection and source != target and self.status_power(target, "reflect"):
             self.damage(
                 source, min(amount, self.status_power(target, "reflect")), element, target, False
@@ -673,8 +690,36 @@ def _execute(original, command, args, context, dice):
 
     engine = Engine(original, context, dice, args)
     engine.context_combat = context["combat"]
+    owner_policy = engine.state.get("owner_rules_policy") == 1
     if engine.world.hp <= 0:
-        raise ValueError("Герой выбыл.")
+        from rpg_vkr.domain.owner_rules_runtime import life
+
+        allowed = owner_policy and (
+            command == "death_save" or (command == "wait" and life(engine).stable)
+        )
+        if not allowed:
+            raise ValueError("Герой выбыл.")
+    if owner_policy:
+        from rpg_vkr.domain.owner_rules_runtime import perform as owner_perform
+
+        if owner_perform(engine, command, args):
+            npc_round(engine, command)
+            engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
+            advance(engine, engine.action_minutes)
+            return engine.finish()
+    if command == "enable_owner_rules":
+        if (
+            args != {"version": 1}
+            or type(args.get("version")) is not int
+            or original.get("catalog_revision") != 3
+            or original.get("free_action_policy") != 1
+            or original.get("owner_rules_policy")
+            or engine.state["battle"]
+        ):
+            raise ValueError("Нельзя включить авторские правила в этом состоянии.")
+        engine.state["owner_rules_policy"] = 1
+        engine.text.append("Включены авторские правила R01–R14; исторические операции сохранены.")
+        return engine.finish()
     if command == "enable_attempt_plans":
         if (
             args != {"version": 1}
@@ -709,5 +754,10 @@ def _execute(original, command, args, context, dice):
     else:
         perform(engine, command, args)
     npc_round(engine, command)
+    engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
     advance(engine, engine.action_minutes)
+    if owner_policy:
+        from rpg_vkr.domain.owner_rules_runtime import finish_rest
+
+        finish_rest(engine)
     return engine.finish()

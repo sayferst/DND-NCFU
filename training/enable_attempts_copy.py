@@ -9,7 +9,7 @@ from rpg_vkr.application import Session
 from rpg_vkr.storage.slots import MAX_SAVE_BYTES
 
 
-def activate(source, output):
+def activate(source, output, *, owner_rules=False):
     source, output = Path(source), Path(output)
     if source.stat().st_size > MAX_SAVE_BYTES or output.exists():
         raise ValueError("Oversized source or existing destination")
@@ -19,7 +19,10 @@ def activate(source, output):
     session = Session.from_dict(data["session"], version=31)
     if not getattr(session, "is_unified", False):
         raise ValueError("A unified campaign is required")
-    session.perform_gameplay("enable_attempt_plans", {"version": 1}, session._request_token())
+    if not owner_rules or not session.gameplay.get("free_action_policy"):
+        session.perform_gameplay("enable_attempt_plans", {"version": 1}, session._request_token())
+    if owner_rules:
+        session.perform_gameplay("enable_owner_rules", {"version": 1}, session._request_token())
     payload = session.to_dict()
     if Session.from_dict(payload, version=31).to_dict() != payload:
         raise ValueError("Activated continuation failed replay validation")

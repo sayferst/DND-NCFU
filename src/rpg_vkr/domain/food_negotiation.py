@@ -43,9 +43,37 @@ def execute(e, args):
         raise ValueError("Личные запасы участников уже обеспечивают рацион.")
     options = food_options(model)
     selected = options[args["policy"]]
-    # Consent is checked, never inferred from the mere existence of alternatives.
+    # New owner policy binds a feasible offer after success only within public vital limits.
+    owner_policy = e.state.get("owner_rules_policy") == 1
+    public_terms = {}
+    eligible = True
+    if owner_policy:
+        for id in here:
+            terms = (e.actors[id].state or {}).get("public_ration_terms")
+            if (
+                not terms
+                or terms.get("scope_actor") != id
+                or terms.get("authority_scope") != "own_ration"
+            ):
+                raise ValueError(
+                    "CLARIFICATION_REQUIRED: сначала уточните полномочия и условия участников."
+                )
+            public_terms[id] = terms
+        allocations_preview = {}
+        for group, people in (("civilians", civilians), ("guards", guards)):
+            remaining = selected["allocation"][group]
+            allocations_preview.update(dict.fromkeys(people, 0))
+            while remaining:
+                for id in sorted(people):
+                    if remaining and allocations_preview[id] < needs[id]:
+                        allocations_preview[id] += 1
+                        remaining -= 1
+        eligible = all(
+            w["residents"][id]["food"] + allocations_preview[id] >= public_terms[id]["minimum_food"]
+            for id in here
+        )
     e.action_minutes = 10
-    persuasive = e.check("persuasion", 15)
+    persuasive = e.check("persuasion", 15) if eligible else False
     consent = {}
     for id in here:
         group = "garrison" if id in guards else "residents"
@@ -54,7 +82,12 @@ def execute(e, args):
         reservation = 0.35 + 0.2 * (1 - expectation)
         utility = selected["utilities"][group]
         consent[id] = {
-            "accepted": needs[id] == 0 or utility >= reservation,
+            "accepted": (
+                w["residents"][id]["food"] + allocations_preview[id]
+                >= public_terms[id]["minimum_food"]
+                if owner_policy
+                else needs[id] == 0 or utility >= reservation
+            ),
             "utility": utility,
             "reservation": reservation,
         }
@@ -118,4 +151,38 @@ def execute(e, args):
         "Согласовано распределение реальных припасов; порции переданы участникам."
         if accepted
         else "Предложение выслушано, но соглашение не достигнуто. Припасы не переданы."
+    )
+
+
+def disclose_terms(e):
+    """Declared NPC interests over their own ration in the existing communal pool."""
+    if e.state.get("owner_rules_policy") != 1 or e.state["battle"]:
+        raise ValueError("Уточнение условий доступно в мирной сцене по новым правилам.")
+    residents = e.state["living_world"]["residents"]
+    people = [
+        id
+        for id, ref in e.refs.items()
+        if ref.place == e.scene.current and id in residents and e.hp(id) > 0
+    ]
+    if not people:
+        raise ValueError("Здесь нет участников распределения.")
+    for id in people:
+        actor, spec = e.actor(id)
+        if spec.properties.get("shares_ration_terms", True) is False:
+            continue
+        minimum = spec.properties.get("minimum_ration", 2 if residents[id]["job"] == "guard" else 1)
+        if type(minimum) is not int or not 0 <= minimum <= 3:
+            raise ValueError("Некорректные условия NPC.")
+        terms = {
+            "version": "personal-ration-1",
+            "authority_scope": "own_ration",
+            "minimum_food": minimum,
+            "scope_actor": id,
+            "pool": "living_world.stocks:" + e.scene.current,
+        }
+        e.actors[id] = replace(actor, state=(actor.state or {}) | {"public_ration_terms": terms})
+        e.events.append({"kind": "owner_food_terms", "actor": id, "terms": terms})
+    e.text.append(
+        "Участники назвали условия относительно своих собственных рационов; "
+        "соглашение ещё не заключено."
     )

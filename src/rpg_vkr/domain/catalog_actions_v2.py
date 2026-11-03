@@ -215,10 +215,26 @@ def perform(e, command, args):
     elif command == "rest":
         if any(e.status_power("hero", k) for k in ("burn", "bleed", "poison")):
             raise ValueError("Сначала нужна помощь при активном повреждении.")
-        e.world = replace(e.world, hp=e.world.max_hp)
-        e.state.update(mp=e.state["mp_cap"], st=e.state["st_cap"])
+        if e.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules import long_rest
+            from rpg_vkr.domain.owner_rules_runtime import life
+
+            long_rest(life(e))  # Eligibility, before advancing time or changing resources.
+            if e.state["battle"]:
+                raise ValueError("Длительный отдых невозможен во время боя.")
+            last = e.state.get("owner_last_rest_end")
+            if last is not None and e.state["minute"] + 480 - last < 1440:
+                raise ValueError("Польза длительного отдыха доступна один раз за24часа.")
+            e.owner_rest_pending = True
+        else:
+            e.world = replace(e.world, hp=e.world.max_hp)
+            e.state.update(mp=e.state["mp_cap"], st=e.state["st_cap"])
         e.action_minutes = 480
-        e.text.append("Отдых завершён.")
+        e.text.append(
+            "На отдых отведено8часов."
+            if getattr(e, "owner_rest_pending", False)
+            else "Отдых завершён."
+        )
     elif command == "equip":
         item = e.owned(args["item"])
         row = e.template(item)
@@ -289,10 +305,27 @@ def perform(e, command, args):
         e.state["active"] = enemies[0]
         e.text.append("Началась общая схватка.")
     elif command == "attack":
-        if not e.state["battle"] or e.state["battle"]["sides"].get(args["target"]) != "enemy":
+        owner_downed = False
+        if e.state.get("owner_rules_policy") == 1 and args["target"] in e.actors:
+            from rpg_vkr.domain.owner_rules_runtime import life
+
+            e.actor(args["target"], False)
+            owner_downed = (
+                e.hp(args["target"]) == 0 and e.refs[args["target"]].place == e.scene.current
+            )
+            if owner_downed and life(e, args["target"]).dead:
+                e.text.append("Цель уже мертва; нового урона здоровью и повторной награды нет.")
+                return
+        if not owner_downed and (
+            not e.state["battle"] or e.state["battle"]["sides"].get(args["target"]) != "enemy"
+        ):
             raise ValueError("Нужен противник в активной схватке.")
         hit(e, "hero", args["target"])
-        if args.get("lethal") and e.hp(args["target"]) == 0:
+        if (
+            args.get("lethal")
+            and e.hp(args["target"]) == 0
+            and e.state.get("owner_rules_policy") != 1
+        ):
             actor, _ = e.actor(args["target"], False)
             e.actors[actor.id] = replace(actor, state=(actor.state or {}) | {"life": "dead"})
     elif command in ("recover", "dodge"):
@@ -349,6 +382,16 @@ def perform(e, command, args):
     elif command == "travel":
         e.travel(args["destination"])
         e.action_minutes = max(5, 30 - 5 * e.status_power("hero", "haste"))
+        if e.state.get("owner_rules_policy") == 1:
+            from math import ceil
+
+            from rpg_vkr.domain.owner_rules import speed
+            from rpg_vkr.domain.owner_rules_runtime import life
+
+            pace = speed(life(e), 30)
+            if pace == 0:
+                raise ValueError("Состояние героя не позволяет двигаться.")
+            e.action_minutes = ceil(e.action_minutes * 30 / pace)
 
 
 def targets(e, row, args):
@@ -370,7 +413,11 @@ def targets(e, row, args):
             if primary in ("damage", "drain_mp"):
                 raise ValueError("Выберите противника.")
             continue
-        e.actor(id, alive=primary != "revive")
+        can_treat_unconscious = e.state.get("owner_rules_policy") == 1 and primary in (
+            "heal",
+            "revive",
+        )
+        e.actor(id, alive=primary != "revive" and not can_treat_unconscious)
         place = e.refs[id].place
         if place != e.scene.current and not (row.get("range", 0) and place in e.neighbors()):
             raise ValueError("Цель вне дальности.")
@@ -406,8 +453,18 @@ def use(e, command, args):
             raise ValueError("Способность восстанавливается.")
     if row["level"] > level(e):
         raise ValueError("Недостаточный уровень.")
+    overcast_charge = None
     if (
-        e.state["mp"] < row.get("mp", 0)
+        e.state.get("owner_rules_policy") == 1
+        and command == "cast"
+        and e.state["mp"] < row.get("mp", 0)
+    ):
+        from rpg_vkr.domain.owner_rules import overcast
+        from rpg_vkr.domain.owner_rules_runtime import life
+
+        overcast_charge = overcast(life(e), e.state["mp"], row["mp"], e.args.get("payment"))
+    if (
+        (e.state["mp"] < row.get("mp", 0) and overcast_charge is None)
         or e.state["st"] < row.get("cost_st", 0)
         or e.world.hp <= row.get("hp_cost", 0)
     ):
@@ -433,7 +490,22 @@ def use(e, command, args):
     ):
         raise ValueError("Здоровье целей полное.")
     e.action_minutes = row.get("minutes", 1)
-    e.state["mp"] -= row.get("mp", 0)
+    if overcast_charge is not None:
+        from rpg_vkr.domain.owner_rules_runtime import apply, resolve_check
+
+        after, payment_record = overcast_charge
+        # The spell and its price are one atomic attempt. Exhaustion penalty uses
+        # the caster's state before paying, rather than adding the cost twice.
+        natural = e.roll("1d20", "Перерасход магии")
+        result = resolve_check(e, natural, e.hero_bonus("arcana"), "arcana", payment_record["dc"])
+        apply(e, "hero", after)
+        e.state["mp"] = 0
+        e.events.append({"kind": "owner_overcast", **payment_record, **result})
+        if not result["succeeded"]:
+            e.text.append("Перерасход оплачен, но заклинание не сработало.")
+            return
+    else:
+        e.state["mp"] -= row.get("mp", 0)
     e.state["st"] -= row.get("cost_st", 0)
     e.change_hp("hero", -row.get("hp_cost", 0))
     if command == "ability":
@@ -593,8 +665,18 @@ def craft(e, command, args):
 
 def hit(e, attacker, target):
     ammunition = None
-    if e.hp(attacker) <= 0 or e.hp(target) <= 0:
+    if e.hp(attacker) <= 0:
         return
+    if e.hp(target) <= 0:
+        if e.state.get("owner_rules_policy") != 1:
+            return
+        from rpg_vkr.domain.owner_rules_runtime import life
+
+        if life(e, target).dead:
+            return
+        if attacker == "hero" and e.args.get("lethal") is False:
+            e.text.append("Цель уже без сознания; дополнительный удар для оглушения не нанесён.")
+            return
     if e.status_power(attacker, "stagger"):
         e.remove_status(attacker, "stagger")
         e.text.append("Оглушение прервало действие.")
@@ -679,16 +761,45 @@ def hit(e, attacker, target):
     )
     if ammunition and ammunition.get("effect") == "pierce":
         defence -= ammunition["power"]
+    unconscious_melee = False
+    if e.state.get("owner_rules_policy") == 1:
+        from rpg_vkr.domain.owner_rules_runtime import life
+
+        unconscious_melee = life(e, target).unconscious and row["category"] not in (
+            "longbow",
+            "crossbow",
+            "focus",
+        )
     value = e.roll("1d20", "Атака")
+    if unconscious_melee:
+        value = max(value, e.roll("1d20", "Преимущество по бессознательной цели"))
     bonus += e.status_power(target, "mark")
+    if e.state.get("owner_rules_policy") == 1:
+        from rpg_vkr.domain.owner_rules_runtime import life
+
+        bonus -= 2 * life(e, attacker).exhaustion
+        if value == 1:
+            e.owner_complication_minutes = getattr(e, "owner_complication_minutes", 0) + 1
+            e.events.append(
+                {"kind": "owner_complication", "consequence": "lost_tempo", "minutes": 1}
+            )
     success = value == 20 or value != 1 and value + bonus >= defence
     amount = 0
     if success:
         amount = e.roll(row["dice"], "Урон оружия")
-        if value == 20:
+        critical = value == 20 or unconscious_melee
+        if critical:
             amount += e.roll(row["dice"], "Критический урон")
         amount = max(0, amount + damage_bonus)
+        if e.state.get("owner_rules_policy") == 1:
+            e.owner_hit_flags = {
+                "critical": critical,
+                "nonlethal": attacker == "hero"
+                and e.args.get("lethal") is False
+                and row["category"] not in ("longbow", "crossbow", "focus"),
+            }
         delivered = e.damage(target, amount, row.get("damage_type", "physical"), attacker)
+        e.owner_hit_flags = {}
         if e.state.get("catalog_revision") == 3:
             amount = delivered
         if ammunition:
@@ -747,11 +858,24 @@ def npc_round(e, command):
         else order[hero_index + 1 :] + order[:hero_index]
     )
     for id in followers:
-        if e.world.hp <= 0:
+        owner_policy = e.state.get("owner_rules_policy") == 1
+        if e.world.hp <= 0 and not owner_policy:
             break
         if e.hp(id) <= 0:
-            continue
+            if owner_policy:
+                from rpg_vkr.domain.owner_rules_runtime import life, save
+
+                value = life(e, id)
+                if not value.dead and not value.stable:
+                    save(e, id)
+            if e.hp(id) <= 0:
+                continue
         actor, spec = e.actor(id)
+        if owner_policy:
+            from rpg_vkr.domain.owner_rules_runtime import assist_fallen
+
+            if assist_fallen(e, id, spec, battle):
+                continue
         enemies = [
             t for t in battle["order"] if battle["sides"][t] != battle["sides"][id] and e.hp(t) > 0
         ]
@@ -857,6 +981,10 @@ def advance(e, minutes):
             if not pending["remaining"] or not valid:
                 e.state["pending"].remove(pending)
         advance_world(e, start, now)
+        if e.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import recover_and_resolve
+
+            recover_and_resolve(e, start, now)
         start = now
 
 

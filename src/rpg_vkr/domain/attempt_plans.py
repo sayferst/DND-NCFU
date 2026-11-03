@@ -22,6 +22,7 @@ class Form:
     kind: str = "tool"
     category: str = "miscellaneous"
     dice: str = ""
+    task: str = "repair"
 
 
 # A small vocabulary of mechanics. New combinations use the same resolver.
@@ -281,12 +282,28 @@ def transform(e, plan):
     if any(i.get("quantity", 1) != 1 for i in items):
         clarify("Для сборки укажите отдельные физические единицы.")
     e.action_minutes = 30
-    natural = e.roll("1d20", "Работа с материалами: Ловкость")
-    modifier = ability_modifier(e.char.dexterity) - e.status_power("hero", "weaken")
+    owner_policy = e.state.get("owner_rules_policy") == 1
+    task = ("athletics" if form.kind == "weapon" else form.task) if owner_policy else "dexterity"
+    natural = e.roll(
+        "1d20",
+        "Работа с материалами: " + task if owner_policy else "Работа с материалами: Ловкость",
+    )
+    modifier = (
+        e.hero_bonus(task)
+        if owner_policy
+        else ability_modifier(e.char.dexterity) - e.status_power("hero", "weaken")
+    )
     total, dc = natural + modifier, 20
+    if owner_policy:
+        from rpg_vkr.domain.owner_rules_runtime import resolve_check
+
+        result = resolve_check(e, natural, modifier, task, dc, partial=True)
+        total = result["total"]
     target = items[0]
     outcome = (
-        "damaged"
+        "success"
+        if owner_policy and natural == 20
+        else "damaged"
         if total <= 10
         else "partial"
         if total <= 17
@@ -370,10 +387,15 @@ def repair(e, plan):
     e.action_minutes = 30
     natural = e.roll("1d20", "Ремонт")
     total = natural + e.hero_bonus("repair")
+    if e.state.get("owner_rules_policy") == 1:
+        from rpg_vkr.domain.owner_rules_runtime import resolve_check
+
+        result = resolve_check(e, natural, e.hero_bonus("repair"), "repair", 15, partial=True)
+        total = result["total"]
     for item, quantity in selected:
         e.consume_item(item, quantity)
     tool["durability"] -= 1
-    if total >= 15:
+    if total >= 15 or (e.state.get("owner_rules_policy") == 1 and natural == 20):
         if origin:
             target.update(
                 template=origin["template"],
@@ -457,7 +479,7 @@ def take(e, plan):
     definition = e.definitions.get(entity.definition_id) if entity else None
     if not definition or definition.properties.get("portable") is not True:
         clarify("Переносимость предмета пока не подтверждена.")
-    if thing.owner not in ("", "hero", e.scene.current):
+    if thing.owner not in ("", "hero", e.scene.current) and e.state.get("owner_rules_policy") != 1:
         clarify("У вещи есть владелец; уточните передачу или отдельную попытку кражи.")
     # Root visibility does not open a closed nested container.
     cursor = thing
@@ -467,6 +489,18 @@ def take(e, plan):
         if parent_entity and (parent_entity.state or {}).get("open") is False:
             clarify("Сначала откройте контейнер.")
         cursor = parent
+    if e.state.get("owner_rules_policy") == 1:
+        state = dict(entity.state or {})
+        state.setdefault("legal_owner", entity.owner_id)
+        entity = replace(entity, state=state)
+        e.events.append(
+            {
+                "kind": "owner_physical_take",
+                "item": id,
+                "holder_after": "hero",
+                "legal_owner_after": state["legal_owner"],
+            }
+        )
     e.actors[id] = replace(entity, owner_id="hero", parent_id="hero")
     e.things[id] = replace(thing, owner="hero", holder="hero")
     e.scene = replace(e.scene, things=tuple(e.things.values()))
@@ -537,7 +571,7 @@ def resolve(e, plan):
         "outcome": outcome,
         "dc": dc,
         "total": total,
-        "duration_minutes": e.action_minutes,
+        "duration_minutes": e.action_minutes + getattr(e, "owner_complication_minutes", 0),
         "item_changes": [
             {"id": id, "before": old.get(id), "after": deepcopy(new.get(id))}
             for id in sorted(old.keys() | new.keys())
