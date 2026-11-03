@@ -1,0 +1,29 @@
+{
+  "source": "SYNTHETIC_ENGINE_REGRESSION_NOT_SFT",
+  "class_id": "mage",
+  "known_spells": [
+    "light",
+    "bolt"
+  ],
+  "copper_unchanged": true,
+  "mp_unchanged": true,
+  "rng_unchanged": true,
+  "receipt": {
+    "dc": null,
+    "dice": [],
+    "duration_minutes": 1,
+    "item_changes": [],
+    "kind": "free_attempt",
+    "mechanics": "physical-affordances-1",
+    "mode": "ATTEMPT_WITHOUT_TARGET_SUCCESS",
+    "outcome": "target_unreachable",
+    "plan": {
+      "goal": "currency",
+      "items": [],
+      "operation": "magic",
+      "tool": ""
+    },
+    "total": null,
+    "version": 1
+  }
+}

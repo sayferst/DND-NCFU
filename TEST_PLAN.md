@@ -1673,3 +1673,20 @@ ZIP, скачанного браузером. Локальная установ�
 подтверждением запуска хоста на ПК владельца. Платные API не использовались.
 
 Целевой локальный прогон:80passed/0.30с; Ruff check/format пяти Python-файлов успешны. Нативная проверка нового пути ожидается.
+
+
+## 03.11.2026 — интеллектуальный мастер
+
+Выполнен scripts/check.py:12272passed/6skipped/0failed/0errors,13пакетов,
+pip check/Ruff check/format407файлов успешны. Raw и JUnit summary —
+docs/validation/intelligent-gm-2026-11-03. Пропуски явные: длительные сценарии
+до20уровня требуют отдельной переменной, Win-only проверки требуют Windows.
+Не выдавать Linux/offscreen за нативный Windows GUI или Setup.
+
+Контрольные тесты: tests/test_free_actions_pipeline.py и
+tests/test_attempt_generalization.py; математика/NPC: test_strategic_conflicts.py;
+XLSX/права: test_annotation_workbook.py; профили/guard/loopback/localgate:
+test_faun_preflight.py. Целевые:64core,29local/UI,18data/Faun,5conflict;
+наборы пересекаются и их числа не складываются как независимые тесты.
+Исторические fixtures/обработчики не переписывались. Веса и живой API в тестах
+не используются. Фактический baseline/adapter holdout пока BLOCKED.

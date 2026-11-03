@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://api.crossref.org/works/10.1073/pnas.39.10.1095",
+    "doi": "10.1073/pnas.39.10.1095",
+    "title": [
+      "Stochastic Games"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          1953,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "given": "L. S.",
+        "family": "Shapley"
+      }
+    ]
+  },
+  {
+    "url": "https://api.crossref.org/works/10.1287/mnsc.14.3.159",
+    "doi": "10.1287/mnsc.14.3.159",
+    "title": [
+      "Games with Incomplete Information Played by “Bayesian” Players, I–III Part I. The Basic Model"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          1967,
+          11
+        ]
+      ]
+    },
+    "author": [
+      {
+        "given": "John C.",
+        "family": "Harsanyi"
+      }
+    ]
+  },
+  {
+    "url": "https://api.crossref.org/works/10.1073/pnas.36.1.48",
+    "doi": "10.1073/pnas.36.1.48",
+    "title": [
+      "Equilibrium points in\n                    <i>n</i>\n                    -person games"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          1950,
+          1
+        ]
+      ]
+    },
+    "author": [
+      {
+        "given": "John F.",
+        "family": "Nash"
+      }
+    ]
+  }
+]

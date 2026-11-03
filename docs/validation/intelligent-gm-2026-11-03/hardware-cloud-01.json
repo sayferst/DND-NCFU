@@ -1,0 +1,20 @@
+{
+  "schema": "dnd-hardware-1",
+  "scope": "execution_environment",
+  "observed_at": "2026-11-03T13:03:50.709925+00:00",
+  "platform": "Linux",
+  "cpu": "",
+  "logical_cpus": 3,
+  "free_disk_bytes": 7539466240,
+  "ollama_installed": false,
+  "llama_cpp_installed": false,
+  "training_stack_installed": false,
+  "memory": {
+    "total_bytes": 10452459520,
+    "available_bytes": 9774235648
+  },
+  "gpus": [],
+  "training_status": "BLOCKED_HARDWARE",
+  "inference_status": "REQUIRES_LOCAL_MODEL_AND_MEASUREMENT",
+  "training_started": false
+}
