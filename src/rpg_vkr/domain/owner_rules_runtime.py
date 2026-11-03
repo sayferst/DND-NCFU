@@ -75,7 +75,11 @@ def finish_rest(e):
     e.state.update(mp=e.state["mp_cap"], st=e.state["st_cap"])
     e.state["owner_last_rest_end"] = e.state["minute"]
     e.events.append({"kind": "owner_rest", "completed": True, "after": life(e).public()})
-    e.text.append("Длительный отдых завершён; снят один уровень истощения.")
+    e.text.append(
+        "Длительный отдых завершён; HP, MP и ST восстановлены, истощение уменьшено до "
+        + str(life(e).exhaustion)
+        + "."
+    )
 
 
 def resolve_check(e, natural, modifier, task, dc, *, partial=False):

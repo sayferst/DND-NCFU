@@ -79,6 +79,9 @@ def install(window, layout):
         },
     )
     window.unified_death_save = button("Спасбросок смерти", "death_save", dict)
+    window.unified_wait_recovery = button(
+        "Дождаться помощи или восстановления (1час)", "wait", lambda: {"minutes": 60}
+    )
     window.unified_stabilize = button(
         "Стабилизировать без расходника (Медицина DC10)",
         "stabilize",
@@ -232,6 +235,9 @@ def refresh(window):
         widget.setVisible(owner_policy and bool(state["spells"]))
     window.unified_death_save.setVisible(owner_policy and s.world.hp == 0)
     window.unified_death_save.setEnabled(not life.get("dead") and not life.get("stable"))
+    window.unified_wait_recovery.setVisible(
+        owner_policy and s.world.hp == 0 and life.get("stable", False)
+    )
     window.unified_stabilize.setVisible(owner_policy)
     window.unified_food_terms.setVisible(owner_policy)
     window.unified_info.setText(
