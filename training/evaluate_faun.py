@@ -13,9 +13,16 @@ from training.ollama_probe import request
 from training.schema import validate
 
 
-def holdout(directory, *, synthetic_pilot=False, grounded_synthetic=False):
-    if synthetic_pilot and grounded_synthetic:
+def holdout(
+    directory, *, synthetic_pilot=False, grounded_synthetic=False, fireball_augmented=False
+):
+    if sum((synthetic_pilot, grounded_synthetic, fireball_augmented)) > 1:
         raise ValueError("Choose one explicit corpus policy")
+    if fireball_augmented:
+        from training.fireball import verify
+
+        manifest, splits = verify(directory)
+        return manifest, splits["test"]
     if grounded_synthetic:
         from training.grounded_validation import verify
 
@@ -59,12 +66,16 @@ def evaluate(
     requester=request,
     synthetic_pilot=False,
     grounded_synthetic=False,
+    fireball_augmented=False,
     condition=None,
 ):
     from training.tokenize_dataset import messages_for
 
     manifest, rows = holdout(
-        directory, synthetic_pilot=synthetic_pilot, grounded_synthetic=grounded_synthetic
+        directory,
+        synthetic_pilot=synthetic_pilot,
+        grounded_synthetic=grounded_synthetic,
+        fireball_augmented=fireball_augmented,
     )
     tags = requester("/api/tags")
     if model not in local_models(tags):
@@ -80,16 +91,17 @@ def evaluate(
         "model_revision": identity["digest"],
         "dataset_sha256": manifest["sha256"],
         "prompt_mode": "grounded_reference_execution"
-        if grounded_synthetic
+        if (grounded_synthetic or fireball_augmented)
         else "synthetic_mock_receipt"
         if synthetic_pilot
         else "confirmed_engine_receipt",
         "synthetic_pilot": synthetic_pilot,
         "grounded_synthetic": grounded_synthetic,
+        "fireball_augmented": fireball_augmented,
         "actual_inference": False,
         "human_review": None,
         "automatic_checks": "STRUCTURE_AND_AGENCY_ONLY_REFERENCE_FACTS_NEED_HUMAN_REVIEW"
-        if grounded_synthetic
+        if (grounded_synthetic or fireball_augmented)
         else "LIMITED_RULE_CRITIC_NOT_FULL_FACT_VERIFICATION",
         "samples": [],
         "training_steps_by_this_command": 0,
@@ -102,7 +114,7 @@ def evaluate(
                 "model": model,
                 "stream": False,
                 "messages": messages_for(row)
-                if grounded_synthetic
+                if (grounded_synthetic or fireball_augmented)
                 else [
                     {
                         "role": "system",
@@ -125,7 +137,7 @@ def evaluate(
             },
         )
         text = reply.get("message", {}).get("content", "")
-        if grounded_synthetic:
+        if grounded_synthetic or fireball_augmented:
             # A reference receipt is not a committed live-game receipt. Do not
             # fabricate that flag to satisfy the existing runtime critic.
             findings = [{"code": "REFERENCE_FACT_REVIEW_REQUIRED", "severity": "review"}]
@@ -153,7 +165,7 @@ def evaluate(
                 "prompt_sha256": hashlib.sha256(
                     json.dumps(
                         messages_for(row)
-                        if grounded_synthetic
+                        if (grounded_synthetic or fireball_augmented)
                         else {
                             "context": row["public_context"],
                             "player": row["player_message"],
@@ -183,13 +195,17 @@ def main():
     p.add_argument("--run-local", action="store_true")
     p.add_argument("--synthetic-pilot", action="store_true")
     p.add_argument("--grounded-synthetic", action="store_true")
+    p.add_argument("--fireball-augmented", action="store_true")
     from training.compare_models import CONDITIONS
 
     p.add_argument("--condition", choices=CONDITIONS)
     a = p.parse_args()
     if not a.run_local:
         manifest, rows = holdout(
-            a.directory, synthetic_pilot=a.synthetic_pilot, grounded_synthetic=a.grounded_synthetic
+            a.directory,
+            synthetic_pilot=a.synthetic_pilot,
+            grounded_synthetic=a.grounded_synthetic,
+            fireball_augmented=a.fireball_augmented,
         )
         result = {"status": "DATA_READY_INFERENCE_NOT_RUN", "test_samples": len(rows)}
     else:
@@ -199,6 +215,7 @@ def main():
             limit=a.limit,
             synthetic_pilot=a.synthetic_pilot,
             grounded_synthetic=a.grounded_synthetic,
+            fireball_augmented=a.fireball_augmented,
             condition=a.condition,
             requester=lambda path, body=None: request(path, body, port=a.port, timeout=600),
         )

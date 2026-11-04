@@ -1,0 +1,67 @@
+{
+  "revision": "1b363686ed0d681bf8a0eb1e943af75d3716f7c8",
+  "files": [
+    {
+      "path": "filtered/5e57717afb23973fe3889460557e5bf7.jsonl",
+      "bytes": 261946,
+      "sha256": "4db48cd835a776df2dac2a6a6f9a2651d8bf66826958ce24c9c7150b617b7c7c"
+    },
+    {
+      "path": "filtered/3574b7d01c4509a3395cabcc866de9a4.jsonl",
+      "bytes": 223635,
+      "sha256": "cd04c4b271e03f6b1838d5ab885c82380a46ac24a04c35817c3280c93272a229"
+    },
+    {
+      "path": "filtered/8c010af93949bbbd9bd36bdf377b94e5.jsonl",
+      "bytes": 227725,
+      "sha256": "b98ee543cbb186fa05ceedd360fd4b444c82e333ae20998857a0c74ebf21091f"
+    },
+    {
+      "path": "filtered/5520f262d1250c08e597c8d211c41ce3.jsonl",
+      "bytes": 254125,
+      "sha256": "935ef04bd4e763915d8f1adcc94d725956faaddebaf33250eed84b47c03de230"
+    },
+    {
+      "path": "filtered/8e3712bec3e033804aa62aa517589030.jsonl",
+      "bytes": 222563,
+      "sha256": "52bd652aa0b1710e5ae940cba22ad405406dd426b1646a1499270b725eca85b6"
+    },
+    {
+      "path": "filtered/26e42458280b7d6c661087234913fe8f.jsonl",
+      "bytes": 230345,
+      "sha256": "66145d53c5eb06bddb634b21cc483a8d26e325a0d525db5a51fd7c531eae570d"
+    },
+    {
+      "path": "filtered/3722164a485f9a840faa1e105bcfebb6.jsonl",
+      "bytes": 146470,
+      "sha256": "0863f0c3053f5420579903acf43d639dc4acde3137738d0f42ecfa51f733a3aa"
+    },
+    {
+      "path": "filtered/9efbaddeea1fdbfc404d6502655d711c.jsonl",
+      "bytes": 256964,
+      "sha256": "c82b2db89ec95dc2be5b183c6ea26f28f68af526773eeda9984f8590c3b154fc"
+    },
+    {
+      "path": "filtered/16f2e94e1146c35596f20010dd85b026.jsonl",
+      "bytes": 204236,
+      "sha256": "c86f4d7509e016fc9bcb0c7000f06ce8cb20e7421f52dd9f370e28cb1317628b"
+    },
+    {
+      "path": "filtered/196f767932c2384af7de08fc6b27bb2f.jsonl",
+      "bytes": 243974,
+      "sha256": "46165ef06969fe7a01636f1e85fa17c7b6a12ed632e688539c6aa5a426a9a54e"
+    },
+    {
+      "path": "filtered/6b7d61633575b175fd8652154e6ceb60.jsonl",
+      "bytes": 192812,
+      "sha256": "246bff0c33be695edfdfea03050f690244cf39fea3b8f67311d7e3fa53658dd5"
+    },
+    {
+      "path": "filtered/a315d405c6324f7156451be75761caef.jsonl",
+      "bytes": 246487,
+      "sha256": "fc98dfb09bb2735921195ee588887c16de31a3c8228124403fedf4d55f586e71"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "attribution": "Andrew Zhu, Karmanya Aggarwal, Alexander Feng, Lara J. Martin, Chris Callison-Burch. FIREBALL, ACL 2023. https://doi.org/10.18653/v1/2023.acl-long.229"
+}

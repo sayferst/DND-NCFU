@@ -70,9 +70,15 @@ tables are code inputs included in the tools, not private played campaigns.
 
 
 def prepare(
-    output, *, dataset=None, synthetic_pilot=False, grounded_synthetic=False, cpu_report=None
+    output,
+    *,
+    dataset=None,
+    synthetic_pilot=False,
+    grounded_synthetic=False,
+    fireball_augmented=False,
+    cpu_report=None,
 ):
-    if synthetic_pilot and grounded_synthetic:
+    if sum((synthetic_pilot, grounded_synthetic, fireball_augmented)) > 1:
         raise ValueError("Choose one explicit synthetic corpus policy")
     output = Path(output)
     if output.exists():
@@ -80,7 +86,13 @@ def prepare(
     config = json.loads((ROOT / "training/configs/faun_qlora_v1.json").read_text(encoding="utf-8"))
     data_status, data_sha = "BLOCKED_DATA", None
     if dataset is not None:
-        if grounded_synthetic:
+        if fireball_augmented:
+            from training.fireball import verify
+
+            manifest, _ = verify(dataset)
+            data_status = "FIREBALL_AUGMENTED_HASH_BOUND_NOT_INCLUDED"
+            config["dataset_policy"] = "fireball-augmented-v1"
+        elif grounded_synthetic:
             from training.grounded_validation import verify
 
             manifest, _ = verify(dataset)
@@ -98,11 +110,13 @@ def prepare(
             manifest, _ = holdout(dataset)
             data_status = "REVIEWED_DATA_HASH_BOUND_NOT_INCLUDED"
         data_sha = manifest["sha256"]
-    elif synthetic_pilot or grounded_synthetic:
+    elif synthetic_pilot or grounded_synthetic or fireball_augmented:
         raise ValueError("BLOCKED_DATA: --synthetic-pilot requires a prepared dataset")
     config["dataset_sha256"] = data_sha
     config["dataset"] = (
-        "data/processed/gm-grounded-synthetic-v1"
+        "data/processed/gm-fireball-augmented-v1"
+        if fireball_augmented
+        else "data/processed/gm-grounded-synthetic-v1"
         if grounded_synthetic
         else "data/processed/gm-synthetic-pilot-v1"
         if synthetic_pilot
@@ -123,7 +137,7 @@ def prepare(
         report_sha = hashlib.sha256(raw).hexdigest()
         config["cpu_tokenization_report"] = config["dataset"] + "/cpu-tokenization.json"
         config["cpu_tokenization_report_sha256"] = report_sha
-    if (synthetic_pilot or grounded_synthetic) and cpu_report is None:
+    if (synthetic_pilot or grounded_synthetic or fireball_augmented) and cpu_report is None:
         raise ValueError("BLOCKED_DATA: tokenize the synthetic pilot on CPU first")
     config["model_path"] = "models/faun-reviewed-base"
     files = {}
@@ -146,6 +160,7 @@ def prepare(
         "dataset_sha256": data_sha,
         "synthetic_pilot": synthetic_pilot,
         "grounded_synthetic": grounded_synthetic,
+        "fireball_augmented": fireball_augmented,
         "cpu_report_sha256": report_sha,
         "cpu_report_included": False,
         "base_model_id": config["model_id"],
@@ -169,6 +184,7 @@ def main():
     parser.add_argument("--dataset", type=Path)
     parser.add_argument("--synthetic-pilot", action="store_true")
     parser.add_argument("--grounded-synthetic", action="store_true")
+    parser.add_argument("--fireball-augmented", action="store_true")
     parser.add_argument("--cpu-report", type=Path)
     args = parser.parse_args()
     report = prepare(
@@ -176,6 +192,7 @@ def main():
         dataset=args.dataset,
         synthetic_pilot=args.synthetic_pilot,
         grounded_synthetic=args.grounded_synthetic,
+        fireball_augmented=args.fireball_augmented,
         cpu_report=args.cpu_report,
     )
     print(json.dumps({k: v for k, v in report.items() if k != "files_sha256"}, indent=2))

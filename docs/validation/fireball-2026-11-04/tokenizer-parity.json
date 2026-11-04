@@ -1,0 +1,34 @@
+{
+  "schema": "faun-cpu-tokenization-v1",
+  "status": "EXACT_AUTO_TOKENIZER_PARITY",
+  "dataset_sha256": "529c055869da21495f170015877a16101bc10531b4f27aea1cc54988768036d3",
+  "max_length": 2048,
+  "dropped_samples": 0,
+  "training_steps": 0,
+  "model_weights_loaded": false,
+  "gpu_fit_verified": false,
+  "prompt_contract": "context_player_receipt_v1",
+  "splits": {
+    "train": {
+      "samples": 976,
+      "max_total": 1149,
+      "total_tokens": 680698,
+      "supervised_tokens": 33899,
+      "encoded_sha256": "de55ce029a44c7504a3b19586f6071633dc74c54358b77eecee2552d2f5e51be"
+    },
+    "val": {
+      "samples": 110,
+      "max_total": 1071,
+      "total_tokens": 80908,
+      "supervised_tokens": 3866,
+      "encoded_sha256": "87d6edb55bee24402bead911d92c29abe700338166630bc8a46c1d105dfed8d1"
+    },
+    "test": {
+      "samples": 110,
+      "max_total": 1072,
+      "total_tokens": 74579,
+      "supervised_tokens": 3032,
+      "encoded_sha256": "1ef8d1fd2d3744dfd0cb90c405a980676c8fb2f2e7c2fbcc110ab2d86e0a7f6e"
+    }
+  }
+}

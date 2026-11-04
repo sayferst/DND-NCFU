@@ -1765,3 +1765,18 @@ scripts/check.py с реальным loopback HTTP и offscreen Qt. CPU parity �
 ожидания в UI20passed/4.71с, после состава transfer15passed/4.13с. Пропуски:
 opt-in1→20 и5 Windows/PowerShell-тестов. GPU/native Windows/обучение NOT_RUN.
 Окончательный corpus SHA79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c.
+
+
+## 04.11.2026 — доработка с FIREBALL по прямому поручению владельца
+
+Использованы12 закреплённых файлов HF FIREBALL (2.71MB),96 уникальных наблюдённых
+HP-переходов и русские авторские формулировки. Исходные1100 строк сохранены;
+итог1196, train976/val110/test110. Связанные участники образуют одну компоненту,
+новые96 только в train; независимого FIREBALL-holdout нет.283 строки отклонены
+с явными причинами. Не импортируются английские реплики/Avrae-заклинания/правила,
+не выводится смерть из0HP. Новая политика fireball-augmented-v1 не ослабляет gm-sft-v1.
+Реально48passed/19.12с; Ruff445 файлов. Exact CPU/AutoTokenizer parity1196,0 потерь.
+Распаковка ZIP, SHA, неизменность двух исходных листов Excel и перенос проверены;
+dry-run BLOCKED_MODEL, holdout110 готов без инференса. Новый полный проектный
+прогон не выполнялся. Веса/платные операции/шаги обучения0, человеческих оценок0.
+Подробности: docs/intelligent_gm/FIREBALL.md; evidence: docs/validation/fireball-2026-11-04.

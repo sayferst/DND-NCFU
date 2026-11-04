@@ -1,0 +1,12 @@
+[
+  {
+    "module": "training.train_lora",
+    "exit_code": 0,
+    "stdout": "{\n  \"status\": \"BLOCKED_MODEL: local reviewed base model missing\",\n  \"training_started\": false\n}"
+  },
+  {
+    "module": "training.evaluate_faun",
+    "exit_code": 0,
+    "stdout": "DATA_READY_INFERENCE_NOT_RUN"
+  }
+]

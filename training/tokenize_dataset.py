@@ -14,7 +14,11 @@ CONTROL_TOKENS = ("<|im_start|>", "<|im_end|>", "<s>", "</s>")
 
 def load_splits(config):
     root = Path(config["dataset"])
-    if config.get("dataset_policy") == "synthetic-pilot-v1":
+    if config.get("dataset_policy") == "fireball-augmented-v1":
+        from training.fireball import verify
+
+        manifest, splits = verify(root)
+    elif config.get("dataset_policy") == "synthetic-pilot-v1":
         from training.synthetic_corpus import verify
 
         manifest, splits = verify(root)
@@ -42,6 +46,19 @@ def load_splits(config):
 
 
 def messages_for(row):
+    if row.get("schema_version") == "fireball-observed-hp-v1":
+        from training.grounded_prompt import SYSTEM
+
+        return [
+            {"role": "system", "content": SYSTEM},
+            {
+                "role": "user",
+                "content": json.dumps(
+                    {k: row[k] for k in ("public_context", "player_message", "engine_receipt")},
+                    ensure_ascii=False,
+                ),
+            },
+        ]
     if row.get("schema_version") == "gm-grounded-synthetic-v1":
         from training.grounded_prompt import messages
 

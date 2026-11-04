@@ -614,3 +614,17 @@ homebrew владельца, не утверждение о содержании
 оставляет1HP; текущий0HP — намеренное авторское отличие.
 Новые состояния/тексты корпуса явно синтетические; права на реальные партии
 не объявлены независимо проверенными. Больших моделей и их весов в Git нет.
+
+
+## FIREBALL, исследовательское дополнение 04.11.2026
+
+Andrew Zhu, Karmanya Aggarwal, Alexander Feng, Lara J. Martin, Chris Callison-Burch,
+FIREBALL: A Dataset of Dungeons and Dragons Actual-Play with Structured Game State
+Information, ACL2023, DOI10.18653/v1/2023.acl-long.229.
+Источник: https://huggingface.co/datasets/lara-martin/FIREBALL ; CC BY4.0.
+Репозиторий авторов: https://github.com/zhudotexe/FIREBALL . Русские формулировки
+написаны для проекта по проверенным HP-переходам; имена/реплики/идентификаторы
+пользователей не входят в промпт. Это изменённые данные; английские реплики
+не названы русской авторской записью партии. Источники/SHA/CC-лицензия сохранены
+в приватном комплекте, исходные строки в Git не опубликованы. Полный аудит:
+docs/intelligent_gm/FIREBALL.md.

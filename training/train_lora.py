@@ -16,7 +16,15 @@ def preflight(config):
     if not (data / "manifest.json").is_file():
         return "BLOCKED_DATA: no reviewed training dataset"
     manifest = json.loads((data / "manifest.json").read_text(encoding="utf-8"))
-    if config.get("dataset_policy") == "synthetic-pilot-v1":
+    if config.get("dataset_policy") == "fireball-augmented-v1":
+        from training.fireball import verify
+
+        try:
+            verify(data)
+        except (ValueError, OSError, KeyError, TypeError):
+            return "BLOCKED_DATA: invalid FIREBALL augmented corpus"
+        expected_status = "READY_FIREBALL_AUGMENTED"
+    elif config.get("dataset_policy") == "synthetic-pilot-v1":
         from training.synthetic_corpus import verify
 
         try:
