@@ -150,11 +150,9 @@ def manifests(root):
                 "lines": meta["lines"],
                 "revision": meta["revision"],
                 "url": meta["source_url"],
-                "released_combat_key": Path(relative).stem
-                if relative.startswith("filtered/")
-                else None,
+                "hf_shard_key": Path(relative).stem if relative.startswith("filtered/") else None,
                 "group_evidence": (
-                    "per-combat filenames in pinned distill4_normalize.py; campaign unknown"
+                    "HF shard may contain multiple native combats; use native raw correspondence"
                     if relative.startswith("filtered/")
                     else "primary README: both demonstration files are one combat"
                 ),

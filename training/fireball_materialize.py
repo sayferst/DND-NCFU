@@ -7,11 +7,28 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from training.fireball_observations import database, unpacked
+from training.fireball_observations import database, packed, unpacked
 from training.fireball_tasks import SYSTEMS, candidate_record
 
 
-def materialize(root, output):
+def materialize(root, output, history_overlay=None):
+    coverage = Path(root) / "coverage.json"
+    if coverage.is_file() and not history_overlay:
+        original_report = json.loads(coverage.read_text(encoding="utf-8"))
+        if original_report.get(
+            "schema"
+        ) == "fireball-complete-observations-v1" and not original_report.get(
+            "history_scope_policy"
+        ):
+            raise ValueError(
+                "HISTORY_CORRECTION_REQUIRED: legacy HF shards mix combats; pass --history-overlay"
+            )
+    patches, correction = {}, None
+    if history_overlay:
+        from training.fireball_history_overlay import load_overlay
+
+        patches, correction = load_overlay(history_overlay)
+    used_patches = set()
     db = database(root)
     predictive = tuple(SYSTEMS)
     marks = ",".join("?" for _ in predictive)
@@ -38,8 +55,21 @@ def materialize(root, output):
                 if row[2] in SYSTEMS:
                     if row[8] is None:
                         raise ValueError("Predictive task has no token ledger record")
-                    record = candidate_record(row[:8], row[8:])
-                    profile = row[9] or "long-retained"
+                    view, metadata = row[:8], row[8:]
+                    if row[0] in patches:
+                        patch = patches[row[0]]
+                        if (
+                            row[2] != "dialogue_sequence"
+                            or hashlib.sha256(row[5]).hexdigest() != patch["base_input_sha256"]
+                        ):
+                            raise ValueError("History overlay does not match original base view")
+                        if unpacked(row[6]) != patch["target"]:
+                            raise ValueError("History correction cannot change source target")
+                        view = tuple([*row[:5], packed(patch["input"]), row[6], row[7]])
+                        metadata = patch["token_metadata"]
+                        used_patches.add(row[0])
+                    record = candidate_record(view, metadata)
+                    profile = metadata[1] or "long-retained"
                 else:
                     profile = "observation-only"
                     record = {
@@ -69,11 +99,15 @@ def materialize(root, output):
         for handle in handles.values():
             handle.close()
         db.close()
+    if len(used_patches) != len(patches):
+        raise ValueError("Overlay contains views absent from this base")
     result = {
         "schema": "fireball-materialized-views-v1",
         "views": dict(counts),
         "tokenized_predictive_views": actual,
         "new_tokenization": False,
+        "history_correction": correction,
+        "applied_history_corrections": len(used_patches),
         "human_approved": 0,
         "train_admitted": 0,
         "training_steps": 0,
@@ -94,8 +128,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--root", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--history-overlay", type=Path)
     a = p.parse_args()
-    result = materialize(a.root, a.output)
+    result = materialize(a.root, a.output, a.history_overlay)
     print(json.dumps({k: v for k, v in result.items() if k != "files"}, indent=2))
 
 

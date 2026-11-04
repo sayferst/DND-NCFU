@@ -1,5 +1,12 @@
 # FIREBALL: полный доступный filtered-корпус
 
+**Обновление после raw-проверки:** HF-файл объединяет несколько боёв.
+Для исторического0cb45f3-комплекта обязателен history-overlay из
+[FIREBALL_RAW.md](FIREBALL_RAW.md); обнаружены и исправлены12514диалоговых
+контекстов чужого боя. Прежние source-байты и результаты ниже сохранены как история.
+Полный raw теперь прочитан и проверен; его тексты целиком физически здесь не копировались.
+
+
 04.11.2026. Это отдельный внешний архив наблюдений и задач, а не расширение
 схемы игровых квитанций. Полный проход по доступному закреплённому filtered-релизу
 выполнен. Автоматический импорт не присваивает человеческое одобрение, не реализует
@@ -107,8 +114,10 @@ DM ограничивает задачи рассказчика, но не уд�
 
 ## Независимые части и ограничения проверки дублей
 
-Карта splits строится **до** task views и окон истории. Основная единица —
-опубликованный файл боя; основание видно в закреплённом `distill4_normalize.py`.
+Карта splits строится **до** task views и окон истории. Основная единица прежнего splits —
+опубликованный HF-пакет, объединяющий до10нативных боёв.
+`distill4_normalize.py` описывает исходные файлы боёв до перепаковки в HF;
+это не доказательство, что HF-файл равен одному бою.
 Явные session/combat ID используются, когда доступны. Общий участник не доказывает
 общую кампанию. При отсутствии достоверных campaign-связей независимость кампаний
 не обещается.
@@ -180,7 +189,7 @@ if ($LASTEXITCODE -ne 0) { throw "Обновление остановлено" }
 $fbRoot = "D:\Projects\DND-NCFU-data\fireball-full-01"
 .\.venv\Scripts\python.exe -m training.fireball_verify --root $fbRoot
 .\.venv\Scripts\python.exe -m training.fireball_verify --root $fbRoot --tasks
-.\.venv\Scripts\python.exe -m training.fireball_materialize --root $fbRoot --output "D:\Projects\DND-NCFU-data\fireball-task-export-01"
+.\.venv\Scripts\python.exe -m training.fireball_materialize --root $fbRoot --output "D:\Projects\DND-NCFU-data\fireball-task-export-01" --history-overlay "D:\Projects\DND-NCFU-data\FIREBALL_RAW_UPDATE\history-correction"
 ```
 
 Ожидается PASS на 1 473 файлах/154 196 строках; materialize создаёт все восемь

@@ -1,0 +1,31 @@
+{
+  "schema": "fireball-complete-native-reference-resolution-v1",
+  "status": "COMPLETE",
+  "archive_sha256": "787796a8d88c770ea08be886121fe87d116c2efbbe06ee175a93ddd912ca1226",
+  "counts": {
+    "native_filtered_records": 153829,
+    "hf_content_candidate_records": 153829
+  },
+  "groups": {
+    "paired_raw_member": 14700
+  },
+  "link_statuses": {
+    "INDEX_AND_TYPE_CONFIRMED": 1375526,
+    "INDEX_UNAVAILABLE": 10
+  },
+  "after_reference_roles": {
+    "unknown": 28446,
+    "human_role_unknown": 32974
+  },
+  "hf_mapping": "core+reference correspondences; existing HF roles/splits/admission unchanged",
+  "canonical_raw_storage": "SEE_SOURCE_REPORT_NOT_CLAIMED_BY_INDEX",
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0,
+  "ledger_sha256": "1d459729fd1a8377c32f56fc5b612a45e3929165edb548ec6263285ad528ce6e",
+  "ledger_bytes": 25338528,
+  "rejected_reference_vector_candidates": 68,
+  "unique_native_group_mappings": 153829,
+  "ambiguous_native_group_mappings": 0,
+  "native_group_map_sha256": "51bf2941477a4c2c01b4be2b5a59e3ed6286c74f2bddfc5a278c03493bd2b5b7"
+}

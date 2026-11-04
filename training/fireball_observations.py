@@ -6,6 +6,7 @@ per-task candidates and dispositions are layer C. No human approval is inferred.
 
 import argparse
 import base64
+import gzip
 import hashlib
 import json
 import math
@@ -478,7 +479,31 @@ def assign_splits(db):
     }
 
 
-def build_views(root):
+def load_native_groups(path):
+    result = {}
+    with gzip.open(path, "rt", encoding="utf-8") as stream:
+        for line in stream:
+            row = strict_source_json(line)
+            identity, scope = row["hf_observation_id"], row["native_group"]
+            if not isinstance(scope, str) or not scope or identity in result:
+                raise ValueError("Invalid or duplicate native group mapping")
+            result[identity] = scope
+    return result
+
+
+def trusted_history_scope(file, identity, record, native_groups=None):
+    """A physical HF shard may contain many combats; it is never evidence of one history."""
+    if native_groups and identity in native_groups:
+        return ("native", native_groups[identity])
+    for key in ("combat_id", "session_id"):
+        if record.get(key) is not None:
+            return (key, dumps(record[key]))
+    if file == "DEMO/filtered_triples.jsonl":
+        return ("pinned_primary_demo", "single_combat_from_upstream_README")
+    return None
+
+
+def build_views(root, native_groups=None):
     from training.fireball_readiness import missing_reason
     from training.fireball_readiness import readiness as task_readiness
 
@@ -500,10 +525,11 @@ def build_views(root):
         "JOIN split_map s ON s.group_id=o.group_id",
     )
     for index, (file, _line, identity, group, payload, status, split) in enumerate(rows, 1):
-        if (file, group) != current:
-            history.clear()
-            current = (file, group)
         value = unpacked(payload)
+        scope = trusted_history_scope(file, identity, value, native_groups)
+        if (file, scope) != current or scope is None:
+            history.clear()
+            current = (file, scope)
         try:
             starts = indices(value, "before_idxs")
             if type(value.get("before_state_idx")) is int:
@@ -579,6 +605,16 @@ def build_views(root):
             print(dumps({"task_views_records": index}), flush=True)
     db.commit()
     db.close()
+    (Path(root) / "history-policy.json").write_text(
+        dumps(
+            {
+                "history_scope_policy": "EXPLICIT_COMBAT_OR_SESSION_OR_VERIFIED_NATIVE_MAP_ONLY",
+                "native_mappings": len(native_groups or {}),
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return splits
 
 
@@ -637,6 +673,13 @@ def report(root, split_report):
         ("runtime_compatibility"): (
             "NOT_REQUIRED_FOR_STORAGE_OR_TASK_CANDIDACY_NOT_IMPLEMENTED_BY_IMPORT"
         ),
+        "history_scope_policy": (
+            json.loads((root / "history-policy.json").read_text(encoding="utf-8"))[
+                "history_scope_policy"
+            ]
+            if (root / "history-policy.json").exists()
+            else None
+        ),
         ("canonical_original_fields"): (
             "all original JSON values retained; immutable raw bytes remain layer A"
         ),
@@ -660,12 +703,15 @@ def report(root, split_report):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--root", type=Path, required=True)
+    p.add_argument("--native-group-map", type=Path)
     a = p.parse_args()
     from training.fireball_audit import refine
 
     ingest(a.root)
     refine(a.root)
-    split = build_views(a.root)
+    split = build_views(
+        a.root, load_native_groups(a.native_group_map) if a.native_group_map else None
+    )
     print(json.dumps(report(a.root, split), indent=2))
 
 

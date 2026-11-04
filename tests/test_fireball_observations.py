@@ -519,3 +519,72 @@ def test_available_demo_event_roles_resolve_without_inventing_dungeon_master(tmp
     )
     assert link["native_index"] == 15 and link["role_evidence"] == "explicit_author_bot"
     assert link["status"] == "INDEX_AND_TYPE_CONFIRMED"
+
+
+def test_unknown_hf_shard_is_never_treated_as_one_combat():
+    from training.fireball_observations import trusted_history_scope
+
+    assert trusted_history_scope("filtered/shard.jsonl", "row", turn("hero")) is None
+    assert trusted_history_scope(
+        "filtered/shard.jsonl", "row", turn("hero"), {"row": "native-combat"}
+    ) == ("native", "native-combat")
+    assert trusted_history_scope("filtered/shard.jsonl", "row", {"combat_id": "explicit"}) == (
+        "combat_id",
+        '"explicit"',
+    )
+
+
+def test_history_overlay_materializes_corrected_context_with_new_token_metadata(
+    tmp_path, monkeypatch
+):
+    import gzip
+
+    from training import fireball_history_overlay as correction
+    from training import fireball_tasks as tasks
+    from training.fireball_materialize import materialize
+    from training.fireball_observations import packed
+
+    root = source(tmp_path / "source")
+    ingest(root)
+    refine(root)
+    build_views(root)
+    db = database(root)
+    identity = db.execute("SELECT id FROM views WHERE task='dialogue_sequence' LIMIT 1").fetchone()[
+        0
+    ]
+    db.execute(
+        "UPDATE views SET input=? WHERE id=?",
+        (packed({"previous_turns": [{"before_utterances": ["FOREIGN_COMBAT"]}]}), identity),
+    )
+    db.commit()
+    db.close()
+    monkeypatch.setattr(tasks, "PinnedFaunTokenizer", FixtureChatML)
+    monkeypatch.setattr(correction, "PinnedFaunTokenizer", FixtureChatML)
+    tasks.export(root, tmp_path, tmp_path / "original-export")
+    mapping = tmp_path / "groups.jsonl.gz"
+    with gzip.open(mapping, "wt", encoding="utf-8") as f:
+        f.write("")
+    report = correction.build(root, mapping, tmp_path, tmp_path / "overlay")
+    assert report["patches"] == 1 and report["targets_modified"] is False
+    result = materialize(root, tmp_path / "safe-export", tmp_path / "overlay")
+    assert result["applied_history_corrections"] == 1 and result["train_admitted"] == 0
+    matched = []
+    for file in (tmp_path / "safe-export").glob("*.gz"):
+        with gzip.open(file, "rt", encoding="utf-8") as f:
+            matched.extend(json.loads(line) for line in f if identity in line)
+    assert len(matched) == 1
+    assert "FOREIGN_COMBAT" not in matched[0]["messages"][1]["content"]
+    assert matched[0]["readiness"] == "OBSERVATION_CONTEXT_INSUFFICIENT_RETAINED"
+
+
+def test_legacy_materializer_requires_history_correction_before_creating_output(tmp_path):
+    from training.fireball_materialize import materialize
+
+    root = tmp_path / "legacy"
+    root.mkdir()
+    (root / "coverage.json").write_text(
+        '{"schema":"fireball-complete-observations-v1"}', encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="HISTORY_CORRECTION_REQUIRED"):
+        materialize(root, tmp_path / "export")
+    assert not (tmp_path / "export").exists()
