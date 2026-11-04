@@ -340,7 +340,10 @@ def test_owner_decisions_must_bind_exact_rulebook(proposal_pack, tmp_path):
 
 
 def test_pilot_transfer_requires_explicit_policy_and_cpu_report(proposal_pack, tmp_path):
+    from test_training_tokenization import CharacterTokenizer
+
     from training.prepare_faun_transfer import prepare as transfer
+    from training.tokenize_dataset import encode_dataset
     from training.train_lora import preflight
 
     files = read_pack(proposal_pack)
@@ -355,16 +358,25 @@ def test_pilot_transfer_requires_explicit_policy_and_cpu_report(proposal_pack, t
         transfer(path, dataset=dataset, synthetic_pilot=True)
     assert not path.exists()
     cpu = tmp_path / "cpu.json"
-    cpu.write_text(
-        json.dumps(
-            {
-                "schema": "faun-cpu-tokenization-v1",
-                "dataset_sha256": manifest["sha256"],
-                "max_length": 2048,
-                "dropped_samples": 0,
-            }
-        )
+    _, token_report = encode_dataset(
+        {
+            "dataset": str(dataset),
+            "dataset_policy": "synthetic-pilot-v1",
+            "dataset_sha256": manifest["sha256"],
+            "model_family": "faun_mistral_nemo",
+            "max_length": 2048,
+        },
+        CharacterTokenizer(),
     )
+    # A matching corpus hash alone is not a completed CPU check.
+    incomplete = {
+        k: token_report[k] for k in ("schema", "dataset_sha256", "max_length", "dropped_samples")
+    }
+    cpu.write_text(json.dumps(incomplete), encoding="utf-8")
+    with pytest.raises(ValueError, match="BLOCKED_DATA"):
+        transfer(path, dataset=dataset, synthetic_pilot=True, cpu_report=cpu)
+    assert not path.exists()
+    cpu.write_text(json.dumps(token_report), encoding="utf-8")
     result = transfer(path, dataset=dataset, synthetic_pilot=True, cpu_report=cpu)
     assert result["synthetic_pilot"] is True and not result["dataset_included"]
     assert not result["cpu_report_included"]
@@ -383,6 +395,8 @@ def test_pilot_transfer_requires_explicit_policy_and_cpu_report(proposal_pack, t
         ):
             assert name in archive.namelist()
     local_config = config | {"dataset": str(dataset)}
+    assert preflight(local_config).startswith("BLOCKED_DATA")  # Report not transferred yet.
+    local_config["cpu_tokenization_report"] = str(cpu)
     assert preflight(local_config).startswith("BLOCKED_MODEL")
     local_config.pop("dataset_policy")
     assert preflight(local_config).startswith("BLOCKED_DATA")

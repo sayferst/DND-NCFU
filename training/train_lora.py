@@ -7,7 +7,7 @@ import math
 import re
 from pathlib import Path
 
-from training.tokenize_dataset import encode_dataset, verify_cpu_report
+from training.tokenize_dataset import bound_cpu_report, encode_dataset, verify_cpu_report
 
 
 def preflight(config):
@@ -59,9 +59,14 @@ def preflight(config):
         from training.tokenize_dataset import load_splits
 
         try:
-            load_splits(config)
+            _, splits = load_splits(config)
+            cpu = bound_cpu_report(config)
+            if cpu is not None and any(
+                cpu["splits"][name].get("samples") != len(rows) for name, rows in splits.items()
+            ):
+                return "BLOCKED_DATA: CPU report sample counts differ"
         except (ValueError, OSError, KeyError, TypeError):
-            return "BLOCKED_DATA: invalid samples or holdout separation"
+            return "BLOCKED_DATA: invalid samples, holdout separation or CPU report"
     if not config.get("revision") or not config.get("license") or not base.is_dir():
         return "BLOCKED_MODEL: local reviewed base model missing"
     from training.model_profiles import validate_local

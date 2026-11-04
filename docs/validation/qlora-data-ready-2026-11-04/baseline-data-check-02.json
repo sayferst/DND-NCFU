@@ -1,0 +1,92 @@
+{
+  "schema": "faun-final-data-check-v1",
+  "status": "DATA_READY_INDEPENDENT_TOKEN_CHECK_PASS",
+  "purpose": "RUSSIAN_CONFIRMED_OUTCOME_NARRATION_NOT_ACTION_PLANNER_OR_AVRAE_COMMANDS",
+  "dataset_policy": "grounded-synthetic-v1",
+  "dataset_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+  "split_sha256": {
+    "train": "2866f3e3a4738f7a5a379d5d68f437ee49de57d3686ee97b575b02dacd53fdc7",
+    "val": "07ac9c2ad075b09ad6ef63bf0144b8e93f1bc4d8f3dc425e5125dc0c0b7866ab",
+    "test": "5aebb32c7089aa00e8e0d7bbd9713241efb117ac50d0d2e0b303f887bdbfb724"
+  },
+  "cpu_report_sha256": "5b9ee051f1b6c09e0cac07e89d4999069c4b37839510f8e00e32e6a7be690559",
+  "model_id": "limloop/MN-12B-Faun-RP-RU",
+  "revision": "bdfc761b14feb9dd03ef158a4d337fc1cf5fd183",
+  "chat_template_sha256": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b",
+  "corpus": {
+    "samples": 1100,
+    "splits": {
+      "train": 880,
+      "val": 110,
+      "test": 110
+    },
+    "groups": 220,
+    "group_cross_split": 0,
+    "duplicate_full_inputs": 0,
+    "provenance_by_split": {
+      "train": {
+        "gm-grounded-synthetic-v1": 880
+      },
+      "val": {
+        "gm-grounded-synthetic-v1": 110
+      },
+      "test": {
+        "gm-grounded-synthetic-v1": 110
+      }
+    },
+    "human_reviewed_samples": 0,
+    "unique_replies": 566,
+    "maximum_reply_repetition": 41,
+    "approximate_sentences": {
+      "1": 459,
+      "2": 487,
+      "3": 139,
+      "4": 15
+    },
+    "outcomes": {
+      "failure": 161,
+      "partial_success": 54,
+      "success": 670,
+      "goal_unreachable": 160,
+      "best_possible": 23,
+      "clarification_required": 25,
+      "success_with_complication": 5,
+      "no_effect_dead_target": 2
+    },
+    "holdout_limit": "GROUP_IDS_NOT_PROOF_OF_REAL_CAMPAIGN_GENERALIZATION"
+  },
+  "max_length": 2048,
+  "tokenization": {
+    "train": {
+      "samples": 880,
+      "max_total": 1149,
+      "total_tokens": 648283,
+      "supervised_tokens": 30022,
+      "encoded_sha256": "adb1e735be4dfd9893be625f0bbd883962ea9d806ba749fcf1b55f39f9c22332"
+    },
+    "val": {
+      "samples": 110,
+      "max_total": 1071,
+      "total_tokens": 80908,
+      "supervised_tokens": 3866,
+      "encoded_sha256": "87d6edb55bee24402bead911d92c29abe700338166630bc8a46c1d105dfed8d1"
+    },
+    "test": {
+      "samples": 110,
+      "max_total": 1072,
+      "total_tokens": 74579,
+      "supervised_tokens": 3032,
+      "encoded_sha256": "1ef8d1fd2d3744dfd0cb90c405a980676c8fb2f2e7c2fbcc110ab2d86e0a7f6e"
+    }
+  },
+  "tokenizer_rechecked_samples": 1100,
+  "independent_auto_tokenizer_samples": 1100,
+  "model_weights_loaded": false,
+  "gpu_fit_verified": false,
+  "model_quality_evaluated": false,
+  "training_steps": 0,
+  "tokenizer_file_sha256": {
+    "tokenizer.json": "a2fa2956478eaa353c6c4b1f47fdd6868cce6075e52e169c35ae8bd28524e7a8",
+    "chat_template.jinja": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b"
+  }
+}

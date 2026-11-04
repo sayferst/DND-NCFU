@@ -59,6 +59,14 @@ baseline. Never put API keys, private saves or unapproved dialogues in the ZIP.
 
 
 GUIDE += """
+Before downloading weights or renting GPU time, check the separately transferred
+data with standard-library Python from the extracted transfer root:
+  python3.12 -m training.check_faun_data --config faun-smoke.json --output integrity-001.json
+This does not rerun tokenization. With the optional local CPU tokenizer stack:
+  USE_TORCH=0 .venv-faun-cpu/bin/python -m training.check_faun_data --config faun-smoke.json \\
+    --tokenizer tokenizer --independent --output tokenization-001.json
+Read docs/intelligent_gm/QLORA_DATA_READY.md for exact readiness and holdout limits.
+
 V4 full grounded synthetic mode (--grounded-synthetic) is distinct from the old
 40-pair pilot. It creates faun-smoke.json and faun-full.json; place the separately
 authorized corpus under data/processed/gm-grounded-synthetic-v1 and its bound
@@ -135,6 +143,15 @@ def prepare(
         ):
             raise ValueError("BLOCKED_DATA: CPU report is not bound to this corpus/config")
         report_sha = hashlib.sha256(raw).hexdigest()
+        from training.tokenize_dataset import bound_cpu_report
+
+        bound_cpu_report(
+            config
+            | {
+                "cpu_tokenization_report": str(cpu_report),
+                "cpu_tokenization_report_sha256": report_sha,
+            }
+        )
         config["cpu_tokenization_report"] = config["dataset"] + "/cpu-tokenization.json"
         config["cpu_tokenization_report_sha256"] = report_sha
     if (synthetic_pilot or grounded_synthetic or fireball_augmented) and cpu_report is None:

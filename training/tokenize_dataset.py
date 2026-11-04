@@ -202,14 +202,31 @@ def encode_dataset(config, tokenizer):
     }
 
 
-def verify_cpu_report(config, report):
+def bound_cpu_report(config):
+    """Check a declared CPU report even when weights, CUDA and tokenizer are absent."""
     path = config.get("cpu_tokenization_report")
     if not path:
-        return
+        return None
     raw = Path(path).read_bytes()
     if hashlib.sha256(raw).hexdigest() != config.get("cpu_tokenization_report_sha256"):
         raise ValueError("BLOCKED_DATA: CPU report changed")
     recorded = json.loads(raw)
+    if (
+        recorded.get("schema") != "faun-cpu-tokenization-v1"
+        or recorded.get("status") not in {"TOKENIZATION_READY", "TOKENIZATION_READY_PILOT_ONLY"}
+        or recorded.get("dataset_sha256") != config.get("dataset_sha256")
+        or recorded.get("max_length") != config.get("max_length")
+        or recorded.get("dropped_samples") != 0
+        or set(recorded.get("splits", {})) != {"train", "val", "test"}
+    ):
+        raise ValueError("BLOCKED_DATA: CPU report is not bound to this corpus/config")
+    return recorded
+
+
+def verify_cpu_report(config, report):
+    recorded = bound_cpu_report(config)
+    if recorded is None:
+        return
     if (
         recorded.get("dataset_sha256") != report["dataset_sha256"]
         or recorded.get("max_length") != report["max_length"]
