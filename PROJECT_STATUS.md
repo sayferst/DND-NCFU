@@ -1847,3 +1847,9 @@ Ruff check/format463файлов. Реальная CLI-проверка AutoToke
 успешна; новый native-group-map из production linker совпал со вспомогательной
 проверкой на всех153829строках. Шагов обучения0, base/targets не изменены.
 Полный игровой набор повторно не запускался.
+
+Финальный QLoRA-data ZIP5092823байта/123payload-файла проверен SHA/CRC.
+Новая распаковка:4конфига проходят stdlib data-check, dry-run ожидаемо
+BLOCKED_MODEL. AutoTokenizer повторно проверил все1100/1196 из архива,
+результаты совпали с доупаковочными; оригиналы V4/Excel/FIREBALL ZIP прежние.
+Свидетельства: docs/validation/qlora-data-ready-2026-11-04/delivery.json.

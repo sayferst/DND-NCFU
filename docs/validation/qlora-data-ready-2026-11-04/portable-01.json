@@ -1,0 +1,35 @@
+{
+  "schema": "faun-ready-package-portability-v1",
+  "status": "PASS",
+  "payload_files_sha256_verified": 123,
+  "stdlib_only_python_no_site_packages": true,
+  "fresh_extraction": true,
+  "runs": [
+    {
+      "config": "faun-smoke.json",
+      "data_integrity": "INTEGRITY_PASS_TOKENIZATION_NOT_RERUN",
+      "trainer_preflight": "BLOCKED_MODEL: local reviewed base model missing",
+      "training_started": false
+    },
+    {
+      "config": "faun-full.json",
+      "data_integrity": "INTEGRITY_PASS_TOKENIZATION_NOT_RERUN",
+      "trainer_preflight": "BLOCKED_MODEL: local reviewed base model missing",
+      "training_started": false
+    },
+    {
+      "config": "faun-fireball-hp-smoke.json",
+      "data_integrity": "INTEGRITY_PASS_TOKENIZATION_NOT_RERUN",
+      "trainer_preflight": "BLOCKED_MODEL: local reviewed base model missing",
+      "training_started": false
+    },
+    {
+      "config": "faun-fireball-hp-full.json",
+      "data_integrity": "INTEGRITY_PASS_TOKENIZATION_NOT_RERUN",
+      "trainer_preflight": "BLOCKED_MODEL: local reviewed base model missing",
+      "training_started": false
+    }
+  ],
+  "model_weights_loaded": false,
+  "training_steps": 0
+}

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "fresh_extraction": true,
+  "cases": [
+    {
+      "dataset": "baseline",
+      "status": "DATA_READY_INDEPENDENT_TOKEN_CHECK_PASS",
+      "corpus_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+      "all_samples_checked": 1100,
+      "report_byte_sha256": "ecf54e54e7b8d39ac7c3ac5dc4f782f0d38874fd137906b28c607ed4ba3cf9e9",
+      "matches_pre_package_report": true
+    },
+    {
+      "dataset": "fireball-hp",
+      "status": "DATA_READY_INDEPENDENT_TOKEN_CHECK_PASS",
+      "corpus_sha256": "529c055869da21495f170015877a16101bc10531b4f27aea1cc54988768036d3",
+      "all_samples_checked": 1196,
+      "report_byte_sha256": "c48036d1d4f1c4ef9d5fc09887fc2cca1c89d42958d984a5f54240c6148ce67d",
+      "matches_pre_package_report": true
+    }
+  ],
+  "weights_loaded": false,
+  "training_steps": 0
+}

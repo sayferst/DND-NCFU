@@ -1907,3 +1907,9 @@ CPU-report, утечки групп/полного input, loss по prompt, ск
 валидации сохранено. Финальный138-набор запускался с разрешённым loopback.
 Реальные offline AutoTokenizer1100+1196 отдельно: полный PASS, не GPU smoke.
 Полный игровой набор/нативный Windows/обучение не запускались повторно.
+
+Финальный QLoRA-data ZIP5092823байта/123payload-файла проверен SHA/CRC.
+Новая распаковка:4конфига проходят stdlib data-check, dry-run ожидаемо
+BLOCKED_MODEL. AutoTokenizer повторно проверил все1100/1196 из архива,
+результаты совпали с доупаковочными; оригиналы V4/Excel/FIREBALL ZIP прежние.
+Свидетельства: docs/validation/qlora-data-ready-2026-11-04/delivery.json.

@@ -10,3 +10,9 @@ as Russian narrator SFT. See ../../intelligent_gm/QLORA_DATA_READY.md.
 targeted-02.txt is the actual138-test run after fixing the old incomplete-report
 fixture and enabling local loopback sockets. Full game tests were not repeated.
 The logs' PyTorch-not-found message is expected in the tokenizer-only environment.
+
+Final private delivery:5,092,823bytes,123payload files. Size/SHA/CRC verified.
+The four configurations passed stdlib-only checks after fresh extraction and
+all block only on the absent base. Full AutoTokenizer checks were repeated
+on both extracted corpora; reports match before packaging. See delivery.json,
+portable-01.json, portable-tokenizers.json and originals-integrity.json.

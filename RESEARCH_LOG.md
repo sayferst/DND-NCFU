@@ -2310,3 +2310,9 @@ AutoTokenizer прохода совпали с pinned backend на всех ст
 566уникальных в основном наборе, максимум41; это ограничение, не скрытый успех.
 Human review0; метрики обученной модели/GPU-fit NOT_RUN. Свидетельства:
 docs/validation/qlora-data-ready-2026-11-04.
+
+Финальный QLoRA-data ZIP5092823байта/123payload-файла проверен SHA/CRC.
+Новая распаковка:4конфига проходят stdlib data-check, dry-run ожидаемо
+BLOCKED_MODEL. AutoTokenizer повторно проверил все1100/1196 из архива,
+результаты совпали с доупаковочными; оригиналы V4/Excel/FIREBALL ZIP прежние.
+Свидетельства: docs/validation/qlora-data-ready-2026-11-04/delivery.json.
