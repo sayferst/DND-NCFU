@@ -1,0 +1,146 @@
+{
+  "entity_fields_observed": 17692352,
+  "native_event_references": 1375744,
+  "surface_extraction": "candidate names at top-level commas; raw values retained, not spell definitions",
+  "entity_inventory": [
+    {
+      "kind": "actions",
+      "distinct_surface_forms": 1667,
+      "occurrences": 14021120
+    },
+    {
+      "kind": "attacks",
+      "distinct_surface_forms": 28409,
+      "occurrences": 14898736
+    },
+    {
+      "kind": "class",
+      "distinct_surface_forms": 4075,
+      "occurrences": 1448290
+    },
+    {
+      "kind": "effects",
+      "distinct_surface_forms": 5050,
+      "occurrences": 3119648
+    },
+    {
+      "kind": "race",
+      "distinct_surface_forms": 4197,
+      "occurrences": 2826839
+    },
+    {
+      "kind": "spells",
+      "distinct_surface_forms": 1447,
+      "occurrences": 24143468
+    }
+  ],
+  "reference_resolution": "source indices retained; full raw release required to resolve full filtered references",
+  "demo_comparison": [
+    {
+      "demo_observation": "15d70092bddab6cc69abd3950984fe08de27cc3aec998825fca6179a467330d0",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "d851c26d766a274e28488b8eaf78702b7bb55519cd965d7bbb5aaf636b9ff6c5",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "9742a6f6a6de79a84e2bd633df846f80ada8b48dc6721e90045ff559ae92ca08",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "9f394048227af5c863a1766e017e385dd2c72e44f4cac6e31783bb2e1e95620c",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "587ceef6423fa2ef42a3b857882c25d9bba01155d70b051fd8501ddd2f5145a1",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "4662b6cf4729782415a1846aae6f0b5374fe7e54a11d726a35161b6f35e02caf",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "b917c7766a5e47b4809bf03bce6337691eb6b952a15dd3f3fb27e02468c012bc",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "ec5b1f477c2fb9c04379e6da769db73dcf136573b17639921fd804410f268996",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "9820b2012f9a1dd7a02053c46cd0f6196e0babeff20780c71fcc029b841840e2",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "2f4e093153a484d88735e04bb974008002f18515b03c85fd23227d383eb143e9",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "c3058b7d72d6087f5c14a53507d8a58d500d16c28805342d796a5ec363d5dd8d",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "d5049d73661ad378d3706a1b6ea87a2f503f1fec30327aface658630ce72a76d",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "00973529ff95150a5396cb15676f04c2172bf1881991b7357b2c268a02a57a15",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "07f410ef93e5fc603ac3bf8cd46847b1b0034a89dfe38d89303d1a87c90b785b",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "1e58c8241b7790b00fc917f72c9c88d1555a47fcf20b2ad19ea7099864125ef2",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "b5203d9deb90a9119bf753dff8e7719ae651764c98acfb518b3f82bab6fb205c",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "62251c5dd92d7d715400d6d27449da0735c9cc2d3683125e536aaaf2be5ae361",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "96d8ba642191956a676c46ec7976549f65425670e3221d188215188bde0f04be",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "b8954d806b707166b1d9ec03336c7f0d3910a5dc7e1e505dac7ae28773cc311d",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "ab14715032549b250bb22f4e59298e57965f235051a0d22267ebe63e0de6b370",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "10144e27fe3baa5ca1ac97d30357809b965540115353f88353973a2d3a53fa4f",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "3cb9cf51b799966a4c7c6bc9be0a95dc660f1231661ad314864ad070886179c6",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "9b9e5b202f4648f53e59cfb123880265f87d4ab8379891b119f34548b56db64e",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "2db5e9ac80d40b63ca2604d45bf575608a9d79ca0859781fb4ed38b00121beb5",
+      "full_filtered_matches": []
+    },
+    {
+      "demo_observation": "71763631e3c8414dd82acc7dcb08dc2764ee7d5b78042098816cc8ff47ba68dd",
+      "full_filtered_matches": []
+    }
+  ],
+  "approximate_comparisons": 26,
+  "approximate_edges": 24,
+  "approximate_method": "two min-trigram bands; Jaccard>=0.95 with identical roster and commands; not exhaustive semantic equivalence",
+  "participant_grouping": "participant overlap alone is not campaign proof",
+  "unknown_mechanics_preserved": true,
+  "runtime_implemented_by_import": false
+}

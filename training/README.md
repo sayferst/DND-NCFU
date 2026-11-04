@@ -83,3 +83,9 @@ training.serve — один выбранный путь: localhost Ollama-compat
 
 QLoRA transfer: `python -m training.prepare_faun_transfer --output NEW.zip`.
 Инструкции и бюджетные GPU: [TRAINING_TRANSFER.md](../docs/intelligent_gm/TRAINING_TRANSFER.md).
+
+
+Полный доступный FIREBALL обрабатывается отдельно от игровых receipt:
+[схема A/B/C, все файлы, задачи, splits, Faun и команды](../docs/intelligent_gm/FIREBALL_COMPLETE.md).
+`fireball-augmented-v1` — исторические96HP-примеров, не полный новый архив.
+Кандидаты native tasks не являются автоматически одобренным SFT.

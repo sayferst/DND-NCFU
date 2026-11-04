@@ -1,4 +1,10 @@
-# Доработка V4 по FIREBALL
+# Историческое дополнение V4: 96 HP-наблюдений
+
+Актуальный полный проход: [FIREBALL_COMPLETE.md](FIREBALL_COMPLETE.md).
+Описанный ниже малый выпуск сохранён для воспроизводимости и не является
+пределом или текущим покрытием FIREBALL. Ограничение на сохранение чужой
+механики отменено прямым поручением владельца 04.11.2026.
+
 
 Использован первичный [FIREBALL](https://github.com/zhudotexe/FIREBALL) и публичный
 релиз [lara-martin/FIREBALL](https://huggingface.co/datasets/lara-martin/FIREBALL),

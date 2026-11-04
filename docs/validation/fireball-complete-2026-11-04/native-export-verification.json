@@ -1,0 +1,30 @@
+{
+  "schema": "fireball-exhaustive-native-export-verification-v1",
+  "status": "PASS",
+  "views": 606269,
+  "shards": 9473,
+  "tasks": {
+    "utterance_to_command": 120396,
+    "dialogue_sequence": 120420,
+    "observed_transition": 153854,
+    "command_to_result": 153826,
+    "negative_outcome_candidate": 14390,
+    "grounded_utterance": 43383
+  },
+  "profiles": {
+    "2048": 368769,
+    "4096": 181150,
+    "8192": 51890,
+    "16384": 4270,
+    "32768": 186,
+    "65536": 4
+  },
+  "all_messages_and_token_metadata_equal_complete_DB": true,
+  "missing_duplicate_or_truncated_native_records": 0,
+  "final_split_mismatches": 0,
+  "obvious_contact_pattern_matches_in_messages": 0,
+  "contact_check_not_human_privacy_approval": true,
+  "target_token_content_changes": 0,
+  "human_approved": 0,
+  "train_admitted": 0
+}

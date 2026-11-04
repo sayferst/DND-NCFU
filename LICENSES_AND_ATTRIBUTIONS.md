@@ -628,3 +628,23 @@ Information, ACL2023, DOI10.18653/v1/2023.acl-long.229.
 не названы русской авторской записью партии. Источники/SHA/CC-лицензия сохранены
 в приватном комплекте, исходные строки в Git не опубликованы. Полный аудит:
 docs/intelligent_gm/FIREBALL.md.
+
+
+## FIREBALL — полный доступный filtered-архив, 04.11.2026
+
+Andrew Zhu, Karmanya Aggarwal, Alexander Feng, Lara J. Martin, Chris Callison-Burch
+(2023), *FIREBALL: A Dataset of Dungeons and Dragons Actual-Play with Structured
+Game State Information*, ACL,4171–4193. https://aclanthology.org/2023.acl-long.229/
+DOI:10.18653/v1/2023.acl-long.229. Данные: CC BY4.0, сохранена формулировка upstream
+README «released for research purposes only». HF revision
+1b363686ed0d681bf8a0eb1e943af75d3716f7c8; GitHub FIREBALL
+02a040bdfc9de5c7da271ca7faad56be090669ba.
+
+Код схемы FIREBALL-data-processing, revision
+b3f9b5eca6dbbe1b7504c14dcbc055687bd4c7b4: MIT, Copyright(c)2022 Andrew Zhu.
+Он сохранён как первичное свидетельство вне Git и не исполняется импортёром.
+Полные LICENSE обоих upstream-проектов входят в комплект источников.
+Изменения в производных: структурирование по задачам, автоматическое удаление
+контактов, групповые splits, индексы и токенизация. Исходники неизменны;
+новые игровые рассказы, переводы или реализации Avrae-правил не создавались.
+Подробные источники/границы: docs/intelligent_gm/FIREBALL_COMPLETE.md.

@@ -1,0 +1,13 @@
+{
+  "schema": "fireball-primary-demo-reference-resolution-v1",
+  "raw_events_available": 342,
+  "references": {
+    "INDEX_AND_TYPE_CONFIRMED": 218
+  },
+  "linked_after_utterance_event_roles": {
+    "human_role_unknown": 12
+  },
+  "scope": "Only both files in pinned GitHub demo; no automatic HF binding by similarity",
+  "dm_role": "NOT_AVAILABLE_NOT_INFERRED_FROM_HUMAN_FLAG",
+  "human_approved": 0
+}

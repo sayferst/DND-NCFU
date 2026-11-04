@@ -1,0 +1,16 @@
+[
+  {
+    "url": "https://datasets.mechanus.zhu.codes/fireball-anonymized-nov-28-2022-kfdjl.tar.gz",
+    "method": "HEAD",
+    "range": null,
+    "status": 403,
+    "error": "HTTPError"
+  },
+  {
+    "url": "https://datasets.mechanus.zhu.codes/fireball-anonymized-nov-28-2022-kfdjl.tar.gz",
+    "method": "GET",
+    "range": "bytes=0-0",
+    "status": 403,
+    "error": "HTTPError"
+  }
+]
