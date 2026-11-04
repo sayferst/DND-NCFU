@@ -1,0 +1,23 @@
+{
+  "schema": "dnd-ncfu-complete-fireball-delivery-check-v1",
+  "status": "PASS",
+  "archives": {
+    "DND_NCFU_FIREBALL_full_observations_20261104.zip": {
+      "bytes": 2447495630,
+      "sha256": "4ff2ff5223d780d5b66d28361ece2d73a336f0756b33457f50cb043c57619ab7",
+      "verified_manifest_members": 120,
+      "code_commit": "0cb45f39fbeb34c1765eb106b4b53ab7215e0c57",
+      "database_sha256": "450a79982bcfad39d288c5a838f3bfeb16ee3987155798504365c1a0692d2739"
+    },
+    "FIREBALL_full_sources_pinned_20261104.zip": {
+      "bytes": 153763917,
+      "sha256": "2df34093016f242cb1694d2ddabffb8c40af8ee46379e692b95abfe849a146af",
+      "verified_source_files": 1473,
+      "verified_primary_files": 102
+    }
+  },
+  "portable_tools_import": "PASS_NO_MODEL_NO_TORCH_REQUIRED",
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0
+}

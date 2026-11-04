@@ -1773,3 +1773,17 @@ GPU/обучение/новые веса/платные сервисы/нова�
 подтверждение приватности. Для demo отдельно подтверждены218native-index ссылок,
 12after-ссылок наauthor_bot=False; DM не выводится. Публичные manifests и логи
 обновлены, исходныйV4 и1196 повторно проверены с прежними SHA.
+
+
+## 04.11.2026 — проверенный итоговый комплект FIREBALL
+
+Два приватных ZIP: источники153763917байт; B/C+tools+V4/history2447495630байт.
+Все1473исходника и102первичных файла в source-ZIP сверены поSHA; все120payload
+членов B/C-ZIP сверены с kit-manifest поразмеру/SHA/CRC. Полный SQLite входит
+байт-в-байт, quick_check=ok, WAL checkpoint0/0/0. Новый каталог tools извлечён
+отдельно: import observation/tasks/materialize/manifest успешен без модели/Torch.
+SHA и binding code_commit0cb45f3: docs/validation/fireball-complete-2026-11-04/delivery-checksums.json.
+Большие9473JSONL-shards не дублируются: все input/target/token metadata в полном C,
+materialize создаёт все760594представления без повторной токенизации. ИсходныйV4
+и исторический1196 включены отдельно; source/gameplay/saves не переписаны.
+Человеческих одобрений, admission новых native задач и шагов обучения0.

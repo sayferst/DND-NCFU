@@ -50,3 +50,8 @@ Ruff check/format457файлов успешны. Полный игровой1240
 отсутствие явных contact-patterns не названо человеческим privacy approval.
 
 Команды и атрибуция: [FIREBALL_COMPLETE.md](../../intelligent_gm/FIREBALL_COMPLETE.md).
+
+Итоговая доставка: `delivery-checksums.json`. Проверены SHA/размер/CRC всех120
+payload файлов B/C-ZIP и всех1473исходников+102первичных материалов source-ZIP.
+Проверен отдельный portable-import tools без модели/Torch; SQLite quick_check=ok,
+WAL checkpoint0/0/0. Архивы вне Git, byte-bound code commit0cb45f3.
