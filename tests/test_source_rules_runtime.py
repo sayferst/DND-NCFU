@@ -230,7 +230,7 @@ def test_bad_position_and_invalid_program_are_rejected_before_rng():
 
 
 def test_published_v2_battle_replays_with_identical_rng():
-    path = ROOT / "tests/fixtures/world-library-source-v2.json"
+    path = ROOT / "tests/fixtures/world-library-source-v2.source.json"
     assert hashlib.sha256(path.read_bytes()).hexdigest() == (
         "b492f726c5132d86184cfd47e56ef6f5932f99e3d8f927b2c8109f566830b8b7"
     )
