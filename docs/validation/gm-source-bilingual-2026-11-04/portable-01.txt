@@ -1,0 +1,26 @@
+{"status": "SOURCE_RESEARCH_ONLY_TRANSLATION_AND_REVIEW_PENDING", "samples": 33406, "training_steps": 0}
+
+{"status": "OWNER_LABELS_IMPORTED_REVALIDATION_REQUIRED", "training_steps": 0}
+
+{
+  "status": "ALL_TRANSFER_PAYLOAD_HASHES_VERIFIED_NOT_TRAIN_READY",
+  "files": 110,
+  "archive_sha256": "0d8febd495f8410ece1d90fa05c69ee3c9608b5fb625737e22d60ceff22e95d7",
+  "training_steps": 0
+}
+
+{
+  "status": "ALL_TRANSFER_PAYLOAD_HASHES_VERIFIED_NOT_TRAIN_READY",
+  "files": 110,
+  "archive_sha256": "0d8febd495f8410ece1d90fa05c69ee3c9608b5fb625737e22d60ceff22e95d7",
+  "training_steps": 0,
+  "archive_bytes": 45572723,
+  "code_revision": "a728d5593473d27e90f89cc976e3d7a519d2a212",
+  "payload_files_restored": 105,
+  "restored_native_rows_verified": 33406,
+  "blank_reviewed_rows": 0,
+  "blank_unreviewed_rows": 40,
+  "training_preflight": "BLOCKED_DATA: source research corpus requires complete bilingual and meaning review",
+  "stdlib_only_subprocesses": true,
+  "tokenization_rerun_after_transfer": false
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "narrator-comparison-v1",
+  "conditions": {
+    "deepseek_baseline": {
+      "status": "NOT_RUN",
+      "samples": 0,
+      "metrics": null
+    },
+    "faun_base": {
+      "status": "NOT_RUN",
+      "samples": 0,
+      "metrics": null
+    },
+    "faun_trained": {
+      "status": "NOT_RUN",
+      "samples": 0,
+      "metrics": null
+    },
+    "deepseek_engine": {
+      "status": "NOT_RUN",
+      "samples": 0,
+      "metrics": null
+    },
+    "faun_trained_engine": {
+      "status": "NOT_RUN",
+      "samples": 0,
+      "metrics": null
+    }
+  },
+  "improvement_claim": "NONE_WITHOUT_PAIRED_HUMAN_REVIEW"
+}

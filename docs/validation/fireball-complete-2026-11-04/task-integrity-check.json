@@ -1,0 +1,16 @@
+{
+  "schema": "fireball-independent-task-check-v1",
+  "status": "PASS",
+  "failures": {
+    "source_rows_missing_task_decisions": 0,
+    "unknown_task_names": 0,
+    "eligible_decisions_missing_view": 0,
+    "views_missing_eligible_decision": 0,
+    "split_or_group_mismatch": 0,
+    "unsafe_history_temporal_links": 0,
+    "command_future_input_fields": 0
+  },
+  "history_order_evidence": "strict original event indices, not a full raw timestamp reconstruction",
+  "human_approved": 0,
+  "train_admitted": 0
+}

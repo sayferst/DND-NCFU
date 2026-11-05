@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "archive": "DND_NCFU_FIREBALL_RAW_UPDATE_20261104.zip",
+  "bytes": 112941340,
+  "sha256": "fcbe5304cb58764a5f4e0b790c0f44f678b6ef6c2e08a0a423794cd55719ce0e",
+  "verified_files": 101,
+  "code_commit": "fb9357d30e0ffdb21a7abc1618f6830af8684add",
+  "raw_bodies_included": false,
+  "all_records_scanned": true,
+  "history_corrections": 12514,
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0
+}

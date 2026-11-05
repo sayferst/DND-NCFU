@@ -1,0 +1,345 @@
+Targeted files: 26
+.....................................................................FFF [ 35%]
+........................FF.FF...FFFF.................................... [ 70%]
+............................................................             [100%]
+=================================== FAILURES ===================================
+_ test_real_stream_is_hash_bound_resumable_and_retains_only_referenced_messages _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_real_stream_is_hash_bound0')
+
+    def test_real_stream_is_hash_bound_resumable_and_retains_only_referenced_messages(tmp_path):
+        blob = source()
+        index, output = tmp_path / "old", tmp_path / "new"
+>       inspect_stream(io.BytesIO(blob), index, {"bytes": len(blob)}, link_index=True)
+
+tests/test_fireball_dm_roles.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+___________ test_changed_archive_and_modified_role_cache_do_not_pass ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_changed_archive_and_modif0')
+
+    def test_changed_archive_and_modified_role_cache_do_not_pass(tmp_path):
+        blob = source()
+        index, output = tmp_path / "old", tmp_path / "new"
+>       inspect_stream(io.BytesIO(blob), index, {"bytes": len(blob)}, link_index=True)
+
+tests/test_fireball_dm_roles.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+_________________ test_budget_guard_consumes_no_archive_bytes __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_budget_guard_consumes_no_0')
+
+    def test_budget_guard_consumes_no_archive_bytes(tmp_path):
+        blob = source()
+        index = tmp_path / "old"
+>       inspect_stream(io.BytesIO(blob), index, {"bytes": len(blob)}, link_index=True)
+
+tests/test_fireball_dm_roles.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+__________ test_entire_stream_counts_hash_and_audit_is_not_canonical ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_entire_stream_counts_hash0')
+
+    def test_entire_stream_counts_hash_and_audit_is_not_canonical(tmp_path):
+        blob, _ = archive()
+>       report = inspect_stream(io.BytesIO(blob), tmp_path, {"bytes": len(blob)})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fireball_raw.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+___________ test_canonical_keeps_unknown_values_and_quarantine_bytes ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_canonical_keeps_unknown_v0')
+
+    def test_canonical_keeps_unknown_values_and_quarantine_bytes(tmp_path):
+        import base64
+    
+        blob, original = archive()
+>       report = inspect_stream(io.BytesIO(blob), tmp_path, {"bytes": len(blob)}, canonical=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fireball_raw.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+___________________ test_changed_remote_binding_is_rejected ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_changed_remote_binding_is0')
+
+    def test_changed_remote_binding_is_rejected(tmp_path):
+        blob, _ = archive()
+>       inspect_stream(io.BytesIO(blob), tmp_path, {"bytes": len(blob), "etag": "first"})
+
+tests/test_fireball_raw.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+________ test_index_only_keeps_metadata_without_extracting_source_body _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_index_only_keeps_metadata0')
+
+    def test_index_only_keeps_metadata_without_extracting_source_body(tmp_path):
+        import sqlite3
+        import zlib
+    
+        blob, _ = archive()
+>       report = inspect_stream(io.BytesIO(blob), tmp_path, {"bytes": len(blob)}, link_index=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fireball_raw.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+_______ test_full_native_pair_index_and_link_ledger_without_hf_inference _______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_full_native_pair_index_an0')
+
+    def test_full_native_pair_index_and_link_ledger_without_hf_inference(tmp_path):
+        from training.fireball_raw_links import resolve
+    
+        packed = io.BytesIO()
+        raw = {"event_type": "message", "author_bot": False, "content": "The portal opens."}
+        filtered = {"after_utterances": ["The portal opens."], "after_idxs": [0]}
+        with tarfile.open(fileobj=packed, mode="w:gz") as tar:
+            for folder, value in (("data", raw), ("filtered", filtered)):
+                blob = gzip.compress((json.dumps(value) + "\n").encode())
+                info = tarfile.TarInfo("anonymized/" + folder + "/combat.jsonl.gz")
+                info.size = len(blob)
+                tar.addfile(info, io.BytesIO(blob))
+        blob = packed.getvalue()
+        root = tmp_path / "source"
+>       inspect_stream(io.BytesIO(blob), root, {"bytes": len(blob)}, link_index=True)
+
+tests/test_fireball_raw.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+__________ test_incomplete_canonical_output_is_preserved_and_rebuilt ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_incomplete_canonical_outp0')
+
+    def test_incomplete_canonical_output_is_preserved_and_rebuilt(tmp_path):
+        name = hashlib.sha256(b"anonymized/data/combat.jsonl.gz").hexdigest() + ".jsonl.gz"
+        dest = tmp_path / "canonical" / name
+        dest.parent.mkdir()
+        partial = dest.with_name(dest.name + ".partial")
+        partial.write_bytes(b"interrupted derivative")
+        blob, _ = archive()
+>       report = inspect_stream(io.BytesIO(blob), tmp_path, {"bytes": len(blob)}, canonical=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fireball_raw.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+___ test_committed_pending_canonical_file_recovers_after_rename_interruption ___
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_committed_pending_canonic0')
+
+    def test_committed_pending_canonical_file_recovers_after_rename_interruption(tmp_path):
+        blob, _ = archive()
+>       inspect_stream(io.BytesIO(blob), tmp_path, {"bytes": len(blob)}, canonical=True)
+
+tests/test_fireball_raw.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+__ test_bounded_filtered_mirror_preserves_original_bytes_and_source_identity ___
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-148/test_bounded_filtered_mirror_p0')
+
+    def test_bounded_filtered_mirror_preserves_original_bytes_and_source_identity(tmp_path):
+        import sqlite3
+    
+        from training.fireball_raw_filtered import mirror
+    
+        buf = io.BytesIO()
+        original = {"custom_spell": "Violet Gate", "hp": None}
+        payload = gzip.compress((json.dumps(original) + "\n").encode())
+        with tarfile.open(fileobj=buf, mode="w:gz") as tar:
+            entry = tarfile.TarInfo("anonymized/filtered/combat.jsonl.gz")
+            entry.size = len(payload)
+            tar.addfile(entry, io.BytesIO(payload))
+        blob = buf.getvalue()
+        root = tmp_path / "audit"
+>       inspect_stream(io.BytesIO(blob), root, {"bytes": len(blob)})
+
+tests/test_fireball_raw.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+training/fireball_raw.py:75: in inspect_stream
+    guard()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+extra = 0, temporary = None
+
+    def guard(extra=0, temporary=None):
+        db_bytes = sum(p.stat().st_size for p in output.glob("members.sqlite*") if p.is_file())
+        pending = temporary.stat().st_size if temporary and temporary.exists() else 0
+        if db_bytes + stored_bytes + pending + extra + 32768 > limit:
+            raise OSError("OUTPUT_BUDGET_REACHED: source remains external; increase local budget")
+        if shutil.disk_usage(output).free - extra < reserve:
+>           raise OSError("FREE_SPACE_RESERVE_REACHED: no more source data will be written")
+E           OSError: FREE_SPACE_RESERVE_REACHED: no more source data will be written
+
+training/fireball_raw.py:73: OSError
+=========================== short test summary info ============================
+FAILED tests/test_fireball_dm_roles.py::test_real_stream_is_hash_bound_resumable_and_retains_only_referenced_messages
+FAILED tests/test_fireball_dm_roles.py::test_changed_archive_and_modified_role_cache_do_not_pass
+FAILED tests/test_fireball_dm_roles.py::test_budget_guard_consumes_no_archive_bytes
+FAILED tests/test_fireball_raw.py::test_entire_stream_counts_hash_and_audit_is_not_canonical
+FAILED tests/test_fireball_raw.py::test_canonical_keeps_unknown_values_and_quarantine_bytes
+FAILED tests/test_fireball_raw.py::test_changed_remote_binding_is_rejected - ...
+FAILED tests/test_fireball_raw.py::test_index_only_keeps_metadata_without_extracting_source_body
+FAILED tests/test_fireball_raw.py::test_full_native_pair_index_and_link_ledger_without_hf_inference
+FAILED tests/test_fireball_raw.py::test_incomplete_canonical_output_is_preserved_and_rebuilt
+FAILED tests/test_fireball_raw.py::test_committed_pending_canonical_file_recovers_after_rename_interruption
+FAILED tests/test_fireball_raw.py::test_bounded_filtered_mirror_preserves_original_bytes_and_source_identity
+11 failed, 193 passed in 39.57s

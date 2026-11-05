@@ -264,6 +264,14 @@ def story_proposal(data, frame, player_text, *, context=None, previous=()):
     from rpg_vkr.narrative.payment_guard import validate as validate_payment
 
     validate_payment(text, context)
+    if (context.get("receipt") or {}).get("free_attempt"):
+        from rpg_vkr.narrative.strategic_critic import inspect
+
+        critical = [r for r in inspect(context["receipt"], text) if r["severity"] == "critical"]
+        if critical:
+            raise NarrativeConflict(
+                "Рассказ противоречит подтверждённой попытке: " + critical[0]["code"]
+            )
     check_story_quality(
         text,
         frame,

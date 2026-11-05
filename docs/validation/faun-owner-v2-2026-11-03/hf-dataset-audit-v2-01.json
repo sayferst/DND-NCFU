@@ -1,0 +1,546 @@
+{
+  "observed_at": "2026-11-03T15:04:13.628700+00:00",
+  "scope": "PUBLIC_METADATA_ONLY_NO_CORPUS_DOWNLOAD",
+  "sft_admitted": 0,
+  "sources": [
+    {
+      "name": "search_ru_roleplay",
+      "url": "https://huggingface.co/api/datasets?search=russian%20roleplay&limit=5",
+      "http_status": 200,
+      "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "metadata": []
+    },
+    {
+      "name": "search_casino",
+      "url": "https://huggingface.co/api/datasets?search=casino&limit=5",
+      "http_status": 200,
+      "response_sha256": "372a65f3ce6d25ed91eb79401a4c9fa347391a2dbea72e5de0b83a497097aff7",
+      "metadata": [
+        {
+          "id": "kchawla123/casino",
+          "sha": "290898d2d08b6591db17005504e40ce00ac1028e",
+          "lastModified": "2024-01-16T13:53:39.000Z",
+          "tags": [
+            "task_categories:text-generation",
+            "task_categories:fill-mask",
+            "task_ids:dialogue-modeling",
+            "annotations_creators:expert-generated",
+            "language_creators:crowdsourced",
+            "multilinguality:monolingual",
+            "source_datasets:original",
+            "language:en",
+            "license:cc-by-4.0",
+            "size_categories:1K<n<10K",
+            "format:parquet",
+            "modality:text",
+            "library:datasets",
+            "library:pandas",
+            "library:mlcroissant",
+            "library:polars",
+            "region:us"
+          ],
+          "private": false,
+          "gated": false
+        },
+        {
+          "id": "Lots-of-LoRAs/task356_casino_classification_negotiation_self_need",
+          "sha": "399d9350897bf4b3bf4a480736f793318bc44c81",
+          "lastModified": "2024-07-16T14:06:19.000Z",
+          "tags": [
+            "task_categories:text-generation",
+            "annotations_creators:crowdsourced",
+            "language_creators:crowdsourced",
+            "language:en",
+            "license:apache-2.0",
+            "size_categories:1K<n<10K",
+            "format:parquet",
+            "modality:text",
+            "library:datasets",
+            "library:pandas",
+            "library:mlcroissant",
+            "library:polars",
+            "arxiv:2204.07705",
+            "arxiv:2407.00066",
+            "region:us"
+          ],
+          "private": false,
+          "gated": false
+        },
+        {
+          "id": "Lots-of-LoRAs/task353_casino_classification_negotiation_elicit_pref",
+          "sha": "49967389934b7d7ccdf7b7e7ec8d3c845869f34b",
+          "lastModified": "2024-07-16T14:20:55.000Z",
+          "tags": [
+            "task_categories:text-generation",
+            "annotations_creators:crowdsourced",
+            "language_creators:crowdsourced",
+            "language:en",
+            "license:apache-2.0",
+            "size_categories:n<1K",
+            "format:parquet",
+            "modality:text",
+            "library:datasets",
+            "library:pandas",
+            "library:mlcroissant",
+            "library:polars",
+            "arxiv:2204.07705",
+            "arxiv:2407.00066",
+            "region:us"
+          ],
+          "private": false,
+          "gated": false
+        },
+        {
+          "id": "Lots-of-LoRAs/task357_casino_classification_negotiation_small_talk",
+          "sha": "fa3d7aa7e16cebfddd31ab67325d96fc90ebf9e9",
+          "lastModified": "2024-07-16T14:54:55.000Z",
+          "tags": [
+            "task_categories:text-generation",
+            "annotations_creators:crowdsourced",
+            "language_creators:crowdsourced",
+            "language:en",
+            "license:apache-2.0",
+            "size_categories:1K<n<10K",
+            "format:parquet",
+            "modality:text",
+            "library:datasets",
+            "library:pandas",
+            "library:mlcroissant",
+            "library:polars",
+            "arxiv:2204.07705",
+            "arxiv:2407.00066",
+            "region:us"
+          ],
+          "private": false,
+          "gated": false
+        },
+        {
+          "id": "Lots-of-LoRAs/task359_casino_classification_negotiation_vouch_fair",
+          "sha": "2713f84c4da10ae038c023d0bc56b0e2adfd3077",
+          "lastModified": "2024-07-16T13:42:50.000Z",
+          "tags": [
+            "task_categories:text-generation",
+            "annotations_creators:crowdsourced",
+            "language_creators:crowdsourced",
+            "language:en",
+            "license:apache-2.0",
+            "size_categories:n<1K",
+            "format:parquet",
+            "modality:text",
+            "library:datasets",
+            "library:pandas",
+            "library:mlcroissant",
+            "library:polars",
+            "arxiv:2204.07705",
+            "arxiv:2407.00066",
+            "region:us"
+          ],
+          "private": false,
+          "gated": false
+        }
+      ]
+    },
+    {
+      "name": "pippa",
+      "url": "https://huggingface.co/api/datasets/PygmalionAI/PIPPA",
+      "http_status": 200,
+      "response_sha256": "2ba7a662bec62c70bfd501305fe158e7e09c50c79280a6d1e17a695742ee3827",
+      "metadata": {
+        "id": "PygmalionAI/PIPPA",
+        "sha": "6412b0cae4d879b678e7a33df3ba076b9581f4d4",
+        "lastModified": "2023-09-07T03:07:55.000Z",
+        "cardData": {
+          "license": "apache-2.0",
+          "task_categories": [
+            "conversational"
+          ],
+          "language": [
+            "en"
+          ],
+          "tags": [
+            "not-for-all-audiences",
+            "conversational",
+            "roleplay",
+            "custom-format",
+            "a."
+          ],
+          "pretty_name": "PIPPA - Personal Interaction Pairs Between People and AI",
+          "size_categories": [
+            "10K<n<100K"
+          ],
+          "viewer": false
+        },
+        "usedStorage": 798721132,
+        "description": "Personal Interaction Pairs between People and AI (PIPPA) is a partially synthetic, community contributed and open-source conversational and roleplaying dataset generated from a subset of submitted logs to the Pygmalion project.",
+        "private": false,
+        "gated": false
+      }
+    },
+    {
+      "name": "casino",
+      "url": "https://huggingface.co/api/datasets/GEM/casino",
+      "error": "HTTPError",
+      "http_status": 401
+    },
+    {
+      "name": "casino_accessible_mirror",
+      "url": "https://huggingface.co/api/datasets/kchawla123/casino",
+      "http_status": 200,
+      "response_sha256": "fdefd028a10000a034385dece323a6d8cbe759b0cfe37647e0bba1bd2acbc3b6",
+      "metadata": {
+        "id": "kchawla123/casino",
+        "sha": "290898d2d08b6591db17005504e40ce00ac1028e",
+        "cardData": {
+          "annotations_creators": [
+            "expert-generated"
+          ],
+          "language_creators": [
+            "crowdsourced"
+          ],
+          "language": [
+            "en"
+          ],
+          "license": [
+            "cc-by-4.0"
+          ],
+          "multilinguality": [
+            "monolingual"
+          ],
+          "size_categories": [
+            "1K<n<10K"
+          ],
+          "source_datasets": [
+            "original"
+          ],
+          "task_categories": [
+            "conversational",
+            "text-generation",
+            "fill-mask"
+          ],
+          "task_ids": [
+            "dialogue-modeling"
+          ],
+          "paperswithcode_id": "casino",
+          "pretty_name": "Campsite Negotiation Dialogues",
+          "dataset_info": {
+            "features": [
+              {
+                "name": "chat_logs",
+                "list": [
+                  {
+                    "name": "text",
+                    "dtype": "string"
+                  },
+                  {
+                    "name": "task_data",
+                    "struct": [
+                      {
+                        "name": "data",
+                        "dtype": "string"
+                      },
+                      {
+                        "name": "issue2youget",
+                        "struct": [
+                          {
+                            "name": "Firewood",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Water",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Food",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "issue2theyget",
+                        "struct": [
+                          {
+                            "name": "Firewood",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Water",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Food",
+                            "dtype": "string"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "id",
+                    "dtype": "string"
+                  }
+                ]
+              },
+              {
+                "name": "participant_info",
+                "struct": [
+                  {
+                    "name": "mturk_agent_1",
+                    "struct": [
+                      {
+                        "name": "value2issue",
+                        "struct": [
+                          {
+                            "name": "Low",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Medium",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "High",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "value2reason",
+                        "struct": [
+                          {
+                            "name": "Low",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Medium",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "High",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "outcomes",
+                        "struct": [
+                          {
+                            "name": "points_scored",
+                            "dtype": "int32"
+                          },
+                          {
+                            "name": "satisfaction",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "opponent_likeness",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "demographics",
+                        "struct": [
+                          {
+                            "name": "age",
+                            "dtype": "int32"
+                          },
+                          {
+                            "name": "gender",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "ethnicity",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "education",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "personality",
+                        "struct": [
+                          {
+                            "name": "svo",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "big-five",
+                            "struct": [
+                              {
+                                "name": "extraversion",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "agreeableness",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "conscientiousness",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "emotional-stability",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "openness-to-experiences",
+                                "dtype": "float32"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "mturk_agent_2",
+                    "struct": [
+                      {
+                        "name": "value2issue",
+                        "struct": [
+                          {
+                            "name": "Low",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Medium",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "High",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "value2reason",
+                        "struct": [
+                          {
+                            "name": "Low",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "Medium",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "High",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "outcomes",
+                        "struct": [
+                          {
+                            "name": "points_scored",
+                            "dtype": "int32"
+                          },
+                          {
+                            "name": "satisfaction",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "opponent_likeness",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "demographics",
+                        "struct": [
+                          {
+                            "name": "age",
+                            "dtype": "int32"
+                          },
+                          {
+                            "name": "gender",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "ethnicity",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "education",
+                            "dtype": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "personality",
+                        "struct": [
+                          {
+                            "name": "svo",
+                            "dtype": "string"
+                          },
+                          {
+                            "name": "big-five",
+                            "struct": [
+                              {
+                                "name": "extraversion",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "agreeableness",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "conscientiousness",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "emotional-stability",
+                                "dtype": "float32"
+                              },
+                              {
+                                "name": "openness-to-experiences",
+                                "dtype": "float32"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "annotations",
+                "list": {
+                  "list": "string"
+                }
+              }
+            ],
+            "splits": [
+              {
+                "name": "train",
+                "num_bytes": 3211407,
+                "num_examples": 1030
+              }
+            ],
+            "download_size": 1247368,
+            "dataset_size": 3211407
+          },
+          "configs": [
+            {
+              "config_name": "default",
+              "data_files": [
+                {
+                  "split": "train",
+                  "path": "data/train-*"
+                }
+              ]
+            }
+          ]
+        },
+        "usedStorage": 35015944,
+        "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Card for Casino\n\t\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Summary\n\t\n\nWe provide a novel dataset (referred to as CaSiNo) of 1030 negotiation dialogues. Two participants take the role of campsite neighbors and negotiate for Food, Water, and Firewood packages, based on their individual preferences and requirements. This design keeps the task tractable, while still facilitating linguistically rich and personal conversations. This helps to overcome the limitations of prior negotiation datasets… See the full description on the dataset page: https://huggingface.co/datasets/kchawla123/casino.",
+        "private": false,
+        "gated": false
+      }
+    }
+  ]
+}

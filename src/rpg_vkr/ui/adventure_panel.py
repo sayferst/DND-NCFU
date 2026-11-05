@@ -281,6 +281,9 @@ def retry_world(window):
                 description=session.campaign.raw_player_description,
                 world_brief=session.campaign.world_brief,
                 content_revision=2,
+                catalog_revision=session.gameplay.get("catalog_revision", 1),
+                free_action_policy=session.gameplay.get("free_action_policy", 0),
+                owner_rules_policy=session.gameplay.get("owner_rules_policy", 0),
             )
         else:
             window._session = Session.create_hero(

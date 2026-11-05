@@ -81,6 +81,26 @@ def install_connection_layout(window, page):
     layout.addWidget(window.routerai_price)
     layout.addWidget(window.cloud_free_only)
     page.addWidget(models)
+    window.connection_cloud_models = models
+    window.local_connection_box = QGroupBox("Локальный мастер: MN-12B-Faun-RP-RU / Ollama")
+    local = QVBoxLayout(window.local_connection_box)
+    window.local_connection_status = plain_label(
+        "Ollama ещё не проверена. Обновите список моделей."
+    )
+    local.addWidget(window.local_connection_status)
+    local.addWidget(window.local_model)
+    local.addWidget(window.enable_local_narrator)
+    window.select_faun_button = QPushButton("Выбрать установленную Faun")
+    window.return_deepseek_button = QPushButton("Вернуться к DeepSeek через RouterAI")
+    from rpg_vkr.ui.narrator_panel import select_faun
+
+    window.select_faun_button.clicked.connect(lambda: select_faun(window))
+    window.return_deepseek_button.clicked.connect(
+        lambda: window.ai_provider.setCurrentIndex(window.ai_provider.findData("routerai"))
+    )
+    local.addWidget(window.select_faun_button)
+    local.addWidget(window.return_deepseek_button)
+    page.addWidget(window.local_connection_box)
 
     activate = QGroupBox("3. Подключение")
     layout = QVBoxLayout(activate)
@@ -165,13 +185,41 @@ def refresh_connection_layout(window):
 
     provider = window.ai_provider.currentData()
     router = provider == "routerai"
-    window.connection_endpoint.setText(ENDPOINTS.get(provider, ""))
-    window.model_search.setVisible(router)
-    window.local_model.hide()
-    window.enable_local_narrator.hide()
-    window.find_models_button.setText(
-        "Проверить ключ и подключить мастера" if router else "Применить облачное подключение"
+    local = provider == "local"
+    window.connection_endpoint.setText(
+        "http://127.0.0.1:11434" if local else ENDPOINTS.get(provider, "")
     )
+    window.model_search.setVisible(router)
+    window.local_connection_box.setVisible(local)
+    window.connection_cloud_models.setVisible(not local)
+    window.local_model.setVisible(local)
+    window.enable_local_narrator.setVisible(local)
+    window.find_models_button.setText(
+        "Найти установленные модели"
+        if local
+        else "Проверить ключ и подключить мастера"
+        if router
+        else "Применить облачное подключение"
+    )
+    if local:
+        from rpg_vkr.narrative.local_models import FAUN_MODEL
+
+        installed = any(m.casefold() == FAUN_MODEL.casefold() for m in window.ollama.models)
+        window.select_faun_button.setEnabled(installed)
+        reachable = getattr(window, "_local_provider_reachable", False)
+        window.local_connection_status.setText(
+            ("Соединение Ollama проверено. " if reachable else "Соединение ещё не проверено. ")
+            + ("Faun установлена. " if installed else "Faun не найдена; запустите SETUP_FAUN.cmd. ")
+            + "Выбрано: "
+            + (window.local_model.currentText() or "ничего")
+        )
+        from rpg_vkr.ui.cloud_gate import local_ready
+
+        window.local_connection_status.setText(
+            window.local_connection_status.text()
+            + (". Мастер готов к игре." if local_ready(window) else ". Подключение ещё не готово.")
+        )
+        window.connection_status.setText(window.local_connection_status.text())
     window.disconnect_master.setEnabled(
         window.enable_local_narrator.isChecked() or getattr(window, "_flash_pending", False)
     )

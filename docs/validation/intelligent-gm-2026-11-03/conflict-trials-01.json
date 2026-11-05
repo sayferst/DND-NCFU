@@ -1,0 +1,3065 @@
+{
+  "schema": "conflict-trials-v1",
+  "scope": "authored_finite_resource_simulation",
+  "code_commit": "11fa5baa235eeb2d21edefe992a90008667f7d5a",
+  "code_sha256": "a6d62637edf948d898d12a5424a4ecea5873987ec85a068bdc1f7e1191e1002d",
+  "scenarios": 40,
+  "outcomes": 122,
+  "constraint_violations": 0,
+  "elapsed_seconds": 0.007469237999885081,
+  "rows": [
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.4857142857142857,
+        "garrison": 0.05714285714285714,
+        "ruler": 0.2
+      },
+      "unmet": {
+        "civilians": 30,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.12,
+        "garrison": 0.72,
+        "ruler": 0.28
+      },
+      "unmet": {
+        "civilians": 70,
+        "guards": 10
+      }
+    },
+    {
+      "scenario": {
+        "food": 40,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.3302857142857143,
+        "garrison": 0.33885714285714286,
+        "ruler": 0.23399999999999999
+      },
+      "unmet": {
+        "civilians": 47,
+        "guards": 33
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7285714285714285,
+        "garrison": 0.08571428571428572,
+        "ruler": 0.3
+      },
+      "unmet": {
+        "civilians": 10,
+        "guards": 50
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.2714285714285714,
+        "garrison": 0.9142857142857143,
+        "ruler": 0.39999999999999997
+      },
+      "unmet": {
+        "civilians": 60,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 60,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5,
+        "garrison": 0.5,
+        "ruler": 0.35
+      },
+      "unmet": {
+        "civilians": 35,
+        "guards": 25
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.88,
+        "garrison": 0.28,
+        "ruler": 0.42
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 40
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.5142857142857142,
+        "garrison": 0.9428571428571428,
+        "ruler": 0.5
+      },
+      "unmet": {
+        "civilians": 40,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 80,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.6605714285714286,
+        "garrison": 0.6777142857142857,
+        "ruler": 0.46799999999999997
+      },
+      "unmet": {
+        "civilians": 24,
+        "guards": 16
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "purchase",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.475
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": false,
+      "utilities": {
+        "residents": 0.94,
+        "garrison": 0.64,
+        "ruler": 0.5599999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 20
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 0.7571428571428571,
+        "garrison": 0.9714285714285714,
+        "ruler": 0.6
+      },
+      "unmet": {
+        "civilians": 20,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": false,
+      "utilities": {
+        "residents": 0.8302857142857143,
+        "garrison": 0.838857142857143,
+        "ruler": 0.584
+      },
+      "unmet": {
+        "civilians": 12,
+        "guards": 8
+      }
+    },
+    {
+      "scenario": {
+        "food": 100,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "purchase",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.5874999999999999
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 0,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 20,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 40,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": false
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "civilians",
+      "baseline": true,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "guards",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    },
+    {
+      "scenario": {
+        "food": 120,
+        "civilian_need": 70,
+        "guard_need": 50,
+        "treasury": 80,
+        "supplier_food": 20,
+        "supplier_money": 0,
+        "purchase_price": 30,
+        "supplier_available": true
+      },
+      "option": "balanced",
+      "baseline": false,
+      "conserved": true,
+      "pareto": true,
+      "utilities": {
+        "residents": 1.0,
+        "garrison": 1.0,
+        "ruler": 0.7
+      },
+      "unmet": {
+        "civilians": 0,
+        "guards": 0
+      }
+    }
+  ],
+  "narrative_quality": "NOT_MEASURED",
+  "human_evaluation": "NOT_PERFORMED",
+  "research_claim": "Resource conservation and distinct authored preferences only"
+}

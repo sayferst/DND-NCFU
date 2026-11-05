@@ -1,0 +1,39 @@
+{
+  "schema": "faun-cpu-tokenization-v1",
+  "status": "TOKENIZATION_READY",
+  "dataset_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+  "max_length": 2048,
+  "dropped_samples": 0,
+  "training_steps": 0,
+  "model_weights_loaded": false,
+  "gpu_fit_verified": false,
+  "prompt_contract": "grounded_relevant_facts_v1",
+  "tokenizer_file_sha256": {
+    "tokenizer.json": "a2fa2956478eaa353c6c4b1f47fdd6868cce6075e52e169c35ae8bd28524e7a8",
+    "chat_template.jinja": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b"
+  },
+  "backend": "tokenizers_tokenizer_json_pinned_chatml",
+  "splits": {
+    "train": {
+      "samples": 880,
+      "max_total": 1149,
+      "total_tokens": 648283,
+      "supervised_tokens": 30022,
+      "encoded_sha256": "adb1e735be4dfd9893be625f0bbd883962ea9d806ba749fcf1b55f39f9c22332"
+    },
+    "val": {
+      "samples": 110,
+      "max_total": 1071,
+      "total_tokens": 80908,
+      "supervised_tokens": 3866,
+      "encoded_sha256": "87d6edb55bee24402bead911d92c29abe700338166630bc8a46c1d105dfed8d1"
+    },
+    "test": {
+      "samples": 110,
+      "max_total": 1072,
+      "total_tokens": 74579,
+      "supervised_tokens": 3032,
+      "encoded_sha256": "1ef8d1fd2d3744dfd0cb90c405a980676c8fb2f2e7c2fbcc110ab2d86e0a7f6e"
+    }
+  }
+}

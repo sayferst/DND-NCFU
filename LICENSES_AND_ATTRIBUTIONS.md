@@ -544,3 +544,134 @@ Raw JSONL хранится в игнорируемой data/synthetic_gm, не �
 инструментов — собственный код проекта. Старые каталоги/оригиналы сохранены.
 488живых кандидатов остаютсяpending/rights unknown, не допущены к обучению,
 не включены в дистрибутив. Никаких новых лицензированных весов не скачивалось.
+
+
+## 03.11.2026 — Faun и синтетические кандидаты
+
+limloop/MN-12B-Faun-RP-RU, revision bdfc761b14feb9dd03ef158a4d337fc1cf5fd183,
+https://huggingface.co/limloop/MN-12B-Faun-RP-RU — карточка объявляет Apache2.0.
+Метаданные и SHA ChatML сохранены; веса не скачаны и не распространяются.
+Права на исходные обучающие данные merge независимо не установлены.
+Внешние датасеты не импортированы; аудит лицензий/происхождения/исключений —
+docs/intelligent_gm/DATASETS.md.1000сценариев сгенерированы для этого проекта
+с явной меткой PROJECT_AUTHORED_SYNTHETIC, не являются человеческой разметкой.
+openpyxl3.1.5/MIT и et_xmlfile2.0.0/MIT использованы только во временной среде
+независимой валидации XLSX, не включены в клиент или его runtime-зависимости.
+
+
+## 03.11.2026 — дополнительные метаданные Faun/данных
+
+Ollama: официальный https://ollama.com/download/windows и подписанный
+OllamaSetup.exe. Установщик/веса не включаются в Git или GPU-tools ZIP.
+Faun/GGUF: ссылки и закреплённые metadata revisions приведены в
+docs/intelligent_gm/FAUN.md; Apache2.0 объявлена карточкой, происхождение всех
+merge-training данных независимо не доказано. Реальных скачиваний весов0.
+
+PIPPA https://huggingface.co/datasets/PygmalionAI/PIPPA, revision
+6412b0cae4d879b678e7a33df3ba076b9581f4d4: Apache2.0 в карточке; EN
+community-contributed partially synthetic roleplay. Не включён в обучение.
+CaSiNo mirror https://huggingface.co/datasets/kchawla123/casino, revision
+290898d2d08b6591db17005504e40ce00ac1028e: CC BY4.0 в карточке;1030 EN
+переговоров. Лицензия/приватность оригинальных реплик требуют отдельной проверки;
+данные не скачаны. Raw metadata и причины решений сохранены в новом отчёте.
+
+openpyxl3.1.5 MIT используется только из временного каталога для независимой
+проверки XLSX, не добавлен в игру. training/requirements-faun-linux.lock —
+отдельное воспроизводимое разрешение candidate зависимостей, не новое право
+распространения их бинарников и не результат GPU-теста.
+
+
+## 03.11.2026 — сверка официального SRD и данные v3
+
+Официальный PDF SRD5.2.1 повторно загружен с media.dndbeyond.com; SHA256
+`8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87`
+совпал с ранее записанной PDF-копией зеркала. Прочитаны с17–18
+(смерть/стабилизация/оглушение),181 (Exhaustion),185 (Long Rest).
+Предыдущая запись о недоступности издателя описывает прошлую проверку.
+Русское резюме и авторские отличия R06/R08/R10/R14:
+docs/intelligent_gm/TRAINING_DATA_V3.md. Приписывать оглушение до0HP самому
+SRD5.2.1 нельзя: он оставляет1HP;0HP здесь утверждённое homebrew.
+
+40 синтетических примеров пользователя после редакторского просмотра Codex
+учитываются отдельно от реальных партий и от одобрения человеком.
+Прямое разрешение владельца записано без утверждения о независимой проверке
+прав на все потенциальные сторонние материалы. Сырые данные вне Git.
+Публичный токенизатор закреплённой Faun-ревизии имеет записанные SHA;
+его файлы и веса не включены в игру/Git. CPU-зависимости имеют отдельный
+сгенерированный hash-lock и не добавлены в runtime lock.
+
+
+## Правила владельца V4, 03.11.2026
+
+`domain.owner_rules` — вычислительная адаптация разделов Death Saving Throws,
+Stabilizing a Character, Instant Death, Exhaustion, Long Rest из SRD5.2.1
+(CC BY4.0). Официальный источник и полная атрибуция приведены выше; PDF:
+https://media.dndbeyond.com/compendium-images/srd/5.2/SRD_CC_v5.2.1.pdf .
+Русские описания и код — адаптация; полный текст PDF в поставку не добавляется.
+Натуральные1/20 вне атак/спасбросков смерти, нелетальное оглушение0HP stable,
+перерасход HP/истощением и обязательное разумное соглашение — утверждённый
+homebrew владельца, не утверждение о содержании SRD. В SRD5.2.1 knockout
+оставляет1HP; текущий0HP — намеренное авторское отличие.
+Новые состояния/тексты корпуса явно синтетические; права на реальные партии
+не объявлены независимо проверенными. Больших моделей и их весов в Git нет.
+
+
+## FIREBALL, исследовательское дополнение 04.11.2026
+
+Andrew Zhu, Karmanya Aggarwal, Alexander Feng, Lara J. Martin, Chris Callison-Burch,
+FIREBALL: A Dataset of Dungeons and Dragons Actual-Play with Structured Game State
+Information, ACL2023, DOI10.18653/v1/2023.acl-long.229.
+Источник: https://huggingface.co/datasets/lara-martin/FIREBALL ; CC BY4.0.
+Репозиторий авторов: https://github.com/zhudotexe/FIREBALL . Русские формулировки
+написаны для проекта по проверенным HP-переходам; имена/реплики/идентификаторы
+пользователей не входят в промпт. Это изменённые данные; английские реплики
+не названы русской авторской записью партии. Источники/SHA/CC-лицензия сохранены
+в приватном комплекте, исходные строки в Git не опубликованы. Полный аудит:
+docs/intelligent_gm/FIREBALL.md.
+
+
+## FIREBALL — полный доступный filtered-архив, 04.11.2026
+
+Andrew Zhu, Karmanya Aggarwal, Alexander Feng, Lara J. Martin, Chris Callison-Burch
+(2023), *FIREBALL: A Dataset of Dungeons and Dragons Actual-Play with Structured
+Game State Information*, ACL,4171–4193. https://aclanthology.org/2023.acl-long.229/
+DOI:10.18653/v1/2023.acl-long.229. Данные: CC BY4.0, сохранена формулировка upstream
+README «released for research purposes only». HF revision
+1b363686ed0d681bf8a0eb1e943af75d3716f7c8; GitHub FIREBALL
+02a040bdfc9de5c7da271ca7faad56be090669ba.
+
+Код схемы FIREBALL-data-processing, revision
+b3f9b5eca6dbbe1b7504c14dcbc055687bd4c7b4: MIT, Copyright(c)2022 Andrew Zhu.
+Он сохранён как первичное свидетельство вне Git и не исполняется импортёром.
+Полные LICENSE обоих upstream-проектов входят в комплект источников.
+Изменения в производных: структурирование по задачам, автоматическое удаление
+контактов, групповые splits, индексы и токенизация. Исходники неизменны;
+новые игровые рассказы, переводы или реализации Avrae-правил не создавались.
+Подробные источники/границы: docs/intelligent_gm/FIREBALL_COMPLETE.md.
+
+## 05.11.2026 — CRD3 и отдельные переводы source-сцен
+
+CRD3: Revanth Rameshkumar, Peter Bailey, *Storytelling with Dialogue: A Critical
+Role Dungeons and Dragons Dataset*, ACL2020. Первичный репозиторий
+https://github.com/RevanthRameshkumar/CRD3 , закреплённый commit
+7fd4515eea411f0f9c5d0a03a8b6b8b2da464e81; CC-BY-SA-4.0.
+Сохранены README/LICENSE, благодарности Critical Role, CRTranscript и Critical
+Role Wiki. Изменения:отбор DM-ходов, исключение будущих summary, группировка,
+краткие изложения и отдельные переводы. Переводы/отобранные тексты сохраняют
+условия соответствующего источника; лицензия будущего адаптера не выведена
+автоматически из лицензии корпуса. Исходные тексты и переводы вне Git.
+
+FIREBALL: Zhu et al., ACL2023, https://aclanthology.org/2023.acl-long.229/ ,
+DOI10.18653/v1/2023.acl-long.229; CC-BY-4.0, research-release wording
+первичного README сохранён. Источник роли DM — distill2_authors.py из
+zhudotexe/FIREBALL-data-processing revb3f9b5eca6dbbe1b7504c14dcbc055687bd4c7b4
+(MIT,2022 Andrew Zhu). Чужой код не исполнялся; новая реализация анализирует
+схему data.dm. Подробные пины/преобразования: docs/intelligent_gm/SOURCE_DATA_V5.md.
+
+Диагностические OPUS-MT: Helsinki-NLP, CC-BY-4.0; CT2 INT8-конверсии
+rohanksaxena/opus-mt-en-ru@3e60bacffde1e346edc65b9d057be7d441872779 и
+rohanksaxena/opus-mt-ru-en@0814e5845ab3be4d38fd3e67b8080923e0940a21.
+Модельные файлы проверены по Git/LFS/SHA-256; remote code не включён.
+CTranslate2 4.8.5 (MIT), SentencePiece0.2.2 (Apache-2.0), setuptools80.9.0
+(MIT) закреплены в optional hash-lock. Смысловой провал прототипа зафиксирован;
+он не используется для допуска обучающих переводов.

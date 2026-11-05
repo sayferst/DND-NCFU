@@ -1,0 +1,14 @@
+{
+  "status": "NATIVE_GROUP_HISTORY_AUDIT",
+  "mapped_hf_rows": 153829,
+  "ambiguous_rows": 0,
+  "match_counts": {
+    "core_and_reference_vector_matches": 153829,
+    "reference_vector_mismatch": 68
+  },
+  "history_links": 458987,
+  "confirmed_cross_combat_history_links": 21946,
+  "affected_dialogue_views": 12514,
+  "unresolved_history_links": 94,
+  "mapping_method": "normalized full core plus exact source reference vector, unique native combat match"
+}

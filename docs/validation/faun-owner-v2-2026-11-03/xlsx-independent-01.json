@@ -1,0 +1,62 @@
+{
+  "validator": "openpyxl 3.1.5",
+  "workbook_sha256": "47b92320c442bc188f524876133705ad68ada2771106c79e37a8ea48b2e10ac2",
+  "action_rows": 1000,
+  "reply_rows": 1000,
+  "human_first": 200,
+  "auto_later": 800,
+  "human_per_condition": {
+    "0": 40,
+    "1": 40,
+    "2": 40,
+    "3": 40,
+    "4": 40
+  },
+  "human_per_family": {
+    "Необычное ремесло": 10,
+    "Эксперименты с предметами": 10,
+    "Частичный успех": 10,
+    "Поломки и расход": 10,
+    "Магия и экономика": 10,
+    "Недостижимые цели": 10,
+    "Согласованность объектов": 10,
+    "Дороги и исследование": 10,
+    "Рискованные перемещения": 10,
+    "Конфликт ресурсов": 10,
+    "Торговля": 10,
+    "Переговоры": 10,
+    "Моральные конфликты": 10,
+    "Интересы и информация NPC": 10,
+    "Бои": 10,
+    "Ограниченная магия": 10,
+    "Исследование": 10,
+    "Нарушения фактов": 10,
+    "Ошибки повествования": 10,
+    "Тренировки и прогресс": 10
+  },
+  "worked_examples": 20,
+  "formulas_tokenized": 16,
+  "formula_expected_counts": {
+    "all": 1000,
+    "human": 200,
+    "auto": 800,
+    "human_per_condition": [
+      40,
+      40,
+      40,
+      40,
+      40
+    ],
+    "reviewed": 0,
+    "sft": 0
+  },
+  "native_excel_recalculation": "NOT_RUN",
+  "openpyxl_roundtrip_import_counts": {
+    "action_labels": 1,
+    "narrator_reviews": 1,
+    "verified_episodes": 0,
+    "math_conflicts": 4
+  },
+  "human_approved": 0,
+  "sft_admitted": 0
+}

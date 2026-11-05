@@ -1,0 +1,12 @@
+{
+  "schema": "dnd-private-delivery-check-v1",
+  "file_name": "DND_NCFU_training_v4.zip",
+  "bytes": 1023604,
+  "sha256": "52a7f327db61fcbf6ac8447c2a095eab4897c85cf45935018503e74a35378ee3",
+  "dataset_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+  "files": 81,
+  "fresh_extraction_sha_check": "PASS",
+  "synthetic_samples": 1100,
+  "training_steps": 0,
+  "data_published_to_github": false
+}

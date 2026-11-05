@@ -1,0 +1,12 @@
+{
+  "schema": "faun-transfer-v1",
+  "status": "TOOLS_PREPARED_NOT_TRAINED",
+  "dataset_status": "BLOCKED_DATA",
+  "dataset_sha256": null,
+  "base_model_id": "limloop/MN-12B-Faun-RP-RU",
+  "base_revision": "bdfc761b14feb9dd03ef158a4d337fc1cf5fd183",
+  "weights_included": false,
+  "dataset_included": false,
+  "game_gguf_needed_on_gpu": false,
+  "training_steps": 0
+}

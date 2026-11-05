@@ -1,0 +1,13 @@
+{
+  "proposals": 800,
+  "rule_statuses": {
+    "RULE_LABELED": 480,
+    "HUMAN_REVIEW_REQUIRED": 320
+  },
+  "ai_statuses": {
+    "NOT_REQUESTED": 800
+  },
+  "human_approved": 0,
+  "sft_admitted": 0,
+  "sha256": "f2beeaeab03a58bd7bfb473d2c5141d5f359f9e5bc50393029e94fc9a46a7e6d"
+}

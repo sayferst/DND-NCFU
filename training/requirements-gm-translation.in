@@ -1,0 +1,5 @@
+# Optional local CPU translation only; extend the separate pinned data environment.
+# No weights are installed by this file. NumPy/PyYAML come from requirements-faun-cpu.lock.
+ctranslate2==4.8.5
+sentencepiece==0.2.2
+setuptools==80.9.0

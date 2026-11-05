@@ -131,6 +131,10 @@ class Engine:
         from rpg_vkr.domain.unified import bonus
 
         result = bonus(self.state, self.char, task)[1]
+        if task == "melee" and self.state.get("free_action_policy") == 1:
+            weapon = next((i for i in self.state["items"] if i["id"] == self.state["weapon"]), {})
+            if weapon.get("form"):
+                result += weapon["usage_penalty"]
         if task in ("melee", "ranged", "arcana"):
             result += self.status_power("hero", "accuracy")
         if task in ("ranged", "stealth"):
@@ -180,10 +184,32 @@ class Engine:
     def check(self, task, dc):
         value = self.roll("1d20", task)
         bonus = self.hero_bonus(task)
+        if self.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import resolve_check
+
+            result = resolve_check(self, value, bonus, task, dc)
+            self.text.append(f"d20({value}) {bonus:+}, итог {result['total']} против DC {dc}")
+            return result["succeeded"]
         self.text.append(f"d20({value}) {bonus:+} = {value + bonus} против DC {dc}")
         return value + bonus >= dc
 
     def template(self, item):
+        if item.get("form"):
+            from rpg_vkr.domain.attempt_plans import FORMS
+
+            form = FORMS[item["form"]]
+            return {
+                "id": "improvised_" + item["form"],
+                "name": item["name"],
+                "kind": form.kind,
+                "category": form.category,
+                "level": 1,
+                "dice": form.dice,
+                "hands": 2,
+                "stamina": 2,
+                "price_cp": 0,
+                "durability": item["durability_cap"],
+            }
         return (
             content.row(item["template"])
             if item.get("template")
@@ -351,6 +377,10 @@ class Engine:
         return (e.state or {}).get("hp", d.properties["hp_max"])
 
     def change_hp(self, id, delta):
+        if self.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import change_hp
+
+            return change_hp(self, id, delta)
         if id == "hero":
             self.world = replace(
                 self.world, hp=max(0, min(self.world.max_hp, self.world.hp + delta))
@@ -492,7 +522,14 @@ class Engine:
             if shield > blocked:
                 self.status(target, "shield", shield - blocked, 2)
         amount = max(0, amount - resistance)
-        self.change_hp(target, -amount)
+        if self.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import change_hp
+
+            flags = getattr(self, "owner_hit_flags", {})
+            self.owner_hit_flags = {}  # Only the originating hit, never reflection or a later DOT.
+            change_hp(self, target, -amount, **flags)
+        else:
+            self.change_hp(target, -amount)
         if amount and reflection and source != target and self.status_power(target, "reflect"):
             self.damage(
                 source, min(amount, self.status_power(target, "reflect")), element, target, False
@@ -653,9 +690,74 @@ def _execute(original, command, args, context, dice):
 
     engine = Engine(original, context, dice, args)
     engine.context_combat = context["combat"]
+    owner_policy = engine.state.get("owner_rules_policy") == 1
     if engine.world.hp <= 0:
-        raise ValueError("Герой выбыл.")
-    perform(engine, command, args)
+        from rpg_vkr.domain.owner_rules_runtime import life
+
+        allowed = owner_policy and (
+            command == "death_save" or (command == "wait" and life(engine).stable)
+        )
+        if not allowed:
+            raise ValueError("Герой выбыл.")
+    if owner_policy:
+        from rpg_vkr.domain.owner_rules_runtime import perform as owner_perform
+
+        if owner_perform(engine, command, args):
+            npc_round(engine, command)
+            engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
+            advance(engine, engine.action_minutes)
+            return engine.finish()
+    if command == "enable_owner_rules":
+        if (
+            args != {"version": 1}
+            or type(args.get("version")) is not int
+            or original.get("catalog_revision") != 3
+            or original.get("free_action_policy") != 1
+            or original.get("owner_rules_policy")
+            or engine.state["battle"]
+        ):
+            raise ValueError("Нельзя включить авторские правила в этом состоянии.")
+        engine.state["owner_rules_policy"] = 1
+        engine.text.append("Включены авторские правила R01–R14; исторические операции сохранены.")
+        return engine.finish()
+    if command == "enable_attempt_plans":
+        if (
+            args != {"version": 1}
+            or type(args.get("version")) is not int
+            or original.get("catalog_revision") != 3
+            or original.get("free_action_policy")
+            or engine.state["battle"]
+        ):
+            raise ValueError("Нельзя включить свободные планы в этом состоянии.")
+        engine.state["free_action_policy"] = 1
+        engine.text.append("Включены планы свободных действий. Исторические операции сохранены.")
+        return engine.finish()
+    if command == "attempt":
+        from rpg_vkr.domain.attempt_plans import resolve
+
+        if (
+            not isinstance(args, dict)
+            or set(args) != {"plan", "version"}
+            or type(args["version"]) is not int
+            or args["version"] != 1
+        ):
+            raise ValueError("Неверная версия плана попытки.")
+        resolve(engine, args["plan"])
+    elif command == "negotiate_food":
+        from rpg_vkr.domain.food_negotiation import execute as negotiate_food
+
+        negotiate_food(engine, args)
+    elif command == "free_attempt":
+        from rpg_vkr.domain.free_actions import execute as free_attempt
+
+        free_attempt(engine, args)
+    else:
+        perform(engine, command, args)
     npc_round(engine, command)
+    engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
     advance(engine, engine.action_minutes)
+    if owner_policy:
+        from rpg_vkr.domain.owner_rules_runtime import finish_rest
+
+        finish_rest(engine)
     return engine.finish()

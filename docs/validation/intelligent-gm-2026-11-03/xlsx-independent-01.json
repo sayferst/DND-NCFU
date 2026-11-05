@@ -1,0 +1,18 @@
+{
+  "validator": "openpyxl",
+  "version": "3.1.5",
+  "sheets": [
+    "Действия игроков",
+    "Ответы мастера",
+    "Конфликтные ситуации",
+    "Справочник",
+    "Статистика"
+  ],
+  "rows": 1000,
+  "columns": 20,
+  "frozen": "A2",
+  "data_validations": 6,
+  "human_first": 200,
+  "ai_later": 800,
+  "formula": "=COUNTA('Действия игроков'!A2:A1001)"
+}

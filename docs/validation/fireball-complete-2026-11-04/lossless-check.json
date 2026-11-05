@@ -1,0 +1,12 @@
+{
+  "schema": "fireball-independent-lossless-check-v1",
+  "status": "PASS",
+  "verified_files": 1473,
+  "verified_source_lines": 154196,
+  "canonical_records": 154196,
+  "quarantined_lines": 0,
+  "errors": [],
+  "missing_fields": 0,
+  "all_filtered_files": 1471,
+  "expected_filtered_files": 1471
+}

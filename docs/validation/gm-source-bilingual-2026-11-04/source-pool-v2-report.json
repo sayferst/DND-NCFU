@@ -1,0 +1,75 @@
+{
+  "schema": "gm-complete-source-candidate-pool-v1",
+  "status": "CURATION_COMPLETE_SELECTION_PENDING",
+  "counts": {
+    "fireball_source_records": 153829,
+    "same_source_unit_lower_priority_contexts": 101430,
+    "ambiguous_normalized_state_references": 13108,
+    "crd3_source_turns": 398682,
+    "synthetic_reference_rows": 1100
+  },
+  "review_reasons": {
+    "TEXT_SOURCE_NOT_EXACTLY_RECONSTRUCTED": 81826,
+    "RESULT_OR_COMMAND_NOT_CONFIRMED_BEFORE_TARGET": 551,
+    "TARGET_ACCOUNT_NOT_TIME_LOCAL_DM": 67676,
+    "SHORT_TARGET_RETAINED_FOR_REVIEW": 48751,
+    "UNCLASSIFIED_BEFORE_TEXT_WITHOUT_EXPLICIT_ROLEPLAY_FRAMING": 57352,
+    "TEXT_SOURCE_AMBIGUOUS": 716,
+    "DEATH_CLAIM_WITH_CONFIRMED_SURVIVING_TARGETS": 52,
+    "NUMERIC_ADJUDICATION_WITHOUT_STRUCTURED_RECEIPT": 1036,
+    "TARGET_TEXT_ALREADY_IN_INPUT": 56,
+    "OUT_OF_GAME_OR_PERSONA_ADVERTISEMENT": 1125,
+    "DAMAGE_AMOUNT_NOT_CONFIRMED_IN_AUTOMATION": 19,
+    "AUTOMATION_EMBED_NOT_AVAILABLE_BEFORE_TARGET": 13,
+    "INPUT_PRIVACY_OR_INSTRUCTION_REVIEW": 34,
+    "MIXED_DM_AND_PLAYER_ROLE_SEGMENTS": 7,
+    "PRIVACY_OR_INSTRUCTION_REVIEW": 7
+  },
+  "cases": [
+    [
+      "CRD3",
+      "test",
+      25441
+    ],
+    [
+      "CRD3",
+      "train",
+      61153
+    ],
+    [
+      "FIREBALL",
+      "test",
+      5206
+    ],
+    [
+      "FIREBALL",
+      "train",
+      19445
+    ],
+    [
+      "FIREBALL",
+      "val",
+      2355
+    ],
+    [
+      "PROJECT_REFERENCE",
+      "test",
+      110
+    ],
+    [
+      "PROJECT_REFERENCE",
+      "train",
+      880
+    ],
+    [
+      "PROJECT_REFERENCE",
+      "val",
+      110
+    ]
+  ],
+  "fireball_dm_components": 952,
+  "crd3_grouping": "C1_TRAIN_C2_TEST_NO_CROSS_CAMPAIGN_WINDOWS_NO_CRD3_VALIDATION",
+  "curation_version": "source-dm-curation-2",
+  "human_approved": 0,
+  "training_steps": 0
+}

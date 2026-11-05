@@ -1,0 +1,30 @@
+{
+  "status": "EXACT_AUTO_TOKENIZER_PARITY",
+  "transformers_version": "5.3.0",
+  "examples": 40,
+  "splits": {
+    "train": {
+      "samples": 32,
+      "max_total": 226,
+      "total_tokens": 5530,
+      "supervised_tokens": 1066,
+      "encoded_sha256": "f32e77a9b107b2ec278c02db10d802c05c3cd01c1ae09f1feb2a884aa44f07d8"
+    },
+    "val": {
+      "samples": 4,
+      "max_total": 179,
+      "total_tokens": 655,
+      "supervised_tokens": 111,
+      "encoded_sha256": "27811bd82d900fade21a08294bfe61c6e39976a41d322adba2512031723c01c7"
+    },
+    "test": {
+      "samples": 4,
+      "max_total": 211,
+      "total_tokens": 769,
+      "supervised_tokens": 178,
+      "encoded_sha256": "1bfe2f91d7392f8f045adfb9af273b59044982f352e8a0205f599bb65e6ae24c"
+    }
+  },
+  "training_steps": 0,
+  "weights_loaded": false
+}

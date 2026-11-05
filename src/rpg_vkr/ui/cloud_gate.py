@@ -37,8 +37,20 @@ def cloud_ready(window):
     )
 
 
+def local_ready(window):
+    if getattr(getattr(window, "release_profile", None), "mode", "") == "tester":
+        return False
+    return (
+        (window._session.gameplay or {}).get("free_action_policy") == 1
+        and window.ai_provider.currentData() == "local"
+        and window.enable_local_narrator.isChecked()
+        and window.ai_chat.isChecked()
+        and window.local_model.currentText() in window.ollama.models
+    )
+
+
 def require_cloud(window):
-    if window._legacy_controls or cloud_ready(window):
+    if window._legacy_controls or cloud_ready(window) or local_ready(window):
         return True
     window.narrator_status.setText(NOTICE)
     window.statusBar().showMessage(NOTICE)

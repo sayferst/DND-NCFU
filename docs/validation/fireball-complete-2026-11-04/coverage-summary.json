@@ -1,0 +1,225 @@
+{
+  "schema": "fireball-complete-observations-v1",
+  "observations": 154196,
+  "files_read": 1473,
+  "lines_by_status": {
+    "PRESERVED": 154196
+  },
+  "event_types": {
+    "automation_run": 33,
+    "button_press": 3,
+    "combat_end": 1,
+    "combat_start": 1,
+    "combat_state_update": 57,
+    "command": 60,
+    "filtered_turn": 153854,
+    "message": 182,
+    "snippet_resolution": 5
+  },
+  "source_roles": {
+    "automation": 33,
+    "bot": 70,
+    "human_role_unknown": 172,
+    "unknown": 153921
+  },
+  "language_heuristic_not_verified": {
+    "en_heuristic": 119314,
+    "und": 34882
+  },
+  "views_by_task": {
+    "command_to_result": 153826,
+    "dialogue_sequence": 120420,
+    "entity_observation": 153983,
+    "grounded_utterance": 43383,
+    "negative_outcome_candidate": 14390,
+    "observed_transition": 153854,
+    "raw_event": 342,
+    "utterance_to_command": 120396
+  },
+  "views_by_split": {
+    "test": 75635,
+    "train": 608357,
+    "val": 76602
+  },
+  "dispositions": 1233568,
+  "expected_dispositions": 1233568,
+  "unaccounted_records": 0,
+  "split_violations": 0,
+  "split_design": {
+    "source_groups": 1473,
+    "components": 1470,
+    "normalized_duplicate_clusters": 45,
+    "explicit_demo_combat_links": 1,
+    "components_by_split": {
+      "train": 1176,
+      "val": 147,
+      "test": 147
+    },
+    "grouping_limit": "file proxy when explicit session missing; participant overlap alone is not campaign proof"
+  },
+  "task_decisions": [
+    {
+      "task": "command_to_result",
+      "status": "CANDIDATE",
+      "reason": "source_values; role/privacy review pending; no human approval",
+      "count": 153826
+    },
+    {
+      "task": "command_to_result",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:absent;automation_results:absent",
+      "count": 342
+    },
+    {
+      "task": "command_to_result",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:empty",
+      "count": 28
+    },
+    {
+      "task": "dialogue_sequence",
+      "status": "CANDIDATE",
+      "reason": "source_values; role/privacy review pending; no human approval",
+      "count": 108909
+    },
+    {
+      "task": "dialogue_sequence",
+      "status": "OBSERVATION_ONLY",
+      "reason": "OBSERVATION_CONTEXT_INSUFFICIENT_RETAINED",
+      "count": 11511
+    },
+    {
+      "task": "dialogue_sequence",
+      "status": "UNAVAILABLE",
+      "reason": "before_utterances:absent",
+      "count": 342
+    },
+    {
+      "task": "dialogue_sequence",
+      "status": "UNAVAILABLE",
+      "reason": "before_utterances:empty",
+      "count": 33434
+    },
+    {
+      "task": "entity_observation",
+      "status": "OBSERVATION_ONLY",
+      "reason": "OBSERVATION_VIEW_NOT_SFT_PAIR",
+      "count": 153983
+    },
+    {
+      "task": "entity_observation",
+      "status": "UNAVAILABLE",
+      "reason": "no_recognized_entity_field_in_nested_source_original_still_preserved",
+      "count": 213
+    },
+    {
+      "task": "grounded_utterance",
+      "status": "CANDIDATE",
+      "reason": "source_values; role/privacy review pending; no human approval",
+      "count": 43383
+    },
+    {
+      "task": "grounded_utterance",
+      "status": "UNAVAILABLE",
+      "reason": "after_utterances:absent",
+      "count": 342
+    },
+    {
+      "task": "grounded_utterance",
+      "status": "UNAVAILABLE",
+      "reason": "after_utterances:empty",
+      "count": 110471
+    },
+    {
+      "task": "negative_outcome_candidate",
+      "status": "CANDIDATE",
+      "reason": "source_values; role/privacy review pending; no human approval",
+      "count": 14390
+    },
+    {
+      "task": "negative_outcome_candidate",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:absent;automation_results:absent",
+      "count": 342
+    },
+    {
+      "task": "negative_outcome_candidate",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:empty",
+      "count": 28
+    },
+    {
+      "task": "negative_outcome_candidate",
+      "status": "UNAVAILABLE",
+      "reason": "no_lexical_negative_evidence_interpretation_not_inferred",
+      "count": 139436
+    },
+    {
+      "task": "observed_transition",
+      "status": "CANDIDATE",
+      "reason": "source_values; role/privacy review pending; no human approval",
+      "count": 153854
+    },
+    {
+      "task": "observed_transition",
+      "status": "UNAVAILABLE",
+      "reason": "combat_state_before:absent;combat_state_after:absent",
+      "count": 342
+    },
+    {
+      "task": "raw_event",
+      "status": "OBSERVATION_ONLY",
+      "reason": "OBSERVATION_VIEW_NOT_SFT_PAIR",
+      "count": 342
+    },
+    {
+      "task": "raw_event",
+      "status": "UNAVAILABLE",
+      "reason": "event_type_absent",
+      "count": 153854
+    },
+    {
+      "task": "utterance_to_command",
+      "status": "CANDIDATE",
+      "reason": "source_values; role/privacy review pending; no human approval",
+      "count": 120396
+    },
+    {
+      "task": "utterance_to_command",
+      "status": "UNAVAILABLE",
+      "reason": "before_utterances:empty",
+      "count": 33430
+    },
+    {
+      "task": "utterance_to_command",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:absent;before_utterances:absent",
+      "count": 342
+    },
+    {
+      "task": "utterance_to_command",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:empty",
+      "count": 24
+    },
+    {
+      "task": "utterance_to_command",
+      "status": "UNAVAILABLE",
+      "reason": "commands_norm:empty;before_utterances:empty",
+      "count": 4
+    }
+  ],
+  "human_approved": 0,
+  "train_admitted": 0,
+  "runtime_compatibility": "NOT_REQUIRED_FOR_STORAGE_OR_TASK_CANDIDACY_NOT_IMPLEMENTED_BY_IMPORT",
+  "canonical_original_fields": "all original JSON values retained; immutable raw bytes remain layer A",
+  "raw_release": {
+    "url": "https://datasets.mechanus.zhu.codes/fireball-anonymized-nov-28-2022-kfdjl.tar.gz",
+    "error": "HTTPError",
+    "message": "HTTP Error 403: Forbidden"
+  },
+  "field_inventory_summary": {
+    "paths_and_types": 2132,
+    "full_field_inventory": "included in private corpus coverage.json; no source values removed"
+  }
+}

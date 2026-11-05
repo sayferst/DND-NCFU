@@ -1,0 +1,72 @@
+{
+  "schema": "training-pack-audit-v1",
+  "status": "VALID_PROPOSALS_BLOCKED_DATA",
+  "source_sha256": "a64c6fbe581c7d1bd55e606b2b0d6dfa8cfc474efb3cccb61dd07995c7708019",
+  "counts": {
+    "action_proposals": 1000,
+    "human_review_priority": 200,
+    "ai_later": 800,
+    "open_factual_questions": 644,
+    "synthetic_narrative_preference_pairs": 40,
+    "verified_engine_receipts": 0,
+    "approved_gm_sft_samples": 0,
+    "real_log_QA_observations": 5
+  },
+  "warnings": [
+    {
+      "code": "BOILERPLATE_TARGETS",
+      "field": "outcomes",
+      "unique": 2,
+      "max_repeated": 737
+    },
+    {
+      "code": "BOILERPLATE_TARGETS",
+      "field": "consequences",
+      "unique": 1,
+      "max_repeated": 1000
+    },
+    {
+      "code": "ONE_CLASS_ATTEMPT_POSSIBILITY",
+      "note": "Review label definition; not automatically wrong"
+    },
+    {
+      "code": "SEMANTIC_SPLIT_INDEPENDENCE_NOT_PROVEN",
+      "note": "Exact action grouping passes; related intents share thematic families"
+    }
+  ],
+  "split_counts": {
+    "train": 800,
+    "val": 100,
+    "test": 100
+  },
+  "action_groups": 200,
+  "families": 20,
+  "rulebook_status": "OWNER_CONFIRMED_RUNTIME_IMPLEMENTATION_NOT_VERIFIED",
+  "pair_split_counts": {
+    "train": 37,
+    "test": 1,
+    "val": 2
+  },
+  "sft_status": "BLOCKED_DATA",
+  "sft_admitted": 0,
+  "training_steps": 0,
+  "blockers": [
+    "NO_VERIFIED_TRAINING_EPISODES",
+    "NO_INDIVIDUAL_HUMAN_REVIEW",
+    "INCOMPLETE_WORLD_FACTS"
+  ],
+  "repairs": {
+    "missing_generic_question_links": 274,
+    "facts_invented": false,
+    "human_approval_created": false
+  },
+  "workbook_import_counts": {
+    "action_labels": 1000,
+    "narrator_reviews": 40,
+    "verified_episodes": 0,
+    "math_conflicts": 4
+  },
+  "staged_question_groups": 10,
+  "question_group_membership_may_overlap": true,
+  "raw_owner_data_in_git": false
+}

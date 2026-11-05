@@ -1,0 +1,44 @@
+{
+  "schema": "gm-research-actual-encoder-check-v1",
+  "status": "STRUCTURAL_PASS_TRAINING_BLOCKED",
+  "dataset_sha256": "83ecf58288c7d61d0d1586e792060a8344666e20464d3d9fb0a936e609984b78",
+  "file_sha256": {
+    "train": "b3efd384a6aef128e59d52bdd752fb830883f1368e89d7f86eddcb26615e6ed9",
+    "val": "afab7e12d1b5e7b0ba7e60b51c9e78194e4dd101855b2176fff05fcf16a9b3cb",
+    "test": "2ff81f2b3a0df6991c96ae4daf924f8c257e04f00a9c6266742b5333593b0278"
+  },
+  "native_audit_sha256": "d1998bfc797a7fdb9ed88f62ded94427a3912bf19c75a74e941de693182774a7",
+  "independent_source_tokenizer_samples_in_bound_audit": 37939,
+  "actual_loss_masks_verified": 33406,
+  "splits": {
+    "train": {
+      "samples": 24752,
+      "max_total": 2048,
+      "total_tokens": 19963191,
+      "supervised_tokens": 742940,
+      "encoded_sha256": "cadb92ca21d5acb21e8f51e8839c2d9e2fb64f044560d3ee87f197fcf6d50286"
+    },
+    "val": {
+      "samples": 2081,
+      "max_total": 2041,
+      "total_tokens": 1939567,
+      "supervised_tokens": 59407,
+      "encoded_sha256": "abd7e1717b2d815bb3c7974a0d2ce7dd99f06ac4e0e7f87882e0eeb863f22fa5"
+    },
+    "test": {
+      "samples": 6573,
+      "max_total": 2045,
+      "total_tokens": 5695205,
+      "supervised_tokens": 228023,
+      "encoded_sha256": "f0269a199bb7341291dab082abe5741ee162b831987e95db09ed9f5bb3490c31"
+    }
+  },
+  "silent_truncation": 0,
+  "dropped_samples": 0,
+  "train_admitted": 0,
+  "meaning_or_human_approval": false,
+  "training_preflight": "BLOCKED_DATA: source research corpus requires complete bilingual and meaning review",
+  "training_steps": 0,
+  "faun_weights_loaded": false,
+  "gpu_fit_verified": false
+}

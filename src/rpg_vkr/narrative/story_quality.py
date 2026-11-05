@@ -122,6 +122,19 @@ def check_story_quality(text, frame, player_text, *, brief=None, previous=(), ca
     issues = []
     resolution = campaign.get("resolution") or []
     receipt = campaign.get("receipt") or {}
+    if receipt.get("free_attempt"):
+        from rpg_vkr.narrative.strategic_critic import inspect
+
+        findings = inspect(
+            receipt,
+            prose,
+            objects=campaign.get("objects", []) + campaign.get("public_objects", []),
+        )
+        issues.extend(
+            "Рассказ противоречит квитанции: " + f["code"]
+            for f in findings
+            if f["severity"] == "critical"
+        )
     interaction = campaign.get("interaction_result", "")
     if unsupported_numeric_claim(prose) and not numeric_claim_matches_receipt(
         prose, receipt, campaign.get("resource_balances")

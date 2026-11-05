@@ -1,0 +1,11 @@
+{
+  "status": "PORTABLE_CPU_VERIFIED",
+  "tools_manifest_verified": true,
+  "dataset_layout_verified": true,
+  "tokenization_matches_pretransfer": true,
+  "fresh_cpu_environment": true,
+  "torch_installed": false,
+  "gpu_smoke_run": false,
+  "dry_run_status": "BLOCKED_MODEL",
+  "training_steps": 0
+}

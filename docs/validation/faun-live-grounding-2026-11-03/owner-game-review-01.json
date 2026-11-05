@@ -1,0 +1,88 @@
+{
+  "source": "OWNER_LOCAL_FAUN_AUTHORED_BENCHMARK",
+  "source_sha256": "b0e8fdbf2cac818a21db70f7a076e89aa8fd25b6570457d38d1ae02b35cc2a0c",
+  "model": "hf.co/limloop/MN-12B-Faun-RP-RU-GGUF:Q4_K_M",
+  "model_digest": "2f9499fe553fb70ed2024f024c72d4f3f2326b83f0263e653207f9b0299a39df",
+  "original_status": "LIVE_COMPLETED_REQUIRES_HUMAN_REVIEW",
+  "human_review": "NOT_PERFORMED",
+  "review_kind": "ASSISTANT_INSPECTION_AND_REVISED_RULE_CRITIC",
+  "training_steps": 0,
+  "sft_admitted": 0,
+  "memory_telemetry": "INCOMPLETE_PROCESS_COVERAGE_NOT_MODEL_RAM",
+  "cases": [
+    {
+      "id": "bow_damage",
+      "engine_outcome": "damaged",
+      "reply": "Вы разобрали свой лук, используя метлу и древко. Удочка изготовлена из поврежденных материалов, состояние её плохое.",
+      "elapsed_seconds": 126.6988339999989,
+      "tokens_per_second": 2.252425298940634,
+      "load_seconds": 14.6751905,
+      "original_parser_accepted": true,
+      "revised_rule_findings": [
+        {
+          "code": "UNCONFIRMED_CRAFT_INPUT",
+          "severity": "critical"
+        },
+        {
+          "code": "UNCONFIRMED_CRAFT_INPUT",
+          "severity": "critical"
+        },
+        {
+          "code": "UNCONFIRMED_FINISHED_PRODUCT",
+          "severity": "critical"
+        }
+      ],
+      "save_replay_equal_reported": true,
+      "no_second_action_reported": true
+    },
+    {
+      "id": "bow_partial",
+      "engine_outcome": "partial",
+      "reply": "Вы разобрали лук, заменив его древком на удочку. Удочка изготовлена из ясеневого древка, которое вы нашли. Она крепкая и прочная, но не идеальна, так как изготовлена из подручных материалов. Вы можете использовать её для ловли рыбы в ближайшем водоеме.",
+      "elapsed_seconds": 147.5990443999981,
+      "tokens_per_second": 2.5683500573614033,
+      "load_seconds": 0.0060171,
+      "original_parser_accepted": true,
+      "revised_rule_findings": [
+        {
+          "code": "UNCONFIRMED_CRAFT_INPUT",
+          "severity": "critical"
+        },
+        {
+          "code": "UNCONFIRMED_CRAFT_INPUT",
+          "severity": "critical"
+        },
+        {
+          "code": "UNCONFIRMED_FINISHED_PRODUCT",
+          "severity": "critical"
+        }
+      ],
+      "save_replay_equal_reported": true,
+      "no_second_action_reported": true
+    },
+    {
+      "id": "bow_success",
+      "engine_outcome": "success",
+      "reply": "Вы успешно соорудили удочку из обломков лука. Теперь у вас есть импровизированная удочка.",
+      "elapsed_seconds": 122.08500610000192,
+      "tokens_per_second": 2.6653078673320163,
+      "load_seconds": 0.0057698,
+      "original_parser_accepted": true,
+      "revised_rule_findings": [],
+      "save_replay_equal_reported": true,
+      "no_second_action_reported": true
+    }
+  ],
+  "mean_turn_seconds": 132.1276281666663,
+  "critical_cases": 2,
+  "setup_smoke": {
+    "source_sha256": "ced733086463e210373dbcd9c0e4e510f74fbd88e735f83d0014c9a42fc2c121",
+    "elapsed_seconds": 15.770535200001177,
+    "load_seconds": 10.6316764,
+    "tokens": 13,
+    "tokens_per_second": 3.574201523379677,
+    "response": "Обычная метла без магии не летает.",
+    "done": true,
+    "context_tokens": 2048
+  }
+}

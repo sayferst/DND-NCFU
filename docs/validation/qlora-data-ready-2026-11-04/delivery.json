@@ -1,0 +1,39 @@
+{
+  "schema": "dnd-faun-ready-data-delivery-summary-v1",
+  "status": "ARCHIVE_HASH_CRC_VERIFIED",
+  "file": "DND_NCFU_QLORA_READY_20261104.zip",
+  "bytes": 5092823,
+  "sha256": "7017e29e21d34c02f85014d968654cc01b5232811eb87cc3c5afec341b8a94a0",
+  "files_checked": 123,
+  "source_code_commit": "d0a17dd83d014c67c8bcc4b622239487e96e4770",
+  "datasets": {
+    "baseline": {
+      "dataset_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+      "policy": "grounded-synthetic-v1",
+      "splits": {
+        "train": 880,
+        "val": 110,
+        "test": 110
+      },
+      "full_cpu_check": "PASS",
+      "independent_auto_tokenizer_samples": 1100,
+      "human_reviewed_samples": 0,
+      "training_steps": 0
+    },
+    "fireball-hp": {
+      "dataset_sha256": "529c055869da21495f170015877a16101bc10531b4f27aea1cc54988768036d3",
+      "policy": "fireball-augmented-v1",
+      "splits": {
+        "train": 976,
+        "val": 110,
+        "test": 110
+      },
+      "full_cpu_check": "PASS",
+      "independent_auto_tokenizer_samples": 1196,
+      "human_reviewed_samples": 0,
+      "training_steps": 0
+    }
+  },
+  "weights_included": false,
+  "training_steps": 0
+}

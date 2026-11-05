@@ -62,6 +62,32 @@ def install(window, layout):
             **target_args(window),
         },
     )
+    window.unified_payment = QComboBox()
+    window.unified_payment.addItem("Выберите цену перерасхода", None)
+    window.unified_payment.addItem("Здоровье:2HP за недостающий1MP, можно до0HP", "hp")
+    window.unified_payment.addItem(
+        "Истощение:1уровень за каждые2MP;6уровней — смерть", "exhaustion"
+    )
+    form.addRow(window.unified_payment)
+    window.unified_overcast = button(
+        "Применить с выбранным перерасходом",
+        "overcast",
+        lambda: {
+            "spell": window.unified_spell.currentData(),
+            "payment": window.unified_payment.currentData(),
+            **target_args(window),
+        },
+    )
+    window.unified_death_save = button("Спасбросок смерти", "death_save", dict)
+    window.unified_wait_recovery = button(
+        "Дождаться помощи или восстановления (1час)", "wait", lambda: {"minutes": 60}
+    )
+    window.unified_stabilize = button(
+        "Стабилизировать без расходника (Медицина DC10)",
+        "stabilize",
+        lambda: {"target": window.unified_target.currentData()},
+    )
+    window.unified_food_terms = button("Уточнить условия распределения еды", "food_terms", dict)
     window.unified_recipe = QComboBox()
     for key in RECIPES:
         window.unified_recipe.addItem(key, key)
@@ -203,12 +229,31 @@ def refresh(window):
 
     state = window._session.gameplay
     s = window._session
+    owner_policy = state.get("owner_rules_policy") == 1
+    life = state.get("owner_life", {}).get("hero", {})
+    for widget in (window.unified_payment, window.unified_overcast):
+        widget.setVisible(owner_policy and bool(state["spells"]))
+    window.unified_death_save.setVisible(owner_policy and s.world.hp == 0)
+    window.unified_death_save.setEnabled(not life.get("dead") and not life.get("stable"))
+    window.unified_wait_recovery.setVisible(
+        owner_policy and s.world.hp == 0 and life.get("stable", False)
+    )
+    window.unified_stabilize.setVisible(owner_policy)
+    window.unified_food_terms.setVisible(owner_policy)
     window.unified_info.setText(
         f"{CLASSES[state['identity']['class_id']][0]} · "
         f"уровень{level(state['xp'])} · XP{state['xp']}\n"
         f"HP{s.world.hp}/{s.world.max_hp} · MP{state['mp']}/{state['mp_cap']} · "
         f"ST{state['st']}/{state['st_cap']}\n"
         f"Подготовка+{proficiency(state['xp'])} · {state['copper']} медных"
+        + (
+            f"\nИстощение: {life.get('exhaustion', 0)}/6; "
+            f"спасброски смерти: {life.get('successes', 0)} успехов, "
+            f"{life.get('failures', 0)} провалов. "
+            + ("Мёртв." if life.get("dead") else "Стабилен." if life.get("stable") else "")
+            if owner_policy
+            else ""
+        )
     )
 
     from rpg_vkr.domain.unified import TALENTS, talents

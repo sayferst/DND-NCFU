@@ -1,0 +1,67 @@
+Platform: Linux x86_64
+Python: 3.12.14; SQLite: 3.53.1
+Running: git --version
+git version 2.52.0
+Running: /workspace/DND-NCFU/.venv/bin/python -m pip --no-cache-dir check
+No broken requirements found.
+Running: /workspace/DND-NCFU/.venv/bin/python scripts/check_batches.py
+Full suite batch 1: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 104 items
+
+tests/learning/test_evaluation.py .........                              [  8%]
+tests/learning/test_live_probe.py ....                                   [ 12%]
+tests/learning/test_live_suite.py .......                                [ 19%]
+tests/learning/test_memory_runtime.py .....                              [ 24%]
+tests/learning/test_package.py ............                              [ 35%]
+tests/learning/test_pipeline.py ........                                 [ 43%]
+tests/learning/test_review_and_ui.py ...                                 [ 46%]
+tests/test_accounts.py ......                                            [ 51%]
+tests/test_adventure.py ...................                              [ 70%]
+tests/test_adventure_consistency.py ........                             [ 77%]
+tests/test_adventure_ui.py ............                                  [ 89%]
+tests/test_annotation_v2.py ...........                                  [100%]
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-f997bf9a50a146d884f559fa9a51b2b5/batch-01.xml -
+======================== 104 passed in 67.24s (0:01:07) ========================
+Full suite batch 2: 12 files
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0
+rootdir: /workspace/DND-NCFU
+configfile: pyproject.toml
+collected 3493 items
+
+tests/test_annotation_workbook.py ....                                   [  0%]
+tests/test_artist_panel.py ......................                        [  0%]
+tests/test_attempt_generalization.py Traceback (most recent call last):
+  File "/workspace/DND-NCFU/scripts/check.py", line 41, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/DND-NCFU/scripts/check.py", line 27, in main
+    result = subprocess.run(command, cwd=root, check=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+
+- generated xml file: /workspace/DND-NCFU/build/check-batches-f997bf9a50a146d884f559fa9a51b2b5/batch-02.xml -
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py:183: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+============================= 26 passed in 18.20s ==============================
