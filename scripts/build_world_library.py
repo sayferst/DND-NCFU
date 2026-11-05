@@ -152,6 +152,9 @@ def build():
         }
     )
     schema = {"record": record_schema} | {k: obj(v) for k, v in PROFILES.items()}
+    from import_rpgd100_facts import extend_schema
+
+    extend_schema(schema)
     for value in schema.values():
         value["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     (OUT / "schemas.json").write_text(

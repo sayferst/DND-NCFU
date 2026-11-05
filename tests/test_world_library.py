@@ -38,6 +38,30 @@ def test_seed_manifest_and_determinism(records):
     assert manifest["human_reviewed"] == 0
 
 
+def test_rpgd100_facts_coverage_and_nonexecution(library):
+    facts = read_jsonl(ROOT / "data/world_library/rpgd100-creature-facts.jsonl")
+    main = [r for r in facts if r["attributes"]["source_catalog"] == "bestiary_dnd5e"]
+    assert len(main) == 2874
+    assert len({r["id"] for r in facts}) == len(facts)
+    assert all(r["provenance"]["origin"] == "source-facts/original-description" for r in facts)
+    library.import_records(facts)
+    with pytest.raises(ValueError, match="handler"):
+        preview(library, Session(seed=1), main[0]["id"], "reference_monster")
+
+
+def test_literal_parser_does_not_execute():
+    import sys
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from import_rpgd100_facts import literal_array
+
+    assert literal_array("const x=[{id:'a', flag:!0, n:12}];throw 1") == [
+        {"id": "a", "flag": True, "n": 12}
+    ]
+    with pytest.raises(ValueError):
+        literal_array("const x=[dangerous()]")
+
+
 @pytest.mark.parametrize(
     "mutation", ["boolean_number", "missing", "unknown", "excess_damage", "currency", "nonfinite"]
 )

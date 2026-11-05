@@ -18,7 +18,11 @@ if __name__ == "__main__":
     try:
         library.migrate()
         if not library.all():
-            library.import_records(read_jsonl(ROOT / "data/world_library/seed-v1.jsonl"))
+            rows = read_jsonl(ROOT / "data/world_library/seed-v1.jsonl")
+            facts = ROOT / "data/world_library/rpgd100-creature-facts.jsonl"
+            if facts.exists():
+                rows += read_jsonl(facts)
+            library.import_records(rows)
         window = LibraryWindow(library)
         window.show()
         app.exec()

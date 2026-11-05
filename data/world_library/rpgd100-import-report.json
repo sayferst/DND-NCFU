@@ -1,0 +1,91 @@
+{
+  "retrieved_at": "2026-11-05T03:12:18.781331+00:00",
+  "records": 3920,
+  "total_with_original_seed": 6784,
+  "limit": 20000,
+  "sources": [
+    {
+      "url": "https://rpgd100.ru/scripts/bestiary_dnd5e.js",
+      "records": 2874,
+      "sha256": "bb9b26c2acd1ec2d36e4854c5fb89ba1faed72a54610098dbcea9e8a8fd1ae2a"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/compendium_of_beasts.js",
+      "records": 146,
+      "sha256": "7ed6a0fc09fe5fa74e2e1e21fab5173947259601e92eb65f1bb75161bab6218c"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/compendium_of_dinosaurs.js",
+      "records": 29,
+      "sha256": "3436783c15f5bef4e53c2325daba5a1e52118f3922f541aa894bf97a105b999a"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/deadly_encounters.js",
+      "records": 29,
+      "sha256": "92b9e450545e2194e2ea20bc3e1c82862889dada1ceddf97ebab149a841fb9de"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/dogs_of_war.js",
+      "records": 4,
+      "sha256": "df0da330c3051c3d57a8f85e8e917acdbc851134a13df441b5ebc613760bdcc5"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/drakkenheim_arcadian_council.js",
+      "records": 2,
+      "sha256": "8533d7b716ce5f008612e2ff764292b3ec347eb0eea45ebe5e429da2361df173"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/drakkenheim_denizens.js",
+      "records": 19,
+      "sha256": "e39818e4364bca9db526b3e452676fcfbea4fbf0ce356b5ed7f96ee03db7a450"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/grim_hollow_monster_grimoire_24.js",
+      "records": 409,
+      "sha256": "412898ed6b0139082f3852c8f1ba18562e494ad1596c54c57b60f9c539946b91"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/larsenes_ledger_creatures.js",
+      "records": 53,
+      "sha256": "e286bb6635d034a2632c8e13cb3095ee308a85037747302afa13dddef945ad4c"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/monsters_of_drakkenheim.js",
+      "records": 223,
+      "sha256": "faa77313448dd5c331496a87e3d44600f165af9a6d05491dbe4c4b7ef848290c"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/nocturnal_horrors.js",
+      "records": 40,
+      "sha256": "6daf247c5878fecb3b27e8e06b6c76e63f4c05a6096362265383e9d3122d6505"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/olies_guide_to_familiars.js",
+      "records": 40,
+      "sha256": "6d87e71c7607f3c1bfc8a473f3a4097bcf0395df15076139f676c67e9df3d1ba"
+    },
+    {
+      "url": "https://rpgd100.ru/scripts/steinhardt_bestiary.js",
+      "records": 52,
+      "sha256": "3b8b65dfe99e77bcd1fd328f50a12471e188b790647cb3a9350c1c1c00c6f543"
+    }
+  ],
+  "errors": [],
+  "by_catalog": {
+    "bestiary_dnd5e": 2874,
+    "compendium_of_beasts": 146,
+    "compendium_of_dinosaurs": 29,
+    "deadly_encounters": 29,
+    "dogs_of_war": 4,
+    "drakkenheim_arcadian_council": 2,
+    "drakkenheim_denizens": 19,
+    "grim_hollow_monster_grimoire_24": 409,
+    "larsenes_ledger_creatures": 53,
+    "monsters_of_drakkenheim": 223,
+    "nocturnal_horrors": 40,
+    "olies_guide_to_familiars": 40,
+    "steinhardt_bestiary": 52
+  },
+  "complete_all_bestiaries": false,
+  "note": "Only discovered literal stat arrays; no copied narrative/action descriptions. Missing values flagged, not guessed."
+}

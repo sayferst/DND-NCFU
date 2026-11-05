@@ -18,7 +18,16 @@ CATEGORY = {
     "boss": "bosses",
     "quest": "quest",
 }
-DESCRIPTIVE_ONLY = {"spell", "rune", "scroll", "combination", "skill", "race", "recipe"}
+DESCRIPTIVE_ONLY = {
+    "spell",
+    "rune",
+    "scroll",
+    "combination",
+    "skill",
+    "race",
+    "recipe",
+    "source_creature",
+}
 LEGACY_MATERIALS = {
     "wl_material_0": ("mat_ash", "Ясень"),
     "wl_material_2": ("mat_oak", "Дуб"),
@@ -37,11 +46,15 @@ def preview(library, session, template_id, instance_id):
     by_name = {normalized(r.name): r.id for r in catalog.definitions}
     definitions = []
     resolved = {}
+    revisions = {}
 
     def convert(id, revision=None):
-        if id in resolved:
-            return resolved[id]
         revision = revision or library.revision(id)
+        if id in resolved:
+            if revisions[id] != revision:
+                raise ValueError("Conflicting pinned component revisions")
+            return resolved[id]
+        revisions[id] = revision
         row = library.get(id, revision)
         if id in LEGACY_MATERIALS and revision == 1:
             legacy_id, name = LEGACY_MATERIALS[id]

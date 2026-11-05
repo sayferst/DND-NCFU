@@ -38,7 +38,8 @@
           "combination",
           "skill",
           "race",
-          "recipe"
+          "recipe",
+          "source_creature"
         ]
       },
       "category": {
@@ -109,7 +110,8 @@
           "origin": {
             "type": "string",
             "enum": [
-              "invented/homebrew"
+              "invented/homebrew",
+              "source-facts/original-description"
             ]
           },
           "source": {
@@ -1522,5 +1524,150 @@
     ],
     "additionalProperties": false,
     "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_creature": {
+    "type": "object",
+    "properties": {
+      "source_url": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 600
+      },
+      "source_catalog": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "source_name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      },
+      "source_type": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 100
+      },
+      "source_size": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 100
+      },
+      "hp": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000000
+      },
+      "challenge_rating": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 40
+      },
+      "speed": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 200
+      },
+      "alignment": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 100
+      },
+      "armour_class": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "abilities": {
+        "type": "object",
+        "properties": {
+          "str": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40
+          },
+          "dex": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40
+          },
+          "con": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40
+          },
+          "int": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40
+          },
+          "wis": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40
+          },
+          "cha": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40
+          }
+        },
+        "required": [
+          "str",
+          "dex",
+          "con",
+          "int",
+          "wis",
+          "cha"
+        ],
+        "additionalProperties": false
+      },
+      "missing_fields": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "maxItems": 20
+      },
+      "feature_names": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "maxItems": 80
+      },
+      "appearance_homebrew": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "mechanics": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "required": [
+      "source_url",
+      "source_catalog",
+      "source_name",
+      "source_type",
+      "source_size",
+      "hp",
+      "challenge_rating",
+      "speed",
+      "alignment",
+      "armour_class",
+      "abilities",
+      "missing_fields",
+      "feature_names",
+      "appearance_homebrew",
+      "mechanics"
+    ],
+    "additionalProperties": false
   }
 }

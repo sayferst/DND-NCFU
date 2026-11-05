@@ -22,6 +22,8 @@ ROOTS = [
     "https://dnd.su/",
     "https://ruleholder.com/",
     "https://longstoryshort.app/srd/",
+    "https://longstoryshort.app/",
+    "https://next.dnd.su/",
 ]
 HOSTS = {urlsplit(url).hostname for url in ROOTS}
 
@@ -83,7 +85,7 @@ def inventory(output, budget):
         if output.exists()
         else {"pages": {}, "pending": ROOTS}
     )
-    queue = deque(previous["pending"])
+    queue = deque(dict.fromkeys(ROOTS + previous["pending"]))
     pages = previous["pages"]
     attempts = 0
     while queue and attempts < budget:

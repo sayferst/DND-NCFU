@@ -46,8 +46,16 @@ class Library:
             with self.db.transaction():
                 yield
         else:
-            with self.db:
+            if self.db.in_transaction:
+                raise ValueError("Nested library transactions are not supported")
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
                 yield
+            except BaseException:
+                self.db.rollback()
+                raise
+            else:
+                self.db.commit()
 
     def migrate(self):
         """Versioned opt-in DDL; no access to application saves."""
@@ -165,6 +173,8 @@ class Library:
             if len({r["id"] for r in records}) != len(records):
                 raise ValueError("Duplicate incoming ID")
             merged = previous | {r["id"]: r for r in records}
+            if len(merged) > 20000:
+                raise ValueError("Global library limit is 20000 records")
             validate_bundle(list(merged.values()))
             changed = []
             for row in records:

@@ -59,6 +59,9 @@ def main():
         result = None
         if args.command == "init":
             rows = read_jsonl(ROOT / "data/world_library/seed-v1.jsonl")
+            facts = ROOT / "data/world_library/rpgd100-creature-facts.jsonl"
+            if facts.exists():
+                rows += read_jsonl(facts)
             result = {"imported": library.import_records(rows)}
         elif args.command == "search":
             result = [
