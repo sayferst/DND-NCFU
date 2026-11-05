@@ -2,6 +2,7 @@
 
 import json
 
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QComboBox,
     QFileDialog,
@@ -22,6 +23,7 @@ from rpg_vkr.world_library.model import read_jsonl
 class LibraryWindow(QWidget):
     def __init__(self, library):
         super().__init__()
+        self.setFont(QFont("Segoe UI", 10))
         self.library = library
         self.setWindowTitle("DND-NCFU — библиотека шаблонов мира")
         self.resize(1000, 700)
@@ -164,6 +166,8 @@ class LibraryWindow(QWidget):
                     f"ID: {row['id']}",
                 ]
             )
+            if row["profile"] == "source_creature":
+                lines.append("Справочные характеристики — из источника; внешний эскиз — авторский.")
             self.details.setPlainText("\n".join(lines))
 
     def import_file(self):
