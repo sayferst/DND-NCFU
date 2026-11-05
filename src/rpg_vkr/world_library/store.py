@@ -145,11 +145,12 @@ class Library:
 
         rows = self.execute(
             (
-                "SELECT id FROM wl_templates WHERE retired=0 AND search_text "
-                "LIKE ? ESCAPE '!' AND (category=? OR category LIKE ? ESCAPE "
+                "SELECT id FROM wl_templates WHERE retired=0 AND (id=? OR search_text "
+                "LIKE ? ESCAPE '!') AND (category=? OR category LIKE ? ESCAPE "
                 "'!') ORDER BY id LIMIT ?"
             ),
             (
+                query.strip(),
                 "%" + escape(normalized(query)) + "%",
                 category,
                 escape(category) + ".%" if category else "%",

@@ -98,6 +98,11 @@ def compile_equipment(record):
 
 
 def validate_equipment(row):
+    if isinstance(row, dict) and row.get("rules_version") == "library-equipment-2":
+        from rpg_vkr.world_library.physical_rules import validate_physical
+
+        validate_physical(row)
+        return
     keys = {
         "kind",
         "category",

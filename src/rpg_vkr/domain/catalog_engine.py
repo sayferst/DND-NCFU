@@ -194,6 +194,13 @@ class Engine:
         return value + bonus >= dc
 
     def template(self, item):
+        if item.get("library_instance_rules"):
+            from rpg_vkr.world_library.physical_rules import instance_rules
+
+            entity = self.actors[item["source"]]
+            definition = self.definitions[entity.definition_id]
+            rules = instance_rules(entity, definition)
+            return rules | {"id": definition.id, "name": definition.name}
         if item.get("library_definition"):
             from rpg_vkr.world_library.equipment_rules import validate_equipment
 
@@ -300,8 +307,20 @@ class Engine:
                 item.update(
                     library_definition=definition.id, kind=row["kind"], ammo_kind=row["ammo_kind"]
                 )
+                if row["rules_version"] == "library-equipment-2":
+                    item.update(quality=row["quality"], durability_cap=row["durability"])
+                    item["durability"] = min(item["durability"], row["durability"])
                 if row["category"] == "ammunition":
                     item["ammunition"] = True
+            if (entity.state or {}).get("library_instance_rules"):
+                from rpg_vkr.world_library.physical_rules import instance_rules
+
+                row = instance_rules(entity, definition)
+                item.update(
+                    library_instance_rules=True,
+                    quality=row["quality"],
+                    durability_cap=row["durability"],
+                )
             self.state["items"] = [i for i in self.state["items"] if i["id"] != id] + [item]
             return item
         raise ValueError("Предмет недоступен или не принадлежит герою.")
@@ -355,6 +374,14 @@ class Engine:
             self.state["items"].remove(item)
             self.actors.pop(item.get("source", item["id"]), None)
             self.things.pop(item.get("source", item["id"]), None)
+        elif (
+            item.get("library_definition")
+            and self.template(item).get("rules_version") == "library-equipment-2"
+        ):
+            id = item.get("source", item["id"])
+            self.actors[id] = replace(self.actors[id], quantity=item["quantity"])
+            if id in self.things:
+                self.things[id] = replace(self.things[id], quantity=item["quantity"])
 
     def require_materials(self, ingredients, multiplier=1):
         selected = []
@@ -540,6 +567,9 @@ class Engine:
             if shield > blocked:
                 self.status(target, "shield", shield - blocked, 2)
         amount = max(0, amount - resistance)
+        if hasattr(self, "_library_damage_collector"):
+            self._library_damage_collector.append(amount)
+            return amount
         if self.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import change_hp
 

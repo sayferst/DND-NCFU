@@ -124,6 +124,8 @@ def build():
                     "combines",
                     "species",
                     "starting_inventory",
+                    "parent",
+                    "child",
                 ],
             },
             "target": ID,
@@ -140,7 +142,7 @@ def build():
             "description": text(1800, 40),
             "price_cp": number(0, 1000000),
             "attributes": {"type": "object"},
-            "links": array(link),
+            "links": array(link, 512),
             "provenance": obj(
                 {
                     "origin": {"type": "string", "enum": ["invented/homebrew"]},
@@ -184,7 +186,7 @@ def build():
             "provenance": {
                 "origin": "invented/homebrew",
                 "source": "DND-NCFU original frontier setting",
-                "generator": "world-library-1",
+                "generator": "world-library-2",
                 "review": "unreviewed",
             },
         }
@@ -772,20 +774,42 @@ def build():
                         "mp": 2 * level + mode,
                         "duration_turns": 1 + level if mode != 2 else 0,
                         "components": ["жест", "слово", "фокус мастера"],
+                        "rules": {
+                            "operation": ["shield", "signal", "damage", "defence"][mode],
+                            "element": [
+                                "fire",
+                                "cold",
+                                "physical",
+                                "thunder",
+                                "radiant",
+                                "necrotic",
+                                "poison",
+                                "thunder",
+                            ][j],
+                            "power": 2 * level if mode == 0 else 1 + level // 2,
+                            "duration": 0 if mode == 2 else 1 + level,
+                            "dice": f"{level}d4",
+                        },
                         "effect": (
                             f"{effect.capitalize()} природы «{nature}»; интенсивность "
-                            f"{level}. Числовой эффект ещё не подключён к обработчику."
+                            f"{level}. Обработчик library-magic-1: "
+                            + [
+                                f"защитный запас {2 * level}",
+                                "световой сигнал без автоматического воздействия на NPC",
+                                f"магическая атака, урон {level}d4",
+                                f"бонус защиты {1 + level // 2}",
+                            ][mode]
                         ),
                         "counterplay": (
-                            "Прервать концентрацию или покинуть область; проверяется движком."
+                            "Эффект ограничен сроком; запас защиты расходуется уроном. "
+                            "Эти авторские формулы не требуют концентрации."
                         ),
                     },
                     (
                         f"Авторская формула: {effect} природы «{nature}», ступень "
                         f"{level}. Длительность ограничена, стоимость MP обязательна. "
                         f"Более высокая ступень не отменяет укрытия, доступность цели "
-                        f"или сопротивление. До регистрации обработчика это "
-                        f"описательный проект."
+                        f"или сопротивление. Это авторская формула, не правило SRD."
                     ),
                 )
                 spells.append(spell)
@@ -808,19 +832,20 @@ def build():
                         [ref(spell, "spell")],
                     )
     for i in range(0, len(spells), 2):
+        children = [next(r for r in records if r["id"] == key) for key in spells[i : i + 2]]
         add(
             f"combination_{i}",
             f"Сплетение формул {i // 2 + 1}",
             "combination",
             {
-                "level": 3,
-                "mp": 12,
-                "effect": "Совместный покров и сигнал; эффекты не суммируют урон автоматически.",
+                "level": max(r["attributes"]["level"] for r in children),
+                "mp": sum(r["attributes"]["mp"] for r in children),
+                "effect": "Две связанные формулы исполняются по порядку за их суммарную стоимость.",
             },
             (
                 "Авторская исследовательская комбинация двух формул. "
-                "Совместимость, суммарная стоимость и порядок исполнения "
-                "требуют отдельной проверки движка. Запись не разрешает "
+                "Суммарная стоимость, уровень и порядок исполнения "
+                "проверяются движком. Запись не разрешает "
                 "бесконечное усиление заклинаний."
             ),
             links=[ref(spells[i], "combines"), ref(spells[i + 1], "combines")],
@@ -846,15 +871,15 @@ def build():
     validate_bundle(records)
     (OUT / "seed-v1.jsonl").write_text("\n".join(dump(r) for r in records) + "\n", encoding="utf-8")
     report = {
-        "generator": "world-library-1",
+        "generator": "world-library-2",
         "records": len(records),
         "by_profile": dict(sorted(Counter(r["profile"] for r in records).items())),
         "sha256_canonical_records": digest(records),
         "human_reviewed": 0,
         "invented_homebrew": len(records),
         "note": (
-            "Procedural regional/craft variants; not 20000 independently "
-            "curated entities or executable mechanics."
+            "Procedural regional/craft variants with bounded versioned handlers; "
+            "not independently curated entities or a complete SRD implementation."
         ),
     }
     (OUT / "manifest.json").write_text(

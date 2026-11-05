@@ -35,7 +35,10 @@
   "vulnerabilities": 138,
   "simple_multiattack": 327,
   "unconditional_regeneration": 3,
-  "creatures_with_unsupported_features": 3846,
-  "unsupported_feature_occurrences": 18182,
+  "creatures_with_unsupported_features": 3853,
+  "unsupported_feature_occurrences": 18278,
+  "homebrew_magic_templates_with_handlers": 560,
+  "homebrew_recipes_with_handlers": 720,
+  "reference_records_without_gameplay_handler": 20251,
   "full_rule_coverage": false
 }

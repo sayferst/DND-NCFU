@@ -477,7 +477,13 @@ def take(e, plan):
     )
     entity = e.actors.get(id)
     definition = e.definitions.get(entity.definition_id) if entity else None
-    if not definition or definition.properties.get("portable") is not True:
+    portable = definition and definition.properties.get("portable") is True
+    if definition and not portable and (entity.state or {}).get("library_instance_rules"):
+        from rpg_vkr.world_library.physical_rules import instance_rules
+
+        rules = instance_rules(entity, definition)
+        portable = rules["mass_g"] <= 30000
+    if not portable:
         clarify("Переносимость предмета пока не подтверждена.")
     if thing.owner not in ("", "hero", e.scene.current) and e.state.get("owner_rules_policy") != 1:
         clarify("У вещи есть владелец; уточните передачу или отдельную попытку кражи.")

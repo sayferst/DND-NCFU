@@ -46,6 +46,34 @@ def compile_creature(record):
         implemented.update(name for name in a["feature_names"] if "регенерац" in name.casefold())
     if a.get("extra_attacks"):
         implemented.add("Мультиатака")
+    version = VERSION
+    extended = {}
+    if "actions_v2" in a:
+        from rpg_vkr.world_library.creature_actions import VERSION as ACTIONS_VERSION
+        from rpg_vkr.world_library.creature_actions import validate
+
+        validate(a["actions_v2"])
+        version = ACTIONS_VERSION
+        extended["source_actions_v2"] = a["actions_v2"]
+        for field, flag in (
+            ("source_resistances", "force_resistance"),
+            ("source_immunities", "force_immunity"),
+            ("source_vulnerabilities", "force_vulnerability"),
+        ):
+            if a["actions_v2"].get(flag):
+                extended[field] = sorted(set(a[field.removeprefix("source_")]) | {"force"})
+        implemented = set()
+        if a.get("regeneration"):
+            implemented.update(
+                name for name in a["feature_names"] if "регенерац" in name.casefold()
+            )
+        if a.get("extra_attacks"):
+            implemented.add("Мультиатака")
+        implemented.update(
+            action["name"] for action in a["actions_v2"]["actions"] if action["complete"]
+        )
+        if a["actions_v2"]["multiattack_complete"]:
+            implemented.add("Мультиатака")
     return {
         "hp_max": hp,
         "armour_class": ac,
@@ -53,7 +81,7 @@ def compile_creature(record):
         "damage_dice": dice,
         "attack_bonus": bonus,
         "attack_damage": max(1, 3 + ability_modifier(stats["strength"])),
-        "library_rules_version": VERSION,
+        "library_rules_version": version,
         "homebrew_fields": invented,
         "unsupported_source_features": [
             name for name in a["feature_names"] if name not in implemented
@@ -67,12 +95,18 @@ def compile_creature(record):
         if a.get("attacks")
         else "physical",
         "behavior": "hunter",
+        **extended,
     }
 
 
 def validate_runtime(properties):
-    if properties.get("library_rules_version") != VERSION:
+    from rpg_vkr.world_library.creature_actions import VERSION as ACTIONS_VERSION
+    from rpg_vkr.world_library.creature_actions import validate
+
+    if properties.get("library_rules_version") not in {VERSION, ACTIONS_VERSION}:
         raise ValueError("Unknown library creature rules")
+    if properties["library_rules_version"] == ACTIONS_VERSION:
+        validate(properties["source_actions_v2"])
     if (
         type(properties.get("attack_bonus")) is not int
         or not -10 <= properties["attack_bonus"] <= 40
@@ -93,6 +127,8 @@ def validate_runtime(properties):
         "psychic",
         "thunder",
     }
+    if properties["library_rules_version"] == ACTIONS_VERSION:
+        elements.add("force")
     if properties.get("source_attack_element", "physical") not in elements | {"physical"}:
         raise ValueError("Unknown creature attack element")
     for field in ("source_resistances", "source_immunities", "source_vulnerabilities"):

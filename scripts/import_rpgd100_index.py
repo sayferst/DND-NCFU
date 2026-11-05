@@ -20,8 +20,23 @@ def canonical(url):
     return path, slug
 
 
+def preserve_details(row, previous):
+    """A repeat index scan must not erase a separately verified enrichment."""
+    old = previous.get(row["id"])
+    identity = ("source_catalog", "native_id", "source_name", "source_url")
+    if old and all(old["attributes"][k] == row["attributes"][k] for k in identity):
+        fields = ("record_type", "details", "source_asset", "source_asset_sha256", "data_state")
+        if all(k in old["attributes"] for k in fields):
+            row["attributes"].update({k: old["attributes"][k] for k in fields})
+            row["description"] = old["description"]
+            row["links"] = old["links"]
+    return row
+
+
 def main():
     out = ROOT / "data/world_library"
+    prior_path = out / "rpgd100-reference-index.jsonl"
+    previous = {r["id"]: r for r in read_jsonl(prior_path)} if prior_path.exists() else {}
     index = json.loads((out / "rpgd100-all-indexes.json").read_text(encoding="utf-8"))
     if not index["complete_indexes"]:
         raise ValueError("Catalog inventory incomplete")
@@ -99,6 +114,7 @@ def main():
                 "reference_entries": len(catalog["entries"]) - linked,
             }
         )
+    rows = {key: preserve_details(row, previous) for key, row in rows.items()}
     all_rows = existing + list(rows.values())
     validate_bundle(all_rows)
     (out / "rpgd100-reference-index.jsonl").write_text(

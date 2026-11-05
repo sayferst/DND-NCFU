@@ -26,6 +26,8 @@ PARAMETERS = {
     "advance": ({"minutes"}, {"minutes"}),
     "encounter": ({"enemies", "allies"}, {"enemies"}),
     "attack": ({"target", "lethal"}, {"target"}),
+    "library_magic": ({"item", "target"}, {"item"}),
+    "library_recipe": ({"item"}, {"item"}),
     "recover": (set(), set()),
     "dodge": (set(), set()),
     "raise": ({"ability"}, {"ability"}),
@@ -100,6 +102,16 @@ def perform(e, command, args):
         from rpg_vkr.domain.contracts import perform as contract_action
 
         (contract_action if command == "contract" else faction_action)(e, args)
+        return
+    if command == "library_magic":
+        from rpg_vkr.world_library.magic_rules import perform as library_magic
+
+        library_magic(e, args)
+        return
+    if command == "library_recipe":
+        from rpg_vkr.world_library.recipe_rules import perform as library_recipe
+
+        library_recipe(e, args)
         return
     if e.state["battle"] and command in (
         "rest",
@@ -663,8 +675,11 @@ def craft(e, command, args):
     )
 
 
-def hit(e, attacker, target):
+def hit(e, attacker, target, *, source_attack=None):
+    if attacker == "hero" and source_attack is not None:
+        raise ValueError("Source attack choices belong to source creatures")
     ammunition = None
+    source_parts = []
     if e.hp(attacker) <= 0:
         return
     if e.hp(target) <= 0:
@@ -768,6 +783,32 @@ def hit(e, attacker, target):
             bonus = spec.properties["attack_bonus"] - e.status_power(attacker, "weaken")
             damage_bonus = e.status_power(attacker, "power")
             row["damage_type"] = spec.properties.get("source_attack_element", "physical")
+            if source_attack is not None:
+                from rpg_vkr.world_library.creature_actions import VERSION, selected
+
+                if spec.properties["library_rules_version"] != VERSION:
+                    raise ValueError("Attack choices require versioned source actions")
+                source_action = selected(spec.properties, source_attack)
+                source_parts = source_action.get("components", [])
+                import re
+
+                formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", source_action["dice"])
+                row.update(
+                    dice=formula[1],
+                    damage_type=source_action["element"],
+                    category="longbow" if source_action["ranged"] else "dagger",
+                )
+                bonus = source_action["bonus"] - e.status_power(attacker, "weaken")
+                damage_bonus += int(formula[2] or 0)
+                e.events.append(
+                    {
+                        "kind": "source_attack_choice",
+                        "actor": attacker,
+                        "action_index": source_attack,
+                        "name": source_action["name"],
+                        "version": VERSION,
+                    }
+                )
         cost = max(1, 1 + e.status_power(attacker, "slow") - e.status_power(attacker, "haste"))
         if (actor.state or {}).get("st", 10) < cost:
             e.actor_resource(attacker, "st", 3)
@@ -776,6 +817,10 @@ def hit(e, attacker, target):
     defence = e.defence(target) + e.status_power(target, "ranged_guard") * int(
         row["category"] in ("longbow", "crossbow")
     )
+    if row.get("rules_version") == "library-equipment-2":
+        defence = max(1, defence - row["penetration"])
+    if ammunition and ammunition.get("rules_version") == "library-equipment-2":
+        defence = max(1, defence - ammunition["penetration"])
     if ammunition and ammunition.get("effect") == "pierce":
         defence -= ammunition["power"]
     unconscious_melee = False
@@ -815,7 +860,19 @@ def hit(e, attacker, target):
                 and e.args.get("lethal") is False
                 and row["category"] not in ("longbow", "crossbow", "focus"),
             }
-        delivered = e.damage(target, amount, row.get("damage_type", "physical"), attacker)
+        if len(source_parts) > 1:
+            from rpg_vkr.world_library.damage_packets import apply as damage_packet
+
+            packet = [(amount, row.get("damage_type", "physical"))]
+            for part in source_parts[1:]:
+                formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", part["dice"])
+                part_damage = e.roll(formula[1], "Дополнительный тип урона")
+                if critical:
+                    part_damage += e.roll(formula[1], "Критический дополнительный урон")
+                packet.append((max(0, part_damage + int(formula[2] or 0)), part["element"]))
+            delivered = damage_packet(e, target, packet, attacker)
+        else:
+            delivered = e.damage(target, amount, row.get("damage_type", "physical"), attacker)
         e.owner_hit_flags = {}
         if e.state.get("catalog_revision") == 3:
             amount = delivered
@@ -941,8 +998,18 @@ def npc_round(e, command):
 
             move_actor(e, id, e.scene.current)
             continue
-        hit(e, id, enemies[0])
-        if spec.properties.get("library_rules_version"):
+        from rpg_vkr.world_library.creature_actions import VERSION as SOURCE_ACTIONS_VERSION
+
+        if spec.properties.get("library_rules_version") == SOURCE_ACTIONS_VERSION:
+            from rpg_vkr.world_library.creature_actions import turn
+
+            turn(e, id, enemies[0], spec.properties)
+        else:
+            hit(e, id, enemies[0])
+        if (
+            spec.properties.get("library_rules_version")
+            and spec.properties["library_rules_version"] != SOURCE_ACTIONS_VERSION
+        ):
             from rpg_vkr.world_library.creature_rules import after_attack
 
             after_attack(e, id, enemies[0], spec.properties)

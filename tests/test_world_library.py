@@ -193,6 +193,7 @@ def test_idempotency_updates_rollback_export(library, records, tmp_path):
 
 def test_search_injection_retire_and_pending(library, records):
     assert library.search("лук", "physical.weapon")
+    assert library.search(records[0]["id"])[0] == records[0]
     assert not library.search("' OR 1=1 --")
     assert not library.search("%")
     row = deepcopy(records[0])
@@ -234,6 +235,12 @@ def test_library_window(qt_app, library):
     window.rows = [next(row for row in equipment if row["attributes"]["facts"])]
     window.show_record(0)
     assert "source-facts/original-description" in window.details.toPlainText()
+    references = read_jsonl(ROOT / "data/world_library/rpgd100-reference-index.jsonl")
+    window.rows = [next(r for r in references if r["attributes"]["record_type"] == "spell")]
+    window.show_record(0)
+    shown = window.details.toPlainText()
+    assert '"source_fields"' in shown
+    assert "Цена: справочное значение не задано" in shown
     window.close()
 
 

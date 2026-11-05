@@ -20,13 +20,8 @@ CATEGORY = {
     "quest": "quest",
 }
 DESCRIPTIVE_ONLY = {
-    "spell",
-    "rune",
-    "scroll",
-    "combination",
     "skill",
     "race",
-    "recipe",
     "source_reference",
 }
 LEGACY_MATERIALS = {
@@ -57,7 +52,14 @@ def preview(library, session, template_id, instance_id):
             return resolved[id]
         revisions[id] = revision
         row = library.get(id, revision)
-        if row["profile"] in {"source_creature", "source_equipment"} and (
+        if row["profile"] in {
+            "source_creature",
+            "source_equipment",
+            "spell",
+            "rune",
+            "scroll",
+            "combination",
+        } and (
             not getattr(session, "is_unified", False)
             or session.gameplay.get("catalog_revision") != 3
         ):
@@ -120,6 +122,55 @@ def preview(library, session, template_id, instance_id):
                 library_item_rules=rules,
                 portable=rules["mass_g"] <= 30000,
             )
+        from rpg_vkr.world_library.physical_rules import PROFILES, compile_physical
+
+        if profile in PROFILES:
+            rules = compile_physical(row)
+            properties.update(library_item_rules=rules, portable=rules["mass_g"] <= 30000)
+        if profile == "recipe":
+            from rpg_vkr.world_library.recipe_rules import compile_recipe
+
+            recipe_links = []
+            for relation, target, target_revision, quantity in library.execute(
+                "SELECT relation,target_id,target_revision,quantity FROM wl_links "
+                "WHERE id=? AND revision=? AND relation IN ('input','output') ORDER BY ordinal",
+                (id, revision),
+            ).fetchall():
+                recipe_links.append(
+                    {
+                        "relation": relation,
+                        "definition": convert(target, target_revision),
+                        "quantity": quantity,
+                    }
+                )
+            properties.update(
+                library_recipe_rules=compile_recipe(
+                    row, recipe_links, existing | {d.id: d for d in definitions}
+                ),
+                portable=True,
+                mass_g=1,
+                durability=1,
+            )
+        if profile in {"spell", "rune", "scroll", "combination"}:
+            from rpg_vkr.world_library.magic_rules import compile_magic
+
+            dependencies = []
+            for target, target_revision in library.execute(
+                "SELECT target_id,target_revision FROM wl_links WHERE id=? AND revision=? "
+                "AND relation IN ('spell','combines') ORDER BY ordinal",
+                (id, revision),
+            ).fetchall():
+                dependency = convert(target, target_revision)
+                definition = existing.get(dependency) or next(
+                    value for value in definitions if value.id == dependency
+                )
+                dependencies.append(definition.properties["library_magic_rules"])
+            properties.update(
+                library_magic_rules=compile_magic(row, dependencies),
+                portable=True,
+                mass_g=a.get("mass_g", 1),
+                durability=a.get("durability", 1),
+            )
         properties |= {
             "library_id": id,
             "library_revision": revision,
@@ -148,7 +199,32 @@ def preview(library, session, template_id, instance_id):
 
     target = convert(template_id)
     world = session.interaction_state()
-    entity = Entity(instance_id, target, world.current)
+    target_definition = existing.get(target) or next(d for d in definitions if d.id == target)
+    instance_state = None
+    if template_id in LEGACY_MATERIALS and target == LEGACY_MATERIALS[template_id][0]:
+        from rpg_vkr.world_library.physical_rules import compile_physical
+
+        instance_rules = compile_physical(library.get(template_id, revisions[template_id]))
+        instance_state = {
+            "condition": instance_rules["durability"],
+            "library_instance_rules": instance_rules,
+        }
+    entity = Entity(
+        instance_id,
+        target,
+        world.current,
+        state=instance_state
+        or (
+            {"condition": target_definition.properties["durability"]}
+            if any(
+                target_definition.properties.get(key)
+                for key in ("library_magic_rules", "library_recipe_rules")
+            )
+            or target_definition.properties.get("library_item_rules", {}).get("rules_version")
+            == "library-equipment-2"
+            else None
+        ),
+    )
     # The same validator used by commit rejects duplicate IDs, hero grants and stale scenes.
     record = Registration(
         tuple(definitions),

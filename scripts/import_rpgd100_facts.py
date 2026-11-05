@@ -15,9 +15,11 @@ sys.path.insert(0, str(ROOT / "src"))
 from rpg_vkr.world_library.model import dump, schemas, validate_bundle  # noqa: E402
 
 
-def literal_array(source):
+def literal_array(source, *, allow_duplicate_keys=False):
     """Restricted data grammar: objects/arrays/JSON scalars and minified booleans."""
-    match = re.search(r"(?:const|let|var)\s+\w+\s*=\s*\[", source)
+    match = re.search(
+        r"(?:(?:const|let|var)\s+|[,;]\s*)\w+\s*=\s*(?:Object\.freeze\(\s*)?[\[{]", source
+    )
     if not match:
         raise ValueError("No literal array")
     pos = match.end() - 1
@@ -78,7 +80,7 @@ def literal_array(source):
                     if source[pos] != ":":
                         raise ValueError("Expected colon")
                     pos += 1
-                    if key in value:
+                    if key in value and not allow_duplicate_keys:
                         raise ValueError("Duplicate key")
                     value[key] = read()
                 else:
@@ -93,6 +95,12 @@ def literal_array(source):
             result = source[pos + 1] == "0"
             pos += 2
             return result
+        if char in "+-.0123456789":
+            token = re.compile(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?").match(source, pos)
+            if token:
+                pos = token.end()
+                number = token[0]
+                return float(number) if any(c in number for c in ".eE") else int(number)
         result, pos = decoder.raw_decode(source, pos)
         return result
 
@@ -188,6 +196,15 @@ def extend_schema(spec):
         }
     )
     spec["source_reference"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    from rpg_vkr.world_library.reference_details import register
+
+    register(spec)
+    from rpg_vkr.world_library.creature_actions import register as register_actions
+
+    register_actions(spec)
+    from rpg_vkr.world_library.magic_rules import register as register_magic
+
+    register_magic(spec)
     return spec
 
 

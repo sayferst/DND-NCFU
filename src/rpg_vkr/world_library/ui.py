@@ -30,7 +30,7 @@ class LibraryWindow(QWidget):
         layout = QVBoxLayout(self)
         filters = QHBoxLayout()
         self.query = QLineEdit()
-        self.query.setPlaceholderText("Название или описание")
+        self.query.setPlaceholderText("Название, описание или точный ID")
         self.category = QComboBox()
         self.category.addItem("Все категории", "")
         for (category,) in library.execute("SELECT id FROM wl_categories ORDER BY id").fetchall():
@@ -50,6 +50,7 @@ class LibraryWindow(QWidget):
             ("Импорт JSONL", self.import_file),
             ("Предложить новый шаблон", self.propose_file),
             ("Создать экземпляр в копии мира", self.instantiate),
+            ("Применить в копии мира", self.activate),
         ):
             button = QPushButton(label)
             button.clicked.connect(lambda checked=False, fn=callback: self.guarded(fn))
@@ -144,8 +145,15 @@ class LibraryWindow(QWidget):
                 "method": "Порядок работы",
                 "mode": "Тип производства",
             }
-            lines = [row["name"], row["description"], "", f"Цена: {row['price_cp']} медных"]
+            price = (
+                "Цена: справочное значение не задано"
+                if row["profile"] == "source_reference"
+                else f"Цена: {row['price_cp']} медных"
+            )
+            lines = [row["name"], row["description"], "", price]
             for key, value in row["attributes"].items():
+                if isinstance(value, dict):
+                    value = "\n" + json.dumps(value, ensure_ascii=False, indent=2)
                 if isinstance(value, list):
                     value = "; ".join(
                         f"{v['from']} → {v['to']}: {v['event']}"
@@ -227,4 +235,47 @@ class LibraryWindow(QWidget):
         export_session(session, destination)
         QMessageBox.information(
             self, "Создана копия мира", "Экземпляр размещён в текущей сцене. Исходный мир сохранён."
+        )
+
+    def activate(self):
+        operation, ok = QInputDialog.getItem(
+            self, "Действие движка", "Что применить?", ["Магическая формула", "Рецепт"], 0, False
+        )
+        if not ok:
+            return
+        source, _ = QFileDialog.getOpenFileName(
+            self, "Мир с формулой у героя", "", "SQLite (*.sqlite3)"
+        )
+        if not source:
+            return
+        instance_id, ok = QInputDialog.getText(
+            self, "Формула", "ID принадлежащего герою экземпляра:"
+        )
+        if not ok:
+            return
+        target_id = "hero"
+        if operation == "Магическая формула":
+            target_id, ok = QInputDialog.getText(
+                self, "Цель", "ID цели (hero — герой):", text="hero"
+            )
+            if not ok:
+                return
+        destination, _ = QFileDialog.getSaveFileName(
+            self, "Новая копия после применения", "", "SQLite (*.sqlite3)"
+        )
+        if not destination:
+            return
+        from rpg_vkr.storage.knowledge import export_session, restore_session
+
+        session = restore_session(source)
+        session.perform_gameplay(
+            "library_magic" if operation == "Магическая формула" else "library_recipe",
+            {"item": instance_id, "target": target_id}
+            if operation == "Магическая формула"
+            else {"item": instance_id},
+            "library-magic-" + session._request_token(),
+        )
+        export_session(session, destination)
+        QMessageBox.information(
+            self, "Действие выполнено", "Создана новая копия с журналом действий движка."
         )

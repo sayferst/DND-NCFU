@@ -87,6 +87,14 @@ def validate_record(record):
     if record["category"].split(".")[-1] != record["profile"]:
         raise ValueError("Category/profile mismatch")
     a = record["attributes"]
+    if record["profile"] == "source_reference":
+        from rpg_vkr.world_library.reference_details import validate_details
+
+        validate_details(a, spec, validate)
+    if record["profile"] == "source_creature" and "actions_v2" in a:
+        from rpg_vkr.world_library.creature_actions import validate as validate_actions
+
+        validate_actions(a["actions_v2"])
     if record["profile"] in {"npc", "creature", "boss"}:
         if a["hp_max"] > 20 + 40 * a["level"]:
             raise ValueError("Actor exceeds homebrew HP envelope")
@@ -94,6 +102,10 @@ def validate_record(record):
         raise ValueError("Weapon exceeds mundane damage envelope")
     if record["profile"] == "spell" and a["mp"] < a["level"]:
         raise ValueError("Spell MP below level")
+    if record["profile"] == "spell" and "rules" in a:
+        from rpg_vkr.world_library.magic_rules import compile_magic
+
+        compile_magic(record, [])
     return record
 
 
@@ -108,6 +120,36 @@ def validate_bundle(records):
         by_id[row["id"]] = row
         names.add(key)
     for row in records:
+        if row["profile"] == "source_reference" and row["attributes"].get("record_type") in {
+            "class",
+            "race",
+        }:
+            details = row["attributes"]["details"]
+            parent = details["parent_global_id"]
+            children = details["child_ids"]
+            if len(set(children)) != len(children) or row["id"] in children or parent == row["id"]:
+                raise ValueError("Duplicate/self hierarchy reference")
+            for target in ([parent] if parent else []) + children:
+                if (
+                    target not in by_id
+                    or by_id[target]["attributes"].get("record_type")
+                    != row["attributes"]["record_type"]
+                ):
+                    raise ValueError("Missing/incompatible hierarchy reference")
+            if parent and row["id"] not in by_id[parent]["attributes"]["details"]["child_ids"]:
+                raise ValueError("Nonreciprocal hierarchy parent")
+            if any(
+                by_id[child]["attributes"]["details"]["parent_global_id"] != row["id"]
+                for child in children
+            ):
+                raise ValueError("Nonreciprocal hierarchy child")
+            trail = {row["id"]}
+            ancestor = parent
+            while ancestor:
+                if ancestor in trail or len(trail) > 8:
+                    raise ValueError("Hierarchy cycle/depth")
+                trail.add(ancestor)
+                ancestor = by_id[ancestor]["attributes"]["details"]["parent_global_id"]
         for link in row["links"]:
             if link["target"] not in by_id or link["target"] == row["id"]:
                 raise ValueError("Missing/self reference: " + link["target"])
@@ -118,6 +160,11 @@ def validate_bundle(records):
                 "plant",
             }:
                 raise ValueError("Invalid component profile")
+            if (
+                link["relation"] in {"spell", "combines"}
+                and by_id[link["target"]]["profile"] != "spell"
+            ):
+                raise ValueError("Magic carrier/combination must reference a spell")
         if row["profile"] == "recipe":
             if not {"input", "output"} <= {x["relation"] for x in row["links"]}:
                 raise ValueError("Recipe needs inputs and outputs")

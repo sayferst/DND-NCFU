@@ -42,12 +42,34 @@ def main():
     instance.add_argument("instance_id")
     instance.add_argument("source_sqlite", type=Path)
     instance.add_argument("destination_sqlite", type=Path)
+    activate = sub.add_parser("activate")
+    activate.add_argument("instance_id")
+    activate.add_argument("source_sqlite", type=Path)
+    activate.add_argument("destination_sqlite", type=Path)
+    activate.add_argument("--target", default="hero")
+    activate.add_argument("--operation", choices=("magic", "craft"), default="magic")
     args = parser.parse_args()
     if args.command == "export-sqlite":
         from rpg_vkr.world_library.migration import export_sqlite
 
         result = export_sqlite(args.source, args.destination)
         print(dump({"world_id": result["world_id"], "digest": result["digest"]}))
+        return
+    if args.command == "activate":
+        from rpg_vkr.storage.knowledge import export_session, restore_session
+
+        if args.destination_sqlite.exists():
+            raise ValueError("Destination must be a new save copy")
+        session = restore_session(args.source_sqlite)
+        session.perform_gameplay(
+            "library_magic" if args.operation == "magic" else "library_recipe",
+            {"item": args.instance_id, "target": args.target}
+            if args.operation == "magic"
+            else {"item": args.instance_id},
+            "library-magic-" + session._request_token(),
+        )
+        export_session(session, args.destination_sqlite)
+        print(dump({"activated": args.instance_id, "copy": str(args.destination_sqlite)}))
         return
     library = (
         Library.postgres(os.environ["DND_LIBRARY_DSN"])
