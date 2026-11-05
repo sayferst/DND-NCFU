@@ -62,6 +62,25 @@ def test_literal_parser_does_not_execute():
         literal_array("const x=[dangerous()]")
 
 
+def test_complete_equipment_index_and_visual_variants(library):
+    from rpg_vkr.world_library.appearance import appearance
+
+    rows = read_jsonl(ROOT / "data/world_library/rpgd100-equipment-facts.jsonl")
+    assert len(rows) == 391
+    assert len({row["id"] for row in rows}) == 391
+    assert sum(row["attributes"]["missing_numeric_facts"] for row in rows) == 6
+    library.import_records(rows)
+    with pytest.raises(ValueError, match="handler"):
+        preview(library, Session(seed=1), rows[0]["id"], "unpriced_source_item")
+    assert appearance("a", "Слизь", "слизь", "большая") == appearance(
+        "a", "Слизь", "слизь", "большая"
+    )
+    assert appearance("a", "Слизь", "слизь", "большая") != appearance(
+        "b", "Слизь", "слизь", "большая"
+    )
+    assert "бескостная" in appearance("a", "Слизь", "слизь", "большая")
+
+
 @pytest.mark.parametrize(
     "mutation", ["boolean_number", "missing", "unknown", "excess_damage", "currency", "nonfinite"]
 )

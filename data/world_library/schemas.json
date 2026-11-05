@@ -39,7 +39,8 @@
           "skill",
           "race",
           "recipe",
-          "source_creature"
+          "source_creature",
+          "source_equipment"
         ]
       },
       "category": {
@@ -1667,6 +1668,68 @@
       "feature_names",
       "appearance_homebrew",
       "mechanics"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_equipment": {
+    "type": "object",
+    "properties": {
+      "source_url": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 600
+      },
+      "source_name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      },
+      "section": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 100
+      },
+      "facts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "value": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 180
+            }
+          },
+          "required": [
+            "field",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 30
+      },
+      "missing_numeric_facts": {
+        "type": "boolean"
+      },
+      "price_status": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "required": [
+      "source_url",
+      "source_name",
+      "section",
+      "facts",
+      "missing_numeric_facts",
+      "price_status"
     ],
     "additionalProperties": false,
     "$schema": "https://json-schema.org/draft/2020-12/schema"

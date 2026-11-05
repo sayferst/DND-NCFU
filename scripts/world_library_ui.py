@@ -22,6 +22,9 @@ if __name__ == "__main__":
             facts = ROOT / "data/world_library/rpgd100-creature-facts.jsonl"
             if facts.exists():
                 rows += read_jsonl(facts)
+            equipment = ROOT / "data/world_library/rpgd100-equipment-facts.jsonl"
+            if equipment.exists():
+                rows += read_jsonl(equipment)
             library.import_records(rows)
         window = LibraryWindow(library)
         window.show()

@@ -144,6 +144,14 @@ def extend_schema(spec):
         }
     )
     spec["source_creature"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    if "source_equipment" not in profiles:
+        profiles.append("source_equipment")
+    spec["source_equipment"] = obj({
+        "source_url": text(600), "source_name": text(160), "section": text(100, 0),
+        "facts": array(obj({"field": text(40), "value": text(180, 0)}), 30),
+        "missing_numeric_facts": {"type": "boolean"}, "price_status": text(200),
+    })
+    spec["source_equipment"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     return spec
 
 
@@ -272,11 +280,9 @@ def run():
                                             :200
                                         ]
                                     )
-                    appearance = (
-                        f"Авторский эскиз для DND-NCFU: {kind or 'существо неизвестного типа'}, "
-                        f"размер — {size or 'не установлен'}. Индивидуальные черты внешности "
-                        "пока не разработаны; канонической иллюстрации эта запись не заменяет."
-                    )
+                    from rpg_vkr.world_library.appearance import appearance as visual_variant
+
+                    appearance = visual_variant(id, name, kind, size)
                     row = {
                         "id": id,
                         "name": (name[:65] + " · " + id[-8:]),

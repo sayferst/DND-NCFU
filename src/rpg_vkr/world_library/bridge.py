@@ -27,6 +27,7 @@ DESCRIPTIVE_ONLY = {
     "race",
     "recipe",
     "source_creature",
+    "source_equipment",
 }
 LEGACY_MATERIALS = {
     "wl_material_0": ("mat_ash", "Ясень"),

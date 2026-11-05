@@ -62,6 +62,9 @@ def main():
             facts = ROOT / "data/world_library/rpgd100-creature-facts.jsonl"
             if facts.exists():
                 rows += read_jsonl(facts)
+            equipment = ROOT / "data/world_library/rpgd100-equipment-facts.jsonl"
+            if equipment.exists():
+                rows += read_jsonl(equipment)
             result = {"imported": library.import_records(rows)}
         elif args.command == "search":
             result = [
