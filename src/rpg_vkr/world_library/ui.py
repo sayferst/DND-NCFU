@@ -74,7 +74,97 @@ class LibraryWindow(QWidget):
 
     def show_record(self, index):
         if 0 <= index < len(self.rows):
-            self.details.setPlainText(json.dumps(self.rows[index], ensure_ascii=False, indent=2))
+            row = self.rows[index]
+            labels = {
+                "mass_g": "Масса, г",
+                "durability": "Прочность",
+                "quality": "Качество",
+                "purpose": "Назначение",
+                "history": "История",
+                "damage_count": "Кубиков урона",
+                "damage_die": "Граней кубика",
+                "penetration": "Пробитие",
+                "hands": "Рук",
+                "defence": "Защита",
+                "slot": "Место экипировки",
+                "compatible": "Совместимость",
+                "hp_max": "Максимум HP",
+                "level": "Уровень",
+                "species": "Вид",
+                "profession": "Профессия",
+                "social_status": "Положение",
+                "beliefs": "Убеждения",
+                "appearance": "Внешность",
+                "motivation": "Мотив",
+                "biography": "Биография",
+                "age_years": "Возраст",
+                "surname": "Фамилия",
+                "initial_mood": "Настроение",
+                "mood_transitions": "Условия смены настроения",
+                "territory": "Территория",
+                "diet": "Питание",
+                "tactics": "Поведение",
+                "school": "Школа магии",
+                "nature": "Природа",
+                "mp": "Стоимость MP",
+                "duration_turns": "Длительность, ходов",
+                "components": "Компоненты формулы",
+                "effect": "Предлагаемый эффект",
+                "counterplay": "Противодействие",
+                "proficiency": "Подготовка",
+                "potency": "Сила",
+                "fictional": "Вымышленное вещество",
+                "nutrition": "Питательность",
+                "shelf_days": "Срок хранения, дней",
+                "habitat": "Место произрастания",
+                "processing": "Обработка",
+                "season": "Сезон",
+                "harvest": "Сбор",
+                "deposit": "Месторождение",
+                "yield_percent": "Выход материала, %",
+                "family": "Группа материала",
+                "subject": "Тема",
+                "author": "Автор",
+                "objective": "Задача",
+                "issuer": "Источник задания",
+                "trigger": "Активация",
+                "charges": "Заряды",
+                "ability": "Характеристика",
+                "use": "Применение",
+                "limit": "Ограничение",
+                "lifespan": "Срок жизни",
+                "size": "Размер",
+                "culture": "Культура",
+                "trait": "Особенность",
+                "minutes": "Время, минут",
+                "difficulty": "Сложность",
+                "labour_cp": "Стоимость работы, медных",
+                "method": "Порядок работы",
+                "mode": "Тип производства",
+            }
+            lines = [row["name"], row["description"], "", f"Цена: {row['price_cp']} медных"]
+            for key, value in row["attributes"].items():
+                if isinstance(value, list):
+                    value = "; ".join(
+                        f"{v['from']} → {v['to']}: {v['event']}" if isinstance(v, dict) else str(v)
+                        for v in value
+                    )
+                lines.append(f"{labels.get(key, key)}: {value}")
+            if row["links"]:
+                lines.extend(["", "Состав и связанные записи:"])
+                for link in row["links"]:
+                    target = self.library.get(link["target"])
+                    lines.append(f"• {target['name']} × {link['quantity']} — {link['role']}")
+            lines.extend(
+                [
+                    "",
+                    "Авторский проект без ручной редакторской приёмки.",
+                    "Новые эффекты требуют обработчика движка.",
+                    f"Происхождение: {row['provenance']['origin']}",
+                    f"ID: {row['id']}",
+                ]
+            )
+            self.details.setPlainText("\n".join(lines))
 
     def import_file(self):
         path, _ = QFileDialog.getOpenFileName(self, "Импорт шаблонов", "", "JSONL (*.jsonl)")

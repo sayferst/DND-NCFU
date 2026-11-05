@@ -206,6 +206,14 @@ def test_postgresql_parity(records, tmp_path):
         assert library.search("лук", "physical.weapon")
         library.import_records(records)
         assert library.revision(records[0]["id"]) == 1
+        changed = deepcopy(records[0])
+        changed["description"] += " Проверка версии PostgreSQL."
+        library.import_records([changed], expected={changed["id"]: 1})
+        assert library.get(changed["id"], 1) == records[0]
+        assert library.get(changed["id"]) == changed
+        with pytest.raises(ValueError, match="Stale"):
+            library.import_records([records[0]], expected={changed["id"]: 1})
+        assert library.revision(changed["id"]) == 2
         session = Session(seed=3)
         source = tmp_path / "pg-source.sqlite3"
         export_session(session, source)
