@@ -468,3 +468,14 @@ def test_unknown_condition_semantics_cannot_be_enabled_by_a_proposal():
     program["powers"][0]["effect"].update(condition="petrified", rounds=10)
     with pytest.raises(ValueError, match="complete versioned handler"):
         validate(program)
+
+
+def test_v2_single_attack_count_is_preserved_when_no_new_exact_sequence(monkeypatch):
+    from rpg_vkr.domain import catalog_actions_v2
+
+    e, _ = engine_with_rules()
+    properties = e.definitions["wounded_type"].properties | {"source_extra_attacks": 2}
+    calls = []
+    monkeypatch.setattr(catalog_actions_v2, "hit", lambda *a, **kw: calls.append(kw))
+    runtime.turn(e, "wounded", "hero", properties)
+    assert [r["source_attack"] for r in calls] == [0, 0, 0]

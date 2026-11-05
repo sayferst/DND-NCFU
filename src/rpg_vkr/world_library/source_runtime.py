@@ -571,6 +571,8 @@ def turn(engine, actor, target, properties):
         old_turn(engine, actor, target, properties)
         return
     sequence = spec["multiattack"] or [available[0]]
+    if not spec["multiattack"] and len(actions) == 1:
+        sequence *= 1 + properties.get("source_extra_attacks", 0)
     movement = speed(engine, actor, max(spec["speed"], spec["fly_speed"]))
     if engine.state.get("owner_rules_policy") == 1:
         from rpg_vkr.domain.owner_rules_runtime import life
