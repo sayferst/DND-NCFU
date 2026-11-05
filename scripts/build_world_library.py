@@ -186,7 +186,11 @@ def build():
             "provenance": {
                 "origin": "invented/homebrew",
                 "source": "DND-NCFU original frontier setting",
-                "generator": "world-library-2",
+                "generator": (
+                    "world-library-3"
+                    if profile in {"food", "medicine", "poison", "book", "quest"}
+                    else "world-library-2"
+                ),
                 "review": "unreviewed",
             },
         }
@@ -477,7 +481,11 @@ def build():
                 elif profile in {"medicine", "poison"}:
                     a |= {
                         "effect": (
-                            "Вымышленное состояние; исполнение требует отдельного обработчика."
+                            "Восстанавливает 2 × силу HP живой цели; расходуется одна единица."
+                            if profile == "medicine"
+                            else "Вымышленный боевой порошок: проверка нанесения, затем стойкость "
+                            "Сл 10 + сила; при провале цели 1d4 + сила урона ядом. "
+                            "Единица расходуется при попытке."
                         ),
                         "potency": 1 + j,
                         "fictional": True,
@@ -871,7 +879,7 @@ def build():
     validate_bundle(records)
     (OUT / "seed-v1.jsonl").write_text("\n".join(dump(r) for r in records) + "\n", encoding="utf-8")
     report = {
-        "generator": "world-library-2",
+        "generator": "world-library-3",
         "records": len(records),
         "by_profile": dict(sorted(Counter(r["profile"] for r in records).items())),
         "sha256_canonical_records": digest(records),

@@ -709,3 +709,11 @@ https://www.dndbeyond.com/sources/dnd/basic-rules-2014/spellcasting .
 Чужие абзацы в seed не включены. Это адаптер закреплённых source-фактов,
 не заявление принадлежности всего RPGD100 к SRD и не замена правил R01–R14.
 Версии правил разделены; ограничения: docs/SOURCE_RULES_V3.md.
+# Дополнение 05.11.2026: инструкции обучения и подключения
+
+Для WORLD_MASTER_TRAINING.md проверены официальные технические руководства:
+https://huggingface.co/docs/peft/developer_guides/quantization и
+https://docs.ollama.com/import . Приведены ссылки и собственное изложение,
+тексты руководств/веса моделей не включены в seed. Новые utility-правила и
+представление карточек — оригинальный DND-NCFU homebrew; это не новые права
+на исходные материалы RPGD100 или остальных перечисленных сайтов.

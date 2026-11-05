@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QMessageBox,
     QPushButton,
+    QTabWidget,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -43,8 +44,13 @@ class LibraryWindow(QWidget):
         self.results = QListWidget()
         self.details = QTextEdit()
         self.details.setReadOnly(True)
+        self.card_preview = QTextEdit()
+        self.card_preview.setReadOnly(True)
+        tabs = QTabWidget()
+        tabs.addTab(self.card_preview, "Карточка для мастера")
+        tabs.addTab(self.details, "Все поля и происхождение")
         layout.addWidget(self.results, 1)
-        layout.addWidget(self.details, 2)
+        layout.addWidget(tabs, 2)
         actions = QHBoxLayout()
         for label, callback in (
             ("Импорт JSONL", self.import_file),
@@ -74,10 +80,37 @@ class LibraryWindow(QWidget):
         self.results.clear()
         self.results.addItems([f"{r['name']} · {r['id']}" for r in self.rows])
         self.details.clear()
+        self.card_preview.clear()
 
     def show_record(self, index):
         if 0 <= index < len(self.rows):
             row = self.rows[index]
+            from rpg_vkr.world_library.presentation import card, render
+
+            revision = self.library.revision(row["id"])
+            pinned = dict(
+                self.library.execute(
+                    "SELECT target_id,target_revision FROM wl_links WHERE id=? AND revision=?",
+                    (row["id"], revision),
+                ).fetchall()
+            )
+            resolve = lambda id: self.library.get(id, pinned[id])  # noqa: E731
+            value = card(row, resolve=resolve, revision=revision)
+            status = (
+                "Справочная карточка; автоматического игрового действия нет."
+                if value["mechanics"]["version"] == "descriptive"
+                else "Программа: " + value["mechanics"]["version"]
+            )
+            pending = value["mechanics"]["pending_features"]
+            if pending:
+                status += f"\nОсобенностей без обработчика: {len(pending)}."
+            self.card_preview.setPlainText(
+                render(value)
+                + "\n\n"
+                + status
+                + f"\nПроисхождение: {value['provenance']['origin']}"
+                + f"\nID: {row['id']}; редакция: {revision}"
+            )
             labels = {
                 "mass_g": "Масса, г",
                 "durability": "Прочность",
@@ -167,7 +200,7 @@ class LibraryWindow(QWidget):
             if row["links"]:
                 lines.extend(["", "Состав и связанные записи:"])
                 for link in row["links"]:
-                    target = self.library.get(link["target"])
+                    target = resolve(link["target"])
                     lines.append(f"• {target['name']} × {link['quantity']} — {link['role']}")
             lines.extend(
                 [
@@ -230,7 +263,34 @@ class LibraryWindow(QWidget):
         from rpg_vkr.world_library.bridge import commit, preview
 
         session = restore_session(source)
-        record = preview(self.library, session, self.rows[index]["id"], instance_id)
+        with_inventory = self.rows[index]["profile"] == "npc"
+        try:
+            record = preview(
+                self.library,
+                session,
+                self.rows[index]["id"],
+                instance_id,
+                with_inventory=with_inventory,
+            )
+        except ValueError as error:
+            if "pins a different template revision" not in str(error):
+                raise
+            answer = QMessageBox.question(
+                self,
+                "Новая редакция шаблона",
+                "Создать новую редакцию для нового экземпляра?\n"
+                "Уже существующие предметы и существа сохранят прежние свойства.",
+            )
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+            record = preview(
+                self.library,
+                session,
+                self.rows[index]["id"],
+                instance_id,
+                with_inventory=with_inventory,
+                new_revision=True,
+            )
         commit(session, record)
         export_session(session, destination)
         QMessageBox.information(
@@ -239,7 +299,12 @@ class LibraryWindow(QWidget):
 
     def activate(self):
         operation, ok = QInputDialog.getItem(
-            self, "Действие движка", "Что применить?", ["Магическая формула", "Рецепт"], 0, False
+            self,
+            "Действие движка",
+            "Что применить?",
+            ["Магическая формула", "Рецепт", "Еда лекарство яд книга или квестовая вещь"],
+            0,
+            False,
         )
         if not ok:
             return
@@ -254,7 +319,7 @@ class LibraryWindow(QWidget):
         if not ok:
             return
         target_id = "hero"
-        if operation == "Магическая формула":
+        if operation != "Рецепт":
             target_id, ok = QInputDialog.getText(
                 self, "Цель", "ID цели (hero — герой):", text="hero"
             )
@@ -268,10 +333,17 @@ class LibraryWindow(QWidget):
         from rpg_vkr.storage.knowledge import export_session, restore_session
 
         session = restore_session(source)
-        session.perform_gameplay(
-            "library_magic" if operation == "Магическая формула" else "library_recipe",
-            {"item": instance_id, "target": target_id}
+        command = (
+            "library_magic"
             if operation == "Магическая формула"
+            else "library_recipe"
+            if operation == "Рецепт"
+            else "library_use"
+        )
+        session.perform_gameplay(
+            command,
+            {"item": instance_id, "target": target_id}
+            if operation != "Рецепт"
             else {"item": instance_id},
             "library-magic-" + session._request_token(),
         )

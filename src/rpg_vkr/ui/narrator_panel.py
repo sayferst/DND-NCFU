@@ -963,6 +963,35 @@ def accept_world_plan(window, result):
     window._story_obstacle = hints.get("obstacle") or ""
     window._pending_memories = memories
     text = window._chat_text
+    if hints.get("library_requests"):
+        from rpg_vkr.domain.interactions import nonexecuting
+        from rpg_vkr.world_library.requests import prepare
+
+        if nonexecuting(text):
+            failed(window, "Вопрос, отрицание и цитата не создают новую сущность.")
+            return
+        try:
+            requested = prepare(
+                window._session,
+                hints["library_requests"],
+                model=window.ollama.response_model or window.local_model.currentText(),
+            )
+        except (ValueError, TypeError, KeyError, OSError) as error:
+            failed(window, "Создание из библиотеки не выполнено: " + str(error))
+            return
+        names = "\n".join(d.name for d in requested.definitions)
+        if not window._confirm(
+            "Создать предложенные экземпляры в текущей сцене?\n"
+            + names
+            + "\nИмущество NPC остаётся у NPC. HP, деньги и RNG героя не изменяются."
+        ):
+            cancel_narration(window)
+            return
+        definitions, entities, reason = (
+            requested.definitions,
+            requested.entities,
+            requested.reason,
+        )
     if trade and window._session.schema_version == 31:
         hints["gameplay"] = {
             "command": trade["operation"],
@@ -1171,6 +1200,22 @@ def accept_world_plan(window, result):
         while results and len(json.dumps(results, ensure_ascii=False)) > 24000:
             results.pop()
         state["catalog_query_results"] = results
+        from rpg_vkr.world_library.narrator import POLICY, retrieve
+
+        reference_cards = {}
+        for query in queries:
+            reference = retrieve(query)
+            for value in (reference or {}).get("cards", []):
+                reference_cards.setdefault(value["id"], value)
+        if reference_cards:
+            cards = list(reference_cards.values())[:3]
+            while cards and len(json.dumps(cards, ensure_ascii=False)) > 3200:
+                cards.pop()
+            state["world_library"] = {
+                "status": "matched" if cards else "no_match",
+                "cards": cards,
+                "policy": POLICY,
+            }
         window._catalog_reads += 1
         window.ollama.plan_world(
             build_frame(window._session),

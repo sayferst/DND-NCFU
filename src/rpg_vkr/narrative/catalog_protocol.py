@@ -55,6 +55,7 @@ def validate_proposal(value, plan, state):
                 "assessment",
                 "reply",
                 "memories",
+                "library_requests",
             )
         )
         or plan.get("check") != "none"
@@ -97,7 +98,7 @@ def planning_context(session, query=""):
         ]
 
     scene = session.interaction_state()
-    return {
+    result = {
         "commands": sorted(
             (
                 COMMANDS
@@ -172,6 +173,41 @@ def planning_context(session, query=""):
             else {}
         ),
     }
+    if session.catalog:
+        definitions = {d.id: d for d in session.catalog.definitions}
+        things = {t.id: t for t in scene.things}
+        items = []
+        for entity in session.catalog.entities:
+            thing = things.get(entity.id)
+            if entity.owner_id != "hero" or thing is None or scene.root_holder(thing) != "hero":
+                continue
+            definition = definitions[entity.definition_id]
+            properties = definition.properties
+            command = (
+                "library_magic"
+                if properties.get("library_magic_rules")
+                else "library_recipe"
+                if properties.get("library_recipe_rules")
+                else "library_use"
+                if properties.get("library_utility_rules")
+                else ""
+            )
+            if command:
+                items.append(
+                    {
+                        "instance_id": entity.id,
+                        "name": definition.name,
+                        "command": command,
+                        "args": {"item": entity.id},
+                        "utility": properties.get("library_utility_rules", {}).get("profile", ""),
+                        "mp": properties.get("library_magic_rules", {}).get("mp", 0),
+                    }
+                )
+            if len(items) == 12:
+                break
+        if items:
+            result["library_items"] = items
+    return result
 
 
 GUIDE = (
@@ -190,6 +226,10 @@ GUIDE = (
     'При gameplay: steps:[],places:[],check:"none", остальные действия и reply отсутствуют. '
     "Это только предложение: движок проверит ресурсы и цели и рассчитает квитанцию; "
     "исход заранее не описывай."
+    " Если в library_items есть экземпляр, используй его command и item из args. "
+    "library_magic применяет формулу с MP, library_recipe расходует материалы, "
+    "library_use применяет еду, лекарство, вымышленный яд, книгу или квестовую вещь. "
+    "При необходимости добавь target — ID цели из текущей сцены; для еды и чтения target=hero."
 )
 
 
@@ -222,6 +262,9 @@ def describe_proposal(session, proposal):
         "overcast": "Применить магию с опасным перерасходом",
         "contract": "Поручение",
         "faction": "Объединение",
+        "library_magic": "Применить формулу из библиотеки",
+        "library_recipe": "Выполнить рецепт из библиотеки",
+        "library_use": "Использовать предмет из библиотеки",
     }
     names = {r["id"]: r["name"] for r in catalog.load().values()}
     scene = session.interaction_state()

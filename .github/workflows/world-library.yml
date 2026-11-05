@@ -43,3 +43,9 @@ jobs:
           tests/test_source_rules_runtime.py
           tests/test_complete_campaign.py
           tests/test_gm_review_transfer.py
+          tests/test_library_master_context.py
+          tests/test_library_master_requests.py
+          tests/test_library_npc_inventory.py
+          tests/test_library_utility_runtime.py
+          tests/test_catalog_ui_playable.py
+          tests/test_library_all_creation.py

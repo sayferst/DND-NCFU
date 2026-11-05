@@ -32,11 +32,15 @@ LEGACY_MATERIALS = {
 }
 
 
-def preview(library, session, template_id, instance_id):
+def preview(
+    library, session, template_id, instance_id, *, with_inventory=False, new_revision=False
+):
     """Pin dependency closure and scene. Never grant HP, money, resources or rolls."""
     from rpg_vkr.domain.catalog import Registration, register
 
     catalog = session.catalog or seed_catalog()
+    if type(with_inventory) is not bool or type(new_revision) is not bool:
+        raise ValueError("Creation options must be Boolean")
     library.get(template_id)  # Top-level retired templates cannot spawn new instances.
     existing = {r.id: r for r in catalog.definitions}
     by_name = {normalized(r.name): r.id for r in catalog.definitions}
@@ -75,12 +79,20 @@ def preview(library, session, template_id, instance_id):
                 return legacy_id
         if row["profile"] in DESCRIPTIVE_ONLY:
             raise ValueError("No executable handler for this content profile")
+        definition_id = id
         if id in existing:
-            if existing[id].properties.get("library_digest") != digest(row):
+            if existing[id].properties.get("library_digest") == digest(row):
+                resolved[id] = id
+                return id
+            if not new_revision or existing[id].properties.get("library_id") != id:
                 raise ValueError("World pins a different template revision")
-            resolved[id] = id
-            return id
-        if normalized(row["name"]) in by_name:
+            definition_id = id[:50] + "_v" + digest(row)[:10]
+            if definition_id in existing:
+                if existing[definition_id].properties.get("library_digest") != digest(row):
+                    raise ValueError("Revision identity collision")
+                resolved[id] = definition_id
+                return definition_id
+        if normalized(row["name"]) in by_name and definition_id == id:
             # Explicit reconciliation is needed; never silently equate same-name content.
             raise ValueError("Name already exists in world; reconcile aliases explicitly")
         pinned = library.execute(
@@ -127,6 +139,11 @@ def preview(library, session, template_id, instance_id):
         if profile in PROFILES:
             rules = compile_physical(row)
             properties.update(library_item_rules=rules, portable=rules["mass_g"] <= 30000)
+        from rpg_vkr.world_library.utility_rules import PROFILES as UTILITY_PROFILES
+        from rpg_vkr.world_library.utility_rules import compile_utility
+
+        if profile in UTILITY_PROFILES and row["provenance"]["generator"] == "world-library-3":
+            properties["library_utility_rules"] = compile_utility(row)
         if profile == "recipe":
             from rpg_vkr.world_library.recipe_rules import compile_recipe
 
@@ -184,7 +201,7 @@ def preview(library, session, template_id, instance_id):
             else "descriptive-until-engine-handler",
         }
         definition = Definition(
-            id,
+            definition_id,
             row["name"],
             kind,
             (CATEGORY.get(profile, "miscellaneous"),),
@@ -194,13 +211,18 @@ def preview(library, session, template_id, instance_id):
             origin="generated",
         )
         definitions.append(definition)
-        resolved[id] = id
-        return id
+        resolved[id] = definition_id
+        return definition_id
 
     target = convert(template_id)
     world = session.interaction_state()
     target_definition = existing.get(target) or next(d for d in definitions if d.id == target)
     instance_state = None
+    if target_definition.properties.get("library_utility_rules", {}).get("profile") == "food":
+        instance_state = {
+            "library_created_minute": session.gameplay["minute"],
+            "condition": target_definition.properties["library_item_rules"]["durability"],
+        }
     if template_id in LEGACY_MATERIALS and target == LEGACY_MATERIALS[template_id][0]:
         from rpg_vkr.world_library.physical_rules import compile_physical
 
@@ -225,10 +247,47 @@ def preview(library, session, template_id, instance_id):
             else None
         ),
     )
+    entities = [entity]
+    if with_inventory and target_definition.kind == "actor":
+        from dataclasses import replace
+
+        inventory = library.execute(
+            "SELECT target_id,target_revision,quantity FROM wl_links "
+            "WHERE id=? AND revision=? AND relation='starting_inventory' ORDER BY ordinal",
+            (template_id, revisions[template_id]),
+        ).fetchall()
+        actor_state = dict(entity.state or {})
+        actor_state["library_inventory_version"] = 1
+        actor_state["mood"] = target_definition.properties["library_attributes"].get(
+            "initial_mood", "wary"
+        )
+        for number, (item_id, revision, quantity) in enumerate(inventory):
+            item_definition_id = convert(item_id, revision)
+            item_definition = existing.get(item_definition_id) or next(
+                d for d in definitions if d.id == item_definition_id
+            )
+            import hashlib
+
+            child_id = (
+                instance_id[:40]
+                + "_inv"
+                + hashlib.sha256(instance_id.encode()).hexdigest()[:8]
+                + "_"
+                + str(number)
+            )
+            state = {"condition": item_definition.properties.get("durability", 20)}
+            if item_definition.properties.get("library_utility_rules", {}).get("profile") == "food":
+                state["library_created_minute"] = session.gameplay["minute"]
+            entities.append(
+                Entity(child_id, item_definition_id, instance_id, instance_id, quantity, state)
+            )
+            if item_definition.properties.get("library_item_rules", {}).get("kind") == "weapon":
+                actor_state.setdefault("library_weapon", child_id)
+        entities[0] = replace(entity, state=actor_state)
     # The same validator used by commit rejects duplicate IDs, hero grants and stale scenes.
     record = Registration(
         tuple(definitions),
-        (entity,),
+        tuple(entities),
         "Создание из библиотеки " + template_id,
         "world-library-1",
         len(session.turns),

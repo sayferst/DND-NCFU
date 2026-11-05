@@ -29,6 +29,7 @@ PARAMETERS = {
     "source_move": ({"position"}, {"position"}),
     "library_magic": ({"item", "target"}, {"item"}),
     "library_recipe": ({"item"}, {"item"}),
+    "library_use": ({"item", "target"}, {"item"}),
     "recover": (set(), set()),
     "dodge": (set(), set()),
     "raise": ({"ability"}, {"ability"}),
@@ -87,6 +88,12 @@ def perform(e, command, args):
     if not required <= set(args) <= allowed:
         raise ValueError("Неверные параметры действия.")
     from rpg_vkr.world_library import source_runtime
+
+    if command == "library_use":
+        from rpg_vkr.world_library.utility_rules import perform as utility
+
+        utility(e, args)
+        return
 
     if "sense" in args and (
         not source_runtime.enabled(e) or args["sense"] not in {"sight", "hearing", "none"}
@@ -789,7 +796,12 @@ def hit(e, attacker, target, *, source_attack=None):
             "dice": spec.properties.get("damage_dice", "1d4"),
             "category": spec.properties.get("weapon", "dagger"),
         }
-        if row["category"] in ("longbow", "crossbow"):
+        from rpg_vkr.world_library.npc_equipment import weapon as library_npc_weapon
+
+        library_weapon = library_npc_weapon(e, attacker)
+        if library_weapon:
+            row = library_weapon
+        if not library_weapon and row["category"] in ("longbow", "crossbow"):
             if (actor.state or {}).get("ammo", 10) > 0:
                 e.actor_resource(attacker, "ammo", -1)
             else:

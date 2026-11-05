@@ -174,6 +174,11 @@ def render_context(context):
             "npc_voice задаёт мотивы и память говорящего. Не раскрывай скрытые мотивы "
             "как известные герою факты; используй их для выбора реплики."
         )
+    if context.get("world_library"):
+        lines.append(
+            "Справочник шаблонов мира для выбора описаний и исходных ID: "
+            + json.dumps(context["world_library"], ensure_ascii=False)
+        )
     if brief.get("target_id"):
         actor = next((a for a in brief.get("actors", []) if a["id"] == brief["target_id"]), {})
         if actor.get("social_memory"):

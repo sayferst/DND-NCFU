@@ -42,12 +42,14 @@ def main():
     instance.add_argument("instance_id")
     instance.add_argument("source_sqlite", type=Path)
     instance.add_argument("destination_sqlite", type=Path)
+    instance.add_argument("--with-inventory", action="store_true")
+    instance.add_argument("--new-revision", action="store_true")
     activate = sub.add_parser("activate")
     activate.add_argument("instance_id")
     activate.add_argument("source_sqlite", type=Path)
     activate.add_argument("destination_sqlite", type=Path)
     activate.add_argument("--target", default="hero")
-    activate.add_argument("--operation", choices=("magic", "craft"), default="magic")
+    activate.add_argument("--operation", choices=("magic", "craft", "use"), default="magic")
     args = parser.parse_args()
     if args.command == "export-sqlite":
         from rpg_vkr.world_library.migration import export_sqlite
@@ -61,10 +63,13 @@ def main():
         if args.destination_sqlite.exists():
             raise ValueError("Destination must be a new save copy")
         session = restore_session(args.source_sqlite)
+        command = {"magic": "library_magic", "craft": "library_recipe", "use": "library_use"}[
+            args.operation
+        ]
         session.perform_gameplay(
-            "library_magic" if args.operation == "magic" else "library_recipe",
+            command,
             {"item": args.instance_id, "target": args.target}
-            if args.operation == "magic"
+            if args.operation in {"magic", "use"}
             else {"item": args.instance_id},
             "library-magic-" + session._request_token(),
         )
@@ -120,7 +125,14 @@ def main():
             if args.destination_sqlite.exists():
                 raise ValueError("Destination must be a new save copy")
             session = restore_session(args.source_sqlite)
-            proposal = preview(library, session, args.template_id, args.instance_id)
+            proposal = preview(
+                library,
+                session,
+                args.template_id,
+                args.instance_id,
+                with_inventory=args.with_inventory,
+                new_revision=args.new_revision,
+            )
             commit(session, proposal)
             export_session(session, args.destination_sqlite)
             result = {"created": args.instance_id, "copy": str(args.destination_sqlite)}

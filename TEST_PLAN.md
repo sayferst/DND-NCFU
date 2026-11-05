@@ -1973,3 +1973,20 @@ docs/validation/world-library-2026-11-05/SOURCE_RULES_RESULTS.md.
 повтора трёх проблемных блоков, не сумма перекрывающихся прогонов.
 Ruff check/format528файлов и pip check успешны. Ручной игровой/балансный
 прогон и новый WindowsEXE не подтверждены.
+# 05.11.2026 — интеграция библиотеки в мастера
+
+179 passed /88.64s: `test_library_master_requests`, `test_library_master_context`,
+`test_library_utility_runtime`, `test_library_npc_inventory`, `test_catalog_ui_playable`,
+`test_library_magic_runtime`, `test_library_recipes_runtime`,
+`test_library_equipment_runtime`, `test_source_rules_runtime`,
+`test_owner_rules_runtime`, `test_library_migrations`, `test_complete_campaign`,
+`test_gm_review_transfer`. Qt offscreen/mock transport проверяет фактический путь
+чат→JSON→валидация→подтверждение→Session, а не только вызов отдельной функции.
+Подтверждённый предмет появляется в сцене, отказ/неверный запрос не создаёт сущность
+и не тратит RNG. Replay проверяет эффекты расходников и начального имущества NPC.
+
+Отдельная новая БД:27426строк, все7087предложений создания валидны, integrity=ok,
+FK-ошибок0, Session/RNG неизменны. Это не тест всех исходных особенностей.
+`scripts/world_master.py --db <global.sqlite3> doctor` выводит
+READY_FOR_LOCAL_RETRIEVAL; `context wl_weapon_0_0` возвращает закреплённую карточку.
+В CI добавлены четыре новых набора и Qt-сценарии мастера.

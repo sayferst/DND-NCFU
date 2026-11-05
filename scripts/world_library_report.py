@@ -39,6 +39,11 @@ def main():
             r["profile"] in {"spell", "rune", "scroll", "combination"} for r in rows
         ),
         "homebrew_recipes_with_handlers": profiles["recipe"],
+        "homebrew_utilities_with_handlers": sum(
+            r["profile"] in {"food", "medicine", "poison", "book", "quest"}
+            and r["provenance"]["generator"] == "world-library-3"
+            for r in rows
+        ),
         "reference_records_without_gameplay_handler": profiles["source_reference"],
         "full_rule_coverage": False,
     }

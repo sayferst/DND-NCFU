@@ -39,6 +39,7 @@
   "unsupported_feature_occurrences": 17126,
   "homebrew_magic_templates_with_handlers": 560,
   "homebrew_recipes_with_handlers": 720,
+  "homebrew_utilities_with_handlers": 320,
   "reference_records_without_gameplay_handler": 20251,
   "full_rule_coverage": false
 }

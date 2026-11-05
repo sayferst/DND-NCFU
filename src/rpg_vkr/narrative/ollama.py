@@ -417,6 +417,12 @@ class OllamaClient(QObject):
 
         state = dict(state)
         state.update(references(text))
+        from rpg_vkr.world_library.narrator import retrieve as library_retrieve
+
+        if "world_library" not in state:
+            library_context = library_retrieve(text)
+            if library_context is not None:
+                state["world_library"] = library_context
         self._frame, self._model = frame, model
         from rpg_vkr.narrative.story_prompt import writing_profile
 
@@ -530,6 +536,10 @@ class OllamaClient(QObject):
                 "без классовой подготовки. Рангов и очков навыков нет. ",
             )
         prompt += OBJECT_CREATION_GUIDE + OBJECT_MEMORY_GUIDE + "\n" + POLICY
+        if state.get("world_library"):
+            from rpg_vkr.world_library.requests import GUIDE as LIBRARY_GUIDE
+
+            prompt += "\n" + LIBRARY_GUIDE
         if state.get("catalog_actions"):
             from rpg_vkr.narrative.catalog_protocol import GUIDE as CATALOG_GUIDE
 
@@ -1244,6 +1254,7 @@ class OllamaClient(QObject):
                         "obstacle",
                         "assessment",
                         "gameplay",
+                        "library_requests",
                     }
                     or not isinstance(value["check"], str)
                     or value["check"] not in {"none", *CHALLENGES}
@@ -1352,6 +1363,30 @@ class OllamaClient(QObject):
                     hints["gameplay"] = validate_proposal(
                         value["gameplay"], value, self._planning["state"]
                     )
+                if "library_requests" in value:
+                    from rpg_vkr.world_library.requests import validate_requests
+
+                    library_requests = validate_requests(
+                        value["library_requests"], self._planning["state"].get("world_library")
+                    )
+                    if library_requests and (
+                        plan.steps
+                        or plan.places
+                        or definitions
+                        or entities
+                        or queries
+                        or attempt
+                        or trade
+                        or hints.get("assessment")
+                        or hints.get("gameplay")
+                        or hints.get("reply")
+                        or hints.get("dialogue_target")
+                        or memories
+                        or value["check"] != "none"
+                    ):
+                        raise ValueError("Library creation requires a separate engine transaction")
+                    if library_requests:
+                        hints["library_requests"] = library_requests
                 self._report(kind, model, raw, data, "OK: план получен, изменения ещё не применены")
                 self.world_plan_ready.emit(
                     (
