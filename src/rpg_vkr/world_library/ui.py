@@ -148,7 +148,11 @@ class LibraryWindow(QWidget):
             for key, value in row["attributes"].items():
                 if isinstance(value, list):
                     value = "; ".join(
-                        f"{v['from']} → {v['to']}: {v['event']}" if isinstance(v, dict) else str(v)
+                        f"{v['from']} → {v['to']}: {v['event']}"
+                        if isinstance(v, dict) and {"from", "to", "event"} <= v.keys()
+                        else f"{v['field']}: {v['value']}"
+                        if isinstance(v, dict) and {"field", "value"} <= v.keys()
+                        else str(v)
                         for v in value
                     )
                 lines.append(f"{labels.get(key, key)}: {value}")

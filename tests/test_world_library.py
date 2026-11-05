@@ -184,6 +184,10 @@ def test_library_window(qt_app, library):
     assert window.results.count() > 0
     window.results.setCurrentRow(0)
     assert "invented/homebrew" in window.details.toPlainText()
+    equipment = read_jsonl(ROOT / "data/world_library/rpgd100-equipment-facts.jsonl")
+    window.rows = [next(row for row in equipment if row["attributes"]["facts"])]
+    window.show_record(0)
+    assert "source-facts/original-description" in window.details.toPlainText()
     window.close()
 
 
