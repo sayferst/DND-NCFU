@@ -41,3 +41,5 @@ jobs:
           tests/test_library_recipes_runtime.py tests/test_owner_rules_runtime.py -q
           tests/test_library_migrations.py
           tests/test_source_rules_runtime.py
+          tests/test_complete_campaign.py
+          tests/test_gm_review_transfer.py

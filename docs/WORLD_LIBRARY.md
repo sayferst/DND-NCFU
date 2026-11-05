@@ -206,4 +206,4 @@ Source_reference не выдаётся как готовая механика. N
 Платных сервисов, обучения и runtime-вызовов API эти модули не требуют.
 
 Проверки и ограничения общего прогона:
-docs/validation/world-library-2026-11-05/REFERENCE_RESULTS.md.
+docs/validation/world-library-2026-11-05/SOURCE_RULES_RESULTS.md.
