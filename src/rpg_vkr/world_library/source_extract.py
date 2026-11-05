@@ -31,6 +31,7 @@ CONDITION_WORDS = {
     "ошеломл": "stunned",
     "бессознан": "unconscious",
 }
+SUPPORTED_CONDITIONS = {"blinded", "poisoned", "paralyzed", "stunned"}
 
 
 def action_matches(name, phrase):
@@ -197,6 +198,10 @@ def validate(rules, actions=None):
             raise ValueError("Empty saving-throw effect")
         if bool(effect["condition"]) != bool(effect["rounds"]):
             raise ValueError("Condition requires a finite duration")
+        if effect["condition"] and effect["condition"] not in SUPPORTED_CONDITIONS:
+            raise ValueError("Condition effect needs a complete versioned handler")
+        if effect["repeat"] != "none" and not effect["condition"]:
+            raise ValueError("Repeating save requires an active condition")
     for r in rules["ranges"]:
         if r["normal"] > r["maximum"]:
             raise ValueError("Source range order")
@@ -288,7 +293,7 @@ def save_effect(body):
     if len(conditions) > 1 or len(parts) > 4:
         return None
     condition = next(iter(conditions), "")
-    if condition and condition not in {"blinded", "poisoned", "paralyzed", "stunned"}:
+    if condition and condition not in SUPPORTED_CONDITIONS:
         return None
     rounds = 0
     if condition:

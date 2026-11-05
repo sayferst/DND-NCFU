@@ -404,6 +404,8 @@ def turn_order(engine, followers):
 def tick(engine, command, was_battle):
     if not enabled(engine) or not was_battle or command in {"rest", "wait", "advance"}:
         return
+    if engine.action_minutes > 1:
+        raise ValueError("Finish the encounter before starting a long action")
     state = engine.state["source_rules_v3"]
     state["step"] += 1
     minutes, state["step"] = divmod(state["step"], 10)

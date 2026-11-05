@@ -452,3 +452,19 @@ def test_shortbow_source_abbreviation_uses_real_range_instead_of_homebrew():
     assert runtime.hero_range(e, {"source": "test_bow"}, {"category": "longbow"}, "wounded")
     assert e.events[-1]["origin"] == "source"
     assert e.events[-1]["normal"] == 80 and e.events[-1]["maximum"] == 320
+
+
+def test_combat_clock_never_compresses_long_crafting_to_six_seconds():
+    e, _ = engine_with_rules()
+    e.action_minutes = 30
+    checkpoint = dump(e.state["source_rules_v3"])
+    with pytest.raises(ValueError, match="long action"):
+        runtime.tick(e, "library_recipe", True)
+    assert dump(e.state["source_rules_v3"]) == checkpoint
+
+
+def test_unknown_condition_semantics_cannot_be_enabled_by_a_proposal():
+    _, program = engine_with_rules(breath_stat())
+    program["powers"][0]["effect"].update(condition="petrified", rounds=10)
+    with pytest.raises(ValueError, match="complete versioned handler"):
+        validate(program)
