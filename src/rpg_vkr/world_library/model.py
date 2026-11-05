@@ -1,0 +1,162 @@
+"""Strict, portable JSON Schema subset and cross-record content constraints."""
+
+import hashlib
+import json
+import re
+import unicodedata
+from functools import lru_cache
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+
+
+def dump(value):
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, allow_nan=False)
+
+
+def digest(value):
+    return hashlib.sha256(dump(value).encode("utf-8")).hexdigest()
+
+
+def normalized(value):
+    return " ".join(unicodedata.normalize("NFKC", value).casefold().split())
+
+
+def validate(value, schema, path="record"):
+    """Only the keywords emitted by schemas.json; unknown keywords fail closed."""
+    allowed = {
+        "type",
+        "properties",
+        "required",
+        "additionalProperties",
+        "items",
+        "enum",
+        "minimum",
+        "maximum",
+        "minLength",
+        "maxLength",
+        "pattern",
+        "maxItems",
+        "minItems",
+        "$schema",
+        "title",
+    }
+    if set(schema) - allowed:
+        raise ValueError("Unsupported schema keyword")
+    kind = schema.get("type")
+    types = {"object": dict, "array": list, "string": str, "integer": int, "boolean": bool}
+    if kind and type(value) is not types[kind]:
+        raise ValueError(path + ": expected " + kind)
+    if "enum" in schema and value not in schema["enum"]:
+        raise ValueError(path + ": enum")
+    if kind == "object":
+        props = schema.get("properties", {})
+        if not set(schema.get("required", [])) <= value.keys():
+            raise ValueError(path + ": required fields")
+        if schema.get("additionalProperties") is False and set(value) - props.keys():
+            raise ValueError(path + ": unknown fields")
+        for key, child in value.items():
+            if key in props:
+                validate(child, props[key], path + "." + key)
+    elif kind == "array":
+        if not schema.get("minItems", 0) <= len(value) <= schema.get("maxItems", 100):
+            raise ValueError(path + ": array length")
+        for child in value:
+            validate(child, schema["items"], path + "[]")
+    elif kind == "string":
+        if not schema.get("minLength", 0) <= len(value) <= schema.get("maxLength", 4000):
+            raise ValueError(path + ": text length")
+        if any(ord(c) < 32 for c in value):
+            raise ValueError(path + ": control characters")
+        if "pattern" in schema and not re.fullmatch(schema["pattern"], value):
+            raise ValueError(path + ": pattern")
+    elif kind == "integer":
+        if not schema.get("minimum", -(10**9)) <= value <= schema.get("maximum", 10**9):
+            raise ValueError(path + ": range")
+
+
+@lru_cache(maxsize=1)
+def schemas():
+    return json.loads((ROOT / "data/world_library/schemas.json").read_text(encoding="utf-8"))
+
+
+def validate_record(record):
+    spec = schemas()
+    validate(record, spec["record"])
+    validate(record["attributes"], spec[record["profile"]], "attributes")
+    if record["category"].split(".")[-1] != record["profile"]:
+        raise ValueError("Category/profile mismatch")
+    a = record["attributes"]
+    if record["profile"] in {"npc", "creature", "boss"}:
+        if a["hp_max"] > 20 + 40 * a["level"]:
+            raise ValueError("Actor exceeds homebrew HP envelope")
+    if record["profile"] == "weapon" and a["damage_die"] * a["damage_count"] > 24:
+        raise ValueError("Weapon exceeds mundane damage envelope")
+    if record["profile"] == "spell" and a["mp"] < a["level"]:
+        raise ValueError("Spell MP below level")
+    return record
+
+
+def validate_bundle(records):
+    by_id = {}
+    names = set()
+    for row in records:
+        validate_record(row)
+        key = (row["profile"], normalized(row["name"]))
+        if row["id"] in by_id or key in names:
+            raise ValueError("Duplicate ID or normalized name")
+        by_id[row["id"]] = row
+        names.add(key)
+    for row in records:
+        for link in row["links"]:
+            if link["target"] not in by_id or link["target"] == row["id"]:
+                raise ValueError("Missing/self reference: " + link["target"])
+            if link["relation"] == "component" and by_id[link["target"]]["profile"] not in {
+                "material",
+                "ore",
+                "ingredient",
+                "plant",
+            }:
+                raise ValueError("Invalid component profile")
+        if row["profile"] == "recipe":
+            if not {"input", "output"} <= {x["relation"] for x in row["links"]}:
+                raise ValueError("Recipe needs inputs and outputs")
+            ins = sum(
+                by_id[x["target"]]["price_cp"] * x["quantity"]
+                for x in row["links"]
+                if x["relation"] == "input"
+            )
+            outs = sum(
+                by_id[x["target"]]["price_cp"] * x["quantity"]
+                for x in row["links"]
+                if x["relation"] == "output"
+            )
+            if outs > ins + row["attributes"]["labour_cp"]:
+                raise ValueError("Recipe creates unbudgeted value")
+    complete = set()
+
+    def visit(key, trail):
+        if key in trail or len(trail) > 32:
+            raise ValueError("Composition cycle/depth")
+        if key in complete:
+            return
+        for link in by_id[key]["links"]:
+            if link["relation"] == "component":
+                visit(link["target"], trail | {key})
+        complete.add(key)
+
+    for key in by_id:
+        visit(key, set())
+    return by_id
+
+
+def read_jsonl(path):
+    result = []
+    with Path(path).open(encoding="utf-8") as stream:
+        for line in stream:
+            if len(line) > 64000 or len(result) >= 50000:
+                raise ValueError("Import limit")
+            if line.strip():
+                result.append(json.loads(line))
+    validate_bundle(result)
+    return result

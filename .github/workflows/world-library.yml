@@ -1,0 +1,34 @@
+name: Optional world library
+on:
+  push:
+    branches: [codex/structured-world-catalog-20261105]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: library_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      DND_LIBRARY_TEST_DSN: postgresql://postgres:local-test-only@localhost:5432/library_test
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --require-hashes -r requirements-dev.lock
+      - run: python -m pip install 'psycopg[binary]==3.3.8'
+      - run: python scripts/build_world_library.py
+      - run: git diff --exit-code -- data/world_library/seed-v1.jsonl data/world_library/manifest.json data/world_library/schemas.json
+      - run: python -m pytest tests/test_world_library.py -q

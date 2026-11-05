@@ -1,5 +1,17 @@
 # Лицензии и происхождение материалов
 
+## 05.11.2026 — world-library-1
+
+Новые описания/числа/биографии data/world_library/seed-v1.jsonl созданы для
+проекта, маркированы invented/homebrew, generator=world-library-1,
+review=unreviewed. Это не копия статей, SRD или чужих переводов.
+RPGD100, DnD.su, Ruleholder, Long Story Short использованы для изучения
+рубрикаторов; фактические обращения и URL — source-inventory.json.
+Перевод Long Story Short указывает CC BY-NC-SA4.0 и не включён в seed.
+Существующая атрибуция SRD5.2.1 и исходные корпуса сохранены.
+Тексты страниц/иллюстрации crawler не сохраняет; доступность ссылки сама
+по себе не меняет происхождение записи и не даёт ей пометку SRD.
+
 ## 27.10.2026 — новый авторский игровой каталог
 
 `data/gameplay/catalog-v1.json`, библиотека эффектов и матрицы `catalog_authoring.py`

@@ -1,0 +1,1526 @@
+{
+  "record": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "[a-z][a-z0-9_]{0,63}"
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "profile": {
+        "type": "string",
+        "enum": [
+          "weapon",
+          "armour",
+          "ammunition",
+          "tool",
+          "medicine",
+          "poison",
+          "food",
+          "ingredient",
+          "plant",
+          "ore",
+          "material",
+          "book",
+          "quest",
+          "npc",
+          "creature",
+          "boss",
+          "spell",
+          "rune",
+          "scroll",
+          "combination",
+          "skill",
+          "race",
+          "recipe"
+        ]
+      },
+      "category": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "description": {
+        "type": "string",
+        "minLength": 40,
+        "maxLength": 1800
+      },
+      "price_cp": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000000
+      },
+      "attributes": {
+        "type": "object"
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "relation": {
+              "type": "string",
+              "enum": [
+                "component",
+                "input",
+                "output",
+                "spell",
+                "combines",
+                "species",
+                "starting_inventory"
+              ]
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "[a-z][a-z0-9_]{0,63}"
+            },
+            "quantity": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          },
+          "required": [
+            "relation",
+            "target",
+            "quantity",
+            "role"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 24
+      },
+      "provenance": {
+        "type": "object",
+        "properties": {
+          "origin": {
+            "type": "string",
+            "enum": [
+              "invented/homebrew"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "generator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "review": {
+            "type": "string",
+            "enum": [
+              "unreviewed",
+              "engineer-reviewed"
+            ]
+          }
+        },
+        "required": [
+          "origin",
+          "source",
+          "generator",
+          "review"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "profile",
+      "category",
+      "description",
+      "price_cp",
+      "attributes",
+      "links",
+      "provenance"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "weapon": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "damage_count": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 2
+      },
+      "damage_die": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 12
+      },
+      "penetration": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 6
+      },
+      "hands": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 2
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "damage_count",
+      "damage_die",
+      "penetration",
+      "hands"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "armour": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "defence": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 8
+      },
+      "slot": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "defence",
+      "slot"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "ammunition": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "compatible": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "penetration": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "compatible",
+      "penetration"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "tool": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "proficiency": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "proficiency"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "medicine": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "effect": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "potency": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "fictional": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "effect",
+      "potency",
+      "fictional"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "poison": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "effect": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "potency": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "fictional": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "effect",
+      "potency",
+      "fictional"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "food": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "nutrition": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10
+      },
+      "shelf_days": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 365
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "nutrition",
+      "shelf_days"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "ingredient": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "habitat": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "processing": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "habitat",
+      "processing"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "plant": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "habitat": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "season": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "harvest": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "habitat",
+      "season",
+      "harvest"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "ore": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "deposit": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "yield_percent": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 95
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "deposit",
+      "yield_percent"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "material": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "family": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "processing": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "family",
+      "processing"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "book": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "subject": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "author": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "subject",
+      "author"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "quest": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "objective": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "issuer": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "objective",
+      "issuer"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "npc": {
+    "type": "object",
+    "properties": {
+      "hp_max": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 820
+      },
+      "level": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "species": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "[a-z][a-z0-9_]{0,63}"
+      },
+      "profession": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "social_status": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "beliefs": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "appearance": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "motivation": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "biography": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1200
+      },
+      "age_years": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000
+      },
+      "surname": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "initial_mood": {
+        "type": "string",
+        "enum": [
+          "calm",
+          "wary",
+          "angry"
+        ]
+      },
+      "mood_transitions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "event": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "to": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          },
+          "required": [
+            "from",
+            "event",
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 6
+      },
+      "territory": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "diet": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "tactics": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "hp_max",
+      "level",
+      "species",
+      "profession",
+      "social_status",
+      "beliefs",
+      "appearance",
+      "motivation",
+      "biography",
+      "age_years",
+      "surname",
+      "initial_mood",
+      "mood_transitions",
+      "territory",
+      "diet",
+      "tactics"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "creature": {
+    "type": "object",
+    "properties": {
+      "hp_max": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 820
+      },
+      "level": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "species": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "[a-z][a-z0-9_]{0,63}"
+      },
+      "profession": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "social_status": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "beliefs": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "appearance": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "motivation": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "biography": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1200
+      },
+      "age_years": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000
+      },
+      "surname": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "initial_mood": {
+        "type": "string",
+        "enum": [
+          "calm",
+          "wary",
+          "angry"
+        ]
+      },
+      "mood_transitions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "event": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "to": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          },
+          "required": [
+            "from",
+            "event",
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 6
+      },
+      "territory": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "diet": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "tactics": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "hp_max",
+      "level",
+      "species",
+      "profession",
+      "social_status",
+      "beliefs",
+      "appearance",
+      "motivation",
+      "biography",
+      "age_years",
+      "surname",
+      "initial_mood",
+      "mood_transitions",
+      "territory",
+      "diet",
+      "tactics"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "boss": {
+    "type": "object",
+    "properties": {
+      "hp_max": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 820
+      },
+      "level": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "species": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "[a-z][a-z0-9_]{0,63}"
+      },
+      "profession": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "social_status": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "beliefs": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "appearance": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "motivation": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "biography": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1200
+      },
+      "age_years": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000
+      },
+      "surname": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "initial_mood": {
+        "type": "string",
+        "enum": [
+          "calm",
+          "wary",
+          "angry"
+        ]
+      },
+      "mood_transitions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "event": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "to": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          },
+          "required": [
+            "from",
+            "event",
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 6
+      },
+      "territory": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "diet": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "tactics": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "hp_max",
+      "level",
+      "species",
+      "profession",
+      "social_status",
+      "beliefs",
+      "appearance",
+      "motivation",
+      "biography",
+      "age_years",
+      "surname",
+      "initial_mood",
+      "mood_transitions",
+      "territory",
+      "diet",
+      "tactics"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "spell": {
+    "type": "object",
+    "properties": {
+      "school": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "nature": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "level": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9
+      },
+      "mp": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 30
+      },
+      "duration_turns": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "components": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "maxItems": 5
+      },
+      "effect": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "counterplay": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "school",
+      "nature",
+      "level",
+      "mp",
+      "duration_turns",
+      "components",
+      "effect",
+      "counterplay"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "rune": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "trigger": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "charges": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "trigger",
+      "charges"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "scroll": {
+    "type": "object",
+    "properties": {
+      "mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "durability": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "quality": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "purpose": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "history": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 800
+      },
+      "charges": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1
+      }
+    },
+    "required": [
+      "mass_g",
+      "durability",
+      "quality",
+      "purpose",
+      "history",
+      "charges"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "combination": {
+    "type": "object",
+    "properties": {
+      "level": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 9
+      },
+      "mp": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 30
+      },
+      "effect": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "level",
+      "mp",
+      "effect"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "skill": {
+    "type": "object",
+    "properties": {
+      "ability": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "use": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "limit": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "ability",
+      "use",
+      "limit"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "race": {
+    "type": "object",
+    "properties": {
+      "lifespan": {
+        "type": "integer",
+        "minimum": 20,
+        "maximum": 1000
+      },
+      "size": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "culture": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "trait": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      }
+    },
+    "required": [
+      "lifespan",
+      "size",
+      "culture",
+      "trait"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "recipe": {
+    "type": "object",
+    "properties": {
+      "minutes": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10000
+      },
+      "difficulty": {
+        "type": "integer",
+        "minimum": 5,
+        "maximum": 25
+      },
+      "labour_cp": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100000
+      },
+      "method": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 400
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "craft",
+          "salvage"
+        ]
+      }
+    },
+    "required": [
+      "minutes",
+      "difficulty",
+      "labour_cp",
+      "method",
+      "mode"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  }
+}

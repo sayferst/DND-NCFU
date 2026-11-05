@@ -1,0 +1,33 @@
+{
+  "generator": "world-library-1",
+  "records": 2864,
+  "by_profile": {
+    "ammunition": 40,
+    "armour": 80,
+    "book": 80,
+    "boss": 80,
+    "combination": 80,
+    "creature": 80,
+    "food": 80,
+    "ingredient": 80,
+    "material": 16,
+    "medicine": 40,
+    "npc": 400,
+    "ore": 40,
+    "plant": 80,
+    "poison": 40,
+    "quest": 80,
+    "race": 8,
+    "recipe": 720,
+    "rune": 160,
+    "scroll": 160,
+    "skill": 80,
+    "spell": 160,
+    "tool": 120,
+    "weapon": 160
+  },
+  "sha256_canonical_records": "7f1663f8094103d0e43db1560c462d44ee9dcc0557a94a6265d0ab2c84b10ae3",
+  "human_reviewed": 0,
+  "invented_homebrew": 2864,
+  "note": "Procedural regional/craft variants; not 20000 independently curated entities or executable mechanics."
+}

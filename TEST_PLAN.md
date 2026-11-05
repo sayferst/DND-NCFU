@@ -1,5 +1,14 @@
 # План проверок
 
+## 05.11.2026 — world_library
+
+tests/test_world_library.py: схемы/пределы/ссылки/циклы, immutable revisions,
+idempotency/rollback, injection, предложения/approve/retire, отказ от чужой БД,
+Qt browser, регистрация/SQLite replay без изменения HP/RNG и read-only staging.
+PostgreSQL parity включается DND_LIBRARY_TEST_DSN на выделенной пустой БД;
+.github/workflows/world-library.yml запускает отдельный бесплатный CI-сервис.
+Проверять отчёт, не считать skipped прошедшей серверной проверкой.
+
 ## 27.10.2026 — фактические записи большого каталога
 
 `test_full_game_catalog`: каждый из3360ID проходит исполнение, предметы дополнительно
