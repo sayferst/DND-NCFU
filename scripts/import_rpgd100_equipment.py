@@ -117,7 +117,15 @@ def main():
                 "with_facts": matched,
             }
         )
+    from rpg_vkr.world_library.equipment_rules import compile_equipment
     from rpg_vkr.world_library.model import dump, read_jsonl, validate_bundle
+
+    for row in rows:
+        rules = compile_equipment(row)
+        row["price_cp"] = rules["price_cp"]
+        row["attributes"]["price_status"] = (
+            "homebrew-estimate" if "price_cp" in rules["homebrew_fields"] else "source-price-parsed"
+        )
 
     validate_bundle(rows)
     out = ROOT / "data/world_library/rpgd100-equipment-facts.jsonl"

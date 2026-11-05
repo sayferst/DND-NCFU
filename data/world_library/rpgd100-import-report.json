@@ -1,8 +1,8 @@
 {
-  "retrieved_at": "2026-11-05T03:26:40.727214+00:00",
+  "retrieved_at": "2026-11-05T03:49:51.106049+00:00",
   "records": 3920,
   "total_with_original_seed": 6784,
-  "limit": 20000,
+  "limit": 100000,
   "sources": [
     {
       "url": "https://rpgd100.ru/scripts/bestiary_dnd5e.js",

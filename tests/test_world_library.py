@@ -62,6 +62,52 @@ def test_literal_parser_does_not_execute():
         literal_array("const x=[dangerous()]")
 
 
+def test_all_catalog_entries_have_canonical_ids():
+    from rpg_vkr.world_library.model import all_records
+
+    rows = all_records()
+    assert len(rows) == 27426
+    ids = {r["id"] for r in rows}
+    mapping = [
+        json.loads(line)
+        for line in (ROOT / "data/world_library/rpgd100-source-ids.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert len(mapping) == 24527
+    assert all(r["canonical_id"] in ids for r in mapping)
+    assert len({r["catalog"] for r in mapping}) == 55
+
+
+def test_creature_stats_fallback_and_canonical_combat(library):
+    from test_owner_rules_runtime import campaign
+
+    from rpg_vkr.world_library.creature_rules import compile_creature
+
+    facts = read_jsonl(ROOT / "data/world_library/rpgd100-creature-facts.jsonl")
+    row = next(r for r in facts if r["attributes"]["attacks"] and 1 <= r["attributes"]["hp"] <= 5)
+    library.import_records(facts)
+    props = compile_creature(row)
+    assert props["hp_max"] == row["attributes"]["hp"]
+    assert props["attack_bonus"] == row["attributes"]["attacks"][0]["bonus"]
+    assert "attack_bonus" not in props["homebrew_fields"]
+    missing = deepcopy(row)
+    missing["attributes"]["hp"] = 0
+    fallback = compile_creature(missing)
+    assert fallback["hp_max"] > 0 and "hp_max" in fallback["homebrew_fields"]
+    session = campaign(hp=12)
+    before = session.to_dict()
+    proposal = preview(library, session, row["id"], "source_enemy")
+    assert session.to_dict() == before
+    commit(session, proposal)
+    session.perform_gameplay(
+        "encounter", {"enemies": ["source_enemy"], "allies": []}, "source-encounter"
+    )
+    restored = Session.from_dict(session.to_dict(), version=31)
+    assert restored.to_dict() == session.to_dict()
+    assert restored.dice.checkpoint() == session.dice.checkpoint()
+
+
 def test_complete_equipment_index_and_visual_variants(library):
     from rpg_vkr.world_library.appearance import appearance
 
@@ -261,6 +307,12 @@ def test_postgresql_parity(records, tmp_path):
         with pytest.raises(ValueError, match="Stale"):
             library.import_records([records[0]], expected={changed["id"]: 1})
         assert library.revision(changed["id"]) == 2
+        from rpg_vkr.world_library.model import all_records
+
+        full = {r["id"]: r for r in all_records()}
+        full[changed["id"]] = changed
+        library.import_records(list(full.values()))
+        assert len(library.all()) == 27426
         session = Session(seed=3)
         source = tmp_path / "pg-source.sqlite3"
         export_session(session, source)

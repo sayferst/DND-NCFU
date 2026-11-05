@@ -4,6 +4,7 @@ from rpg_vkr.domain.catalog import Definition, Entity, seed_catalog
 from rpg_vkr.world_library.model import digest, normalized
 
 CATEGORY = {
+    "source_creature": "creatures",
     "weapon": "weapons",
     "ammunition": "weapons",
     "armour": "armour",
@@ -26,8 +27,7 @@ DESCRIPTIVE_ONLY = {
     "skill",
     "race",
     "recipe",
-    "source_creature",
-    "source_equipment",
+    "source_reference",
 }
 LEGACY_MATERIALS = {
     "wl_material_0": ("mat_ash", "Ясень"),
@@ -57,6 +57,11 @@ def preview(library, session, template_id, instance_id):
             return resolved[id]
         revisions[id] = revision
         row = library.get(id, revision)
+        if row["profile"] in {"source_creature", "source_equipment"} and (
+            not getattr(session, "is_unified", False)
+            or session.gameplay.get("catalog_revision") != 3
+        ):
+            raise ValueError("Creature handler requires canonical catalog3 campaign")
         if id in LEGACY_MATERIALS and revision == 1:
             legacy_id, name = LEGACY_MATERIALS[id]
             if (
@@ -88,7 +93,7 @@ def preview(library, session, template_id, instance_id):
         profile = row["profile"]
         kind = (
             "actor"
-            if profile in {"npc", "creature", "boss"}
+            if profile in {"npc", "creature", "boss", "source_creature"}
             else "material"
             if profile in {"material", "ore", "ingredient", "plant"}
             else "item"
@@ -101,13 +106,31 @@ def preview(library, session, template_id, instance_id):
         }
         if profile == "weapon":
             properties["damage_dice"] = f"{a['damage_count']}d{a['damage_die']}"
+        if profile == "source_creature":
+            from rpg_vkr.world_library.creature_rules import compile_creature
+
+            properties.update(compile_creature(row))
+        if profile == "source_equipment":
+            from rpg_vkr.world_library.equipment_rules import compile_equipment
+
+            rules = compile_equipment(row)
+            properties.update(
+                mass_g=rules["mass_g"],
+                durability=rules["durability"],
+                library_item_rules=rules,
+                portable=rules["mass_g"] <= 30000,
+            )
         properties |= {
             "library_id": id,
             "library_revision": revision,
             "library_digest": digest(row),
             "description": row["description"],
-            "library_attributes": a,
-            "mechanics": "descriptive-until-engine-handler",
+            "library_attributes": a
+            if profile != "source_creature"
+            else {"appearance_homebrew": a["appearance_homebrew"], "source_url": a["source_url"]},
+            "mechanics": "canonical-basic-combat-1; unsupported features listed explicitly"
+            if profile == "source_creature"
+            else "descriptive-until-engine-handler",
         }
         definition = Definition(
             id,
@@ -115,7 +138,7 @@ def preview(library, session, template_id, instance_id):
             kind,
             (CATEGORY.get(profile, "miscellaneous"),),
             properties,
-            price_cp=row["price_cp"],
+            price_cp=properties.get("library_item_rules", {}).get("price_cp", row["price_cp"]),
             materials=materials,
             origin="generated",
         )

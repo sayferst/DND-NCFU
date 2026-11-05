@@ -194,6 +194,13 @@ class Engine:
         return value + bonus >= dc
 
     def template(self, item):
+        if item.get("library_definition"):
+            from rpg_vkr.world_library.equipment_rules import validate_equipment
+
+            definition = self.definitions[item["library_definition"]]
+            row = definition.properties["library_item_rules"]
+            validate_equipment(row)
+            return row | {"id": definition.id, "name": definition.name}
         if item.get("form"):
             from rpg_vkr.domain.attempt_plans import FORMS
 
@@ -288,6 +295,13 @@ class Engine:
                         item["ammunition"] = True
             elif definition.id == "type_bandage":
                 item["template"] = "use_dressings_0_0"
+            if definition.properties.get("library_item_rules"):
+                row = definition.properties["library_item_rules"]
+                item.update(
+                    library_definition=definition.id, kind=row["kind"], ammo_kind=row["ammo_kind"]
+                )
+                if row["category"] == "ammunition":
+                    item["ammunition"] = True
             self.state["items"] = [i for i in self.state["items"] if i["id"] != id] + [item]
             return item
         raise ValueError("Предмет недоступен или не принадлежит герою.")
@@ -485,6 +499,10 @@ class Engine:
         )
         if target != "hero":
             e, d = self.actor(target, alive=False)
+            if d.properties.get("library_rules_version"):
+                from rpg_vkr.world_library.creature_rules import incoming
+
+                amount = incoming(d.properties, amount, element)
             if d.properties.get("resistance") == element:
                 resistance += 2
             if d.properties.get("vulnerability") == element:

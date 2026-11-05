@@ -139,6 +139,23 @@ def extend_schema(spec):
             ),
             "missing_fields": array(text(), 20),
             "feature_names": array(text(200), 80),
+            "resistances": array(text(30), 14),
+            "immunities": array(text(30), 14),
+            "vulnerabilities": array(text(30), 14),
+            "regeneration": number(0, 100),
+            "extra_attacks": number(0, 2),
+            "attacks": array(
+                obj(
+                    {
+                        "name": text(200),
+                        "bonus": number(-10, 40),
+                        "dice": text(40),
+                        "element": text(30),
+                        "partial": {"type": "boolean"},
+                    }
+                ),
+                30,
+            ),
             "appearance_homebrew": text(800),
             "mechanics": text(300),
         }
@@ -157,6 +174,20 @@ def extend_schema(spec):
         }
     )
     spec["source_equipment"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    if "source_reference" not in profiles:
+        profiles.append("source_reference")
+    spec["source_reference"] = obj(
+        {
+            "source_url": text(1000),
+            "source_name": text(250),
+            "source_catalog": text(200),
+            "native_id": text(160),
+            "english_name": text(200, 0),
+            "section": text(150, 0),
+            "mechanics_state": {"type": "string", "enum": ["reference-only"]},
+        }
+    )
+    spec["source_reference"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     return spec
 
 
@@ -267,6 +298,9 @@ def run():
                         + hashlib.sha256((script_url + "#" + str(slug)).encode()).hexdigest()[:24]
                     )
                     features = []
+                    attacks = []
+                    regeneration = 0
+                    extra_attacks = 0
                     for group in (
                         "черты",
                         "действия",
@@ -285,6 +319,135 @@ def run():
                                             :200
                                         ]
                                     )
+                                    prose = re.sub(r"<[^>]+>", " ", value.get("описание", ""))
+                                    lower = prose.casefold()
+                                    if "регенерац" in value["название"].casefold() and not any(
+                                        word in lower
+                                        for word in (
+                                            "если",
+                                            "пока",
+                                            "кроме",
+                                            "огн",
+                                            "кислот",
+                                            "солнеч",
+                                            "свят",
+                                            "излучен",
+                                        )
+                                    ):
+                                        healing = re.search(r"восстанавливает\s+(\d+)\s+хит", lower)
+                                        if healing and "начале" in lower and "хода" in lower:
+                                            regeneration = min(100, int(healing[1]))
+                                    bonus_match = re.search(
+                                        r"([+-]\s*\d+)\s*к\s*попаданию", prose, re.I
+                                    )
+                                    dice_match = re.search(
+                                        r"\b([1-9][0-9]?)\s*[кd](4|6|8|10|12)(\s*[+-]\s*[0-9]{1,2})?",
+                                        prose,
+                                    )
+                                    if bonus_match and dice_match and len(attacks) < 30:
+                                        bonus = int(bonus_match[1].replace(" ", ""))
+                                        if -10 <= bonus <= 40:
+                                            dice = (
+                                                dice_match[1]
+                                                + "d"
+                                                + dice_match[2]
+                                                + (dice_match[3] or "").replace(" ", "")
+                                            )
+                                            attacks.append(
+                                                {
+                                                    "name": features[-1],
+                                                    "bonus": bonus,
+                                                    "dice": dice,
+                                                    "element": next(
+                                                        (
+                                                            element
+                                                            for word, element in (
+                                                                ("огн", "fire"),
+                                                                ("холод", "cold"),
+                                                                ("электр", "lightning"),
+                                                                ("кислот", "acid"),
+                                                                ("некрот", "necrotic"),
+                                                                ("излуч", "radiant"),
+                                                                ("псих", "psychic"),
+                                                                ("ядом", "poison"),
+                                                                ("звуком", "thunder"),
+                                                            )
+                                                            if word
+                                                            in prose[
+                                                                dice_match.end() : dice_match.end()
+                                                                + 60
+                                                            ].casefold()
+                                                        ),
+                                                        "physical",
+                                                    ),
+                                                    "partial": any(
+                                                        word in lower
+                                                        for word in (
+                                                            "спасброс",
+                                                            "если",
+                                                            "отравлен",
+                                                            "схвачен",
+                                                            "опутан",
+                                                            "очарован",
+                                                            "испуган",
+                                                            "сбит",
+                                                            "парализован",
+                                                        )
+                                                    ),
+                                                }
+                                            )
+                    if len(attacks) == 1:
+                        for action in stat.get("действия", []):
+                            if (
+                                isinstance(action, dict)
+                                and str(action.get("название") or "").casefold() == "мультиатака"
+                            ):
+                                prose = str(action.get("описание") or "").casefold()
+                                if not any(
+                                    word in prose for word in ("или", "если", "заклин", "может")
+                                ):
+                                    if re.search(r"совершает\s+две\s+атаки", prose):
+                                        extra_attacks = 1
+                                    elif re.search(r"совершает\s+три\s+атаки", prose):
+                                        extra_attacks = 2
+
+                    def elements(field, stat=stat):
+                        value = stat.get(field, [])
+                        if isinstance(value, dict):
+                            value = value.get("урон", [])
+                        if isinstance(value, str):
+                            value = re.split(r"[,;]", value)
+                        if not isinstance(value, list):
+                            return []
+                        known = {
+                            "огонь": "fire",
+                            "огню": "fire",
+                            "огнём": "fire",
+                            "холод": "cold",
+                            "холоду": "cold",
+                            "холодом": "cold",
+                            "электричество": "lightning",
+                            "электричеству": "lightning",
+                            "электричеством": "lightning",
+                            "кислота": "acid",
+                            "кислоте": "acid",
+                            "кислотой": "acid",
+                            "яд": "poison",
+                            "яду": "poison",
+                            "ядом": "poison",
+                            "некротическая энергия": "necrotic",
+                            "излучение": "radiant",
+                            "психическая энергия": "psychic",
+                            "звук": "thunder",
+                        }
+                        return sorted(
+                            {
+                                known[s.strip().casefold()]
+                                for s in value
+                                if isinstance(s, str) and s.strip().casefold() in known
+                            }
+                        )
+
                     from rpg_vkr.world_library.appearance import appearance as visual_variant
 
                     appearance = visual_variant(id, name, kind, size)
@@ -316,6 +479,12 @@ def run():
                             "abilities": abilities,
                             "missing_fields": missing,
                             "feature_names": features[:80],
+                            "resistances": elements("сопротивления"),
+                            "immunities": elements("иммунитеты"),
+                            "vulnerabilities": elements("уязвимости"),
+                            "regeneration": regeneration,
+                            "extra_attacks": extra_attacks,
+                            "attacks": attacks,
                             "appearance_homebrew": appearance,
                             "mechanics": (
                                 "reference-only; engine handler required; zero means "
@@ -344,12 +513,14 @@ def run():
             errors.append({"url": page_url, "error": str(exc)[:200]})
     unique = {r["id"]: r for r in records}
     records = list(unique.values())
+    if sum(r["attributes"]["source_catalog"] == "bestiary_dnd5e" for r in records) != 2874:
+        raise ValueError("Primary bestiary coverage regressed; refusing to replace complete seed")
     base = [
         json.loads(line)
         for line in (out / "seed-v1.jsonl").read_text(encoding="utf-8").splitlines()
     ]
-    if len(base) + len(records) > 20000:
-        raise ValueError("Total library would exceed 20000; curate before import")
+    if len(base) + len(records) > 100000:
+        raise ValueError("Library exceeds resource safety bound")
     validate_bundle(base + records)
     (out / "rpgd100-creature-facts.jsonl").write_text(
         "\n".join(dump(r) for r in records) + "\n", encoding="utf-8"
@@ -358,7 +529,7 @@ def run():
         "retrieved_at": datetime.now(UTC).isoformat(),
         "records": len(records),
         "total_with_original_seed": len(base) + len(records),
-        "limit": 20000,
+        "limit": 100000,
         "sources": sources,
         "errors": errors,
         "by_catalog": dict(Counter(r["attributes"]["source_catalog"] for r in records)),

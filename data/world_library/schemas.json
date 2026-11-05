@@ -40,7 +40,8 @@
           "race",
           "recipe",
           "source_creature",
-          "source_equipment"
+          "source_equipment",
+          "source_reference"
         ]
       },
       "category": {
@@ -1641,6 +1642,83 @@
         },
         "maxItems": 80
       },
+      "resistances": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "maxItems": 14
+      },
+      "immunities": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "maxItems": 14
+      },
+      "vulnerabilities": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "maxItems": 14
+      },
+      "regeneration": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "extra_attacks": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2
+      },
+      "attacks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "bonus": {
+              "type": "integer",
+              "minimum": -10,
+              "maximum": 40
+            },
+            "dice": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "element": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 30
+            },
+            "partial": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "name",
+            "bonus",
+            "dice",
+            "element",
+            "partial"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 30
+      },
       "appearance_homebrew": {
         "type": "string",
         "minLength": 1,
@@ -1666,6 +1744,12 @@
       "abilities",
       "missing_fields",
       "feature_names",
+      "resistances",
+      "immunities",
+      "vulnerabilities",
+      "regeneration",
+      "extra_attacks",
+      "attacks",
       "appearance_homebrew",
       "mechanics"
     ],
@@ -1730,6 +1814,58 @@
       "facts",
       "missing_numeric_facts",
       "price_status"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_reference": {
+    "type": "object",
+    "properties": {
+      "source_url": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      },
+      "source_name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 250
+      },
+      "source_catalog": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "native_id": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      },
+      "english_name": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 200
+      },
+      "section": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 150
+      },
+      "mechanics_state": {
+        "type": "string",
+        "enum": [
+          "reference-only"
+        ]
+      }
+    },
+    "required": [
+      "source_url",
+      "source_name",
+      "source_catalog",
+      "native_id",
+      "english_name",
+      "section",
+      "mechanics_state"
     ],
     "additionalProperties": false,
     "$schema": "https://json-schema.org/draft/2020-12/schema"

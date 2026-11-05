@@ -173,8 +173,8 @@ class Library:
             if len({r["id"] for r in records}) != len(records):
                 raise ValueError("Duplicate incoming ID")
             merged = previous | {r["id"]: r for r in records}
-            if len(merged) > 20000:
-                raise ValueError("Global library limit is 20000 records")
+            if len(merged) > 100000:
+                raise ValueError("Global library safety bound is 100000 records")
             validate_bundle(list(merged.values()))
             changed = []
             for row in records:
@@ -187,18 +187,14 @@ class Library:
                 if rev and id not in expected:
                     raise ValueError("Update requires expected revision")
                 category = row["category"]
-                parent = category.split(".")[0]
-                self.execute(
-                    (
-                        "INSERT INTO wl_categories(id,parent_id) VALUES(?,NULL) ON "
-                        "CONFLICT(id) DO NOTHING"
-                    ),
-                    (parent,),
-                )
-                self.execute(
-                    "INSERT INTO wl_categories VALUES(?,?) ON CONFLICT(id) DO NOTHING",
-                    (category, parent),
-                )
+                parent = None
+                for part in category.split("."):
+                    current = part if parent is None else parent + "." + part
+                    self.execute(
+                        "INSERT INTO wl_categories VALUES(?,?) ON CONFLICT(id) DO NOTHING",
+                        (current, parent),
+                    )
+                    parent = current
                 rev += 1
                 self.execute(
                     (

@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from rpg_vkr.world_library.model import dump, read_jsonl  # noqa: E402
+from rpg_vkr.world_library.model import all_records, dump, read_jsonl  # noqa: E402
 from rpg_vkr.world_library.store import Library  # noqa: E402
 
 
@@ -58,13 +58,7 @@ def main():
         library.migrate()
         result = None
         if args.command == "init":
-            rows = read_jsonl(ROOT / "data/world_library/seed-v1.jsonl")
-            facts = ROOT / "data/world_library/rpgd100-creature-facts.jsonl"
-            if facts.exists():
-                rows += read_jsonl(facts)
-            equipment = ROOT / "data/world_library/rpgd100-equipment-facts.jsonl"
-            if equipment.exists():
-                rows += read_jsonl(equipment)
+            rows = all_records()
             result = {"imported": library.import_records(rows)}
         elif args.command == "search":
             result = [

@@ -1,0 +1,146 @@
+"""Versioned numerical adapter; extracted facts and homebrew fallbacks stay distinct."""
+
+import re
+from fractions import Fraction
+
+from rpg_vkr.domain.character import ability_modifier
+
+VERSION = "library-creature-1"
+
+
+def compile_creature(record):
+    a = record["attributes"]
+    try:
+        cr = max(0, min(30, float(Fraction(a["challenge_rating"] or "1"))))
+    except (ValueError, ZeroDivisionError):
+        cr = 1
+    invented = []
+    hp = a["hp"]
+    if not hp:
+        hp = max(4, int(8 + cr * 12))
+        invented.append("hp_max")
+    ac = a["armour_class"]
+    if not ac:
+        ac = min(25, 10 + int(cr / 3))
+        invented.append("armour_class")
+    stats = {}
+    for short, full in zip(
+        ("str", "dex", "con", "int", "wis", "cha"),
+        ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"),
+        strict=True,
+    ):
+        stats[full] = a["abilities"][short] or 10
+        if not a["abilities"][short]:
+            invented.append(full)
+    # A fallback is a declared homebrew basic attack, not a claimed source feature.
+    bonus = ability_modifier(stats["strength"]) + min(9, 2 + int(cr // 4))
+    dice = "1d6"
+    invented.extend(["attack_bonus", "damage_dice"])
+    if a.get("attacks"):
+        bonus, dice = a["attacks"][0]["bonus"], a["attacks"][0]["dice"]
+        invented = [key for key in invented if key not in {"attack_bonus", "damage_dice"}]
+    implemented = {
+        attack["name"] for attack in a.get("attacks", [])[:1] if not attack.get("partial")
+    }
+    if a.get("regeneration"):
+        implemented.update(name for name in a["feature_names"] if "регенерац" in name.casefold())
+    if a.get("extra_attacks"):
+        implemented.add("Мультиатака")
+    return {
+        "hp_max": hp,
+        "armour_class": ac,
+        **stats,
+        "damage_dice": dice,
+        "attack_bonus": bonus,
+        "attack_damage": max(1, 3 + ability_modifier(stats["strength"])),
+        "library_rules_version": VERSION,
+        "homebrew_fields": invented,
+        "unsupported_source_features": [
+            name for name in a["feature_names"] if name not in implemented
+        ],
+        "source_resistances": a.get("resistances", []),
+        "source_immunities": a.get("immunities", []),
+        "source_vulnerabilities": a.get("vulnerabilities", []),
+        "source_regeneration": a.get("regeneration", 0),
+        "source_extra_attacks": a.get("extra_attacks", 0),
+        "source_attack_element": a["attacks"][0].get("element", "physical")
+        if a.get("attacks")
+        else "physical",
+        "behavior": "hunter",
+    }
+
+
+def validate_runtime(properties):
+    if properties.get("library_rules_version") != VERSION:
+        raise ValueError("Unknown library creature rules")
+    if (
+        type(properties.get("attack_bonus")) is not int
+        or not -10 <= properties["attack_bonus"] <= 40
+    ):
+        raise ValueError("Invalid attack bonus")
+    if not re.fullmatch(
+        r"[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?", properties.get("damage_dice", "")
+    ):
+        raise ValueError("Invalid creature damage dice")
+    elements = {
+        "fire",
+        "cold",
+        "lightning",
+        "acid",
+        "poison",
+        "necrotic",
+        "radiant",
+        "psychic",
+        "thunder",
+    }
+    if properties.get("source_attack_element", "physical") not in elements | {"physical"}:
+        raise ValueError("Unknown creature attack element")
+    for field in ("source_resistances", "source_immunities", "source_vulnerabilities"):
+        if (
+            not isinstance(properties.get(field, []), list)
+            or not set(properties.get(field, [])) <= elements
+        ):
+            raise ValueError("Unknown creature damage element")
+    for field, maximum in (("source_regeneration", 100), ("source_extra_attacks", 2)):
+        if (
+            type(properties.get(field, 0)) is not int
+            or not 0 <= properties.get(field, 0) <= maximum
+        ):
+            raise ValueError("Creature feature outside balance bounds")
+
+
+def incoming(properties, amount, element):
+    validate_runtime(properties)
+    if element in properties.get("source_immunities", []):
+        return 0
+    if element in properties.get("source_resistances", []):
+        amount //= 2
+    if element in properties.get("source_vulnerabilities", []):
+        amount *= 2
+    return amount
+
+
+def before_turn(engine, id, properties):
+    validate_runtime(properties)
+    amount = properties.get("source_regeneration", 0)
+    if amount and engine.hp(id) > 0:
+        before = engine.hp(id)
+        engine.change_hp(id, amount)
+        engine.events.append(
+            {
+                "kind": "source_regeneration",
+                "actor": id,
+                "healed": engine.hp(id) - before,
+                "version": VERSION,
+            }
+        )
+
+
+def after_attack(engine, id, target, properties):
+    validate_runtime(properties)
+    from rpg_vkr.domain.catalog_actions_v2 import hit
+
+    for _ in range(properties.get("source_extra_attacks", 0)):
+        if engine.hp(id) <= 0 or engine.hp(target) <= 0:
+            break
+        hit(engine, id, target)

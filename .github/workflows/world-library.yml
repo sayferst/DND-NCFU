@@ -32,4 +32,4 @@ jobs:
       - run: python -m pip install 'psycopg[binary]==3.3.8'
       - run: python scripts/build_world_library.py
       - run: git diff --exit-code -- data/world_library/seed-v1.jsonl data/world_library/manifest.json data/world_library/schemas.json
-      - run: python -m pytest tests/test_world_library.py -q
+      - run: python -m pytest tests/test_world_library.py tests/test_library_creature_features.py tests/test_library_equipment_runtime.py -q

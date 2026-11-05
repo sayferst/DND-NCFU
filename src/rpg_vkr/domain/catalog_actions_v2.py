@@ -703,7 +703,17 @@ def hit(e, attacker, target):
             raise ValueError("Недостаточно ST.")
         if task == "ranged":
             arrow = next(
-                (i for i in e.state["items"] if i.get("ammunition") and i["owner"] == "hero"), None
+                (
+                    i
+                    for i in e.state["items"]
+                    if i.get("ammunition")
+                    and i["owner"] == "hero"
+                    and (
+                        not row.get("required_ammunition")
+                        or i.get("ammo_kind", "arrow") == row["required_ammunition"]
+                    )
+                ),
+                None,
             )
             if arrow is None:
                 raise ValueError("Нет боеприпаса.")
@@ -751,6 +761,13 @@ def hit(e, attacker, target):
         damage_bonus = ability_modifier(spec.properties.get("strength", 10)) + e.status_power(
             attacker, "power"
         )
+        if spec.properties.get("library_rules_version"):
+            from rpg_vkr.world_library.creature_rules import validate_runtime
+
+            validate_runtime(spec.properties)
+            bonus = spec.properties["attack_bonus"] - e.status_power(attacker, "weaken")
+            damage_bonus = e.status_power(attacker, "power")
+            row["damage_type"] = spec.properties.get("source_attack_element", "physical")
         cost = max(1, 1 + e.status_power(attacker, "slow") - e.status_power(attacker, "haste"))
         if (actor.state or {}).get("st", 10) < cost:
             e.actor_resource(attacker, "st", 3)
@@ -871,6 +888,10 @@ def npc_round(e, command):
             if e.hp(id) <= 0:
                 continue
         actor, spec = e.actor(id)
+        if spec.properties.get("library_rules_version"):
+            from rpg_vkr.world_library.creature_rules import before_turn
+
+            before_turn(e, id, spec.properties)
         if owner_policy:
             from rpg_vkr.domain.owner_rules_runtime import assist_fallen
 
@@ -921,6 +942,10 @@ def npc_round(e, command):
             move_actor(e, id, e.scene.current)
             continue
         hit(e, id, enemies[0])
+        if spec.properties.get("library_rules_version"):
+            from rpg_vkr.world_library.creature_rules import after_attack
+
+            after_attack(e, id, enemies[0], spec.properties)
         template = spec.properties.get("game_template_id")
         if (
             template

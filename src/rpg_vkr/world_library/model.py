@@ -154,9 +154,25 @@ def read_jsonl(path):
     result = []
     with Path(path).open(encoding="utf-8") as stream:
         for line in stream:
-            if len(line) > 64000 or len(result) >= 50000:
+            if len(line) > 64000 or len(result) >= 100000:
                 raise ValueError("Import limit")
             if line.strip():
                 result.append(json.loads(line))
     validate_bundle(result)
     return result
+
+
+def all_records():
+    """One manifest order for CLI, window, tests and export tooling."""
+    records = []
+    for name in (
+        "seed-v1.jsonl",
+        "rpgd100-creature-facts.jsonl",
+        "rpgd100-equipment-facts.jsonl",
+        "rpgd100-reference-index.jsonl",
+    ):
+        path = ROOT / "data/world_library" / name
+        if path.exists():
+            records.extend(read_jsonl(path))
+    validate_bundle(records)
+    return records

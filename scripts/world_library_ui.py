@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from rpg_vkr.world_library.model import read_jsonl  # noqa: E402
+from rpg_vkr.world_library.model import all_records  # noqa: E402
 from rpg_vkr.world_library.store import Library  # noqa: E402
 from rpg_vkr.world_library.ui import LibraryWindow  # noqa: E402
 
@@ -18,14 +18,7 @@ if __name__ == "__main__":
     try:
         library.migrate()
         if not library.all():
-            rows = read_jsonl(ROOT / "data/world_library/seed-v1.jsonl")
-            facts = ROOT / "data/world_library/rpgd100-creature-facts.jsonl"
-            if facts.exists():
-                rows += read_jsonl(facts)
-            equipment = ROOT / "data/world_library/rpgd100-equipment-facts.jsonl"
-            if equipment.exists():
-                rows += read_jsonl(equipment)
-            library.import_records(rows)
+            library.import_records(all_records())
         window = LibraryWindow(library)
         window.show()
         app.exec()
