@@ -146,11 +146,16 @@ def extend_schema(spec):
     spec["source_creature"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     if "source_equipment" not in profiles:
         profiles.append("source_equipment")
-    spec["source_equipment"] = obj({
-        "source_url": text(600), "source_name": text(160), "section": text(100, 0),
-        "facts": array(obj({"field": text(40), "value": text(180, 0)}), 30),
-        "missing_numeric_facts": {"type": "boolean"}, "price_status": text(200),
-    })
+    spec["source_equipment"] = obj(
+        {
+            "source_url": text(600),
+            "source_name": text(160),
+            "section": text(100, 0),
+            "facts": array(obj({"field": text(40), "value": text(180, 0)}), 30),
+            "missing_numeric_facts": {"type": "boolean"},
+            "price_status": text(200),
+        }
+    )
     spec["source_equipment"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     return spec
 
