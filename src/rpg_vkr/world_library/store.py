@@ -71,30 +71,70 @@ class Library:
                 "schema_json TEXT", "schema_json JSONB"
             )
         with self.transaction():
+            if self.postgres:
+                self.execute("SELECT pg_advisory_xact_lock(934354738)")
             self.execute(
                 "CREATE TABLE IF NOT EXISTS wl_migrations(version INTEGER "
                 "PRIMARY KEY, checksum TEXT NOT NULL)"
             )
             old = self.execute("SELECT checksum FROM wl_migrations WHERE version=1").fetchone()
+            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 2:
+                raise ValueError("Unsupported newer library migration")
             checksum = digest(sql)
             if old:
                 if old[0] != checksum:
                     raise ValueError("Migration checksum changed")
-                return
-            for statement in sql.split(";"):
-                if statement.strip():
-                    self.execute(statement)
+            else:
+                for statement in sql.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
             from rpg_vkr.world_library.model import schemas
 
-            for key, value in schemas().items():
-                self.execute("INSERT INTO wl_schemas VALUES(?,?)", (key, dump(value)))
-            if self.postgres:
-                self.execute("CREATE INDEX wl_attributes_gin ON wl_versions USING GIN (payload)")
-                self.execute(
-                    "CREATE INDEX wl_search_fts ON wl_templates USING GIN "
-                    "(to_tsvector('simple',search_text))"
-                )
-            self.execute("INSERT INTO wl_migrations VALUES(1,?)", (checksum,))
+            if not old:
+                for key, value in schemas().items():
+                    self.execute("INSERT INTO wl_schemas VALUES(?,?)", (key, dump(value)))
+                if self.postgres:
+                    self.execute(
+                        "CREATE INDEX wl_attributes_gin ON wl_versions USING GIN (payload)"
+                    )
+                    self.execute(
+                        "CREATE INDEX wl_search_fts ON wl_templates USING GIN "
+                        "(to_tsvector('simple',search_text))"
+                    )
+                self.execute("INSERT INTO wl_migrations VALUES(1,?)", (checksum,))
+            backend = "postgres" if self.postgres else "sqlite"
+            sql2 = (ROOT / f"data/world_library/migrations/002_hierarchy_{backend}.sql").read_text(
+                encoding="utf-8"
+            )
+            checksum2 = digest(sql2)
+            old2 = self.execute("SELECT checksum FROM wl_migrations WHERE version=2").fetchone()
+            if old2:
+                if old2[0] != checksum2:
+                    raise ValueError("Migration checksum changed")
+            else:
+                for statement in sql2.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
+                for key, payload in self.execute(
+                    "SELECT id,schema_json FROM wl_schemas"
+                ).fetchall():
+                    value = self._decode(payload)
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?)",
+                        (key, digest(value), dump(value)),
+                    )
+                for key, value in schemas().items():
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?) "
+                        "ON CONFLICT(id,digest) DO NOTHING",
+                        (key, digest(value), dump(value)),
+                    )
+                    self.execute(
+                        "INSERT INTO wl_schemas VALUES(?,?) ON CONFLICT(id) DO UPDATE SET "
+                        "schema_json=excluded.schema_json",
+                        (key, dump(value)),
+                    )
+                self.execute("INSERT INTO wl_migrations VALUES(2,?)", (checksum2,))
 
     def _decode(self, value):
         return json.loads(value) if isinstance(value, str) else value

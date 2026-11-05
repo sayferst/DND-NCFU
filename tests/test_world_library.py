@@ -300,7 +300,9 @@ def test_postgresql_parity(records, tmp_path):
     # Requires a dedicated EMPTY database, never a user's game database.
     library = Library.postgres(os.environ["DND_LIBRARY_TEST_DSN"])
     try:
-        library.migrate()
+        from test_library_migrations import bootstrap_v1
+
+        bootstrap_v1(library)
         library.import_records(records)
         assert len(library.all()) == len(records)
         assert library.search("лук", "physical.weapon")
@@ -314,6 +316,7 @@ def test_postgresql_parity(records, tmp_path):
         with pytest.raises(ValueError, match="Stale"):
             library.import_records([records[0]], expected={changed["id"]: 1})
         assert library.revision(changed["id"]) == 2
+        library.migrate()  # Upgrade the populated published V1 schema before full import.
         from rpg_vkr.world_library.model import all_records
 
         full = {r["id"]: r for r in all_records()}

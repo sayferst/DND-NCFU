@@ -39,3 +39,4 @@ jobs:
           tests/test_library_equipment_runtime.py tests/test_library_reference_details.py
           tests/test_library_creature_actions.py tests/test_library_magic_runtime.py
           tests/test_library_recipes_runtime.py tests/test_owner_rules_runtime.py -q
+          tests/test_library_migrations.py
