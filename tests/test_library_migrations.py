@@ -81,7 +81,7 @@ def test_populated_v1_upgrade_imports_every_record_and_preserves_history(tmp_pat
         )
         assert library.execute("PRAGMA foreign_key_check").fetchall() == []
         library.migrate()
-        assert library.execute("SELECT COUNT(*) FROM wl_migrations").fetchone()[0] == 3
+        assert library.execute("SELECT COUNT(*) FROM wl_migrations").fetchone()[0] == 4
         assert library.get(changed["id"]) == changed
     finally:
         library.close()

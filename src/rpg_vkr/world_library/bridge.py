@@ -118,8 +118,29 @@ def preview(
             for k, v in a.items()
             if k in {"mass_g", "durability", "quality", "hp_max", "penetration", "defence", "hands"}
         }
+        if profile in {"npc", "creature", "boss"} and "abilities" in a:
+            properties.update(a["abilities"])
+            properties.update(
+                armour_class=a["armour_class"],
+                damage_dice=a["damage_dice"],
+                weapon="unarmed",
+                level=a["level"],
+            )
         if profile == "weapon":
             properties["damage_dice"] = f"{a['damage_count']}d{a['damage_die']}"
+        if profile == "npc" and row["provenance"]["generator"] == "world-library-4":
+            from rpg_vkr.world_library.social_rules import compile_social
+
+            properties["library_social_rules"] = compile_social(row)
+            properties["can_trade"] = a["profession"] in {
+                "торговец",
+                "кузнец",
+                "повар",
+                "лекарь",
+                "гончар",
+                "ткач",
+                "сапожник",
+            }
         if profile == "source_creature":
             from rpg_vkr.world_library.creature_rules import compile_creature
 
@@ -134,6 +155,8 @@ def preview(
                 library_item_rules=rules,
                 portable=rules["mass_g"] <= 30000,
             )
+            if "pack_v1" in a:
+                properties["library_pack_rules"] = a["pack_v1"]
         from rpg_vkr.world_library.physical_rules import PROFILES, compile_physical
 
         if profile in PROFILES:
@@ -202,7 +225,7 @@ def preview(
         }
         definition = Definition(
             definition_id,
-            row["name"],
+            a["pack_v1"]["unit_name"] + " · " + id[-8:] if "pack_v1" in a else row["name"],
             kind,
             (CATEGORY.get(profile, "miscellaneous"),),
             properties,
@@ -218,6 +241,12 @@ def preview(
     world = session.interaction_state()
     target_definition = existing.get(target) or next(d for d in definitions if d.id == target)
     instance_state = None
+    if target_definition.properties.get("library_social_rules"):
+        instance_state = {
+            "library_social_version": 1,
+            "mood": target_definition.properties["library_social_rules"]["initial"],
+            "relations": {},
+        }
     if target_definition.properties.get("library_utility_rules", {}).get("profile") == "food":
         instance_state = {
             "library_created_minute": session.gameplay["minute"],
@@ -235,6 +264,7 @@ def preview(
         instance_id,
         target,
         world.current,
+        quantity=target_definition.properties.get("library_pack_rules", {}).get("quantity", 1),
         state=instance_state
         or (
             {"condition": target_definition.properties["durability"]}
@@ -283,6 +313,10 @@ def preview(
             )
             if item_definition.properties.get("library_item_rules", {}).get("kind") == "weapon":
                 actor_state.setdefault("library_weapon", child_id)
+            item_rules = item_definition.properties.get("library_item_rules", {})
+            if item_rules.get("kind") == "armour":
+                slot = "library_shield" if item_rules["category"] == "shield" else "library_armour"
+                actor_state.setdefault(slot, child_id)
         entities[0] = replace(entity, state=actor_state)
     # The same validator used by commit rejects duplicate IDs, hero grants and stale scenes.
     record = Registration(

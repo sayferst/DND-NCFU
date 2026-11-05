@@ -22,6 +22,20 @@ def apply(engine, target, components, source):
         del engine._library_damage_collector
         engine.owner_hit_flags = {}
     amount = sum(collected)
+    from rpg_vkr.world_library.resilience_rules import incoming as resilient_damage
+
+    amount = resilient_damage(
+        engine,
+        target,
+        amount,
+        radiant=any(
+            element == "radiant" and reduced > 0
+            for (_, element), reduced in zip(components, collected, strict=True)
+        ),
+        critical=flags.get("critical", False) or getattr(engine, "source_hit_critical", False),
+        nonlethal=flags.get("nonlethal", False),
+    )
+    engine.source_hit_critical = False
     if engine.state.get("owner_rules_policy") == 1:
         from rpg_vkr.domain.owner_rules_runtime import change_hp
 

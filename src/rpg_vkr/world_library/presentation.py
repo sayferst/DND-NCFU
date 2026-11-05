@@ -41,6 +41,8 @@ LABELS = {
     "hands": "Руки",
     "level": "Уровень",
     "hp_max": "Максимум HP",
+    "armour_class": "КД",
+    "damage_dice": "Урон",
     "age_years": "Возраст лет",
     "profession": "Занятие",
     "social_status": "Положение",
@@ -165,13 +167,40 @@ def card(record, *, resolve=None, revision=None):
                     "salvage": "разборка",
                 }.get(str(value), str(value))
                 facts.append((label, value))
+        if "abilities" in a:
+            facts.insert(
+                0,
+                (
+                    "Характеристики",
+                    ", ".join(
+                        f"{label} {a['abilities'][key]}"
+                        for key, label in (
+                            ("strength", "СИЛ"),
+                            ("dexterity", "ЛОВ"),
+                            ("constitution", "ТЕЛ"),
+                            ("intelligence", "ИНТ"),
+                            ("wisdom", "МУД"),
+                            ("charisma", "ХАР"),
+                        )
+                    ),
+                ),
+            )
         if "damage_count" in a:
             facts.append(("Урон", f"{a['damage_count']}d{a['damage_die']}"))
         if profile == "source_equipment":
-            from rpg_vkr.world_library.equipment_rules import compile_equipment
+            from rpg_vkr.world_library.equipment_rules import compile_equipment, pending_features
 
             rules = compile_equipment(record)
-            description = f"{name}. Раздел {a['section']}."
+            if "pack_v1" in a:
+                pack = a["pack_v1"]
+                facts.insert(
+                    0,
+                    (
+                        "Упаковка",
+                        f"{pack['quantity']} шт.; {pack['pack_price_cp']} медных за всю партию",
+                    ),
+                )
+            description = prose(a.get("purpose_homebrew") or f"{name}. Раздел {a['section']}.")
             translations = {
                 "damage": "Урон",
                 "properties": "Свойства",
@@ -188,7 +217,9 @@ def card(record, *, resolve=None, revision=None):
                 if r["value"]
             )
             mechanics.update(
-                version=rules["rules_version"], homebrew_fields=rules["homebrew_fields"]
+                version=rules["rules_version"],
+                homebrew_fields=rules["homebrew_fields"],
+                pending_features=pending_features(record, rules),
             )
     if record["price_cp"] or profile in {
         "weapon",

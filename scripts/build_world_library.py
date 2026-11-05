@@ -154,6 +154,28 @@ def build():
         }
     )
     schema = {"record": record_schema} | {k: obj(v) for k, v in PROFILES.items()}
+    for profile in ("npc", "creature", "boss"):
+        schema[profile]["properties"].update(
+            abilities=obj(
+                {
+                    k: number(1, 30)
+                    for k in (
+                        "strength",
+                        "dexterity",
+                        "constitution",
+                        "intelligence",
+                        "wisdom",
+                        "charisma",
+                    )
+                }
+            ),
+            armour_class=number(1, 25),
+            damage_dice={
+                "type": "string",
+                "maxLength": 40,
+                "pattern": r"[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+            },
+        )  # Additive fields: published older actor records remain valid.
     from import_rpgd100_facts import extend_schema
 
     extend_schema(schema)
@@ -165,6 +187,50 @@ def build():
     records = []
 
     def add(key, name, profile, attributes, description, price=0, links=None):
+        if profile in {"npc", "creature", "boss"}:
+            attributes = dict(attributes)
+            code = int(digest({"actor": key})[:8], 16)
+            abilities = {
+                k: 8 + ((code >> (n * 3)) % 6)
+                for n, k in enumerate(
+                    (
+                        "strength",
+                        "dexterity",
+                        "constitution",
+                        "intelligence",
+                        "wisdom",
+                        "charisma",
+                    )
+                )
+            }
+            if profile == "npc":
+                job = attributes["profession"].casefold()
+                if any(t in job for t in ("кузнец", "рудокоп", "лесоруб", "каменщик", "страж")):
+                    abilities["strength"] += 3
+                if any(t in job for t in ("лекарь", "травник", "учитель", "писец", "алхимик")):
+                    abilities["intelligence"] += 3
+                if any(t in job for t in ("торговец", "трактирщик", "певец")):
+                    abilities["charisma"] += 3
+                natural_armour, dice = 0, "1d4"
+            else:
+                boss = profile == "boss"
+                abilities.update(
+                    strength=14 if not boss else 18 + attributes["level"] // 4,
+                    constitution=12 + attributes["level"] // 3,
+                    intelligence=3,
+                    wisdom=12,
+                )
+                if "мотылёк" in name.casefold():
+                    abilities.update(strength=3 if not boss else 10, dexterity=16)
+                if "страж" in name.casefold():
+                    abilities.update(strength=18 if not boss else 22, intelligence=8)
+                natural_armour = 3 if any(t in name.casefold() for t in ("краб", "каменный")) else 1
+                dice = "2d6" if boss else "1d4" if "мотылёк" in name.casefold() else "1d6"
+            attributes.update(
+                abilities=abilities,
+                damage_dice=dice,
+                armour_class=10 + (abilities["dexterity"] - 10) // 2 + natural_armour,
+            )
         group = (
             "actors"
             if profile in {"npc", "creature", "boss", "race"}
@@ -187,7 +253,9 @@ def build():
                 "origin": "invented/homebrew",
                 "source": "DND-NCFU original frontier setting",
                 "generator": (
-                    "world-library-3"
+                    "world-library-4"
+                    if profile in {"npc", "creature", "boss"}
+                    else "world-library-3"
                     if profile in {"food", "medicine", "poison", "book", "quest"}
                     else "world-library-2"
                 ),
@@ -199,6 +267,46 @@ def build():
 
     def ref(target, relation="component", quantity=1, role="основной материал"):
         return {"relation": relation, "target": target, "quantity": quantity, "role": role}
+
+    def npc_inventory(profession, job_index, region_index, shift):
+        def held(key, role, quantity=1):
+            return ref(f"wl_{key}_{region_index}", "starting_inventory", quantity, role)
+
+        stock = [held(f"food_{(job_index + shift) % 8}", "личный дорожный запас", 2)]
+        if profession == "егерь":
+            return stock + [
+                held("weapon_10", "охотничий лук"),
+                held("ammunition_0", "конечный запас стрел", 12),
+            ]
+        if profession == "страж":
+            return stock + [
+                held("weapon_3", "служебное копьё"),
+                held("armour_2", "личная кольчуга"),
+            ]
+        if profession == "лекарь":
+            return stock + [held("medicine_0", "запас ухода за ранеными", 2)]
+        if profession in {"певец", "картограф", "архивист", "учитель"}:
+            book = 4 if profession == "певец" else 1 if profession == "картограф" else 5
+            return stock + [held(f"book_{book}", "рабочие записи")]
+        tools = {
+            0: 1,
+            1: 8,
+            6: 11,
+            7: 11,
+            8: 5,
+            9: 9,
+            10: 10,
+            11: 11,
+            12: 10,
+            13: 2,
+            16: 0,
+            18: 4,
+            19: 11,
+        }
+        return stock + [
+            held(f"tool_{tools.get(job_index, 0)}", "принадлежность по профессии"),
+            held("weapon_8", "рабочий нож"),
+        ]
 
     def physical(i, purpose, mass=500):
         return {
@@ -666,8 +774,12 @@ def build():
                     "age_years": 22 + j * 2 + shift * 11,
                     "surname": ["Мостовой", "Вереск", "Камнев", "Листопад"][i % 4]
                     + (" Старший" if shift else " Младший"),
-                    "initial_mood": "wary",
-                    "mood_transitions": [
+                    "initial_mood": "angry"
+                    if (i + n) % 7 == 6
+                    else ["wary", "calm", "angry"][(i + n) % 3],
+                    "mood_transitions": []
+                    if (i + n) % 7 == 6
+                    else [
                         {
                             "from": "wary",
                             "event": "движок подтвердил выполненное обещание",
@@ -677,6 +789,16 @@ def build():
                             "from": "calm",
                             "event": "движок подтвердил кражу собственности",
                             "to": "angry",
+                        },
+                        {
+                            "from": "wary",
+                            "event": "движок подтвердил кражу собственности",
+                            "to": "angry",
+                        },
+                        {
+                            "from": "angry",
+                            "event": "движок подтвердил выполненное обещание",
+                            "to": "wary",
                         },
                     ],
                     "territory": region,
@@ -696,11 +818,7 @@ def build():
                     ),
                     links=[
                         ref(a["species"], "species"),
-                        ref(
-                            items[(i * 20 + n) % len(items)],
-                            "starting_inventory",
-                            role="предлагаемый стартовый предмет, не автоматическая выдача",
-                        ),
+                        *npc_inventory(profession, j, i, shift),
                     ],
                 )
         for j, beast in enumerate(
@@ -879,7 +997,7 @@ def build():
     validate_bundle(records)
     (OUT / "seed-v1.jsonl").write_text("\n".join(dump(r) for r in records) + "\n", encoding="utf-8")
     report = {
-        "generator": "world-library-3",
+        "generator": "world-library-4",
         "records": len(records),
         "by_profile": dict(sorted(Counter(r["profile"] for r in records).items())),
         "sha256_canonical_records": digest(records),

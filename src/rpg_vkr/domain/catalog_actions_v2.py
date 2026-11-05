@@ -827,6 +827,12 @@ def hit(e, attacker, target, *, source_attack=None):
             bonus = spec.properties["attack_bonus"] - e.status_power(attacker, "weaken")
             damage_bonus = e.status_power(attacker, "power")
             row["damage_type"] = spec.properties.get("source_attack_element", "physical")
+            if source_attack is None and spec.properties.get("source_attack_math_version") == 2:
+                import re
+
+                base_formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", row["dice"])
+                row["dice"] = base_formula[1]
+                damage_bonus += int(base_formula[2] or 0)
             if source_attack is not None:
                 from rpg_vkr.world_library.creature_actions import VERSION, selected
 
@@ -930,7 +936,7 @@ def hit(e, attacker, target, *, source_attack=None):
     success = value == 20 or value != 1 and value + bonus >= defence
     amount = 0
     if success:
-        amount = e.roll(row["dice"], "Урон оружия")
+        amount = 0 if row["dice"] == "0d4" else e.roll(row["dice"], "Урон оружия")
         critical = value == 20 or unconscious_melee
         if source_runtime.enabled(e):
             from rpg_vkr.world_library.source_geometry import distance
@@ -940,8 +946,12 @@ def hit(e, attacker, target, *, source_attack=None):
                 and distance(e, attacker, target) <= 5
             )
         if critical:
-            amount += e.roll(row["dice"], "Критический урон")
+            amount += 0 if row["dice"] == "0d4" else e.roll(row["dice"], "Критический урон")
         amount = max(0, amount + damage_bonus)
+        if target != "hero" and e.actor(target, False)[1].properties.get(
+            "library_resilience_rules"
+        ):
+            e.source_hit_critical = critical
         if e.state.get("owner_rules_policy") == 1:
             e.owner_hit_flags = {
                 "critical": critical,
@@ -960,9 +970,15 @@ def hit(e, attacker, target, *, source_attack=None):
             packet = [(amount, row.get("damage_type", "physical"))]
             for part in source_parts[1:]:
                 formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", part["dice"])
-                part_damage = e.roll(formula[1], "Дополнительный тип урона")
+                part_damage = (
+                    0 if formula[1] == "0d4" else e.roll(formula[1], "Дополнительный тип урона")
+                )
                 if critical:
-                    part_damage += e.roll(formula[1], "Критический дополнительный урон")
+                    part_damage += (
+                        0
+                        if formula[1] == "0d4"
+                        else e.roll(formula[1], "Критический дополнительный урон")
+                    )
                 packet.append((max(0, part_damage + int(formula[2] or 0)), part["element"]))
             condition = None
             if (
@@ -1229,6 +1245,17 @@ def trade(e, operation, args):
         else:
             price = max(1, price * e.state["living_world"].get("price_percent", 100) // 100)
         price *= quantity
+        from rpg_vkr.world_library.equipment_packs import quote as package_quote
+
+        if definition.properties.get("library_pack_rules"):
+            if e.state.get("catalog_revision") != 3:
+                raise ValueError("Package pricing requires canonical catalog3")
+            price = package_quote(
+                e,
+                definition,
+                quantity,
+                price_percent(e, definition.properties.get("game_template_id")),
+            )
         if e.state["copper"] < price:
             raise ValueError("Недостаточно денег.")
         thing = e.things[entity.id]
@@ -1260,6 +1287,21 @@ def trade(e, operation, args):
 
             price = max(1, unit_value(e, item) * price_percent(e, item.get("template")) // 200)
         price *= quantity
+        source_entity = e.actors.get(item.get("source", item["id"]))
+        if source_entity:
+            from rpg_vkr.world_library.equipment_packs import quote as package_quote
+
+            item_definition = e.definitions[source_entity.definition_id]
+            if item_definition.properties.get("library_pack_rules"):
+                if e.state.get("catalog_revision") != 3:
+                    raise ValueError("Package pricing requires canonical catalog3")
+                price = package_quote(
+                    e,
+                    item_definition,
+                    quantity,
+                    price_percent(e, item.get("template")),
+                    selling=True,
+                )
         if wallet.get("gold_cp", 0) < price:
             raise ValueError("У торговца недостаточно средств.")
         wallet["gold_cp"] -= price

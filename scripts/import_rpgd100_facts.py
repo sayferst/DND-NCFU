@@ -121,6 +121,17 @@ def fetch(url):
         return raw
 
 
+def literal_bindings(source):
+    """Read comma-separated declarations too; this never evaluates JavaScript."""
+    pattern = r"(?:(?:const|let|var)\s+|[,;]\s*)\w+\s*=\s*(?:Object\.freeze\(\s*)?[\[{]"
+    for match in re.finditer(pattern, source):
+        try:
+            value = literal_array(source[match.start() :], allow_duplicate_keys=True)
+        except (ValueError, IndexError):
+            continue
+        yield value
+
+
 def extend_schema(spec):
     from build_world_library import array, number, obj, text
 
@@ -169,6 +180,10 @@ def extend_schema(spec):
         }
     )
     spec["source_creature"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    spec["source_creature"]["properties"]["attack_math_version"] = {
+        "type": "integer",
+        "enum": [2],
+    }
     if "source_equipment" not in profiles:
         profiles.append("source_equipment")
     spec["source_equipment"] = obj(
@@ -182,6 +197,14 @@ def extend_schema(spec):
         }
     )
     spec["source_equipment"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    spec["source_equipment"]["properties"].update(
+        source_asset=text(1000),
+        source_asset_sha256={"type": "string", "pattern": "[0-9a-f]{64}"},
+        purpose_homebrew=text(300),
+        appearance_homebrew=text(600),
+        history_homebrew=text(300),
+        design_origin={"type": "string", "enum": ["invented/homebrew"]},
+    )
     if "source_reference" not in profiles:
         profiles.append("source_reference")
     spec["source_reference"] = obj(
@@ -208,6 +231,12 @@ def extend_schema(spec):
     from rpg_vkr.world_library.source_extract import register as register_source
 
     register_source(spec)
+    from rpg_vkr.world_library.resilience_rules import register as register_resilience
+
+    register_resilience(spec)
+    from rpg_vkr.world_library.equipment_packs import register as register_packs
+
+    register_packs(spec)
     return spec
 
 

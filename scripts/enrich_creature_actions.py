@@ -2,14 +2,13 @@
 
 import hashlib
 import json
-import re
 import sys
 from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "scripts")]
-from import_rpgd100_facts import fetch, literal_array  # noqa: E402
+from import_rpgd100_facts import fetch, literal_bindings  # noqa: E402
 
 from rpg_vkr.world_library.creature_actions import extract, validate  # noqa: E402
 from rpg_vkr.world_library.model import dump, read_jsonl, validate_bundle  # noqa: E402
@@ -27,10 +26,8 @@ def main():
         if hashlib.sha256(raw).hexdigest() != source["sha256"]:
             raise ValueError("Source changed; reinventory before extracting mechanics")
         text = raw.decode("utf-8")
-        for match in re.finditer(r"(?:const|let|var)\s+\w+\s*=\s*\[", text):
-            try:
-                values = literal_array(text[match.start() :], allow_duplicate_keys=True)
-            except (ValueError, IndexError):
+        for values in literal_bindings(text):
+            if not isinstance(values, list):
                 continue
             for entry in values:
                 if not isinstance(entry, dict) or "статблок" not in entry:
@@ -45,6 +42,7 @@ def main():
                 rules = extract(entry["статблок"])
                 validate(rules)
                 by_id[id]["attributes"]["actions_v2"] = rules
+                by_id[id]["attributes"]["attack_math_version"] = 2
                 matched.add(id)
     if len(matched) != len(rows):
         raise ValueError(f"Source reconciliation incomplete: {len(matched)}/{len(rows)}")

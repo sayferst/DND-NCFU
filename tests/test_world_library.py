@@ -12,7 +12,14 @@ from rpg_vkr.storage.catalog import CatalogIndex
 from rpg_vkr.storage.knowledge import export_session, restore_session
 from rpg_vkr.world_library.bridge import commit, preview
 from rpg_vkr.world_library.migration import export_sqlite, stage
-from rpg_vkr.world_library.model import ROOT, digest, read_jsonl, validate_bundle, validate_record
+from rpg_vkr.world_library.model import (
+    ROOT,
+    digest,
+    equipment_records,
+    read_jsonl,
+    validate_bundle,
+    validate_record,
+)
 from rpg_vkr.world_library.store import Library
 
 
@@ -111,10 +118,10 @@ def test_creature_stats_fallback_and_canonical_combat(library):
 def test_complete_equipment_index_and_visual_variants(library):
     from rpg_vkr.world_library.appearance import appearance
 
-    rows = read_jsonl(ROOT / "data/world_library/rpgd100-equipment-facts.jsonl")
+    rows = equipment_records()
     assert len(rows) == 391
     assert len({row["id"] for row in rows}) == 391
-    assert sum(row["attributes"]["missing_numeric_facts"] for row in rows) == 6
+    assert sum(row["attributes"]["missing_numeric_facts"] for row in rows) == 0
     library.import_records(rows)
     with pytest.raises(ValueError, match="handler"):
         preview(library, Session(seed=1), rows[0]["id"], "unpriced_source_item")
@@ -231,7 +238,7 @@ def test_library_window(qt_app, library):
     assert window.results.count() > 0
     window.results.setCurrentRow(0)
     assert "invented/homebrew" in window.details.toPlainText()
-    equipment = read_jsonl(ROOT / "data/world_library/rpgd100-equipment-facts.jsonl")
+    equipment = equipment_records()
     window.rows = [next(row for row in equipment if row["attributes"]["facts"])]
     window.show_record(0)
     assert "source-facts/original-description" in window.details.toPlainText()

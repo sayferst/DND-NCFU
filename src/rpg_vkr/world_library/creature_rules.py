@@ -55,6 +55,13 @@ def compile_creature(record):
         validate(a["actions_v2"])
         version = ACTIONS_VERSION
         extended["source_actions_v2"] = a["actions_v2"]
+        if a.get("attack_math_version") == 2:
+            extended["source_attack_math_version"] = 2
+            if a["actions_v2"]["actions"]:
+                first = a["actions_v2"]["actions"][0]
+                bonus, dice = first["bonus"], first["dice"]
+                invented = [key for key in invented if key not in {"attack_bonus", "damage_dice"}]
+                extended["source_attack_element"] = first["element"]
         for field, flag in (
             ("source_resistances", "force_resistance"),
             ("source_immunities", "force_immunity"),
@@ -82,6 +89,12 @@ def compile_creature(record):
         version = SOURCE_VERSION
         extended["source_features_v3"] = a["features_v3"]
         implemented.update(a["features_v3"]["supported_names"])
+    if "resilience_v1" in a:
+        from rpg_vkr.world_library.resilience_rules import validate as validate_resilience
+
+        validate_resilience(a["resilience_v1"])
+        extended["library_resilience_rules"] = a["resilience_v1"]
+        implemented.update(a["resilience_v1"]["supported_names"])
     return {
         "hp_max": hp,
         "armour_class": ac,
@@ -112,6 +125,11 @@ def validate_runtime(properties):
     from rpg_vkr.world_library.creature_actions import validate
     from rpg_vkr.world_library.source_runtime import VERSION as SOURCE_VERSION
 
+    if "source_attack_math_version" in properties and (
+        type(properties["source_attack_math_version"]) is not int
+        or properties["source_attack_math_version"] != 2
+    ):
+        raise ValueError("Unknown source attack math version")
     if properties.get("library_rules_version") not in {VERSION, ACTIONS_VERSION, SOURCE_VERSION}:
         raise ValueError("Unknown library creature rules")
     if properties["library_rules_version"] in {ACTIONS_VERSION, SOURCE_VERSION}:
@@ -125,9 +143,12 @@ def validate_runtime(properties):
         or not -10 <= properties["attack_bonus"] <= 40
     ):
         raise ValueError("Invalid attack bonus")
-    if not re.fullmatch(
-        r"[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?", properties.get("damage_dice", "")
-    ):
+    pattern = r"[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
+    if properties.get("source_attack_math_version") == 2:
+        from rpg_vkr.world_library.creature_actions import DICE
+
+        pattern = DICE
+    if not re.fullmatch(pattern, properties.get("damage_dice", "")):
         raise ValueError("Invalid creature damage dice")
     elements = {
         "fire",

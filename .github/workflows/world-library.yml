@@ -49,3 +49,10 @@ jobs:
           tests/test_library_utility_runtime.py
           tests/test_catalog_ui_playable.py
           tests/test_library_all_creation.py
+          tests/test_library_social_runtime.py
+          tests/test_source_resilience_runtime.py
+          tests/test_world_source_inventory.py
+          tests/test_library_equipment_packs.py
+          tests/test_source_attack_grammar.py
+          tests/test_source_literal_bindings.py
+          tests/test_library_equipment_designs.py

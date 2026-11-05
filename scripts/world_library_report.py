@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from rpg_vkr.world_library.creature_rules import compile_creature  # noqa: E402
+from rpg_vkr.world_library.equipment_rules import pending_features  # noqa: E402
 from rpg_vkr.world_library.model import all_records, dump  # noqa: E402
 
 
@@ -27,7 +28,12 @@ def main():
         "records": len(rows),
         "by_profile": dict(profiles),
         "creatures": len(creatures),
-        "source_attack_formula": sum(bool(r["attributes"]["attacks"]) for r in creatures),
+        "source_attack_formula": sum(
+            bool(r["attributes"].get("actions_v2", {}).get("actions"))
+            if r["attributes"].get("attack_math_version") == 2
+            else bool(r["attributes"]["attacks"])
+            for r in creatures
+        ),
         "resistances": sum(bool(r["attributes"]["resistances"]) for r in creatures),
         "immunities": sum(bool(r["attributes"]["immunities"]) for r in creatures),
         "vulnerabilities": sum(bool(r["attributes"]["vulnerabilities"]) for r in creatures),
@@ -39,12 +45,32 @@ def main():
             r["profile"] in {"spell", "rune", "scroll", "combination"} for r in rows
         ),
         "homebrew_recipes_with_handlers": profiles["recipe"],
+        "undead_fortitude": sum(
+            r["attributes"].get("resilience_v1", {}).get("undead_fortitude", False)
+            for r in creatures
+        ),
+        "homebrew_actors_with_full_stat_blocks": sum(
+            r["profile"] in {"npc", "creature", "boss"} and "abilities" in r["attributes"]
+            for r in rows
+        ),
+        "homebrew_npcs_with_social_programs": sum(
+            r["profile"] == "npc" and r["provenance"]["generator"] == "world-library-4"
+            for r in rows
+        ),
         "homebrew_utilities_with_handlers": sum(
             r["profile"] in {"food", "medicine", "poison", "book", "quest"}
             and r["provenance"]["generator"] == "world-library-3"
             for r in rows
         ),
         "reference_records_without_gameplay_handler": profiles["source_reference"],
+        "source_equipment_with_pending_special_rules": sum(
+            bool(pending_features(row)) for row in rows if row["profile"] == "source_equipment"
+        ),
+        "source_equipment_with_original_visual_designs": sum(
+            row["profile"] == "source_equipment"
+            and row["attributes"].get("design_origin") == "invented/homebrew"
+            for row in rows
+        ),
         "full_rule_coverage": False,
     }
     directory = ROOT / "data/world_library"

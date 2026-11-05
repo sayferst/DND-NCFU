@@ -18,7 +18,7 @@ ELEMENTS = {
     "звук": "thunder",
     "силов": "force",
 }
-DICE = r"[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
+DICE = r"(?:[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?|0d4\+[0-9]{1,6})"
 
 
 def text(value):
@@ -84,28 +84,38 @@ def extract(stat):
         if name.casefold().strip(".") == "мультиатака":
             multi = body.casefold()
             continue
-        bonus = re.search(r"([+-]\s*\d+)\s*к\s*попаданию", body, re.I)
+        bonus = re.search(r"([+-]\s*\d+)\s*(?:к|на)\s*попадани[юея]", body, re.I)
+        if not bonus:
+            bonus = re.search(
+                r"\bбросок(?:\s+[а-яё]+){0,3}\s+атаки(?:\s+[а-яё]+){0,4}\s*:\s*([+-]\s*\d+)",
+                body,
+                re.I,
+            )
         hit = re.search(r"Попадание\s*:\s*(.*)", body, re.I)
         if not bonus or not hit:
             continue
         damage = re.findall(r"\b([1-9][0-9]?)\s*[кd](4|6|8|10|12)(\s*[+-]\s*\d{1,2})?", hit[1])
-        if not damage or len(actions) == 30:
+        components, complete = damage_components(hit[1].casefold())
+        if (not damage and not components) or len(actions) == 30:
             continue
-        formula = damage[0][0] + "d" + damage[0][1] + re.sub(r"\s", "", damage[0][2])
+        formula = (
+            components[0]["dice"]
+            if components
+            else (damage[0][0] + "d" + damage[0][1] + re.sub(r"\s", "", damage[0][2]))
+        )
         value = int(bonus[1].replace(" ", ""))
         if not -10 <= value <= 40:
             continue
         lower = hit[1].casefold()
         element = next((element for stem, element in ELEMENTS.items() if stem in lower), "")
         # Strictly one unconditional damage sentence. Additional text stays unsupported.
-        components, complete = damage_components(lower)
         actions.append(
             {
                 "name": name,
                 "bonus": value,
                 "dice": formula,
                 "element": components[0]["element"] if complete else element or "physical",
-                "ranged": "дальнобойная" in body.casefold(),
+                "ranged": any(w in body.casefold() for w in ("дальнобойн", "дальней", "дальнего")),
                 "complete": complete,
                 "components": components,
             }
@@ -131,19 +141,31 @@ def extract(stat):
 
 
 def damage_components(value):
-    formula = r"([1-9][0-9]?)\s*[кd](4|6|8|10|12)(\s*[+-]\s*\d{1,2})?"
+    formula = r"([1-9][0-9]?)\s*[кd](12|10|8|6|4|1)(\s*[+-]\s*\d{1,2})?"
     kinds = (
         r"(?:дробящего|колющего|рубящего|некротического|психического)\s+урона"
         r"|урона\s+(?:огн[её]м|холодом|электричеством|кислотой|ядом|"
         r"некротической\s+энергией|излучением|психической\s+энергией|силовым\s+полем|звуком)"
     )
-    pattern = re.compile(r"\d+\s*\(" + formula + r"\)\s+(" + kinds + r")")
+    amount = (
+        r"(?:\d+\s*)?\(([^()]+)\)|([0-9]{1,6}(?:\s*[кd](?:12|10|8|6|4|1)(?:\s*[+-]\s*\d{1,2})?)?)"
+    )
+    pattern = re.compile(r"(?:" + amount + r")\s+(" + kinds + r")")
     parts = []
     for match in pattern.finditer(value):
-        element = next((element for stem, element in ELEMENTS.items() if stem in match[4]), "")
+        element = next((element for stem, element in ELEMENTS.items() if stem in match[3]), "")
         if not element or len(parts) == 4:
             return parts, False
-        dice = match[1] + "d" + match[2] + re.sub(r"\s", "", match[3] or "")
+        number = re.sub(r"\s", "", match[1] or match[2])
+        parsed = re.fullmatch(formula, number)
+        if number.isdigit():
+            dice = "0d4+" + number
+        elif parsed and parsed[2] == "1":
+            dice = "0d4+" + str(max(0, int(parsed[1]) + int(parsed[3] or 0)))
+        elif parsed:
+            dice = parsed[1] + "d" + parsed[2] + (parsed[3] or "")
+        else:
+            return parts, False
         parts.append({"dice": dice, "element": element})
     remainder = pattern.sub("#", value).strip(" .")
     complete = bool(parts and re.fullmatch(r"#(?:\s*(?:,|плюс|и|а также)\s*#)*", remainder))

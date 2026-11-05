@@ -1,5 +1,5 @@
 {
-  "generator": "world-library-3",
+  "generator": "world-library-4",
   "records": 2864,
   "by_profile": {
     "ammunition": 40,
@@ -26,7 +26,7 @@
     "tool": 120,
     "weapon": 160
   },
-  "sha256_canonical_records": "709bae1afb43f4133293213c8fbb4bd43d72af5e8f3b3aa8a0214310f7a69a98",
+  "sha256_canonical_records": "f4a77b154f7ad37103c1f4d094c4690505a41225cbc23163bd8e226748a5c420",
   "human_reviewed": 0,
   "invented_homebrew": 2864,
   "note": "Procedural regional/craft variants with bounded versioned handlers; not independently curated entities or a complete SRD implementation."

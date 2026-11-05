@@ -180,6 +180,12 @@ def roll_d20(engine, mode, reason):
 def saving_throw(engine, actor, ability, dc, *, magical=False):
     if ability not in ABILITIES or type(dc) is not int or not 1 <= dc <= 40:
         raise ValueError("Invalid source saving throw")
+    return saving_throw_extended(engine, actor, ability, dc, magical=magical)
+
+
+def saving_throw_extended(engine, actor, ability, dc, *, magical=False):
+    if ability not in ABILITIES or type(dc) is not int or not 1 <= dc <= 8000005:
+        raise ValueError("Invalid derived source saving throw")
     spec = rules(engine, actor)
     automatic = ability in {"strength", "dexterity"} and has(
         engine, actor, "paralyzed", "petrified", "stunned", "unconscious"
@@ -201,15 +207,14 @@ def saving_throw(engine, actor, ability, dc, *, magical=False):
         from rpg_vkr.domain.owner_rules import check
         from rpg_vkr.domain.owner_rules_runtime import life
 
-        offset = max(0, dc - 30)
         result = check(
             natural,
-            bonus - offset,
+            bonus,
             min(dc, 30),
             exhaustion=life(engine, actor).exhaustion,
             partial=False,
         )
-        success, total = result["succeeded"], result["total"] + offset
+        success, total = natural == 20 or result["total"] >= dc, result["total"]
         if result["complication"]:
             engine.owner_complication_minutes = getattr(engine, "owner_complication_minutes", 0) + 1
     else:

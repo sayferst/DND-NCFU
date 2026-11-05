@@ -20,7 +20,12 @@ def test_npc_starts_with_real_owned_items_and_replays(library):  # noqa: F811
     assert any(e.owner_id == "smith" for e in request.entities)
     commit(s, request)
     held = [e for e in s.catalog.entities if e.owner_id == "smith"]
-    assert len(held) == 1 and held[0].parent_id == "smith"
+    assert len(held) == 3 and all(e.parent_id == "smith" for e in held)
+    types = {d.id: d for d in s.catalog.definitions}
+    profiles = {
+        types[e.definition_id].properties["library_item_rules"]["source_profile"] for e in held
+    }
+    assert profiles == {"food", "tool", "weapon"}
     assert s.gameplay["items"] == before_items
     assert Session.from_dict(s.to_dict(), version=31).to_dict() == s.to_dict()
 
@@ -54,4 +59,64 @@ def test_new_revision_does_not_overwrite_old_definition_or_instance(library):  #
     new = next(e for e in s.catalog.entities if e.id == "new_ration")
     assert old.definition_id != new.definition_id
     assert next(d for d in s.catalog.definitions if d.id == previous.id) == previous
+    assert Session.from_dict(s.to_dict(), version=31).to_dict() == s.to_dict()
+
+
+def test_guard_armour_must_be_present_intact_and_owned(library):  # noqa: F811
+    from dataclasses import replace
+
+    s = campaign(hp=12)
+    commit(s, preview(library, s, "wl_npc_0_5", "watchman", with_inventory=True))
+    e = Engine(s.gameplay, context(s), s.dice, {})
+    id = e.actors["watchman"].state["library_armour"]
+    protected = e.defence("watchman")
+    armour = e.actors[id]
+    e.actors[id] = replace(armour, state=dict(armour.state) | {"condition": 0})
+    assert e.defence("watchman") < protected
+    e.actors[id] = replace(armour, owner_id="hero", parent_id="hero")
+    assert e.defence("watchman") < protected
+
+
+def test_hunter_starts_with_twelve_real_arrows_and_spends_one(library):  # noqa: F811
+    s = campaign(hp=12)
+    commit(s, preview(library, s, "wl_npc_0_14", "hunter", with_inventory=True))
+    e = Engine(s.gameplay, context(s), s.dice, {})
+    arrows = next(
+        a
+        for a in e.actors.values()
+        if a.owner_id == "hunter"
+        and e.definitions[a.definition_id].properties.get("library_item_rules", {}).get("category")
+        == "ammunition"
+    )
+    assert arrows.quantity == 12
+    assert weapon(e, "hunter")["required_ammunition"] == "arrow"
+    assert e.actors[arrows.id].quantity == 11
+
+
+def test_new_merchant_trades_only_actual_stock_and_preserves_money(library):  # noqa: F811
+    from test_catalog_invariants import coins
+
+    s = campaign(hp=12)
+    commit(s, preview(library, s, "wl_npc_0_9", "trader", with_inventory=True))
+    definitions = {d.id: d for d in s.catalog.definitions}
+    stock = next(
+        e
+        for e in s.catalog.entities
+        if e.owner_id == "trader"
+        and definitions[e.definition_id]
+        .properties.get("library_item_rules", {})
+        .get("source_profile")
+        == "food"
+    )
+    before = coins(s)
+    s.perform_gameplay("buy", {"merchant": "trader", "item": stock.id, "quantity": 1}, "buy-ration")
+    assert coins(s) == before
+    assert (
+        sum(
+            e.quantity
+            for e in s.catalog.entities
+            if e.owner_id == "trader" and e.definition_id == stock.definition_id
+        )
+        == stock.quantity - 1
+    )
     assert Session.from_dict(s.to_dict(), version=31).to_dict() == s.to_dict()

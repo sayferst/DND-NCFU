@@ -77,12 +77,14 @@ def compile_equipment(record):
             row.update(category="crossbow", required_ammunition="bolt")
         if any(word in kind for word in ("огнестрел", "порох")):
             row.update(category="crossbow", required_ammunition="bullet")
-    elif "доспех" in kind or "щит" in name:
+    elif (
+        attributes.get("section") == "Доспехи" or "доспех" in kind or "щит" in name or kind == "щит"
+    ):
         ac = facts.get("ac", facts.get("armor_class", ""))
         number = re.search(r"\d+", ac)
         row.update(
             kind="armour",
-            category="shield" if "щит" in name else "body",
+            category="shield" if "щит" in name or kind == "щит" else "body",
             defence=int(number[0]) if number else 2 if "щит" in name else 10,
             dex_cap=2 if "макс" in ac.casefold() else 10 if "ловк" in ac.casefold() else 0,
         )
@@ -93,8 +95,29 @@ def compile_equipment(record):
             category="ammunition",
             ammo_kind="arrow" if "стрелы" in name else "bolt" if "болты" in name else "bullet",
         )
+    if "pack_v1" in attributes:
+        from rpg_vkr.world_library.equipment_packs import normalize_rules
+
+        normalize_rules(row, attributes["pack_v1"])
     validate_equipment(row)
     return row
+
+
+def pending_features(record, rules=None):
+    """Basic item execution does not imply execution of every source property."""
+    rules = rules or compile_equipment(record)
+    facts = {row["field"]: row["value"] for row in record["attributes"]["facts"]}
+    pending = []
+    for key, label in (
+        ("properties", "Особые свойства"),
+        ("strength", "Требование силы"),
+        ("stealth", "Влияние на скрытность"),
+    ):
+        if facts.get(key, "").strip() not in {"", "—", "-"}:
+            pending.append(label + ": " + facts[key])
+    if rules["kind"] == "household" and rules["category"] != "ammunition":
+        pending.append("Специальное применение исходного предмета")
+    return pending
 
 
 def validate_equipment(row):
@@ -169,5 +192,7 @@ def validate_equipment(row):
         "price_cp",
         "mass_g",
         "defence",
+        "display_unit_price_rounding",
+        "unit_mass_rounding",
     }:
         raise ValueError("Unknown homebrew field")

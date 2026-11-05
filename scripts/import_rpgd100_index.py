@@ -42,7 +42,7 @@ def main():
         raise ValueError("Catalog inventory incomplete")
     existing = read_jsonl(out / "seed-v1.jsonl")
     existing += read_jsonl(out / "rpgd100-creature-facts.jsonl")
-    existing += read_jsonl(out / "rpgd100-equipment-facts.jsonl")
+    existing += read_jsonl(out / "rpgd100-equipment-facts.jsonl", dependencies=existing)
     by_url = {}
     by_name = {}
     for row in existing:

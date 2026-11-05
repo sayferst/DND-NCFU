@@ -78,7 +78,7 @@ class Library:
                 "PRIMARY KEY, checksum TEXT NOT NULL)"
             )
             old = self.execute("SELECT checksum FROM wl_migrations WHERE version=1").fetchone()
-            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 3:
+            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 4:
                 raise ValueError("Unsupported newer library migration")
             checksum = digest(sql)
             if old:
@@ -163,6 +163,38 @@ class Library:
                     ("library-creature-3", digest(schemas()["source_features_v3"])),
                 )
                 self.execute("INSERT INTO wl_migrations VALUES(3,?)", (checksum3,))
+            sql4 = (ROOT / "data/world_library/migrations/004_source_resilience.sql").read_text(
+                encoding="utf-8"
+            )
+            checksum4 = digest(sql4)
+            old4 = self.execute("SELECT checksum FROM wl_migrations WHERE version=4").fetchone()
+            if old4:
+                if old4[0] != checksum4:
+                    raise ValueError("Migration checksum changed")
+            else:
+                for statement in sql4.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
+                for key, value in schemas().items():
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?) "
+                        "ON CONFLICT(id,digest) DO NOTHING",
+                        (key, digest(value), dump(value)),
+                    )
+                    self.execute(
+                        "INSERT INTO wl_schemas VALUES(?,?) ON CONFLICT(id) DO UPDATE SET "
+                        "schema_json=excluded.schema_json",
+                        (key, dump(value)),
+                    )
+                self.execute(
+                    "INSERT INTO wl_rulesets VALUES(?,?)",
+                    ("library-resilience-1", digest(schemas()["source_resilience_v1"])),
+                )
+                self.execute(
+                    "INSERT INTO wl_rulesets VALUES(?,?)",
+                    ("library-pack-1", digest(schemas()["equipment_pack_v1"])),
+                )
+                self.execute("INSERT INTO wl_migrations VALUES(4,?)", (checksum4,))
 
     def _decode(self, value):
         return json.loads(value) if isinstance(value, str) else value

@@ -99,6 +99,17 @@ def validate_record(record):
         from rpg_vkr.world_library.source_extract import validate as validate_source
 
         validate_source(a["features_v3"], a["actions_v2"])
+    if record["profile"] == "source_creature" and "resilience_v1" in a:
+        from rpg_vkr.world_library.resilience_rules import validate as validate_resilience
+
+        validate_resilience(a["resilience_v1"])
+    if record["profile"] == "source_equipment" and "pack_v1" in a:
+        from rpg_vkr.world_library.equipment_packs import validate as validate_pack
+
+        validate_pack(a["pack_v1"])
+        pack = a["pack_v1"]
+        if record["price_cp"] != (pack["pack_price_cp"] + pack["quantity"] - 1) // pack["quantity"]:
+            raise ValueError("Package display unit price must match its declared quantity")
     if record["profile"] in {"npc", "creature", "boss"}:
         if a["hp_max"] > 20 + 40 * a["level"]:
             raise ValueError("Actor exceeds homebrew HP envelope")
@@ -201,7 +212,7 @@ def validate_bundle(records):
     return by_id
 
 
-def read_jsonl(path):
+def read_jsonl(path, *, dependencies=()):
     result = []
     with Path(path).open(encoding="utf-8") as stream:
         for line in stream:
@@ -209,8 +220,14 @@ def read_jsonl(path):
                 raise ValueError("Import limit")
             if line.strip():
                 result.append(json.loads(line))
-    validate_bundle(result)
+    validate_bundle([*dependencies, *result])
     return result
+
+
+def equipment_records():
+    """Validate the equipment shard against its explicit canonical material shard."""
+    seed = read_jsonl(ROOT / "data/world_library/seed-v1.jsonl")
+    return read_jsonl(ROOT / "data/world_library/rpgd100-equipment-facts.jsonl", dependencies=seed)
 
 
 def all_records():
@@ -224,6 +241,10 @@ def all_records():
     ):
         path = ROOT / "data/world_library" / name
         if path.exists():
-            records.extend(read_jsonl(path))
+            records.extend(
+                read_jsonl(
+                    path, dependencies=records if name == "rpgd100-equipment-facts.jsonl" else ()
+                )
+            )
     validate_bundle(records)
     return records

@@ -1,13 +1,13 @@
 {
   "source_creatures": 3920,
-  "typed_attacks": 4426,
-  "complete_attacks": 1775,
-  "complete_single_damage_attacks": 1417,
-  "mixed_damage_attacks": 358,
-  "creatures_with_complete_attack_choices": 1326,
-  "creatures_with_multiple_complete_attack_choices": 411,
-  "exact_multiattack_sequences": 203,
-  "mixed_multiattack_sequences": 36,
+  "typed_attacks": 5551,
+  "complete_attacks": 2263,
+  "complete_single_damage_attacks": 1828,
+  "mixed_damage_attacks": 435,
+  "creatures_with_complete_attack_choices": 1739,
+  "creatures_with_multiple_complete_attack_choices": 484,
+  "exact_multiattack_sequences": 251,
+  "mixed_multiattack_sequences": 38,
   "version": "library-creature-2",
   "complete_rule_coverage": false
 }

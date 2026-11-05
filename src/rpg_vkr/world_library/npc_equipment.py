@@ -3,6 +3,35 @@
 from dataclasses import replace
 
 
+def defence(engine, actor, base):
+    state = engine.actors[actor].state or {}
+    if state.get("library_inventory_version") != 1:
+        return base
+    from rpg_vkr.domain.character import ability_modifier
+
+    dexterity = ability_modifier(
+        engine.definitions[engine.actors[actor].definition_id].properties.get("dexterity", 10)
+    )
+    shield = 0
+    for slot in ("library_armour", "library_shield"):
+        entity = engine.actors.get(state.get(slot))
+        if (
+            not entity
+            or entity.owner_id != actor
+            or entity.parent_id != actor
+            or (entity.state or {}).get("condition", 0) <= 0
+        ):
+            continue
+        rules = engine.definitions[entity.definition_id].properties.get("library_item_rules", {})
+        if rules.get("kind") != "armour":
+            continue
+        if slot == "library_shield" and rules["category"] == "shield":
+            shield = rules["defence"]
+        elif slot == "library_armour" and rules["category"] == "body":
+            base = max(base, rules["defence"] + min(rules["dex_cap"], dexterity))
+    return base + shield
+
+
 def weapon(engine, actor):
     actor_state = engine.actors[actor].state or {}
     if actor_state.get("library_inventory_version") != 1:

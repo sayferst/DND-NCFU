@@ -4,8 +4,9 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from urllib.parse import urljoin, urlsplit
 
-from import_rpgd100_facts import fetch, literal_array
+from import_rpgd100_facts import fetch, literal_bindings
 
 ROOT = Path(__file__).resolve().parents[1]
 FACT_KEYS = {
@@ -36,31 +37,31 @@ def main():
             continue
         html = fetch("https://rpgd100.ru" + catalog["catalog"]).decode("utf-8")
         facts = {}
+        fact_sources = {}
+        resources = [("https://rpgd100.ru" + catalog["catalog"], html)]
         for script in re.findall(r'<script[^>]+src="([^"?]+)', html):
-            if script.rsplit("/", 1)[-1] not in {
-                "armor.js",
-                "weapons.js",
-                "equipment.js",
-                "firearms.js",
-                "siege_equipment.js",
-                "trade_goods.js",
-                "poisons.js",
-                "drugs.js",
-                "tools.js",
-            }:
+            address = urljoin("https://rpgd100.ru" + catalog["catalog"], script)
+            parsed = urlsplit(address)
+            if parsed.scheme != "https" or parsed.hostname != "rpgd100.ru":
                 continue
-            source = fetch("https://rpgd100.ru" + script).decode("utf-8")
-            for match in re.finditer(r"(?:const|let|var)\s+\w+\s*=\s*\[", source):
-                try:
-                    data = literal_array(source[match.start() :])
-                except (ValueError, IndexError):
-                    continue
-                for value in data:
+            if not parsed.path.endswith(".js"):
+                continue
+            resources.append((address, fetch(address).decode("utf-8")))
+        for address, source in resources:
+            source_hash = hashlib.sha256(source.encode("utf-8")).hexdigest()
+            for data in literal_bindings(source):
+                for value in data if isinstance(data, list) else [data]:
                     if not isinstance(value, dict):
                         continue
                     name = value.get("name_ru", value.get("name", ""))
                     if isinstance(name, str):
-                        facts[name.casefold()] = value
+                        old = facts.get(name.casefold(), {})
+                        if len(FACT_KEYS & value.keys()) > len(FACT_KEYS & old.keys()):
+                            facts[name.casefold()] = value
+                            fact_sources[name.casefold()] = {
+                                "source_asset": address,
+                                "source_asset_sha256": source_hash,
+                            }
         matched = 0
         for entry in catalog["entries"]:
             source_id, title, english, path, section = entry[:5]
@@ -100,12 +101,13 @@ def main():
                         "facts": selected,
                         "missing_numeric_facts": not bool(selected),
                         "price_status": "unparsed-source-price; price_cp is not a market valuation",
+                        **fact_sources.get(name.casefold(), {}),
                     },
                     "links": [],
                     "provenance": {
                         "origin": "source-facts/original-description",
                         "source": "https://rpgd100.ru" + path[:370],
-                        "generator": "rpg-equipment-1",
+                        "generator": "rpg-equipment-2",
                         "review": "unreviewed",
                     },
                 }
@@ -117,20 +119,25 @@ def main():
                 "with_facts": matched,
             }
         )
+    from rpg_vkr.world_library.equipment_designs import enrich as enrich_design
+    from rpg_vkr.world_library.equipment_packs import enrich as enrich_package
     from rpg_vkr.world_library.equipment_rules import compile_equipment
     from rpg_vkr.world_library.model import dump, read_jsonl, validate_bundle
 
     for row in rows:
         rules = compile_equipment(row)
+        enrich_package(row, rules)
+        rules = compile_equipment(row)
         row["price_cp"] = rules["price_cp"]
         row["attributes"]["price_status"] = (
             "homebrew-estimate" if "price_cp" in rules["homebrew_fields"] else "source-price-parsed"
         )
+        enrich_design(row)
 
-    validate_bundle(rows)
+    validate_bundle(read_jsonl(ROOT / "data/world_library/seed-v1.jsonl") + rows)
     out = ROOT / "data/world_library/rpgd100-equipment-facts.jsonl"
     out.write_text("\n".join(dump(r) for r in rows) + "\n", encoding="utf-8")
-    assert len(read_jsonl(out)) == len(rows)
+    assert len(read_jsonl(out, dependencies=read_jsonl(out.parent / "seed-v1.jsonl"))) == len(rows)
     (out.parent / "rpgd100-equipment-report.json").write_text(
         json.dumps(coverage, ensure_ascii=False, indent=2), encoding="utf-8"
     )

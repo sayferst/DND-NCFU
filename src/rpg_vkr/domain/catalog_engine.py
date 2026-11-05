@@ -498,9 +498,15 @@ class Engine:
     def defence(self, id):
         if id != "hero":
             e, d = self.actor(id, alive=False)
+            from rpg_vkr.world_library.npc_equipment import defence as library_npc_defence
+
             return (
-                d.properties.get(
-                    "armour_class", 10 + ability_modifier(d.properties.get("dexterity", 10))
+                library_npc_defence(
+                    self,
+                    id,
+                    d.properties.get(
+                        "armour_class", 10 + ability_modifier(d.properties.get("dexterity", 10))
+                    ),
                 )
                 + self.status_power(id, "defence")
                 + min(3, (e.state or {}).get("fortification", 0))
@@ -588,6 +594,19 @@ class Engine:
         if hasattr(self, "_library_damage_collector"):
             self._library_damage_collector.append(amount)
             return amount
+        from rpg_vkr.world_library.resilience_rules import incoming as resilient_damage
+
+        hit_flags = getattr(self, "owner_hit_flags", {})
+        amount = resilient_damage(
+            self,
+            target,
+            amount,
+            radiant=element == "radiant",
+            critical=hit_flags.get("critical", False)
+            or getattr(self, "source_hit_critical", False),
+            nonlethal=hit_flags.get("nonlethal", False),
+        )
+        self.source_hit_critical = False
         if self.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import change_hp
 
@@ -732,7 +751,9 @@ class Engine:
 
     def finish(self):
         from rpg_vkr.domain.unified import caps
+        from rpg_vkr.world_library.social_rules import update as update_library_social
 
+        update_library_social(self)
         self.sync_physical()
         limits = caps(self.state, self.char)
         self.world = replace(self.world, max_hp=limits["hp"], hp=min(self.world.hp, limits["hp"]))

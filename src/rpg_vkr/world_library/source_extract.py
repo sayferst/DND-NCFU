@@ -117,9 +117,15 @@ def register(spec):
     def string(n):
         return {"type": "string", "maxLength": n}
 
-    component = spec["creature_actions_v2"]["properties"]["actions"]["items"]["properties"][
-        "components"
-    ]["items"]
+    from copy import deepcopy
+
+    component = deepcopy(
+        spec["creature_actions_v2"]["properties"]["actions"]["items"]["properties"]["components"][
+            "items"
+        ]
+    )
+    # The published V3 schema remains byte-equivalent; flat riders need a newer program.
+    component["properties"]["dice"]["pattern"] = r"[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
     effect = obj(
         {
             "ability": {"type": "string", "enum": list(ABILITIES)},
@@ -221,7 +227,12 @@ def validate(rules, actions=None):
 
 def save_effect(body):
     lower = body.casefold()
-    saves = list(re.finditer(r"спасброс(?:ок|ке|ка)\s+([а-яё]+)\s+сл\s*(\d+)", lower))
+    # V3 cannot represent constant damage. Never silently discard it while claiming
+    # that the accompanying condition or saving throw is fully executable.
+    typed_damage, _ = damage_components(lower)
+    if any(part["dice"].startswith("0d") for part in typed_damage):
+        return None
+    saves = list(re.finditer(r"спасброс(?:ок|ке|ка)\s+([а-яё]+)\s*:?\s*сл\s*(\d+)", lower))
     if len(saves) != 1:
         return None
     ability = next(
@@ -450,7 +461,7 @@ def extract(stat, previous):
                 start = hit.end() + separator.start()
                 base, complete = damage_components(lower[hit.end() : start].strip(" ,.;"))
                 effect = save_effect(lower[start:])
-                if complete and effect:
+                if complete and effect and all(not p["dice"].startswith("0d") for p in base):
                     result["riders"].append({"index": index, "base": base, "effect": effect})
                     result["supported_names"].append(name)
             continue

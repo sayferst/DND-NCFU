@@ -1,0 +1,543 @@
+{
+  "passed": 107,
+  "failed": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "tests.test_library_equipment_designs",
+      "name": "test_source_bow_has_distinct_wood_string_and_grip_in_real_engine_definition",
+      "seconds": 2.409
+    },
+    {
+      "class": "tests.test_library_equipment_designs",
+      "name": "test_buckler_and_gladiator_armours_are_not_household_objects",
+      "seconds": 0.724
+    },
+    {
+      "class": "tests.test_library_equipment_designs",
+      "name": "test_source_special_property_is_visible_as_pending_until_its_handler_exists",
+      "seconds": 0.68
+    },
+    {
+      "class": "tests.test_library_equipment_runtime",
+      "name": "test_all_source_equipment_compiles_and_rejects_arbitrary_effects",
+      "seconds": 0.662
+    },
+    {
+      "class": "tests.test_library_equipment_runtime",
+      "name": "test_imported_weapon_take_equip_and_replay",
+      "seconds": 2.456
+    },
+    {
+      "class": "tests.test_library_equipment_packs",
+      "name": "test_one_pack_is_ten_units_with_a_single_unit_name_and_unit_value",
+      "seconds": 2.325
+    },
+    {
+      "class": "tests.test_library_equipment_packs",
+      "name": "test_fractional_unit_prices_round_only_the_total_payment",
+      "seconds": 2.144
+    },
+    {
+      "class": "tests.test_library_equipment_packs",
+      "name": "test_real_buy_sell_keeps_ten_units_and_conserves_all_money",
+      "seconds": 2.304
+    },
+    {
+      "class": "tests.test_library_npc_inventory",
+      "name": "test_npc_starts_with_real_owned_items_and_replays",
+      "seconds": 1.117
+    },
+    {
+      "class": "tests.test_library_npc_inventory",
+      "name": "test_npc_uses_intact_item_and_does_not_recreate_missing_weapon",
+      "seconds": 1.06
+    },
+    {
+      "class": "tests.test_library_npc_inventory",
+      "name": "test_new_revision_does_not_overwrite_old_definition_or_instance",
+      "seconds": 1.531
+    },
+    {
+      "class": "tests.test_library_npc_inventory",
+      "name": "test_guard_armour_must_be_present_intact_and_owned",
+      "seconds": 1.082
+    },
+    {
+      "class": "tests.test_library_npc_inventory",
+      "name": "test_hunter_starts_with_twelve_real_arrows_and_spends_one",
+      "seconds": 1.067
+    },
+    {
+      "class": "tests.test_library_npc_inventory",
+      "name": "test_new_merchant_trades_only_actual_stock_and_preserves_money",
+      "seconds": 1.184
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_all_400_declared_personalities_are_closed_programs",
+      "seconds": 1.109
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_confirmed_contract_updates_mood_once_without_resources_or_rng",
+      "seconds": 1.121
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_property_taking_needs_the_actual_owner_as_witness[True]",
+      "seconds": 1.061
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_property_taking_needs_the_actual_owner_as_witness[False]",
+      "seconds": 1.152
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_old_npc_and_unverified_prose_have_no_social_effect",
+      "seconds": 1.236
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_social_state_initialization_and_saved_wait_replay",
+      "seconds": 1.231
+    },
+    {
+      "class": "tests.test_library_social_runtime",
+      "name": "test_real_contract_completion_and_property_taking_change_npc_mood",
+      "seconds": 1.549
+    },
+    {
+      "class": "tests.test_library_all_creation",
+      "name": "test_all_7087_templates_build_valid_inert_creation_proposals",
+      "seconds": 33.02
+    },
+    {
+      "class": "tests.test_library_migrations",
+      "name": "test_populated_v1_upgrade_imports_every_record_and_preserves_history",
+      "seconds": 24.248
+    },
+    {
+      "class": "tests.test_library_migrations",
+      "name": "test_changed_migration_checksum_is_rejected_without_changes",
+      "seconds": 0.038
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[None-15-1]",
+      "seconds": 0.05
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[None-15-1 (1\\u043a1)]",
+      "seconds": 0.048
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[None-20-1]",
+      "seconds": 0.044
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[None-20-1 (1\\u043a1)]",
+      "seconds": 0.046
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[0-15-1]",
+      "seconds": 0.053
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[0-15-1 (1\\u043a1)]",
+      "seconds": 0.052
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[0-20-1]",
+      "seconds": 0.05
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_constant_attack_never_rolls_zero_dice_or_doubles_the_constant[0-20-1 (1\\u043a1)]",
+      "seconds": 0.051
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_ranged_mixed_attack_and_conditional_tail",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_published_v3_schema_does_not_accept_an_unversioned_constant_effect",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_attack_grammar",
+      "name": "test_modern_save_colon_preserves_actual_damage_and_difficulty",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_one_save_before_the_canonical_hp_transition[18-True]",
+      "seconds": 0.053
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_one_save_before_the_canonical_hp_transition[2-False]",
+      "seconds": 0.048
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_one_save_before_the_canonical_hp_transition[20-True]",
+      "seconds": 0.048
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_exceptions_never_spend_a_fortitude_roll[radiant]",
+      "seconds": 0.049
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_exceptions_never_spend_a_fortitude_roll[critical]",
+      "seconds": 0.05
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_exceptions_never_spend_a_fortitude_roll[nonlethal]",
+      "seconds": 0.048
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_exceptions_never_spend_a_fortitude_roll[already_zero]",
+      "seconds": 0.054
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_exceptions_never_spend_a_fortitude_roll[legacy]",
+      "seconds": 0.045
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_a_mixed_hit_has_one_save_and_preserves_large_derived_dc",
+      "seconds": 0.047
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_radiant_component_bypasses_only_when_it_actually_causes_damage",
+      "seconds": 0.093
+    },
+    {
+      "class": "tests.test_source_resilience_runtime",
+      "name": "test_extractor_never_claims_combined_or_limited_traits",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_magic_resistance_rolls_two_and_daily_budget_is_not_midnight_reset",
+      "seconds": 0.045
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_auto_failed_physical_save_does_not_roll_and_legendary_can_replace_it",
+      "seconds": 0.046
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_condition_advantages_cancel_and_rounds_do_not_last_ten_minutes",
+      "seconds": 0.049
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_parry_reaction_is_used_once_and_recovers_on_own_turn",
+      "seconds": 0.052
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_legendary_actions_have_per_turn_cost_and_cannot_act_on_own_end",
+      "seconds": 0.059
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[cone-point0-True]",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[cone-point1-False]",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[cone-point2-False]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[cone-point3-False]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[cone-point4-True]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[cone-point5-False]",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[line-point6-True]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_boundaries_without_float_drift[line-point7-False]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_recharge_has_no_roll_when_ready_and_spends_on_attempt",
+      "seconds": 0.052
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_bad_position_and_invalid_program_are_rejected_before_rng",
+      "seconds": 0.051
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_published_v2_battle_replays_with_identical_rng",
+      "seconds": 0.106
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_all_source_programs_and_pinned_world_payloads_validate",
+      "seconds": 3.551
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_pack_tactics_requires_a_living_capable_ally_next_to_the_target",
+      "seconds": 0.044
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_grounded_actor_does_not_climb_to_airborne_target",
+      "seconds": 0.146
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_area_damage_is_rolled_once_but_each_creature_saves",
+      "seconds": 0.046
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_condition_immunity_does_not_spend_legendary_resistance_or_rng",
+      "seconds": 0.046
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_high_dc_preserves_r01_exhaustion_and_natural_twenty",
+      "seconds": 0.048
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_real_registered_v3_encounter_has_deterministic_save_and_replay",
+      "seconds": 0.251
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_out_of_range_hero_attack_never_spends_stamina_or_rng",
+      "seconds": 0.051
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_source_rider_packet_with_eight_components_has_one_death_transition",
+      "seconds": 0.052
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_shortbow_source_abbreviation_uses_real_range_instead_of_homebrew",
+      "seconds": 0.053
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_combat_clock_never_compresses_long_crafting_to_six_seconds",
+      "seconds": 0.043
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_unknown_condition_semantics_cannot_be_enabled_by_a_proposal",
+      "seconds": 0.047
+    },
+    {
+      "class": "tests.test_source_rules_runtime",
+      "name": "test_v2_single_attack_count_is_preserved_when_no_new_exact_sequence",
+      "seconds": 0.046
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_proposal_is_inert_then_engine_commits_exact_template",
+      "seconds": 1.325
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_stale_digest_and_arbitrary_hp_are_rejected",
+      "seconds": 1.102
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_existing_world_entity_and_missing_template_are_not_overwritten",
+      "seconds": 1.065
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_concurrent_catalog_update_cannot_mix_template_revisions",
+      "seconds": 1.574
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_actual_master_chat_creates_a_pinned_instance_after_confirmation",
+      "seconds": 2.875
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_false_non_list_requests_are_rejected[None]",
+      "seconds": 0.001
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_false_non_list_requests_are_rejected[]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_false_non_list_requests_are_rejected[value2]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_false_non_list_requests_are_rejected[0]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_false_non_list_requests_are_rejected[False]",
+      "seconds": 0.0
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_master_chat_never_applies_declined_or_invalid_creation[decline]",
+      "seconds": 2.059
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_master_chat_never_applies_declined_or_invalid_creation[reply]",
+      "seconds": 2.399
+    },
+    {
+      "class": "tests.test_library_master_requests",
+      "name": "test_master_chat_never_applies_declined_or_invalid_creation[malformed]",
+      "seconds": 2.473
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_stabilize_preserves_zero_hp_and_full_replay",
+      "seconds": 0.159
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_old_origin_does_not_gain_new_rules_and_invalid_policy_rejected",
+      "seconds": 0.147
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_real_hp_accessor_never_resurrects_dead_and_keeps_death_counters",
+      "seconds": 0.052
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_overcast_reaches_zero_and_price_survives_failure",
+      "seconds": 0.016
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_insufficient_hp_or_implicit_payment_cannot_cast",
+      "seconds": 0.018
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_activation_copy_logs_policy_without_rewriting_old_origin",
+      "seconds": 0.371
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_stable_zero_hp_recovers_after_recorded_hours_without_resurrection",
+      "seconds": 0.05
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_healer_spends_actual_turn_and_mana_to_help_fallen_living_ally",
+      "seconds": 0.054
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_public_agreement_terms_required_before_rng_and_success_binds",
+      "seconds": 0.068
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_rest_benefits_once_per_day_and_no_benefits_after_damage",
+      "seconds": 0.242
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_planner_exposes_owner_commands_only_after_activation",
+      "seconds": 0.12
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_melee_hit_at_zero_is_critical_and_flags_do_not_leak_to_other_damage",
+      "seconds": 0.053
+    },
+    {
+      "class": "tests.test_owner_rules_runtime",
+      "name": "test_new_composition_works_with_owner_policy_and_replays_real_inventory",
+      "seconds": 0.362
+    },
+    {
+      "class": "tests.test_catalog_invariants",
+      "name": "test_twenty_days_conserve_money_and_factions_spend_real_supplies",
+      "seconds": 2.005
+    },
+    {
+      "class": "tests.test_catalog_invariants",
+      "name": "test_repeated_buy_sell_has_no_coin_or_item_creation",
+      "seconds": 0.215
+    },
+    {
+      "class": "tests.test_catalog_invariants",
+      "name": "test_magic_refund_never_produces_mp_and_source_materials_are_finite",
+      "seconds": 0.227
+    },
+    {
+      "class": "tests.test_catalog_invariants",
+      "name": "test_tampered_cached_receipt_is_rejected_by_full_replay",
+      "seconds": 0.186
+    },
+    {
+      "class": "tests.test_catalog_invariants",
+      "name": "test_unit_order_award_cannot_be_repeated_for_same_product",
+      "seconds": 0.037
+    },
+    {
+      "class": "tests.test_catalog_writer_facts",
+      "name": "test_writer_question_keeps_last_receipt_and_current_mp",
+      "seconds": 0.141
+    }
+  ],
+  "full_repository_suite": false
+}

@@ -953,6 +953,60 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 400
+      },
+      "abilities": {
+        "type": "object",
+        "properties": {
+          "strength": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "dexterity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "constitution": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "intelligence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "wisdom": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "charisma": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          }
+        },
+        "required": [
+          "strength",
+          "dexterity",
+          "constitution",
+          "intelligence",
+          "wisdom",
+          "charisma"
+        ],
+        "additionalProperties": false
+      },
+      "armour_class": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 25
+      },
+      "damage_dice": {
+        "type": "string",
+        "maxLength": 40,
+        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
       }
     },
     "required": [
@@ -1087,6 +1141,60 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 400
+      },
+      "abilities": {
+        "type": "object",
+        "properties": {
+          "strength": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "dexterity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "constitution": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "intelligence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "wisdom": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "charisma": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          }
+        },
+        "required": [
+          "strength",
+          "dexterity",
+          "constitution",
+          "intelligence",
+          "wisdom",
+          "charisma"
+        ],
+        "additionalProperties": false
+      },
+      "armour_class": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 25
+      },
+      "damage_dice": {
+        "type": "string",
+        "maxLength": 40,
+        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
       }
     },
     "required": [
@@ -1221,6 +1329,60 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 400
+      },
+      "abilities": {
+        "type": "object",
+        "properties": {
+          "strength": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "dexterity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "constitution": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "intelligence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "wisdom": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "charisma": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          }
+        },
+        "required": [
+          "strength",
+          "dexterity",
+          "constitution",
+          "intelligence",
+          "wisdom",
+          "charisma"
+        ],
+        "additionalProperties": false
+      },
+      "armour_class": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 25
+      },
+      "damage_dice": {
+        "type": "string",
+        "maxLength": 40,
+        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
       }
     },
     "required": [
@@ -1784,6 +1946,12 @@
         "minLength": 1,
         "maxLength": 300
       },
+      "attack_math_version": {
+        "type": "integer",
+        "enum": [
+          2
+        ]
+      },
       "actions_v2": {
         "type": "object",
         "properties": {
@@ -1803,7 +1971,7 @@
                 },
                 "dice": {
                   "type": "string",
-                  "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                  "pattern": "(?:[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?|0d4\\+[0-9]{1,6})",
                   "maxLength": 40
                 },
                 "element": {
@@ -1836,7 +2004,7 @@
                     "properties": {
                       "dice": {
                         "type": "string",
-                        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                        "pattern": "(?:[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?|0d4\\+[0-9]{1,6})",
                         "maxLength": 40
                       },
                       "element": {
@@ -2428,6 +2596,35 @@
         ],
         "additionalProperties": false,
         "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "resilience_v1": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "library-resilience-1"
+            ]
+          },
+          "undead_fortitude": {
+            "type": "boolean"
+          },
+          "supported_names": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        },
+        "required": [
+          "version",
+          "undead_fortitude",
+          "supported_names"
+        ],
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       }
     },
     "required": [
@@ -2505,6 +2702,82 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 200
+      },
+      "source_asset": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      },
+      "source_asset_sha256": {
+        "type": "string",
+        "pattern": "[0-9a-f]{64}"
+      },
+      "purpose_homebrew": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      },
+      "appearance_homebrew": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 600
+      },
+      "history_homebrew": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      },
+      "design_origin": {
+        "type": "string",
+        "enum": [
+          "invented/homebrew"
+        ]
+      },
+      "pack_v1": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "library-pack-1"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 1000
+          },
+          "unit_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "pack_price_cp": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "pack_mass_g": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          },
+          "price_is_homebrew": {
+            "type": "boolean"
+          },
+          "mass_is_homebrew": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "version",
+          "quantity",
+          "unit_name",
+          "pack_price_cp",
+          "pack_mass_g"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       }
     },
     "required": [
@@ -3341,7 +3614,7 @@
             },
             "dice": {
               "type": "string",
-              "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+              "pattern": "(?:[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?|0d4\\+[0-9]{1,6})",
               "maxLength": 40
             },
             "element": {
@@ -3374,7 +3647,7 @@
                 "properties": {
                   "dice": {
                     "type": "string",
-                    "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                    "pattern": "(?:[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?|0d4\\+[0-9]{1,6})",
                     "maxLength": 40
                   },
                   "element": {
@@ -4059,6 +4332,81 @@
       "powers"
     ],
     "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_resilience_v1": {
+    "type": "object",
+    "properties": {
+      "version": {
+        "type": "string",
+        "enum": [
+          "library-resilience-1"
+        ]
+      },
+      "undead_fortitude": {
+        "type": "boolean"
+      },
+      "supported_names": {
+        "type": "array",
+        "maxItems": 20,
+        "items": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "required": [
+      "version",
+      "undead_fortitude",
+      "supported_names"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "equipment_pack_v1": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "version": {
+        "type": "string",
+        "enum": [
+          "library-pack-1"
+        ]
+      },
+      "quantity": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 1000
+      },
+      "unit_name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      },
+      "pack_price_cp": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "pack_mass_g": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000000
+      },
+      "price_is_homebrew": {
+        "type": "boolean"
+      },
+      "mass_is_homebrew": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "version",
+      "quantity",
+      "unit_name",
+      "pack_price_cp",
+      "pack_mass_g"
+    ],
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   }
 }
