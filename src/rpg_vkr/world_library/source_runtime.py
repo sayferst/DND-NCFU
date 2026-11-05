@@ -470,7 +470,9 @@ def hero_range(engine, item, row, target):
         properties = " ".join(
             r["value"] for r in facts if r.get("field") in {"properties", "range"}
         ).casefold()
-        match = re.search(r"(?:дист(?:анция)?\.?|дальность)\s*\(?\s*(\d+)\s*/\s*(\d+)", properties)
+        match = re.search(
+            r"(?:дис(?:т(?:анция)?)?\.?|дальность)\s*\(?\s*(\d+)\s*/\s*(\d+)", properties
+        )
         if ranged and match and 1 <= int(match[1]) <= int(match[2]) <= 2000:
             normal, maximum, origin = int(match[1]), int(match[2]), "source"
         elif not ranged and ("досягаемость" in properties or "длинное" in properties):

@@ -425,3 +425,30 @@ def test_source_rider_packet_with_eight_components_has_one_death_transition():
     e.damage("hero", e.hp("hero") - 1)
     apply(e, "hero", [(1, "physical")] * 8, "wounded")
     assert life(e).hp == 0 and life(e).failures == 0
+
+
+def test_shortbow_source_abbreviation_uses_real_range_instead_of_homebrew():
+    from rpg_vkr.domain.catalog import Definition, Entity
+
+    e, _ = engine_with_rules()
+    e.definitions["test_bow_type"] = Definition(
+        "test_bow_type",
+        "Короткий лук",
+        "item",
+        ("weapons",),
+        {
+            "library_attributes": {
+                "facts": [
+                    {
+                        "field": "properties",
+                        "value": "Боеприпас (дис. 80/320), двуручное",
+                    }
+                ]
+            },
+        },
+    )
+    e.actors["test_bow"] = Entity("test_bow", "test_bow_type", "pier")
+    positions(e)["wounded"]["point"] = [200, 0, 0]
+    assert runtime.hero_range(e, {"source": "test_bow"}, {"category": "longbow"}, "wounded")
+    assert e.events[-1]["origin"] == "source"
+    assert e.events[-1]["normal"] == 80 and e.events[-1]["maximum"] == 320
