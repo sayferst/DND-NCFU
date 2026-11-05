@@ -143,6 +143,7 @@ def extend_schema(spec):
             "mechanics": text(300),
         }
     )
+    spec["source_creature"]["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     return spec
 
 
