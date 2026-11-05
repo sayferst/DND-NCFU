@@ -1,0 +1,24 @@
+{
+  "schema": "gm-bilingual-owner-review-v1",
+  "status": "OWNER_SAMPLE_REVIEW_PENDING",
+  "source_cases_sha256": "55dfa21de577ed87b434773ea4ec1f36dad56cb8b5aad221bfe4639d21b7596b",
+  "editorial_file_sha256": "b8ce96000ed887bda82ff3deb1728e252145fbee61054a46d0baca49b2bda3c0",
+  "rows": 40,
+  "sources": {
+    "FIREBALL": 24,
+    "CRD3": 6,
+    "PROJECT_REFERENCE": 10
+  },
+  "source_splits": {
+    "train": 40
+  },
+  "human_reviewed": 0,
+  "train_admitted": 0,
+  "training_steps": 0,
+  "files": {
+    "DND_NCFU_REVIEW_40_RU_EN.xlsx": "33971693c8512e7144049e052b1e2f441433dc2f5f6919e26d04df63d6ff8a6c",
+    "\u041f\u0420\u041e\u0427\u0418\u0422\u0410\u0419_40_\u041f\u0420\u0418\u041c\u0415\u0420\u041e\u0412.md": "5582dc1ca4a6330ab75db0500b8211009f3b016f95c354afd1734093482496c6",
+    "review-40.csv": "fb0ebb46ffa43e129b3e9acff473e934d84f8c76fad5adb4457451364aa3252b",
+    "review-cases.jsonl": "8152f2464a3b4a5a8d850458eaf84edcaf870c07cdff643300444ae4434f75dc"
+  }
+}

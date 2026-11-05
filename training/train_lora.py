@@ -16,6 +16,8 @@ def preflight(config):
     if not (data / "manifest.json").is_file():
         return "BLOCKED_DATA: no reviewed training dataset"
     manifest = json.loads((data / "manifest.json").read_text(encoding="utf-8"))
+    if config.get("dataset_policy") == "source-gm-research-v1":
+        return "BLOCKED_DATA: source research corpus requires complete bilingual and meaning review"
     if config.get("dataset_policy") == "fireball-augmented-v1":
         from training.fireball import verify
 

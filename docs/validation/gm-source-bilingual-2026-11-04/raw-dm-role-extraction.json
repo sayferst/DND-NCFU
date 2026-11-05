@@ -1,0 +1,26 @@
+{
+  "schema": "fireball-time-local-dm-index-v1",
+  "archive_sha256": "787796a8d88c770ea08be886121fe87d116c2efbbe06ee175a93ddd912ca1226",
+  "archive_bytes": 7699684480,
+  "source_index_sha256": "c987df6375da86d50b408ca11a8b1649b5410e4e9af33741b5c326240f4e2949",
+  "max_output_mib": 128,
+  "status": "COMPLETE_REFERENCED_MESSAGE_ROLE_INDEX",
+  "all_archive_members_hash_verified": 39448,
+  "native_filtered_groups": 14700,
+  "resumed_role_groups": 0,
+  "counts": {
+    "dungeon_master_account": 146517,
+    "lines": 11141305,
+    "missing_indices": 0,
+    "non_dm_account": 100340,
+    "requested_indices": 251756,
+    "retrieved_indices": 251756,
+    "state_updates": 1139098,
+    "unknown": 4899
+  },
+  "role_scope": "ACCOUNT_MATCHES_EXPLICIT_DM_IN_PRECEDING_STATE_NOT_PROOF_OF_TEXT_AUTHORSHIP",
+  "raw_storage": "ONLY_REFERENCED_MESSAGES_AND_DM_TIMELINES_NOT_FULL_CANONICAL_RAW",
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0
+}

@@ -46,6 +46,9 @@ def load_splits(config):
 
 
 def messages_for(row):
+    if row.get("schema_version") == "gm-source-research-v1":
+        # This also permits research-only CPU audits. train_lora.preflight blocks its policy.
+        return row["messages"]
     if row.get("schema_version") == "fireball-observed-hp-v1":
         from training.grounded_prompt import SYSTEM
 

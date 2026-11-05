@@ -648,3 +648,30 @@ b3f9b5eca6dbbe1b7504c14dcbc055687bd4c7b4: MIT, Copyright(c)2022 Andrew Zhu.
 контактов, групповые splits, индексы и токенизация. Исходники неизменны;
 новые игровые рассказы, переводы или реализации Avrae-правил не создавались.
 Подробные источники/границы: docs/intelligent_gm/FIREBALL_COMPLETE.md.
+
+## 05.11.2026 — CRD3 и отдельные переводы source-сцен
+
+CRD3: Revanth Rameshkumar, Peter Bailey, *Storytelling with Dialogue: A Critical
+Role Dungeons and Dragons Dataset*, ACL2020. Первичный репозиторий
+https://github.com/RevanthRameshkumar/CRD3 , закреплённый commit
+7fd4515eea411f0f9c5d0a03a8b6b8b2da464e81; CC-BY-SA-4.0.
+Сохранены README/LICENSE, благодарности Critical Role, CRTranscript и Critical
+Role Wiki. Изменения:отбор DM-ходов, исключение будущих summary, группировка,
+краткие изложения и отдельные переводы. Переводы/отобранные тексты сохраняют
+условия соответствующего источника; лицензия будущего адаптера не выведена
+автоматически из лицензии корпуса. Исходные тексты и переводы вне Git.
+
+FIREBALL: Zhu et al., ACL2023, https://aclanthology.org/2023.acl-long.229/ ,
+DOI10.18653/v1/2023.acl-long.229; CC-BY-4.0, research-release wording
+первичного README сохранён. Источник роли DM — distill2_authors.py из
+zhudotexe/FIREBALL-data-processing revb3f9b5eca6dbbe1b7504c14dcbc055687bd4c7b4
+(MIT,2022 Andrew Zhu). Чужой код не исполнялся; новая реализация анализирует
+схему data.dm. Подробные пины/преобразования: docs/intelligent_gm/SOURCE_DATA_V5.md.
+
+Диагностические OPUS-MT: Helsinki-NLP, CC-BY-4.0; CT2 INT8-конверсии
+rohanksaxena/opus-mt-en-ru@3e60bacffde1e346edc65b9d057be7d441872779 и
+rohanksaxena/opus-mt-ru-en@0814e5845ab3be4d38fd3e67b8080923e0940a21.
+Модельные файлы проверены по Git/LFS/SHA-256; remote code не включён.
+CTranslate2 4.8.5 (MIT), SentencePiece0.2.2 (Apache-2.0), setuptools80.9.0
+(MIT) закреплены в optional hash-lock. Смысловой провал прототипа зафиксирован;
+он не используется для допуска обучающих переводов.
