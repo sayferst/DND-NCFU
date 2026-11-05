@@ -1904,6 +1904,530 @@
           "multiattack_complete"
         ],
         "additionalProperties": false
+      },
+      "features_v3": {
+        "type": "object",
+        "properties": {
+          "save_bonuses": {
+            "type": "object",
+            "properties": {
+              "strength": {
+                "type": "integer",
+                "minimum": -10,
+                "maximum": 40
+              },
+              "dexterity": {
+                "type": "integer",
+                "minimum": -10,
+                "maximum": 40
+              },
+              "constitution": {
+                "type": "integer",
+                "minimum": -10,
+                "maximum": 40
+              },
+              "intelligence": {
+                "type": "integer",
+                "minimum": -10,
+                "maximum": 40
+              },
+              "wisdom": {
+                "type": "integer",
+                "minimum": -10,
+                "maximum": 40
+              },
+              "charisma": {
+                "type": "integer",
+                "minimum": -10,
+                "maximum": 40
+              }
+            },
+            "required": [
+              "strength",
+              "dexterity",
+              "constitution",
+              "intelligence",
+              "wisdom",
+              "charisma"
+            ],
+            "additionalProperties": false
+          },
+          "magic_resistance": {
+            "type": "boolean"
+          },
+          "pack_tactics": {
+            "type": "boolean"
+          },
+          "legendary_resistance": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "condition_immunities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "blinded",
+                "charmed",
+                "deafened",
+                "frightened",
+                "grappled",
+                "incapacitated",
+                "invisible",
+                "paralyzed",
+                "petrified",
+                "poisoned",
+                "prone",
+                "restrained",
+                "stunned",
+                "unconscious"
+              ]
+            },
+            "maxItems": 14
+          },
+          "legendary_max": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "legendary": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "cost": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 29
+                }
+              },
+              "required": [
+                "name",
+                "cost",
+                "index"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          },
+          "parry": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "supported_names": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "maxItems": 80
+          },
+          "multiattack": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            },
+            "maxItems": 8
+          },
+          "speed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "fly_speed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "riders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 29
+                },
+                "base": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "dice": {
+                        "type": "string",
+                        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                        "maxLength": 40
+                      },
+                      "element": {
+                        "type": "string",
+                        "enum": [
+                          "acid",
+                          "cold",
+                          "fire",
+                          "force",
+                          "lightning",
+                          "necrotic",
+                          "physical",
+                          "poison",
+                          "psychic",
+                          "radiant",
+                          "thunder"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "dice",
+                      "element"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 4
+                },
+                "effect": {
+                  "type": "object",
+                  "properties": {
+                    "ability": {
+                      "type": "string",
+                      "enum": [
+                        "strength",
+                        "dexterity",
+                        "constitution",
+                        "intelligence",
+                        "wisdom",
+                        "charisma"
+                      ]
+                    },
+                    "dc": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 40
+                    },
+                    "magical": {
+                      "type": "boolean"
+                    },
+                    "half": {
+                      "type": "boolean"
+                    },
+                    "components": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "dice": {
+                            "type": "string",
+                            "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                            "maxLength": 40
+                          },
+                          "element": {
+                            "type": "string",
+                            "enum": [
+                              "acid",
+                              "cold",
+                              "fire",
+                              "force",
+                              "lightning",
+                              "necrotic",
+                              "physical",
+                              "poison",
+                              "psychic",
+                              "radiant",
+                              "thunder"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "dice",
+                          "element"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 4
+                    },
+                    "condition": {
+                      "type": "string",
+                      "enum": [
+                        "",
+                        "blinded",
+                        "charmed",
+                        "deafened",
+                        "frightened",
+                        "grappled",
+                        "incapacitated",
+                        "invisible",
+                        "paralyzed",
+                        "petrified",
+                        "poisoned",
+                        "prone",
+                        "restrained",
+                        "stunned",
+                        "unconscious"
+                      ]
+                    },
+                    "rounds": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 14400
+                    },
+                    "repeat": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "start",
+                        "end"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ability",
+                    "dc",
+                    "magical",
+                    "half",
+                    "components",
+                    "condition",
+                    "rounds",
+                    "repeat"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "index",
+                "base",
+                "effect"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 30
+          },
+          "ranges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 29
+                },
+                "normal": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2000
+                },
+                "maximum": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2000
+                }
+              },
+              "required": [
+                "index",
+                "normal",
+                "maximum"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 30
+          },
+          "powers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "effect": {
+                  "type": "object",
+                  "properties": {
+                    "ability": {
+                      "type": "string",
+                      "enum": [
+                        "strength",
+                        "dexterity",
+                        "constitution",
+                        "intelligence",
+                        "wisdom",
+                        "charisma"
+                      ]
+                    },
+                    "dc": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 40
+                    },
+                    "magical": {
+                      "type": "boolean"
+                    },
+                    "half": {
+                      "type": "boolean"
+                    },
+                    "components": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "dice": {
+                            "type": "string",
+                            "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                            "maxLength": 40
+                          },
+                          "element": {
+                            "type": "string",
+                            "enum": [
+                              "acid",
+                              "cold",
+                              "fire",
+                              "force",
+                              "lightning",
+                              "necrotic",
+                              "physical",
+                              "poison",
+                              "psychic",
+                              "radiant",
+                              "thunder"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "dice",
+                          "element"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 4
+                    },
+                    "condition": {
+                      "type": "string",
+                      "enum": [
+                        "",
+                        "blinded",
+                        "charmed",
+                        "deafened",
+                        "frightened",
+                        "grappled",
+                        "incapacitated",
+                        "invisible",
+                        "paralyzed",
+                        "petrified",
+                        "poisoned",
+                        "prone",
+                        "restrained",
+                        "stunned",
+                        "unconscious"
+                      ]
+                    },
+                    "rounds": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 14400
+                    },
+                    "repeat": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "start",
+                        "end"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ability",
+                    "dc",
+                    "magical",
+                    "half",
+                    "components",
+                    "condition",
+                    "rounds",
+                    "repeat"
+                  ],
+                  "additionalProperties": false
+                },
+                "range": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2000
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": [
+                    "one",
+                    "cone",
+                    "line",
+                    "sphere",
+                    "self"
+                  ]
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100
+                },
+                "recharge": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 6
+                },
+                "daily": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10
+                }
+              },
+              "required": [
+                "name",
+                "effect",
+                "range",
+                "shape",
+                "size",
+                "width",
+                "recharge",
+                "daily"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          }
+        },
+        "required": [
+          "save_bonuses",
+          "magic_resistance",
+          "pack_tactics",
+          "legendary_resistance",
+          "condition_immunities",
+          "legendary_max",
+          "legendary",
+          "parry",
+          "supported_names",
+          "multiattack",
+          "speed",
+          "fly_speed",
+          "riders",
+          "ranges",
+          "powers"
+        ],
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       }
     },
     "required": [
@@ -3009,6 +3533,530 @@
       "level",
       "charges",
       "effects"
+    ],
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_features_v3": {
+    "type": "object",
+    "properties": {
+      "save_bonuses": {
+        "type": "object",
+        "properties": {
+          "strength": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 40
+          },
+          "dexterity": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 40
+          },
+          "constitution": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 40
+          },
+          "intelligence": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 40
+          },
+          "wisdom": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 40
+          },
+          "charisma": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 40
+          }
+        },
+        "required": [
+          "strength",
+          "dexterity",
+          "constitution",
+          "intelligence",
+          "wisdom",
+          "charisma"
+        ],
+        "additionalProperties": false
+      },
+      "magic_resistance": {
+        "type": "boolean"
+      },
+      "pack_tactics": {
+        "type": "boolean"
+      },
+      "legendary_resistance": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10
+      },
+      "condition_immunities": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "blinded",
+            "charmed",
+            "deafened",
+            "frightened",
+            "grappled",
+            "incapacitated",
+            "invisible",
+            "paralyzed",
+            "petrified",
+            "poisoned",
+            "prone",
+            "restrained",
+            "stunned",
+            "unconscious"
+          ]
+        },
+        "maxItems": 14
+      },
+      "legendary_max": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10
+      },
+      "legendary": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "cost": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            }
+          },
+          "required": [
+            "name",
+            "cost",
+            "index"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 20
+      },
+      "parry": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10
+      },
+      "supported_names": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "maxItems": 80
+      },
+      "multiattack": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        },
+        "maxItems": 8
+      },
+      "speed": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000
+      },
+      "fly_speed": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000
+      },
+      "riders": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            },
+            "base": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dice": {
+                    "type": "string",
+                    "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                    "maxLength": 40
+                  },
+                  "element": {
+                    "type": "string",
+                    "enum": [
+                      "acid",
+                      "cold",
+                      "fire",
+                      "force",
+                      "lightning",
+                      "necrotic",
+                      "physical",
+                      "poison",
+                      "psychic",
+                      "radiant",
+                      "thunder"
+                    ]
+                  }
+                },
+                "required": [
+                  "dice",
+                  "element"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 4
+            },
+            "effect": {
+              "type": "object",
+              "properties": {
+                "ability": {
+                  "type": "string",
+                  "enum": [
+                    "strength",
+                    "dexterity",
+                    "constitution",
+                    "intelligence",
+                    "wisdom",
+                    "charisma"
+                  ]
+                },
+                "dc": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 40
+                },
+                "magical": {
+                  "type": "boolean"
+                },
+                "half": {
+                  "type": "boolean"
+                },
+                "components": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "dice": {
+                        "type": "string",
+                        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                        "maxLength": 40
+                      },
+                      "element": {
+                        "type": "string",
+                        "enum": [
+                          "acid",
+                          "cold",
+                          "fire",
+                          "force",
+                          "lightning",
+                          "necrotic",
+                          "physical",
+                          "poison",
+                          "psychic",
+                          "radiant",
+                          "thunder"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "dice",
+                      "element"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 4
+                },
+                "condition": {
+                  "type": "string",
+                  "enum": [
+                    "",
+                    "blinded",
+                    "charmed",
+                    "deafened",
+                    "frightened",
+                    "grappled",
+                    "incapacitated",
+                    "invisible",
+                    "paralyzed",
+                    "petrified",
+                    "poisoned",
+                    "prone",
+                    "restrained",
+                    "stunned",
+                    "unconscious"
+                  ]
+                },
+                "rounds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 14400
+                },
+                "repeat": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "start",
+                    "end"
+                  ]
+                }
+              },
+              "required": [
+                "ability",
+                "dc",
+                "magical",
+                "half",
+                "components",
+                "condition",
+                "rounds",
+                "repeat"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "index",
+            "base",
+            "effect"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 30
+      },
+      "ranges": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            },
+            "normal": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000
+            },
+            "maximum": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000
+            }
+          },
+          "required": [
+            "index",
+            "normal",
+            "maximum"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 30
+      },
+      "powers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "effect": {
+              "type": "object",
+              "properties": {
+                "ability": {
+                  "type": "string",
+                  "enum": [
+                    "strength",
+                    "dexterity",
+                    "constitution",
+                    "intelligence",
+                    "wisdom",
+                    "charisma"
+                  ]
+                },
+                "dc": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 40
+                },
+                "magical": {
+                  "type": "boolean"
+                },
+                "half": {
+                  "type": "boolean"
+                },
+                "components": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "dice": {
+                        "type": "string",
+                        "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?",
+                        "maxLength": 40
+                      },
+                      "element": {
+                        "type": "string",
+                        "enum": [
+                          "acid",
+                          "cold",
+                          "fire",
+                          "force",
+                          "lightning",
+                          "necrotic",
+                          "physical",
+                          "poison",
+                          "psychic",
+                          "radiant",
+                          "thunder"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "dice",
+                      "element"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 4
+                },
+                "condition": {
+                  "type": "string",
+                  "enum": [
+                    "",
+                    "blinded",
+                    "charmed",
+                    "deafened",
+                    "frightened",
+                    "grappled",
+                    "incapacitated",
+                    "invisible",
+                    "paralyzed",
+                    "petrified",
+                    "poisoned",
+                    "prone",
+                    "restrained",
+                    "stunned",
+                    "unconscious"
+                  ]
+                },
+                "rounds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 14400
+                },
+                "repeat": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "start",
+                    "end"
+                  ]
+                }
+              },
+              "required": [
+                "ability",
+                "dc",
+                "magical",
+                "half",
+                "components",
+                "condition",
+                "rounds",
+                "repeat"
+              ],
+              "additionalProperties": false
+            },
+            "range": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000
+            },
+            "shape": {
+              "type": "string",
+              "enum": [
+                "one",
+                "cone",
+                "line",
+                "sphere",
+                "self"
+              ]
+            },
+            "size": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "recharge": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "daily": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            }
+          },
+          "required": [
+            "name",
+            "effect",
+            "range",
+            "shape",
+            "size",
+            "width",
+            "recharge",
+            "daily"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 20
+      }
+    },
+    "required": [
+      "save_bonuses",
+      "magic_resistance",
+      "pack_tactics",
+      "legendary_resistance",
+      "condition_immunities",
+      "legendary_max",
+      "legendary",
+      "parry",
+      "supported_names",
+      "multiattack",
+      "speed",
+      "fly_speed",
+      "riders",
+      "ranges",
+      "powers"
     ],
     "additionalProperties": false,
     "$schema": "https://json-schema.org/draft/2020-12/schema"

@@ -78,7 +78,7 @@ class Library:
                 "PRIMARY KEY, checksum TEXT NOT NULL)"
             )
             old = self.execute("SELECT checksum FROM wl_migrations WHERE version=1").fetchone()
-            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 2:
+            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 3:
                 raise ValueError("Unsupported newer library migration")
             checksum = digest(sql)
             if old:
@@ -135,6 +135,34 @@ class Library:
                         (key, dump(value)),
                     )
                 self.execute("INSERT INTO wl_migrations VALUES(2,?)", (checksum2,))
+            sql3 = (ROOT / "data/world_library/migrations/003_source_rules.sql").read_text(
+                encoding="utf-8"
+            )
+            checksum3 = digest(sql3)
+            old3 = self.execute("SELECT checksum FROM wl_migrations WHERE version=3").fetchone()
+            if old3:
+                if old3[0] != checksum3:
+                    raise ValueError("Migration checksum changed")
+            else:
+                for statement in sql3.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
+                for key, value in schemas().items():
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?) "
+                        "ON CONFLICT(id,digest) DO NOTHING",
+                        (key, digest(value), dump(value)),
+                    )
+                    self.execute(
+                        "INSERT INTO wl_schemas VALUES(?,?) ON CONFLICT(id) DO UPDATE SET "
+                        "schema_json=excluded.schema_json",
+                        (key, dump(value)),
+                    )
+                self.execute(
+                    "INSERT INTO wl_rulesets VALUES(?,?)",
+                    ("library-creature-3", digest(schemas()["source_features_v3"])),
+                )
+                self.execute("INSERT INTO wl_migrations VALUES(3,?)", (checksum3,))
 
     def _decode(self, value):
         return json.loads(value) if isinstance(value, str) else value

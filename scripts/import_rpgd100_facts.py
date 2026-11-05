@@ -205,6 +205,9 @@ def extend_schema(spec):
     from rpg_vkr.world_library.magic_rules import register as register_magic
 
     register_magic(spec)
+    from rpg_vkr.world_library.source_extract import register as register_source
+
+    register_source(spec)
     return spec
 
 

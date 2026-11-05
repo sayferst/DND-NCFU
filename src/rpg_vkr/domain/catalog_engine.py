@@ -117,6 +117,9 @@ class Engine:
         from rpg_vkr.domain.catalog_world import initialize
 
         initialize(self)
+        from rpg_vkr.world_library.source_runtime import initialize as initialize_source
+
+        initialize_source(self)
 
     def mint(self, prefix="item"):
         self.state["sequence"] += 1
@@ -182,7 +185,22 @@ class Engine:
         return result - self.status_power("hero", "weaken")
 
     def check(self, task, dc):
-        value = self.roll("1d20", task)
+        from rpg_vkr.world_library.source_runtime import enabled, has, roll_d20
+
+        if enabled(self) and (
+            self.args.get("sense") == "sight"
+            and has(self, "hero", "blinded")
+            or self.args.get("sense") == "hearing"
+            and has(self, "hero", "deafened")
+        ):
+            self.events.append({"kind": "source_sense_failure", "sense": self.args["sense"]})
+            return False
+
+        value = (
+            roll_d20(self, -1, task)
+            if enabled(self) and has(self, "hero", "poisoned")
+            else self.roll("1d20", task)
+        )
         bonus = self.hero_bonus(task)
         if self.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import resolve_check
@@ -606,6 +624,10 @@ class Engine:
         )
 
     def travel(self, destination):
+        from rpg_vkr.world_library.source_runtime import enabled, speed
+
+        if enabled(self) and not speed(self, "hero", 30):
+            raise ValueError("Current source condition prevents movement")
         if destination == self.scene.current:
             return
         if destination not in self.neighbors():
@@ -737,6 +759,9 @@ def _execute(original, command, args, context, dice):
     from rpg_vkr.domain.catalog_actions_v2 import advance, npc_round, perform
 
     engine = Engine(original, context, dice, args)
+    from rpg_vkr.world_library import source_runtime
+
+    was_battle = bool(engine.state["battle"])
     engine.context_combat = context["combat"]
     owner_policy = engine.state.get("owner_rules_policy") == 1
     if engine.world.hp <= 0:
@@ -747,11 +772,17 @@ def _execute(original, command, args, context, dice):
         )
         if not allowed:
             raise ValueError("Герой выбыл.")
-    if owner_policy:
+    can_act = command == "encounter" or (
+        not source_runtime.enabled(engine)
+        or engine.world.hp <= 0
+        or source_runtime.before_actor(engine, "hero")
+    )
+    if owner_policy and can_act:
         from rpg_vkr.domain.owner_rules_runtime import perform as owner_perform
 
         if owner_perform(engine, command, args):
             npc_round(engine, command)
+            source_runtime.tick(engine, command, was_battle)
             engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
             advance(engine, engine.action_minutes)
             return engine.finish()
@@ -780,7 +811,16 @@ def _execute(original, command, args, context, dice):
         engine.state["free_action_policy"] = 1
         engine.text.append("Включены планы свободных действий. Исторические операции сохранены.")
         return engine.finish()
-    if command == "attempt":
+    if not can_act:
+        from rpg_vkr.domain.catalog_actions_v2 import PARAMETERS
+
+        if command not in PARAMETERS or not isinstance(args, dict):
+            raise ValueError("Current source condition prevents this action")
+        allowed, required = PARAMETERS[command]
+        if not required <= set(args) <= allowed:
+            raise ValueError("Invalid action parameters")
+        engine.events.append({"kind": "source_incapacitated", "actor": "hero"})
+    elif command == "attempt":
         from rpg_vkr.domain.attempt_plans import resolve
 
         if (
@@ -802,10 +842,15 @@ def _execute(original, command, args, context, dice):
     else:
         perform(engine, command, args)
     npc_round(engine, command)
+    source_runtime.tick(engine, command, was_battle)
     engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
     advance(engine, engine.action_minutes)
     if owner_policy:
         from rpg_vkr.domain.owner_rules_runtime import finish_rest
 
         finish_rest(engine)
+        if command == "rest" and engine.state.get("owner_last_rest_end") == engine.state["minute"]:
+            source_runtime.long_rest(engine)
+    elif command == "rest":
+        source_runtime.long_rest(engine)
     return engine.finish()

@@ -74,6 +74,14 @@ def compile_creature(record):
         )
         if a["actions_v2"]["multiattack_complete"]:
             implemented.add("Мультиатака")
+    if "features_v3" in a:
+        from rpg_vkr.world_library.source_extract import validate as validate_source
+        from rpg_vkr.world_library.source_runtime import VERSION as SOURCE_VERSION
+
+        validate_source(a["features_v3"], a["actions_v2"])
+        version = SOURCE_VERSION
+        extended["source_features_v3"] = a["features_v3"]
+        implemented.update(a["features_v3"]["supported_names"])
     return {
         "hp_max": hp,
         "armour_class": ac,
@@ -102,11 +110,16 @@ def compile_creature(record):
 def validate_runtime(properties):
     from rpg_vkr.world_library.creature_actions import VERSION as ACTIONS_VERSION
     from rpg_vkr.world_library.creature_actions import validate
+    from rpg_vkr.world_library.source_runtime import VERSION as SOURCE_VERSION
 
-    if properties.get("library_rules_version") not in {VERSION, ACTIONS_VERSION}:
+    if properties.get("library_rules_version") not in {VERSION, ACTIONS_VERSION, SOURCE_VERSION}:
         raise ValueError("Unknown library creature rules")
-    if properties["library_rules_version"] == ACTIONS_VERSION:
+    if properties["library_rules_version"] in {ACTIONS_VERSION, SOURCE_VERSION}:
         validate(properties["source_actions_v2"])
+    if properties["library_rules_version"] == SOURCE_VERSION:
+        from rpg_vkr.world_library.source_extract import validate as validate_source
+
+        validate_source(properties["source_features_v3"], properties["source_actions_v2"])
     if (
         type(properties.get("attack_bonus")) is not int
         or not -10 <= properties["attack_bonus"] <= 40
@@ -127,7 +140,7 @@ def validate_runtime(properties):
         "psychic",
         "thunder",
     }
-    if properties["library_rules_version"] == ACTIONS_VERSION:
+    if properties["library_rules_version"] in {ACTIONS_VERSION, SOURCE_VERSION}:
         elements.add("force")
     if properties.get("source_attack_element", "physical") not in elements | {"physical"}:
         raise ValueError("Unknown creature attack element")

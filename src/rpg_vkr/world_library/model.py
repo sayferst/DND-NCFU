@@ -95,6 +95,10 @@ def validate_record(record):
         from rpg_vkr.world_library.creature_actions import validate as validate_actions
 
         validate_actions(a["actions_v2"])
+    if record["profile"] == "source_creature" and "features_v3" in a:
+        from rpg_vkr.world_library.source_extract import validate as validate_source
+
+        validate_source(a["features_v3"], a["actions_v2"])
     if record["profile"] in {"npc", "creature", "boss"}:
         if a["hp_max"] > 20 + 40 * a["level"]:
             raise ValueError("Actor exceeds homebrew HP envelope")

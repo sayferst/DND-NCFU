@@ -2,7 +2,7 @@
 
 
 def apply(engine, target, components, source):
-    if not 1 <= len(components) <= 4 or hasattr(engine, "_library_damage_collector"):
+    if not 1 <= len(components) <= 8 or hasattr(engine, "_library_damage_collector"):
         raise ValueError("Invalid or recursive damage packet")
     for amount, element in components:
         if type(amount) is not int or not 0 <= amount <= 1000000:
