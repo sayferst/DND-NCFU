@@ -74,8 +74,11 @@ def test_sqlite_failed_commit_rolls_back_the_entire_approval(tmp_path, proposed_
             library.approve(id, actor="trusted-reviewer")
         assert not connection.in_transaction
         assert status(library, id) == "pending"
-        for table in ("wl_templates", "wl_versions", "wl_links", "wl_audit"):
+        for table in ("wl_templates", "wl_versions", "wl_links"):
             assert library.execute("SELECT COUNT(*) FROM " + table).fetchone()[0] == 0
+        assert library.execute("SELECT action FROM wl_audit").fetchall() == [
+            ("proposal_submitted",)
+        ]
         library.db = connection
         library.approve(id, actor="trusted-reviewer")
         assert library.get(proposed_record["id"]) == proposed_record
@@ -99,8 +102,36 @@ def test_status_failure_rolls_back_template_revision_links_and_all_audit(
     with pytest.raises(RuntimeError, match="metadata failure"):
         library.approve(id, actor="trusted-reviewer")
     assert library.revision(proposed_record["id"]) == 0 and status(library, id) == "pending"
-    for table in ("wl_templates", "wl_versions", "wl_links", "wl_audit"):
+    for table in ("wl_templates", "wl_versions", "wl_links"):
         assert library.execute("SELECT COUNT(*) FROM " + table).fetchone()[0] == 0
+    assert library.execute("SELECT action FROM wl_audit").fetchall() == [("proposal_submitted",)]
+
+
+def test_submission_is_timestamped_once_and_cannot_survive_its_audit_failure(
+    proposals_db, proposed_record, monkeypatch
+):
+    library = proposals_db
+    original = library.execute
+
+    def fail_audit(sql, params=()):
+        if sql.startswith("INSERT INTO wl_audit"):
+            raise RuntimeError("Simulated submission audit failure")
+        return original(sql, params)
+
+    monkeypatch.setattr(library, "execute", fail_audit)
+    with pytest.raises(RuntimeError, match="submission audit"):
+        pending(library, proposed_record)
+    assert original("SELECT COUNT(*) FROM wl_proposals").fetchone()[0] == 0
+    assert original("SELECT COUNT(*) FROM wl_audit").fetchone()[0] == 0
+    monkeypatch.setattr(library, "execute", original)
+    id = pending(library, proposed_record)
+    assert pending(library, proposed_record) == id
+    rows = original("SELECT action,subject,payload,created_at FROM wl_audit").fetchall()
+    assert len(rows) == 1 and rows[0][0:2] == ("proposal_submitted", id) and rows[0][3]
+    trace = library._decode(rows[0][2])
+    assert trace["template_id"] == proposed_record["id"]
+    assert trace["model"] == "offline-test-model" and trace["prompt_version"] == "test-proposal-1"
+    assert trace["engine_version"] == library.proposal(id)["engine_version"]
 
 
 def test_approval_is_idempotent_and_cannot_reactivate_a_retired_template(

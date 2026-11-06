@@ -524,13 +524,31 @@ class Library:
             if request_id is not None:
                 payload["request_id"] = request_id
             id = digest(payload)
-            self.execute(
+            inserted = self.execute(
                 (
                     "INSERT INTO wl_proposals(id,status,payload) "
                     "VALUES(?,'pending',?) ON CONFLICT(id) DO NOTHING"
                 ),
                 (id, dump(payload)),
             )
+            if inserted.rowcount == 1:
+                self.execute(
+                    "INSERT INTO wl_audit(actor,action,subject,payload) VALUES(?,?,?,?)",
+                    (
+                        "engine/propose",
+                        "proposal_submitted",
+                        id,
+                        dump(
+                            {
+                                "proposal_id": id,
+                                "template_id": record["id"],
+                                "model": model,
+                                "prompt_version": prompt_version,
+                                "engine_version": payload["engine_version"],
+                            }
+                        ),
+                    ),
+                )
         return id
 
     def propose_authored(self, record, *, model, prompt_version, request_id=None):
