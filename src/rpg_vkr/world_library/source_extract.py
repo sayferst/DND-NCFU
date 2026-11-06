@@ -84,6 +84,7 @@ def action_matches(name, phrase):
 
 
 def source_sequence(body, actions):
+    body = body.casefold()
     if any(w in body for w in ("или", "если", "может", "заклин", "вместо")):
         return []
     counts = {
@@ -99,6 +100,21 @@ def source_sequence(body, actions):
         "пять": 5,
         "шесть": 6,
     }
+    repeated = re.fullmatch(
+        r"[а-яёa-z -]{1,100} совершает (\d+|"
+        + "|".join(counts)
+        + r") (рукопашные|дальнобойные) атаки\.?",
+        body.strip(),
+    )
+    if repeated:
+        amount = counts.get(repeated[1], int(repeated[1]) if repeated[1].isdigit() else 0)
+        ranged = repeated[2] == "дальнобойные"
+        # An unnamed sequence is exact only if there is one eligible attack,
+        # including incomplete attacks: never silently discard an unknown choice.
+        eligible = [i for i, a in enumerate(actions) if a["ranged"] == ranged]
+        if 1 <= amount <= 8 and len(eligible) == 1 and actions[eligible[0]]["complete"]:
+            return eligible * amount
+        return []
     match = re.search(r"совершает\s+(\d+|" + "|".join(counts) + r")\s+атак[а-я]*", body)
     if not match:
         return []
