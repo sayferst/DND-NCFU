@@ -1,0 +1,340 @@
+{
+  "source_entries": 24527,
+  "canonical_records": 27426,
+  "new_reference_records": 20251,
+  "catalogs": [
+    {
+      "catalog": "/content_pages/adventures/dregdens_ferry_expanded",
+      "source_entries": 8,
+      "reconciled_enriched": 0,
+      "reference_entries": 8
+    },
+    {
+      "catalog": "/content_pages/adventures/murkmire_malevolence",
+      "source_entries": 33,
+      "reconciled_enriched": 0,
+      "reference_entries": 33
+    },
+    {
+      "catalog": "/content_pages/adventures/pirates_of_the_drann",
+      "source_entries": 12,
+      "reconciled_enriched": 0,
+      "reference_entries": 12
+    },
+    {
+      "catalog": "/content_pages/adventures/stygian_gambit",
+      "source_entries": 32,
+      "reconciled_enriched": 0,
+      "reference_entries": 32
+    },
+    {
+      "catalog": "/content_pages/adventures/table_for_two",
+      "source_entries": 96,
+      "reconciled_enriched": 0,
+      "reference_entries": 96
+    },
+    {
+      "catalog": "/content_pages/backgrounds",
+      "source_entries": 234,
+      "reconciled_enriched": 0,
+      "reference_entries": 234
+    },
+    {
+      "catalog": "/content_pages/bestiary_dnd5e",
+      "source_entries": 2874,
+      "reconciled_enriched": 2874,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/classes",
+      "source_entries": 9673,
+      "reconciled_enriched": 0,
+      "reference_entries": 9673
+    },
+    {
+      "catalog": "/content_pages/conditions",
+      "source_entries": 53,
+      "reconciled_enriched": 0,
+      "reference_entries": 53
+    },
+    {
+      "catalog": "/content_pages/equipment",
+      "source_entries": 348,
+      "reconciled_enriched": 348,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/feats",
+      "source_entries": 859,
+      "reconciled_enriched": 0,
+      "reference_entries": 859
+    },
+    {
+      "catalog": "/content_pages/magic_items_dnd5e",
+      "source_entries": 934,
+      "reconciled_enriched": 0,
+      "reference_entries": 934
+    },
+    {
+      "catalog": "/content_pages/materials/advanced_weapon_grim_hollow",
+      "source_entries": 46,
+      "reconciled_enriched": 0,
+      "reference_entries": 46
+    },
+    {
+      "catalog": "/content_pages/materials/ancestral_weapons",
+      "source_entries": 200,
+      "reconciled_enriched": 0,
+      "reference_entries": 200
+    },
+    {
+      "catalog": "/content_pages/materials/armaments_of_legacy",
+      "source_entries": 60,
+      "reconciled_enriched": 0,
+      "reference_entries": 60
+    },
+    {
+      "catalog": "/content_pages/materials/compendium_of_beasts",
+      "source_entries": 146,
+      "reconciled_enriched": 146,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/materials/compendium_of_dinosaurs",
+      "source_entries": 29,
+      "reconciled_enriched": 29,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/materials/compendium_of_exploits",
+      "source_entries": 149,
+      "reconciled_enriched": 0,
+      "reference_entries": 149
+    },
+    {
+      "catalog": "/content_pages/materials/darias_guide_to_prosthetics",
+      "source_entries": 47,
+      "reconciled_enriched": 0,
+      "reference_entries": 47
+    },
+    {
+      "catalog": "/content_pages/materials/deadly_encounters",
+      "source_entries": 11,
+      "reconciled_enriched": 0,
+      "reference_entries": 11
+    },
+    {
+      "catalog": "/content_pages/materials/dogs_of_war",
+      "source_entries": 7,
+      "reconciled_enriched": 0,
+      "reference_entries": 7
+    },
+    {
+      "catalog": "/content_pages/materials/drakkenheim_arcadian_council",
+      "source_entries": 8,
+      "reconciled_enriched": 0,
+      "reference_entries": 8
+    },
+    {
+      "catalog": "/content_pages/materials/drakkenheim_denizens",
+      "source_entries": 21,
+      "reconciled_enriched": 19,
+      "reference_entries": 2
+    },
+    {
+      "catalog": "/content_pages/materials/drakkenheim_encounters_expanded",
+      "source_entries": 28,
+      "reconciled_enriched": 0,
+      "reference_entries": 28
+    },
+    {
+      "catalog": "/content_pages/materials/drakkenheim_factions_hb_extension",
+      "source_entries": 72,
+      "reconciled_enriched": 0,
+      "reference_entries": 72
+    },
+    {
+      "catalog": "/content_pages/materials/equestrians_guide_to_horses",
+      "source_entries": 32,
+      "reconciled_enriched": 0,
+      "reference_entries": 32
+    },
+    {
+      "catalog": "/content_pages/materials/grim_hollow_items",
+      "source_entries": 149,
+      "reconciled_enriched": 0,
+      "reference_entries": 149
+    },
+    {
+      "catalog": "/content_pages/materials/grim_hollow_monster_grimoire_24",
+      "source_entries": 412,
+      "reconciled_enriched": 409,
+      "reference_entries": 3
+    },
+    {
+      "catalog": "/content_pages/materials/grim_hollow_transformations",
+      "source_entries": 23,
+      "reconciled_enriched": 0,
+      "reference_entries": 23
+    },
+    {
+      "catalog": "/content_pages/materials/inspiration_cards",
+      "source_entries": 171,
+      "reconciled_enriched": 0,
+      "reference_entries": 171
+    },
+    {
+      "catalog": "/content_pages/materials/karsus_guide_to_create_a_spell",
+      "source_entries": 45,
+      "reconciled_enriched": 0,
+      "reference_entries": 45
+    },
+    {
+      "catalog": "/content_pages/materials/larlochs_vault_magic_of_netheril",
+      "source_entries": 75,
+      "reconciled_enriched": 0,
+      "reference_entries": 75
+    },
+    {
+      "catalog": "/content_pages/materials/larsenes_ledger_creatures",
+      "source_entries": 53,
+      "reconciled_enriched": 53,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/materials/larsenes_ledger_of_treasures_and_trinkets",
+      "source_entries": 17,
+      "reconciled_enriched": 0,
+      "reference_entries": 17
+    },
+    {
+      "catalog": "/content_pages/materials/larsenes_ledger_of_treasures_and_trinkets_items",
+      "source_entries": 334,
+      "reconciled_enriched": 0,
+      "reference_entries": 334
+    },
+    {
+      "catalog": "/content_pages/materials/magic_vault_items",
+      "source_entries": 883,
+      "reconciled_enriched": 0,
+      "reference_entries": 883
+    },
+    {
+      "catalog": "/content_pages/materials/meta_legacy",
+      "source_entries": 144,
+      "reconciled_enriched": 0,
+      "reference_entries": 144
+    },
+    {
+      "catalog": "/content_pages/materials/monsters_of_drakkenheim",
+      "source_entries": 282,
+      "reconciled_enriched": 223,
+      "reference_entries": 59
+    },
+    {
+      "catalog": "/content_pages/materials/nocturnal_horrors",
+      "source_entries": 40,
+      "reconciled_enriched": 40,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/materials/non_playable_sidekicks",
+      "source_entries": 17,
+      "reconciled_enriched": 0,
+      "reference_entries": 17
+    },
+    {
+      "catalog": "/content_pages/materials/olies_guide_to_familiars",
+      "source_entries": 40,
+      "reconciled_enriched": 40,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/materials/steinhardt_bestiary",
+      "source_entries": 52,
+      "reconciled_enriched": 52,
+      "reference_entries": 0
+    },
+    {
+      "catalog": "/content_pages/materials/tashas_crucible_of_everything_else_volume_1",
+      "source_entries": 77,
+      "reconciled_enriched": 0,
+      "reference_entries": 77
+    },
+    {
+      "catalog": "/content_pages/materials/tashas_crucible_of_everything_else_volume_2",
+      "source_entries": 98,
+      "reconciled_enriched": 0,
+      "reference_entries": 98
+    },
+    {
+      "catalog": "/content_pages/materials/terrain_effects",
+      "source_entries": 45,
+      "reconciled_enriched": 0,
+      "reference_entries": 45
+    },
+    {
+      "catalog": "/content_pages/materials/the_crimson_codex_blood_spells",
+      "source_entries": 21,
+      "reconciled_enriched": 0,
+      "reference_entries": 21
+    },
+    {
+      "catalog": "/content_pages/materials/the_griffons_saddlebag_book_one_24",
+      "source_entries": 365,
+      "reconciled_enriched": 0,
+      "reference_entries": 365
+    },
+    {
+      "catalog": "/content_pages/materials/the_griffons_saddlebag_book_two_5e",
+      "source_entries": 504,
+      "reconciled_enriched": 0,
+      "reference_entries": 504
+    },
+    {
+      "catalog": "/content_pages/materials/world_of_drakkenheim",
+      "source_entries": 43,
+      "reconciled_enriched": 0,
+      "reference_entries": 43
+    },
+    {
+      "catalog": "/content_pages/materials/xanathars_extraordinary_vault_5e",
+      "source_entries": 278,
+      "reconciled_enriched": 0,
+      "reference_entries": 278
+    },
+    {
+      "catalog": "/content_pages/races",
+      "source_entries": 319,
+      "reconciled_enriched": 0,
+      "reference_entries": 319
+    },
+    {
+      "catalog": "/content_pages/spells",
+      "source_entries": 2578,
+      "reconciled_enriched": 0,
+      "reference_entries": 2578
+    },
+    {
+      "catalog": "/content_pages/tables",
+      "source_entries": 487,
+      "reconciled_enriched": 0,
+      "reference_entries": 487
+    },
+    {
+      "catalog": "/content_pages/talents",
+      "source_entries": 920,
+      "reconciled_enriched": 0,
+      "reference_entries": 920
+    },
+    {
+      "catalog": "/content_pages/tools",
+      "source_entries": 43,
+      "reconciled_enriched": 43,
+      "reference_entries": 0
+    }
+  ],
+  "complete_catalog_entry_coverage": true,
+  "complete_mechanical_implementation": false,
+  "note": "Full index coverage is not full rule implementation, full prose import or human review."
+}

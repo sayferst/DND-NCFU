@@ -1,0 +1,13 @@
+{
+  "source_creatures": 3920,
+  "typed_attacks": 5582,
+  "complete_attacks": 3252,
+  "complete_single_damage_attacks": 2707,
+  "mixed_damage_attacks": 545,
+  "creatures_with_complete_attack_choices": 2393,
+  "creatures_with_multiple_complete_attack_choices": 753,
+  "exact_multiattack_sequences": 277,
+  "mixed_multiattack_sequences": 45,
+  "version": "library-creature-2",
+  "complete_rule_coverage": false
+}

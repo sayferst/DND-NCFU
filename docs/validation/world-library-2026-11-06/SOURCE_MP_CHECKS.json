@@ -1,0 +1,30 @@
+{
+  "windows_passed": 78,
+  "windows_skipped": 1,
+  "seconds": 122.61,
+  "skip": "PostgreSQL DSN not configured locally",
+  "mp_and_multi_additional_passed": 13,
+  "mp_and_multi_seconds": 6.81,
+  "sets_overlap": true,
+  "creation_previews_checked": 7089,
+  "migrations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "global_db_validation": "SQLite in memory, integrity/FK, inert world/RNG",
+  "source_spell_programs": 2,
+  "cantrip_levels_recovered_from_source": 241,
+  "source_multiattack_programs": 55,
+  "pending_source_features": 15175,
+  "pending_source_references": 20249,
+  "frozen_source_v3_digest": "ead94a5628520609d0e03ab3ce3c402a99e3849fa1622dcad4c15f53c50e2dec",
+  "user_saves_touched": false,
+  "full_repository_suite": false,
+  "full_rule_coverage": false
+}

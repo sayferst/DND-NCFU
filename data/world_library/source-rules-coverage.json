@@ -1,0 +1,16 @@
+{
+  "creatures": 3920,
+  "magic_resistance": 469,
+  "pack_tactics": 81,
+  "legendary_resistance": 225,
+  "riders": 89,
+  "save_powers": 252,
+  "recharge_powers": 154,
+  "daily_powers": 9,
+  "multiattacks": 517,
+  "source_feature_occurrences": 1739,
+  "legendary_actions": 34,
+  "parry": 72,
+  "version": "library-creature-3",
+  "full_rule_coverage": false
+}

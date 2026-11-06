@@ -1,0 +1,151 @@
+{
+  "visited": 18695,
+  "pending": 0,
+  "queue_exhausted": true,
+  "complete": false,
+  "errors": [
+    {
+      "url": "https://longstoryshort.app/long/avrae-bot/avrae-cheatsheet.txt",
+      "error": "Not HTML"
+    },
+    {
+      "url": "https://dnd.su/spells/61-tongues/)",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/spells/64-etherealness/,",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/spells/52-thunderous_smite/)",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/spells/471-thunder_step/).",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/bestiary/8821-cosmic_horror/).",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/bestiary/danger/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/homebrew/articles/homebrew/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/72-zele_chteniya_myslej/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://longstoryshort.app/compendium/equipment/mounts-and-vehicles/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://longstoryshort.app/srd/appendices/misc-creatures/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://longstoryshort.app/srd/appendices/npc-list/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://longstoryshort.app/srd/character/multiclassing/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://longstoryshort.app/srd/monsters/list/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/class/89-cleric/Врата в царство теней [Shadow Realm Gateway]",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/spells/223-feather_fall/).",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://longstoryshort.app/character/list/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/homebrew/articles/lore/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/homebrew/articles/lore/613-the-vile-village/revenant bear",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/articles/inventory/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/articles/mechanics/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/articles/monsters/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/articles/newbie/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/articles/news/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/articles/partners/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/bestiary/8055-archaic/)",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/items/14-rope_of_entanglement/)",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/spells/157-disguise_self/)",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/spells/383-maximilian_s_earthen_grasp/)",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://dnd.su/homebrew/class/stargazer",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://next.dnd.su/39-crossbow-bolts/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://ruleholder.com/adventures/new",
+      "error": "Redirect outside source scope"
+    }
+  ],
+  "by_host": {
+    "next.dnd.su": 4502,
+    "dnd.su": 10444,
+    "ruleholder.com": 3148,
+    "longstoryshort.app": 526,
+    "rpgd100.ru": 75
+  },
+  "scope": "Public allowlisted HTML links; no query/account/search/private API/binary requests",
+  "semantic_import_complete": false,
+  "checkpoint_tests_passed": 9,
+  "checkpoint_test_seconds": 0.29,
+  "postgres_ci_passed": 330,
+  "postgres_ci_seconds": 322.14,
+  "postgres_tested_pin": "99ba7426d4be1988f15103c4eb07f3cfb0bb4ce0",
+  "user_saves_touched": false
+}

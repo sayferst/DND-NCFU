@@ -1,0 +1,16 @@
+{
+  "template_id": "rpg_474e175757941c04aea0d30e",
+  "instance_id": "cli_source_v3",
+  "rules_version": "library-creature-3",
+  "source_unchanged": true,
+  "source_sha256": "fa8854c1b2d06ed9e20cda328e6ec38227dc67967698ca4443665a1807597aaa",
+  "created_copy": "cli-source-v3-created-01.sqlite3",
+  "played_copy": "cli-source-v3-played-01.sqlite3",
+  "snapshot_and_rng_replay": true,
+  "integrity_check": "ok",
+  "commands": [
+    "instantiate",
+    "encounter",
+    "source_move_if_alive"
+  ]
+}

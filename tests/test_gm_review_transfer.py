@@ -2,7 +2,7 @@
 
 import hashlib
 import json
-from zipfile import ZipFile
+from zipfile import ZipFile, ZipInfo
 
 import pytest
 
@@ -17,7 +17,10 @@ def archive(path, *, name="review/answer.txt", payload="Привет!", declared
         "files": {name: {"sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}},
     }
     with ZipFile(path, "x") as z:
-        z.writestr(name, payload.encode("utf-8"))
+        # Preserve the supplied unsafe header; ZipInfo normalizes backslashes on Windows.
+        entry = ZipInfo(name)
+        entry.filename = entry.orig_filename = name
+        z.writestr(entry, payload.encode("utf-8"))
         z.writestr("transfer-manifest.json", json.dumps(manifest))
 
 

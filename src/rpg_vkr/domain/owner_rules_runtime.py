@@ -55,6 +55,10 @@ def change_hp(e, id, delta, *, critical=False, nonlethal=False):
         if delta >= 0
         else rules.damage(old, -delta, critical=critical, nonlethal=nonlethal)
     )
+    if delta < 0 and id != "hero":
+        from rpg_vkr.world_library.regeneration_rules import defer_damage_death
+
+        value = defer_damage_death(e, id, old, value)
     apply(e, id, value)
     if value != old and public_actor(e, id):
         e.events.append(

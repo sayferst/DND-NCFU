@@ -117,6 +117,9 @@ class Engine:
         from rpg_vkr.domain.catalog_world import initialize
 
         initialize(self)
+        from rpg_vkr.world_library.source_runtime import initialize as initialize_source
+
+        initialize_source(self)
 
     def mint(self, prefix="item"):
         self.state["sequence"] += 1
@@ -182,7 +185,22 @@ class Engine:
         return result - self.status_power("hero", "weaken")
 
     def check(self, task, dc):
-        value = self.roll("1d20", task)
+        from rpg_vkr.world_library.source_runtime import enabled, has, roll_d20
+
+        if enabled(self) and (
+            self.args.get("sense") == "sight"
+            and has(self, "hero", "blinded")
+            or self.args.get("sense") == "hearing"
+            and has(self, "hero", "deafened")
+        ):
+            self.events.append({"kind": "source_sense_failure", "sense": self.args["sense"]})
+            return False
+
+        value = (
+            roll_d20(self, -1, task)
+            if enabled(self) and has(self, "hero", "poisoned")
+            else self.roll("1d20", task)
+        )
         bonus = self.hero_bonus(task)
         if self.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import resolve_check
@@ -194,6 +212,20 @@ class Engine:
         return value + bonus >= dc
 
     def template(self, item):
+        if item.get("library_instance_rules"):
+            from rpg_vkr.world_library.physical_rules import instance_rules
+
+            entity = self.actors[item["source"]]
+            definition = self.definitions[entity.definition_id]
+            rules = instance_rules(entity, definition)
+            return rules | {"id": definition.id, "name": definition.name}
+        if item.get("library_definition"):
+            from rpg_vkr.world_library.equipment_rules import validate_equipment
+
+            definition = self.definitions[item["library_definition"]]
+            row = definition.properties["library_item_rules"]
+            validate_equipment(row)
+            return row | {"id": definition.id, "name": definition.name}
         if item.get("form"):
             from rpg_vkr.domain.attempt_plans import FORMS
 
@@ -288,6 +320,25 @@ class Engine:
                         item["ammunition"] = True
             elif definition.id == "type_bandage":
                 item["template"] = "use_dressings_0_0"
+            if definition.properties.get("library_item_rules"):
+                row = definition.properties["library_item_rules"]
+                item.update(
+                    library_definition=definition.id, kind=row["kind"], ammo_kind=row["ammo_kind"]
+                )
+                if row["rules_version"] == "library-equipment-2":
+                    item.update(quality=row["quality"], durability_cap=row["durability"])
+                    item["durability"] = min(item["durability"], row["durability"])
+                if row["category"] == "ammunition":
+                    item["ammunition"] = True
+            if (entity.state or {}).get("library_instance_rules"):
+                from rpg_vkr.world_library.physical_rules import instance_rules
+
+                row = instance_rules(entity, definition)
+                item.update(
+                    library_instance_rules=True,
+                    quality=row["quality"],
+                    durability_cap=row["durability"],
+                )
             self.state["items"] = [i for i in self.state["items"] if i["id"] != id] + [item]
             return item
         raise ValueError("Предмет недоступен или не принадлежит герою.")
@@ -341,6 +392,14 @@ class Engine:
             self.state["items"].remove(item)
             self.actors.pop(item.get("source", item["id"]), None)
             self.things.pop(item.get("source", item["id"]), None)
+        elif (
+            item.get("library_definition")
+            and self.template(item).get("rules_version") == "library-equipment-2"
+        ):
+            id = item.get("source", item["id"])
+            self.actors[id] = replace(self.actors[id], quantity=item["quantity"])
+            if id in self.things:
+                self.things[id] = replace(self.things[id], quantity=item["quantity"])
 
     def require_materials(self, ingredients, multiplier=1):
         selected = []
@@ -388,6 +447,8 @@ class Engine:
             return self.world.hp
         e, d = self.actor(id, alive=False)
         data = dict(e.state or {})
+        if data.get("life") == "dead" and d.properties.get("library_regeneration_rules"):
+            return data.get("hp", 0)
         data["hp"] = max(
             0, min(d.properties["hp_max"], data.get("hp", d.properties["hp_max"]) + delta)
         )
@@ -439,9 +500,15 @@ class Engine:
     def defence(self, id):
         if id != "hero":
             e, d = self.actor(id, alive=False)
+            from rpg_vkr.world_library.npc_equipment import defence as library_npc_defence
+
             return (
-                d.properties.get(
-                    "armour_class", 10 + ability_modifier(d.properties.get("dexterity", 10))
+                library_npc_defence(
+                    self,
+                    id,
+                    d.properties.get(
+                        "armour_class", 10 + ability_modifier(d.properties.get("dexterity", 10))
+                    ),
                 )
                 + self.status_power(id, "defence")
                 + min(3, (e.state or {}).get("fortification", 0))
@@ -485,6 +552,10 @@ class Engine:
         )
         if target != "hero":
             e, d = self.actor(target, alive=False)
+            if d.properties.get("library_rules_version"):
+                from rpg_vkr.world_library.creature_rules import incoming
+
+                amount = incoming(d.properties, amount, element)
             if d.properties.get("resistance") == element:
                 resistance += 2
             if d.properties.get("vulnerability") == element:
@@ -522,6 +593,25 @@ class Engine:
             if shield > blocked:
                 self.status(target, "shield", shield - blocked, 2)
         amount = max(0, amount - resistance)
+        if hasattr(self, "_library_damage_collector"):
+            self._library_damage_collector.append(amount)
+            return amount
+        from rpg_vkr.world_library.regeneration_rules import record_damage
+
+        record_damage(self, target, [(amount, element)])
+        from rpg_vkr.world_library.resilience_rules import incoming as resilient_damage
+
+        hit_flags = getattr(self, "owner_hit_flags", {})
+        amount = resilient_damage(
+            self,
+            target,
+            amount,
+            radiant=element == "radiant",
+            critical=hit_flags.get("critical", False)
+            or getattr(self, "source_hit_critical", False),
+            nonlethal=hit_flags.get("nonlethal", False),
+        )
+        self.source_hit_critical = False
         if self.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import change_hp
 
@@ -558,6 +648,10 @@ class Engine:
         )
 
     def travel(self, destination):
+        from rpg_vkr.world_library.source_runtime import enabled, speed
+
+        if enabled(self) and not speed(self, "hero", 30):
+            raise ValueError("Current source condition prevents movement")
         if destination == self.scene.current:
             return
         if destination not in self.neighbors():
@@ -661,8 +755,14 @@ class Engine:
         )
 
     def finish(self):
-        from rpg_vkr.domain.unified import caps
+        if self.state.get("source_rules_v3", {}).get("grapples_v1"):
+            from rpg_vkr.world_library.grapple_rules import links
 
+            links(self)
+        from rpg_vkr.domain.unified import caps
+        from rpg_vkr.world_library.social_rules import update as update_library_social
+
+        update_library_social(self)
         self.sync_physical()
         limits = caps(self.state, self.char)
         self.world = replace(self.world, max_hp=limits["hp"], hp=min(self.world.hp, limits["hp"]))
@@ -689,6 +789,9 @@ def _execute(original, command, args, context, dice):
     from rpg_vkr.domain.catalog_actions_v2 import advance, npc_round, perform
 
     engine = Engine(original, context, dice, args)
+    from rpg_vkr.world_library import source_runtime
+
+    was_battle = bool(engine.state["battle"])
     engine.context_combat = context["combat"]
     owner_policy = engine.state.get("owner_rules_policy") == 1
     if engine.world.hp <= 0:
@@ -699,11 +802,17 @@ def _execute(original, command, args, context, dice):
         )
         if not allowed:
             raise ValueError("Герой выбыл.")
-    if owner_policy:
+    can_act = command == "encounter" or (
+        not source_runtime.enabled(engine)
+        or engine.world.hp <= 0
+        or source_runtime.before_actor(engine, "hero")
+    )
+    if owner_policy and can_act:
         from rpg_vkr.domain.owner_rules_runtime import perform as owner_perform
 
         if owner_perform(engine, command, args):
             npc_round(engine, command)
+            source_runtime.tick(engine, command, was_battle)
             engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
             advance(engine, engine.action_minutes)
             return engine.finish()
@@ -732,7 +841,16 @@ def _execute(original, command, args, context, dice):
         engine.state["free_action_policy"] = 1
         engine.text.append("Включены планы свободных действий. Исторические операции сохранены.")
         return engine.finish()
-    if command == "attempt":
+    if not can_act:
+        from rpg_vkr.domain.catalog_actions_v2 import PARAMETERS
+
+        if command not in PARAMETERS or not isinstance(args, dict):
+            raise ValueError("Current source condition prevents this action")
+        allowed, required = PARAMETERS[command]
+        if not required <= set(args) <= allowed:
+            raise ValueError("Invalid action parameters")
+        engine.events.append({"kind": "source_incapacitated", "actor": "hero"})
+    elif command == "attempt":
         from rpg_vkr.domain.attempt_plans import resolve
 
         if (
@@ -754,10 +872,15 @@ def _execute(original, command, args, context, dice):
     else:
         perform(engine, command, args)
     npc_round(engine, command)
+    source_runtime.tick(engine, command, was_battle)
     engine.action_minutes += getattr(engine, "owner_complication_minutes", 0)
     advance(engine, engine.action_minutes)
     if owner_policy:
         from rpg_vkr.domain.owner_rules_runtime import finish_rest
 
         finish_rest(engine)
+        if command == "rest" and engine.state.get("owner_last_rest_end") == engine.state["minute"]:
+            source_runtime.long_rest(engine)
+    elif command == "rest":
+        source_runtime.long_rest(engine)
     return engine.finish()

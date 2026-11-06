@@ -1,0 +1,145 @@
+{
+  "runtime_commit": "b4c9634c795700cb40f9a047f3591e00a36b263e",
+  "files": 186,
+  "batches": 16,
+  "initial_run": {
+    "passed": 12607,
+    "counts": {
+      "tests": 12616,
+      "failures": 2,
+      "errors": 5,
+      "skipped": 2
+    },
+    "seconds": 885.56,
+    "unchanged_inputs": true
+  },
+  "repeat": {
+    "repeated_batches": [
+      7,
+      13,
+      14
+    ],
+    "files": [
+      "tests/test_gateway.py",
+      "tests/test_gateway_request_headers.py",
+      "tests/test_gm_candidate_audit.py",
+      "tests/test_gm_mechanics.py",
+      "tests/test_gm_research_corpus.py",
+      "tests/test_gm_review_packet.py",
+      "tests/test_gm_review_transfer.py",
+      "tests/test_gm_source_jobs.py",
+      "tests/test_gm_translation.py",
+      "tests/test_grounded_curriculum.py",
+      "tests/test_host_metadata_errors.py",
+      "tests/test_host_public_readiness.py",
+      "tests/test_source_rules_runtime.py",
+      "tests/test_spend_journal.py",
+      "tests/test_sqlite_lifecycle.py",
+      "tests/test_story_conversation_quality.py",
+      "tests/test_strategic_conflicts.py",
+      "tests/test_synthetic_audit.py",
+      "tests/test_team_encounters.py",
+      "tests/test_tester_build.py",
+      "tests/test_tester_connection.py",
+      "tests/test_tester_delivery.py",
+      "tests/test_theme_notices.py",
+      "tests/test_trade_context.py",
+      "tests/test_training_capture_session.py",
+      "tests/test_training_pack_review.py",
+      "tests/test_training_pipeline.py",
+      "tests/test_training_story_contract.py",
+      "tests/test_training_tokenization.py",
+      "tests/test_tunnel_dns.py",
+      "tests/test_tunnel_health.py",
+      "tests/test_tunnel_supervision.py",
+      "tests/test_unified_creation.py",
+      "tests/test_unified_rules.py",
+      "tests/test_update_build_launcher.py",
+      "tests/test_update_tree.py"
+    ],
+    "counts": {
+      "tests": 356,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "seconds": 68.41,
+    "reason": "Actual unsafe ZIP header fixture; shorter Windows temp path for local Git tests"
+  },
+  "failed_cases_rechecked": [
+    [
+      "tests.test_gm_review_transfer",
+      "test_unsafe_windows_and_posix_paths_are_rejected[review\\\\answer.txt]"
+    ],
+    [
+      "tests.test_tester_delivery",
+      "test_publication_branch_contains_only_signed_address_and_updates_fast_forward"
+    ],
+    [
+      "tests.test_update_build_launcher",
+      "test_current_checkout_prints_actual_sha"
+    ],
+    [
+      "tests.test_update_build_launcher",
+      "test_fetches_and_fast_forwards_only_current_release_branch"
+    ],
+    [
+      "tests.test_update_build_launcher",
+      "test_wrong_branch_never_switches_or_updates"
+    ],
+    [
+      "tests.test_update_build_launcher",
+      "test_dirty_checkout_with_remote_changes_is_preserved"
+    ],
+    [
+      "tests.test_update_build_launcher",
+      "test_active_host_prevents_fast_forward_without_touching_checkout"
+    ]
+  ],
+  "unique_cases_after_rechecks": {
+    "passed": 12614,
+    "skipped": 2
+  },
+  "unique_total": 12616,
+  "case_identity": [
+    "classname",
+    "name"
+  ],
+  "coverage_verified_after_rechecks": true,
+  "single_uninterrupted_green_run": false,
+  "runtime_changed_since_full_run": false,
+  "changed_test_files": [
+    "tests/test_gm_review_transfer.py"
+  ],
+  "checks": [
+    {
+      "command": [
+        "pip",
+        "--no-cache-dir",
+        "check"
+      ],
+      "exit_code": 0,
+      "output": "No broken requirements found.\n"
+    },
+    {
+      "command": [
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "."
+      ],
+      "exit_code": 0,
+      "output": "528 files already formatted\n"
+    }
+  ]
+}

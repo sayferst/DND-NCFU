@@ -150,7 +150,12 @@ def faction_day(e, day):
             e.events.append(event)
 
 
-def move_actor(e, id, place):
+def move_actor(e, id, place, *, forced=False):
+    if not forced and e.state.get("source_rules_v3", {}).get("grapples_v1"):
+        from rpg_vkr.world_library.grapple_rules import links
+
+        if any(row["target"] == id for row in links(e)):
+            return False
     if place not in {p.id for p in e.scene.places}:
         return False
     if id not in e.refs or e.refs[id].place == place:

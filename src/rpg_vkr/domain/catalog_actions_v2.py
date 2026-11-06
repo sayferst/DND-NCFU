@@ -25,7 +25,12 @@ PARAMETERS = {
     "wait": ({"minutes"}, {"minutes"}),
     "advance": ({"minutes"}, {"minutes"}),
     "encounter": ({"enemies", "allies"}, {"enemies"}),
-    "attack": ({"target", "lethal"}, {"target"}),
+    "attack": ({"target", "lethal", "position"}, {"target"}),
+    "source_move": ({"position"}, {"position"}),
+    "source_escape": ({"source", "ability", "attack_index", "position"}, {"source", "ability"}),
+    "library_magic": ({"item", "target"}, {"item"}),
+    "library_recipe": ({"item"}, {"item"}),
+    "library_use": ({"item", "target"}, {"item"}),
     "recover": (set(), set()),
     "dodge": (set(), set()),
     "raise": ({"ability"}, {"ability"}),
@@ -36,7 +41,7 @@ PARAMETERS = {
         {"merchant", "item", "operation", "quantity"},
         {"merchant", "item", "operation"},
     ),
-    "check": ({"task", "dc"}, {"task", "dc"}),
+    "check": ({"task", "dc", "sense"}, {"task", "dc"}),
     "explore": (set(), set()),
     "travel": ({"destination"}, {"destination"}),
 }
@@ -83,6 +88,41 @@ def perform(e, command, args):
     allowed, required = PARAMETERS[command]
     if not required <= set(args) <= allowed:
         raise ValueError("Неверные параметры действия.")
+    from rpg_vkr.world_library import source_runtime
+
+    if command == "library_use":
+        from rpg_vkr.world_library.utility_rules import perform as utility
+
+        utility(e, args)
+        return
+
+    if "sense" in args and (
+        not source_runtime.enabled(e) or args["sense"] not in {"sight", "hearing", "none"}
+    ):
+        raise ValueError("Invalid sense for source check")
+
+    if source_runtime.enabled(e) and e.state["battle"] and command in {"wait", "advance"}:
+        raise ValueError("Use a combat turn instead of skipping encounter time")
+    if source_runtime.enabled(e) and e.state["battle"] and command == "rest":
+        raise ValueError("Rest requires leaving the active encounter")
+    if command == "source_escape":
+        from rpg_vkr.world_library.grapple_rules import perform_escape
+
+        perform_escape(e, args)
+        return
+    if "position" in args:
+        if not source_runtime.enabled(e) or not e.state["battle"]:
+            raise ValueError("Source movement requires a version-three encounter")
+        from rpg_vkr.world_library.source_geometry import move
+
+        speed = source_runtime.speed(e, "hero", 30)
+        if e.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules_runtime import life
+
+            speed = max(0, speed - 5 * life(e).exhaustion)
+        move(e, "hero", args["position"], speed)
+        if command == "source_move":
+            return
     if "lethal" in args and type(args["lethal"]) is not bool:
         raise ValueError("Смертельное намерение задаётся явно.")
     for field in ("targets", "enemies", "allies"):
@@ -100,6 +140,16 @@ def perform(e, command, args):
         from rpg_vkr.domain.contracts import perform as contract_action
 
         (contract_action if command == "contract" else faction_action)(e, args)
+        return
+    if command == "library_magic":
+        from rpg_vkr.world_library.magic_rules import perform as library_magic
+
+        library_magic(e, args)
+        return
+    if command == "library_recipe":
+        from rpg_vkr.world_library.recipe_rules import perform as library_recipe
+
+        library_recipe(e, args)
         return
     if e.state["battle"] and command in (
         "rest",
@@ -326,6 +376,11 @@ def perform(e, command, args):
             and e.hp(args["target"]) == 0
             and e.state.get("owner_rules_policy") != 1
         ):
+            from rpg_vkr.world_library.regeneration_rules import program as regeneration_program
+
+            regeneration = regeneration_program(e, args["target"])
+            if regeneration and regeneration["zero_death"]:
+                return
             actor, _ = e.actor(args["target"], False)
             e.actors[actor.id] = replace(actor, state=(actor.state or {}) | {"life": "dead"})
     elif command in ("recover", "dodge"):
@@ -663,13 +718,25 @@ def craft(e, command, args):
     )
 
 
-def hit(e, attacker, target):
+def hit(e, attacker, target, *, source_attack=None):
+    from rpg_vkr.world_library import source_runtime
+    from rpg_vkr.world_library.grapple_rules import advantage as grapple_advantage
+
+    if source_runtime.enabled(e) and source_runtime.cannot_attack(e, attacker, target):
+        raise ValueError("Source condition prevents this attack")
+    if attacker == "hero" and source_attack is not None:
+        raise ValueError("Source attack choices belong to source creatures")
     ammunition = None
+    source_parts = []
+    source_range_disadvantage = False
     if e.hp(attacker) <= 0:
         return
     if e.hp(target) <= 0:
         if e.state.get("owner_rules_policy") != 1:
-            return
+            from rpg_vkr.world_library.regeneration_rules import pending_zero
+
+            if not pending_zero(e, target):
+                return
         from rpg_vkr.domain.owner_rules_runtime import life
 
         if life(e, target).dead:
@@ -691,6 +758,8 @@ def hit(e, attacker, target):
             raise ValueError("Оружие сломано.")
         row = e.template(item) if item else {"dice": "1d4-1", "category": "unarmed", "stamina": 1}
         task = "ranged" if row["category"] in ("longbow", "crossbow") else "melee"
+        if source_runtime.enabled(e):
+            source_range_disadvantage = source_runtime.hero_range(e, item, row, target)
         if row["category"] == "dagger" and e.char.dexterity > e.char.strength:
             task = "stealth"
         cost = max(
@@ -703,7 +772,17 @@ def hit(e, attacker, target):
             raise ValueError("Недостаточно ST.")
         if task == "ranged":
             arrow = next(
-                (i for i in e.state["items"] if i.get("ammunition") and i["owner"] == "hero"), None
+                (
+                    i
+                    for i in e.state["items"]
+                    if i.get("ammunition")
+                    and i["owner"] == "hero"
+                    and (
+                        not row.get("required_ammunition")
+                        or i.get("ammo_kind", "arrow") == row["required_ammunition"]
+                    )
+                ),
+                None,
             )
             if arrow is None:
                 raise ValueError("Нет боеприпаса.")
@@ -732,7 +811,12 @@ def hit(e, attacker, target):
             "dice": spec.properties.get("damage_dice", "1d4"),
             "category": spec.properties.get("weapon", "dagger"),
         }
-        if row["category"] in ("longbow", "crossbow"):
+        from rpg_vkr.world_library.npc_equipment import weapon as library_npc_weapon
+
+        library_weapon = library_npc_weapon(e, attacker)
+        if library_weapon:
+            row = library_weapon
+        if not library_weapon and row["category"] in ("longbow", "crossbow"):
             if (actor.state or {}).get("ammo", 10) > 0:
                 e.actor_resource(attacker, "ammo", -1)
             else:
@@ -751,6 +835,59 @@ def hit(e, attacker, target):
         damage_bonus = ability_modifier(spec.properties.get("strength", 10)) + e.status_power(
             attacker, "power"
         )
+        if spec.properties.get("library_rules_version"):
+            from rpg_vkr.world_library.creature_rules import validate_runtime
+
+            validate_runtime(spec.properties)
+            bonus = spec.properties["attack_bonus"] - e.status_power(attacker, "weaken")
+            damage_bonus = e.status_power(attacker, "power")
+            row["damage_type"] = spec.properties.get("source_attack_element", "physical")
+            if source_attack is None and spec.properties.get("source_attack_math_version") == 2:
+                import re
+
+                base_formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", row["dice"])
+                row["dice"] = base_formula[1]
+                damage_bonus += int(base_formula[2] or 0)
+            if source_attack is not None:
+                from rpg_vkr.world_library.creature_actions import VERSION, selected
+
+                if spec.properties["library_rules_version"] not in {
+                    VERSION,
+                    source_runtime.VERSION,
+                }:
+                    raise ValueError("Attack choices require versioned source actions")
+                source_action = (
+                    source_runtime.selected(spec.properties, source_attack)
+                    if spec.properties["library_rules_version"] == source_runtime.VERSION
+                    else selected(spec.properties, source_attack)
+                )
+                source_parts = source_action.get("components", [])
+                if spec.properties["library_rules_version"] == source_runtime.VERSION:
+                    from rpg_vkr.world_library.source_geometry import distance
+
+                    separation = distance(e, attacker, target)
+                    if separation > source_action.get("maximum_range", 2000):
+                        raise ValueError("Target exceeds source attack range")
+                    source_range_disadvantage = separation > source_action.get("normal_range", 2000)
+                import re
+
+                formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", source_action["dice"])
+                row.update(
+                    dice=formula[1],
+                    damage_type=source_action["element"],
+                    category="longbow" if source_action["ranged"] else "dagger",
+                )
+                bonus = source_action["bonus"] - e.status_power(attacker, "weaken")
+                damage_bonus += int(formula[2] or 0)
+                e.events.append(
+                    {
+                        "kind": "source_attack_choice",
+                        "actor": attacker,
+                        "action_index": source_attack,
+                        "name": source_action["name"],
+                        "version": spec.properties["library_rules_version"],
+                    }
+                )
         cost = max(1, 1 + e.status_power(attacker, "slow") - e.status_power(attacker, "haste"))
         if (actor.state or {}).get("st", 10) < cost:
             e.actor_resource(attacker, "st", 3)
@@ -759,6 +896,10 @@ def hit(e, attacker, target):
     defence = e.defence(target) + e.status_power(target, "ranged_guard") * int(
         row["category"] in ("longbow", "crossbow")
     )
+    if row.get("rules_version") == "library-equipment-2":
+        defence = max(1, defence - row["penetration"])
+    if ammunition and ammunition.get("rules_version") == "library-equipment-2":
+        defence = max(1, defence - ammunition["penetration"])
     if ammunition and ammunition.get("effect") == "pierce":
         defence -= ammunition["power"]
     unconscious_melee = False
@@ -770,8 +911,23 @@ def hit(e, attacker, target):
             "crossbow",
             "focus",
         )
-    value = e.roll("1d20", "Атака")
-    if unconscious_melee:
+    if source_runtime.enabled(e):
+        value = source_runtime.roll_d20(
+            e,
+            source_runtime.attack_mode(
+                e,
+                attacker,
+                target,
+                row["category"] in ("longbow", "crossbow"),
+                extra_advantage=unconscious_melee
+                or grapple_advantage(e, attacker, target, source_attack),
+                extra_disadvantage=source_range_disadvantage,
+            ),
+            "Атака",
+        )
+    else:
+        value = e.roll("1d20", "Атака")
+    if unconscious_melee and not source_runtime.enabled(e):
         value = max(value, e.roll("1d20", "Преимущество по бессознательной цели"))
     bonus += e.status_power(target, "mark")
     if e.state.get("owner_rules_policy") == 1:
@@ -783,14 +939,35 @@ def hit(e, attacker, target):
             e.events.append(
                 {"kind": "owner_complication", "consequence": "lost_tempo", "minutes": 1}
             )
+    if source_runtime.enabled(e):
+        defence = source_runtime.parry(
+            e,
+            target,
+            attacker,
+            value,
+            value + bonus,
+            defence,
+            row["category"] in ("longbow", "crossbow", "focus"),
+        )
     success = value == 20 or value != 1 and value + bonus >= defence
     amount = 0
     if success:
-        amount = e.roll(row["dice"], "Урон оружия")
+        amount = 0 if row["dice"] == "0d4" else e.roll(row["dice"], "Урон оружия")
         critical = value == 20 or unconscious_melee
+        if source_runtime.enabled(e):
+            from rpg_vkr.world_library.source_geometry import distance
+
+            critical = value == 20 or (
+                (unconscious_melee or source_runtime.has(e, target, "paralyzed", "unconscious"))
+                and distance(e, attacker, target) <= 5
+            )
         if critical:
-            amount += e.roll(row["dice"], "Критический урон")
+            amount += 0 if row["dice"] == "0d4" else e.roll(row["dice"], "Критический урон")
         amount = max(0, amount + damage_bonus)
+        if target != "hero" and e.actor(target, False)[1].properties.get(
+            "library_resilience_rules"
+        ):
+            e.source_hit_critical = critical
         if e.state.get("owner_rules_policy") == 1:
             e.owner_hit_flags = {
                 "critical": critical,
@@ -798,7 +975,40 @@ def hit(e, attacker, target):
                 and e.args.get("lethal") is False
                 and row["category"] not in ("longbow", "crossbow", "focus"),
             }
-        delivered = e.damage(target, amount, row.get("damage_type", "physical"), attacker)
+        if len(source_parts) > 1 or (
+            attacker != "hero"
+            and source_attack is not None
+            and e.actor(attacker, False)[1].properties.get("library_rules_version")
+            == source_runtime.VERSION
+        ):
+            from rpg_vkr.world_library.damage_packets import apply as damage_packet
+
+            packet = [(amount, row.get("damage_type", "physical"))]
+            for part in source_parts[1:]:
+                formula = re.fullmatch(r"(\d+d\d+)([+-]\d+)?", part["dice"])
+                part_damage = (
+                    0 if formula[1] == "0d4" else e.roll(formula[1], "Дополнительный тип урона")
+                )
+                if critical:
+                    part_damage += (
+                        0
+                        if formula[1] == "0d4"
+                        else e.roll(formula[1], "Критический дополнительный урон")
+                    )
+                packet.append((max(0, part_damage + int(formula[2] or 0)), part["element"]))
+            condition = None
+            if (
+                e.actor(attacker, False)[1].properties.get("library_rules_version")
+                == source_runtime.VERSION
+            ):
+                packet, condition = source_runtime.attack_rider(
+                    e, attacker, target, source_attack, packet
+                )
+            delivered = damage_packet(e, target, packet, attacker)
+            if condition and e.hp(target) > 0:
+                source_runtime.apply_condition(e, **condition)
+        else:
+            delivered = e.damage(target, amount, row.get("damage_type", "physical"), attacker)
         e.owner_hit_flags = {}
         if e.state.get("catalog_revision") == 3:
             amount = delivered
@@ -823,6 +1033,10 @@ def hit(e, attacker, target):
             and (e.state.get("catalog_revision") != 3 or amount > 0)
         ):
             e.status(target, trait, 1, 2)
+    if success and source_attack is not None:
+        from rpg_vkr.world_library.grapple_rules import apply as apply_grapple
+
+        apply_grapple(e, attacker, target, source_attack)
     e.attacks.append(
         {
             "actor_id": attacker,
@@ -850,6 +1064,10 @@ def npc_round(e, command):
     battle = e.state["battle"]
     if not battle:
         return
+    from rpg_vkr.world_library import source_runtime
+
+    if source_runtime.enabled(e) and command != "encounter":
+        source_runtime.after_actor(e, "hero")
     order = list(battle["order"])
     hero_index = order.index("hero")
     followers = (
@@ -857,7 +1075,7 @@ def npc_round(e, command):
         if command == "encounter"
         else order[hero_index + 1 :] + order[:hero_index]
     )
-    for id in followers:
+    for id in source_runtime.turn_order(e, followers):
         owner_policy = e.state.get("owner_rules_policy") == 1
         if e.world.hp <= 0 and not owner_policy:
             break
@@ -871,6 +1089,10 @@ def npc_round(e, command):
             if e.hp(id) <= 0:
                 continue
         actor, spec = e.actor(id)
+        if spec.properties.get("library_rules_version"):
+            from rpg_vkr.world_library.creature_rules import before_turn
+
+            before_turn(e, id, spec.properties)
         if owner_policy:
             from rpg_vkr.domain.owner_rules_runtime import assist_fallen
 
@@ -920,7 +1142,22 @@ def npc_round(e, command):
 
             move_actor(e, id, e.scene.current)
             continue
-        hit(e, id, enemies[0])
+        from rpg_vkr.world_library.creature_actions import VERSION as SOURCE_ACTIONS_VERSION
+
+        if spec.properties.get("library_rules_version") == source_runtime.VERSION:
+            source_runtime.turn(e, id, enemies[0], spec.properties)
+        elif spec.properties.get("library_rules_version") == SOURCE_ACTIONS_VERSION:
+            from rpg_vkr.world_library.creature_actions import turn
+
+            turn(e, id, enemies[0], spec.properties)
+        else:
+            hit(e, id, enemies[0])
+        if spec.properties.get("library_rules_version") and spec.properties[
+            "library_rules_version"
+        ] not in {SOURCE_ACTIONS_VERSION, source_runtime.VERSION}:
+            from rpg_vkr.world_library.creature_rules import after_attack
+
+            after_attack(e, id, enemies[0], spec.properties)
         template = spec.properties.get("game_template_id")
         if (
             template
@@ -938,7 +1175,13 @@ def npc_round(e, command):
                 e.status(id, "power", 1, 2)
             else:
                 e.status(enemies[0], skill, 1, 2)
-    alive = [id for id in battle["order"] if battle["sides"][id] == "enemy" and e.hp(id) > 0]
+    from rpg_vkr.world_library.regeneration_rules import pending_zero
+
+    alive = [
+        id
+        for id in battle["order"]
+        if battle["sides"][id] == "enemy" and (e.hp(id) > 0 or pending_zero(e, id))
+    ]
     battle["round"] += 1
     if not alive or e.world.hp <= 0:
         e.state.update(last_battle=battle, battle=None, active=None)
@@ -981,6 +1224,9 @@ def advance(e, minutes):
             if not pending["remaining"] or not valid:
                 e.state["pending"].remove(pending)
         advance_world(e, start, now)
+        from rpg_vkr.world_library.regeneration_rules import advance as advance_regeneration
+
+        advance_regeneration(e, start, now)
         if e.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import recover_and_resolve
 
@@ -1028,6 +1274,17 @@ def trade(e, operation, args):
         else:
             price = max(1, price * e.state["living_world"].get("price_percent", 100) // 100)
         price *= quantity
+        from rpg_vkr.world_library.equipment_packs import quote as package_quote
+
+        if definition.properties.get("library_pack_rules"):
+            if e.state.get("catalog_revision") != 3:
+                raise ValueError("Package pricing requires canonical catalog3")
+            price = package_quote(
+                e,
+                definition,
+                quantity,
+                price_percent(e, definition.properties.get("game_template_id")),
+            )
         if e.state["copper"] < price:
             raise ValueError("Недостаточно денег.")
         thing = e.things[entity.id]
@@ -1059,6 +1316,21 @@ def trade(e, operation, args):
 
             price = max(1, unit_value(e, item) * price_percent(e, item.get("template")) // 200)
         price *= quantity
+        source_entity = e.actors.get(item.get("source", item["id"]))
+        if source_entity:
+            from rpg_vkr.world_library.equipment_packs import quote as package_quote
+
+            item_definition = e.definitions[source_entity.definition_id]
+            if item_definition.properties.get("library_pack_rules"):
+                if e.state.get("catalog_revision") != 3:
+                    raise ValueError("Package pricing requires canonical catalog3")
+                price = package_quote(
+                    e,
+                    item_definition,
+                    quantity,
+                    price_percent(e, item.get("template")),
+                    selling=True,
+                )
         if wallet.get("gold_cp", 0) < price:
             raise ValueError("У торговца недостаточно средств.")
         wallet["gold_cp"] -= price

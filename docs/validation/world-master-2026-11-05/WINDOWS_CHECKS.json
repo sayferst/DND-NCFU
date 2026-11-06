@@ -1,0 +1,62 @@
+{
+  "schema": "world-master-windows-checks-1",
+  "python": "3.12.10",
+  "platform": "Windows",
+  "runs": [
+    {
+      "run": "master-verified-final-tests",
+      "tests": 179,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 104.89
+    },
+    {
+      "run": "master-context-final-tests",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 23.616
+    },
+    {
+      "run": "master-regression-tests",
+      "tests": 6788,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "seconds": 518.76
+    },
+    {
+      "run": "master-transport-final-tests",
+      "tests": 134,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 32.099
+    },
+    {
+      "run": "master-all-creation-tests",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 29.018
+    }
+  ],
+  "unique_cases": 7103,
+  "unique_passed": 7102,
+  "unique_skipped": 1,
+  "not_a_full_repository_suite": true,
+  "paid_api_calls": 0,
+  "trained_models": 0,
+  "user_saves_modified": false,
+  "static_checks": {
+    "ruff_check": "passed",
+    "ruff_format_files": 540,
+    "pip_check": "passed",
+    "git_diff_check": "passed"
+  },
+  "previous_full_suite": "../world-library-2026-11-05/ALL_TESTS_VERIFICATION.json",
+  "previous_full_suite_is_not_current_runtime_validation": true
+}

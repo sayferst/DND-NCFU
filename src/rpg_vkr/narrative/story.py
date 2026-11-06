@@ -143,6 +143,11 @@ def story_context(
     from rpg_vkr.learning.corpus import references
 
     context.update(references(text))
+    from rpg_vkr.world_library.narrator import retrieve as library_retrieve
+
+    library_context = library_retrieve(text)
+    if library_context is not None:
+        context["world_library"] = library_context
     if master_question(text):
         context["task"] += " Это вопрос ведущему о наблюдаемом: ответь описанием, не от лица NPC."
     return context

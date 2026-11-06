@@ -1,0 +1,67 @@
+name: Optional world library
+on:
+  push:
+    branches: [codex/structured-world-catalog-20261105]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: library_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d library_test" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      DND_LIBRARY_TEST_DSN: postgresql://postgres:local-test-only@localhost:5432/library_test
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --require-hashes -r requirements-dev.lock
+      - run: sudo apt-get update && sudo apt-get install -y libegl1 libopengl0
+      - run: python -m pip install 'psycopg[binary]==3.3.8'
+      - run: python scripts/build_world_library.py
+      - run: git diff --exit-code -- data/world_library/seed-v1.jsonl data/world_library/manifest.json data/world_library/schemas.json
+      - run: python scripts/world_library_report.py
+      - run: git diff --exit-code -- data/world_library/runtime-coverage.json data/world_library/unsupported-creature-features.jsonl
+      - run: >-
+          python -m pytest tests/test_world_library.py tests/test_library_creature_features.py
+          tests/test_library_equipment_runtime.py tests/test_library_reference_details.py
+          tests/test_library_creature_actions.py tests/test_library_magic_runtime.py
+          tests/test_library_recipes_runtime.py tests/test_owner_rules_runtime.py -q
+          tests/test_library_migrations.py
+          tests/test_source_rules_runtime.py
+          tests/test_complete_campaign.py
+          tests/test_gm_review_transfer.py
+          tests/test_library_master_context.py
+          tests/test_library_master_requests.py
+          tests/test_library_npc_inventory.py
+          tests/test_library_utility_runtime.py
+          tests/test_catalog_ui_playable.py
+          tests/test_library_all_creation.py
+          tests/test_library_social_runtime.py
+          tests/test_source_resilience_runtime.py
+          tests/test_world_source_inventory.py
+          tests/test_library_equipment_packs.py
+          tests/test_source_attack_grammar.py
+          tests/test_source_literal_bindings.py
+          tests/test_library_equipment_designs.py
+          tests/test_source_regeneration_runtime.py
+          tests/test_source_pack_grammar.py
+          tests/test_library_proposal_transactions.py
+          tests/test_library_authored_templates.py
+          tests/test_source_repeated_attacks.py
+          tests/test_source_damage_prefix.py
+          tests/test_source_multiattack_runtime.py
+          tests/test_source_magic_runtime.py
+          tests/test_source_grapple_runtime.py

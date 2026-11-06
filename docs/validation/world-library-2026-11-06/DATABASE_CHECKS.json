@@ -1,0 +1,43 @@
+{
+  "records": 27426,
+  "by_profile": {
+    "material": 16,
+    "race": 8,
+    "ore": 40,
+    "plant": 80,
+    "ingredient": 80,
+    "weapon": 160,
+    "recipe": 720,
+    "armour": 80,
+    "ammunition": 40,
+    "tool": 120,
+    "medicine": 40,
+    "poison": 40,
+    "food": 80,
+    "book": 80,
+    "quest": 80,
+    "npc": 400,
+    "creature": 80,
+    "boss": 80,
+    "spell": 160,
+    "rune": 160,
+    "scroll": 160,
+    "combination": 80,
+    "skill": 80,
+    "source_creature": 3920,
+    "source_equipment": 391,
+    "source_reference": 20251
+  },
+  "canonical_digest": "80d50cbe15b5129260aa3803be1bd5e3eb49f5fd63c0a31c0378803130f10947",
+  "migrations": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "integrity_check": "ok",
+  "foreign_key_errors": 0,
+  "user_saves_touched": false,
+  "database_sha256": "595875f1a458d04b7df0c7367503f61e82e15f73d1265ab7f8ef6918e860c0ff",
+  "full_rule_coverage": false
+}

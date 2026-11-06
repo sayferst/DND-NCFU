@@ -1,0 +1,10 @@
+{
+  "run_id": 42050967770,
+  "job_id": 127326643078,
+  "commit": "b4c9634c795700cb40f9a047f3591e00a36b263e",
+  "postgresql": "16",
+  "conclusion": "success",
+  "passed": 109,
+  "seconds": 129.49,
+  "url": "https://github.com/sayferst/DND-NCFU/actions/runs/42050967770"
+}

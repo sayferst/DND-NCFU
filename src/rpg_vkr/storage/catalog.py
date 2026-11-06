@@ -452,6 +452,27 @@ class CatalogIndex:
                 "relations_to_hero": raw["entity"]["state"].get("relations", {}).get("hero", {}),
                 "observed_event": raw["entity"]["state"].get("last_observed_event"),
             }
+            properties = raw["definition"]["properties"]
+            if properties.get("library_social_rules", {}).get("version") == "library-social-1":
+                attributes = properties["library_attributes"]
+                value["npc_voice"]["library_personality"] = {
+                    key: attributes[key]
+                    for key in (
+                        "surname",
+                        "species",
+                        "profession",
+                        "social_status",
+                        "beliefs",
+                        "appearance",
+                        "motivation",
+                        "biography",
+                        "age_years",
+                        "territory",
+                    )
+                }
+                value["npc_voice"]["mood"] = raw["entity"]["state"].get(
+                    "mood", properties["library_social_rules"]["initial"]
+                )
         return value
 
     def export(self, path):

@@ -1,0 +1,81 @@
+{
+  "original_catalogs": {
+    "data/catalog/seed-v1.json": {
+      "records": 46,
+      "sha256": "cd9e5b2598eb42b50c8ca5907937676f34831d45ebcd3ef894ce19e145d880fb"
+    },
+    "data/gameplay/catalog-v1.json": {
+      "records": 3360,
+      "sha256": "ec77df664a3a4895e298272647054e2afad9acd880a26adda961c02ab6bed888"
+    },
+    "data/gameplay/catalog-v2.json": {
+      "records": 3360,
+      "sha256": "36bdcdc89d06f7d63f4991960ec02867f0b88f20202d125e1635eec4e6d93935"
+    },
+    "data/gameplay/catalog-v3.json": {
+      "records": 3360,
+      "sha256": "fcf8ebd1e5f7e24d00fb3f8a5ab6288fa792a90e451b5638beba12d90edb1535"
+    }
+  },
+  "reference_corpus": {
+    "counts": {
+      "cards": 19000,
+      "aliases": 200
+    },
+    "tables": [
+      "aliases",
+      "cards",
+      "lookup",
+      "lookup_config",
+      "lookup_data",
+      "lookup_docsize",
+      "lookup_idx"
+    ],
+    "sha256": "252f3d68abffcee4c612c6943ad3528fd012413559c400942d3646309abb65aa",
+    "imported_as_game_templates": 0
+  },
+  "new_library": 2864,
+  "exact_name_collisions": [
+    {
+      "library_id": "wl_material_0",
+      "name": "Ясень",
+      "existing": [
+        {
+          "source": "data/catalog/seed-v1.json",
+          "id": "mat_ash"
+        }
+      ]
+    },
+    {
+      "library_id": "wl_material_2",
+      "name": "Дуб",
+      "existing": [
+        {
+          "source": "data/catalog/seed-v1.json",
+          "id": "mat_oak"
+        }
+      ]
+    },
+    {
+      "library_id": "wl_material_8",
+      "name": "Железо",
+      "existing": [
+        {
+          "source": "data/catalog/seed-v1.json",
+          "id": "mat_iron"
+        }
+      ]
+    },
+    {
+      "library_id": "wl_material_11",
+      "name": "Медь",
+      "existing": [
+        {
+          "source": "data/catalog/seed-v1.json",
+          "id": "mat_copper"
+        }
+      ]
+    }
+  ],
+  "policy": "Legacy records remain authoritative; world adapter reuses explicit material aliases and rejects unresolved name collisions. No semantic/fuzzy deduplication claimed."
+}

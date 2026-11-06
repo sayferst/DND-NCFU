@@ -1,0 +1,16 @@
+{
+  "code_pin": "99ba7426d4be1988f15103c4eb07f3cfb0bb4ce0",
+  "run_url": "https://github.com/sayferst/DND-NCFU/actions/runs/42202982141",
+  "run_id": 42202982141,
+  "job_id": 127842597370,
+  "conclusion": "success",
+  "passed": 330,
+  "seconds": 322.14,
+  "backend": "PostgreSQL 16, Ubuntu, Python 3.12, Qt offscreen",
+  "seed_schema_manifest_rebuild_unchanged": true,
+  "coverage_report_rebuild_unchanged": true,
+  "all_7087_creation_previews_included": true,
+  "transaction_tests_both_sqlite_and_postgres": true,
+  "full_repository_suite": false,
+  "user_saves_touched": false
+}
