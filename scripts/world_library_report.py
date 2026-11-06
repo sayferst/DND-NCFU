@@ -72,7 +72,13 @@ def main():
             and r["provenance"]["generator"] == "world-library-3"
             for r in rows
         ),
-        "reference_records_without_gameplay_handler": profiles["source_reference"],
+        "reference_records_without_gameplay_handler": sum(
+            r["profile"] == "source_reference" and not r["attributes"].get("source_spell_v1")
+            for r in rows
+        ),
+        "mp_adapted_source_spell_handlers": sum(
+            bool(r["attributes"].get("source_spell_v1")) for r in rows
+        ),
         "source_equipment_with_pending_special_rules": sum(
             bool(pending_features(row)) for row in rows if row["profile"] == "source_equipment"
         ),

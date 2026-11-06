@@ -102,6 +102,26 @@ def extract(stat, attacks, features):
                 "choices": [base],
                 "followups": [{"after": before[0], "attack": after[0]}],
             }
+    # Two same-type attacks, or one of each. A duplicated word in a source
+    # sentence is accepted only in this otherwise fully matched construction.
+    mixed = re.fullmatch(
+        r"[а-яёa-z -]{1,100} совершает или две атаки ([а-яё -]+), "
+        r"или две атаки ([а-яё -]+), или по одной каждой (?:каждой )?из них\.?",
+        body,
+    )
+    if mixed:
+        found = [
+            [i for i, a in enumerate(actions) if action_matches(a["name"], phrase)]
+            for phrase in (mixed[1], mixed[2])
+        ]
+        if all(len(indices) == 1 for indices in found):
+            first, second = found[0][0], found[1][0]
+            if first != second and actions[first]["complete"] and actions[second]["complete"]:
+                return {
+                    "version": VERSION,
+                    "choices": [[first, first], [second, second], [first, second]],
+                    "followups": [],
+                }
     # Exactly one of the explicitly named alternative repeated attacks.
     match = re.fullmatch(
         r"([а-яёa-z -]{1,100} совершает (?:две|три|четыре|[1-8]) атаки) "

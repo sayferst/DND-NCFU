@@ -104,6 +104,19 @@ def validate_record(record):
         from rpg_vkr.world_library.reference_details import validate_details
 
         validate_details(a, spec, validate)
+        if a.get("mechanics_state") == "mp-adapted" and "source_spell_v1" not in a:
+            raise ValueError("MP-adapted reference requires a source spell program")
+        if "source_spell_v1" in a:
+            from rpg_vkr.world_library.source_magic_rules import validate as validate_source_spell
+
+            validate_source_spell(a["source_spell_v1"])
+            if a.get("mechanics_state") != "mp-adapted":
+                raise ValueError("Source spell must declare MP adaptation")
+            if (
+                a["record_type"] != "spell"
+                or a["details"]["level"] != a["source_spell_v1"]["level"]
+            ):
+                raise ValueError("Source spell program must match its typed spell level")
     if record["profile"] == "source_creature" and "actions_v2" in a:
         from rpg_vkr.world_library.creature_actions import validate as validate_actions
 

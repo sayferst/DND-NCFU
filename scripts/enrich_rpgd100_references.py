@@ -507,7 +507,9 @@ def spell_details(raw):
         else -1
     )
     return {
-        "level": number(raw.get("level")),
+        "level": 0
+        if clean(raw.get("level", "")).casefold() in {"заговор", "cantrip"}
+        else number(raw.get("level")),
         "school": clean(raw.get("school", ""), 100),
         "casting_unit": casting,
         "casting_amount": amount,

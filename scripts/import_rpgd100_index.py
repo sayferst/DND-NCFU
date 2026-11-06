@@ -28,6 +28,11 @@ def preserve_details(row, previous):
         fields = ("record_type", "details", "source_asset", "source_asset_sha256", "data_state")
         if all(k in old["attributes"] for k in fields):
             row["attributes"].update({k: old["attributes"][k] for k in fields})
+            if "source_spell_v1" in old["attributes"]:
+                row["attributes"].update(
+                    source_spell_v1=old["attributes"]["source_spell_v1"],
+                    mechanics_state=old["attributes"]["mechanics_state"],
+                )
             row["description"] = old["description"]
             row["links"] = old["links"]
     return row

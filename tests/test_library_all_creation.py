@@ -4,12 +4,12 @@ from collections import Counter
 
 from test_owner_rules_runtime import campaign
 
-from rpg_vkr.world_library.bridge import DESCRIPTIVE_ONLY, preview
+from rpg_vkr.world_library.bridge import is_descriptive, preview
 from rpg_vkr.world_library.model import all_records
 from rpg_vkr.world_library.store import Library
 
 
-def test_all_7087_templates_build_valid_inert_creation_proposals(tmp_path):
+def test_all_spawnable_templates_build_valid_inert_creation_proposals(tmp_path):
     library = Library.sqlite(tmp_path / "new-global-library.sqlite3")
     try:
         library.migrate()
@@ -19,7 +19,7 @@ def test_all_7087_templates_build_valid_inert_creation_proposals(tmp_path):
         before, rng = session.to_dict(), session.dice.checkpoint()
         checked = Counter()
         for row in records:
-            if row["profile"] in DESCRIPTIVE_ONLY:
+            if is_descriptive(row):
                 continue
             proposal = preview(
                 library,
@@ -30,7 +30,9 @@ def test_all_7087_templates_build_valid_inert_creation_proposals(tmp_path):
             )
             assert proposal.entities[0].id == "preview_entity", row["id"]
             checked[row["profile"]] += 1
-        assert sum(checked.values()) == 7087
+        assert sum(checked.values()) == 7087 + sum(
+            bool(r["attributes"].get("source_spell_v1")) for r in records
+        )
         assert checked["source_creature"] == 3920 and checked["npc"] == 400
         assert session.to_dict() == before and session.dice.checkpoint() == rng
         assert library.execute("PRAGMA integrity_check").fetchone()[0] == "ok"

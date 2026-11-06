@@ -157,7 +157,11 @@ def test_enrichment_report_and_source_fingerprints(references):
         if a["data_state"] in {"source-structured", "source-section"}:
             assert len(a["source_asset_sha256"]) == 64
             assert a["source_asset"].startswith("https://rpgd100.ru/")
-        assert a["mechanics_state"] == "reference-only"
+        assert a["mechanics_state"] == (
+            "mp-adapted" if a.get("source_spell_v1") else "reference-only"
+        )
+        if a.get("source_spell_v1"):
+            validate_record(row)
 
 
 def test_invalid_typed_parameters_and_broken_parents(references):
@@ -198,3 +202,21 @@ def test_card_surface_excludes_navigation_and_other_cards():
     result = "".join(parser.parts)
     assert "Shield" in result and "AC&nbsp;2" in result
     assert "Ignore" not in result and "Also ignore" not in result
+
+
+@pytest.mark.parametrize(
+    "level,expected", [("Заговор", 0), ("cantrip", 0), ("3 уровень", 3), ("не указан", -1), (0, 0)]
+)
+def test_cantrip_level_is_recovered_without_inventing_unknown_levels(level, expected):
+    assert spell_details({"level": level})["level"] == expected
+
+
+def test_index_refresh_preserves_executable_source_spell_and_its_adaptation(references):
+    old = next(r for r in references if r["attributes"].get("source_spell_v1"))
+    incoming = deepcopy(old)
+    incoming["attributes"].pop("source_spell_v1")
+    incoming["attributes"]["mechanics_state"] = "reference-only"
+    restored = preserve_details(incoming, {old["id"]: old})
+    assert restored["attributes"]["source_spell_v1"] == old["attributes"]["source_spell_v1"]
+    assert restored["attributes"]["mechanics_state"] == "mp-adapted"
+    validate_record(restored)

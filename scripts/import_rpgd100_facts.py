@@ -246,6 +246,9 @@ def extend_schema(spec):
     from rpg_vkr.world_library.multiattack_rules import register as register_multiattack
 
     register_multiattack(spec)
+    from rpg_vkr.world_library.source_magic_rules import register as register_source_magic
+
+    register_source_magic(spec)
     return spec
 
 

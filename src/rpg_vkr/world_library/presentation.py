@@ -336,6 +336,22 @@ def card(record, *, resolve=None, revision=None):
                 if type(value) is bool:
                     value = "да" if value else "нет"
                 facts.append((labels[key], str(value)))
+    if profile == "source_reference" and a.get("source_spell_v1"):
+        program = a["source_spell_v1"]
+        mechanics.update(
+            version=program["version"],
+            homebrew_fields=["MP", "reviewed formula grants use", "scene geometry"],
+        )
+        facts.insert(0, ("Расход MP", str(program["mp"])))
+        facts.insert(
+            1,
+            (
+                "Действие",
+                "Атака заклинанием"
+                if program["mode"] == "ranged_attack"
+                else "Спасбросок Телосложения",
+            ),
+        )
     parts, stock, related = [], [], []
     for link in record["links"]:
         target = resolve(link["target"]) if resolve else None

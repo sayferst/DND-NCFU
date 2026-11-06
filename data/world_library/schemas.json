@@ -2666,7 +2666,8 @@
           "ranges",
           "powers"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       },
       "resilience_v1": {
         "type": "object",
@@ -2694,7 +2695,8 @@
           "undead_fortitude",
           "supported_names"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       },
       "regeneration_v1": {
         "type": "object",
@@ -2757,7 +2759,8 @@
           "suppress_elements",
           "zero_death",
           "supported_names"
-        ]
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       },
       "multiattack_v1": {
         "type": "object",
@@ -2965,7 +2968,8 @@
           "unit_name",
           "pack_price_cp",
           "pack_mass_g"
-        ]
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       }
     },
     "required": [
@@ -3015,7 +3019,8 @@
       "mechanics_state": {
         "type": "string",
         "enum": [
-          "reference-only"
+          "reference-only",
+          "mp-adapted"
         ]
       },
       "record_type": {
@@ -3049,6 +3054,77 @@
           "needs-source-resolution",
           "index-control"
         ]
+      },
+      "source_spell_v1": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "library-source-magic-1"
+            ]
+          },
+          "level": {
+            "type": "integer",
+            "enum": [
+              0
+            ]
+          },
+          "mp": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "ranged_attack",
+              "constitution_save"
+            ]
+          },
+          "range_ft": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 120
+          },
+          "dice": {
+            "type": "string",
+            "enum": [
+              "1d12"
+            ]
+          },
+          "element": {
+            "type": "string",
+            "enum": [
+              "poison"
+            ]
+          },
+          "source_prose_sha256": {
+            "type": "string",
+            "pattern": "[a-f0-9]{64}",
+            "maxLength": 64
+          },
+          "adaptation": {
+            "type": "string",
+            "enum": [
+              "MP; reviewed formula grants use; scene geometry"
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "level",
+          "mp",
+          "mode",
+          "range_ft",
+          "dice",
+          "element",
+          "source_prose_sha256",
+          "adaptation"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
       }
     },
     "required": [
@@ -3902,7 +3978,8 @@
       "multiattack",
       "multiattack_complete"
     ],
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "library_magic_runtime": {
     "type": "object",
@@ -3994,7 +4071,8 @@
       "charges",
       "effects"
     ],
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "source_features_v3": {
     "type": "object",
@@ -4517,7 +4595,8 @@
       "ranges",
       "powers"
     ],
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "source_resilience_v1": {
     "type": "object",
@@ -4545,7 +4624,8 @@
       "undead_fortitude",
       "supported_names"
     ],
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "equipment_pack_v1": {
     "type": "object",
@@ -4590,7 +4670,8 @@
       "unit_name",
       "pack_price_cp",
       "pack_mass_g"
-    ]
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "source_regeneration_v1": {
     "type": "object",
@@ -4653,7 +4734,8 @@
       "suppress_elements",
       "zero_death",
       "supported_names"
-    ]
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "authored_proposal": {
     "type": "object",
@@ -4829,8 +4911,7 @@
           "attributes",
           "links"
         ],
-        "additionalProperties": false,
-        "$schema": "https://json-schema.org/draft/2020-12/schema"
+        "additionalProperties": false
       },
       "model": {
         "type": "string",
@@ -4847,7 +4928,8 @@
       "record",
       "model",
       "prompt_version"
-    ]
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   },
   "source_multiattack_v1": {
     "type": "object",
@@ -4903,6 +4985,78 @@
       "version",
       "choices",
       "followups"
-    ]
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_spell_v1": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "version": {
+        "type": "string",
+        "enum": [
+          "library-source-magic-1"
+        ]
+      },
+      "level": {
+        "type": "integer",
+        "enum": [
+          0
+        ]
+      },
+      "mp": {
+        "type": "integer",
+        "enum": [
+          1
+        ]
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "ranged_attack",
+          "constitution_save"
+        ]
+      },
+      "range_ft": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 120
+      },
+      "dice": {
+        "type": "string",
+        "enum": [
+          "1d12"
+        ]
+      },
+      "element": {
+        "type": "string",
+        "enum": [
+          "poison"
+        ]
+      },
+      "source_prose_sha256": {
+        "type": "string",
+        "pattern": "[a-f0-9]{64}",
+        "maxLength": 64
+      },
+      "adaptation": {
+        "type": "string",
+        "enum": [
+          "MP; reviewed formula grants use; scene geometry"
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "level",
+      "mp",
+      "mode",
+      "range_ft",
+      "dice",
+      "element",
+      "source_prose_sha256",
+      "adaptation"
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
   }
 }

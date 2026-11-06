@@ -36,7 +36,7 @@
   "simple_multiattack": 327,
   "unconditional_regeneration": 3,
   "creatures_with_unsupported_features": 3785,
-  "unsupported_feature_occurrences": 15178,
+  "unsupported_feature_occurrences": 15175,
   "homebrew_magic_templates_with_handlers": 560,
   "homebrew_recipes_with_handlers": 720,
   "undead_fortitude": 39,
@@ -46,7 +46,8 @@
   "homebrew_actors_with_full_stat_blocks": 560,
   "homebrew_npcs_with_social_programs": 400,
   "homebrew_utilities_with_handlers": 320,
-  "reference_records_without_gameplay_handler": 20251,
+  "reference_records_without_gameplay_handler": 20249,
+  "mp_adapted_source_spell_handlers": 2,
   "source_equipment_with_pending_special_rules": 353,
   "source_equipment_with_original_visual_designs": 391,
   "full_rule_coverage": false

@@ -32,6 +32,12 @@ LEGACY_MATERIALS = {
 }
 
 
+def is_descriptive(row):
+    return row["profile"] in DESCRIPTIVE_ONLY and not (
+        row["profile"] == "source_reference" and row["attributes"].get("source_spell_v1")
+    )
+
+
 def preview(
     library, session, template_id, instance_id, *, with_inventory=False, new_revision=False
 ):
@@ -77,7 +83,7 @@ def preview(
             ):
                 resolved[id] = legacy_id
                 return legacy_id
-        if row["profile"] in DESCRIPTIVE_ONLY:
+        if is_descriptive(row):
             raise ValueError("No executable handler for this content profile")
         definition_id = id
         if id in existing:
@@ -221,6 +227,18 @@ def preview(
                 mass_g=a.get("mass_g", 1),
                 durability=a.get("durability", 1),
             )
+        if profile == "source_reference" and a.get("source_spell_v1"):
+            if (
+                not getattr(session, "is_unified", False)
+                or session.gameplay.get("catalog_revision") != 3
+            ):
+                raise ValueError("Source formula requires canonical catalog3")
+            from rpg_vkr.world_library.source_magic_rules import validate as validate_source_spell
+
+            validate_source_spell(a["source_spell_v1"])
+            properties.update(
+                library_source_spell=a["source_spell_v1"], portable=True, mass_g=1, durability=1
+            )
         properties |= {
             "library_id": id,
             "library_revision": revision,
@@ -280,7 +298,7 @@ def preview(
             {"condition": target_definition.properties["durability"]}
             if any(
                 target_definition.properties.get(key)
-                for key in ("library_magic_rules", "library_recipe_rules")
+                for key in ("library_magic_rules", "library_recipe_rules", "library_source_spell")
             )
             or target_definition.properties.get("library_item_rules", {}).get("rules_version")
             == "library-equipment-2"

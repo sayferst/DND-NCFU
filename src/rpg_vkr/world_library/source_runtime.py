@@ -40,7 +40,9 @@ def rules(engine, actor):
 
 def initialize(engine):
     if not any(
-        d.properties.get("library_rules_version") == VERSION for d in engine.definitions.values()
+        d.properties.get("library_rules_version") == VERSION
+        or d.properties.get("library_source_spell")
+        for d in engine.definitions.values()
     ):
         return
     engine.state.setdefault(

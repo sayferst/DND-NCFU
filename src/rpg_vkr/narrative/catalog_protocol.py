@@ -185,7 +185,7 @@ def planning_context(session, query=""):
             properties = definition.properties
             command = (
                 "library_magic"
-                if properties.get("library_magic_rules")
+                if properties.get("library_magic_rules") or properties.get("library_source_spell")
                 else "library_recipe"
                 if properties.get("library_recipe_rules")
                 else "library_use"
@@ -200,7 +200,9 @@ def planning_context(session, query=""):
                         "command": command,
                         "args": {"item": entity.id},
                         "utility": properties.get("library_utility_rules", {}).get("profile", ""),
-                        "mp": properties.get("library_magic_rules", {}).get("mp", 0),
+                        "mp": properties.get(
+                            "library_source_spell", properties.get("library_magic_rules", {})
+                        ).get("mp", 0),
                     }
                 )
             if len(items) == 12:

@@ -7,7 +7,7 @@ from pathlib import Path
 
 from rpg_vkr.domain.catalog import Registration, register, seed_catalog
 from rpg_vkr.domain.interactions import identifier
-from rpg_vkr.world_library.bridge import preview
+from rpg_vkr.world_library.bridge import is_descriptive, preview
 from rpg_vkr.world_library.model import digest
 from rpg_vkr.world_library.store import Library
 
@@ -92,9 +92,7 @@ def prepare(session, requests, *, path=None, model="world-master"):
                     "revision": library.revision(row["id"]),
                     "digest": digest(row),
                     "mechanics": {
-                        "version": "descriptive"
-                        if row["profile"] in {"source_reference", "skill", "race"}
-                        else "engine-template"
+                        "version": "descriptive" if is_descriptive(row) else "engine-template"
                     },
                 }
             )

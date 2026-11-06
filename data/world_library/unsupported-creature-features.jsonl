@@ -11,8 +11,8 @@
 {"features": ["Задержка дыхания"], "id": "rpg_6cfca2e70f6b5e54eab81c7d", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=archelon-al"}
 {"features": ["Стойкость нежити"], "id": "rpg_924bd9691a4fe96eafedbd01", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=archelon-zombie-al"}
 {"features": ["Свечение", "Необычная природа", "Вытягивающая тепло лоза"], "id": "rpg_e27520be382628472c30b6cb", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=astral-blight-sas"}
-{"features": ["Паучье лазание", "Мультиатака", "Использование заклинание (псионика)"], "id": "rpg_905b9a41182ac690f1ec5bc5", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aartuk-starhorror-sas"}
-{"features": ["Паучье лазание", "Мультиатака"], "id": "rpg_54317a69810e25e52f534786", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aartuk-weedling-sas"}
+{"features": ["Паучье лазание", "Использование заклинание (псионика)"], "id": "rpg_905b9a41182ac690f1ec5bc5", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aartuk-starhorror-sas"}
+{"features": ["Паучье лазание"], "id": "rpg_54317a69810e25e52f534786", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aartuk-weedling-sas"}
 {"features": ["Амфибия", "Власть над водами", "Божественная слава", "Использование заклинаний"], "id": "rpg_31bfac78527a151700b7f97b", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=avi-wdh"}
 {"features": ["Неисправность", "1–10", "11–12: «Я чувствую, как рассудок покидает меня.»", "13–14: «Вы меня обезоружили!»", "15–16: «Кто выключил свет?»", "17–20: «Волшебного вам дня!»", "Необычная природа"], "id": "rpg_e84d97ee2bc3b78acbe797ed", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=autognome-sas"}
 {"features": ["Прыжок с места", "Увёртливость", "Мультиатака", "Клеймо", "Невероятное уклонение"], "id": "rpg_427e3192c2f01a03d7b5e896", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=agdon-longscarf-wbw"}
@@ -28,7 +28,7 @@
 {"features": ["Аура угрозы", "Свечение", "Бестелесное перемещение", "Мультиатака", "Использование заклинаний", "Телепорт"], "id": "rpg_606f871db02a0a2b799e892b", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=lantern-archon-pam"}
 {"features": ["Врождённое колдовство (Псионика)", "Мультиатака", "Длинный меч"], "id": "rpg_7f12d28a6cb25bf6f3b79a89", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=auspicia-dran-ai"}
 {"features": ["Пикирующая атака", "Использование заклинаний", "Призыв воздушного элементаля"], "id": "rpg_421446011622e3032d72dfa3", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=asharra-toa"}
-{"features": ["Паучье лазание", "Мультиатака", "Использование заклинание (псионика)"], "id": "rpg_8bf1888ffd365376936965ad", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aartuk-elder-sas"}
+{"features": ["Паучье лазание", "Использование заклинание (псионика)"], "id": "rpg_8bf1888ffd365376936965ad", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aartuk-elder-sas"}
 {"features": ["Защита без доспехов", "Мультиатака", "Безоружный удар", "Отражение снарядов"], "id": "rpg_c6b2ad6d870130cb4585e0c3", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=martial-arts-adept-mpmm"}
 {"features": ["Защита без доспехов", "Храбрый", "Проворство полуросликов", "Мультиатака", "Безоружный удар", "Отражение снарядов"], "id": "rpg_41e855d92b4d82d4b4ddba01", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=zhent-martial-arts-adept-wdh"}
 {"features": ["Острый слух и тонкий нюх"], "id": "rpg_474e175757941c04aea0d30e", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=hell-hound-mm14"}

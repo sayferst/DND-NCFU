@@ -93,3 +93,17 @@ def test_alternative_sequence_uses_reachable_attack_and_preserves_all_its_attack
     assert len(e.attacks) == 2
     choices = [r["action_index"] for r in e.events if r["kind"] == "source_attack_choice"]
     assert choices == [1, 1]
+
+
+@pytest.mark.parametrize("duplicate", [False, True])
+def test_two_same_or_one_each_is_an_explicit_complete_choice(duplicate):
+    stat = raw()
+    stat["действия"][0]["описание"] = (
+        "Аартук совершает или две атаки Хвостом, или две атаки Клювом, "
+        "или по одной каждой " + ("каждой " if duplicate else "") + "из них."
+    )
+    stat["действия"] = [stat["действия"][0], stat["действия"][1], stat["действия"][3]]
+    a = attacks(stat)
+    p = extract(stat, a, features(stat, a))
+    assert p["choices"] == [[0, 0], [1, 1], [0, 1]]
+    validate(p, a["actions"], features(stat, a))

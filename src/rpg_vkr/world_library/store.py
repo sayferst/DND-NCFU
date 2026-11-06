@@ -77,7 +77,7 @@ class Library:
                 "PRIMARY KEY, checksum TEXT NOT NULL)"
             )
             old = self.execute("SELECT checksum FROM wl_migrations WHERE version=1").fetchone()
-            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 7:
+            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 8:
                 raise ValueError("Unsupported newer library migration")
             checksum = digest(sql)
             if old:
@@ -278,6 +278,34 @@ class Library:
                     ("library-multiattack-1", digest(schemas()["source_multiattack_v1"])),
                 )
                 self.execute("INSERT INTO wl_migrations VALUES(7,?)", (checksum7,))
+            sql8 = (ROOT / "data/world_library/migrations/008_mp_source_spells.sql").read_text(
+                encoding="utf-8"
+            )
+            checksum8 = digest(sql8)
+            old8 = self.execute("SELECT checksum FROM wl_migrations WHERE version=8").fetchone()
+            if old8:
+                if old8[0] != checksum8:
+                    raise ValueError("Migration checksum changed")
+            else:
+                for statement in sql8.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
+                for key, value in schemas().items():
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?) "
+                        "ON CONFLICT(id,digest) DO NOTHING",
+                        (key, digest(value), dump(value)),
+                    )
+                    self.execute(
+                        "INSERT INTO wl_schemas VALUES(?,?) ON CONFLICT(id) DO UPDATE SET "
+                        "schema_json=excluded.schema_json",
+                        (key, dump(value)),
+                    )
+                self.execute(
+                    "INSERT INTO wl_rulesets VALUES(?,?)",
+                    ("library-source-magic-1", digest(schemas()["source_spell_v1"])),
+                )
+                self.execute("INSERT INTO wl_migrations VALUES(8,?)", (checksum8,))
 
     def _decode(self, value):
         return json.loads(value) if isinstance(value, str) else value

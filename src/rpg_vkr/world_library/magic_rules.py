@@ -110,6 +110,10 @@ def perform(engine, args):
     item = engine.owned(args["item"])
     entity = engine.actors[item.get("source", item["id"])]
     definition = engine.definitions[entity.definition_id]
+    if definition.properties.get("library_source_spell"):
+        from rpg_vkr.world_library.source_magic_rules import perform as perform_source_spell
+
+        return perform_source_spell(engine, args)
     rules = definition.properties.get("library_magic_rules")
     if not rules:
         raise ValueError("This item has no checked magic handler")
