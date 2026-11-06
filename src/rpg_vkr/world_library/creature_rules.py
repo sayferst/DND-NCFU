@@ -101,6 +101,12 @@ def compile_creature(record):
         validate_regeneration(a["regeneration_v1"])
         extended["library_regeneration_rules"] = a["regeneration_v1"]
         implemented.update(a["regeneration_v1"]["supported_names"])
+    if "multiattack_v1" in a:
+        from rpg_vkr.world_library.multiattack_rules import validate as validate_multiattack
+
+        validate_multiattack(a["multiattack_v1"], a["actions_v2"]["actions"], a["features_v3"])
+        extended["library_multiattack_rules"] = a["multiattack_v1"]
+        implemented.add("Мультиатака")
     return {
         "hp_max": hp,
         "armour_class": ac,
@@ -156,6 +162,14 @@ def validate_runtime(properties):
         pattern = DICE
     if not re.fullmatch(pattern, properties.get("damage_dice", "")):
         raise ValueError("Invalid creature damage dice")
+    if "library_multiattack_rules" in properties:
+        from rpg_vkr.world_library.multiattack_rules import validate as validate_multiattack
+
+        validate_multiattack(
+            properties["library_multiattack_rules"],
+            properties["source_actions_v2"]["actions"],
+            properties["source_features_v3"],
+        )
     elements = {
         "fire",
         "cold",

@@ -20,6 +20,7 @@ def main():
     rows = [json.loads(line) for line in path.read_text("utf-8").splitlines()]
     for row in rows:
         row["attributes"].pop("features_v3", None)
+        row["attributes"].pop("multiattack_v1", None)
     validate_bundle(rows)
     by_id = {row["id"]: row for row in rows}
     report = json.loads((directory / "rpgd100-import-report.json").read_text("utf-8"))
@@ -46,6 +47,15 @@ def main():
                 row["attributes"]["features_v3"] = extract(
                     entry["статблок"], row["attributes"]["actions_v2"]
                 )
+                from rpg_vkr.world_library.multiattack_rules import extract as extract_multiattack
+
+                program = extract_multiattack(
+                    entry["статблок"],
+                    row["attributes"]["actions_v2"],
+                    row["attributes"]["features_v3"],
+                )
+                if program:
+                    row["attributes"]["multiattack_v1"] = program
                 matched.add(id)
     if matched != set(by_id):
         raise ValueError("Source reconciliation is incomplete")

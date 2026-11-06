@@ -130,7 +130,7 @@ def source_sequence(body, actions):
     ):
         return [options[0]] * total
     result = []
-    for part in re.split(r"[,;]|\s+и\s+", tail):
+    for part in filter(str.strip, re.split(r"[,;]|\s+и\s+", tail)):
         count = re.search(r"\b(\d+|" + "|".join(counts) + r")\b", part)
         found = [
             i for i, a in enumerate(actions) if a["complete"] and action_matches(a["name"], part)

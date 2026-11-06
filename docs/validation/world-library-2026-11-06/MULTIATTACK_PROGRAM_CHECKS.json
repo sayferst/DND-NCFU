@@ -1,0 +1,28 @@
+{
+  "profiled_passed": 83,
+  "profiled_seconds": 18.11,
+  "extra_multiattack_cases_passed": 5,
+  "sets_overlap": true,
+  "all_creation_proposals_checked": 7087,
+  "migration_versions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "backend_for_all_creation": "SQLite in-memory",
+  "fk_errors": 0,
+  "integrity": "ok",
+  "world_and_rng_unchanged": true,
+  "source_programs": 52,
+  "alternative_programs": 51,
+  "conditional_programs": 1,
+  "unsupported_before": 15279,
+  "unsupported_after": 15178,
+  "reference_records_pending": 20251,
+  "full_repository_suite": false,
+  "user_saves_touched": false
+}

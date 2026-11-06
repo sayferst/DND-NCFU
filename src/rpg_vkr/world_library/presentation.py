@@ -153,6 +153,26 @@ def card(record, *, resolve=None, revision=None):
                 ),
             ]
         )
+        if "multiattack_v1" in a:
+            program = a["multiattack_v1"]
+            actions = a["actions_v2"]["actions"]
+
+            def names(sequence):
+                return " → ".join(actions[i]["name"] for i in sequence)
+
+            facts.append(
+                ("Варианты мультиатаки", "; либо ".join(names(s) for s in program["choices"]))
+            )
+            for trigger in program["followups"]:
+                facts.append(
+                    (
+                        "После попадания",
+                        actions[trigger["after"]]["name"]
+                        + " → "
+                        + actions[trigger["attack"]]["name"]
+                        + "; та же живая цель, в пределах дальности",
+                    )
+                )
         if "regeneration_v1" in a:
             program = a["regeneration_v1"]
             detail = f"+{program['amount']} HP в начале своего хода"

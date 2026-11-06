@@ -243,6 +243,9 @@ def extend_schema(spec):
     from rpg_vkr.world_library.proposal_policy import register as register_proposals
 
     register_proposals(spec)
+    from rpg_vkr.world_library.multiattack_rules import register as register_multiattack
+
+    register_multiattack(spec)
     return spec
 
 

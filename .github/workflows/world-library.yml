@@ -62,3 +62,4 @@ jobs:
           tests/test_library_authored_templates.py
           tests/test_source_repeated_attacks.py
           tests/test_source_damage_prefix.py
+          tests/test_source_multiattack_runtime.py

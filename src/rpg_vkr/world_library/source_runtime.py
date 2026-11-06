@@ -582,8 +582,15 @@ def turn(engine, actor, target, properties):
 
         old_turn(engine, actor, target, properties)
         return
-    sequence = spec["multiattack"] or [available[0]]
-    if not spec["multiattack"] and len(actions) == 1:
+    program = properties.get("library_multiattack_rules")
+    if program:
+        from rpg_vkr.world_library.multiattack_rules import choose, validate
+
+        validate(program, actions, spec)
+        sequence = choose(engine, actor, target, program, lambda i: selected(properties, i))
+    else:
+        sequence = spec["multiattack"] or [available[0]]
+    if not program and not spec["multiattack"] and len(actions) == 1:
         sequence *= 1 + properties.get("source_extra_attacks", 0)
     movement = speed(engine, actor, max(spec["speed"], spec["fly_speed"]))
     if engine.state.get("owner_rules_policy") == 1:
@@ -601,3 +608,10 @@ def turn(engine, actor, target, properties):
         if distance(engine, actor, target) > action["maximum_range"]:
             break
         hit(engine, actor, target, source_attack=index)
+        if program and engine.attacks[-1]["hit"]:
+            for followup in program["followups"]:
+                if followup["after"] != index or engine.hp(actor) <= 0 or engine.hp(target) <= 0:
+                    continue
+                extra = selected(properties, followup["attack"])
+                if distance(engine, actor, target) <= extra["maximum_range"]:
+                    hit(engine, actor, target, source_attack=followup["attack"])
