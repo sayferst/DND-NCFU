@@ -134,6 +134,21 @@
               "unreviewed",
               "engineer-reviewed"
             ]
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "prompt_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "engine_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
           }
         },
         "required": [
@@ -409,6 +424,12 @@
       },
       "fictional": {
         "type": "boolean"
+      },
+      "utility_version": {
+        "type": "string",
+        "enum": [
+          "library-utility-1"
+        ]
       }
     },
     "required": [
@@ -464,6 +485,12 @@
       },
       "fictional": {
         "type": "boolean"
+      },
+      "utility_version": {
+        "type": "string",
+        "enum": [
+          "library-utility-1"
+        ]
       }
     },
     "required": [
@@ -516,6 +543,12 @@
         "type": "integer",
         "minimum": 1,
         "maximum": 365
+      },
+      "utility_version": {
+        "type": "string",
+        "enum": [
+          "library-utility-1"
+        ]
       }
     },
     "required": [
@@ -777,6 +810,12 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 400
+      },
+      "utility_version": {
+        "type": "string",
+        "enum": [
+          "library-utility-1"
+        ]
       }
     },
     "required": [
@@ -828,6 +867,12 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 400
+      },
+      "utility_version": {
+        "type": "string",
+        "enum": [
+          "library-utility-1"
+        ]
       }
     },
     "required": [
@@ -1007,6 +1052,15 @@
         "type": "string",
         "maxLength": 40,
         "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
+      },
+      "social_version": {
+        "type": "string",
+        "enum": [
+          "library-social-1"
+        ]
+      },
+      "can_trade": {
+        "type": "boolean"
       }
     },
     "required": [
@@ -1195,6 +1249,15 @@
         "type": "string",
         "maxLength": 40,
         "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
+      },
+      "social_version": {
+        "type": "string",
+        "enum": [
+          "library-social-1"
+        ]
+      },
+      "can_trade": {
+        "type": "boolean"
       }
     },
     "required": [
@@ -1383,6 +1446,15 @@
         "type": "string",
         "maxLength": 40,
         "pattern": "[1-9][0-9]?d(?:4|6|8|10|12)(?:[+-][0-9]{1,2})?"
+      },
+      "social_version": {
+        "type": "string",
+        "enum": [
+          "library-social-1"
+        ]
+      },
+      "can_trade": {
+        "type": "boolean"
       }
     },
     "required": [
@@ -4534,6 +4606,200 @@
       "suppress_elements",
       "zero_death",
       "supported_names"
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "authored_proposal": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "record": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "[a-z][a-z0-9_]{0,63}"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "weapon",
+              "armour",
+              "ammunition",
+              "tool",
+              "medicine",
+              "poison",
+              "food",
+              "ingredient",
+              "plant",
+              "ore",
+              "material",
+              "book",
+              "quest",
+              "npc",
+              "creature",
+              "boss",
+              "spell",
+              "rune",
+              "scroll",
+              "combination",
+              "skill",
+              "race",
+              "recipe",
+              "source_creature",
+              "source_equipment",
+              "source_reference"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "minLength": 40,
+            "maxLength": 1800
+          },
+          "price_cp": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "attributes": {
+            "type": "object"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "relation": {
+                  "type": "string",
+                  "enum": [
+                    "component",
+                    "input",
+                    "output",
+                    "spell",
+                    "combines",
+                    "species",
+                    "starting_inventory",
+                    "parent",
+                    "child"
+                  ]
+                },
+                "target": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64,
+                  "pattern": "[a-z][a-z0-9_]{0,63}"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                }
+              },
+              "required": [
+                "relation",
+                "target",
+                "quantity",
+                "role"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 512
+          },
+          "provenance": {
+            "type": "object",
+            "properties": {
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "invented/homebrew",
+                  "source-facts/original-description"
+                ]
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "generator": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "review": {
+                "type": "string",
+                "enum": [
+                  "unreviewed",
+                  "engineer-reviewed"
+                ]
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "prompt_version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "engine_version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "origin",
+              "source",
+              "generator",
+              "review"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "name",
+          "profile",
+          "category",
+          "description",
+          "price_cp",
+          "attributes",
+          "links"
+        ],
+        "additionalProperties": false
+      },
+      "model": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "prompt_version": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    },
+    "required": [
+      "record",
+      "model",
+      "prompt_version"
     ],
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   }

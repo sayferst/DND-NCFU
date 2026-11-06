@@ -29,8 +29,13 @@ def main():
     for command in ("import", "export", "propose", "stage"):
         p = sub.add_parser(command)
         p.add_argument("file", type=Path)
+        if command == "propose":
+            p.add_argument("--model")
+            p.add_argument("--prompt-version")
     approve = sub.add_parser("approve")
     approve.add_argument("id")
+    for command in ("proposal", "reject"):
+        sub.add_parser(command).add_argument("id")
     update = sub.add_parser("update")
     update.add_argument("file", type=Path)
     update.add_argument("--revision", type=int, required=True)
@@ -108,12 +113,36 @@ def main():
         elif args.command == "retire":
             library.retire(args.id, args.revision, actor="local-maintainer")
         elif args.command == "propose":
-            record = json.loads(args.file.read_text(encoding="utf-8"))
+            from uuid import uuid4
+
+            value = json.loads(args.file.read_text(encoding="utf-8"))
+            if isinstance(value, dict) and "record" in value:
+                if set(value) != {"record", "model", "prompt_version"}:
+                    raise ValueError("Expected record, model and prompt_version")
+                record, model, prompt_version = (
+                    value["record"],
+                    value["model"],
+                    value["prompt_version"],
+                )
+            else:
+                record, model, prompt_version = value, "manual-json", "local-1"
+            proposal = library.propose_authored(
+                record,
+                model=args.model or model,
+                prompt_version=args.prompt_version or prompt_version,
+                request_id=uuid4().hex,
+            )
             result = {
-                "proposal": library.propose(record, model="manual-json", prompt_version="local-1")
+                "proposal": proposal,
+                "record_id": library.proposal(proposal)["record"]["id"],
+                "status": "pending",
             }
         elif args.command == "approve":
             library.approve(args.id, actor="local-maintainer")
+        elif args.command == "proposal":
+            result = library.proposal(args.id)
+        elif args.command == "reject":
+            library.reject(args.id, actor="local-maintainer")
         elif args.command == "stage":
             from rpg_vkr.world_library.migration import stage
 

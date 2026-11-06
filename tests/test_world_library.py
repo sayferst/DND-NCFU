@@ -223,6 +223,7 @@ def test_foreign_database_refused(tmp_path):
     path = tmp_path / "foreign.sqlite3"
     with sqlite3.connect(path) as db:
         db.execute("CREATE TABLE user_save(payload TEXT)")
+    db.close()
     before = path.read_bytes()
     with pytest.raises(ValueError, match="Foreign"):
         Library.sqlite(path)

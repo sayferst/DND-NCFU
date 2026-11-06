@@ -51,11 +51,10 @@ class Library:
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 yield
+                self.db.commit()
             except BaseException:
                 self.db.rollback()
                 raise
-            else:
-                self.db.commit()
 
     def migrate(self):
         """Versioned opt-in DDL; no access to application saves."""
@@ -78,7 +77,7 @@ class Library:
                 "PRIMARY KEY, checksum TEXT NOT NULL)"
             )
             old = self.execute("SELECT checksum FROM wl_migrations WHERE version=1").fetchone()
-            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 5:
+            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 6:
                 raise ValueError("Unsupported newer library migration")
             checksum = digest(sql)
             if old:
@@ -223,6 +222,34 @@ class Library:
                     ("library-regeneration-1", digest(schemas()["source_regeneration_v1"])),
                 )
                 self.execute("INSERT INTO wl_migrations VALUES(5,?)", (checksum5,))
+            sql6 = (ROOT / "data/world_library/migrations/006_authored_proposals.sql").read_text(
+                encoding="utf-8"
+            )
+            checksum6 = digest(sql6)
+            old6 = self.execute("SELECT checksum FROM wl_migrations WHERE version=6").fetchone()
+            if old6:
+                if old6[0] != checksum6:
+                    raise ValueError("Migration checksum changed")
+            else:
+                for statement in sql6.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
+                for key, value in schemas().items():
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?) "
+                        "ON CONFLICT(id,digest) DO NOTHING",
+                        (key, digest(value), dump(value)),
+                    )
+                    self.execute(
+                        "INSERT INTO wl_schemas VALUES(?,?) ON CONFLICT(id) DO UPDATE SET "
+                        "schema_json=excluded.schema_json",
+                        (key, dump(value)),
+                    )
+                self.execute(
+                    "INSERT INTO wl_rulesets VALUES(?,?)",
+                    ("world-proposal-1", digest(schemas()["authored_proposal"])),
+                )
+                self.execute("INSERT INTO wl_migrations VALUES(6,?)", (checksum6,))
 
     def _decode(self, value):
         return json.loads(value) if isinstance(value, str) else value
@@ -289,7 +316,11 @@ class Library:
 
     def import_records(self, records, *, actor="engine/import", expected=None):
         """All-or-nothing, immutable revisions, optimistic updates, idempotent seeds."""
-        if not actor.strip():
+        return self._import_records(records, actor=actor, expected=expected)
+
+    def _import_records(self, records, *, actor, expected=None, proposal_id=None):
+        """One transaction also covers proposal approval when called by approve()."""
+        if type(actor) is not str or not actor.strip() or len(actor) > 128:
             raise ValueError("Audit actor required")
         expected = expected or {}
         with self.transaction():
@@ -298,7 +329,50 @@ class Library:
                 self.execute("LOCK TABLE wl_templates IN SHARE ROW EXCLUSIVE MODE")
             else:
                 self.execute("UPDATE wl_migrations SET version=version WHERE version=1")
+            approval = None
+            if proposal_id is not None:
+                row = self.execute(
+                    "SELECT status,payload FROM wl_proposals WHERE id=?"
+                    + (" FOR UPDATE" if self.postgres else ""),
+                    (proposal_id,),
+                ).fetchone()
+                if row is None:
+                    raise KeyError(proposal_id)
+                approval = self._decode(row[1])
+                if digest(approval) != proposal_id:
+                    raise ValueError("Proposal payload digest mismatch")
+                if row[0] == "approved":
+                    return len(records)
+                if row[0] != "pending":
+                    raise ValueError("Only pending proposals can be approved")
+                if len(records) != 1 or records[0] != approval["record"] or expected:
+                    raise ValueError("Approval must import its exact immutable proposal")
+                dependencies = approval.get("dependencies")
+                targets = {link["target"] for link in records[0]["links"]}
+                if dependencies is None and targets:
+                    raise ValueError("Legacy proposal needs resubmission with pinned dependencies")
+                if dependencies is not None:
+                    if set(dependencies) != targets:
+                        raise ValueError("Invalid proposal dependency set")
+                    for target, pinned in dependencies.items():
+                        try:
+                            actual = self.get(target)
+                        except KeyError as exc:
+                            raise ValueError("Proposal dependency was retired or removed") from exc
+                        if (
+                            set(pinned) != {"revision", "digest"}
+                            or type(pinned["revision"]) is not int
+                            or self.revision(target) != pinned["revision"]
+                            or digest(actual) != pinned["digest"]
+                        ):
+                            raise ValueError("Stale proposal dependency; review a new proposal")
             previous = {r["id"]: r for r in self.all(include_retired=True)}
+            if (
+                approval
+                and records[0]["id"] in previous
+                and digest(previous[records[0]["id"]]) != digest(records[0])
+            ):
+                raise ValueError("Proposals cannot overwrite established templates")
             if len({r["id"] for r in records}) != len(records):
                 raise ValueError("Duplicate incoming ID")
             merged = previous | {r["id"]: r for r in records}
@@ -371,6 +445,30 @@ class Library:
                             link["role"],
                         ),
                     )
+            if proposal_id is not None:
+                cursor = self.execute(
+                    "UPDATE wl_proposals SET status='approved' WHERE id=? AND status='pending'",
+                    (proposal_id,),
+                )
+                if cursor.rowcount != 1:
+                    raise ValueError("Proposal status changed during approval")
+                self.execute(
+                    "INSERT INTO wl_audit(actor,action,subject,payload) VALUES(?,?,?,?)",
+                    (
+                        actor,
+                        "proposal_approved",
+                        proposal_id,
+                        dump(
+                            {
+                                "template_id": records[0]["id"],
+                                "revision": self.revision(records[0]["id"]),
+                                "model": approval["model"],
+                                "prompt_version": approval["prompt_version"],
+                                "engine_version": approval["engine_version"],
+                            }
+                        ),
+                    ),
+                )
         return len(records)
 
     def retire(self, id, expected_revision, *, actor):
@@ -392,19 +490,40 @@ class Library:
             for row in self.all(include_retired=True):
                 stream.write(dump(row) + "\n")
 
-    def propose(self, record, *, model, prompt_version):
+    def propose(self, record, *, model, prompt_version, request_id=None):
         """LLM input becomes pending data; no template or world mutation."""
         if any(not isinstance(v, str) or not 1 <= len(v) <= 128 for v in (model, prompt_version)):
             raise ValueError("Model and prompt version required, <=128 characters")
-        validate_bundle(list(({r["id"]: r for r in self.all()} | {record["id"]: record}).values()))
-        payload = {
-            "record": record,
-            "model": model,
-            "prompt_version": prompt_version,
-            "engine_version": "world-library-1",
-        }
-        id = digest(payload)
+        if request_id is not None and (
+            type(request_id) is not str or not 1 <= len(request_id) <= 128
+        ):
+            raise ValueError("Review request ID must be bounded text")
         with self.transaction():
+            if self.postgres:
+                self.execute("LOCK TABLE wl_templates IN SHARE ROW EXCLUSIVE MODE")
+            else:
+                self.execute("UPDATE wl_migrations SET version=version WHERE version=1")
+            validate_bundle(
+                list(
+                    (
+                        {r["id"]: r for r in self.all(include_retired=True)}
+                        | {record["id"]: record}
+                    ).values()
+                )
+            )
+            payload = {
+                "record": record,
+                "model": model,
+                "prompt_version": prompt_version,
+                "engine_version": "world-library-1",
+                "dependencies": {
+                    target: {"revision": self.revision(target), "digest": digest(self.get(target))}
+                    for target in sorted({link["target"] for link in record["links"]})
+                },
+            }
+            if request_id is not None:
+                payload["request_id"] = request_id
+            id = digest(payload)
             self.execute(
                 (
                     "INSERT INTO wl_proposals(id,status,payload) "
@@ -414,15 +533,52 @@ class Library:
             )
         return id
 
+    def propose_authored(self, record, *, model, prompt_version, request_id=None):
+        """Original model output acquires explicit engine contracts before review."""
+        from rpg_vkr.world_library.proposal_policy import prepare_record
+
+        prepared = prepare_record(record, model=model, prompt_version=prompt_version)
+        return self.propose(
+            prepared, model=model, prompt_version=prompt_version, request_id=request_id
+        )
+
+    def proposal(self, id):
+        row = self.execute("SELECT status,payload FROM wl_proposals WHERE id=?", (id,)).fetchone()
+        if row is None:
+            raise KeyError(id)
+        payload = self._decode(row[1])
+        if digest(payload) != id:
+            raise ValueError("Proposal payload digest mismatch")
+        return {"id": id, "status": row[0], **payload}
+
     def approve(self, id, *, actor):
         """Trusted maintainer operation; library approval does not create inventory."""
-        # import_records owns the transaction; proposals are append-only evidence.
         row = self.execute("SELECT payload FROM wl_proposals WHERE id=?", (id,)).fetchone()
         if row is None:
             raise KeyError(id)
         record = self._decode(row[0])["record"]
-        if self.revision(record["id"]) and digest(self.get(record["id"])) != digest(record):
-            raise ValueError("Proposals cannot overwrite established templates")
-        self.import_records([record], actor=actor)
+        self._import_records([record], actor=actor, proposal_id=id)
+
+    def reject(self, id, *, actor):
+        """Reject a pending proposal without changing any template or saved world."""
+        if type(actor) is not str or not actor.strip() or len(actor) > 128:
+            raise ValueError("Audit actor required")
         with self.transaction():
-            self.execute("UPDATE wl_proposals SET status='approved' WHERE id=?", (id,))
+            row = self.execute(
+                "SELECT status,payload FROM wl_proposals WHERE id=?"
+                + (" FOR UPDATE" if self.postgres else ""),
+                (id,),
+            ).fetchone()
+            if row is None:
+                raise KeyError(id)
+            if digest(self._decode(row[1])) != id:
+                raise ValueError("Proposal payload digest mismatch")
+            if row[0] == "rejected":
+                return
+            if row[0] != "pending":
+                raise ValueError("Approved templates must be retired separately")
+            self.execute("UPDATE wl_proposals SET status='rejected' WHERE id=?", (id,))
+            self.execute(
+                "INSERT INTO wl_audit(actor,action,subject,payload) VALUES(?,?,?,?)",
+                (actor, "proposal_rejected", id, dump({"proposal_id": id})),
+            )

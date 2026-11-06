@@ -226,19 +226,59 @@ class LibraryWindow(QWidget):
         path, _ = QFileDialog.getOpenFileName(self, "Один новый шаблон", "", "JSON (*.json)")
         if not path:
             return
+        from html import escape
         from pathlib import Path
+        from uuid import uuid4
 
-        row = json.loads(Path(path).read_text(encoding="utf-8"))
-        proposal = self.library.propose(row, model="local-ui", prompt_version="manual-1")
+        value = json.loads(Path(path).read_text(encoding="utf-8"))
+        if isinstance(value, dict) and "record" in value:
+            if set(value) != {"record", "model", "prompt_version"}:
+                raise ValueError("Expected record, model and prompt_version")
+            row, model, prompt_version = value["record"], value["model"], value["prompt_version"]
+        else:
+            row, model, prompt_version = value, "local-ui", "manual-1"
+        proposal = self.library.propose_authored(
+            row,
+            model=model,
+            prompt_version=prompt_version,
+            request_id=uuid4().hex,
+        )
+        row = self.library.proposal(proposal)["record"]
+        from rpg_vkr.world_library.presentation import card
+
+        preview = card(row, resolve=self.library.get)
+        facts = "<br>".join(escape(label + ": " + str(value)) for label, value in preview["facts"])
+        outcome = (
+            "Карточка будет доступна мастеру как справочная запись."
+            if preview["mechanics"]["version"] == "descriptive"
+            else "После добавления можно отдельно создать экземпляр в мире."
+        )
         answer = QMessageBox.question(
             self,
             "Проверить предложение",
-            "Схема и ссылки проверены. Добавить этот шаблон в библиотеку?\n"
-            "Это не выдаёт предметы герою и не включает новые игровые эффекты.",
+            "<p>Добавить в библиотеку шаблон <b>"
+            + escape(row["name"])
+            + "</b>?</p><p>"
+            + escape(row["description"])
+            + "</p><p>"
+            + facts
+            + "</p><p>Связи и начальное имущество: "
+            + escape(json.dumps(row["links"], ensure_ascii=False))
+            + "</p><p>Модель: "
+            + escape(model)
+            + "; промпт: "
+            + escape(prompt_version)
+            + "</p><p>"
+            + outcome
+            + "</p>",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
         )
         if answer == QMessageBox.StandardButton.Yes:
             self.library.approve(proposal, actor="local-maintainer")
             self.search()
+        else:
+            self.library.reject(proposal, actor="local-maintainer")
 
     def instantiate(self):
         index = self.results.currentRow()

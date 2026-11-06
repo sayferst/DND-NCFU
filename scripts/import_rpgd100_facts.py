@@ -240,6 +240,9 @@ def extend_schema(spec):
     from rpg_vkr.world_library.regeneration_rules import register as register_regeneration
 
     register_regeneration(spec)
+    from rpg_vkr.world_library.proposal_policy import register as register_proposals
+
+    register_proposals(spec)
     return spec
 
 

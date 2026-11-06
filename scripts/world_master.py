@@ -25,7 +25,7 @@ def doctor(path):
         migrations = [
             r[0] for r in db.execute("SELECT version FROM wl_migrations ORDER BY version")
         ]
-        if migrations not in ([1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]):
+        if migrations not in ([1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]):
             raise ValueError("Run the documented library migration first")
         count = db.execute("SELECT COUNT(*) FROM wl_templates WHERE retired=0").fetchone()[0]
     return {

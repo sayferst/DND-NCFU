@@ -58,3 +58,5 @@ jobs:
           tests/test_library_equipment_designs.py
           tests/test_source_regeneration_runtime.py
           tests/test_source_pack_grammar.py
+          tests/test_library_proposal_transactions.py
+          tests/test_library_authored_templates.py

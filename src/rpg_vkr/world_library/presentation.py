@@ -57,6 +57,7 @@ LABELS = {
     "damage_dice": "Урон",
     "age_years": "Возраст лет",
     "profession": "Занятие",
+    "can_trade": "Торговля доступна",
     "social_status": "Положение",
     "beliefs": "Убеждения",
     "motivation": "Мотив",
@@ -205,6 +206,8 @@ def card(record, *, resolve=None, revision=None):
                     "craft": "создание",
                     "disassemble": "разборка",
                     "salvage": "разборка",
+                    "True": "да",
+                    "False": "нет",
                 }.get(str(value), str(value))
                 facts.append((label, value))
         if "abilities" in a:

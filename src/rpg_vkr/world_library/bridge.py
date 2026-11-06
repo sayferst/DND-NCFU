@@ -128,19 +128,26 @@ def preview(
             )
         if profile == "weapon":
             properties["damage_dice"] = f"{a['damage_count']}d{a['damage_die']}"
-        if profile == "npc" and row["provenance"]["generator"] == "world-library-4":
+        if profile == "npc" and (
+            row["provenance"]["generator"] == "world-library-4"
+            or a.get("social_version") == "library-social-1"
+        ):
             from rpg_vkr.world_library.social_rules import compile_social
 
             properties["library_social_rules"] = compile_social(row)
-            properties["can_trade"] = a["profession"] in {
-                "торговец",
-                "кузнец",
-                "повар",
-                "лекарь",
-                "гончар",
-                "ткач",
-                "сапожник",
-            }
+            properties["can_trade"] = a.get(
+                "can_trade",
+                a["profession"]
+                in {
+                    "торговец",
+                    "кузнец",
+                    "повар",
+                    "лекарь",
+                    "гончар",
+                    "ткач",
+                    "сапожник",
+                },
+            )
         if profile == "source_creature":
             from rpg_vkr.world_library.creature_rules import compile_creature
 
@@ -165,7 +172,10 @@ def preview(
         from rpg_vkr.world_library.utility_rules import PROFILES as UTILITY_PROFILES
         from rpg_vkr.world_library.utility_rules import compile_utility
 
-        if profile in UTILITY_PROFILES and row["provenance"]["generator"] == "world-library-3":
+        if profile in UTILITY_PROFILES and (
+            row["provenance"]["generator"] == "world-library-3"
+            or a.get("utility_version") == "library-utility-1"
+        ):
             properties["library_utility_rules"] = compile_utility(row)
         if profile == "recipe":
             from rpg_vkr.world_library.recipe_rules import compile_recipe

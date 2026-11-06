@@ -87,6 +87,19 @@ def validate_record(record):
     if record["category"].split(".")[-1] != record["profile"]:
         raise ValueError("Category/profile mismatch")
     a = record["attributes"]
+    if record["profile"] == "npc" and "social_version" in a:
+        from rpg_vkr.world_library.social_rules import compile_social
+
+        if not {"abilities", "armour_class", "damage_dice"} <= a.keys():
+            raise ValueError("Versioned NPC needs a complete stat block")
+        compile_social(record)
+    if (
+        record["profile"] in {"food", "medicine", "poison", "book", "quest"}
+        and "utility_version" in a
+    ):
+        from rpg_vkr.world_library.utility_rules import compile_utility
+
+        compile_utility(record)
     if record["profile"] == "source_reference":
         from rpg_vkr.world_library.reference_details import validate_details
 
@@ -139,6 +152,39 @@ def validate_bundle(records):
         by_id[row["id"]] = row
         names.add(key)
     for row in records:
+        if row["profile"] == "npc" and "social_version" in row["attributes"]:
+            species = row["attributes"]["species"]
+            target = by_id.get(species)
+            if target is None or not (
+                target["profile"] == "race"
+                or (
+                    target["profile"] == "source_reference"
+                    and target["attributes"].get("record_type") == "race"
+                )
+            ):
+                raise ValueError("Authored NPC requires a known species/race template")
+            species_links = [link for link in row["links"] if link["relation"] == "species"]
+            if (
+                len(species_links) != 1
+                or species_links[0]["target"] != species
+                or species_links[0]["quantity"] != 1
+            ):
+                raise ValueError("NPC species must match its pinned species link")
+            for link in row["links"]:
+                if link["relation"] == "starting_inventory" and by_id.get(link["target"], {}).get(
+                    "profile"
+                ) in {
+                    "npc",
+                    "creature",
+                    "boss",
+                    "source_creature",
+                    "race",
+                    "skill",
+                    "source_reference",
+                }:
+                    raise ValueError(
+                        "NPC starting inventory requires physical/spell/recipe templates"
+                    )
         if row["profile"] == "source_reference" and row["attributes"].get("record_type") in {
             "class",
             "race",
