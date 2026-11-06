@@ -95,6 +95,12 @@ def compile_creature(record):
         validate_resilience(a["resilience_v1"])
         extended["library_resilience_rules"] = a["resilience_v1"]
         implemented.update(a["resilience_v1"]["supported_names"])
+    if "regeneration_v1" in a:
+        from rpg_vkr.world_library.regeneration_rules import validate as validate_regeneration
+
+        validate_regeneration(a["regeneration_v1"])
+        extended["library_regeneration_rules"] = a["regeneration_v1"]
+        implemented.update(a["regeneration_v1"]["supported_names"])
     return {
         "hp_max": hp,
         "armour_class": ac,
@@ -192,6 +198,12 @@ def incoming(properties, amount, element):
 
 def before_turn(engine, id, properties):
     validate_runtime(properties)
+    if "library_regeneration_rules" in properties:
+        from rpg_vkr.world_library.regeneration_rules import start_turn
+
+        if id not in getattr(engine, "_library_regen_started", set()):
+            start_turn(engine, id)
+        return
     amount = properties.get("source_regeneration", 0)
     if amount and engine.hp(id) > 0:
         before = engine.hp(id)

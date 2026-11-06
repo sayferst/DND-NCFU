@@ -447,6 +447,8 @@ class Engine:
             return self.world.hp
         e, d = self.actor(id, alive=False)
         data = dict(e.state or {})
+        if data.get("life") == "dead" and d.properties.get("library_regeneration_rules"):
+            return data.get("hp", 0)
         data["hp"] = max(
             0, min(d.properties["hp_max"], data.get("hp", d.properties["hp_max"]) + delta)
         )
@@ -594,6 +596,9 @@ class Engine:
         if hasattr(self, "_library_damage_collector"):
             self._library_damage_collector.append(amount)
             return amount
+        from rpg_vkr.world_library.regeneration_rules import record_damage
+
+        record_damage(self, target, [(amount, element)])
         from rpg_vkr.world_library.resilience_rules import incoming as resilient_damage
 
         hit_flags = getattr(self, "owner_hit_flags", {})

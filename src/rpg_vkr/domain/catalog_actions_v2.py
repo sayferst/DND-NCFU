@@ -370,6 +370,11 @@ def perform(e, command, args):
             and e.hp(args["target"]) == 0
             and e.state.get("owner_rules_policy") != 1
         ):
+            from rpg_vkr.world_library.regeneration_rules import program as regeneration_program
+
+            regeneration = regeneration_program(e, args["target"])
+            if regeneration and regeneration["zero_death"]:
+                return
             actor, _ = e.actor(args["target"], False)
             e.actors[actor.id] = replace(actor, state=(actor.state or {}) | {"life": "dead"})
     elif command in ("recover", "dodge"):
@@ -721,7 +726,10 @@ def hit(e, attacker, target, *, source_attack=None):
         return
     if e.hp(target) <= 0:
         if e.state.get("owner_rules_policy") != 1:
-            return
+            from rpg_vkr.world_library.regeneration_rules import pending_zero
+
+            if not pending_zero(e, target):
+                return
         from rpg_vkr.domain.owner_rules_runtime import life
 
         if life(e, target).dead:
@@ -1155,7 +1163,13 @@ def npc_round(e, command):
                 e.status(id, "power", 1, 2)
             else:
                 e.status(enemies[0], skill, 1, 2)
-    alive = [id for id in battle["order"] if battle["sides"][id] == "enemy" and e.hp(id) > 0]
+    from rpg_vkr.world_library.regeneration_rules import pending_zero
+
+    alive = [
+        id
+        for id in battle["order"]
+        if battle["sides"][id] == "enemy" and (e.hp(id) > 0 or pending_zero(e, id))
+    ]
     battle["round"] += 1
     if not alive or e.world.hp <= 0:
         e.state.update(last_battle=battle, battle=None, active=None)
@@ -1198,6 +1212,9 @@ def advance(e, minutes):
             if not pending["remaining"] or not valid:
                 e.state["pending"].remove(pending)
         advance_world(e, start, now)
+        from rpg_vkr.world_library.regeneration_rules import advance as advance_regeneration
+
+        advance_regeneration(e, start, now)
         if e.state.get("owner_rules_policy") == 1:
             from rpg_vkr.domain.owner_rules_runtime import recover_and_resolve
 

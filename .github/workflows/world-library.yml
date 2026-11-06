@@ -56,3 +56,5 @@ jobs:
           tests/test_source_attack_grammar.py
           tests/test_source_literal_bindings.py
           tests/test_library_equipment_designs.py
+          tests/test_source_regeneration_runtime.py
+          tests/test_source_pack_grammar.py

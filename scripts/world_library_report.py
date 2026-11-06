@@ -49,6 +49,16 @@ def main():
             r["attributes"].get("resilience_v1", {}).get("undead_fortitude", False)
             for r in creatures
         ),
+        "source_regeneration_programs": sum(
+            "regeneration_v1" in r["attributes"] for r in creatures
+        ),
+        "source_regeneration_with_suppression": sum(
+            bool(r["attributes"].get("regeneration_v1", {}).get("suppress_elements"))
+            for r in creatures
+        ),
+        "source_regeneration_with_zero_hp_death_timing": sum(
+            r["attributes"].get("regeneration_v1", {}).get("zero_death", False) for r in creatures
+        ),
         "homebrew_actors_with_full_stat_blocks": sum(
             r["profile"] in {"npc", "creature", "boss"} and "abilities" in r["attributes"]
             for r in rows

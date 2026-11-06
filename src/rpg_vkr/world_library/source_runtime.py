@@ -396,6 +396,13 @@ def parry(engine, defender, attacker, natural, total, defence, ranged):
 
 def turn_order(engine, followers):
     for actor in followers:
+        from rpg_vkr.world_library.regeneration_rules import program, start_turn
+
+        if program(engine, actor) is not None:
+            start_turn(engine, actor)
+            engine._library_regen_started = getattr(engine, "_library_regen_started", set()) | {
+                actor
+            }
         if enabled(engine) and engine.hp(actor) > 0 and not before_actor(engine, actor):
             engine.events.append({"kind": "source_incapacitated", "actor": actor})
             after_actor(engine, actor)

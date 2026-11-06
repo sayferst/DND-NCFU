@@ -78,7 +78,7 @@ class Library:
                 "PRIMARY KEY, checksum TEXT NOT NULL)"
             )
             old = self.execute("SELECT checksum FROM wl_migrations WHERE version=1").fetchone()
-            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 4:
+            if self.execute("SELECT COALESCE(MAX(version),0) FROM wl_migrations").fetchone()[0] > 5:
                 raise ValueError("Unsupported newer library migration")
             checksum = digest(sql)
             if old:
@@ -195,6 +195,34 @@ class Library:
                     ("library-pack-1", digest(schemas()["equipment_pack_v1"])),
                 )
                 self.execute("INSERT INTO wl_migrations VALUES(4,?)", (checksum4,))
+            sql5 = (ROOT / "data/world_library/migrations/005_source_regeneration.sql").read_text(
+                encoding="utf-8"
+            )
+            checksum5 = digest(sql5)
+            old5 = self.execute("SELECT checksum FROM wl_migrations WHERE version=5").fetchone()
+            if old5:
+                if old5[0] != checksum5:
+                    raise ValueError("Migration checksum changed")
+            else:
+                for statement in sql5.split(";"):
+                    if statement.strip():
+                        self.execute(statement)
+                for key, value in schemas().items():
+                    self.execute(
+                        "INSERT INTO wl_schema_revisions VALUES(?,?,?) "
+                        "ON CONFLICT(id,digest) DO NOTHING",
+                        (key, digest(value), dump(value)),
+                    )
+                    self.execute(
+                        "INSERT INTO wl_schemas VALUES(?,?) ON CONFLICT(id) DO UPDATE SET "
+                        "schema_json=excluded.schema_json",
+                        (key, dump(value)),
+                    )
+                self.execute(
+                    "INSERT INTO wl_rulesets VALUES(?,?)",
+                    ("library-regeneration-1", digest(schemas()["source_regeneration_v1"])),
+                )
+                self.execute("INSERT INTO wl_migrations VALUES(5,?)", (checksum5,))
 
     def _decode(self, value):
         return json.loads(value) if isinstance(value, str) else value

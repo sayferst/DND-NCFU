@@ -22,6 +22,13 @@ def apply(engine, target, components, source):
         del engine._library_damage_collector
         engine.owner_hit_flags = {}
     amount = sum(collected)
+    from rpg_vkr.world_library.regeneration_rules import record_damage
+
+    record_damage(
+        engine,
+        target,
+        [(reduced, element) for (_, element), reduced in zip(components, collected, strict=True)],
+    )
     from rpg_vkr.world_library.resilience_rules import incoming as resilient_damage
 
     amount = resilient_damage(

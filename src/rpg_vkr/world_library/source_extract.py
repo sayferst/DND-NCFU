@@ -34,6 +34,35 @@ CONDITION_WORDS = {
 SUPPORTED_CONDITIONS = {"blinded", "poisoned", "paralyzed", "stunned"}
 
 
+def literal_pack_tactics(body):
+    if re.search(r"\bне\s+(?:имеет|получает|совершает)\b", body):
+        return False
+    legacy = (
+        "преимуществом" in body
+        and "броски атаки" in body
+        and "5 футов" in body
+        and "дееспособный союзник" in body
+        and not any(w in body for w in ("только", "оружием", "рукопаш", "дополн"))
+    )
+    standard = re.fullmatch(
+        r"[а-яёa-z -]{1,100} совершает с преимуществом броски атаки "
+        r"(?:по существу|против существа), если как минимум один союзник "
+        r"[а-яёa-z -]{1,100} находится в пределах 5 футов от этого существа,? "
+        r"и этот союзник дееспособен\.?",
+        body,
+    )
+    equivalent = re.fullmatch(
+        r"[а-яёa-z -]{1,100} (?:совершает атаку против существа с преимуществом|"
+        r"имеет преимущество на броске атаки против существа|"
+        r"получает преимущество на броски атаки против существ),? "
+        r"если хотя бы один из союзников [а-яёa-z -]{1,100} "
+        r"находится в пределах 5 футов от (?:существа|цели атаки) "
+        r"и (?:союзник (?:дееспособен|не выведен из строя)|боеспособен)\.?",
+        body,
+    )
+    return bool(legacy or standard or equivalent)
+
+
 def action_matches(name, phrase):
     irregular = {
         "коготь": "когт",
@@ -400,14 +429,7 @@ def extract(stat, previous):
                 continue
             name, body = text(row.get("название")), text(row.get("описание")).casefold()
             lower = name.casefold()
-            if (
-                lower == "тактика стаи"
-                and "преимуществом" in body
-                and "броски атаки" in body
-                and "5 футов" in body
-                and "дееспособный союзник" in body
-                and not any(w in body for w in ("только", "оружием", "рукопаш", "дополн"))
-            ):
+            if lower == "тактика стаи" and literal_pack_tactics(body):
                 result["pack_tactics"] = True
                 result["supported_names"].append(name[:200])
             if (

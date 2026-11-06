@@ -1,0 +1,25 @@
+{
+  "source_regeneration_programs": 41,
+  "suppression_programs": 22,
+  "zero_hp_death_timing": 19,
+  "source_pack_tactics": 81,
+  "source_pack_added_since_checkpoint_02479f9": 24,
+  "windows_profiled": {
+    "passed": 128,
+    "seconds": 95.97
+  },
+  "windows_native_regression": {
+    "passed": 6848,
+    "skipped": 1,
+    "seconds": 495.99
+  },
+  "windows_source_pack_and_rules": {
+    "passed": 58,
+    "seconds": 8.68
+  },
+  "sets_overlap": true,
+  "full_repository_suite": false,
+  "user_saves_touched": false,
+  "source_features_v3_schema_unchanged": true,
+  "published_migrations_1_to_4_unchanged": true
+}

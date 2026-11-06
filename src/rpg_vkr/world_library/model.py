@@ -103,6 +103,10 @@ def validate_record(record):
         from rpg_vkr.world_library.resilience_rules import validate as validate_resilience
 
         validate_resilience(a["resilience_v1"])
+    if record["profile"] == "source_creature" and "regeneration_v1" in a:
+        from rpg_vkr.world_library.regeneration_rules import validate as validate_regeneration
+
+        validate_regeneration(a["regeneration_v1"])
     if record["profile"] == "source_equipment" and "pack_v1" in a:
         from rpg_vkr.world_library.equipment_packs import validate as validate_pack
 

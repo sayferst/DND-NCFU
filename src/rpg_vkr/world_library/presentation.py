@@ -32,6 +32,18 @@ PROFILE_NAMES = {
     "source_equipment": "Снаряжение из источников",
     "source_reference": "Справочные разделы",
 }
+ELEMENT_NAMES = {
+    "acid": "кислота",
+    "fire": "огонь",
+    "cold": "холод",
+    "lightning": "электричество",
+    "radiant": "излучение",
+    "necrotic": "некротическая энергия",
+    "poison": "яд",
+    "psychic": "психическая энергия",
+    "thunder": "звук",
+    "force": "силовое поле",
+}
 LABELS = {
     "mass_g": "Масса г",
     "durability": "Прочность",
@@ -140,6 +152,34 @@ def card(record, *, resolve=None, revision=None):
                 ),
             ]
         )
+        if "regeneration_v1" in a:
+            program = a["regeneration_v1"]
+            detail = f"+{program['amount']} HP в начале своего хода"
+            if program["minimum_hp"]:
+                detail += "; требуется хотя бы 1 HP"
+            if program["suppress_elements"]:
+                detail += "; до следующего хода подавляют: " + ", ".join(
+                    ELEMENT_NAMES[element] for element in program["suppress_elements"]
+                )
+            if program["zero_death"]:
+                detail += "; при 0 HP смерть проверяется в начале хода без восстановления"
+            facts.append(("Регенерация", detail))
+        if a.get("resilience_v1", {}).get("undead_fortitude"):
+            facts.append(
+                (
+                    "Стойкость нежити",
+                    "Телосложение против 5 + урон: остаётся 1 HP; "
+                    "излучение и критическое попадание исключены",
+                )
+            )
+        if a.get("features_v3", {}).get("pack_tactics"):
+            facts.append(
+                (
+                    "Тактика стаи",
+                    "Преимущество атак, если дееспособный союзник "
+                    "находится в пределах 5 футов от цели",
+                )
+            )
         for attack in a.get("actions_v2", {}).get("actions", []):
             facts.append(("Атака", f"{attack['name']}: {attack['bonus']:+d}, {attack['dice']}"))
         mechanics = {

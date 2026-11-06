@@ -237,6 +237,9 @@ def extend_schema(spec):
     from rpg_vkr.world_library.equipment_packs import register as register_packs
 
     register_packs(spec)
+    from rpg_vkr.world_library.regeneration_rules import register as register_regeneration
+
+    register_regeneration(spec)
     return spec
 
 
