@@ -30,6 +30,18 @@ ROOTS = [
 HOSTS = {urlsplit(url).hostname for url in ROOTS}
 
 
+def replace_checkpoint(temporary, output):
+    """Windows readers/antivirus may briefly deny an otherwise atomic replacement."""
+    for attempt in range(10):
+        try:
+            temporary.replace(output)
+            return
+        except PermissionError:
+            if attempt == 9:
+                raise
+            time.sleep(min(0.05 * (attempt + 1), 0.5))
+
+
 class Links(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -188,7 +200,7 @@ def inventory(
         }
         temporary = output.with_suffix(".tmp")
         temporary.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
-        temporary.replace(output)
+        replace_checkpoint(temporary, output)
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         while queue and attempts < budget:

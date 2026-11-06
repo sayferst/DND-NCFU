@@ -88,3 +88,34 @@ def test_unicode_spaces_and_http_links_are_encoded_and_upgraded():
         "%D1%82%D0%B5%D0%BD%D0%B5%D0%B9%20%5BRealm%5D"
     )
     assert inventory_module.canonical("https://dnd.su/a\nb") is None
+
+
+@pytest.mark.parametrize("permanent", [False, True])
+def test_checkpoint_retries_temporary_windows_reader_lock_without_losing_old_state(
+    tmp_path, monkeypatch, permanent
+):
+    output, temporary = tmp_path / "state.json", tmp_path / "state.tmp"
+    output.write_text('{"old":true}', encoding="utf-8")
+    temporary.write_text('{"new":true}', encoding="utf-8")
+    original = Path.replace
+    calls = []
+
+    def locked(path, target):
+        assert path == temporary and target == output
+        calls.append(path)
+        if permanent or len(calls) < 3:
+            raise PermissionError("Simulated Windows reader lock")
+        return original(path, target)
+
+    monkeypatch.setattr(Path, "replace", locked)
+    monkeypatch.setattr(inventory_module.time, "sleep", lambda _: None)
+    if permanent:
+        with pytest.raises(PermissionError):
+            inventory_module.replace_checkpoint(temporary, output)
+        assert len(calls) == 10
+        assert json.loads(output.read_text()) == {"old": True}
+        assert json.loads(temporary.read_text()) == {"new": True}
+    else:
+        inventory_module.replace_checkpoint(temporary, output)
+        assert len(calls) == 3 and not temporary.exists()
+        assert json.loads(output.read_text()) == {"new": True}
