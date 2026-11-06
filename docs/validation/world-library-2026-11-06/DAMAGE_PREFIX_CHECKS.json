@@ -1,0 +1,10 @@
+{
+  "passed": 79,
+  "seconds": 14.57,
+  "pending_before": 16406,
+  "pending_after": 15279,
+  "references_pending": 20251,
+  "equipment_pending": 353,
+  "full_repository_suite": false,
+  "user_saves_touched": false
+}

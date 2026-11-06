@@ -141,6 +141,23 @@ def extract(stat):
 
 
 def damage_components(value):
+    value = value.casefold()
+    # 2024 stat blocks put the damage type before its amount. Preserve every
+    # surrounding clause so a rider/alternative cannot become unconditional damage.
+    prefix = {
+        "дробящий урон": "дробящего урона",
+        "колющий урон": "колющего урона",
+        "рубящий урон": "рубящего урона",
+        "некротический урон": "некротического урона",
+        "психический урон": "психического урона",
+    }
+    numeric = r"(?:\d+\s*\([^()]+\)|\d+\s*[кd](?:12|10|8|6|4|1)(?:\s*[+-]\s*\d+)?|\d+)"
+    value = re.sub(
+        r"(?P<kind>" + "|".join(prefix) + r"|урон (?:огн[её]м|холодом|электричеством|"
+        r"кислотой|ядом|излучением|силовым полем|звуком))\s+(?P<amount>" + numeric + r")",
+        lambda m: m["amount"] + " " + prefix.get(m["kind"], m["kind"].replace("урон ", "урона ")),
+        value,
+    )
     formula = r"([1-9][0-9]?)\s*[кd](12|10|8|6|4|1)(\s*[+-]\s*\d{1,2})?"
     kinds = (
         r"(?:дробящего|колющего|рубящего|некротического|психического)\s+урона"
