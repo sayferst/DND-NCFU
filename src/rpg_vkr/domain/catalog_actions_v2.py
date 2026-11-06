@@ -27,6 +27,7 @@ PARAMETERS = {
     "encounter": ({"enemies", "allies"}, {"enemies"}),
     "attack": ({"target", "lethal", "position"}, {"target"}),
     "source_move": ({"position"}, {"position"}),
+    "source_escape": ({"source", "ability", "attack_index", "position"}, {"source", "ability"}),
     "library_magic": ({"item", "target"}, {"item"}),
     "library_recipe": ({"item"}, {"item"}),
     "library_use": ({"item", "target"}, {"item"}),
@@ -104,6 +105,11 @@ def perform(e, command, args):
         raise ValueError("Use a combat turn instead of skipping encounter time")
     if source_runtime.enabled(e) and e.state["battle"] and command == "rest":
         raise ValueError("Rest requires leaving the active encounter")
+    if command == "source_escape":
+        from rpg_vkr.world_library.grapple_rules import perform_escape
+
+        perform_escape(e, args)
+        return
     if "position" in args:
         if not source_runtime.enabled(e) or not e.state["battle"]:
             raise ValueError("Source movement requires a version-three encounter")
@@ -714,6 +720,7 @@ def craft(e, command, args):
 
 def hit(e, attacker, target, *, source_attack=None):
     from rpg_vkr.world_library import source_runtime
+    from rpg_vkr.world_library.grapple_rules import advantage as grapple_advantage
 
     if source_runtime.enabled(e) and source_runtime.cannot_attack(e, attacker, target):
         raise ValueError("Source condition prevents this attack")
@@ -912,7 +919,8 @@ def hit(e, attacker, target, *, source_attack=None):
                 attacker,
                 target,
                 row["category"] in ("longbow", "crossbow"),
-                extra_advantage=unconscious_melee,
+                extra_advantage=unconscious_melee
+                or grapple_advantage(e, attacker, target, source_attack),
                 extra_disadvantage=source_range_disadvantage,
             ),
             "Атака",
@@ -1025,6 +1033,10 @@ def hit(e, attacker, target, *, source_attack=None):
             and (e.state.get("catalog_revision") != 3 or amount > 0)
         ):
             e.status(target, trait, 1, 2)
+    if success and source_attack is not None:
+        from rpg_vkr.world_library.grapple_rules import apply as apply_grapple
+
+        apply_grapple(e, attacker, target, source_attack)
     e.attacks.append(
         {
             "actor_id": attacker,

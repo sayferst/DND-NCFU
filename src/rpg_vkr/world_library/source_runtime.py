@@ -66,7 +66,9 @@ def conditions(engine, actor):
     if not enabled(engine):
         return []
     rows = engine.state["source_rules_v3"]["conditions"].get(actor, [])
-    return [row for row in rows if row["until"] > now(engine)]
+    from rpg_vkr.world_library.grapple_rules import conditions as grapple_conditions
+
+    return [row for row in rows if row["until"] > now(engine)] + grapple_conditions(engine, actor)
 
 
 def has(engine, actor, *names):
@@ -168,7 +170,9 @@ def cannot_attack(engine, actor, target):
 def speed(engine, actor, base):
     if incapacitated(engine, actor) or has(engine, actor, "grappled", "restrained"):
         return 0
-    return base // 2 if has(engine, actor, "prone") else base
+    from rpg_vkr.world_library.grapple_rules import drag_speed
+
+    return drag_speed(engine, actor, base // 2 if has(engine, actor, "prone") else base)
 
 
 def roll_d20(engine, mode, reason):
@@ -339,6 +343,7 @@ def legendary_actions(engine, ended):
     if not battle:
         return
     from rpg_vkr.domain.catalog_actions_v2 import hit
+    from rpg_vkr.world_library.grapple_rules import allowed as grapple_allowed
 
     for actor in list(battle["order"]):
         if (
@@ -361,6 +366,7 @@ def legendary_actions(engine, ended):
                 if battle["sides"][id] != battle["sides"][actor]
                 and engine.hp(id) > 0
                 and not cannot_attack(engine, actor, id)
+                and grapple_allowed(engine, actor, id, action["index"])
                 and distance(engine, actor, id) <= bounds["maximum_range"]
             ]
             if not targets:
@@ -524,6 +530,29 @@ def turn(engine, actor, target, properties):
     if cannot_attack(engine, actor, target):
         engine.events.append({"kind": "source_cannot_attack", "actor": actor, "target": target})
         return
+    from rpg_vkr.world_library.grapple_rules import escape as escape_grapple
+    from rpg_vkr.world_library.grapple_rules import links as grapple_links
+
+    held = [r for r in grapple_links(engine) if r["target"] == actor]
+    max_reach = max(
+        (
+            selected(properties, i)["maximum_range"]
+            for i, a in enumerate(properties["source_actions_v2"]["actions"])
+            if a["complete"]
+        ),
+        default=5,
+    )
+    if held and distance(engine, actor, target) > max_reach:
+        bonuses = properties.get("library_check_bonuses", {})
+        ability = max(
+            ("strength", "dexterity"),
+            key=lambda name: bonuses.get(
+                "athletics" if name == "strength" else "acrobatics",
+                ability_modifier(properties.get(name, 10)),
+            ),
+        )
+        escape_grapple(engine, {"source": held[0]["source"], "ability": ability}, actor)
+        return
     budget = engine.state["source_rules_v3"]["spent"].setdefault(actor, {})
     for index, power in enumerate(spec["powers"]):
         if power["recharge"] and budget.get("recharge:" + str(index)):
@@ -584,6 +613,15 @@ def turn(engine, actor, target, properties):
 
         old_turn(engine, actor, target, properties)
         return
+    from rpg_vkr.world_library.grapple_rules import (
+        allowed as grapple_allowed,
+    )
+    from rpg_vkr.world_library.grapple_rules import (
+        release as release_grapple,
+    )
+
+    if not any(grapple_allowed(engine, actor, target, i) for i in available):
+        release_grapple(engine, actor)
     program = properties.get("library_multiattack_rules")
     if program:
         from rpg_vkr.world_library.multiattack_rules import choose, validate
@@ -602,6 +640,10 @@ def turn(engine, actor, target, properties):
     for index in sequence:
         if engine.hp(actor) <= 0 or engine.hp(target) <= 0:
             break
+        from rpg_vkr.world_library.grapple_rules import allowed as grapple_allowed
+
+        if not grapple_allowed(engine, actor, target, index):
+            continue
         action = selected(properties, index)
         if distance(engine, actor, target) > action["maximum_range"]:
             from rpg_vkr.world_library.source_geometry import approach

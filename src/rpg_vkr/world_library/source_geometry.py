@@ -73,8 +73,13 @@ def move(engine, actor, destination, speed):
             raise ValueError("Vertical movement requires an active flight capability")
     if square(source["point"], destination) > speed * speed:
         raise ValueError("Movement exceeds the available speed")
+    from rpg_vkr.world_library.grapple_rules import links, moved
+
+    held = links(engine)
+    before = list(source["point"])
     source["point"] = list(destination)
     source["origin"] = "engine-movement"
+    moved(engine, actor, before, destination, held)
     engine.events.append({"kind": "source_move", "actor": actor, "to": destination, "speed": speed})
 
 

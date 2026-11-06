@@ -101,6 +101,16 @@ def compile_creature(record):
         validate_regeneration(a["regeneration_v1"])
         extended["library_regeneration_rules"] = a["regeneration_v1"]
         implemented.update(a["regeneration_v1"]["supported_names"])
+    extended["library_creature_size"] = a["source_size"]
+    if "skill_bonuses_v1" in a:
+        extended["library_check_bonuses"] = a["skill_bonuses_v1"]
+    if "grapple_v1" in a:
+        from rpg_vkr.world_library.grapple_rules import validate as validate_grapple
+
+        validate_grapple(a["grapple_v1"], a["actions_v2"]["actions"])
+        extended["library_grapple_rules"] = a["grapple_v1"]
+        if any(rule["max_size"] < 0 for rule in a["grapple_v1"]["attacks"]):
+            invented.append("grapple_target_size_limit")
     if "multiattack_v1" in a:
         from rpg_vkr.world_library.multiattack_rules import validate as validate_multiattack
 
@@ -162,6 +172,12 @@ def validate_runtime(properties):
         pattern = DICE
     if not re.fullmatch(pattern, properties.get("damage_dice", "")):
         raise ValueError("Invalid creature damage dice")
+    if "library_grapple_rules" in properties:
+        from rpg_vkr.world_library.grapple_rules import validate as validate_grapple
+
+        validate_grapple(
+            properties["library_grapple_rules"], properties["source_actions_v2"]["actions"]
+        )
     if "library_multiattack_rules" in properties:
         from rpg_vkr.world_library.multiattack_rules import validate as validate_multiattack
 

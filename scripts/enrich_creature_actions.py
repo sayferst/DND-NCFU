@@ -40,6 +40,12 @@ def main():
                 if id not in by_id:
                     continue
                 rules = extract(entry["статблок"])
+                from rpg_vkr.world_library.grapple_rules import extract as extract_grapple
+
+                program = extract_grapple(entry["статблок"], rules["actions"])
+                by_id[id]["attributes"].pop("grapple_v1", None)
+                if program:
+                    by_id[id]["attributes"]["grapple_v1"] = program
                 validate(rules)
                 by_id[id]["attributes"]["actions_v2"] = rules
                 by_id[id]["attributes"]["attack_math_version"] = 2

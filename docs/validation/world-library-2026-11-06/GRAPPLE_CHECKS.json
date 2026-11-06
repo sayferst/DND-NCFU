@@ -1,0 +1,37 @@
+{
+  "profiled_passed": 45,
+  "profiled_seconds": 6.97,
+  "grapple_session_cases_passed": 10,
+  "grapple_session_seconds": 3.98,
+  "native_passed": 6850,
+  "native_skipped": 1,
+  "native_seconds": 568.53,
+  "native_skip_reason": "Explicit long 1-to-20 campaign flag not enabled",
+  "sets_overlap": true,
+  "creation_and_upgrade": {
+    "creation_previews": 7089,
+    "migrations": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "integrity": "ok",
+    "fk_errors": 0,
+    "world_and_rng_unchanged": true,
+    "upgrade_from": 6,
+    "upgrade_to": 9,
+    "old_versions_and_audit_preserved": true,
+    "old_database_sha256_unchanged": "b5b8088f52c4d546672a7ffb0ecf78076cd53c31bde4c27f0f805e04f04e922a"
+  },
+  "pending_source_features": 15162,
+  "pending_source_references": 20249,
+  "grapple_programs": 12,
+  "full_repository_suite": false,
+  "user_saves_touched": false
+}

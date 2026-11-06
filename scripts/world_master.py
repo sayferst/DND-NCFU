@@ -32,6 +32,7 @@ def doctor(path):
             [1, 2, 3, 4, 5, 6],
             [1, 2, 3, 4, 5, 6, 7],
             [1, 2, 3, 4, 5, 6, 7, 8],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9],
         ):
             raise ValueError("Run the documented library migration first")
         count = db.execute("SELECT COUNT(*) FROM wl_templates WHERE retired=0").fetchone()[0]

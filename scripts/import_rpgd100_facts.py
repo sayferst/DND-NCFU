@@ -249,6 +249,9 @@ def extend_schema(spec):
     from rpg_vkr.world_library.source_magic_rules import register as register_source_magic
 
     register_source_magic(spec)
+    from rpg_vkr.world_library.grapple_rules import register as register_grapples
+
+    register_grapples(spec)
     return spec
 
 

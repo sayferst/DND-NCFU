@@ -2817,6 +2817,99 @@
           "choices",
           "followups"
         ]
+      },
+      "grapple_v1": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "library-grapple-1"
+            ]
+          },
+          "attacks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 29
+                },
+                "dc": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 30
+                },
+                "capacity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 8
+                },
+                "max_size": {
+                  "type": "integer",
+                  "minimum": -1,
+                  "maximum": 5
+                },
+                "reach": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100
+                },
+                "restrained": {
+                  "type": "boolean"
+                },
+                "advantage_held": {
+                  "type": "boolean"
+                },
+                "locks": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 29
+                  },
+                  "maxItems": 30
+                }
+              },
+              "required": [
+                "index",
+                "dc",
+                "capacity",
+                "max_size",
+                "reach",
+                "restrained",
+                "advantage_held",
+                "locks"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 30
+          }
+        },
+        "required": [
+          "version",
+          "attacks"
+        ]
+      },
+      "skill_bonuses_v1": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "athletics": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 50
+          },
+          "acrobatics": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 50
+          }
+        }
       }
     },
     "required": [
@@ -5056,6 +5149,84 @@
       "element",
       "source_prose_sha256",
       "adaptation"
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+  },
+  "source_grapple_v1": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "version": {
+        "type": "string",
+        "enum": [
+          "library-grapple-1"
+        ]
+      },
+      "attacks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            },
+            "dc": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "capacity": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "max_size": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 5
+            },
+            "reach": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "restrained": {
+              "type": "boolean"
+            },
+            "advantage_held": {
+              "type": "boolean"
+            },
+            "locks": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "maxItems": 30
+            }
+          },
+          "required": [
+            "index",
+            "dc",
+            "capacity",
+            "max_size",
+            "reach",
+            "restrained",
+            "advantage_held",
+            "locks"
+          ]
+        },
+        "minItems": 1,
+        "maxItems": 30
+      }
+    },
+    "required": [
+      "version",
+      "attacks"
     ],
     "$schema": "https://json-schema.org/draft/2020-12/schema"
   }

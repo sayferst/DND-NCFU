@@ -129,6 +129,10 @@ def validate_record(record):
         from rpg_vkr.world_library.resilience_rules import validate as validate_resilience
 
         validate_resilience(a["resilience_v1"])
+    if record["profile"] == "source_creature" and "grapple_v1" in a:
+        from rpg_vkr.world_library.grapple_rules import validate as validate_grapple
+
+        validate_grapple(a["grapple_v1"], a["actions_v2"]["actions"])
     if record["profile"] == "source_creature" and "multiattack_v1" in a:
         from rpg_vkr.world_library.multiattack_rules import validate as validate_multiattack
 

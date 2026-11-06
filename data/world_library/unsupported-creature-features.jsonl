@@ -6,7 +6,7 @@
 {"features": ["Две головы"], "id": "rpg_3e0c5a738a752aa12022d938", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=amphisbaena-mot"}
 {"features": ["Две головы"], "id": "rpg_758567ffcc45ed30958ee31f", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=amphisbaena-gos"}
 {"features": ["Хитрое действие", "Скрытая атака (1/ход)", "Мультиатака"], "id": "rpg_8977b59c04bab6a4ab382f1e", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aazon-talieri-toa"}
-{"features": ["Амфибия", "Клешня"], "id": "rpg_a19f25f36c3832c68cf49456", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aldani-lobsterfolk-toa"}
+{"features": ["Амфибия"], "id": "rpg_a19f25f36c3832c68cf49456", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aldani-lobsterfolk-toa"}
 {"features": ["Спрячься у всех на виду", "Врождённое колдовство"], "id": "rpg_93366e13d5de4f93105a03f3", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alseid-mot"}
 {"features": ["Задержка дыхания"], "id": "rpg_6cfca2e70f6b5e54eab81c7d", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=archelon-al"}
 {"features": ["Стойкость нежити"], "id": "rpg_924bd9691a4fe96eafedbd01", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=archelon-zombie-al"}
@@ -22,7 +22,7 @@
 {"features": ["Языки", "Наследие фей", "Магический заряд (Перезарядка 5–6)", "Использование заклинаний"], "id": "rpg_94091291337b3316344adc12", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aloysia-telfan-crcn"}
 {"features": ["Безрассудство"], "id": "rpg_e7cc570dfef7a043055a1ff1", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=ander-pbso"}
 {"features": ["Бросок"], "id": "rpg_84b3e2b048564583bb44de18", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=animatronic-allosaurus-kgv"}
-{"features": ["Укус", "Кислотная струя (перезарядка 6)"], "id": "rpg_38a2d438c294facba15578bb", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=ankheg-mm14"}
+{"features": ["Кислотная струя (перезарядка 6)"], "id": "rpg_38a2d438c294facba15578bb", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=ankheg-mm14"}
 {"features": ["Языки", "Темная преданность", "Использование заклинаний", "Мультиатака"], "id": "rpg_2e3b9a7a73852da6228024eb", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=fel-ardra-sas"}
 {"features": ["Мультиатака"], "id": "rpg_89c50732a5ca1995a84bf1ce", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=arlo-kettletoe-levels-1-4-kgv"}
 {"features": ["Аура угрозы", "Свечение", "Бестелесное перемещение", "Мультиатака", "Использование заклинаний", "Телепорт"], "id": "rpg_606f871db02a0a2b799e892b", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=lantern-archon-pam"}
@@ -75,7 +75,7 @@
 {"features": ["Врождённое колдовство (псионика)", "Серебряный двуручный меч"], "id": "rpg_5e1479e25123bef1442a3019", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alchaia-wdmm"}
 {"features": ["Языки", "Чужеродный разум", "Мощное телосложение", "Использование заклинаний"], "id": "rpg_51651bee59094d3a9de5328d", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aradrine-the-owl-crcn"}
 {"features": ["Убийство", "Увёртливость", "Скрытая атака (1/ход)", "Проклятия Вистани (Перезарядка после продолжительного отдыха)", "Сглаз (Перезарядка после короткого или продолжительного отдыха)"], "id": "rpg_a4c4222452d68ac0fb8ce08b", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=arrigal-cos"}
-{"features": ["Аура угрозы", "Вечное бдение", "Мультиатака", "Коготь", "Укус ищейки", "Использование заклинаний", "Телепорт"], "id": "rpg_b52594485c07471b251888ce", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=warden-archon-pam"}
+{"features": ["Аура угрозы", "Вечное бдение", "Мультиатака", "Укус ищейки", "Использование заклинаний", "Телепорт"], "id": "rpg_b52594485c07471b251888ce", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=warden-archon-pam"}
 {"features": ["Наследие фей", "Специальное снаряжение", "Необычная природа", "Мультиатака", "Использование заклинаний"], "id": "rpg_c0b8d5cec9f9b77ebcc4d1fa", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=astral-elf-aristocrat-sas"}
 {"features": ["Второе дыхание (перезарядка после короткого или продолжительного отдыха)", "Упорный (2/день)", "Дварфская устойчивость", "Дополнительный урон"], "id": "rpg_eca208a2e8811f648f0e3363", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=ahmaergo-wdh"}
 {"features": ["Необычная природа", "Мультиатака", "Коготь", "Захватывающее разрывание"], "id": "rpg_944c1e249e6a54afb077e7d9", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=anhkolox-sdq"}
@@ -84,8 +84,8 @@
 {"features": ["Драконья преданность", "Мастер сражения верхом", "Увёртливость всадника", "Тлеющее копьё", "Ручной арбалет с разрывными болтами (перезарядка 5-6)"], "id": "rpg_3c260b35b181e08ba784539c", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=red-ruin-sdq"}
 {"features": ["Неизменяемая форма", "Магическое оружие", "Руидиевый дротик", "Замедление (перезарядка 5–6)"], "id": "rpg_6dc0f594aa0ceedc2ad717bb", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alyxian-the-hunter-crcn"}
 {"features": ["Сопротивление изгнанию", "Мультиатака", "Хладные объятия", "Использование заклинаний", "Отмена заклинания (3/день)"], "id": "rpg_9484040c507c179c9e3575ec", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alhoon-mpmm"}
-{"features": ["Мультиатака", "Укус", "Шквал от крыльев (перезарядка 5-6)"], "id": "rpg_cee14e5b76771125df911c29", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aerosaur-bpgg"}
-{"features": ["Благословенный богами", "Обновление Апотеона", "Мультиатака", "Хватающая рука", "Атака", "Оружие былых времен (стоит 2 действия)"], "id": "rpg_2aafb7da648d743ba2e90d8e", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alyxian-the-tormented-crcn"}
+{"features": ["Мультиатака", "Шквал от крыльев (перезарядка 5-6)"], "id": "rpg_cee14e5b76771125df911c29", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aerosaur-bpgg"}
+{"features": ["Благословенный богами", "Обновление Апотеона", "Мультиатака", "Оружие былых времен (стоит 2 действия)"], "id": "rpg_2aafb7da648d743ba2e90d8e", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alyxian-the-tormented-crcn"}
 {"features": ["Разрыв Бездны", "Аморфный", "Обманчивая внешность", "Порождение смятения", "Паучье лазанье", "Необычная природа", "Мультиатака", "Щупальце"], "id": "rpg_b69a6988a2374ccd72b6b0e0", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alkilith-mpmm"}
 {"features": ["Кинжал", "Басня Квилла (Перезарядка 6)", "Использование заклинаний", "Совершенная насмешка"], "id": "rpg_188831291fae8287500ed6ef", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=arrant-quill-cm"}
 {"features": ["Амфибия", "Слизистое облако", "Зондирующая телепатия", "Психическое истощение (стоит 2 действия)"], "id": "rpg_36d83bab4474cc08806d463f", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=alyxian-aboleth-crcn"}
@@ -117,8 +117,8 @@
 {"features": ["Тепловая регенерация", "Мультиатака", "Использование заклинаний", "Накладывание заклинания (стоит 2 действия)", "Возгорание (стоит 2 действия)"], "id": "rpg_ae8fb042f58dece6ef9ace4f", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aurnozci-bmt"}
 {"features": ["Мультиатака", "Длинный меч", "Лидерство", "Спираль полководца (перезарядка 5–6)", "Командование союзниками", "Атака длинным мечом (стоит 2 действия)", "Напугать врагов (стоит 3 действия)", "Парирование", "Непоколебимость"], "id": "rpg_f99d93c5e0b1159877e74929", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aurelia-ggr"}
 {"features": ["Специальное снаряжение", "Восстановление", "Использование заклинаний", "Сопротивление изгнанию", "Посох (+3 Боевой посох)", "Призыв проклятья", "Неограниченные заклинания", "Рукопашная атака", "Пугающий взгляд (стоит 2 действия)", "Талисман сферы (стоит 2 действия)", "Разрушение жизни (стоит 3 действия)"], "id": "rpg_56d4905f8eb416ac57d37253", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=acererak-toa"}
-{"features": ["Платиновый блеск (перезаряжается после короткого или длительного отдыха)", "Мультиатака", "Коготь", "Хвост", "Оружия дыхания (перезарядка 5–6)", "Атака", "Яростный укус (стоит 2 действия)"], "id": "rpg_2872aaca903594ee1e0489e3", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aspect-of-bahamut-ftd"}
-{"features": ["Цветной гнев (перезаряжается после короткого или продолжительного отдыха)", "Мультиатака", "Коготь", "Хвост", "Атака", "Яростный укус (стоит 2 действия)"], "id": "rpg_6c6528e9b8a8bbd425726736", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aspect-of-tiamat-ftd"}
+{"features": ["Платиновый блеск (перезаряжается после короткого или длительного отдыха)", "Мультиатака", "Хвост", "Оружия дыхания (перезарядка 5–6)", "Атака", "Яростный укус (стоит 2 действия)"], "id": "rpg_2872aaca903594ee1e0489e3", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aspect-of-bahamut-ftd"}
+{"features": ["Цветной гнев (перезаряжается после короткого или продолжительного отдыха)", "Мультиатака", "Хвост", "Атака", "Яростный укус (стоит 2 действия)"], "id": "rpg_6c6528e9b8a8bbd425726736", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aspect-of-tiamat-ftd"}
 {"features": ["Укус"], "id": "rpg_71456daf0dc4e30a1fd02ee0", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=baboon-mm14"}
 {"features": ["Укус"], "id": "rpg_280703d5b765be4d2ed31800", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=chimeric-baboon-idrf"}
 {"features": ["Тонкий нюх", "Укус"], "id": "rpg_279ba378c05a7b2663fd16d8", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=badger-mm14"}
@@ -541,7 +541,7 @@
 {"features": ["Атака в броске", "Неумолимый (перезаряжается после короткого или продолжительного отдыха)"], "id": "rpg_4317bcbda55272075d8ee164", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-boar-mm14"}
 {"features": ["Хоботок", "Высасывание крови"], "id": "rpg_2ff3ea3d0801003571bf6d6a", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-tick-bpgg"}
 {"features": ["Атака в броске"], "id": "rpg_b38ee7ad4c0b1c5a9b1980c0", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-elk-mm14"}
-{"features": ["Амфибия", "Клешня"], "id": "rpg_3e7e9cfd1b405e2e86682026", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-crayfish-typ"}
+{"features": ["Амфибия"], "id": "rpg_3e7e9cfd1b405e2e86682026", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-crayfish-typ"}
 {"features": ["Куб слизи", "Прозрачный", "Увеличенный", "Мультиатака", "Поглощение"], "id": "rpg_13f3d647facc396a467192c3", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-gelatinous-cube-wdmm"}
 {"features": ["Сжимание"], "id": "rpg_0c1941f90ee88ba0774b08ce", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=giant-constrictor-snake-mm14"}
 {"features": ["Иные формы", "Высасывание энергии (только в истинной форме)", "Смена формы"], "id": "rpg_07f3a37ed3b46dd90eb51fc7", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=gingwatzim-cm"}
@@ -1215,7 +1215,7 @@
 {"features": ["Тонкий нюх", "Наскок", "Мультиатака", "Усыпляющее дыхание (перезаряжается после короткого или продолжительного отдыха)"], "id": "rpg_88ee43ed49a8d3f763ea18af", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=kamadan-toa"}
 {"features": ["Отслеживание нитей (1/день)", "Мультиатака", "Ножницы", "Использование заклинаний", "Предначертанная прогулка", "Запутывание нитей", "Проклятие судьбы (стоит 2 действия)"], "id": "rpg_807c78fbb8b0b07b1375e458", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=fate-hag-bmt"}
 {"features": ["Мультиатака", "Щупальца"], "id": "rpg_5e336608a19e3f974e1cc016", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=chaos-quadrapod-ai"}
-{"features": ["Амфибия", "Обманчивая внешность", "Размашистый удар", "Утопление под гипнозом"], "id": "rpg_123cf59b01fe0626a2995628", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=kelpie-typ"}
+{"features": ["Амфибия", "Обманчивая внешность", "Утопление под гипнозом"], "id": "rpg_123cf59b01fe0626a2995628", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=kelpie-typ"}
 {"features": ["Врождённое колдовство", "Магическое оружие", "Защищенное сознание", "Укус", "Сжимание", "Смена формы"], "id": "rpg_4ec0df8b2ec8c368a86a6ff0", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=couatl-mm14"}
 {"features": ["Мультиатака", "Запутывающее слово", "Использование заклинаний", "Туманное исчезновение (Перезаряжается после короткого или продолжительного отдыха)"], "id": "rpg_aeff4ada38a6f3038bace8ea", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=warlock-of-the-archfey-mpmm"}
 {"features": ["Необычная природа", "Проглатывающий укус"], "id": "rpg_e62cfece9a661f6905a985bb", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=brown-scavver-sas"}
@@ -1384,7 +1384,7 @@
 {"features": ["Храбрый", "Проворство полуросликов", "Использование заклинаний"], "id": "rpg_dc84c51e8b9b0576a583cd09", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=losser-mirklav-wdh"}
 {"features": ["Неизменный облик", "Поглощение излучения", "Мультиатака", "Луносветный взрыв (перезарядка 5-6)"], "id": "rpg_20e89dacff2faae03ce934e1", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=moonlight-guardian-ver"}
 {"features": ["Аура холода", "Тонкий нюх", "Мультиатака", "Коготь"], "id": "rpg_ddcf7f78395e1bd691f0caef", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=ice-troll-idrf"}
-{"features": ["Какофония разумов", "Щупальце"], "id": "rpg_57a8510280b114bb2cdfce62", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=intellect-snare-pbso"}
+{"features": ["Какофония разумов"], "id": "rpg_57a8510280b114bb2cdfce62", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=intellect-snare-pbso"}
 {"features": ["Электрифицированное шасси", "Мультиатака", "Провода"], "id": "rpg_2c388b19d66cdf8dec72d3fc", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=scrapper-mim"}
 {"features": ["Обманчивая внешность", "Пламенная аура", "Мультиатака", "Цепь", "Пылающий вихрь (перезарядка 5-6)"], "id": "rpg_3867e220dc279c199677bc4a", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=whirling-chandelier-ver"}
 {"features": ["Аура оцепенения", "Мультиатака"], "id": "rpg_730787c5e2305307980a2299", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=frost-giant-zombie-egw"}
@@ -1874,7 +1874,7 @@
 {"features": ["Наземный прыжок"], "id": "rpg_ab3c583948ae39a9b45b7fd8", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=pteranodon-zombie-al"}
 {"features": ["Пепельное существо", "Растаптывающий рывок"], "id": "rpg_b070ba8394bea5123b4785b6", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=ashen-warhorse-kgv"}
 {"features": ["Языки", "Рад быть здесь", "Использование заклинаний", "Удача новичка (2/день)"], "id": "rpg_c6606deb2067bf362b1372fa", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=first-year-student-scc"}
-{"features": ["Языки", "Переносчик грузов", "Морская качка", "Крюк"], "id": "rpg_1d7bb5ca31a530db629422de", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=pirate-bosun-gos"}
+{"features": ["Языки", "Переносчик грузов", "Морская качка"], "id": "rpg_1d7bb5ca31a530db629422de", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=pirate-bosun-gos"}
 {"features": ["Агрессивный"], "id": "rpg_a81d6169ab4954054a619511", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=piggy-wiggle-butt-ldr"}
 {"features": ["Засада", "Ловкий побег", "Исследователь руин", "Осадное чудовище"], "id": "rpg_bf5623831fc9062f6ee8bbb4", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=rubblebelt-stalker-ggr"}
 {"features": ["Аморфный", "Разъедание металла", "Обманчивая внешность", "Ложноножка"], "id": "rpg_aa1a9372414d05b213ca215d", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=prince-livid-ota"}
@@ -2144,7 +2144,7 @@
 {"features": ["Использование заклинаний", "Невероятное уклонение"], "id": "rpg_4e1dbb270b925c29ba9d4036", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=cuprilach-rilmani-pam"}
 {"features": ["Ограниченный иммунитет к магии", "Врождённое колдовство", "Коготь"], "id": "rpg_6ba4897b5b07d0d92a3cc7b4", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=rakshasa-mm14"}
 {"features": ["Ограниченный иммунитет к магии", "Магическое оружие", "Врождённое колдовство", "Коготь", "Призыв эринии (1/день)"], "id": "rpg_ddf177bf2bd17d99d4651da6", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=mahadi-the-rakshasa-bgda"}
-{"features": ["Мультиатака", "Укус"], "id": "rpg_0f4018cbe23aae44a3892ba4", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=regisaur-bpgg"}
+{"features": ["Мультиатака"], "id": "rpg_0f4018cbe23aae44a3892ba4", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=regisaur-bpgg"}
 {"features": ["Использование заклинаний"], "id": "rpg_6258f6e03b990090b7b1e5d9", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=aurumach-rilmani-pam"}
 {"features": ["Предводитель нежити", "Использование заклинаний", "Длинный меч", "Сгусток адского пламени (1/день)"], "id": "rpg_1927192ce0c78483a985f18d", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=death-knight-mm14"}
 {"features": ["Неизменяемая форма", "Осадный монстр", "Топот", "Отражение заклинаний (2/день)"], "id": "rpg_93dc8069519568d55859f78b", "source_url": "https://rpgd100.ru/content_pages/bestiary_dnd5e?monster=runic-colossus-bpgg"}

@@ -755,6 +755,10 @@ class Engine:
         )
 
     def finish(self):
+        if self.state.get("source_rules_v3", {}).get("grapples_v1"):
+            from rpg_vkr.world_library.grapple_rules import links
+
+            links(self)
         from rpg_vkr.domain.unified import caps
         from rpg_vkr.world_library.social_rules import update as update_library_social
 

@@ -209,6 +209,48 @@ def planning_context(session, query=""):
                 break
         if items:
             result["library_items"] = items
+    source = s.get("source_rules_v3", {})
+    if (
+        session.catalog
+        and s["battle"]
+        and any(
+            d.properties.get("library_grapple_rules") or d.properties.get("library_source_spell")
+            for d in session.catalog.definitions
+        )
+    ):
+        instant = s["minute"] * 10 + source.get("step", 0)
+        active = source.get("conditions", {})
+        blind = any(c["kind"] == "blinded" and c["until"] > instant for c in active.get("hero", []))
+        allowed = {"hero"} | (
+            {a.id for a in scene.actor_refs if a.place == scene.current} & set(s["battle"]["order"])
+        )
+        for actor in list(allowed - {"hero"}):
+            if blind or any(
+                c["kind"] == "invisible" and c["until"] > instant for c in active.get(actor, [])
+            ):
+                allowed.discard(actor)
+        result["source_geometry"] = {
+            "units": "feet",
+            "positions": [
+                {"id": actor, "point": list(point["point"]), "origin": point["origin"]}
+                for actor, point in sorted(source.get("positions", {}).items())
+                if actor in allowed and point["place"] == scene.current
+            ][:12],
+            "default_positions_are_homebrew": True,
+        }
+    grapples = [
+        r for r in s.get("source_rules_v3", {}).get("grapples_v1", []) if r["target"] == "hero"
+    ]
+    if grapples:
+        result["source_grapples"] = [
+            {
+                "source": r["source"],
+                "attack_index": r["index"],
+                "command": "source_escape",
+                "abilities": ["strength", "dexterity"],
+            }
+            for r in grapples
+        ]
     return result
 
 
@@ -232,6 +274,10 @@ GUIDE = (
     "library_magic применяет формулу с MP, library_recipe расходует материалы, "
     "library_use применяет еду, лекарство, вымышленный яд, книгу или квестовую вещь. "
     "При необходимости добавь target — ID цели из текущей сцены; для еды и чтения target=hero."
+    " При source_grapples можно предложить "
+    "source_escape:{source:ID,ability:strength|dexterity,attack_index:число}; "
+    "position:[x,y,z] — необязательное перемещение после успешного освобождения. "
+    "Исход не предрешай."
 )
 
 
@@ -250,6 +296,7 @@ def describe_proposal(session, proposal):
         "wait": "Подождать",
         "encounter": "Начать схватку",
         "attack": "Атаковать",
+        "source_escape": "Попытаться освободиться из захвата",
         "recover": "Перевести дух",
         "dodge": "Уклониться",
         "buy": "Купить",

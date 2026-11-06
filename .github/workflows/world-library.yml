@@ -64,3 +64,4 @@ jobs:
           tests/test_source_damage_prefix.py
           tests/test_source_multiattack_runtime.py
           tests/test_source_magic_runtime.py
+          tests/test_source_grapple_runtime.py
