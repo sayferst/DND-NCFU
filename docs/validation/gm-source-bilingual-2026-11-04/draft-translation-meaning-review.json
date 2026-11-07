@@ -1,0 +1,186 @@
+{
+  "schema": "gm-draft-translation-meaning-review-v1",
+  "status": "DRAFT_TRANSLATOR_NOT_ADMITTED_FOR_BULK_TRAINING_TRANSLATION",
+  "models": {
+    "en-ru": [
+      "rohanksaxena/opus-mt-en-ru",
+      "3e60bacffde1e346edc65b9d057be7d441872779"
+    ],
+    "ru-en": [
+      "rohanksaxena/opus-mt-ru-en",
+      "0814e5845ab3be4d38fd3e67b8080923e0940a21"
+    ]
+  },
+  "pilot_translated_segments": 320,
+  "selection": "EIGHT_PURPOSEFULLY_SELECTED_FAILURE_OR_AMBIGUITY_CASES_NOT_AN_ESTIMATE_OF_GLOBAL_ERROR_RATE",
+  "examples": [
+    {
+      "segment_id": "000a32764bba35a182186e950454aa1abba9b6c62f1677494102ab926c473fca",
+      "source_en": "//gonna point the cone so it doesn't hit our good boi in the corner :melting:",
+      "draft_ru": "Направим конус так, чтобы он не попал в наш хороший бой в углу : плавка:",
+      "back_en": "Send the cone so it doesn't get into our good fight in the corner: a swimmer:",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [
+          "NEGATION_REQUIRES_MEANING_REVIEW"
+        ],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "417a19c584eebc81a6302d0a6a20cf468b4bb8bc519edafafd5f589d91001409",
+        "target_sha256": "bcec1f2be1116b5d4353be991c6f7dd318cbf5db1badb1ca6269706ec2366637"
+      },
+      "meaning_finding": "good boi превратился в «хороший бой»; перевод эмодзи изменил его. Без контекста не определять вид и пол участника.",
+      "editorial_reference_ru": "Направлю конус так, чтобы не задеть нашего дружка в углу. :melting:",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "002dbf7384d4c36a6b979b7b12d82c475ddc5e7701b4845cfd81b99a3e856eca",
+      "source_en": "The tree begins to move forward before stopping short and lashing out with roots that grasp Emmeline and draw her up to the cracked wooden mouth of this thing.",
+      "draft_ru": "Дерево начинает двигаться вперёд, пока оно не остановилось и не вырвалось с корнем, который хватал Эммелину и подталкивал ее к растресканному деревянному рту этой штуки.",
+      "back_en": "The tree starts moving forward until it stops and breaks out with the root that grabbed Emmelina and pushed her to the cracked wooden mouth of this thing.",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [
+          "NEGATION_REQUIRES_MEANING_REVIEW"
+        ],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "47ec8a2ab15f1ab737367217422a88806e910c2d76134eb46b3620d2ea4398e9",
+        "target_sha256": "7354f280e4fff447aff21b3c8d018a27d92c3252e0cb2e63c2066636bfb2a7c3"
+      },
+      "meaning_finding": "Корни хватают и подтягивают жертву; дерево не вырывается с корнем и не толкает её в обратную сторону.",
+      "editorial_reference_ru": "Дерево подаётся вперёд, резко останавливается и хлещет корнями; те хватают Эммелин и подтягивают её к растрескавленной деревянной пасти.",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "002f00dffe25222cced5c4ecca827bf23a11215c032c2a0a1f72600707af127f",
+      "source_en": "The elemental grows smaller as she falls away from it.",
+      "draft_ru": "Элементарный становится меньше, когда она падает от него.",
+      "back_en": "Elementary becomes smaller when it falls from it.",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "a46d6757f94b7094ba68acb39702adc42107f5abb5c52fb8bc6650fb98d876a9",
+        "target_sha256": "57a118aeddbe3be6613d58ad08904a75015d7b6f47c0a923007d985196e050e9"
+      },
+      "meaning_finding": "elemental — существо «элементаль», не прилагательное «элементарный». Физическое уменьшение без контекста не устанавливается.",
+      "editorial_reference_ru": "По мере того как она падает, отдаляясь от элементаля, тот становится всё меньше.",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "0039b66c28ef25bbf9fc87f791dde255dba18199d1a4e44502c59c647489a5d7",
+      "source_en": "\"Tall dar'lin feed her this.\"",
+      "draft_ru": "\"Должная дорогая покормит её этим.\"",
+      "back_en": "\"The darling should feed her that.\"",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "46ac38b3f0954cb8a242004facaf5f6512a3fb0bae9aa01d6b87cd10ea930023",
+        "target_sha256": "2ac78eb083300e13d9a1dd1eca4b17c677efe9e3b024b0e54163e6860f831d6e"
+      },
+      "meaning_finding": "Обращение и просьба накормить/дать предмет превращены в утверждение о «должной дорогой». Точная редактура требует контекста.",
+      "editorial_reference_ru": "«Эй, высокий, дорогуша, дай ей это».",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "0011a491f6938726bab1dc6c5d2e3b843cfd8b808eb1400f23af30fa818a681f",
+      "source_en": "Mephistopheles Tiefling",
+      "draft_ru": "\"Мефистополисы\"",
+      "back_en": "\"Methostopolis\"",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "2fd2e5dbb0e6d0a08334aeb7afcc3aa484d9bb5949b5b48f383db349fd9cdb38",
+        "target_sha256": "5ae96ed3031569cc996b784b163f92889acbaf9ce7dce92493b388ce0201e0fe"
+      },
+      "meaning_finding": "Потеряна информация о расе и происхождении персонажа.",
+      "editorial_reference_ru": "Тифлинг Мефистофеля",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "0016b02725ade7bfb08bb565ff88260b798cb0483c19810e94d878199107e366",
+      "source_en": "Player 2: Krin would just give the half-orc a brief thumbs up, honestly surprised they managed to last this long with the raining, before quickly focusing on trying another swing!",
+      "draft_ru": "Игрок 2: Крин просто дал бы полуорку короткие пальцы, честно удивляясь, что им удалось продержаться так долго с дождем, прежде чем быстро сфокусироваться на другой качели!",
+      "back_en": "Player 2: Krin would have just given half a finger, honestly wondering if they could hold on so long with the rain before focusing quickly on another swing!",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "b71fbd50600f780d569dd21419f2b0c69f34e5038f050e0128246715cd5f5f30",
+        "target_sha256": "e77d6df7f583f87273f122b5d15d0b60990a60482881ee9cc66cb7d66654c84f"
+      },
+      "meaning_finding": "thumbs up и swing переведены как пальцы и качели; участники и действие искажены. Значение raining требует исходного контекста.",
+      "editorial_reference_ru": "Игрок 2: Крин коротко показывает полуорку поднятый большой палец: он и вправду удивлён, что под обстрелом тот продержался так долго. Затем он быстро сосредотачивается на новой попытке удара.",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "001ec8e59146d72603d8b43702593ab75a02824a2df4988be4403416ffc14279",
+      "source_en": "Foresight, Hexblade's Curse, Blessed, Potent Poison, Feeling Inspired (1d12), Aura of Protection, Supreme Aura",
+      "draft_ru": "Предвидение, проклятие Хексбрейда, благословенное, яд, чувство вдохновения (1d12), Aura of Protection, Верховный Аура",
+      "back_en": "Premonition, Hexbrid curse, blessed, poison, sense of inspiration (1d12), Aura of Protection, Supreme Aura",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "cd30c2d7577fae98fd646d00fcf2ca3522f3521fbbfe82a0363c49f91babf159",
+        "target_sha256": "fbfcda94c5322d3ac530e2366c7db5a982dfcd69f9eb8c8e25e7f95f1bfcc44e"
+      },
+      "meaning_finding": "В перечне эффектов потеряны признаки и смешаны языки; названия эффектов не должны приобретать новые механические значения.",
+      "editorial_reference_ru": "Предвидение, Проклятие ведьмовского клинка, Благословение, Сильный яд, Вдохновение (1d12), Аура защиты, Высшая аура",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    },
+    {
+      "segment_id": "0026310914bac010032ffa4a497934a3817dbe9530027b91081a6d8151e07c3e",
+      "source_en": "GO1 gained Slowed (Ray of Frost).",
+      "draft_ru": "GO1 обрел медленную скорость (Ray of Frost).",
+      "back_en": "GO1 reached a slow speed (Ray of From).",
+      "structural_status": "STRUCTURAL_QC_PASS",
+      "structural_checks": {
+        "back_is_diagnostic_not_meaning_proof": true,
+        "back_issues": [],
+        "human_reviewed": false,
+        "issues": [],
+        "source_sha256": "4c0ecd5b25695f51e68f237d37a375dedf3e6fe76431764ad37f92340c1dd643",
+        "target_sha256": "5bd54c94b9e61149d92929747346ce9a05aa3ac8cf59b7b7523260bafbdc2a74"
+      },
+      "meaning_finding": "Эффект Slowed переведён как получение медленной скорости. Это не прибавка скорости и не неизвестная способность.",
+      "editorial_reference_ru": "GO1 получает эффект замедления («Луч холода»).",
+      "editor": "assistant",
+      "human_reviewed": false,
+      "train_admitted": false
+    }
+  ],
+  "meaning_reviewed_by": "assistant",
+  "human_reviewed_rows": 0,
+  "whole_corpus_meaning_reviewed": false,
+  "training_steps": 0
+}

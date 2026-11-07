@@ -1,0 +1,270 @@
+{
+  "schema": "gm-domain-coverage-v1",
+  "status": "COMPLETE_SOURCE_INVENTORY_NOT_MODEL_QUALITY_VERDICT",
+  "records": {
+    "FIREBALL_FILTERED": 153829,
+    "CRD3_TRANSCRIPT": 398682,
+    "SYNTHETIC_REFERENCE": 1100
+  },
+  "crd3_speaker_roles": {
+    "DM_EXPLICIT_MATT": 111093,
+    "OTHER_OR_MULTIPLE_SPEAKERS": 287589
+  },
+  "requested_domains": 31,
+  "domains": {
+    "combat_attack": {
+      "description": "Атака и попадание/промах",
+      "counts": {
+        "FIREBALL_FILTERED:RECORDED_COMMAND_NOT_RULE_OR_SUCCESS_PROOF": 102704,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 10
+      }
+    },
+    "combat_defense": {
+      "description": "Защита и реакции",
+      "counts": {
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 5
+      }
+    },
+    "spell_casting": {
+      "description": "Применение магии",
+      "counts": {
+        "FIREBALL_FILTERED:RECORDED_COMMAND_NOT_RULE_OR_SUCCESS_PROOF": 41693,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 35
+      }
+    },
+    "resource_cost": {
+      "description": "Расход ресурсов",
+      "counts": {
+        "FIREBALL_FILTERED:RECORDED_AUTOMATION_RESULT": 246,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 40
+      }
+    },
+    "damage": {
+      "description": "Повреждения",
+      "counts": {
+        "FIREBALL_FILTERED:OBSERVED_NUMERIC_STATE_DELTA": 94591,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 5
+      }
+    },
+    "healing": {
+      "description": "Лечение",
+      "counts": {
+        "FIREBALL_FILTERED:OBSERVED_NUMERIC_STATE_DELTA": 21008,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      }
+    },
+    "temporary_hp": {
+      "description": "Временные HP",
+      "counts": {
+        "FIREBALL_FILTERED:RECORDED_AUTOMATION_RESULT": 2492
+      }
+    },
+    "zero_hp": {
+      "description": "Состояние при нуле HP",
+      "counts": {
+        "FIREBALL_FILTERED:OBSERVED_ZERO_HP_NOT_PROOF_OF_DEATH": 13327
+      }
+    },
+    "death_stabilization": {
+      "description": "Смерть, спасброски и стабилизация",
+      "counts": {
+        "FIREBALL_FILTERED:RECORDED_AUTOMATION_RESULT": 1,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 45
+      }
+    },
+    "conditions_effects": {
+      "description": "Состояния и эффекты",
+      "counts": {
+        "FIREBALL_FILTERED:OBSERVED_EFFECT_FIELD_CHANGE_NOT_UNIVERSAL_RULE": 39998,
+        "FIREBALL_FILTERED:RECORDED_AUTOMATION_RESULT": 3710
+      }
+    },
+    "d20_checks": {
+      "description": "Проверки D20 и сложность",
+      "counts": {
+        "FIREBALL_FILTERED:RECORDED_AUTOMATION_RESULT": 21564,
+        "FIREBALL_FILTERED:RECORDED_COMMAND_NOT_RULE_OR_SUCCESS_PROOF": 6,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 342
+      }
+    },
+    "critical_boundaries": {
+      "description": "Натуральные 1/20 в допустимых пределах",
+      "counts": {
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 10
+      }
+    },
+    "partial_success": {
+      "description": "Частичный успех",
+      "counts": {
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 54
+      }
+    },
+    "crafting": {
+      "description": "Создание и переделка вещей",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 89,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 280,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 85
+      }
+    },
+    "repair": {
+      "description": "Ремонт",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 154,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 158,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 45
+      }
+    },
+    "unconventional_item_use": {
+      "description": "Нестандартное использование предметов",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 33,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 15,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 110
+      }
+    },
+    "physical_capability_limits": {
+      "description": "Физические ограничения и доступные способности",
+      "counts": {
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 35
+      }
+    },
+    "movement_travel": {
+      "description": "Перемещение и путешествие",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 6529,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 4129,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 60
+      }
+    },
+    "exploration": {
+      "description": "Исследование и наблюдение",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 687,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 2303,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 210
+      }
+    },
+    "rest_exhaustion": {
+      "description": "Отдых и истощение",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1176,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 956,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      }
+    },
+    "overcasting": {
+      "description": "Перерасход магии по правилам владельца",
+      "counts": {
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      }
+    },
+    "npc_dialogue": {
+      "description": "Диалоги с NPC",
+      "counts": {
+        "CRD3_TRANSCRIPT:POSSIBLE_QUOTED_DIALOGUE_NOT_CHARACTER_ROLE_PROOF": 19095,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 175
+      }
+    },
+    "persuasion_negotiation": {
+      "description": "Убеждение и переговоры",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 174,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 199,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 90
+      }
+    },
+    "npc_interests_conflict": {
+      "description": "Разные интересы участников конфликта",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 217,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 133,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 95
+      }
+    },
+    "trade_economy": {
+      "description": "Торговля и конечные ресурсы",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 333,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 676,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 55
+      }
+    },
+    "world_consequences": {
+      "description": "Последствия для мира",
+      "counts": {
+        "FIREBALL_FILTERED:OBSERVED_NUMERIC_STATE_DELTA": 101814,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 875
+      }
+    },
+    "world_memory": {
+      "description": "Память о событиях",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1335,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1104,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 15
+      }
+    },
+    "scene_quest_generation": {
+      "description": "Повествовательные сцены и задания",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1294,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 790
+      }
+    },
+    "narration": {
+      "description": "Повествование",
+      "counts": {
+        "FIREBALL_FILTERED:SOURCE_LINKED_UTTERANCE_ROLE_CHECK_REQUIRED": 43372,
+        "CRD3_TRANSCRIPT:SOURCE_DM_TRANSCRIPT_REQUIRES_CONTENT_SCREENING": 111093,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 1100
+      }
+    },
+    "clarification": {
+      "description": "Уточнение неизвестных условий",
+      "counts": {
+        "FIREBALL_FILTERED:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 404,
+        "CRD3_TRANSCRIPT:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 699,
+        "SYNTHETIC_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      }
+    },
+    "role_contract": {
+      "description": "Роль мастера и свобода игрока",
+      "counts": {
+        "SYNTHETIC_REFERENCE:EXPLICIT_PROJECT_INSTRUCTION": 1100
+      }
+    }
+  },
+  "no_evidence_domains": [],
+  "no_strong_source_evidence_domains": [
+    "combat_defense",
+    "critical_boundaries",
+    "partial_success",
+    "crafting",
+    "repair",
+    "unconventional_item_use",
+    "physical_capability_limits",
+    "movement_travel",
+    "exploration",
+    "rest_exhaustion",
+    "overcasting",
+    "npc_dialogue",
+    "persuasion_negotiation",
+    "npc_interests_conflict",
+    "trade_economy",
+    "world_memory",
+    "scene_quest_generation",
+    "clarification",
+    "role_contract"
+  ],
+  "ledger_sha256": "3964fb350e62c610b1a1c7f61b983babf56a87c8ab43ee1cfbb7d7d446626199",
+  "notes": [
+    "Narrative mentions are not executed mechanics or validated rules.",
+    "Character-sheet repertoire is excluded from execution counts.",
+    "A source account/role does not imply local human approval.",
+    "No source data or old splits were modified."
+  ],
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0
+}

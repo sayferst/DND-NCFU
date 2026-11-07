@@ -33,6 +33,47 @@ def test_cloud_panel_does_not_show_an_empty_local_model_control(connection_windo
     assert connection_window.local_model.isHidden()
 
 
+def test_modern_local_panel_selects_installed_faun_and_returns_without_paid_call(connection_window):
+    from rpg_vkr.narrative.local_models import FAUN_MODEL
+    from rpg_vkr.ui.narrator_panel import models_ready
+
+    window = connection_window
+    window.ai_provider.setCurrentIndex(window.ai_provider.findData("local"))
+    assert not window.local_connection_box.isHidden()
+    assert not window.local_model.isHidden()
+    assert window.connection_cloud_models.isHidden()
+    assert not window.select_faun_button.isEnabled()
+    window.ollama.models = (FAUN_MODEL,)
+    models_ready(window, (FAUN_MODEL,))
+    window.select_faun_button.click()
+    assert window.local_model.currentText() == FAUN_MODEL
+    assert window.enable_local_narrator.isChecked() and not window.ollama.cloud
+    assert "Faun установлена" in window.local_connection_status.text()
+    assert "127.0.0.1" in window.connection_endpoint.text()
+    assert not window.ollama.busy
+    window.return_deepseek_button.click()
+    assert window.ai_provider.currentData() == "routerai"
+    assert not window.ollama.busy and not window.cloud_allowed.isChecked()
+
+
+def test_saved_local_selection_stays_local_and_requires_fresh_discovery(qt_app, tmp_path):
+    from rpg_vkr.narrative.local_models import FAUN_MODEL
+    from rpg_vkr.ui.flash_settings import save_preferences
+
+    ConnectionPreferences("local", FAUN_MODEL, True, False).save(tmp_path / "ai-connection.json")
+    window = MainWindow(saves=SaveSlots(tmp_path / "saves"))
+    try:
+        assert window.ai_provider.currentData() == "local"
+        assert window.local_model.currentText() == FAUN_MODEL
+        assert not window.ollama.models and not window.ollama.cloud and not window.ollama.busy
+        assert not window.select_faun_button.isEnabled()
+        assert save_preferences(window, True)
+        saved = ConnectionPreferences.load(tmp_path / "ai-connection.json")
+        assert saved.provider == "local" and saved.model == FAUN_MODEL
+    finally:
+        window.close()
+
+
 def test_restart_retains_a_non_flash_selected_model(qt_app, tmp_path, monkeypatch):
     with metadata_server(monkeypatch) as records:
         ConnectionPreferences("routerai", MODEL, True, True).save(tmp_path / "ai-connection.json")

@@ -1,0 +1,316 @@
+FFFFFFFFFF.......F                                                       [100%]
+=================================== FAILURES ===================================
+_________ test_bow_has_graded_physical_outcomes_without_duplication[1] _________
+
+natural = 1
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o0')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+_________ test_bow_has_graded_physical_outcomes_without_duplication[8] _________
+
+natural = 8
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o1')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+_________ test_bow_has_graded_physical_outcomes_without_duplication[9] _________
+
+natural = 9
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o2')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+________ test_bow_has_graded_physical_outcomes_without_duplication[15] _________
+
+natural = 15
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o3')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+________ test_bow_has_graded_physical_outcomes_without_duplication[16] _________
+
+natural = 16
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o4')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+________ test_bow_has_graded_physical_outcomes_without_duplication[18] _________
+
+natural = 18
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o5')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+________ test_bow_has_graded_physical_outcomes_without_duplication[19] _________
+
+natural = 19
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o6')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+________ test_bow_has_graded_physical_outcomes_without_duplication[20] _________
+
+natural = 20
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-1/test_bow_has_graded_physical_o7')
+
+    @pytest.mark.parametrize("natural", [1, 8, 9, 15, 16, 18, 19, 20])
+    def test_bow_has_graded_physical_outcomes_without_duplication(natural, tmp_path):
+        seed = next(n for n in range(10000) if Random(n).randint(1, 20) == natural)
+        s = campaign(seed=seed)
+        bow = next(i for i in s.gameplay["items"] if i.get("kind") == "longbow")
+        id = bow["id"]
+        money, xp = s.gameplay["copper"], s.gameplay["xp"]
+        turn = s.submit("Разбираю свой лук и делаю из него удочку")
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "CHECK_REQUIRED" and check["total"] == natural + 2
+        item = next(i for i in s.gameplay["items"] if i["id"] == id)
+        total = natural + 2
+        assert item["kind"] == ("broken_bow" if total <= 10 else "salvage" if total <= 17 else "improvised_rod")
+        assert "template" not in item and s.gameplay["weapon"] != id
+        assert sum(i["id"] == id for i in s.gameplay["items"]) == 1
+        assert sum(e.id == id for e in s.catalog.entities) == 1
+        assert next(t for t in s.interaction_state().things if t.id == id).name == item["name"]
+        assert (s.gameplay["copper"], s.gameplay["xp"]) == (money, xp)
+>       assert s.gameplay["minute"] == 30
+E       assert 510 == 30
+
+tests/test_free_actions_pipeline.py:58: AssertionError
+_ test_impossible_goal_allows_attempt_without_roll_or_created_resources[\u041f\u044b\u0442\u0430\u044e\u0441\u044c \u043d\u0430\u043a\u043e\u043b\u0434\u043e\u0432\u0430\u0442\u044c \u0441\u0435\u0431\u0435 \u0441\u0442\u043e \u0437\u043e\u043b\u043e\u0442\u044b\u0445 \u043c\u043e\u043d\u0435\u0442] _
+
+text = 'Пытаюсь наколдовать себе сто золотых монет'
+
+    @pytest.mark.parametrize("text", ["Пытаюсь наколдовать себе сто золотых монет", "Сажусь на метлу и пытаюсь взлететь"])
+    def test_impossible_goal_allows_attempt_without_roll_or_created_resources(text):
+        s = campaign()
+        before = s.gameplay["copper"], s.gameplay["mp"], s.dice.checkpoint()
+        s.submit(text)
+        assert (s.gameplay["copper"], s.gameplay["mp"], s.dice.checkpoint()) == before
+        check = receipt(s)["free_attempt"]
+        assert check["mode"] == "ATTEMPT_WITHOUT_TARGET_SUCCESS"
+        assert not check["item_changes"] and check["total"] is None
+>       assert s.gameplay["minute"] == 1
+E       assert 481 == 1
+
+tests/test_free_actions_pipeline.py:86: AssertionError
+_ test_impossible_goal_allows_attempt_without_roll_or_created_resources[\u0421\u0430\u0436\u0443\u0441\u044c \u043d\u0430 \u043c\u0435\u0442\u043b\u0443 \u0438 \u043f\u044b\u0442\u0430\u044e\u0441\u044c \u0432\u0437\u043b\u0435\u0442\u0435\u0442\u044c] _
+
+text = 'Сажусь на метлу и пытаюсь взлететь'
+
+    @pytest.mark.parametrize("text", ["Пытаюсь наколдовать себе сто золотых монет", "Сажусь на метлу и пытаюсь взлететь"])
+    def test_impossible_goal_allows_attempt_without_roll_or_created_resources(text):
+        s = campaign()
+        before = s.gameplay["copper"], s.gameplay["mp"], s.dice.checkpoint()
+>       s.submit(text)
+
+tests/test_free_actions_pipeline.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rpg_vkr/unified_session.py:309: in called
+    result = method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/unified_session.py:158: in submit
+    return self.perform_gameplay(
+src/rpg_vkr/unified_session.py:293: in called
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/storage/migration.py:100: in called
+    return method(session, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/application.py:215: in perform_gameplay
+    return perform(self, command, args, request_id, action=action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/gameplay_session.py:96: in perform
+    result = execute(session._gameplay["state"], command, args, before, session.dice)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/gameplay_rules.py:56: in execute
+    return unified_execute(state, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/unified.py:272: in execute
+    return catalog_execute(original, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/catalog_engine.py:648: in execute
+    return _execute(original, command, args, context, dice)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rpg_vkr/domain/catalog_engine.py:661: in _execute
+    free_attempt(engine, args)
+src/rpg_vkr/domain/free_actions.py:199: in execute
+    broom = one(matching("метла", owned), "Нужна существующая доступная метла.")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rows = [], message = 'Нужна существующая доступная метла.'
+
+    def one(rows, message):
+        if len(rows) != 1:
+>           raise ValueError("CLARIFICATION_REQUIRED: " + message)
+E           ValueError: CLARIFICATION_REQUIRED: Нужна существующая доступная метла.
+
+src/rpg_vkr/domain/free_actions.py:77: ValueError
+__________ test_local_action_ui_uses_engine_without_requesting_model ___________
+
+window = <rpg_vkr.ui.main_window.MainWindow(0x29ccf2c0) at 0x7f4b82f60a00>
+
+    def test_local_action_ui_uses_engine_without_requesting_model(window):
+        from rpg_vkr.ui.narrator_panel import request_local_actions
+    
+        window._session = campaign()
+        window.enable_local_narrator.setChecked(False)
+        assert request_local_actions(window, "Подбираю рукавицу")
+>       assert window._session.catalog.entity("glove").owner_id == "hero"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Catalog' object has no attribute 'entity'
+
+tests/test_free_actions_pipeline.py:139: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[1]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[8]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[9]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[15]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[16]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[18]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[19]
+FAILED tests/test_free_actions_pipeline.py::test_bow_has_graded_physical_outcomes_without_duplication[20]
+FAILED tests/test_free_actions_pipeline.py::test_impossible_goal_allows_attempt_without_roll_or_created_resources[\u041f\u044b\u0442\u0430\u044e\u0441\u044c \u043d\u0430\u043a\u043e\u043b\u0434\u043e\u0432\u0430\u0442\u044c \u0441\u0435\u0431\u0435 \u0441\u0442\u043e \u0437\u043e\u043b\u043e\u0442\u044b\u0445 \u043c\u043e\u043d\u0435\u0442]
+FAILED tests/test_free_actions_pipeline.py::test_impossible_goal_allows_attempt_without_roll_or_created_resources[\u0421\u0430\u0436\u0443\u0441\u044c \u043d\u0430 \u043c\u0435\u0442\u043b\u0443 \u0438 \u043f\u044b\u0442\u0430\u044e\u0441\u044c \u0432\u0437\u043b\u0435\u0442\u0435\u0442\u044c]
+FAILED tests/test_free_actions_pipeline.py::test_local_action_ui_uses_engine_without_requesting_model
+11 failed, 7 passed in 1.89s

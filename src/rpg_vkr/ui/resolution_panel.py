@@ -95,6 +95,15 @@ def refresh_guidance(window):
     actor_id = actor_id or (session.combat.active if command == "атаковать" else None)
     if session.world.hp == 0:
         text = "Герой выбыл. Загрузите сессию или создайте нового героя."
+        if getattr(session, "gameplay", {}).get("owner_rules_policy") == 1:
+            life = session.gameplay.get("owner_life", {}).get("hero", {})
+            text = (
+                "Герой мёртв. Обычное лечение не воскрешает."
+                if life.get("dead")
+                else "Герой стабилен при0HP. Нужны лечение или время для восстановления."
+                if life.get("stable")
+                else "Герой без сознания при0HP. Выполните спасбросок смерти в действиях героя."
+            )
     elif actor_id and not session.actor_is_here(actor_id):
         text = "Цели здесь нет. Сначала доберитесь до её места."
     elif actor_id and session.combat.actor(actor_id).hp == 0:

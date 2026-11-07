@@ -1,0 +1,100 @@
+{
+  "schema": "faun-final-data-check-v1",
+  "status": "DATA_READY_INDEPENDENT_TOKEN_CHECK_PASS",
+  "purpose": "RUSSIAN_CONFIRMED_OUTCOME_NARRATION_NOT_ACTION_PLANNER_OR_AVRAE_COMMANDS",
+  "dataset_policy": "fireball-augmented-v1",
+  "dataset_sha256": "529c055869da21495f170015877a16101bc10531b4f27aea1cc54988768036d3",
+  "split_sha256": {
+    "train": "96c558476bb80926c901125949afae0d2337d3b82a32b991a2142be698425922",
+    "val": "07ac9c2ad075b09ad6ef63bf0144b8e93f1bc4d8f3dc425e5125dc0c0b7866ab",
+    "test": "5aebb32c7089aa00e8e0d7bbd9713241efb117ac50d0d2e0b303f887bdbfb724"
+  },
+  "cpu_report_sha256": "34a62350285be1df9089a2fdf1994913156848de79a3d43fc41abf909697c7db",
+  "model_id": "limloop/MN-12B-Faun-RP-RU",
+  "revision": "bdfc761b14feb9dd03ef158a4d337fc1cf5fd183",
+  "chat_template_sha256": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b",
+  "corpus": {
+    "samples": 1196,
+    "splits": {
+      "train": 976,
+      "val": 110,
+      "test": 110
+    },
+    "groups": 221,
+    "group_cross_split": 0,
+    "duplicate_full_inputs": 0,
+    "provenance_by_split": {
+      "train": {
+        "gm-grounded-synthetic-v1": 880,
+        "fireball-observed-hp-v1": 96
+      },
+      "val": {
+        "gm-grounded-synthetic-v1": 110
+      },
+      "test": {
+        "gm-grounded-synthetic-v1": 110
+      }
+    },
+    "human_reviewed_samples": 0,
+    "unique_replies": 662,
+    "maximum_reply_repetition": 41,
+    "approximate_sentences": {
+      "1": 552,
+      "2": 490,
+      "3": 139,
+      "4": 15
+    },
+    "outcomes": {
+      "failure": 161,
+      "partial_success": 54,
+      "success": 670,
+      "goal_unreachable": 160,
+      "best_possible": 23,
+      "clarification_required": 25,
+      "success_with_complication": 5,
+      "observed_hp_delta": 96,
+      "no_effect_dead_target": 2
+    },
+    "holdout_limit": "GROUP_IDS_NOT_PROOF_OF_REAL_CAMPAIGN_GENERALIZATION"
+  },
+  "max_length": 2048,
+  "tokenization": {
+    "train": {
+      "samples": 976,
+      "max_total": 1149,
+      "total_tokens": 680698,
+      "supervised_tokens": 33899,
+      "encoded_sha256": "de55ce029a44c7504a3b19586f6071633dc74c54358b77eecee2552d2f5e51be"
+    },
+    "val": {
+      "samples": 110,
+      "max_total": 1071,
+      "total_tokens": 80908,
+      "supervised_tokens": 3866,
+      "encoded_sha256": "87d6edb55bee24402bead911d92c29abe700338166630bc8a46c1d105dfed8d1"
+    },
+    "test": {
+      "samples": 110,
+      "max_total": 1072,
+      "total_tokens": 74579,
+      "supervised_tokens": 3032,
+      "encoded_sha256": "1ef8d1fd2d3744dfd0cb90c405a980676c8fb2f2e7c2fbcc110ab2d86e0a7f6e"
+    }
+  },
+  "tokenizer_rechecked_samples": 1196,
+  "independent_auto_tokenizer_samples": 1196,
+  "model_weights_loaded": false,
+  "gpu_fit_verified": false,
+  "model_quality_evaluated": false,
+  "training_steps": 0,
+  "fireball_limit": {
+    "source_observed_examples": 96,
+    "russian_target_origin": "ASSISTANT_AUTHORED_NOT_HUMAN_TRANSCRIPT",
+    "external_holdout_available": false,
+    "full_native_fireball_admitted": false
+  },
+  "tokenizer_file_sha256": {
+    "tokenizer.json": "a2fa2956478eaa353c6c4b1f47fdd6868cce6075e52e169c35ae8bd28524e7a8",
+    "chat_template.jinja": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b"
+  }
+}

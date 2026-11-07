@@ -1,0 +1,33 @@
+{
+  "schema": "faun-training-tools-v1",
+  "status": "TOOLS_ONLY_NOT_TRAINED",
+  "files": {
+    "training/__init__.py": "4bb2c5eec664ce9c9c29c09a2768faf66691d3ce6831c42d7c5884db2ab3459c",
+    "training/train_lora.py": "10dd5e06900ab634fcf5aeda4a45cd6fc5ff6224d69e22161fb305104946bf2f",
+    "training/model_profiles.py": "9407d1bb61bb3f61553b7ba002e9697457db8ac8b67ed2d872804457bb91c696",
+    "training/schema.py": "0792382698a0ec4f6a387c832860097b86c09085964bda7ce8a9a5170bf96417",
+    "training/inspect_archive.py": "58f186600aad0c3d07828ef18caea1510c6546b1d6388ffe756ab5b38ceaa66f",
+    "training/prepare_dataset.py": "e00abad24c18b8d910a4c49e40f0913c687f016fc6c2c6c7a5ad38e59c204e1c",
+    "training/split_dataset.py": "03ef866826e6dcd8a9bff3e5d492d3620b921cb3024a11c2966f8759fd614301",
+    "training/hardware_preflight.py": "5a2ae491c2299df49bc2145c61eb85d10c3cf64cde133a7a894f6036a10c3486",
+    "training/setup_faun_gpu.py": "0ea210382328e488bd70271205c03899df0664028e3517625214d4b6c0dc668d",
+    "training/serve.py": "a16c2dc460347722dcb167f7a2d018d0ffd3467d9cf598541e6c201c81f14619",
+    "training/export_model.py": "3fe73418427b82fb79becf31a30c5d3da9dbe30c44dac232093197464c3ba2f7",
+    "training/merge_gguf.py": "69b792f2342a310296b8c094cbba038972dbe6219dbb6e74173d18a42d7ccad6",
+    "training/compare_models.py": "f2ce4fc3231d8d6a441e03941d7b2a1b4ac1541c9b8020c583b2d2067a67d311",
+    "training/evaluate_faun.py": "41e7aec4d6e7b3597a3d6a0f4de3aff2bce15b1ae43d4efbf0e95fb6d6a902a8",
+    "training/ollama_probe.py": "c38776c8e4e119eb1faaca34d62c480182eb67af3f1a70a5cd56968d66c02309",
+    "training/requirements-faun.in": "468cc67995f2a9766bc2430cd93320faf00d08df73577281fda8ecffe107f1d9",
+    "training/requirements-faun-linux.lock": "24a7233e17ddcdf7e5c7eb3e97b686a20ed802d24cc875f01bd6965af4ab1e5d",
+    "training/configs/faun_qlora_v1.json": "69f54234141c15b5f441039e04f4d1f0e8e844897ee5d3c61dc8d1fc6db93cc7",
+    "src/rpg_vkr/__init__.py": "7b087d029fb2fd69f9dceaa204e52c7b185e1ca8006b1366982a613e58435d61",
+    "src/rpg_vkr/learning/__init__.py": "57806b2b8c60d7fe96a10a5103506ef8c2c6a5c65acba8de4ea8faffe1ded453",
+    "src/rpg_vkr/learning/quality.py": "fb67291bcead002494d2344182f3f9cdf060477f9f584b88db687e81a5eafab9",
+    "src/rpg_vkr/narrative/__init__.py": "09c05ba656c4f4d18821527b5cf76c8bb6b23727e26dbfdd461689709c9b079c",
+    "src/rpg_vkr/narrative/local_models.py": "ed4beaf9253560cb9a6682a9fa506c788aee467450943fafea41e14e951ba4bc",
+    "src/rpg_vkr/narrative/strategic_critic.py": "784d4d698616e08dd0a3e7e1aefa5fb1b033766a3529266a7a6798b42c33201c"
+  },
+  "weights_included": false,
+  "private_data_included": false,
+  "training_steps": 0
+}

@@ -818,6 +818,14 @@ class MainWindow(EpisodePanels, WorkspaceActions, QMainWindow):
                 return
         from rpg_vkr.ui.cloud_gate import require_cloud, require_world
 
+        if (self._session.gameplay or {}).get("free_action_policy") == 1:
+            from rpg_vkr.domain.free_actions import interpret
+
+            if interpret(action) is not None:
+                tester = getattr(getattr(self, "release_profile", None), "mode", "") == "tester"
+                if (not tester or require_cloud(self)) and require_world(self):
+                    request_local_actions(self, action)
+                return
         if not require_cloud(self) or not require_world(self):
             return
         if use_ai and getattr(self, "_flash_pending", False):

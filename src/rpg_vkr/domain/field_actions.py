@@ -41,8 +41,16 @@ def perform(e, command, args):
         raise ValueError("Нужен бинт или чистая ткань.")
     e.consume_item(item)
     if e.check("medicine", 10):
-        e.change_hp(target, 1)
+        if e.state.get("owner_rules_policy") == 1:
+            from rpg_vkr.domain.owner_rules import stabilize
+            from rpg_vkr.domain.owner_rules_runtime import apply, life
+
+            apply(e, target, stabilize(life(e, target)))
+            e.text.append("Первая помощь стабилизировала цель при0HP без восстановления здоровья.")
+        else:
+            e.change_hp(target, 1)
         e.events.append({"kind": "first_aid", "actor": target})
-        e.text.append("Первая помощь вернула сознание. Смерть она не отменяет.")
+        if e.state.get("owner_rules_policy") != 1:
+            e.text.append("Первая помощь вернула сознание. Смерть она не отменяет.")
     else:
         e.text.append("Первая помощь не удалась; перевязочный материал израсходован.")

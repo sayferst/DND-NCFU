@@ -1,0 +1,10 @@
+{
+  "observed_at": "2026-11-03T15:22:16.982434+00:00",
+  "model": "hf.co/limloop/MN-12B-Faun-RP-RU-GGUF:Q4_K_M",
+  "status": "BLOCKED_PROVIDER",
+  "measurements": [],
+  "context_tokens": 2048,
+  "training_steps": 0,
+  "human_quality_review": "NOT_PERFORMED",
+  "error_category": "URLError"
+}

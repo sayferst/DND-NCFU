@@ -1,0 +1,14 @@
+{
+  "raw_events": {
+    "files": 24748,
+    "lines": 12506838,
+    "parsed": 12506838,
+    "quarantine": 0
+  },
+  "native_filtered": {
+    "files": 14700,
+    "lines": 153829,
+    "parsed": 153829,
+    "quarantine": 0
+  }
+}

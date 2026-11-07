@@ -1,0 +1,491 @@
+{
+  "bow_craft:0": {
+    "input_capabilities": [
+      "shoot"
+    ],
+    "result_capabilities": [
+      "fishing_support"
+    ],
+    "limits": {
+      "hook": false
+    },
+    "required_traits": [
+      "shaft",
+      "cord"
+    ],
+    "input_traits": [
+      "shaft",
+      "cord"
+    ]
+  },
+  "bow_craft:1": {
+    "dependent_item": "лук",
+    "input_capabilities": [
+      "string"
+    ],
+    "result_capabilities": [
+      "snare"
+    ],
+    "required_traits": [
+      "cord"
+    ],
+    "input_traits": [
+      "cord"
+    ]
+  },
+  "bow_craft:3": {
+    "input_capabilities": [
+      "broken_bow"
+    ],
+    "result_capabilities": [
+      "splint"
+    ],
+    "limits": {
+      "heals_patient": false
+    },
+    "required_traits": [
+      "shaft",
+      "binding"
+    ],
+    "input_traits": [
+      "shaft",
+      "binding"
+    ]
+  },
+  "bow_craft:5": {
+    "result_capabilities": [
+      "line"
+    ],
+    "limits": {
+      "hook": false
+    },
+    "input_traits": [
+      "cord"
+    ],
+    "required_traits": [
+      "cord"
+    ]
+  },
+  "bow_craft:6": {
+    "input_capabilities": [
+      "fishing_support"
+    ],
+    "result_capabilities": [
+      "shoot"
+    ],
+    "provenance": "registered_former_bow"
+  },
+  "bow_craft:9": {
+    "input_capabilities": [
+      "fishing_support"
+    ],
+    "result_capabilities": [
+      "material_bundle"
+    ]
+  },
+  "material:0": {
+    "material": "raw_clay",
+    "result_capabilities": [
+      "container_form"
+    ],
+    "limits": {
+      "waterproof": false
+    },
+    "required_traits": [
+      "plastic_material"
+    ],
+    "input_traits": [
+      "plastic_material"
+    ]
+  },
+  "material:1": {
+    "evidence": {
+      "leak_present": true,
+      "waterproof": false
+    }
+  },
+  "material:2": {
+    "result_capabilities": [
+      "water_resistant"
+    ],
+    "limits": {
+      "waterproof": false
+    },
+    "input_traits": [
+      "fabric",
+      "oil"
+    ],
+    "required_traits": [
+      "fabric",
+      "oil"
+    ]
+  },
+  "material:3": {
+    "result_capabilities": [
+      "rope"
+    ],
+    "limits": {
+      "length_m": 5,
+      "knot_strength": "limited"
+    },
+    "required_traits": [
+      "cord"
+    ],
+    "input_traits": [
+      "cord"
+    ]
+  },
+  "material:8": {
+    "evidence": {
+      "matches_known_sample": "soft_stone",
+      "magic_detected": false
+    },
+    "observation_uncertain": true
+  },
+  "material:9": {
+    "evidence": {
+      "first_method_material": 1,
+      "second_method_material": 2,
+      "second_method_stronger": true
+    }
+  },
+  "partial:0": {
+    "limits": {
+      "repaired_component": "brake",
+      "other_faults_remain": true
+    }
+  },
+  "partial:1": {
+    "limits": {
+      "supports_repaired": 1,
+      "supports_unchanged": 2
+    }
+  },
+  "damage:2": {
+    "limits": {
+      "chosen_fastener_lost": true
+    },
+    "consumed_component": "крепление"
+  },
+  "damage:6": {
+    "destination": "companion",
+    "transfer_title": true
+  },
+  "coins:2": {
+    "evidence": {
+      "mass_g": 0,
+      "material": false
+    }
+  },
+  "coins:3": {
+    "vital_constraints_satisfied": false,
+    "evidence": {
+      "payment_requires_real_gold": true
+    }
+  },
+  "coins:6": {
+    "evidence": {
+      "mass_g": 0,
+      "scales_response": "no_mass"
+    }
+  },
+  "coins:8": {
+    "evidence": {
+      "supported_effect": "illusion",
+      "creates_real_metal": false
+    }
+  },
+  "coins:9": {
+    "evidence": {
+      "witness_saw": "illusion_cast",
+      "minting_verified": false
+    }
+  },
+  "broom:3": {
+    "evidence": {
+      "lift_sufficient_for_human": false
+    }
+  },
+  "broom:4": {
+    "evidence": {
+      "flight_enchantment": false,
+      "registry_checked": true
+    }
+  },
+  "broom:5": {
+    "evidence": {
+      "known_flight_spell": false
+    }
+  },
+  "broom:7": {
+    "evidence": {
+      "registered_lifting_effect": false
+    }
+  },
+  "glove:0": {
+    "legal_owner": "smith"
+  },
+  "glove:3": {
+    "destination": "open_pack",
+    "legal_owner": "smith",
+    "transfer_title": false
+  },
+  "glove:4": {
+    "destination": "smith",
+    "legal_owner": "smith",
+    "transfer_title": false
+  },
+  "glove:7": {
+    "destination": "companion",
+    "legal_owner": "smith",
+    "transfer_title": false
+  },
+  "glove:1": {
+    "evidence": {
+      "seam": "old_repair",
+      "hidden_contents_known": false
+    }
+  },
+  "glove:2": {
+    "evidence": {
+      "reported_owner": "smith",
+      "transfer_of_title": false
+    }
+  },
+  "glove:5": {
+    "evidence": {
+      "searched_area_contains_second_glove": false
+    }
+  },
+  "glove:6": {
+    "closed_in_all_conditions": true,
+    "legal_owner": "smith"
+  },
+  "road:1": {
+    "evidence": {
+      "visible_section": "blocked_by_debris",
+      "entire_road_explored": false
+    }
+  },
+  "road:3": {
+    "destination": "old_platform"
+  },
+  "road:4": {
+    "evidence": {
+      "tracks_direction": "east",
+      "person_identified": false
+    }
+  },
+  "road:5": {
+    "evidence": {
+      "source": "another_traveler",
+      "claim": "damaged_bridge",
+      "firsthand": false
+    }
+  },
+  "road:7": {
+    "route_closed": true,
+    "wait_minutes": 10
+  },
+  "road:8": {
+    "evidence": {
+      "unsafe_board": true,
+      "crossing_safe": false
+    }
+  },
+  "movement:5": {
+    "destination": "yard",
+    "transfer_title": false
+  },
+  "moral:0": {
+    "destination": "patient",
+    "transfer_title": true,
+    "limits": {
+      "healing_confirmed": false
+    }
+  },
+  "moral:7": {
+    "evidence": {
+      "dose_divisible_without_losing_effect": false
+    }
+  },
+  "moral:9": {
+    "preexisting_agreement": true
+  },
+  "npc:0": {
+    "evidence": {
+      "source": "player_eyewitness",
+      "npc_witnessed_directly": false
+    }
+  },
+  "npc:1": {
+    "evidence": {
+      "source": "hunter",
+      "verified": false
+    }
+  },
+  "npc:4": {
+    "evidence": {
+      "npc_present_at_event": false
+    }
+  },
+  "npc:5": {
+    "evidence": {
+      "authority_to_accept": false
+    }
+  },
+  "research:0": {
+    "evidence": {
+      "visible_symbols": 3,
+      "full_translation_available": false
+    },
+    "observation_uncertain": true
+  },
+  "research:1": {
+    "evidence": {
+      "sound": "rhythmic_metal_clank",
+      "source_identified": false
+    }
+  },
+  "research:2": {
+    "evidence": {
+      "trace": "bootprints",
+      "person_identified": false
+    },
+    "observation_uncertain": true
+  },
+  "research:3": {
+    "evidence": {
+      "visible_bend_matches_map": true,
+      "remote_route_checked": false
+    }
+  },
+  "research:4": {
+    "evidence": {
+      "lever_moves": true,
+      "whole_mechanism_purpose_known": false
+    }
+  },
+  "research:6": {
+    "evidence": {
+      "surface_crack": true,
+      "contents_known": false
+    }
+  },
+  "facts:0": {
+    "holder": "smith",
+    "legal_owner": "smith",
+    "evidence": {
+      "already_returned": true
+    }
+  },
+  "facts:4": {
+    "target_unconscious": true,
+    "evidence": {
+      "death_confirmed": false
+    }
+  },
+  "facts:5": {
+    "quantity": 0,
+    "evidence": {
+      "prior_transaction": "consumed_subject"
+    }
+  },
+  "facts:6": {
+    "evidence": {
+      "source": "hunter",
+      "verified": false
+    }
+  },
+  "narration:5": {
+    "evidence": {
+      "previous_outcome": "partial_success"
+    }
+  },
+  "narration:7": {
+    "evidence": {
+      "speaker_id": "witness"
+    }
+  },
+  "narration:8": {
+    "evidence": {
+      "observation_verified": true,
+      "hypothesis_verified": false
+    }
+  },
+  "narration:9": {
+    "evidence": {
+      "prior_material_spent": 1,
+      "new_transaction": false
+    }
+  },
+  "coins:0": {
+    "required_capability": "currency"
+  },
+  "coins:4": {
+    "required_capability": "gold_transmutation"
+  },
+  "broom:0": {
+    "required_capability": "flight"
+  },
+  "bow_craft:8": {
+    "pay_on_acceptance": true
+  },
+  "damage:9": {
+    "give_tool_on_acceptance": true
+  },
+  "damage:3": {
+    "test_damage": 1
+  },
+  "food:6": {
+    "term_minutes": 1440
+  },
+  "negotiation:8": {
+    "pledge_tool_on_acceptance": true
+  },
+  "movement:3": {
+    "partial_completes_move": true,
+    "partial_conditions": {
+      "wet_boots": true
+    }
+  },
+  "broom:1": {
+    "movement_changes_place": false,
+    "requires_subject_access": true
+  },
+  "broom:6": {
+    "requires_subject_access": true
+  },
+  "movement:1": {
+    "requires_subject_access": true
+  },
+  "glove:8": {
+    "evidence": {
+      "snapshot_comparison": {
+        "expected_object_id": "subject",
+        "observed_object_id": "subject",
+        "state_equal": true,
+        "provenance": "PRESCRIBED_SYNTHETIC_SNAPSHOTS_NOT_LIVE_SAVE_REPLAY"
+      }
+    }
+  },
+  "bow_craft:2": {
+    "input_traits": [
+      "wood",
+      "shaft"
+    ],
+    "required_traits": [
+      "wood",
+      "shaft"
+    ],
+    "required_tool_capabilities": [
+      "steam",
+      "shape"
+    ],
+    "tool_capabilities": [
+      "steam",
+      "shape"
+    ],
+    "tool_name": "котёл с горячей водой и приспособление для фиксации каркаса"
+  }
+}

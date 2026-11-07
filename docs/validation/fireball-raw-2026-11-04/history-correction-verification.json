@@ -1,0 +1,15 @@
+{
+  "schema": "fireball-native-history-correction-independent-verification-v1",
+  "status": "PASS",
+  "corrected_views": 12514,
+  "cross_native_links_before": 21946,
+  "cross_native_links_after": 0,
+  "unresolved_links_after": 0,
+  "new_history_links_are_subset_of_previously_checked_temporal_links": true,
+  "all_corrected_targets_equal_base": true,
+  "official_AutoTokenizer_parity_corrections": 12514,
+  "token_delta": -1229742,
+  "base_modified": false,
+  "model_weights_loaded": false,
+  "training_steps": 0
+}

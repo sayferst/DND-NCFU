@@ -1,0 +1,21 @@
+{
+  "schema": "fireball-native-history-overlay-v1",
+  "status": "COMPLETE",
+  "patches": 12514,
+  "states": {
+    "OBSERVATION_CONTEXT_INSUFFICIENT_RETAINED": 1800,
+    "CANDIDATE_PENDING_REVIEW": 10714
+  },
+  "cross_native_combat_links_in_corrected_history": 0,
+  "tokenizer_fingerprint": {
+    "tokenizer.json": "a2fa2956478eaa353c6c4b1f47fdd6868cce6075e52e169c35ae8bd28524e7a8",
+    "chat_template.jinja": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b"
+  },
+  "base_modified": false,
+  "targets_modified": false,
+  "silently_truncated_targets": 0,
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0,
+  "overlay_sha256": "e7269c31dc9d33b893e1f92a1304b6ced9d50167cfada3f8629ad9cbf3a2c194"
+}

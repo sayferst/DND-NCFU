@@ -1,0 +1,69 @@
+{
+  "schema": "dnd-gpu-public-plan-v1",
+  "date": "2026-11-04",
+  "source_url": "https://gpu.nz/api/v1/offers?gpu=rtx-3090-24gb&num_gpus=1&type=on_demand&min_reliability=0.98&min_cuda=12.4&min_disk_gb=160&min_inet_down_mbps=100&order=price&limit=10",
+  "official_api_docs": "https://gpu.nz/docs/api",
+  "official_billing": "https://gpu.nz/pricing",
+  "offer": {
+    "id": "pdjqskwpam",
+    "available": true,
+    "verified": false,
+    "country": "CA",
+    "region": "Quebec, CA",
+    "gpu": {
+      "slug": "rtx-3090-24gb",
+      "name": "RTX 3090",
+      "count": 1,
+      "vram_gb": 24,
+      "total_tflops": 35.3,
+      "mem_bw_gbs": 828
+    },
+    "cpu": {
+      "name": "Xeon® E5-2650 v2 ",
+      "cores": 16
+    },
+    "ram_gb": 126,
+    "disk": {
+      "max_gb": 549,
+      "bw_mbps": 1809,
+      "name": null
+    },
+    "network": {
+      "up_mbps": 2189,
+      "down_mbps": 1414,
+      "ports": 199
+    },
+    "pcie": {
+      "gen": 3,
+      "bw_gbs": 11.1
+    },
+    "cuda_max": 12.8,
+    "driver": "570.181",
+    "reliability": 0.9953,
+    "max_duration_days": 26,
+    "dlperf": 44.7,
+    "price": {
+      "currency": "RUB",
+      "on_demand_kop_h": 2690,
+      "interruptible_kop_h": 1490,
+      "storage_kop_gb_month": 3267,
+      "traffic_kop_gb": 213
+    }
+  },
+  "planned_disk_gb": 160,
+  "planned_billed_hours_ceiling": 8,
+  "planning_traffic_gb": 40,
+  "gpu_estimate_rub": 215.2,
+  "storage_estimate_rub": 58.08,
+  "traffic_estimate_rub": 85.2,
+  "estimate_method": "Storage assumes 30-day month; final console calculation takes precedence; traffic volume is a planning allowance, not a measurement.",
+  "price_fixed_or_reserved": false,
+  "account_access_used": false,
+  "instance_created": false,
+  "rental_authorized": false,
+  "weights_downloaded": false,
+  "training_steps": 0,
+  "total_estimate_rub": 358.48,
+  "budget_rub": 500,
+  "reserve_estimate_rub": 141.52
+}

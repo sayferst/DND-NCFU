@@ -1,0 +1,89 @@
+{
+  "history_links": 458987,
+  "history_cross_split_or_group": 0,
+  "view_source_split_or_group_mismatch": 0,
+  "source_by_split": [
+    {
+      "source": "DEMO/filtered_triples.jsonl",
+      "split": "train",
+      "records": 25
+    },
+    {
+      "source": "DEMO/raw.jsonl",
+      "split": "train",
+      "records": 342
+    },
+    {
+      "source": "HF_FILTERED",
+      "split": "test",
+      "records": 15286
+    },
+    {
+      "source": "HF_FILTERED",
+      "split": "train",
+      "records": 123108
+    },
+    {
+      "source": "HF_FILTERED",
+      "split": "val",
+      "records": 15435
+    }
+  ],
+  "view_readiness": [
+    {
+      "task": "command_to_result",
+      "readiness": "STRUCTURAL_CANDIDATE_NOT_HUMAN_APPROVED",
+      "n": 153826
+    },
+    {
+      "task": "dialogue_sequence",
+      "readiness": "OBSERVATION_CONTEXT_INSUFFICIENT_RETAINED",
+      "n": 11511
+    },
+    {
+      "task": "dialogue_sequence",
+      "readiness": "STRUCTURAL_CANDIDATE_NOT_HUMAN_APPROVED",
+      "n": 108909
+    },
+    {
+      "task": "entity_observation",
+      "readiness": "OBSERVATION_VIEW_NOT_SFT_PAIR",
+      "n": 153983
+    },
+    {
+      "task": "grounded_utterance",
+      "readiness": "STRUCTURAL_CANDIDATE_NOT_HUMAN_APPROVED",
+      "n": 43383
+    },
+    {
+      "task": "negative_outcome_candidate",
+      "readiness": "STRUCTURAL_CANDIDATE_NOT_HUMAN_APPROVED",
+      "n": 14390
+    },
+    {
+      "task": "observed_transition",
+      "readiness": "STRUCTURAL_CANDIDATE_NOT_HUMAN_APPROVED",
+      "n": 153854
+    },
+    {
+      "task": "raw_event",
+      "readiness": "OBSERVATION_VIEW_NOT_SFT_PAIR",
+      "n": 342
+    },
+    {
+      "task": "utterance_to_command",
+      "readiness": "STRUCTURAL_CANDIDATE_NOT_HUMAN_APPROVED",
+      "n": 120396
+    }
+  ],
+  "independent_axes": {
+    "preservation": "observations.status/reason",
+    "provenance": "source_metadata",
+    "task_eligibility": "dispositions and views.readiness",
+    "review": "NO_HUMAN_APPROVAL",
+    "privacy": "REDACTED_DERIVATIVES_PENDING_CONTENT_REVIEW_LOCAL_RESTRICTED",
+    "rights": "SOURCE_CC_BY_4_0_ATTRIBUTION_CONTENT_RIGHTS_REVIEW_PENDING",
+    "runtime": "NOT_ASSESSED_NOT_REQUIRED_FOR_STORAGE_OR_CANDIDACY"
+  },
+  "views_input_target_sha256": "10172dca1ff9128cdad6008f378c76ada7fe755c68b5cff19162f3ec75e52218"
+}

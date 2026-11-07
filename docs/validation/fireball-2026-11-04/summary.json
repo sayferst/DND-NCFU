@@ -1,0 +1,35 @@
+{
+  "dataset_policy": "fireball-augmented-v1",
+  "status": "READY_FIREBALL_AUGMENTED",
+  "sha256": "529c055869da21495f170015877a16101bc10531b4f27aea1cc54988768036d3",
+  "baseline_sha256": "79f0124633f30a9fcc09c3b038e27df0588505acdcff2cb2947af233ecc03e7c",
+  "baseline_samples": 1100,
+  "fireball": {
+    "rejected": {
+      "INVALID_HP_BOUNDS": 8,
+      "UNKNOWN_OR_TEMPORARY_HP": 124,
+      "NO_HP_CHANGE_OR_TOO_MANY_TARGETS": 118,
+      "DUPLICATE_TRANSITION": 32,
+      "MAX_HP_CHANGED": 1
+    },
+    "independent_groups": 1,
+    "external_holdout_available": false,
+    "accepted": 96
+  },
+  "human_reviewed_samples": 0,
+  "real_dnd_ncfu_episodes": 0,
+  "training_steps": 0,
+  "approved_for_runtime": false,
+  "splits": {
+    "train": 976,
+    "val": 110,
+    "test": 110
+  },
+  "archive_sha256": "98e5694be90234d3fb6517805bc3fb4faf771f73a8b9eeb3e8f750fedf75661f",
+  "archive_bytes": 1718503,
+  "workbook_original_sheets_equal": true,
+  "archive_fresh_extraction_sha_check": true,
+  "tests_passed": 48,
+  "full_project_regression_rerun": false,
+  "weights_downloaded": false
+}

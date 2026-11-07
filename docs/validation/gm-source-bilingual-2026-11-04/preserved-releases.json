@@ -1,0 +1,22 @@
+{
+  "DND_NCFU_training_v4.zip": {
+    "sha256": "52a7f327db61fcbf6ac8447c2a095eab4897c85cf45935018503e74a35378ee3",
+    "bytes": 1023604,
+    "unchanged": true
+  },
+  "DND_NCFU_dataset_v4_final.xlsx": {
+    "sha256": "5e087a1507ab826dbd65c8ec066ad6ba800e0d8bd19526b14fb466adbb0ffa25",
+    "bytes": 321782,
+    "unchanged": true
+  },
+  "DND_NCFU_training_v4_FIREBALL.zip": {
+    "sha256": "98e5694be90234d3fb6517805bc3fb4faf771f73a8b9eeb3e8f750fedf75661f",
+    "bytes": 1718503,
+    "unchanged": true
+  },
+  "DND_NCFU_QLORA_READY_20261104.zip": {
+    "sha256": "7017e29e21d34c02f85014d968654cc01b5232811eb87cc3c5afec341b8a94a0",
+    "bytes": 5092823,
+    "unchanged": true
+  }
+}

@@ -17,6 +17,7 @@ from rpg_vkr.narrative.limits import (
     WORLD_OUTPUT_TOKENS,
     WORLD_TIMEOUT_MS,
 )
+from rpg_vkr.narrative.local_models import local_models
 from rpg_vkr.narrative.records import Narration
 from rpg_vkr.narrative.segments import split_story
 from rpg_vkr.narrative.speech import explicit_target
@@ -122,27 +123,6 @@ def validate_prose(text, dialogue=None):
             "Рассказчик не передал ответ собеседника прямой речью. "
             "Показан подтверждённый ответ; можно повторить запрос."
         )
-
-
-def local_models(data):
-    if not isinstance(data, dict) or not isinstance(data.get("models"), list):
-        raise ValueError("Invalid model list")
-    result = []
-    for item in data["models"]:
-        if not isinstance(item, dict):
-            raise ValueError("Invalid model entry")
-        name = item.get("name", "")
-        if (
-            isinstance(name, str)
-            and re.fullmatch(r"[A-Za-z0-9_.:/-]{1,128}", name)
-            and "cloud" not in name.casefold()
-            and not item.get("remote_host")
-            and not item.get("remote_model")
-            and type(item.get("size")) is int
-            and item["size"] > 0
-        ):
-            result.append(name)
-    return tuple(dict.fromkeys(result))
 
 
 def parse_narration(data, frame, model, dialogue=None, *, clarify=False):
@@ -982,6 +962,10 @@ class OllamaClient(QObject):
             self.failed.emit(message)
 
     def _send(self, path, kind, payload=None):
+        if payload is not None and not self.cloud:
+            if "mn-12b-faun-rp-ru" in payload.get("model", "").casefold():
+                payload = dict(payload)
+                payload.pop("think", None)
         if payload is not None:
             if not self.turn_id:
                 self.begin_turn()
@@ -1447,6 +1431,8 @@ class OllamaClient(QObject):
                             "receipt": context.get("receipt"),
                             "resource_balances": context.get("resource_balances", {}),
                             "validation_roster": context.get("validation_roster", []),
+                            "objects": context.get("objects", []),
+                            "public_objects": context.get("public_objects", []),
                         },
                     )
                     note = Narration(
@@ -1568,6 +1554,22 @@ class OllamaClient(QObject):
                 "reason": reason,
                 "finish_reason": data.get("done_reason") if isinstance(data, dict) else None,
                 "usage": safe_usage,
+                **(
+                    {
+                        "local_timing": {
+                            key: data[key]
+                            for key in (
+                                "load_duration",
+                                "eval_duration",
+                                "eval_count",
+                                "prompt_eval_count",
+                            )
+                            if type(data.get(key)) is int and data[key] >= 0
+                        }
+                    }
+                    if isinstance(data, dict) and not self.cloud and "eval_count" in data
+                    else {}
+                ),
                 "warnings": warnings,
             }
         )

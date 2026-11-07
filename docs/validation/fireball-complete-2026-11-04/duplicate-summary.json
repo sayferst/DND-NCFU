@@ -1,0 +1,15 @@
+{
+  "exact": {
+    "clusters": 0,
+    "extra_records": 0
+  },
+  "near": {
+    "clusters": 45,
+    "extra_records": 76
+  },
+  "approximate_edges": 24,
+  "original_session_non_null": 342,
+  "total_views": 760594,
+  "field_paths_types": 2132,
+  "canonical_payload_and_targets_unchanged": true
+}

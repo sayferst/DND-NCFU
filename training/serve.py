@@ -8,20 +8,35 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 
-def serve(config, adapter, port):
+def serve(config, adapter, port, *, baseline=False):
+    from training.model_profiles import validate_local
+
+    validate_local(config)
     import torch
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-    adapter = Path(adapter)
-    manifest = json.loads((adapter / "training-manifest.json").read_text(encoding="utf-8"))
-    if (
+    if port not in (11434, 11435):
+        raise ValueError("Choose the explicitly supported local port11434 or11435")
+    if baseline:
+        adapter = None
+        manifest = {"adapter_sha256": config["revision"]}
+    else:
+        adapter = Path(adapter)
+    manifest = (
+        json.loads((adapter / "training-manifest.json").read_text(encoding="utf-8"))
+        if adapter
+        else manifest
+    )
+    if adapter and (
         manifest.get("smoke")
         or manifest["global_step"] < 1
         or hashlib.sha256((adapter / "adapter_model.safetensors").read_bytes()).hexdigest()
         != manifest["adapter_sha256"]
     ):
         raise ValueError("No real verified adapter")
+    if adapter and manifest.get("model_revision") != config.get("revision"):
+        raise ValueError("Adapter belongs to a different base revision")
     tokenizer = AutoTokenizer.from_pretrained(
         config["model_path"], local_files_only=True, trust_remote_code=False
     )
@@ -31,10 +46,23 @@ def serve(config, adapter, port):
         trust_remote_code=False,
         device_map={"": 0},
         quantization_config=BitsAndBytesConfig(
-            load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=config.get("double_quant", False),
         ),
     )
-    model = PeftModel.from_pretrained(base, adapter, local_files_only=True).eval()
+    model = (
+        PeftModel.from_pretrained(base, adapter, local_files_only=True).eval()
+        if adapter
+        else base.eval()
+    )
+    model_name = "dnd-base-narrator" if baseline else "dnd-trained-narrator"
+    model_size = (
+        (adapter / "adapter_model.safetensors").stat().st_size
+        if adapter
+        else sum(p.stat().st_size for p in Path(config["model_path"]).glob("*.safetensors"))
+    )
     lock = threading.Lock()
 
     class Handler(BaseHTTPRequestHandler):
@@ -51,12 +79,26 @@ def serve(config, adapter, port):
 
         def do_GET(self):
             if self.path == "/api/tags":
-                self.send({"models": [{"name": "dnd-trained-narrator"}]})
+                self.send(
+                    {
+                        "models": [
+                            {
+                                "name": model_name,
+                                "size": model_size,
+                                "digest": manifest["adapter_sha256"],
+                            }
+                        ]
+                    }
+                )
             else:
                 self.send({"error": "not_found"}, 404)
 
         def do_POST(self):
-            length = int(self.headers.get("Content-Length", "0"))
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+            except ValueError:
+                self.send({"error": "invalid_request"}, 400)
+                return
             if self.path != "/api/chat" or not 0 < length <= 256 * 1024:
                 self.send({"error": "invalid_request"}, 400)
                 return
@@ -65,38 +107,13 @@ def serve(config, adapter, port):
                 return
             try:
                 body = json.loads(self.rfile.read(length))
-                messages = body["messages"]
-                if not isinstance(messages, list) or len(messages) > 12:
-                    raise ValueError("Invalid messages")
-                inputs = tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=True,
-                    add_generation_prompt=True,
-                    enable_thinking=False,
-                    return_tensors="pt",
-                ).to(model.device)
-                if inputs.shape[1] > 8192:
-                    raise ValueError("Context too large")
-                limit = body.get("options", {}).get("num_predict", 1024)
-                if type(limit) is not int or not 1 <= limit <= 4500:
-                    raise ValueError("Output limit")
-                with torch.no_grad():
-                    output = model.generate(
-                        inputs,
-                        max_new_tokens=limit,
-                        do_sample=False,
-                        pad_token_id=tokenizer.eos_token_id,
-                    )
-                content = tokenizer.decode(output[0, inputs.shape[1] :], skip_special_tokens=True)
-                self.send(
-                    {
-                        "message": {"role": "assistant", "content": content},
-                        "done": True,
-                        "done_reason": "stop"
-                        if output[0, -1].item() == tokenizer.eos_token_id
-                        else "length",
-                    }
-                )
+                if body.get("model") != model_name:
+                    raise ValueError("Requested model is not loaded")
+                from training.inference_protocol import generate
+
+                self.send(generate(body, tokenizer, model, config, torch))
+            except (ValueError, KeyError, TypeError):
+                self.send({"error": "invalid_request"}, 400)
             except Exception:
                 self.send({"error": "inference_failed"}, 500)
             finally:
@@ -108,10 +125,12 @@ def serve(config, adapter, port):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--config", type=Path, required=True)
-    p.add_argument("--adapter", type=Path, required=True)
+    mode = p.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--adapter", type=Path)
+    mode.add_argument("--baseline", action="store_true")
     p.add_argument("--port", type=int, default=11435)
     a = p.parse_args()
-    serve(json.loads(a.config.read_text(encoding="utf-8")), a.adapter, a.port)
+    serve(json.loads(a.config.read_text(encoding="utf-8")), a.adapter, a.port, baseline=a.baseline)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,318 @@
+{
+  "schema": "gm-native-candidate-audit-1",
+  "status": "NATIVE_CANDIDATES_AUDITED_NOT_ADMITTED",
+  "source_cases_sha256": "55dfa21de577ed87b434773ea4ec1f36dad56cb8b5aad221bfe4639d21b7596b",
+  "rows": 37939,
+  "unique_source_units": 36568,
+  "source_counts": {
+    "FIREBALL": 26980,
+    "CRD3": 9859,
+    "PROJECT_REFERENCE": 1100
+  },
+  "splits": {
+    "test": 7393,
+    "train": 28082,
+    "val": 2464
+  },
+  "groups": 944,
+  "group_cross_split": 0,
+  "prompt_hashes_cross_split": 1,
+  "target_hashes_cross_split": 10,
+  "minimum_length_profiles": {
+    "2048": 37162,
+    "4096": 704,
+    "8192": 69,
+    "OVER_8192_RETAINED": 4
+  },
+  "total_tokens": 32945156,
+  "assistant_tokens": 1167922,
+  "max_total": 19168,
+  "review_flags": {
+    "DEATH_NOT_ESTABLISHED_BY_AVAILABLE_SOURCE_RECEIPT": 283,
+    "INPUT_CONTAINS_PRODUCTION_OR_OUT_OF_GAME_DISCUSSION": 390,
+    "SOURCE_STATE_AND_AUTOMATION_NEED_RECONCILIATION": 2016,
+    "SCENE_HAS_NO_PRECEDING_DIALOGUE": 602,
+    "CHATTER_OR_MARKUP_REQUIRES_EDITORIAL_REVIEW": 251,
+    "AUTOMATION_ERROR_IS_NOT_A_CONFIRMED_OUTCOME": 52,
+    "PLAYER_AGENCY_REQUIRES_CONTEXT_REVIEW": 359,
+    "OUT_OF_GAME_OR_PERSONA_ADVERTISEMENT": 7
+  },
+  "mechanics": {
+    "combat_attack": {
+      "source_context": {
+        "FIREBALL:RECORDED_COMMAND_NOT_RULE_OR_SUCCESS_PROOF": 10026,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 10
+      },
+      "target_mentions": {}
+    },
+    "combat_defense": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 5
+      },
+      "target_mentions": {}
+    },
+    "spell_casting": {
+      "source_context": {
+        "FIREBALL:RECORDED_COMMAND_NOT_RULE_OR_SUCCESS_PROOF": 4627,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 35
+      },
+      "target_mentions": {}
+    },
+    "resource_cost": {
+      "source_context": {
+        "FIREBALL:RECORDED_AUTOMATION_RESULT": 27,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 40
+      },
+      "target_mentions": {}
+    },
+    "damage": {
+      "source_context": {
+        "FIREBALL:OBSERVED_NUMERIC_STATE_DELTA": 8352,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 5
+      },
+      "target_mentions": {}
+    },
+    "healing": {
+      "source_context": {
+        "FIREBALL:OBSERVED_NUMERIC_STATE_DELTA": 1955,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      },
+      "target_mentions": {}
+    },
+    "temporary_hp": {
+      "source_context": {
+        "FIREBALL:RECORDED_AUTOMATION_RESULT": 176
+      },
+      "target_mentions": {}
+    },
+    "zero_hp": {
+      "source_context": {
+        "FIREBALL:OBSERVED_ZERO_HP_NOT_PROOF_OF_DEATH": 1340
+      },
+      "target_mentions": {}
+    },
+    "death_stabilization": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 45
+      },
+      "target_mentions": {}
+    },
+    "conditions_effects": {
+      "source_context": {
+        "FIREBALL:OBSERVED_EFFECT_FIELD_CHANGE_NOT_UNIVERSAL_RULE": 3862,
+        "FIREBALL:RECORDED_AUTOMATION_RESULT": 396
+      },
+      "target_mentions": {}
+    },
+    "d20_checks": {
+      "source_context": {
+        "FIREBALL:RECORDED_AUTOMATION_RESULT": 2745,
+        "FIREBALL:RECORDED_COMMAND_NOT_RULE_OR_SUCCESS_PROOF": 1,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 342
+      },
+      "target_mentions": {}
+    },
+    "critical_boundaries": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 10
+      },
+      "target_mentions": {}
+    },
+    "partial_success": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 54
+      },
+      "target_mentions": {}
+    },
+    "crafting": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 218,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 216,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 85
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 37,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 13,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 3
+      }
+    },
+    "repair": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 66,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 43,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 45
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 52,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 22,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 16
+      }
+    },
+    "unconventional_item_use": {
+      "source_context": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 5,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 11,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 110
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 8,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 2,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 3
+      }
+    },
+    "physical_capability_limits": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 35
+      },
+      "target_mentions": {}
+    },
+    "movement_travel": {
+      "source_context": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1986,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 739,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 60
+      },
+      "target_mentions": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1031,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 532,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 35
+      }
+    },
+    "exploration": {
+      "source_context": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 276,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 230,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 210
+      },
+      "target_mentions": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 106,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 176,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 49
+      }
+    },
+    "rest_exhaustion": {
+      "source_context": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 1022,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 598,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      },
+      "target_mentions": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 206,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 120,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 40
+      }
+    },
+    "overcasting": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      },
+      "target_mentions": {}
+    },
+    "npc_dialogue": {
+      "source_context": {
+        "CRD3:SOURCE_DM_QUOTED_DIALOGUE_CANDIDATE": 2247,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 175
+      },
+      "target_mentions": {}
+    },
+    "persuasion_negotiation": {
+      "source_context": {
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 63,
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 70,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 90
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 47,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 26,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 10
+      }
+    },
+    "npc_interests_conflict": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 69,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 88,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 95
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 41,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 47,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 10
+      }
+    },
+    "trade_economy": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 127,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 221,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 55
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 101,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 106,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 56
+      }
+    },
+    "world_consequences": {
+      "source_context": {
+        "FIREBALL:OBSERVED_NUMERIC_STATE_DELTA": 9167,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 875
+      },
+      "target_mentions": {}
+    },
+    "world_memory": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 220,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 293,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 15
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 138,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 138,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 6
+      }
+    },
+    "scene_quest_generation": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 128,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 494
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 78,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 211,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 3
+      }
+    },
+    "narration": {
+      "source_context": {
+        "FIREBALL:SOURCE_ACCOUNT_MATCHES_EXPLICIT_PRIOR_DM": 26980,
+        "CRD3:SOURCE_TRANSCRIBER_LABEL_PRIMARY_DM": 9859,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 1100
+      },
+      "target_mentions": {}
+    },
+    "clarification": {
+      "source_context": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 136,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 91,
+        "PROJECT_REFERENCE:EXECUTED_SYNTHETIC_REFERENCE": 25
+      },
+      "target_mentions": {
+        "CRD3:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 108,
+        "FIREBALL:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 41,
+        "PROJECT_REFERENCE:NARRATIVE_MENTION_NOT_VERIFIED_MECHANIC": 28
+      }
+    },
+    "role_contract": {
+      "source_context": {
+        "PROJECT_REFERENCE:EXPLICIT_PROJECT_INSTRUCTION": 1100
+      },
+      "target_mentions": {}
+    }
+  },
+  "human_approved": 0,
+  "train_admitted": 0,
+  "training_steps": 0,
+  "model_weights_loaded": false,
+  "independent_auto_tokenizer_samples": 37939,
+  "semantic_limit": "COUNTS_AND_TOKENIZATION_ARE_NOT_MEANING_OR_RULE_COMPATIBILITY_APPROVAL",
+  "source_limit": "DM_ACCOUNT_AND_TRANSCRIBER_ROLE_ARE_NOT_PROOF_EVERY_LINE_IS_A_GOOD_MASTER_REPLY"
+}

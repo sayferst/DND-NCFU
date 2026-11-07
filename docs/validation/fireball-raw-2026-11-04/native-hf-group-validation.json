@@ -1,0 +1,14 @@
+{
+  "schema": "fireball-native-hf-group-validation-v1",
+  "mapped_hf_rows": 153829,
+  "native_combats": 14700,
+  "hf_physical_shards": 1471,
+  "native_combats_crossing_hf_files": 0,
+  "native_combats_crossing_existing_splits": 0,
+  "shard_combat_count_histogram": {
+    "10": 1469,
+    "9": 1,
+    "1": 1
+  },
+  "interpretation": "HF physical files group multiple combats; grouped holdout conservative, shard-only histories unsafe"
+}

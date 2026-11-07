@@ -86,4 +86,20 @@ def receipt(session):
                     }
                 )
         value["dice"] = record["result"]["rolls"]
+        attempts = [
+            event
+            for event in record["result"].get("battle_events", [])
+            if event.get("kind") == "free_attempt"
+        ]
+        if attempts:
+            value["free_attempt"] = attempts[-1]
+        if session.gameplay.get("owner_rules_policy") == 1:
+            value["owner_rules"] = {
+                "version": "owner-rules-1",
+                "events": [
+                    event
+                    for event in record["result"].get("battle_events", [])
+                    if event.get("kind", "").startswith("owner_")
+                ],
+            }
     return value

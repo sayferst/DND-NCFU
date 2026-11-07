@@ -1,0 +1,234 @@
+{
+  "faun_chat": {
+    "url": "https://huggingface.co/limloop/MN-12B-Faun-RP-RU/raw/bdfc761b14feb9dd03ef158a4d337fc1cf5fd183/chat_template.jinja",
+    "sha256": "99000004eb5936e12e2cb9ba6449b7d194155b6439e8686f658b15cc71938b0b",
+    "data": "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n'}}{% endfor %}\n{% if add_generation_prompt %}{{ '<|im_start|>assistant\\n' }}{% endif %}\n"
+  },
+  "dm": {
+    "url": "https://huggingface.co/api/datasets/gyrojeff/DungeonAssistant",
+    "sha256": "f828cac4bbc968a7a87e593435d1b8a7778d495e15538626978dbf1d2790fb9c",
+    "data": {
+      "id": "gyrojeff/DungeonAssistant",
+      "sha": "cb8339ddee1ea74be11f9f1419e96a2975402384",
+      "cardData": {
+        "license": "mit"
+      },
+      "description": "Check https://github.com/JeffersonQin/DungeonAssistant for details.\n",
+      "downloads": 280,
+      "usedStorage": 49130751294,
+      "file_count": 400,
+      "file_names_sample": [
+        ".gitattributes",
+        "README.md",
+        "batch_push.py",
+        "processed/Equad-01/dataset.csv",
+        "processed/Equad-01/pc.ply",
+        "processed/Equad-01/trajectory.jsonl",
+        "processed/Equad-01/transform/transform_00.npy",
+        "processed/Equad-01/transform/transform_01.npy",
+        "processed/Equad-01/transform/transform_02.npy",
+        "processed/Equad-01/transform/transform_03.npy",
+        "processed/Equad-01/transform/transform_04.npy",
+        "processed/Equad-02/dataset.csv",
+        "processed/Equad-02/errors_to_01.npy",
+        "processed/Equad-02/pc.ply",
+        "processed/Equad-02/trajectory.jsonl"
+      ]
+    }
+  },
+  "dnd_gpt": {
+    "url": "https://huggingface.co/api/datasets/williamsl/DungeonsAndDragonsGPT",
+    "sha256": "28f4e88623b4ebd519dbc810c267c17077527d9ef5a2e79800663146918ce73f",
+    "data": {
+      "id": "williamsl/DungeonsAndDragonsGPT",
+      "sha": "5796d2c7e023128a367afff6acfd000112e1f90d",
+      "cardData": null,
+      "description": "None",
+      "downloads": 5,
+      "usedStorage": 392105,
+      "file_count": 3,
+      "file_names_sample": [
+        ".gitattributes",
+        "test.json",
+        "train.json"
+      ]
+    }
+  },
+  "ru": {
+    "url": "https://huggingface.co/api/datasets/IlyaGusev/ru_turbo_alpaca",
+    "sha256": "51d328737f777b70b3ffc9c1c163d1c50a7cae5262f04ffb5f3a05da8fd4ebc3",
+    "data": {
+      "id": "IlyaGusev/ru_turbo_alpaca",
+      "sha": "460b1f3312aa21ef774e916e532a9576f7938a0d",
+      "cardData": {
+        "dataset_info": {
+          "features": [
+            {
+              "name": "instruction",
+              "dtype": "string"
+            },
+            {
+              "name": "input",
+              "dtype": "string"
+            },
+            {
+              "name": "output",
+              "dtype": "string"
+            },
+            {
+              "name": "alternative_output",
+              "dtype": "string"
+            },
+            {
+              "name": "label",
+              "dtype": "string"
+            },
+            {
+              "name": "all_labels",
+              "sequence": "string"
+            },
+            {
+              "name": "agreement",
+              "dtype": "float32"
+            },
+            {
+              "name": "overlap",
+              "dtype": "uint32"
+            }
+          ],
+          "splits": [
+            {
+              "name": "train",
+              "num_bytes": 54774775,
+              "num_examples": 29822
+            }
+          ],
+          "download_size": 14565995,
+          "dataset_size": 54774775
+        },
+        "license": "cc-by-4.0",
+        "task_categories": [
+          "text-generation",
+          "text2text-generation"
+        ],
+        "language": [
+          "ru"
+        ],
+        "tags": [
+          "instruction-finetuning",
+          "instruction generation",
+          "alpaca"
+        ],
+        "size_categories": [
+          "10K<n<100K"
+        ]
+      },
+      "description": "\n\t\n\t\t\n\t\n\t\n\t\tRuTurboAlpaca\n\t\n\nDataset of ChatGPT-generated instructions in Russian.\n\n\n\nCode: rulm/self_instruct\nCode is based on Stanford Alpaca and self-instruct.\n29822 examples\n\nPreliminary evaluation by an expert based on 400 samples:\n\n83% of samples contain correct instructions\n63% of samples have correct instructions and outputs\n\nCrowdsouring-based evaluation on 3500 samples:\n\n90% of samples contain correct instructions\n68% of samples have correct instructions and outputs\n\nPrompt template:… See the full description on the dataset page: https://huggingface.co/datasets/IlyaGusev/ru_turbo_alpaca.",
+      "downloads": 1349,
+      "usedStorage": 602489110,
+      "file_count": 4,
+      "file_names_sample": [
+        ".gitattributes",
+        "README.md",
+        "ru_turbo_alpaca.jsonl.zst",
+        "ru_turbo_alpaca.py"
+      ]
+    }
+  },
+  "casino": {
+    "url": "https://huggingface.co/api/datasets/jiasheng/naive_casino",
+    "error": "HTTP Error 401: Unauthorized"
+  },
+  "negotiation": {
+    "url": "https://huggingface.co/api/datasets/necm77/negotiation_data",
+    "sha256": "825e27518087fb443a8f3393775e94e8cfd16bdd62a2ba4c40e3e2095e081376",
+    "data": {
+      "id": "necm77/negotiation_data",
+      "sha": "8158095eeaed506a0f8bd650eaf665d1cb30e33d",
+      "cardData": null,
+      "description": "None",
+      "downloads": 13,
+      "usedStorage": 1104101218,
+      "file_count": 4,
+      "file_names_sample": [
+        ".gitattributes",
+        "README.md",
+        "negotiation_combined3_train.txt",
+        "negotiation_combined3_validation.txt"
+      ]
+    }
+  },
+  "dialogsum": {
+    "url": "https://huggingface.co/api/datasets/knkarthick/dialogsum",
+    "sha256": "3e8e41b32a84b709ce169fb470087a8a20723ef37a44b830aa7b637293f8cf26",
+    "data": {
+      "id": "knkarthick/dialogsum",
+      "sha": "a968e7aee0602e257935f1321a02e4287f7d5848",
+      "cardData": {
+        "annotations_creators": [
+          "expert-generated"
+        ],
+        "language_creators": [
+          "expert-generated"
+        ],
+        "language": [
+          "en"
+        ],
+        "license": "cc-by-nc-sa-4.0",
+        "multilinguality": [
+          "monolingual"
+        ],
+        "size_categories": [
+          "10K<n<100K"
+        ],
+        "source_datasets": [
+          "original"
+        ],
+        "task_categories": [
+          "summarization",
+          "text2text-generation",
+          "text-generation"
+        ],
+        "task_ids": [],
+        "pretty_name": "DIALOGSum Corpus",
+        "tags": [
+          "dialogue-summary",
+          "one-liner-summary",
+          "meeting-title",
+          "email-subject"
+        ]
+      },
+      "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Card for DIALOGSum Corpus\n\t\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Description\n\t\n\n\n\t\n\t\t\n\t\n\t\n\t\tLinks\n\t\n\n\nHomepage: https://aclanthology.org/2021.findings-acl.449\nRepository: https://github.com/cylnlp/dialogsum\nPaper: https://aclanthology.org/2021.findings-acl.449\nPoint of Contact: https://huggingface.co/knkarthick\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Summary\n\t\n\nDialogSum is a large-scale dialogue summarization dataset, consisting of 13,460 (Plus 100 holdout data for topic generation) dialogues with… See the full description on the dataset page: https://huggingface.co/datasets/knkarthick/dialogsum.",
+      "downloads": 6431,
+      "usedStorage": 212471798,
+      "file_count": 6,
+      "file_names_sample": [
+        ".gitattributes",
+        "README.md",
+        "holdout.csv",
+        "test.csv",
+        "train.csv",
+        "validation.csv"
+      ]
+    }
+  },
+  "transformers": {
+    "url": "https://pypi.org/pypi/transformers/5.3.0/json",
+    "sha256": "5bdb772b259304b73a04d955d194a9acb136cfd748741742537c9e708a049456",
+    "data": {
+      "version": "5.3.0",
+      "requires_python": ">=3.10.0",
+      "requires_dist": [
+        "huggingface-hub<2.0,>=1.3.0",
+        "numpy>=1.17",
+        "packaging>=20.0",
+        "pyyaml>=5.1",
+        "regex!=2019.12.17",
+        "tokenizers<=0.23.0,>=0.22.0",
+        "typer",
+        "safetensors>=0.4.3",
+        "tqdm>=4.27"
+      ]
+    }
+  }
+}

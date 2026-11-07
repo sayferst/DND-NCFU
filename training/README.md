@@ -1,5 +1,12 @@
 # Отдельный контур данных и обучения
 
+Обновление03.11.2026: [Excel v2 и импорт](../docs/intelligent_gm/ANNOTATION_V2.md),
+[установка Faun на Windows](../docs/intelligent_gm/WINDOWS_FAUN_SETUP.md),
+[сбор эпизодов/предложения меток](../docs/intelligent_gm/DATA_COLLECTION_V2.md),
+[переносимый GPU-процесс](../docs/intelligent_gm/GPU_FAUN_WORKFLOW.md).
+Старый annotation.py сохранён для v1; v2 использует training.annotation_v2.
+Наличие инструментов не означает обучения: шагов0, допущенных SFT-примеров0.
+
 Автоматический runtime теперь имеет отдельный готовый индекс 19 000 карточек:
 [AUTOMATIC_CORPUS.md](../docs/learning/AUTOMATIC_CORPUS.md). Воспроизведение:
 `python -m training.build_corpus_knowledge --input ARCHIVE.zip --output NEW_DIRECTORY`.
@@ -72,3 +79,13 @@ training.serve — один выбранный путь: localhost Ollama-compat
 запускается владельцем только при наличии настоящего адаптера/оборудования.
 Игра читает trained-narrator.json вне UI,сверяет hash/evaluation/localhost;
 неуспех возвращает к RouterAI без повторной игровой транзакции.
+
+
+QLoRA transfer: `python -m training.prepare_faun_transfer --output NEW.zip`.
+Инструкции и бюджетные GPU: [TRAINING_TRANSFER.md](../docs/intelligent_gm/TRAINING_TRANSFER.md).
+
+
+Полный доступный FIREBALL обрабатывается отдельно от игровых receipt:
+[схема A/B/C, все файлы, задачи, splits, Faun и команды](../docs/intelligent_gm/FIREBALL_COMPLETE.md).
+`fireball-augmented-v1` — исторические96HP-примеров, не полный новый архив.
+Кандидаты native tasks не являются автоматически одобренным SFT.

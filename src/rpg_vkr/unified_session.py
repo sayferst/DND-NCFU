@@ -34,12 +34,22 @@ class UnifiedSession(Session):
         content_revision=2,
         catalog_revision=1,
         world_policy=4,
+        free_action_policy=1,
+        owner_rules_policy=0,
     ):
         state = rules.initial({"class_id": class_id, "talent": talent}, character)
         if content_revision not in (1, 2):
             raise ValueError("Неизвестная ревизия данных кампании.")
         if type(world_policy) is not int or world_policy not in (3, 4):
             raise ValueError("Неизвестные правила инвентаря мира.")
+        if type(free_action_policy) is not int or free_action_policy not in (0, 1):
+            raise ValueError("Неизвестные правила свободных действий.")
+        if type(owner_rules_policy) is not int or owner_rules_policy not in (0, 1):
+            raise ValueError("Неизвестная версия авторских правил.")
+        if owner_rules_policy and (catalog_revision != 3 or not free_action_policy):
+            raise ValueError("Авторские правила требуют catalog3 со свободными планами.")
+        if owner_rules_policy:
+            state["owner_rules_policy"] = 1
         if content_revision == 2:
             from rpg_vkr.domain.catalog_engine import initial
 
@@ -51,6 +61,8 @@ class UnifiedSession(Session):
             raise ValueError("Каталог недоступен для этой кампании.")
         limits = rules.caps(state, character)
         if catalog_revision == 3:
+            if free_action_policy:
+                state["free_action_policy"] = free_action_policy
             state.update(mp=limits["mp"], mp_cap=limits["mp"], st=limits["st"], st_cap=limits["st"])
             state.update(contracts={}, activity={"gathered": {}, "crafted": {}, "visited": {}})
             if world_policy == 4:
@@ -78,6 +90,10 @@ class UnifiedSession(Session):
             obj._origin["catalog_revision"] = catalog_revision
         if catalog_revision == 3 and world_policy == 4:
             obj._origin["world_policy"] = 4
+        if catalog_revision == 3 and free_action_policy:
+            obj._origin["free_action_policy"] = free_action_policy
+        if owner_rules_policy:
+            obj._origin["owner_rules_policy"] = 1
         obj._depth = 0
         obj._learning_flags = {"library": False, "memory": True}
         obj._rag_mode = 2
@@ -140,6 +156,21 @@ class UnifiedSession(Session):
 
     def train_skill(self, *args, **kwargs):
         raise ValueError("В единых правилах нет покупаемых рангов навыков.")
+
+    def submit(self, action, **kwargs):
+        if self.gameplay.get("free_action_policy") == 1 and not any(
+            kwargs.get(k) is not None for k in ("intent", "meaning")
+        ):
+            from rpg_vkr.domain.free_actions import interpret
+
+            if interpret(action) is not None:
+                return self.perform_gameplay(
+                    "free_attempt",
+                    {"text": action, "version": 1},
+                    "free_" + self._request_token(),
+                    action=action,
+                )
+        return super().submit(action, **kwargs)
 
     def commit_skill_allocation(self, *args, **kwargs):
         raise ValueError("Подготовка класса растёт автоматически.")
@@ -326,6 +357,7 @@ def restore(data):
     origin = deepcopy(meta["origin"])
     origin.setdefault("content_revision", 1)
     origin.setdefault("world_policy", 3)
+    origin.setdefault("free_action_policy", 0)
     origin["character"] = Character.from_dict(origin["character"])
     origin["campaign"] = Campaign.from_dict(origin["campaign"])
     session = UnifiedSession.create(**origin)

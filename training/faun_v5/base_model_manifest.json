@@ -1,0 +1,36 @@
+{
+  "repository": "limloop/MN-12B-Faun-RP-RU",
+  "revision": "bdfc761b14feb9dd03ef158a4d337fc1cf5fd183",
+  "files": [
+    {
+      "path": "model-00001-of-00005.safetensors",
+      "size": 4865530296,
+      "sha256": "f98830ad0d8dc775034b4d076ef895a92f624b7f57ae137a3778df7e28994ed1"
+    },
+    {
+      "path": "model-00002-of-00005.safetensors",
+      "size": 4907529456,
+      "sha256": "9b189f8a1aa80df4301040d679288ed6b5858de850e27f02b92efe4d9d560e37"
+    },
+    {
+      "path": "model-00003-of-00005.safetensors",
+      "size": 4907529464,
+      "sha256": "78c4351072a36bc0945c095f0c892b494269ec80478c4913fa0ec732cf0dec2f"
+    },
+    {
+      "path": "model-00004-of-00005.safetensors",
+      "size": 4907529456,
+      "sha256": "a0c92802e80e5c5bbdc71e9c62032965373c879591348baebe205d51aee0e9a9"
+    },
+    {
+      "path": "model-00005-of-00005.safetensors",
+      "size": 4907529392,
+      "sha256": "bf780181715227874ff77d7c8dd67a1d33ba8ac904e198cd7bf49ded7da6f11b"
+    },
+    {
+      "path": "tokenizer.json",
+      "size": 17078668,
+      "sha256": "a2fa2956478eaa353c6c4b1f47fdd6868cce6075e52e169c35ae8bd28524e7a8"
+    }
+  ]
+}
